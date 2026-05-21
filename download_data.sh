@@ -6,7 +6,7 @@ VERSION="v1.0.0"
 REPO_URL="https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/releases/download/${VERSION}"
 
 # Array of chunk suffixes (adjust these if you have more parts like ae, af)
-PARTS=("aa" "ab" "ac" "ad")
+PARTS=("aa" "ab" "ac")
 BASE_NAME="CFL_dataset.tar.gz.part"
 
 # Ensure target directory exists
