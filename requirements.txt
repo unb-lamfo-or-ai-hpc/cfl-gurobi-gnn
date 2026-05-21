@@ -1,0 +1,4 @@
+gurobipy
+pandas
+pyarrow
+tqdm
