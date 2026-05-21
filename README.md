@@ -33,6 +33,8 @@ This repository contains the code and data to solve Capacitated Facility Locatio
 │   │   └── solver.py           # Gurobi optimization with callbacks, solution pool, etc.
 │   ├── graph_transform/        # Scripts to convert instances to bipartite graphs
 │   │   └── bipartite_builder.py
+│   ├── data_transformation/    # Data transformation module to process CFL instances
+│   │   └── transformer.py      # Extract data from .lp.gz using Gurobi and output Parquet
 │   └── gnn/                    # Code for training the modified GNN (Liang et al. / Gasse et al.)
 │       └── train.py
 ├── notebooks/                  # Jupyter notebooks for exploratory analysis
@@ -77,6 +79,12 @@ python src/graph_transform/bipartite_builder.py --input_dir data/intermediate_lp
 Train the Graph Neural Network using the processed bipartite graphs:
 ```bash
 python src/gnn/train.py --data_dir data/bipartite_graphs --epochs 100
+```
+
+4. **Data Transformation:**
+Process CFL instances directly from `.lp.gz` into Parquet files:
+```bash
+python src/data_transformation/transformer.py --input_dir data/raw/MILPBench/CFL --output_file data/processed/transformed_data.parquet
 ```
 
 ## References
