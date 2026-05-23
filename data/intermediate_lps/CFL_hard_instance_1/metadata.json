@@ -1,0 +1,27 @@
+{
+  "instance": "CFL_hard_instance_1",
+  "status": 2,
+  "status_name": "OPTIMAL",
+  "runtime": 494.7506990432739,
+  "mip_gap": 5.84601944760895e-14,
+  "node_count": 31.0,
+  "num_solutions_found": 10,
+  "num_incumbents_collected": 17,
+  "num_nodes_collected": 33,
+  "pool_solutions_found": 10,
+  "original_problem": {
+    "vars": 5123200,
+    "constrs": 4800,
+    "nonzeros": 10243200,
+    "binary": 4617600,
+    "integer": 0,
+    "continuous": 505600
+  },
+  "presolved_problem": {
+    "vars": 5123200,
+    "constrs": 4800,
+    "nonzeros": 10243200
+  },
+  "objective_value": 271820.7076077376,
+  "is_optimal": true
+}
