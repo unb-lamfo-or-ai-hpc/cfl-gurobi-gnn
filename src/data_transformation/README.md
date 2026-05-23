@@ -1,4 +1,4 @@
-readme_content = """# Data Transformation: Gurobi to GNN Pipeline (V3)
+# Data Transformation: Gurobi to GNN Pipeline (V3)
 
 Este directorio contiene los scripts para la **transformación y extracción de datos** desde instancias de programación entera mixta (MILP) utilizando Gurobi. El objetivo es generar un *dataset* rico en características estructurales y trayectorias de optimización, diseñado específicamente para entrenar Redes Neuronales de Grafos (GNNs) mediante *Imitation Learning* (ej. paradigma *learn2branch*).
 
