@@ -61,6 +61,14 @@ Install the required dependencies:
 pip install -r requirements.txt
 ```
 
+### Data Download
+Due to the very large size of the dataset, the raw data can be downloaded directly from [MILPBench](https://github.com/thuiar/MILPBench), specifically using the following links:
+* **CFL_easy**: https://drive.google.com/file/d/1z6oNG1ja6CwlsRYViXIzBj0j8Ch6sxdt/view?usp=sharing
+* **CFL_medium**: https://drive.google.com/file/d/181Evo5Q6otZRq6EBeQXFcCYlC4kM8zaH/view?usp=sharing
+* **CFL_hard**: https://drive.google.com/file/d/13NS9YTTyNsiV6Dth3qsQ7lWWNQs4Pek0/view?usp=sharing
+
+After downloading, please extract and place the raw `.lp.gz` files into the `data/raw/MILPBench/CFL/` directory.
+
 ## Usage
 
 1. **Solving Instances:**
