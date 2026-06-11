@@ -224,4 +224,4 @@ __marimo__/
 data/raw/MILPBench/CFL/
 
 # Local sandbox (toy examples, experiments, scratch work)
-sandbox/
+sandbox/toy_outputs/
