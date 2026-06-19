@@ -1,7 +1,7 @@
 """
 Entrenamiento Serial (Single-GPU) para Neural Diving.
 Diseñado para la ejecución clásica en una sola tarjeta gráfica.
-Incluye protección FP32 contra los infinitos de Gurobi.
+Los datos ya vienen higienizados y normalizados desde build_pyg_dataset.py.
 """
 import sys
 import os
@@ -31,28 +31,22 @@ def train_loop(model, loader, optimizer, mse_fn, l1_fn, device, scaler, clear_ca
         is_bin = batch['variable'].x[:, 3] == 1.0
         is_int = batch['variable'].x[:, 4] == 1.0
         binary_mask = is_bin | is_int
-        
-        # [CORRECCIÓN 1] Saneamiento de datos: Límite bajado de 1e6 a 60000.0
-        # Esto asegura que ningún valor exceda el límite físico de FP16 (65504)
-        safe_x_var = torch.clamp(batch['variable'].x, min=-60000.0, max=60000.0)
-        safe_x_cons = torch.clamp(batch['constraint'].x, min=-60000.0, max=60000.0)
-        safe_edge_attr = torch.clamp(batch['variable', 'rev_coef', 'constraint'].edge_attr, min=-60000.0, max=60000.0)
 
-        # Entrenamiento con Precisión Mixta (FP16)
+        # Entrenamiento con Precisión Mixta (FP16). 
+        # Pasamos los datos limpios directamente desde el batch.
         with autocast():
             preds = model(
-                x_var=safe_x_var,
-                x_cons=safe_x_cons,
+                x_var=batch['variable'].x,
+                x_cons=batch['constraint'].x,
                 edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
                 binary_mask=binary_mask,
-                edge_attr=safe_edge_attr
+                edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
             )
             
             targets = batch['variable'].y[binary_mask]
-            # También protegemos los targets
-            targets = torch.clamp(targets, min=-60000.0, max=60000.0)
-            #loss = mse_fn(preds, targets)
-            # Por esto (Forzar el cálculo del error en FP32):
+            
+            # CRÍTICO: Forzamos el FP32 (.float()) en la función de pérdida 
+            # para evitar que el MSE (cuadrado) exceda el límite del FP16.
             loss = mse_fn(preds.float(), targets.float())
         
         scaler.scale(loss).backward()
@@ -60,7 +54,8 @@ def train_loop(model, loader, optimizer, mse_fn, l1_fn, device, scaler, clear_ca
         scaler.update()
         
         with torch.no_grad():
-            mae = l1_fn(preds, targets)
+            # Evaluamos el MAE en FP32 para mayor precisión
+            mae = l1_fn(preds.float(), targets.float())
             rounded_preds = torch.round(preds)
             exact_matches = (rounded_preds == targets).float()
             exact_acc = exact_matches.mean()
@@ -69,9 +64,9 @@ def train_loop(model, loader, optimizer, mse_fn, l1_fn, device, scaler, clear_ca
             total_mae += mae.item()
             total_exact_acc += exact_acc.item()
             
-        # Vaciado de caché opcional (Solo si se pasa el flag por consola)
+        # Vaciado de caché opcional
         if clear_cache:
-            del batch, preds, targets, loss, safe_x_var, safe_x_cons, safe_edge_attr
+            del batch, preds, targets, loss
             torch.cuda.empty_cache()
             
     num_batches = len(loader)
@@ -81,7 +76,7 @@ def main():
     # 1. Configurar Argumentos de Consola
     parser = argparse.ArgumentParser(description="Neural Diving GNN Training")
     parser.add_argument('--hidden_dim', type=int, default=64, 
-                        help='Dimensión oculta de la red (Gasse et al. usa 64). Bajar a 32 si hay OOM.')
+                        help='Dimensión oculta de la red. Bajar a 32 si hay OOM.')
     parser.add_argument('--clear_cache', action='store_true', 
                         help='Fuerza a vaciar la caché de la GPU en cada batch (Lento, pero ahorra RAM).')
     args = parser.parse_args()
@@ -100,7 +95,7 @@ def main():
     loader = DataLoader(dataset, batch_size=1, shuffle=True)
     print(f"Dataset cargado con {len(dataset)} instancias masivas.")
 
-    # 3. Inicializar Modelo con la dimensión parametrizada
+    # 3. Inicializar Modelo
     model = GasseGNN(
         var_in_dim=7,     
         cons_in_dim=5,    
@@ -109,15 +104,16 @@ def main():
         num_layers=2
     ).to(device)
     
-    print("Ajustando capas Prenorm...")
+    print("Ajustando capas Prenorm con datos limpios...")
     sample = next(iter(loader)).to(device)
     
+    # Prenorm sin clamps (Los datos ya están saneados en el .pt)
     with autocast():
         model.fit_prenorm(
-            x_var=torch.clamp(sample['variable'].x, -60000.0, 60000.0),     #Revisar valor del BigM
-            x_cons=torch.clamp(sample['constraint'].x, -60000.0, 60000.0),
+            x_var=sample['variable'].x,
+            x_cons=sample['constraint'].x,
             edge_v2c=sample['variable', 'rev_coef', 'constraint'].edge_index,
-            edge_attr=torch.clamp(sample['variable', 'rev_coef', 'constraint'].edge_attr, -60000.0, 60000.0)
+            edge_attr=sample['variable', 'rev_coef', 'constraint'].edge_attr
         )
     
     if args.clear_cache:
@@ -131,7 +127,6 @@ def main():
     scaler = GradScaler()
     
     epochs = 100
-    # Listas para guardar el historial para el gráfico
     hist_mse, hist_mae = [], []
 
     print("-" * 60)
@@ -146,7 +141,6 @@ def main():
         for epoch in range(epochs):
             avg_mse, avg_mae, avg_acc = train_loop(model, loader, optimizer, mse_fn, l1_fn, device, scaler, args.clear_cache)
             
-            # [CORRECCIÓN 2] Añadir los valores a las listas en cada época
             hist_mse.append(avg_mse)
             hist_mae.append(avg_mae)
             
@@ -154,7 +148,7 @@ def main():
             print(log_str)
             
             log_file.write(f"{epoch+1},{avg_mse},{avg_mae},{avg_acc*100}\n")
-            log_file.flush() # Fuerza a escribir en disco inmediatamente
+            log_file.flush()
             
             if (epoch + 1) % 10 == 0:
                 torch.save(model.state_dict(), os.path.join(output_dir, f"neural_diving_epoch_{epoch+1}.pt"))
