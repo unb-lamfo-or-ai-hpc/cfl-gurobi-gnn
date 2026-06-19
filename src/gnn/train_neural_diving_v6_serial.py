@@ -1,7 +1,7 @@
 """
-Entrenamiento Serial (Single-GPU) para Neural Diving.
-Ejecución 100% en FP32 (Precisión Simple NATIVA).
-Cero riesgos de desbordamiento por suma de aristas.
+Entrenamiento Serial (Single-GPU) con Diagnóstico de NaNs.
+Formulación como Clasificación Binaria (Estilo Gasse et al. original).
+Hiperparámetros (LR, Grad Clip, Hidden Dim) accesibles vía consola.
 """
 import sys
 import os
@@ -16,22 +16,27 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path
 sys.path.insert(0, project_root)
 
 from src.gnn.models.gasse import GasseGNN
-from src.data_transformation.milp_dataset import NeuralDivingDataset
+from src.graph_transform.milp_dataset import NeuralDivingDataset
 
-def train_loop(model, loader, optimizer, mse_fn, l1_fn, device, clear_cache):
+def train_loop(model, loader, optimizer, loss_fn, device, args):
     model.train()
-    total_mse, total_mae, total_exact_acc = 0.0, 0.0, 0.0
+    total_loss, total_acc = 0.0, 0.0
     
-    for batch in loader:
+    for batch_idx, batch in enumerate(loader):
         batch = batch.to(device)
         optimizer.zero_grad()
         
+        # Seleccionamos variables binarias y enteras
         is_bin = batch['variable'].x[:, 3] == 1.0
         is_int = batch['variable'].x[:, 4] == 1.0
         binary_mask = is_bin | is_int
+        
+        # SENSOR 1: Verificar máscara vacía
+        if binary_mask.sum() == 0:
+            print(f"  [AVISO] Batch {batch_idx}: No hay variables discretas. Saltando...")
+            continue
 
-        # FORWARD PASS: 100% FP32 Nativo. 
-        # Cero riesgo de que _scatter_sum desborde.
+        # Forward Pass (100% FP32 Nativo)
         preds = model(
             x_var=batch['variable'].x,
             x_cons=batch['constraint'].x,
@@ -40,41 +45,66 @@ def train_loop(model, loader, optimizer, mse_fn, l1_fn, device, clear_cache):
             edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
         
+        # SENSOR 2: NaNs en Predicciones
+        if torch.isnan(preds).any():
+            print(f"\n[ERROR CRÍTICO] ¡NaN detectado en PREDICCIONES en el batch {batch_idx}!")
+            sys.exit(1)
+            
+        # Target crudo
         targets = batch['variable'].y[binary_mask]
         
-        # Pérdida directa sin necesidad de cast manual
-        loss = mse_fn(preds, targets)
+        # ADAPTACIÓN CLÁSICA (Gasse et al.):
+        # BCEWithLogitsLoss exige que los targets sean probabilidades (0.0 a 1.0).
+        # Si hay variables enteras con valor > 1, las limitamos a 1 para tratarlas como "activadas" (Clasificación).
+        targets = torch.clamp(targets, min=0.0, max=1.0)
         
-        # Backward Pass clásico (Sin Scaler)
+        # Pérdida de Clasificación Binaria
+        loss = loss_fn(preds, targets)
+        
+        # SENSOR 3: NaNs en la Pérdida
+        if torch.isnan(loss):
+            print(f"\n[ERROR CRÍTICO] ¡NaN detectado al calcular la PÉRDIDA en el batch {batch_idx}!")
+            sys.exit(1)
+        
         loss.backward()
+        
+        # Aplicar Gradient Clipping si fue solicitado (> 0.0)
+        if args.grad_clip > 0.0:
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=args.grad_clip)
+        
         optimizer.step()
         
         with torch.no_grad():
-            mae = l1_fn(preds, targets)
-            rounded_preds = torch.round(preds)
-            exact_matches = (rounded_preds == targets).float()
-            exact_acc = exact_matches.mean()
+            # Cálculo de Accuracy estilo Gasse (Logit > 0 implica predicción de clase 1)
+            predicted_classes = (preds > 0).float()
+            acc = (predicted_classes == targets).float().mean()
             
-            total_mse += loss.item()
-            total_mae += mae.item()
-            total_exact_acc += exact_acc.item()
+            total_loss += loss.item()
+            total_acc += acc.item()
             
-        if clear_cache:
+        if args.clear_cache:
             del batch, preds, targets, loss
             torch.cuda.empty_cache()
             
     num_batches = len(loader)
-    return total_mse / num_batches, total_mae / num_batches, total_exact_acc / num_batches
+    if num_batches == 0: return 0.0, 0.0
+    return total_loss / num_batches, total_acc / num_batches
 
 def main():
-    parser = argparse.ArgumentParser(description="Neural Diving GNN Training (FP32 Puro)")
-    parser.add_argument('--hidden_dim', type=int, default=64)
-    parser.add_argument('--clear_cache', action='store_true')
+    parser = argparse.ArgumentParser(description="Neural Diving GNN Training (Clasificación)")
+    
+    # Hiperparámetros dinámicos
+    parser.add_argument('--hidden_dim', type=int, default=32, help="Dimensión oculta de los nodos")
+    parser.add_argument('--lr', type=float, default=1e-3, help="Tasa de aprendizaje (Learning Rate)")
+    parser.add_argument('--grad_clip', type=float, default=1.0, help="Límite del Gradient Clipping (0.0 para desactivar)")
+    parser.add_argument('--clear_cache', action='store_true', help="Vacia la caché VRAM en cada paso")
+    
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"=== Iniciando Entrenamiento Neural Diving en {device} (FP32) ===")
-    print(f"Parámetros: Hidden Dim = {args.hidden_dim} | Clear Cache = {args.clear_cache}")
+    print(f"=== Entrenamiento Neural Diving (BCE & Accuracy) ===")
+    print(f"Hardware  : {device}")
+    print(f"Parámetros: Hidden={args.hidden_dim} | LR={args.lr} | Clip={args.grad_clip} | ClearCache={args.clear_cache}")
 
     output_dir = os.path.join(project_root, "data", "real_train_output")
     os.makedirs(output_dir, exist_ok=True)
@@ -83,8 +113,7 @@ def main():
     dataset = NeuralDivingDataset(root=dataset_root)
     
     loader = DataLoader(dataset, batch_size=1, shuffle=True)
-    print(f"Dataset cargado con {len(dataset)} instancias masivas.")
-
+    
     model = GasseGNN(
         var_in_dim=7,     
         cons_in_dim=5,    
@@ -93,10 +122,8 @@ def main():
         num_layers=2
     ).to(device)
     
-    print("Ajustando capas Prenorm en FP32...")
+    print("Ajustando capas Prenorm...")
     sample = next(iter(loader)).to(device)
-    
-    # Prenorm directo, sin autocast
     model.fit_prenorm(
         x_var=sample['variable'].x,
         x_cons=sample['constraint'].x,
@@ -104,36 +131,41 @@ def main():
         edge_attr=sample['variable', 'rev_coef', 'constraint'].edge_attr
     )
     
+    # SENSOR 4: NaNs durante el prenorm (cálculo de media/std)
+    if torch.isnan(model.convs[0].prenorm_C.beta).any() or torch.isnan(model.convs[0].prenorm_C.sigma).any():
+        print("\n[ERROR CRÍTICO] ¡NaN detectado DENTRO de fit_prenorm!")
+        sys.exit(1)
+    
     if args.clear_cache:
         del sample
         torch.cuda.empty_cache()
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-    mse_fn = nn.MSELoss()
-    l1_fn = nn.L1Loss()
+    # Optimizador y Loss Function Clásica
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    loss_fn = nn.BCEWithLogitsLoss()
     
     epochs = 100
-    hist_mse, hist_mae = [], []
+    hist_loss, hist_acc = [], []
 
-    print("-" * 60)
-    print(f"{'Epoch':<10} | {'MSE Loss':<12} | {'MAE':<12} | {'Exact Acc (%)':<15}")
-    print("-" * 60)
+    print("-" * 55)
+    print(f"{'Epoch':<10} | {'BCE Loss':<15} | {'Accuracy (%)':<15}")
+    print("-" * 55)
     
     log_file_path = os.path.join(output_dir, "training_log.txt")
 
     with open(log_file_path, "w") as log_file:
-        log_file.write("Epoch,MSE,MAE,Exact_Acc\n")
+        log_file.write("Epoch,BCE_Loss,Accuracy\n")
         
         for epoch in range(epochs):
-            avg_mse, avg_mae, avg_acc = train_loop(model, loader, optimizer, mse_fn, l1_fn, device, args.clear_cache)
+            avg_loss, avg_acc = train_loop(model, loader, optimizer, loss_fn, device, args)
             
-            hist_mse.append(avg_mse)
-            hist_mae.append(avg_mae)
+            hist_loss.append(avg_loss)
+            hist_acc.append(avg_acc * 100)
             
-            log_str = f"Epoch {epoch+1:<6} | {avg_mse:<12.4f} | {avg_mae:<12.4f} | {avg_acc * 100:<13.2f}%"
+            log_str = f"Epoch {epoch+1:<6} | {avg_loss:<15.4f} | {avg_acc * 100:<13.2f}%"
             print(log_str)
             
-            log_file.write(f"{epoch+1},{avg_mse},{avg_mae},{avg_acc*100}\n")
+            log_file.write(f"{epoch+1},{avg_loss},{avg_acc*100}\n")
             log_file.flush()
             
             if (epoch + 1) % 10 == 0:
@@ -141,14 +173,23 @@ def main():
     
     torch.save(model.state_dict(), os.path.join(output_dir, "neural_diving_final.pt"))
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, epochs + 1), hist_mse, label='MSE (Loss)')
-    plt.plot(range(1, epochs + 1), hist_mae, label='MAE')
-    plt.xlabel('Epochs')
-    plt.ylabel('Error')
-    plt.title('Curva de Convergencia - Neural Diving (FP32)')
-    plt.legend()
-    plt.grid(True)
+    # Gráfico adaptado a Clasificación (Pérdida vs Precisión)
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    
+    color = 'tab:red'
+    ax1.set_xlabel('Epochs')
+    ax1.set_ylabel('BCE Loss', color=color)
+    ax1.plot(range(1, epochs + 1), hist_loss, color=color, label='Loss')
+    ax1.tick_params(axis='y', labelcolor=color)
+    
+    ax2 = ax1.twinx()
+    color = 'tab:blue'
+    ax2.set_ylabel('Accuracy (%)', color=color)
+    ax2.plot(range(1, epochs + 1), hist_acc, color=color, label='Accuracy')
+    ax2.tick_params(axis='y', labelcolor=color)
+    
+    plt.title('Convergencia Neural Diving (Clasificación)')
+    fig.tight_layout()
     plt.savefig(os.path.join(output_dir, "loss_curve.png"))
     plt.close()
 
