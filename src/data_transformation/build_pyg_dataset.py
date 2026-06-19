@@ -8,6 +8,46 @@ import torch
 from torch_geometric.data import HeteroData
 from tqdm import tqdm
 
+from dataclasses import dataclass, asdict
+from typing import Dict, List, Optional, Tuple
+
+@dataclass
+class ModelFeatures:
+    """Features extracted from a Gurobi model"""
+    num_vars: int
+    num_constrs: int
+    num_binary: int
+    num_integer: int
+    num_continuous: int
+    num_nonzeros: int
+    var_types: np.ndarray
+    var_obj_coeffs: np.ndarray
+    var_lb: np.ndarray
+    var_ub: np.ndarray
+    var_names: List[str]
+    constr_senses: np.ndarray
+    constr_rhs: np.ndarray
+    constr_names: List[str]
+    constraint_matrix: Dict[str, np.ndarray]
+    
+    def to_dict(self):
+        return {k: v.tolist() if isinstance(v, np.ndarray) else v 
+                for k, v in asdict(self).items() 
+                if k != 'constraint_matrix'}
+
+@dataclass
+class SolutionFeatures:
+    """Features from a solution (incumbent or relaxation)"""
+    objective_value: float
+    mip_gap: float
+    node_count: int
+    solution_time: float
+    solution_vector: np.ndarray
+    is_feasible: bool
+    is_optimal: bool
+    integrality_gap: Optional[float] = None
+    bound: Optional[float] = None
+
 def calculate_cosine_similarity(constraint_matrix, obj_coeffs):
     """Calcula la similitud coseno entre cada restricción y la función objetivo."""
     num_constrs = np.max(constraint_matrix['row']) + 1
@@ -42,11 +82,17 @@ def process_instance_to_pyg(instance_dir, output_file):
         sol_dict = pickle.load(f)
         
     # Validar que tengamos el Target (Solución final) y el Input Dinámico (Relajación LP)
-    if not sol_dict.get('final_solution') or not sol_dict.get('node_relaxations'):
+    if not sol_dict.get('final_solution'):
+        print(f"  [Skip] {os.path.basename(instance_dir)}: No encontró solución entera (Target faltante).")
         return False
         
+    if not sol_dict.get('node_relaxations'):
+        print(f"  [Skip] {os.path.basename(instance_dir)}: No hay relajaciones de nodos (Presolve bloqueó B&B).")
+        return False
+
     # El Target (Neural Diving): La mejor solución entera encontrada
-    target_vector = np.array(sol_dict['final_solution']['solution_vector'])
+    #target_vector = np.array(sol_dict['final_solution']['solution_vector'])
+    target_vector = np.array(sol_dict['final_solution'].solution_vector)
     
     # El Feature Dinámico: La relajación continua (LP) en el nodo raíz (índice 0)
     lp_vector = np.array(sol_dict['node_relaxations'][0]['relaxation_vector'])
@@ -113,7 +159,7 @@ def process_instance_to_pyg(instance_dir, output_file):
     return True
 
 if __name__ == "__main__":
-    input_base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/raw/MILPBench/CFL"
+    input_base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
     # PyG requiere que los archivos estén dentro de una subcarpeta llamada "processed"
     output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset/processed"
     os.makedirs(output_dir, exist_ok=True)
