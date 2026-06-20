@@ -135,9 +135,9 @@ def process_instance_to_pyg(instance_dir, output_file):
     #is_cont = (var_types == 0).astype(float)
     #is_bin = (var_types == 1).astype(float)
     #is_int = (var_types == 2).astype(float)
-    is_cont = sanitize_array((var_types == 0).astype(float), apply_log_scale=False)
-    is_bin = sanitize_array((var_types == 1).astype(float), apply_log_scale=False)
-    is_int = sanitize_array((var_types == 2).astype(float), apply_log_scale=False)
+    is_cont = sanitize_array((var_types == 'C').astype(float), apply_log_scale=False)
+    is_bin = sanitize_array((var_types == 'B').astype(float), apply_log_scale=False)
+    is_int = sanitize_array((var_types == 'I').astype(float), apply_log_scale=False)
 
     obj_coeffs = sanitize_array(feat_dict.var_obj_coeffs, "Obj_Coeffs", apply_log_scale=True)
     lb = sanitize_array(feat_dict.var_lb, "LB", apply_log_scale=True)

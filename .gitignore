@@ -221,7 +221,8 @@ __marimo__/
 *.part
 
 # Big instances files
-data/raw/MILPBench/CFL/
+data/
+**/data/
 
 # Local sandbox (toy examples, experiments, scratch work)
 sandbox/toy_outputs/
