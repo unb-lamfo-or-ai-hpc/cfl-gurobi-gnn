@@ -89,7 +89,7 @@ def process_instance_to_pyg(instance_dir, output_file):
     target_clean = sanitize_array(target_vector, "Target", apply_log_scale=False)
     
     lp_vector = np.array(sol_dict['node_relaxations'][0]['relaxation_vector'])
-    lp_clean = sanitize_array(lp_vector, "LP_Vector", apply_log_scale=True)
+    lp_clean = sanitize_array(lp_vector, "LP_Vector", apply_log_scale=False)
     
     data = HeteroData()
     

@@ -49,7 +49,7 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
         
         if target_mask.sum() == 0: continue
         #if binary_mask.sum() == 0: continue
-        valid_batches += 1
+        local_valid_batches += 1
 
         preds = model(
             x_var=batch['variable'].x,
@@ -83,9 +83,13 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
     metrics_tensor = torch.tensor([local_loss, local_acc, local_valid_batches], device=device)
     dist.all_reduce(metrics_tensor, op=dist.ReduceOp.SUM)
     
+    global_loss = metrics_tensor[0].item()
+    global_acc = metrics_tensor[1].item()
     global_batches = metrics_tensor[2].item()
+    
     if global_batches == 0: return float('inf'), 0.0
-    return metrics_tensor[0].item() / global_batches, metrics_tensor[1].item() / global_batches
+    #return metrics_tensor[0].item() / global_batches, metrics_tensor[1].item() / global_batches
+    return global_loss / global_batches, global_acc / global_batches
 
 @torch.no_grad()
 def eval_loop(model, loader, loss_fn, device, args):
@@ -113,7 +117,7 @@ def eval_loop(model, loader, loss_fn, device, args):
             continue
         #if binary_mask.sum() == 0: continue
         
-        valid_batches += 1
+        local_valid_batches += 1
 
         preds = model(
             x_var=batch['variable'].x,
@@ -140,9 +144,13 @@ def eval_loop(model, loader, loss_fn, device, args):
     metrics_tensor = torch.tensor([local_loss, local_acc, local_valid_batches], device=device)
     dist.all_reduce(metrics_tensor, op=dist.ReduceOp.SUM)
     
+    global_loss = metrics_tensor[0].item()
+    global_acc = metrics_tensor[1].item()
     global_batches = metrics_tensor[2].item()
+
     if global_batches == 0: return float('inf'), 0.0
-    return metrics_tensor[0].item() / global_batches, metrics_tensor[1].item() / global_batches
+    #return metrics_tensor[0].item() / global_batches, metrics_tensor[1].item() / global_batches
+    return global_loss / global_batches, global_acc / global_batches
 
 def main():
     dist.init_process_group(backend="nccl")
