@@ -226,3 +226,6 @@ data/
 
 # Local sandbox (toy examples, experiments, scratch work)
 sandbox/toy_outputs/
+
+# Old files
+*.old

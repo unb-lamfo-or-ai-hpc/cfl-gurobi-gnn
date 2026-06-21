@@ -1,5 +1,6 @@
 """
-Entrenamiento Paralelo (DDP Multi-GPU) con Split (Train/Val/Test).
+Entrenamiento Paralelo (DDP Multi-GPU) con Split (Train/Val/Test)..
+Ensamblaje Modular de Datasets por Dificultad (OOD Generalization).
 Formulación de Clasificación Binaria (BCE Loss + Exact Accuracy).
 Evalúa y guarda el mejor modelo basado en Validation Loss global.
 """
@@ -8,7 +9,7 @@ import os
 import argparse
 import torch
 import torch.nn as nn
-from torch.utils.data import random_split
+from torch.utils.data import random_split, ConcatDataset
 from torch_geometric.loader import DataLoader
 import matplotlib.pyplot as plt
 
@@ -31,33 +32,38 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
     for batch_idx, batch in enumerate(loader):
         batch = batch.to(device)
         optimizer.zero_grad()
-        
+
+        # 1. Identificamos variables discretas
         is_bin = batch['variable'].x[:, 3] == 1.0
         is_int = batch['variable'].x[:, 4] == 1.0
-        binary_mask = is_bin | is_int
+        is_discrete = is_bin | is_int
+
+        # 2. Extraemos el LP (Columna 6)
+        lp_values = batch['variable'].x[:, 6]
         
-        if binary_mask.sum() == 0: continue
-        local_valid_batches += 1
+        # 3. MÁSCARA FRACCIONAL (Ignorar los 0.0 y 1.0 claros)
+        is_fractional = (lp_values > 1e-4) & (lp_values < 1.0 - 1e-4)
+        
+        # 4. Combinamos: Solo discretas que el solver dejó ambiguas
+        target_mask = is_discrete & is_fractional
+        
+        if target_mask.sum() == 0: continue
+        #if binary_mask.sum() == 0: continue
+        valid_batches += 1
 
         preds = model(
             x_var=batch['variable'].x,
             x_cons=batch['constraint'].x,
             edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
-            binary_mask=binary_mask,
+            #binary_mask=binary_mask,
+            binary_mask=target_mask,
             edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
-        
-        if torch.isnan(preds).any():
-            print(f"\n[ERROR CRÍTICO Rank {dist.get_rank()}] NaN en PREDICCIONES (Train).")
-            sys.exit(1)
             
-        targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
+        #targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
+        targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)        
+
         loss = loss_fn(preds, targets)
-        
-        if torch.isnan(loss):
-            print(f"\n[ERROR CRÍTICO Rank {dist.get_rank()}] NaN en la PÉRDIDA (Train).")
-            sys.exit(1)
-        
         loss.backward()
         
         if args.grad_clip > 0.0:
@@ -74,16 +80,12 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
             del batch, preds, targets, loss
             torch.cuda.empty_cache()
             
-    # Reducción Global
     metrics_tensor = torch.tensor([local_loss, local_acc, local_valid_batches], device=device)
     dist.all_reduce(metrics_tensor, op=dist.ReduceOp.SUM)
     
-    global_loss = metrics_tensor[0].item()
-    global_acc = metrics_tensor[1].item()
     global_batches = metrics_tensor[2].item()
-    
     if global_batches == 0: return float('inf'), 0.0
-    return global_loss / global_batches, global_acc / global_batches
+    return metrics_tensor[0].item() / global_batches, metrics_tensor[1].item() / global_batches
 
 @torch.no_grad()
 def eval_loop(model, loader, loss_fn, device, args):
@@ -93,22 +95,38 @@ def eval_loop(model, loader, loss_fn, device, args):
     for batch in loader:
         batch = batch.to(device)
         
+        # 1. Identificamos variables discretas
         is_bin = batch['variable'].x[:, 3] == 1.0
         is_int = batch['variable'].x[:, 4] == 1.0
-        binary_mask = is_bin | is_int
+        is_discrete = is_bin | is_int
+
+        # 2. Extraemos el LP (Columna 6)
+        lp_values = batch['variable'].x[:, 6]
         
-        if binary_mask.sum() == 0: continue
-        local_valid_batches += 1
+        # 3. MÁSCARA FRACCIONAL
+        is_fractional = (lp_values > 1e-4) & (lp_values < 1.0 - 1e-4)
+        
+        # 4. Combinamos
+        target_mask = is_discrete & is_fractional
+        
+        if target_mask.sum() == 0: 
+            continue
+        #if binary_mask.sum() == 0: continue
+        
+        valid_batches += 1
 
         preds = model(
             x_var=batch['variable'].x,
             x_cons=batch['constraint'].x,
             edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
-            binary_mask=binary_mask,
+            #binary_mask=binary_mask,
+            binary_mask=target_mask,
             edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
         
-        targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
+        #targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
+        targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
+
         loss = loss_fn(preds, targets)
         
         acc = ((preds > 0).float() == targets).float().mean()
@@ -119,16 +137,12 @@ def eval_loop(model, loader, loss_fn, device, args):
             del batch, preds, targets, loss
             torch.cuda.empty_cache()
             
-    # Reducción Global para Validación/Test
     metrics_tensor = torch.tensor([local_loss, local_acc, local_valid_batches], device=device)
     dist.all_reduce(metrics_tensor, op=dist.ReduceOp.SUM)
     
-    global_loss = metrics_tensor[0].item()
-    global_acc = metrics_tensor[1].item()
     global_batches = metrics_tensor[2].item()
-    
     if global_batches == 0: return float('inf'), 0.0
-    return global_loss / global_batches, global_acc / global_batches
+    return metrics_tensor[0].item() / global_batches, metrics_tensor[1].item() / global_batches
 
 def main():
     dist.init_process_group(backend="nccl")
@@ -143,46 +157,71 @@ def main():
     parser.add_argument('--grad_clip', type=float, default=1.0)
     parser.add_argument('--clear_cache', action='store_true')
     
-    parser.add_argument('--train_frac', type=float, default=0.8)
-    parser.add_argument('--val_frac', type=float, default=0.1)
-    parser.add_argument('--test_frac', type=float, default=0.1)
+    # Nuevos parámetros modulares: [Train, Validation, Test]
+    parser.add_argument('--easy_split', type=int, nargs=3, default=[0,0,0], help="Cantidades para Easy: Train Val Test")
+    parser.add_argument('--medium_split', type=int, nargs=3, default=[0,0,0], help="Cantidades para Medium: Train Val Test")
+    parser.add_argument('--hard_split', type=int, nargs=3, default=[0,0,0], help="Cantidades para Hard: Train Val Test")
+    
     args = parser.parse_args()
 
-    assert abs((args.train_frac + args.val_frac + args.test_frac) - 1.0) < 1e-5, "Sum of fractions must be 1.0"
-
     if is_master:
-        print(f"=== Entrenamiento Neural Diving DDP (Split Train/Val/Test) ===")
-        print(f"GPUs sincronizadas: {dist.get_world_size()}")
+        print(f"=== Entrenamiento Neural Diving DDP (Modular Split) ===")
         print(f"Parámetros: Hidden={args.hidden_dim} | LR={args.lr} | Clip={args.grad_clip}")
+        print(f"Easy   (Train/Val/Test): {args.easy_split}")
+        print(f"Medium (Train/Val/Test): {args.medium_split}")
+        print(f"Hard   (Train/Val/Test): {args.hard_split}")
 
     output_dir = os.path.join(project_root, "data", "real_train_output")
     if is_master: os.makedirs(output_dir, exist_ok=True)
 
-    dataset_root = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset"
-    full_dataset = NeuralDivingDataset(root=dataset_root)
+    base_root = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset"
     
-    dataset_size = len(full_dataset)
-    train_size = int(args.train_frac * dataset_size)
-    val_size = int(args.val_frac * dataset_size)
-    test_size = dataset_size - train_size - val_size
+    # === ENSAMBLAJE MODULAR DEL DATASET ===
+    config = {
+        'CFL_easy_instance': args.easy_split,
+        'CFL_medium_instance': args.medium_split,
+        'CFL_hard_instance': args.hard_split
+    }
     
-    if is_master:
-        print(f"Dataset total: {dataset_size} grafos.")
-        print(f"Split -> Train: {train_size} | Val: {val_size} | Test: {test_size}")
+    train_datasets, val_datasets, test_datasets = [], [], []
+    generator = torch.Generator().manual_seed(42) # Semilla fija para evitar fugas de datos
     
-    # CRÍTICO EN DDP: Usar una semilla fija para que todas las GPUs hagan la misma partición
-    generator = torch.Generator().manual_seed(42)
-    train_data, val_data, test_data = random_split(full_dataset, [train_size, val_size, test_size], generator=generator)
+    for cat, (n_train, n_val, n_test) in config.items():
+        total_req = n_train + n_val + n_test
+        if total_req == 0: continue
+            
+        cat_root = os.path.join(base_root, cat)
+        ds = NeuralDivingDataset(root=cat_root)
+        
+        if len(ds) < total_req:
+            if is_master: print(f"\n[ERROR] '{cat}' solo tiene {len(ds)} grafos listos, pero pediste {total_req}.")
+            sys.exit(1)
+            
+        unused = len(ds) - total_req
+        # Dividir limpiamente esta categoría sin solapamientos
+        ds_train, ds_val, ds_test, _ = random_split(ds, [n_train, n_val, n_test, unused], generator=generator)
+        
+        if n_train > 0: train_datasets.append(ds_train)
+        if n_val > 0: val_datasets.append(ds_val)
+        if n_test > 0: test_datasets.append(ds_test)
+        
+    train_data = ConcatDataset(train_datasets) if train_datasets else None
+    val_data = ConcatDataset(val_datasets) if val_datasets else None
+    test_data = ConcatDataset(test_datasets) if test_datasets else None
     
-    # Samplers independientes para cada subconjunto
+    if not train_data:
+        if is_master: print("\n[ERROR] El conjunto de entrenamiento está vacío. Ajusta los parámetros.")
+        sys.exit(1)
+
+    # Samplers y Loaders
     train_sampler = DistributedSampler(train_data, shuffle=True)
     train_loader = DataLoader(train_data, batch_size=1, sampler=train_sampler)
     
-    if val_size > 0:
+    val_loader, test_loader = None, None
+    if val_data:
         val_sampler = DistributedSampler(val_data, shuffle=False)
         val_loader = DataLoader(val_data, batch_size=1, sampler=val_sampler)
-        
-    if test_size > 0:
+    if test_data:
         test_sampler = DistributedSampler(test_data, shuffle=False)
         test_loader = DataLoader(test_data, batch_size=1, sampler=test_sampler)
     
@@ -190,7 +229,7 @@ def main():
         var_in_dim=7, cons_in_dim=5, edge_dim=1, hidden_dim=args.hidden_dim, num_layers=2
     ).to(device)
     
-    # Prenorm usando solo datos de entrenamiento locales a esta GPU
+    # Prenorm
     for sample in train_loader:
         sample = sample.to(device)
         if ((sample['variable'].x[:, 3] == 1.0) | (sample['variable'].x[:, 4] == 1.0)).sum() > 0:
@@ -207,7 +246,6 @@ def main():
         torch.cuda.empty_cache()
 
     model = DDP(model, device_ids=[local_rank])
-
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     loss_fn = nn.BCEWithLogitsLoss()
     
@@ -224,21 +262,20 @@ def main():
         
     for epoch in range(epochs):
         train_sampler.set_epoch(epoch)
-        
         train_loss, _ = train_loop(model, train_loader, optimizer, loss_fn, device, args)
         
-        if val_size > 0:
+        if val_data:
             val_loss, val_acc = eval_loop(model, val_loader, loss_fn, device, args)
         else:
             val_loss, val_acc = float('inf'), 0.0
             
         if is_master:
             hist_train_loss.append(train_loss)
-            hist_val_loss.append(val_loss)
+            hist_val_loss.append(val_loss if val_data else train_loss) # Fallback para el plot
             
             log_str = f"Epoch {epoch+1:<6} | {train_loss:<12.4f} | {val_loss:<12.4f} | {val_acc * 100:<10.2f}%"
             
-            if val_loss < best_val_loss and val_size > 0:
+            if val_loss < best_val_loss and val_data:
                 best_val_loss = val_loss
                 torch.save(model.module.state_dict(), os.path.join(output_dir, "neural_diving_best_parallel.pt"))
                 log_str += "  --> ¡Mejor Val Loss guardado!"
@@ -247,12 +284,11 @@ def main():
             log_file.write(f"{epoch+1},{train_loss},{val_loss},{val_acc*100}\n")
             log_file.flush()
             
-            # Live-Plotting con dos curvas
             fig, ax = plt.subplots(figsize=(10, 6))
             ax.set_xlabel('Epochs')
             ax.set_ylabel('BCE Loss')
             ax.plot(range(1, len(hist_train_loss) + 1), hist_train_loss, color='tab:red', label='Train Loss')
-            if val_size > 0:
+            if val_data:
                 ax.plot(range(1, len(hist_val_loss) + 1), hist_val_loss, color='tab:orange', linestyle='dashed', label='Validation Loss')
             ax.legend()
             plt.title('Curva de Aprendizaje - Neural Diving (DDP)')
@@ -264,18 +300,21 @@ def main():
         torch.save(model.module.state_dict(), os.path.join(output_dir, "neural_diving_final_parallel.pt"))
         log_file.close()
 
-    # Evaluación Final Sincronizada en Test Set
-    if test_size > 0:
-        dist.barrier() # Esperar a que el maestro guarde el modelo
-        model.module.load_state_dict(torch.load(os.path.join(output_dir, "neural_diving_best_parallel.pt"), map_location=device))
+    # Evaluación Final
+    if test_data:
+        dist.barrier()
+        # Cargamos el modelo ganador para el test final
+        best_model_path = os.path.join(output_dir, "neural_diving_best_parallel.pt")
+        if os.path.exists(best_model_path):
+            model.module.load_state_dict(torch.load(best_model_path, map_location=device))
         
         test_loss, test_acc = eval_loop(model, test_loader, loss_fn, device, args)
         
         if is_master:
             print("\n=== Evaluación Final en Test Set ===")
             print(f"Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc * 100:.2f}%")
-            print(f"\n¡Entrenamiento Multi-GPU finalizado! Gráfica en: {output_dir}")
 
+    if is_master: print(f"\n¡Entrenamiento Multi-GPU finalizado! Gráfica en: {output_dir}")
     dist.barrier()
     dist.destroy_process_group()
 
