@@ -221,8 +221,11 @@ __marimo__/
 *.part
 
 # Big instances files
-data/
-**/data/
+data/bipartite_graphs/
+data/intermediate_lps/
+data/raw/MILPBench/CFL/
+data/real_train_output/*.pt
+
 
 # Local sandbox (toy examples, experiments, scratch work)
 sandbox/toy_outputs/
