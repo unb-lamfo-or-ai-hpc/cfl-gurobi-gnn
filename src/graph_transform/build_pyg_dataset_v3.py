@@ -19,6 +19,40 @@ import pandas as pd
 import torch
 from torch_geometric.data import HeteroData
 from tqdm import tqdm
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+
+# --- DEFINICIÓN DE CLASES PARA QUE PICKLE PUEDA DESEMPAQUETAR ---
+@dataclass
+class ModelFeatures:
+    num_vars: int
+    num_constrs: int
+    num_binary: int
+    num_integer: int
+    num_continuous: int
+    num_nonzeros: int
+    var_types: np.ndarray 
+    var_obj_coeffs: np.ndarray 
+    var_lb: np.ndarray 
+    var_ub: np.ndarray 
+    var_names: List[str] 
+    constr_senses: np.ndarray 
+    constr_rhs: np.ndarray 
+    constr_names: List[str] 
+    constraint_matrix: Dict[str, np.ndarray] 
+
+@dataclass
+class SolutionFeatures:
+    objective_value: float
+    mip_gap: float
+    node_count: int
+    solution_time: float
+    solution_vector: np.ndarray 
+    is_feasible: bool
+    is_optimal: bool
+    integrality_gap: Optional[float] = None
+    bound: Optional[float] = None
+# ----------------------------------------------------------------
 
 def sanitize_array(arr, name="Array", apply_log_scale=False):
     """
