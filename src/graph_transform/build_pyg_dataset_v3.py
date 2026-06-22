@@ -116,9 +116,9 @@ def build_heterodata_for_instance(instance_dir, global_idx_start, processed_dir)
         lp_tensor = sanitize_array(lp_vector_root, apply_log_scale=False)
         
         # One-Hot Encoding de tipos de variables
-        is_cont = torch.FloatTensor((model_features.var_types == 0).astype(float)).unsqueeze(-1)
-        is_bin = torch.FloatTensor((model_features.var_types == 1).astype(float)).unsqueeze(-1)
-        is_int = torch.FloatTensor((model_features.var_types == 2).astype(float)).unsqueeze(-1)
+        is_cont = torch.FloatTensor((model_features.var_types == 'C').astype(float)).unsqueeze(-1)
+        is_bin = torch.FloatTensor((model_features.var_types == 'B').astype(float)).unsqueeze(-1)
+        is_int = torch.FloatTensor((model_features.var_types == 'I').astype(float)).unsqueeze(-1)
         
         # Dimensión V: [num_vars, 7]
         v_features = torch.cat([obj_tensor, lb_tensor, ub_tensor, is_cont, is_bin, is_int, lp_tensor], dim=1)

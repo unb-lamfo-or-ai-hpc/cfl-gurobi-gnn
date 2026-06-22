@@ -464,8 +464,8 @@ def main():
     for i, (category, file_path) in enumerate(file_paths, 1):
         print(f"\n[{i}/{len(file_paths)}] Categoría: {category}")
         category_out_dir = os.path.join(args.output_dir, category)
-
-        success = process_single_instance(file_path, args.output_dir, env, args.time_limit, use_existing_pickle=True)
+        success = process_single_instance(file_path, category_out_dir, env, args.time_limit, use_existing_pickle=True)
+        
         if success: success_count += 1
         else: failure_count += 1
     

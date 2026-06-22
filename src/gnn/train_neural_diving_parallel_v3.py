@@ -40,12 +40,7 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
 
         # 2. Extraemos el LP (Columna 6)
         lp_values = batch['variable'].x[:, 6]
-        
-        # 3. MÁSCARA FRACCIONAL (Ignorar los 0.0 y 1.0 claros)
-        is_fractional = (lp_values > 1e-4) & (lp_values < 1.0 - 1e-4)
-        
-        # 4. Combinamos: Solo discretas que el solver dejó ambiguas
-        target_mask = is_discrete & is_fractional
+        target_mask = is_discrete
         
         if target_mask.sum() == 0: continue
         #if binary_mask.sum() == 0: continue
@@ -106,12 +101,7 @@ def eval_loop(model, loader, loss_fn, device, args):
 
         # 2. Extraemos el LP (Columna 6)
         lp_values = batch['variable'].x[:, 6]
-        
-        # 3. MÁSCARA FRACCIONAL
-        is_fractional = (lp_values > 1e-4) & (lp_values < 1.0 - 1e-4)
-        
-        # 4. Combinamos
-        target_mask = is_discrete & is_fractional
+        target_mask = is_discrete
         
         if target_mask.sum() == 0: 
             continue

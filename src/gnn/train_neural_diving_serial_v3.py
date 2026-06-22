@@ -35,12 +35,9 @@ def train_loop(model, loader, optimizer, device, args):
         is_int = batch['variable'].x[:, 4] == 1.0
         is_discrete = is_bin | is_int
         
-        # 2. Extraemos el LP (Columna 6). ¡AHORA ES PURO DESDE EL DISCO!
+        # 2. Extraemos el LP (Columna 6).
         lp_real = batch['variable'].x[:, 6]
-        
-        # 3. MÁSCARA FRACCIONAL DIRECTA
-        is_fractional = (lp_real > 1e-4) & (lp_real < 1.0 - 1e-4)
-        target_mask = is_discrete & is_fractional
+        target_mask = is_discrete
         
         if target_mask.sum() == 0: 
             continue
@@ -100,9 +97,7 @@ def eval_loop(model, loader, device, args):
         is_discrete = is_bin | is_int
         
         lp_real = batch['variable'].x[:, 6]
-        
-        is_fractional = (lp_real > 1e-4) & (lp_real < 1.0 - 1e-4)
-        target_mask = is_discrete & is_fractional
+        target_mask = is_discrete
         
         if target_mask.sum() == 0: 
             continue
@@ -221,10 +216,8 @@ def main():
         is_int = sample['variable'].x[:, 4] == 1.0
         is_discrete = is_bin | is_int
         
-        # LP PURO DIRECTO
         lp_real = sample['variable'].x[:, 6]
-        is_fractional = (lp_real > 1e-4) & (lp_real < 1.0 - 1e-4)
-        target_mask = is_discrete & is_fractional
+        target_mask = is_discrete
         
         if target_mask.sum() > 0:
             model.fit_prenorm(
