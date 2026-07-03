@@ -1,0 +1,41 @@
+#!/bin/bash
+#SBATCH --job-name=real_gnn
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --gres=gpu:4
+#SBATCH --time=04:00:00
+#SBATCH --output=slurm_real_gnn_%j.out
+
+echo "=== Entrenamiento GNN con Dataset Real (Neural Diving con hasta 8 GPUs DDP) ==="
+EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
+cd $EXEC_DIR
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+SCRIPT_NAME="src/gnn/train_neural_diving_parallel_v3.py"
+
+# Lanzador DDP: Le indicamos que use 1 nodo y hasta 8 procesos por nodo
+# Ajuste --gres=gpu:X y --nproc_per_node=X, con el mismo número de GPUs
+
+# Opción A: El escenario ideal (Rápido y Máxima Inteligencia): 64 o 32
+
+## Ejemplo A: Entrenamiento Equilibrado Clásico
+srun torchrun --standalone --nnodes=1 --nproc_per_node=4 $SCRIPT_NAME \
+    --easy_split 30 0 0 \
+    --medium_split 15 13 2 \
+    --hard_split 0 0 5 \
+    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
+
+## Ejemplo B: El Reto OOD (Out-of-Distribution)
+#srun torchrun --standalone --nnodes=1 --nproc_per_node=4 $SCRIPT_NAME \
+#    --easy_split 30 0 0 \
+#    --medium_split 0 10 0 \
+#    --hard_split 0 0 10 \
+#    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
+
+## Opción B: Si la Opción A falla por OOM (Modo Supervivencia Extrema)
+#srun torchrun --standalone --nnodes=1 --nproc_per_node=8 $SCRIPT_NAME --hidden_dim 32 --lr 0.0001 --grad_clip 1.0 --clear_cache
+
+echo "=== Job Finalizado ==="

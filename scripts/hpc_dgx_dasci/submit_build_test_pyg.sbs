@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name=test_pyg_etl
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=30
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:0
+#SBATCH --time=01:00:00
+#SBATCH --output=slurm_test_pyg_%j.out
+
+echo "=== Iniciando Transformación PyG Multi-Tarea ==="
+EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
+cd $EXEC_DIR
+
+# Activar entorno (que ya tiene torch_geometric instalado)
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+echo -e "\n--- FASE 1: Construyendo Grafos Bipartitos (.pt) ---"
+srun python3 src/graph_transform/build_pyg_dataset_v3.py --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
+
+echo -e "\n--- FASE 2: Auditoría del Dataset ---"
+srun python3 src/graph_transform/test_pyg_dataset_v3.py --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
+
+echo -e "\n=== Job Finalizado ==="
