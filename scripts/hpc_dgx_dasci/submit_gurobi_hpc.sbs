@@ -1,0 +1,59 @@
+#!/bin/bash
+#SBATCH --job-name=gurobi_hpc
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16   # Escalabilidad multicore forzada
+#SBATCH --mem=64G
+#SBATCH --gres=gpu:0         # Gurobi tradicional no requiere GPU
+#SBATCH --time=12:00:00
+#SBATCH --output=slurm_gurobi_hpc_%j.out
+
+echo "=== Lanzando Gurobi HPC Paramétrico ==="
+EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
+cd $EXEC_DIR
+
+# 1. Configuración de Entorno
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+export GRB_LICENSE_FILE="/raid/vrcelestino/data/gurobi.lic"
+export WLSACCESSID=$(grep WLSACCESSID $GRB_LICENSE_FILE | cut -d '=' -f 2)
+export WLSSECRET=$(grep WLSSECRET $GRB_LICENSE_FILE | cut -d '=' -f 2)
+export LICENSEID=$(grep LICENSEID $GRB_LICENSE_FILE | cut -d '=' -f 2 | tr -d '"')
+
+# 2. Panel de Control de Gurobi (Modifique estos valores)
+CATEGORIA="CFL_hard_instance"
+START_IDX=0
+END_IDX=10
+TIME_LIMIT=3600
+
+# Parámetros HPC
+PRESOLVE=-1       # -1: Auto, 0: Off, 1: Conservador, 2: Agresivo
+METHOD=-1         # -1: Auto, 0: Primal, 1: Dual, 2: Barrera, 3: Concurrente
+HEURISTICS=0.05   # Fracción (0.0 a 1.0)
+MIPFOCUS=0        # 0: Auto, 1: Factibilidad, 2: Optimalidad, 3: Cota
+
+# Warm Start (Deje vacío "" si no desea usar MIP Start)
+WARM_START_FILE="data/mip_starts/CFL_hard_instance_10_gnn_start.mst"
+
+# 3. Construcción del Comando
+CMD="srun python3 src/data_transformation/gurobi_hpc_runner.py \
+    --categories $CATEGORIA \
+    --start_idx $START_IDX \
+    --end_idx $END_IDX \
+    --time_limit $TIME_LIMIT \
+    --presolve $PRESOLVE \
+    --method $METHOD \
+    --heuristics $HEURISTICS \
+    --mipfocus $MIPFOCUS"
+
+if [ -n "$WARM_START_FILE" ]; then
+    CMD="$CMD --warm_start $WARM_START_FILE"
+fi
+
+echo "Ejecutando comando:"
+echo $CMD
+
+# 4. Ejecución
+eval $CMD
+
+echo "=== Job Finalizado ==="

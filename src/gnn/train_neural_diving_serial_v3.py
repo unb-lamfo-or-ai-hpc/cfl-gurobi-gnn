@@ -14,6 +14,29 @@ from torch.utils.data import random_split, ConcatDataset
 from torch_geometric.loader import DataLoader
 import matplotlib.pyplot as plt
 
+import random
+
+def set_global_seed(seed=42):
+    """Fija todas las semillas estocásticas para garantizar reproducibilidad."""
+    # 1. Semillas de Python estándar
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    
+    # 2. Semillas de Numpy
+    np.random.seed(seed)
+    
+    # 3. Semillas de PyTorch (CPU y GPU)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    
+    # 4. Forzar determinismo en algoritmos de CuDNN (Opcional pero recomendado)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+# --- LLAMADA AL INICIO DEL SCRIPT ---
+set_global_seed(42)
+
 current_file_path = os.path.abspath(__file__)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
 sys.path.insert(0, project_root)
