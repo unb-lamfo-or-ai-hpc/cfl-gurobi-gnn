@@ -94,6 +94,7 @@ def collect_predictions(model, loader, device):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, required=True)
+    parser.add_argument('--experiment_name', type=str, default="eval", help="Nombre del exp (ej. serial, parallel)")
     parser.add_argument('--hidden_dim', type=int, default=32)
     parser.add_argument('--easy_split', type=int, nargs=3, default=[0,0,0])
     parser.add_argument('--medium_split', type=int, nargs=3, default=[0,0,0])
