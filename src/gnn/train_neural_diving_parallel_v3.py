@@ -58,8 +58,8 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
         optimizer.zero_grad()
 
         # 1. Identificamos variables discretas
-        is_bin = batch['variable'].x[:, 3] == 1.0
-        is_int = batch['variable'].x[:, 4] == 1.0
+        is_bin = batch['variable'].x[:, 4] == 1.0
+        is_int = batch['variable'].x[:, 5] == 1.0
         is_discrete = is_bin | is_int
 
         # 2. Extraemos el LP (Columna 6)
@@ -254,7 +254,7 @@ def main():
     # Prenorm
     for sample in train_loader:
         sample = sample.to(device)
-        if ((sample['variable'].x[:, 3] == 1.0) | (sample['variable'].x[:, 4] == 1.0)).sum() > 0:
+        if ((sample['variable'].x[:, 4] == 1.0) | (sample['variable'].x[:, 5] == 1.0)).sum() > 0:
             model.fit_prenorm(
                 x_var=sample['variable'].x,
                 x_cons=sample['constraint'].x,

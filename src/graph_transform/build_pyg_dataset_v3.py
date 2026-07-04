@@ -163,6 +163,11 @@ def build_heterodata_for_instance(instance_dir, global_idx_start, processed_dir)
         current_global_idx = global_idx_start
         
         for _, row in df_incumbents.iterrows():
+            # --- NUEVO: Filtro de Calidad de Incumbentes ---
+            # Solo guardamos el grafo si el MIP Gap es menor o igual al 50%
+            if float(row['mip_gap']) > 0.50:
+                continue
+            # -----------------------------------------------
             graph_data = template_data.clone()
             
             # Target (Y): El vector de solución

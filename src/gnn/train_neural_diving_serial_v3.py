@@ -116,8 +116,8 @@ def eval_loop(model, loader, device, args):
     for batch in loader:
         batch = batch.to(device)
         
-        is_bin = batch['variable'].x[:, 3] == 1.0
-        is_int = batch['variable'].x[:, 4] == 1.0
+        is_bin = batch['variable'].x[:, 4] == 1.0
+        is_int = batch['variable'].x[:, 5] == 1.0
         is_discrete = is_bin | is_int
         
         lp_real = batch['variable'].x[:, 6]
@@ -236,8 +236,8 @@ def main():
     print("\nAjustando capas Prenorm...")
     for sample in train_loader:
         sample = sample.to(device)
-        is_bin = sample['variable'].x[:, 3] == 1.0
-        is_int = sample['variable'].x[:, 4] == 1.0
+        is_bin = sample['variable'].x[:, 4] == 1.0
+        is_int = sample['variable'].x[:, 5] == 1.0
         is_discrete = is_bin | is_int
         
         lp_real = sample['variable'].x[:, 6]
@@ -259,6 +259,12 @@ def main():
     print("-" * 115)
     print(f"{'Epoch':<6} | {'T.Loss':<8} | {'V.Loss':<8} | {'Acc (%)':<8} | {'TP':<5} {'TN':<5} {'FP':<4} {'FN':<4} | {'Vars/Grf':<8} | {'Avg. Gap':<8}")
     print("-" * 115)
+
+    # --- NUEVO: Inicialización de variables para la gráfica y log ---
+    hist_train_loss, hist_val_loss = [], []
+    log_file = open(os.path.join(output_dir, "training_log_serial.txt"), "w")
+    log_file.write("Epoch,Train_Loss,Val_Loss,Val_Accuracy\n")
+    # ---------------------------------------------------------------
     
     for epoch in range(epochs):
         train_loss, _ = train_loop(model, train_loader, optimizer, device, args)
@@ -275,6 +281,32 @@ def main():
             print(log_str)
         else:
             print(f"Epoch {epoch+1:<6} | Train Loss: {train_loss:.4f}")
+
+        # --- NUEVO: Generación de Gráfica y escritura de Log ---
+        hist_train_loss.append(train_loss)
+        if val_data:
+            hist_val_loss.append(val_loss)
+            log_file.write(f"{epoch+1},{train_loss},{val_loss},{val_acc*100}\n")
+        else:
+            hist_val_loss.append(train_loss)
+            log_file.write(f"{epoch+1},{train_loss},inf,0.0\n")
+        log_file.flush()
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_xlabel('Epochs')
+        ax.set_ylabel('BCE Loss')
+        ax.plot(range(1, len(hist_train_loss) + 1), hist_train_loss, color='tab:red', label='Train Loss')
+        if val_data:
+            ax.plot(range(1, len(hist_val_loss) + 1), hist_val_loss, color='tab:orange', linestyle='dashed', label='Validation Loss')
+        ax.legend()
+        plt.title('Curva de Aprendizaje - Neural Diving (Serial)')
+        fig.tight_layout()
+        plt.savefig(os.path.join(output_dir, "loss_curve_split_serial.png"))
+        plt.close(fig)
+        # -------------------------------------------------------
+
+    # --- NUEVO: Cerrar archivo al terminar las épocas ---
+    log_file.close()
 
 if __name__ == "__main__":
     main()
