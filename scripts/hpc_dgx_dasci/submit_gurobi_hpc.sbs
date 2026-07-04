@@ -36,7 +36,7 @@ MIPFOCUS=0        # 0: Auto, 1: Factibilidad, 2: Optimalidad, 3: Cota
 WARM_START_FILE="data/mip_starts/CFL_hard_instance_10_gnn_start.mst"
 
 # 3. Construcción del Comando
-CMD="srun python3 src/data_transformation/gurobi_hpc_runner.py \
+CMD="srun python3 src/gurobi_solver/gurobi_hpc_runner.py \
     --categories $CATEGORIA \
     --start_idx $START_IDX \
     --end_idx $END_IDX \
