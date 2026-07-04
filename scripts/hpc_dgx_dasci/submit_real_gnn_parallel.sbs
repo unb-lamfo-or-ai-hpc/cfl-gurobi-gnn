@@ -30,9 +30,9 @@ srun torchrun --standalone --nnodes=1 --nproc_per_node=4 $SCRIPT_NAME \
 
 ## Ejemplo B: El Reto OOD (Out-of-Distribution)
 #srun torchrun --standalone --nnodes=1 --nproc_per_node=4 $SCRIPT_NAME \
-#    --easy_split 30 0 0 \
-#    --medium_split 0 10 0 \
-#    --hard_split 0 0 10 \
+#    --easy_split 500 0 0 \
+#    --medium_split 400 100 0 \
+#    --hard_split 150 125 225 \
 #    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
 
 ## Opción B: Si la Opción A falla por OOM (Modo Supervivencia Extrema)

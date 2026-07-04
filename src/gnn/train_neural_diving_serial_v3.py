@@ -15,6 +15,7 @@ from torch_geometric.loader import DataLoader
 import matplotlib.pyplot as plt
 
 import random
+import numpy as np
 
 def set_global_seed(seed=42):
     """Fija todas las semillas estocásticas para garantizar reproducibilidad."""
@@ -54,8 +55,8 @@ def train_loop(model, loader, optimizer, device, args):
         optimizer.zero_grad()
         
         # 1. Identificamos variables discretas
-        is_bin = batch['variable'].x[:, 3] == 1.0
-        is_int = batch['variable'].x[:, 4] == 1.0
+        is_bin = batch['variable'].x[:, 4] == 1.0
+        is_int = batch['variable'].x[:, 5] == 1.0
         is_discrete = is_bin | is_int
         
         # 2. Extraemos el LP (Columna 6).

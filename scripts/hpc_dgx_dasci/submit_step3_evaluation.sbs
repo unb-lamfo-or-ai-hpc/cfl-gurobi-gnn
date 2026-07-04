@@ -22,6 +22,9 @@ srun python3 src/gnn/evaluate_model.py \
     --model_path $MODELO \
     --easy_split 30 0 0 \
     --medium_split 15 13 2 \
-    --hard_split 0 0 5
+    --hard_split 0 0 5 \
+#    --easy_split 500 0 0 \
+#    --medium_split 400 100 0 \
+#    --hard_split 150 125 225
 
 echo "=== Job Finalizado ==="

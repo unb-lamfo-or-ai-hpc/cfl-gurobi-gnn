@@ -68,8 +68,8 @@ def collect_predictions(model, loader, device):
     for batch in loader:
         batch = batch.to(device)
         
-        is_bin = batch['variable'].x[:, 3] == 1.0
-        is_int = batch['variable'].x[:, 4] == 1.0
+        is_bin = batch['variable'].x[:, 4] == 1.0
+        is_int = batch['variable'].x[:, 5] == 1.0
         target_mask = is_bin | is_int
         
         if target_mask.sum() == 0: 
@@ -161,8 +161,8 @@ def main():
     
     plt.figure(figsize=(7, 5))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
-                xticklabels=['Predicción: Cerrar', 'Predicción: Abrir'],
-                yticklabels=['Real: Cerrar', 'Real: Abrir'],
+                xticklabels=['Predicción: Inactivo 0', 'Predicción: Activo 1'],
+                yticklabels=['Real: Inactivo 0', 'Real: Activo 1'],
                 annot_kws={"size": 14})
     plt.title('Matriz de Confusión (Test Set)', fontsize=16, pad=15)
     plt.tight_layout()

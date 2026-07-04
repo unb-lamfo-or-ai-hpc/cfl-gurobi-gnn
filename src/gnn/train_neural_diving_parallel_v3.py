@@ -19,6 +19,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 
 import random
+import numpy as np
 
 def set_global_seed(seed=42):
     """Fija todas las semillas estocásticas para garantizar reproducibilidad."""
@@ -118,8 +119,8 @@ def eval_loop(model, loader, loss_fn, device, args):
         batch = batch.to(device)
         
         # 1. Identificamos variables discretas
-        is_bin = batch['variable'].x[:, 3] == 1.0
-        is_int = batch['variable'].x[:, 4] == 1.0
+        is_bin = batch['variable'].x[:, 4] == 1.0
+        is_int = batch['variable'].x[:, 5] == 1.0
         is_discrete = is_bin | is_int
 
         # 2. Extraemos el LP (Columna 6)
