@@ -79,18 +79,7 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
             edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
             
-        #targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
         targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)        
-
-        # --- Opcional: PESOS DINÁMICOS PARA DESBALANCE DE CLASES ---
-        # Descomentar estas líneas si la red predice todo '0'
-        # num_zeros = (targets == 0).sum().item()
-        # num_ones = (targets == 1).sum().item()
-        # peso_clase_1 = num_zeros / max(1.0, float(num_ones))
-        # pos_weight = torch.tensor([peso_clase_1], device=device)
-        # dynamic_loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-        # loss = dynamic_loss_fn(preds, targets)
-        # -----------------------------------------------------------   
 
         loss = loss_fn(preds, targets)
         loss.backward()
@@ -152,19 +141,7 @@ def eval_loop(model, loader, loss_fn, device, args):
             edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
         
-        #targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
         targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
-
-        # --- Opcional: PESOS DINÁMICOS PARA DESBALANCE DE CLASES ---
-        # Descomentar estas líneas si la red predice todo '0'
-        # num_zeros = (targets == 0).sum().item()
-        # num_ones = (targets == 1).sum().item()
-        # peso_clase_1 = num_zeros / max(1.0, float(num_ones))
-        # pos_weight = torch.tensor([peso_clase_1], device=device)
-        # dynamic_loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-        # loss = dynamic_loss_fn(preds, targets)
-        # -----------------------------------------------------------
-
 
         loss = loss_fn(preds, targets)
         
@@ -290,7 +267,14 @@ def main():
 
     model = DDP(model, device_ids=[local_rank])
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    loss_fn = nn.BCEWithLogitsLoss()
+    #loss_fn = nn.BCEWithLogitsLoss()
+
+    # --- CORRECCIÓN: Peso estático para evitar explosión de gradientes ---
+    # Le decimos a la red que acertar un '1' (abrir fábrica) 
+    # es 50 veces más importante que acertar un '0'
+    pos_weight = torch.tensor([50.0], device=device)
+    loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+    # --------------------------------------------------------------------
     
     epochs = 100
     best_val_loss = float('inf')
