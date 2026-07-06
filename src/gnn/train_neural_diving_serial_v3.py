@@ -78,15 +78,7 @@ def train_loop(model, loader, optimizer, device, args):
             
         # Target (Y) es la solución de la incumbente específica
         targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
-        
-        ## PESOS DINÁMICOS: Penalizar duramente si falla en adivinar un "1"
-        #num_zeros = (targets == 0).sum().item()
-        #num_ones = (targets == 1).sum().item()
-        #peso_clase_1 = num_zeros / max(1.0, float(num_ones))
-        #pos_weight = torch.tensor([peso_clase_1], device=device)
-        #loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-        
-        # --- CORRECCIÓN: Peso estático para evitar explosión de gradientes ---
+              
         # Le decimos a la red que acertar un '1' (abrir fábrica) 
         # es 50 veces más importante que acertar un '0'
         pos_weight = torch.tensor([50.0], device=device)
@@ -150,13 +142,6 @@ def eval_loop(model, loader, device, args):
         
         targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
         
-        #num_zeros = (targets == 0).sum().item()
-        #num_ones = (targets == 1).sum().item()
-        #peso_clase_1 = num_zeros / max(1.0, float(num_ones))
-        #pos_weight = torch.tensor([peso_clase_1], device=device)
-        #loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-
-        # --- CORRECCIÓN: Peso estático para evitar explosión de gradientes ---
         # Le decimos a la red que acertar un '1' (abrir fábrica) 
         # es 50 veces más importante que acertar un '0'
         pos_weight = torch.tensor([50.0], device=device)

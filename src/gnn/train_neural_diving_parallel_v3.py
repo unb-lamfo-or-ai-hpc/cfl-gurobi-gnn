@@ -269,7 +269,6 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     #loss_fn = nn.BCEWithLogitsLoss()
 
-    # --- CORRECCIÓN: Peso estático para evitar explosión de gradientes ---
     # Le decimos a la red que acertar un '1' (abrir fábrica) 
     # es 50 veces más importante que acertar un '0'
     pos_weight = torch.tensor([50.0], device=device)
