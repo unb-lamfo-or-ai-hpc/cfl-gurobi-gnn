@@ -277,6 +277,11 @@ def main():
     
     epochs = 100
     best_val_loss = float('inf')
+
+    # --- NUEVO: Configuración de Early Stopping ---
+    patience = 10  # Número de épocas a tolerar sin mejoras
+    patience_counter = 0
+    # ----------------------------------------------
     
     if is_master:
         hist_train_loss, hist_val_loss = [], []
@@ -303,8 +308,11 @@ def main():
             
             if val_loss < best_val_loss and val_data:
                 best_val_loss = val_loss
+                patience_counter = 0  # Reseteamos el contador porque mejoró
                 torch.save(model.module.state_dict(), os.path.join(output_dir, "neural_diving_best_parallel.pt"))
                 log_str += "  --> ¡Mejor Val Loss guardado!"
+            else:
+                patience_counter += 1 # Sumamos una época sin mejora
                 
             print(log_str)
             log_file.write(f"{epoch+1},{train_loss},{val_loss},{val_acc*100}\n")
@@ -321,6 +329,13 @@ def main():
             fig.tight_layout()
             plt.savefig(os.path.join(output_dir, "loss_curve_split_parallel.png"))
             plt.close(fig)
+
+            # --- NUEVO: Freno de Early Stopping ---
+            if patience_counter >= patience:
+                print(f"\n[Early Stopping] El Validation Loss no mejoró en {patience} épocas consecutivas.")
+                print("Deteniendo el entrenamiento para ahorrar recursos.")
+                break
+            # --------------------------------------
 
     if is_master:
         torch.save(model.module.state_dict(), os.path.join(output_dir, "neural_diving_final_parallel.pt"))

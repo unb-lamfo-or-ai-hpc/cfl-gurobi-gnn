@@ -255,6 +255,11 @@ def main():
     epochs = 100
     best_val_loss = float('inf')
 
+    # --- NUEVO: Configuración de Early Stopping ---
+    patience = 10  # Número de épocas a tolerar sin mejoras
+    patience_counter = 0
+    # ----------------------------------------------
+
     print("-" * 115)
     print(f"{'Epoch':<6} | {'T.Loss':<8} | {'V.Loss':<8} | {'Acc (%)':<8} | {'TP':<5} {'TN':<5} {'FP':<4} {'FN':<4} | {'Vars/Grf':<8} | {'Avg. Gap':<8}")
     print("-" * 115)
@@ -275,8 +280,11 @@ def main():
             
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
+                patience_counter = 0  # Reseteamos el contador porque mejoró
                 torch.save(model.state_dict(), os.path.join(output_dir, "neural_diving_best_serial.pt"))
                 log_str += " -> Best!"
+            else:
+                patience_counter += 1 # Sumamos una época sin mejora
             print(log_str)
         else:
             print(f"Epoch {epoch+1:<6} | Train Loss: {train_loss:.4f}")
@@ -302,6 +310,13 @@ def main():
         fig.tight_layout()
         plt.savefig(os.path.join(output_dir, "loss_curve_split_serial.png"))
         plt.close(fig)
+
+        # --- NUEVO: Freno de Early Stopping ---
+        if patience_counter >= patience:
+            print(f"\n[Early Stopping] El Validation Loss no mejoró en {patience} épocas consecutivas.")
+            print("Deteniendo el entrenamiento para ahorrar recursos.")
+            break
+        # --------------------------------------
         # -------------------------------------------------------
 
     # --- NUEVO: Cerrar archivo al terminar las épocas ---
