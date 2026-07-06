@@ -82,6 +82,16 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
         #targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
         targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)        
 
+        # --- Opcional: PESOS DINÁMICOS PARA DESBALANCE DE CLASES ---
+        # Descomentar estas líneas si la red predice todo '0'
+        # num_zeros = (targets == 0).sum().item()
+        # num_ones = (targets == 1).sum().item()
+        # peso_clase_1 = num_zeros / max(1.0, float(num_ones))
+        # pos_weight = torch.tensor([peso_clase_1], device=device)
+        # dynamic_loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+        # loss = dynamic_loss_fn(preds, targets)
+        # -----------------------------------------------------------   
+
         loss = loss_fn(preds, targets)
         loss.backward()
         
@@ -144,6 +154,17 @@ def eval_loop(model, loader, loss_fn, device, args):
         
         #targets = torch.clamp(batch['variable'].y[binary_mask], min=0.0, max=1.0)
         targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
+
+        # --- Opcional: PESOS DINÁMICOS PARA DESBALANCE DE CLASES ---
+        # Descomentar estas líneas si la red predice todo '0'
+        # num_zeros = (targets == 0).sum().item()
+        # num_ones = (targets == 1).sum().item()
+        # peso_clase_1 = num_zeros / max(1.0, float(num_ones))
+        # pos_weight = torch.tensor([peso_clase_1], device=device)
+        # dynamic_loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+        # loss = dynamic_loss_fn(preds, targets)
+        # -----------------------------------------------------------
+
 
         loss = loss_fn(preds, targets)
         
