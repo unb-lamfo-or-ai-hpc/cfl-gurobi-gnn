@@ -19,18 +19,18 @@ SCRIPT_NAME="src/gnn/train_neural_diving_serial_v3.py"
 # Opción A: El escenario ideal (Rápido y Máxima Inteligencia):
 
 ## Ejemplo A: Entrenamiento Equilibrado Clásico
-srun python $SCRIPT_NAME \
-    --easy_split 30 0 0 \
-    --medium_split 15 13 2 \
-    --hard_split 0 0 5 \
-    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
-
-## Ejemplo B: El Reto OOD (Out-of-Distribution)
 #srun python $SCRIPT_NAME \
-#    --easy_split 500 0 0 \
-#    --medium_split 400 100 0 \
-#    --hard_split 150 125 225 \
+#    --easy_split 30 0 0 \
+#    --medium_split 15 13 2 \
+#    --hard_split 0 0 5 \
 #    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
+
+# Ejemplo B: El Reto OOD (Out-of-Distribution)
+srun python $SCRIPT_NAME \
+    --easy_split 430 0 0 \
+    --medium_split 300 99 0 \
+    --hard_split 130 85 184 \
+    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
 
 ## Opción B: Si la Opción A falla por OOM (Modo Supervivencia Extrema)
 #srun python $SCRIPT_NAME \
