@@ -11,20 +11,25 @@ import argparse
 import torch
 import importlib.util
 
-# Robust path resolution to locate the project root dynamically
-def find_project_root(start: str) -> str:
-    current = start
-    for _ in range(10):  # Max 10 levels up
-        if any(os.path.exists(os.path.join(current, marker))
-               for marker in ('pyproject.toml', 'setup.py', 'setup.cfg')):
-            return current
-        parent = os.path.dirname(current)
-        if parent == current:
-            break
-        current = parent
-    return start
+## Robust path resolution to locate the project root dynamically
+#def find_project_root(start: str) -> str:
+#    current = start
+#    for _ in range(10):  # Max 10 levels up
+#        if any(os.path.exists(os.path.join(current, marker))
+#               for marker in ('pyproject.toml', 'setup.py', 'setup.cfg')):
+#            return current
+#        parent = os.path.dirname(current)
+#        if parent == current:
+#            break
+#        current = parent
+#    return start
 
-project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
+#project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.insert(0, project_root)
+
+# Alternate path reolution for src.graph_transform.milp_dataset
+current_file_path = os.path.abspath(__file__)
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
 sys.path.insert(0, project_root)
 
 from src.graph_transform.milp_dataset import NeuralDivingDataset

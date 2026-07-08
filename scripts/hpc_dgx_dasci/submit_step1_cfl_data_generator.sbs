@@ -23,8 +23,8 @@ conda activate tfm_env
 echo "=== Ejecutando Extracción Avanzada de Gurobi ==="
 
 CATEGORIA="CFL_hard_instance"
-INICIO=0
-FIN=1
+INICIO=1
+FIN=15
 TIEMPO_GUROBI=3600
 
 echo "Lanzando lote controlado para: ${CATEGORIA} del índice ${INICIO} al ${FIN}"
