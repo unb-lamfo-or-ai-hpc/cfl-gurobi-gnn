@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=gnn_milp_data
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=30
-#SBATCH --mem=64G
+#SBATCH --cpus-per-task=8 # reduced from 30 to save memory
+#SBATCH --mem=128G        # expanded from 64G to accommodate larger datasets
 #SBATCH --gres=gpu:0
 #SBATCH --time=08:00:00
 #SBATCH --output=slurm_cfl_data_%j.out
@@ -23,8 +23,8 @@ conda activate tfm_env
 echo "=== Ejecutando Extracción Avanzada de Gurobi ==="
 
 CATEGORIA="CFL_hard_instance"
-INICIO=15
-FIN=30
+INICIO=0
+FIN=1
 TIEMPO_GUROBI=3600
 
 echo "Lanzando lote controlado para: ${CATEGORIA} del índice ${INICIO} al ${FIN}"
