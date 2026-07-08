@@ -1,0 +1,17 @@
+{
+  "instance": "CFL_hard_instance_0",
+  "status": 2,
+  "status_name": "OPTIMAL",
+  "runtime": 757.2450122833252,
+  "mip_gap": 0.0,
+  "node_count": 63.0,
+  "num_solutions_found": 20,
+  "num_incumbents_collected": 26,
+  "num_nodes_collected": 65,
+  "pool_solutions_found": 20,
+  "presolve_setting": 0,
+  "complexity_class": "easy",
+  "probe_node_count": 0,
+  "objective_value": 271573.9352678627,
+  "is_optimal": true
+}
