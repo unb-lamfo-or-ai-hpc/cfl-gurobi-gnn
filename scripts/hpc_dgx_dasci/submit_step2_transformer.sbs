@@ -1,0 +1,50 @@
+#!/bin/bash
+#SBATCH --job-name=raw_lp_audit
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:0
+#SBATCH --time=02:00:00
+#SBATCH --output=slurm_transformer_%j.out
+
+echo "=== Initializing Raw LP Metadata Audit (Step 2) ==="
+EXEC_DIR="/raid/vrcelestino/data"
+cd $EXEC_DIR
+
+# Load Gurobi credentials (gp.Env requires a license even just to read the model)
+export GRB_LICENSE_FILE="${EXEC_DIR}/gurobi.lic"
+export WLSACCESSID=$(grep WLSACCESSID $GRB_LICENSE_FILE | cut -d '=' -f 2)
+export WLSSECRET=$(grep WLSSECRET $GRB_LICENSE_FILE | cut -d '=' -f 2)
+export LICENSEID=$(grep LICENSEID $GRB_LICENSE_FILE | cut -d '=' -f 2 | tr -d '"')
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+echo "=== Running Transformer Audit ==="
+
+# Define your base paths
+INPUT_BASE="/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL"
+OUTPUT_BASE="/raid/vrcelestino/data/cfl-gurobi-gnn/data/metadata"
+
+# Ensure the output directory exists
+mkdir -p $OUTPUT_BASE
+
+# Array of categories to iterate through
+CATEGORIES=("CFL_easy_instance" "CFL_medium_instance" "CFL_hard_instance")
+
+for CATEGORY in "${CATEGORIES[@]}"; do
+    echo "---------------------------------------------------"
+    echo "Processing category: $CATEGORY"
+    
+    INPUT_DIR="${INPUT_BASE}/${CATEGORY}/LP"
+    OUTPUT_FILE="${OUTPUT_BASE}/${CATEGORY}_metadata.parquet"
+    
+    # Execute the python script for the current category
+    # (Adjust the path to transformer_v2.py if it is located inside a specific folder like src/)
+    srun python3 cfl-gurobi-gnn/transformer_v2.py \
+        --input_dir $INPUT_DIR \
+        --output_file $OUTPUT_FILE
+done
+
+echo "---------------------------------------------------"
+echo "=== Job Completed ==="
