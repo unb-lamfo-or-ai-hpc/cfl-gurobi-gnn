@@ -27,7 +27,7 @@ echo "Evaluando modelo: $MODELO_PATH"
 echo "Guardando resultados en: data/analysis/$EXPERIMENT_NAME"
 
 # Ejecutamos con los mismos splits del último entrenamiento (Test > 0)
-srun python3 src/gnn/evaluate_model.py \
+srun python3 src/gnn/evaluate_model_v2.py \
     --model_path $MODELO_PATH \
     --experiment_name $EXPERIMENT_NAME \
     --easy_split 30 0 0 \

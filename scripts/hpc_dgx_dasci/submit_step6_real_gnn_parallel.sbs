@@ -14,7 +14,7 @@ cd $EXEC_DIR
 eval "$(conda shell.bash hook)"
 conda activate tfm_env 
 
-SCRIPT_NAME="src/gnn/train_neural_diving_parallel_v3.py"
+SCRIPT_NAME="src/gnn/train_neural_diving_parallel_v4.py"
 
 # Lanzador DDP: Le indicamos que use 1 nodo y hasta 8 procesos por nodo
 # Ajuste --gres=gpu:X y --nproc_per_node=X, con el mismo número de GPUs
