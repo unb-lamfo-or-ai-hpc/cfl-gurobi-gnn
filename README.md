@@ -224,6 +224,34 @@ All scripts read these variables through `gp.Env(empty=True)`.
 > This pipeline uses `v.PoolNX` and `model.Params.SolutionNumber` as the canonical
 > Gurobi 13.0 solution pool API.  The deprecated `v.Xn` attribute is not used.
 
+## Getting Started
+
+### Prerequisites
+* Python 3.8+
+* Gurobi Optimizer with a valid license
+* PyTorch and PyTorch Geometric (for the GNN)
+
+### Installation
+Clone the repository:
+```bash
+git clone https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn.git
+cd cfl-gurobi-gnn
+```
+
+Install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+---
+
+### Data Download
+Due to the very large size of the dataset, the raw data can be downloaded directly from [MILPBench](https://github.com/thuiar/MILPBench), specifically using the following links:
+* **CFL_easy**: https://drive.google.com/file/d/1z6oNG1ja6CwlsRYViXIzBj0j8Ch6sxdt/view?usp=sharing
+* **CFL_medium**: https://drive.google.com/file/d/181Evo5Q6otZRq6EBeQXFcCYlC4kM8zaH/view?usp=sharing
+* **CFL_hard**: https://drive.google.com/file/d/13NS9YTTyNsiV6Dth3qsQ7lWWNQs4Pek0/view?usp=sharing
+
+After downloading, please extract and place the raw `.lp.gz` files into the `data/raw/MILPBench/CFL/` directory. It is also necessary to add the `.pickle.gz` files to the directory, which should contain folders for each instance `CFL_easy_instance_0` ... `CFL_hard_instance_29`.
+
 ---
 
 ## Repository Policy: Code vs. Data

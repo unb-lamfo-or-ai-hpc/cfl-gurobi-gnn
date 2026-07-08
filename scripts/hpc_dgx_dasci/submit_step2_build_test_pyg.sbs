@@ -16,9 +16,9 @@ eval "$(conda shell.bash hook)"
 conda activate tfm_env 
 
 echo -e "\n--- FASE 1: Construyendo Grafos Bipartitos (.pt) ---"
-srun python3 src/graph_transform/build_pyg_dataset_v4.py --categories CFL_medium_instance #CFL_easy_instance #CFL_hard_instance
+srun python3 src/graph_transform/build_pyg_dataset_v4.py --categories CFL_easy_instance CFL_medium_instance #CFL_hard_instance
 
 echo -e "\n--- FASE 2: Auditoría del Dataset ---"
-srun python3 src/graph_transform/test_pyg_dataset_v4.py --categories CFL_medium_instance #CFL_easy_instance #CFL_hard_instance
+srun python3 src/graph_transform/test_pyg_dataset_v4.py --categories CFL_easy_instance CFL_medium_instance #CFL_hard_instance
 
 echo -e "\n=== Job Finalizado ==="
