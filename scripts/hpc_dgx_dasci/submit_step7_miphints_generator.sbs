@@ -19,7 +19,7 @@ LP_FILE="data/raw/MILPBench/CFL/CFL_hard_instance/LP/CFL_hard_instance_10.lp.gz"
 MODEL_PATH="data/real_train_output/neural_diving_best_serial.pt"
 CONFIDENCE=0.90
 
-srun python3 src/gnn/generate_mip_start.py \
+srun python3 src/gurobi_solver/generate_mip_hints.py \
     --lp_file $LP_FILE \
     --model_path $MODEL_PATH \
     --confidence $CONFIDENCE
