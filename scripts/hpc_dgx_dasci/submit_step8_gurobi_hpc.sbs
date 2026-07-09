@@ -1,17 +1,17 @@
 #!/bin/bash
-#SBATCH --job-name=gurobi_hpc
+#SBATCH --job-name=gurobi_hpc_v2
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16   # Escalabilidad multicore forzada
-#SBATCH --mem=64G
-#SBATCH --gres=gpu:0         # Gurobi tradicional no requiere GPU
+#SBATCH --cpus-per-task=8     # Reduced from 16 to match v5 generator threading
+#SBATCH --mem=128G            # Increased from 64G for hard instances
+#SBATCH --gres=gpu:0
 #SBATCH --time=12:00:00
-#SBATCH --output=slurm_gurobi_hpc_%j.out
+#SBATCH --output=slurm_gurobi_hpc_v2_%j.out
 
-echo "=== Lanzando Gurobi HPC Paramétrico ==="
+echo "=== Launching Gurobi HPC Runner v2 ==="
 EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
 cd $EXEC_DIR
 
-# 1. Configuración de Entorno
+# 1. Environment Setup
 eval "$(conda shell.bash hook)"
 conda activate tfm_env 
 
@@ -20,40 +20,54 @@ export WLSACCESSID=$(grep WLSACCESSID $GRB_LICENSE_FILE | cut -d '=' -f 2)
 export WLSSECRET=$(grep WLSSECRET $GRB_LICENSE_FILE | cut -d '=' -f 2)
 export LICENSEID=$(grep LICENSEID $GRB_LICENSE_FILE | cut -d '=' -f 2 | tr -d '"')
 
-# 2. Panel de Control de Gurobi (Modifique estos valores)
+# 2. Control Panel (v2 Interface)
 CATEGORIA="CFL_hard_instance"
 START_IDX=0
 END_IDX=10
 TIME_LIMIT=3600
 
-# Parámetros HPC
-PRESOLVE=-1       # -1: Auto, 0: Off, 1: Conservador, 2: Agresivo
-METHOD=-1         # -1: Auto, 0: Primal, 1: Dual, 2: Barrera, 3: Concurrente
-HEURISTICS=0.05   # Fracción (0.0 a 1.0)
-MIPFOCUS=0        # 0: Auto, 1: Factibilidad, 2: Optimalidad, 3: Cota
+# Gurobi tuning parameters (unchanged from v1)
+METHOD=-1         # -1: Auto, 0: Primal, 1: Dual, 2: Barrier, 3: Concurrent
+HEURISTICS=0.05   # Fraction (0.0 to 1.0)
+MIPFOCUS=0        # 0: Auto, 1: Feasibility, 2: Optimality, 3: Bound
 
-# Warm Start (Deje vacío "" si no desea usar MIP Start)
-WARM_START_FILE="data/mip_starts/CFL_hard_instance_10_gnn_start.mst"
+# Adaptive presolve parameters (v2 only)
+PROBE_TIME=30               # Probe solve time limit (seconds)
+COMPLEXITY_THRESHOLD=500    # Node count threshold: easy vs. hard
 
-# 3. Construcción del Comando
+# Warm-start configuration (v2: directory-based lookup)
+# Leave empty "" to run without hints (baseline benchmark)
+HINT_DIR="data/hints"       # Directory containing *.hnt files
+                             # Runner auto-matches by instance name
+
+# Pool diversity parameters (v2 only, for data generation mode)
+POOL_SIZE=20
+POOL_GAP=0.10
+
+# 3. Build Command
 CMD="srun python3 src/gurobi_solver/gurobi_hpc_runner_v2.py \
     --categories $CATEGORIA \
     --start_idx $START_IDX \
     --end_idx $END_IDX \
     --time_limit $TIME_LIMIT \
-    --presolve $PRESOLVE \
+    --threads 8 \
     --method $METHOD \
     --heuristics $HEURISTICS \
-    --mipfocus $MIPFOCUS"
+    --mipfocus $MIPFOCUS \
+    --probe_time $PROBE_TIME \
+    --complexity_threshold $COMPLEXITY_THRESHOLD \
+    --pool_size $POOL_SIZE \
+    --pool_gap $POOL_GAP"
 
-if [ -n "$WARM_START_FILE" ]; then
-    CMD="$CMD --warm_start $WARM_START_FILE"
+# Add hint directory if specified
+if [ -n "$HINT_DIR" ]; then
+    CMD="$CMD --hint_dir $HINT_DIR"
 fi
 
-echo "Ejecutando comando:"
+echo "Executing command:"
 echo $CMD
 
-# 4. Ejecución
+# 4. Execute
 eval $CMD
 
-echo "=== Job Finalizado ==="
+echo "=== Job Completed ==="
