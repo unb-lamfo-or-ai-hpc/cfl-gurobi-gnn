@@ -84,9 +84,26 @@ def main():
             'Gap 95% CI': f"± {g_ci*100:.3f}%"
         })
         
+    #report_df = pd.DataFrame(report_rows)
+    #report_df.to_csv("dataset_statistics_report_v2.csv", index=False)
+    #print("Report saved successfully to dataset_statistics_report_v2.csv")
+
     report_df = pd.DataFrame(report_rows)
-    report_df.to_csv("dataset_statistics_report_v2.csv", index=False)
-    print("Report saved successfully to dataset_statistics_report_v2.csv")
+    
+    # Mostrar resultados en consola de forma limpia
+    print("\n" + "="*120)
+    print(" REPORTE ESTADÍSTICO DEL DATASET (LPs Intermedios)")
+    print("="*120)
+    print(report_df.to_string(index=False))
+    print("="*120)
+    
+    # Guardar en disco para incluir en el paper
+    output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis"
+    os.makedirs(output_dir, exist_ok=True)
+    
+    out_csv = os.path.join(output_dir, "dataset_statistics_report.csv")
+    report_df.to_csv(out_csv, index=False)
+    print(f"\nReport saved successfully to: {out_csv}")
 
 if __name__ == "__main__":
     main()

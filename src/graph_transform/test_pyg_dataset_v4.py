@@ -32,7 +32,7 @@ current_file_path = os.path.abspath(__file__)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
 sys.path.insert(0, project_root)
 
-from src.graph_transform.milp_dataset import NeuralDivingDataset
+from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset
 
 def audit_dataset(dataset, category_name):
     """

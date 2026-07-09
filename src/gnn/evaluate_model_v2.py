@@ -67,30 +67,34 @@ set_global_seed(42)
 # ---------------------------------------------------------------------------
 # Robust project-root resolution (replaces fragile 3-level dirname chain)
 # ---------------------------------------------------------------------------
-
-def find_project_root(start: str) -> str:
-    """Walk up the directory tree until a project-marker file is found."""
-    current = os.path.abspath(start)
-    for _ in range(10):
-        for marker in ("pyproject.toml", "setup.py", "setup.cfg", ".git"):
-            if os.path.exists(os.path.join(current, marker)):
-                return current
-        parent = os.path.dirname(current)
-        if parent == current:
-            break
-        current = parent
+#def find_project_root(start: str) -> str:
+    #"""Walk up the directory tree until a project-marker file is found."""
+    #current = os.path.abspath(start)
+    #for _ in range(10):
+    #    for marker in ("pyproject.toml", "setup.py", "setup.cfg", ".git"):
+    #        if os.path.exists(os.path.join(current, marker)):
+    #            return current
+    #    parent = os.path.dirname(current)
+    #    if parent == current:
+    #        break
+    #    current = parent
     # Fallback: three levels above this file (original heuristic)
-    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    #return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+#project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.insert(0, project_root)
 
-project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
+# Alternate path reolution for src.graph_transform.milp_dataset
+current_file_path = os.path.abspath(__file__)
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
 sys.path.insert(0, project_root)
+
 
 # ---------------------------------------------------------------------------
 # Project imports  (resolved after sys.path is set)
 # ---------------------------------------------------------------------------
 from src.gnn.models.gasse import GasseGNN              # noqa: E402
-from src.graph_transform.milp_dataset import NeuralDivingDataset  # noqa: E402
+from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Logging

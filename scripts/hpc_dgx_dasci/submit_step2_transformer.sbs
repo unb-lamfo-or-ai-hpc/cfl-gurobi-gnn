@@ -41,7 +41,7 @@ for CATEGORY in "${CATEGORIES[@]}"; do
     
     # Execute the python script for the current category
     # (Adjust the path to transformer_v2.py if it is located inside a specific folder like src/)
-    srun python3 cfl-gurobi-gnn/transformer_v2.py \
+    srun python3 cfl-gurobi-gnn/src/data_transformation/transformer_v2.py \
         --input_dir $INPUT_DIR \
         --output_file $OUTPUT_FILE
 done

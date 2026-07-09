@@ -67,21 +67,25 @@ set_global_seed(42)
 # ---------------------------------------------------------------------------
 # Project-root detection (robust, no hardcoded directory depth)
 # ---------------------------------------------------------------------------
-def find_project_root(start: str) -> str:
-    """Walk up from *start* until a project marker file is found."""
-    current = os.path.abspath(start)
-    for _ in range(10):
-        markers = ('pyproject.toml', 'setup.py', 'setup.cfg', '.git')
-        if any(os.path.exists(os.path.join(current, m)) for m in markers):
-            return current
-        parent = os.path.dirname(current)
-        if parent == current:
-            break
-        current = parent
-    raise RuntimeError(f"Could not locate project root from: {start}")
+#def find_project_root(start: str) -> str:
+    #"""Walk up from *start* until a project marker file is found."""
+    #current = os.path.abspath(start)
+    #for _ in range(10):
+    #    markers = ('pyproject.toml', 'setup.py', 'setup.cfg', '.git')
+    #    if any(os.path.exists(os.path.join(current, m)) for m in markers):
+    #        return current
+    #    parent = os.path.dirname(current)
+    #    if parent == current:
+    #        break
+    #    current = parent
+    #raise RuntimeError(f"Could not locate project root from: {start}")
 
+#project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.insert(0, project_root)
 
-project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
+# Alternate path reolution for src.graph_transform.milp_dataset
+current_file_path = os.path.abspath(__file__)
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
 sys.path.insert(0, project_root)
 
 from src.gnn.models.gasse import GasseGNN                        # noqa: E402

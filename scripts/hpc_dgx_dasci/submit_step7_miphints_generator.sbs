@@ -5,7 +5,7 @@
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:0       # Inferencia en CPU para simular HPC
 #SBATCH --time=01:00:00
-#SBATCH --output=slurm_mipstart_generator_%j.out
+#SBATCH --output=slurm_miphints_generation_%j.out
 
 echo "=== Generando Warm-Start (.mst) en CPU ==="
 EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"

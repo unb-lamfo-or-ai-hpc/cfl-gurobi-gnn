@@ -225,6 +225,7 @@ data/bipartite_graphs/
 data/intermediate_lps/
 data/raw/MILPBench/CFL/
 data/real_train_output/*.pt
+data/metadata/
 
 
 # Local sandbox (toy examples, experiments, scratch work)
@@ -232,3 +233,6 @@ sandbox/toy_outputs/
 
 # Old files
 *.old
+
+# Output files
+*.out
