@@ -89,7 +89,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path
 sys.path.insert(0, project_root)
 
 from src.gnn.models.gasse import GasseGNN                        # noqa: E402
-from src.graph_transform.milp_dataset import NeuralDivingDataset  # noqa: E402
+from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
