@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name=audit_phase1
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --gres=gpu:0
+#SBATCH --time=00:30:00
+#SBATCH --output=slurm_audit_phase1_%j.out
+
+echo "=== Initializing Phase 1 EDA Audit ==="
+
+# Initialize conda and activate your specific environment
+eval "$(conda shell.bash hook)"
+conda activate tfm_env
+
+# Navigate to the project working directory
+cd /raid/vrcelestino/data/cfl-gurobi-gnn
+
+echo "=== Running Audit Script ==="
+# Execute the script
+srun python3 audit_phase1_eda_v2.py
+
+echo "---------------------------------------------------"
+echo "=== Job Completed ==="
