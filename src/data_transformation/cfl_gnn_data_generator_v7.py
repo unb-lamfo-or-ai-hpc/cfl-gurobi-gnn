@@ -616,24 +616,20 @@ def process_single_instance(
     # ===================================================================
     # [v7_fixed] CREATE GUROBI ENVIRONMENT WITH WLS CREDENTIALS
     # ===================================================================
-    # CRITICAL FIX: Original v7 created empty environment without injecting
-    # WLS credentials from os.environ. This caused "Model too large" error
-    # on Academic WLS licenses even though they support unlimited variables.
+    # Transfered to main()
+
+    #env = gp.Env(empty=True)
+    #env.setParam('OutputFlag', 0)
+    
+    ## Inject WLS credentials from environment variables
+    #for var in ["WLSACCESSID", "WLSSECRET", "LICENSEID"]:
+    #    if var in os.environ:
+    #        val = int(os.environ[var]) if var == "LICENSEID" else os.environ[var]
+    #        env.setParam(var, val)
+    #        logger.debug(f"  Injected {var} from environment")
     #
-    # Root cause: Refactoring error when moving from implicit default env
-    # (which auto-reads os.environ) to explicit empty env (which doesn't).
-    # ===================================================================
-    env = gp.Env(empty=True)
-    env.setParam('OutputFlag', 0)
-    
-    # Inject WLS credentials from environment variables
-    for var in ["WLSACCESSID", "WLSSECRET", "LICENSEID"]:
-        if var in os.environ:
-            val = int(os.environ[var]) if var == "LICENSEID" else os.environ[var]
-            env.setParam(var, val)
-            logger.debug(f"  Injected {var} from environment")
-    
-    env.start()
+    #env.start()
+
     
     try:
         # ===================================================================
@@ -770,8 +766,8 @@ def process_single_instance(
         logger.error(f"  [FAILED] {instance_name}: {e}", exc_info=True)
         return {'instance': instance_name, 'status': 'FAILED', 'error': str(e)}
     
-    finally:
-        env.dispose()
+    #finally:
+    #    env.dispose()
 
 
 # ============================================================
@@ -835,6 +831,19 @@ Examples:
                        help='Pool quality filter (0.10 = keep solutions within 10% of best)')
     
     args = parser.parse_args()
+
+    # Configure Gurobi environment
+    env = gp.Env(empty=True)
+    
+    # WLS license configuration
+    if "WLSACCESSID" in os.environ:
+        env.setParam("WLSACCESSID", os.environ["WLSACCESSID"])
+    if "WLSSECRET" in os.environ:
+        env.setParam("WLSSECRET",   os.environ["WLSSECRET"])
+    if "LICENSEID" in os.environ:
+        env.setParam("LICENSEID",   int(os.environ["LICENSEID"]))
+       
+    env.start()
     
     # Setup logging
     logging.basicConfig(
@@ -894,6 +903,8 @@ Examples:
     logger.info(f"{'='*70}")
     logger.info(f"Instances processed: {len(all_metadata)}")
     logger.info(f"Summary saved to: {summary_path}")
+
+    env.dispose()
 
 
 if __name__ == '__main__':
