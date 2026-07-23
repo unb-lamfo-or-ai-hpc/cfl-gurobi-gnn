@@ -22,14 +22,14 @@ conda activate tfm_env
 
 echo "=== Ejecutando Extracción Avanzada de Gurobi ==="
 
-CATEGORIA="CFL_hard_instance"
-INICIO=1
-FIN=15
+CATEGORIA="CFL_easy_instance"
+INICIO=0
+FIN=30
 TIEMPO_GUROBI=3600
 
 echo "Lanzando lote controlado para: ${CATEGORIA} del índice ${INICIO} al ${FIN}"
 
 # Ejecución en una sola línea (A prueba de fallos)
-srun python3 cfl-gurobi-gnn/src/data_transformation/cfl_gnn_data_generator_v4.py --categories $CATEGORIA --start_idx $INICIO --end_idx $FIN --time_limit $TIEMPO_GUROBI
+srun python3 cfl-gurobi-gnn/src/data_transformation/cfl_gnn_data_generator_v6.py --categories $CATEGORIA --start_idx $INICIO --end_idx $FIN --time_limit $TIEMPO_GUROBI
 
 echo "=== Job Finalizado ==="
