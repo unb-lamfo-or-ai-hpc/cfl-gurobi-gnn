@@ -587,6 +587,7 @@ def process_single_instance(
     lp_file_path: str,
     output_dir: str,
     args: argparse.Namespace,
+    env: gp.Env,  # ← Added this parameter
     logger: logging.Logger
 ) -> Dict[str, Any]:
     """
@@ -885,7 +886,7 @@ Examples:
                 logger.warning(f"File not found: {lp_path}")
                 continue
             
-            metadata = process_single_instance(lp_path, category_output_dir, args, logger)
+            metadata = process_single_instance(lp_path, category_output_dir, args, env, logger)
             all_metadata.append(metadata)
     
     # Save summary report
