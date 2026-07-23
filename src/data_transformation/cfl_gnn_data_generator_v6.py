@@ -1,6 +1,8 @@
 """
-CFL GNN Data Generator - Enhanced Phase 1 with Full Validation (v6_enhanced)
-================================================================================
+CFL GNN Data Generator - Enhanced Phase 1 with Full Validation (v6_enhanced_fixed)
+====================================================================================
+CRITICAL FIX: Gurobi 13.0 API compatibility - changed v.Xn to v.PoolNX (line 434)
+
 Enhancements over v6:
   [E1] REAL-TIME PROGRESS TRACKING: Incumbent logging now shows total_incumbents_written
        to track buffer flush cycles during long solves (critical for 3600s hard instances).
@@ -15,6 +17,10 @@ All v6 fixes preserved:
   - Strict length validation before write
   - Trivial incumbent sanity checks (>95% ones warning)
   - MIPSOL_PHASE == 1 filter
+  
+API MIGRATION (Gurobi 12.x → 13.0):
+  - v.Xn is DEPRECATED in Gurobi 13.0
+  - Use v.PoolNX (pool solution by variable index)
 """
 
 import os
@@ -604,7 +610,8 @@ def process_single_instance(lp_file_path: str, output_dir: str,
                 try:
                     model_to_solve.Params.SolutionNumber = n
                     pool_obj      = float(model_to_solve.PoolObjVal)
-                    pool_solution = np.array([v.Xn for v in pool_vars])
+                    # CRITICAL FIX: Gurobi 13.0 API - v.Xn is DEPRECATED, use v.PoolNX
+                    pool_solution = np.array([v.PoolNX for v in pool_vars])
                     solution_pool.append({
                         'pool_index':      n,
                         'objective':       pool_obj,
@@ -678,7 +685,7 @@ def natural_sort_key(s):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="CFL GNN Data Generator v6_enhanced - Memory-safe with full validation"
+        description="CFL GNN Data Generator v6_enhanced_fixed - Memory-safe with Gurobi 13.0 compatibility"
     )
     parser.add_argument('--categories',  nargs='+',
                         default=["CFL_easy_instance"],
@@ -700,8 +707,8 @@ def main():
     args = parser.parse_args()
 
     print("=" * 80)
-    print("CFL GNN Data Generator v6_enhanced")
-    print("Memory-Safe | Full Validation | Real-Time Progress Tracking")
+    print("CFL GNN Data Generator v6_enhanced_fixed")
+    print("Memory-Safe | Full Validation | Gurobi 13.0 Compatible")
     print("=" * 80)
 
     os.makedirs(args.output_dir, exist_ok=True)
