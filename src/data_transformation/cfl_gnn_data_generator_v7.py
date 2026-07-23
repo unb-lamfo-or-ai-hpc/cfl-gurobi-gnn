@@ -13,8 +13,11 @@ facilities (99.9% ones), creating trivial solutions unsuitable for GNN training.
 
 v7 forces ModelSense = MINIMIZE immediately after reading each .lp file.
 
+**v7_fixed: Added WLS credential injection (missed in original v7 refactor)**
+
 Version History:
 ----------------
+v7_fixed: Fixed WLS license credential injection bug
 v7: Added ModelSense = MINIMIZE fix (THE critical fix for 99.9% ones problem)
 v6_enhanced: Added node validation, progress tracking, post-write validation
 v6: Replaced CSV with PyArrow ParquetWriter, dynamic variable fetching
@@ -29,7 +32,7 @@ Dependencies: gurobipy, pandas, pyarrow, numpy
 
 Usage:
 ------
-python3 cfl_gnn_data_generator_v7.py \\
+python3 cfl_gnn_data_generator_v7_fixed.py \\
     --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance \\
     --start_idx 0 --end_idx 30 \\
     --time_limit 600 --threads 8
@@ -610,9 +613,26 @@ def process_single_instance(
     logger.info(f"Processing: {instance_name}")
     logger.info(f"{'='*60}")
     
-    # Create Gurobi environment
+    # ===================================================================
+    # [v7_fixed] CREATE GUROBI ENVIRONMENT WITH WLS CREDENTIALS
+    # ===================================================================
+    # CRITICAL FIX: Original v7 created empty environment without injecting
+    # WLS credentials from os.environ. This caused "Model too large" error
+    # on Academic WLS licenses even though they support unlimited variables.
+    #
+    # Root cause: Refactoring error when moving from implicit default env
+    # (which auto-reads os.environ) to explicit empty env (which doesn't).
+    # ===================================================================
     env = gp.Env(empty=True)
     env.setParam('OutputFlag', 0)
+    
+    # Inject WLS credentials from environment variables
+    for var in ["WLSACCESSID", "WLSSECRET", "LICENSEID"]:
+        if var in os.environ:
+            val = int(os.environ[var]) if var == "LICENSEID" else os.environ[var]
+            env.setParam(var, val)
+            logger.debug(f"  Injected {var} from environment")
+    
     env.start()
     
     try:
@@ -760,15 +780,15 @@ def process_single_instance(
 
 def main():
     parser = argparse.ArgumentParser(
-        description='CFL GNN Data Generator v7 - Production Final',
+        description='CFL GNN Data Generator v7_fixed - Production Final',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Single category, 10 instances
-  python3 cfl_gnn_data_generator_v7.py --categories CFL_easy_instance --start_idx 0 --end_idx 10
+  python3 cfl_gnn_data_generator_v7_fixed.py --categories CFL_easy_instance --start_idx 0 --end_idx 10
   
   # All categories, full batch
-  python3 cfl_gnn_data_generator_v7.py \\
+  python3 cfl_gnn_data_generator_v7_fixed.py \\
       --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance \\
       --start_idx 0 --end_idx 30 --time_limit 600 --threads 8
         """
@@ -827,7 +847,7 @@ Examples:
     logger = logging.getLogger(__name__)
     
     logger.info("="*70)
-    logger.info("CFL GNN DATA GENERATOR v7 - PRODUCTION FINAL")
+    logger.info("CFL GNN DATA GENERATOR v7_fixed - PRODUCTION FINAL")
     logger.info("="*70)
     logger.info(f"Categories: {args.categories}")
     logger.info(f"Index range: [{args.start_idx}, {args.end_idx})")
