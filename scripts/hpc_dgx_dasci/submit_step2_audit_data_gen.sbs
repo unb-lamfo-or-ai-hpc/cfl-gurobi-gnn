@@ -5,7 +5,7 @@
 #SBATCH --mem=16G
 #SBATCH --gres=gpu:0
 #SBATCH --time=00:30:00
-#SBATCH --output=slurm_audit_phase1_%j.out
+#SBATCH --output=slurm_step2_audit_data_gen_%j.out
 
 echo "=== Initializing Phase 1 EDA Audit ==="
 

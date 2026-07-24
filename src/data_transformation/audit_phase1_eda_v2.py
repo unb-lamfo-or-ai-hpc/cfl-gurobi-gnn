@@ -19,6 +19,9 @@ import numpy as np
 import argparse
 import os
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 from collections import namedtuple  # ← Add this
 
 # ================================================================
@@ -259,6 +262,60 @@ def generate_full_report(base_dir, categories, output_path):
     else:
         print("\n[OK] Variable counts are consistent within categories")
 
+def plot_audit_metrics(csv_path):
+    """
+    Reads the Phase 1 audit CSV report and generates a visual dashboard, 
+    saving it as a high-resolution PNG file.
+    """
+    if not os.path.exists(csv_path):
+        print(f"\n[WARN] Cannot generate plots, file not found: {csv_path}")
+        return
+
+    try:
+        df = pd.read_csv(csv_path)
+        
+        # Validate that we have enough data to plot
+        if len(df) == 0:
+            print("\n[WARN] The CSV is empty. Skipping plot generation.")
+            return
+
+        sns.set_theme(style="whitegrid")
+        fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+        # 1. Execution time distribution
+        sns.histplot(df['runtime_sec'], kde=True, ax=axes[0, 0], color='skyblue', bins=10)
+        axes[0, 0].set_title('Resolution Time Distribution (Seconds)')
+        axes[0, 0].set_xlabel('Time (s)')
+        axes[0, 0].set_ylabel('Frequency')
+
+        # 2. Number of incumbents collected
+        sns.histplot(df['n_incumbents'], kde=True, ax=axes[0, 1], color='salmon', bins=10)
+        axes[0, 1].set_title('Number of Collected Incumbent Solutions')
+        axes[0, 1].set_xlabel('Number of Incumbents')
+        axes[0, 1].set_ylabel('Frequency')
+
+        # 3. Scatter plot: Time vs Incumbents
+        sns.scatterplot(data=df, x='runtime_sec', y='n_incumbents', ax=axes[1, 0], color='purple', s=100, alpha=0.7)
+        axes[1, 0].set_title('Relationship: Resolution Time vs. Incumbents')
+        axes[1, 0].set_xlabel('Resolution Time (s)')
+        axes[1, 0].set_ylabel('Number of Incumbents')
+
+        # 4. Boxplot of active variables (pct_ones)
+        sns.boxplot(y=df['pct_ones'], ax=axes[1, 1], color='lightgreen')
+        axes[1, 1].set_title('Active Variables Distribution (pct_ones)')
+        axes[1, 1].set_ylabel('% of Variables at 1.0')
+
+        plt.tight_layout()
+        
+        # Save the figure in the same directory as the CSV report
+        plot_path = csv_path.replace('.csv', '_plots.png')
+        plt.savefig(plot_path, dpi=300)
+        plt.close()
+        
+        print(f"\n[OK] Plots successfully generated and saved to: {plot_path}")
+        
+    except Exception as e:
+        print(f"\n[ERROR] Failed to generate plots: {e}")
 
 def main():
 
@@ -269,9 +326,11 @@ def main():
     
     target_instance_name = args.instance
 
+    category_name = target_instance_name.rsplit('_', 1)[0]
+
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
     #output_report = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report.csv"
-    output_report = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report_{target_instance_name}.csv"
+    output_report = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report_{category_name}.csv"
     
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
     
@@ -283,7 +342,6 @@ def main():
     
     # Target one known instance for the deep dive
     #target_instance = os.path.join(base_dir, "CFL_easy_instance", "CFL_easy_instance_0")
-    category_name = target_instance_name.rsplit('_', 1)[0]
     target_instance_path = os.path.join(base_dir, category_name, target_instance_name)
 
     if os.path.exists(target_instance_path):
@@ -293,6 +351,9 @@ def main():
         print("Proceeding to aggregate report only...")
 
     generate_full_report(base_dir, categories, output_report)
+
+    # Generate plots from the CSV report
+    plot_audit_metrics(output_report)
     
     print("\n" + "="*60)
     print("AUDIT COMPLETE")
