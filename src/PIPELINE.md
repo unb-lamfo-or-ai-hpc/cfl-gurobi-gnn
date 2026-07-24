@@ -48,7 +48,7 @@ per-instance directories
   node_relaxations.parquet
   metadata.json
         |
-        | Step 2: transformer_v2.py  (independent — raw LP audit)
+        | Step 2: audit_phase1_eda_v2.py  (Phase 1 EDA & Data Validation)
         |
         | Step 3: build_pyg_dataset_v4.py
         v
@@ -97,7 +97,7 @@ vector, and edges are weighted by log-scaled constraint matrix coefficients $A_{
 │
 ├── cfl_gnn_data_generator_v4.py             # Step 1: Gurobi data extraction
 ├── gurobi_hpc_runner_v2.py                  # Step 1 / Step 8: HPC parametric runner
-├── transformer_v2.py                        # Step 2: Raw LP metadata audit
+├── audit_phase1_eda_v2.py                   # Step 2: Phase 1 EDA & Data Validation
 ├── build_pyg_dataset_v4.py                  # Step 3: PyG ETL pipeline
 ├── test_pyg_dataset_v4.py                   # Step 4: Dataset schema audit
 ├── dataset_statistics_v2.py                 # Step 4: Statistical summary
@@ -173,7 +173,7 @@ Step 3 produces one `.pt` file per qualifying incumbent:
 
 ```
 Step 1  ──────────────────────────────────────────────────────────────────┐
-Step 2  (independent, can run alongside Step 1)                           │
+Step 1  →  Step 2  (Data validation)                           │
 Step 1  →  Step 3  →  Step 4  →  Step 5  →  Step 6  →  Step 7           │
                                               Step 6  →  Step 9           │
                        Step 8 (needs Step 1 output + Step 7 output) ◄─────┘
@@ -182,7 +182,7 @@ Step 1  →  Step 3  →  Step 4  →  Step 5  →  Step 6  →  Step 7         
 | Step | Script | Depends on |
 | :---: | :--- | :--- |
 | 1 | `cfl_gnn_data_generator_v4.py` | Raw MILPBench `.lp.gz` files |
-| 2 | `transformer_v2.py` | Raw `.lp.gz` files only — independent of Step 3 |
+| 2 | `audit_phase1_eda_v2.py` | Step 1 complete |
 | 3 | `build_pyg_dataset_v4.py` | Step 1 complete |
 | 4a | `test_pyg_dataset_v4.py` | Step 3 complete — **cannot run before Step 3** |
 | 4b | `dataset_statistics_v2.py` | Step 3 complete |
@@ -224,16 +224,18 @@ python cfl_gnn_data_generator_v4.py \
 | `--pool_size` | `20` | Maximum number of incumbents to retain per instance. |
 | `--pool_gap` | `0.10` | Maximum allowed MIP gap for pool solutions (10%). |
 
-### Step 2 — Raw LP Metadata Audit
+### Step 2 — Phase 1 EDA & Data Validation
 
 ```bash
-python transformer_v2.py \
-    --input_dir   /path/to/MILPBench/CFL/CFL_easy_instance/LP \
-    --output_file /raid/.../metadata/cfl_easy_metadata.parquet
+python audit_phase1_eda_v2.py \
+    --category CFL_easy_instance \
+    --instance CFL_easy_instance_0
 ```
 
-Verify: all instances flagged as `IsMIP=True`; variable and constraint counts
-are consistent across categories.
+Verify:
+* Generates phase1_audit_report_<category>.csv and corresponding _plots.png.
+* Check console output for zero [WARN] or [RED ALERT] messages regarding bounding or dimensionality.
+* Confirm pct_ones is stable and the number of incumbents matches expectations.
 
 ### Step 3 — PyG ETL
 

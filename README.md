@@ -41,7 +41,7 @@ Raw MILPBench .lp.gz files
         v
 per-instance/  [original_features.pickle.gz, incumbents.parquet, metadata.json]
         |
-        +-----> Step 2 — transformer_v2.py  (independent raw LP audit)
+        +-----> Step 2 — audit_phase1_eda_v2.py  (Phase 1 EDA & Data Validation)
         |
         | Step 3 — build_pyg_dataset_v4.py
         v
@@ -81,7 +81,7 @@ hints/  [instance_gnn_hint.hnt]
 │
 ├── cfl_gnn_data_generator_v4.py             # Step 1: Gurobi data extraction
 ├── gurobi_hpc_runner_v2.py                  # Step 1 / Step 8: HPC parametric runner
-├── transformer_v2.py                        # Step 2: Raw LP metadata audit
+├── audit_phase1_eda_v2.py                   # Step 2: Phase 1 EDA & Data Validation
 ├── build_pyg_dataset_v4.py                  # Step 3: PyG ETL pipeline
 ├── test_pyg_dataset_v4.py                   # Step 4: Dataset schema audit
 ├── dataset_statistics_v2.py                 # Step 4: Statistical summary
@@ -114,12 +114,11 @@ python3 cfl_gnn_data_generator_v4.py \
     --workers              8
 ```
 
-**STEP 2 — Raw Data Audit** *(independent, can run alongside Step 1)*
+**STEP 2 — Phase 1 EDA & Data Validation** *(requires Step 1 complete)*
 ```bash
-python3 transformer_v2.py \
-    --input_dir   /path/to/milpbench_lp_files \
-    --output_file /raid/.../instance_metadata.parquet
-```
+python3 audit_phase1_eda_v2.py \
+    --category CFL_easy_instance \
+    --instance CFL_easy_instance_0
 
 **STEP 3 — PyG ETL** *(requires Step 1 complete)*
 ```bash
@@ -193,7 +192,12 @@ python3 evaluate_model_v2.py \
 
 ---
 
-## Prerequisites
+## Getting Started
+
+### Prerequisites
+* Python 3.8+
+* Gurobi Optimizer with a valid license
+* PyTorch and PyTorch Geometric (for the GNN)
 
 ### Python Environment
 
@@ -223,13 +227,6 @@ All scripts read these variables through `gp.Env(empty=True)`.
 
 > This pipeline uses `v.PoolNX` and `model.Params.SolutionNumber` as the canonical
 > Gurobi 13.0 solution pool API.  The deprecated `v.Xn` attribute is not used.
-
-## Getting Started
-
-### Prerequisites
-* Python 3.8+
-* Gurobi Optimizer with a valid license
-* PyTorch and PyTorch Geometric (for the GNN)
 
 ### Installation
 Clone the repository:
