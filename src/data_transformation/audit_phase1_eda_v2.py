@@ -16,6 +16,24 @@ import pickle
 import pandas as pd
 import numpy as np
 
+from collections import namedtuple  # ← Add this
+
+# ================================================================
+# NAMEDTUPLE DEFINITIONS (must match data generator)
+# ================================================================
+ModelFeatures = namedtuple('ModelFeatures', [
+    'num_vars', 'num_constrs', 'num_binary', 'num_integer', 
+    'num_continuous', 'obj_sense', 'obj_offset'
+])
+
+VariableFeatures = namedtuple('VariableFeatures', [
+    'types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'
+])
+
+ConstraintFeatures = namedtuple('ConstraintFeatures', [
+    'senses', 'rhs_values', 'row_norms'
+])
+
 
 def audit_single_instance(instance_dir):
     """Deep dive into a single instance to verify tensor shapes and distributions."""

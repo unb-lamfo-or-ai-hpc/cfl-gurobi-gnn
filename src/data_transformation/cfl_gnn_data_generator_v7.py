@@ -66,6 +66,24 @@ import pyarrow.parquet as pq
 import gurobipy as gp
 from gurobipy import GRB
 
+# ================================================================
+# GLOBAL NAMEDTUPLE DEFINITIONS (for pickle compatibility)
+# ================================================================
+from collections import namedtuple
+    
+# Named tuples for structured feature storage
+ModelFeatures = namedtuple('ModelFeatures', [
+        'num_vars', 'num_constrs', 'num_binary', 'num_integer', 
+        'num_continuous', 'obj_sense', 'obj_offset'
+])
+    
+VariableFeatures = namedtuple('VariableFeatures', [
+        'types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'
+])
+    
+ConstraintFeatures = namedtuple('ConstraintFeatures', [
+        'senses', 'rhs_values', 'row_norms'
+])
 
 # ============================================================
 # PHASE 1 STEP 1: DATA COLLECTION CALLBACK (MEMORY-SAFE)
@@ -454,21 +472,25 @@ def extract_bipartite_features(model: gp.Model) -> Dict[str, Any]:
         - variable_features: Variable metadata (type, bounds, obj coeff)
         - model_features: Global model metadata
     """
-    from collections import namedtuple
+
+    # Moved to beginning - achieve global scope for named tuples
+    #from collections import namedtuple
     
-    # Named tuples for structured feature storage
-    ModelFeatures = namedtuple('ModelFeatures', [
-        'num_vars', 'num_constrs', 'num_binary', 'num_integer', 
-        'num_continuous', 'obj_sense', 'obj_offset'
-    ])
+    ## Named tuples for structured feature storage
+    #ModelFeatures = namedtuple('ModelFeatures', [
+    #    'num_vars', 'num_constrs', 'num_binary', 'num_integer', 
+    #    'num_continuous', 'obj_sense', 'obj_offset'
+    #])
     
-    VariableFeatures = namedtuple('VariableFeatures', [
-        'types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'
-    ])
+    #VariableFeatures = namedtuple('VariableFeatures', [
+    #    'types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'
+    #])
     
-    ConstraintFeatures = namedtuple('ConstraintFeatures', [
-        'senses', 'rhs_values', 'row_norms'
-    ])
+    #ConstraintFeatures = namedtuple('ConstraintFeatures', [
+    #    'senses', 'rhs_values', 'row_norms'
+    #])
+
+    
     
     # Extract variables
     vars_list = model.getVars()
@@ -499,7 +521,7 @@ def extract_bipartite_features(model: gp.Model) -> Dict[str, Any]:
         for i in range(row.size()):
             var = row.getVar(i)
             coeff = row.getCoeff(i)
-            var_idx = vars_list.index(var)
+            var_idx = var.index
             
             edge_indices.append([var_idx, c_idx])
             edge_features.append(coeff)
@@ -834,16 +856,20 @@ Examples:
     args = parser.parse_args()
 
     # Configure Gurobi environment
+    os.environ["GRB_LICENSE_FILE"] = "/home/vrcelestino/discodatos/gurobi.lic"
+
     env = gp.Env(empty=True)
+    env.setParam('OutputFlag', 0)
+
+    wls_id = os.environ.get("WLSACCESSID")
+    wls_secret = os.environ.get("WLSSECRET")
+    license_id = os.environ.get("LICENSEID")
     
-    # WLS license configuration
-    if "WLSACCESSID" in os.environ:
-        env.setParam("WLSACCESSID", os.environ["WLSACCESSID"])
-    if "WLSSECRET" in os.environ:
-        env.setParam("WLSSECRET",   os.environ["WLSSECRET"])
-    if "LICENSEID" in os.environ:
-        env.setParam("LICENSEID",   int(os.environ["LICENSEID"]))
-       
+    if wls_id and wls_secret and license_id:
+        env.setParam("WLSACCESSID", wls_id)
+        env.setParam("WLSSECRET", wls_secret)
+        env.setParam("LICENSEID", int(license_id))
+
     env.start()
     
     # Setup logging
