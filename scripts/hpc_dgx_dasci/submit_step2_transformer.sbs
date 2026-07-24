@@ -30,7 +30,7 @@ OUTPUT_BASE="/raid/vrcelestino/data/cfl-gurobi-gnn/data/metadata"
 mkdir -p $OUTPUT_BASE
 
 # Array of categories to iterate through
-CATEGORIES=("CFL_easy_instance" "CFL_medium_instance" "CFL_hard_instance")
+CATEGORIES=("CFL_easy_instance") # "CFL_medium_instance" "CFL_hard_instance")
 
 for CATEGORY in "${CATEGORIES[@]}"; do
     echo "---------------------------------------------------"

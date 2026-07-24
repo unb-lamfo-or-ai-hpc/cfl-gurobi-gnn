@@ -267,7 +267,7 @@ def main():
                         help='Name of the specific instance to deep dive (e.g., CFL_easy_instance_0)')
     args = parser.parse_args()
     
-    target_instance = args.instance
+    target_instance_name = args.instance
 
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
     #output_report = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report.csv"
@@ -282,12 +282,14 @@ def main():
     print(f"Output report:  {output_report}")
     
     # Target one known instance for the deep dive
-    target_instance = os.path.join(base_dir, "CFL_easy_instance", "CFL_easy_instance_0")
-    
-    if os.path.exists(target_instance):
-        audit_single_instance(target_instance)
+    #target_instance = os.path.join(base_dir, "CFL_easy_instance", "CFL_easy_instance_0")
+    category_name = target_instance_name.rsplit('_', 1)[0]
+    target_instance_path = os.path.join(base_dir, category_name, target_instance_name)
+
+    if os.path.exists(target_instance_path):
+        audit_single_instance(target_instance_path)
     else:
-        print(f"\n[WARN] Target instance not found: {target_instance}")
+        print(f"\n[WARN] Target instance not found: {target_instance_path}")
         print("Proceeding to aggregate report only...")
 
     generate_full_report(base_dir, categories, output_report)
