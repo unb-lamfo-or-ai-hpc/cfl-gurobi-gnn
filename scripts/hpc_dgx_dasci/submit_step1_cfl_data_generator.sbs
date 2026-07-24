@@ -22,7 +22,7 @@ conda activate tfm_env
 
 echo "=== Ejecutando Extracción Avanzada de Gurobi ==="
 
-CATEGORIA="CFL_easy_instance"
+CATEGORIA="CFL_medium_instance"
 INICIO=0
 FIN=30
 TIEMPO_GUROBI=3600

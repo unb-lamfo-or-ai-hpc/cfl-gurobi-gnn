@@ -916,7 +916,13 @@ Examples:
             all_metadata.append(metadata)
     
     # Save summary report
-    summary_path = os.path.join(args.output_dir, "generation_summary.json")
+    #summary_path = os.path.join(args.output_dir, "generation_summary.json")
+
+    # Save summary report with dynamic name based on categories
+    categories_str = "_".join(args.categories)
+    dynamic_filename = f"generation_summary_{categories_str}.json"
+    summary_path = os.path.join(args.output_dir, dynamic_filename)
+
     with open(summary_path, 'w') as f:
         json.dump({
             'timestamp': datetime.now().isoformat(),

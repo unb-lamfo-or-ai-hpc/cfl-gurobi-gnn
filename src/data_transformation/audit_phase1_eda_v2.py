@@ -16,6 +16,9 @@ import pickle
 import pandas as pd
 import numpy as np
 
+import argparse
+import os
+
 from collections import namedtuple  # ← Add this
 
 # ================================================================
@@ -258,8 +261,18 @@ def generate_full_report(base_dir, categories, output_path):
 
 
 def main():
+
+    parser = argparse.ArgumentParser(description='Audit Phase 1 Data')
+    parser.add_argument('--instance', type=str, default="CFL_easy_instance_0",
+                        help='Name of the specific instance to deep dive (e.g., CFL_easy_instance_0)')
+    args = parser.parse_args()
+    
+    target_instance = args.instance
+
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
-    output_report = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report.csv"
+    #output_report = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report.csv"
+    output_report = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report_{target_instance_name}.csv"
+    
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
     
     print("="*60)
