@@ -9,36 +9,26 @@ import sys
 import os
 import argparse
 import torch
-import importlib.util
 
-## Robust path resolution to locate the project root dynamically
-#def find_project_root(start: str) -> str:
-#    current = start
-#    for _ in range(10):  # Max 10 levels up
-#        if any(os.path.exists(os.path.join(current, marker))
-#               for marker in ('pyproject.toml', 'setup.py', 'setup.cfg')):
-#            return current
-#        parent = os.path.dirname(current)
-#        if parent == current:
-#            break
-#        current = parent
-#    return start
-
-#project_root = find_project_root(os.path.dirname(os.path.abspath(__file__)))
-#sys.path.insert(0, project_root)
-
-# Alternate path reolution for src.graph_transform.milp_dataset
+# Alternate path resolution for src.graph_transform.milp_dataset
 current_file_path = os.path.abspath(__file__)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
 sys.path.insert(0, project_root)
 
 from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset
 
+def inverse_log_scale(tensor: torch.Tensor) -> torch.Tensor:
+    """
+    Reverses the signed log1p transformation applied during Phase 2 ETL.
+    Formula: x = sign(x) * (exp(|x|) - 1)
+    """
+    return torch.sign(tensor) * (torch.exp(torch.abs(tensor)) - 1)
+
 def audit_dataset(dataset, category_name):
     """
     Audits the first graph of a category for:
     1. Metadata propagation (Complexity Class)
-    2. LP Vector bounds (vs Variable UB tensor)
+    2. LP Vector bounds (vs Variable UB tensor, correctly reversing log-scale)
     3. Graph topology integrity
     """
     print(f"\n--- X-Ray: First graph of {category_name} ---")
@@ -48,18 +38,22 @@ def audit_dataset(dataset, category_name):
     print(f" -> Complexity Class : {getattr(grafo, 'complexity_class', 'N/A')}")
     print(f" -> Probe Node Count : {getattr(grafo, 'probe_node_count', -1)}")
     
-    # LP Vector Validation: Check against UB tensor (Column 2)
-    ub_vector = grafo['variable'].x[:, 2]
+    # LP Vector Validation
+    # Column 2 is log-scaled UB. We must reverse the transformation before comparison.
+    ub_vector_log_scaled = grafo['variable'].x[:, 2]
+    ub_vector_raw = inverse_log_scale(ub_vector_log_scaled)
+    
+    # Column 6 is the unscaled LP relaxation vector.
     lp_vector = grafo['variable'].x[:, 6]
     
-    # Correct bound validation: LP vector must be <= UB
-    violations = (lp_vector > ub_vector + 1e-6).sum().item()
+    # Correct bound validation: LP vector must be <= UB (with a small epsilon for floating point errors)
+    violations = (lp_vector > ub_vector_raw + 1e-4).sum().item()
     
     print(f" -> LP values exceeding variable UB: {violations}")
     if violations > 0:
-        print(" [RED ALERT] LP vector exceeds Upper Bound — potential mapping error.")
+        print(" [RED ALERT] LP vector exceeds Upper Bound — scaling or mapping error detected.")
     else:
-        print(" [OK] LP vector is within variable bounds.")
+        print(" [OK] LP vector is strictly within variable bounds.")
     
     # Audit Topology
     num_vars = grafo['variable'].x.shape[0]
