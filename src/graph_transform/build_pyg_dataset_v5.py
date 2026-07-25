@@ -31,6 +31,7 @@ import traceback
 import numpy as np
 import pandas as pd
 import torch
+import gc
 from torch_geometric.data import HeteroData
 from tqdm import tqdm
 from collections import namedtuple
@@ -185,6 +186,10 @@ def build_heterodata(
 # Per-Instance ETL Processing
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Per-Instance ETL Processing (Memory Optimized)
+# ---------------------------------------------------------------------------
+
 def process_instance(inst_dir: str,
                      global_idx_start: int,
                      processed_dir: str,
@@ -192,22 +197,18 @@ def process_instance(inst_dir: str,
     """
     Reads a specific instance directory and generates PyG .pt files for 
     every qualifying solution present in the incumbents parquet.
+    Optimized via Base-Graph cloning to prevent Out-Of-Memory (OOM) errors.
     """
     features_path    = os.path.join(inst_dir, "original_features.pickle.gz")
     incumbents_path  = os.path.join(inst_dir, "incumbents.parquet")
     relaxations_path = os.path.join(inst_dir, "node_relaxations.parquet")
     instance_name    = os.path.basename(inst_dir)
 
-    # Validate essential structural files
-    if not os.path.exists(features_path):
-        logger.warning(f"[{instance_name}] Missing original_features.pickle.gz")
-        return 0
-    if not os.path.exists(incumbents_path):
-        logger.warning(f"[{instance_name}] Missing incumbents.parquet")
+    if not os.path.exists(features_path) or not os.path.exists(incumbents_path):
+        logger.warning(f"[{instance_name}] Missing critical files. Skipping.")
         return 0
 
     try:
-        # Load topology features from the optimized tuple structure
         with gzip.open(features_path, 'rb') as fh:
             raw = pickle.load(fh)
             
@@ -217,13 +218,10 @@ def process_instance(inst_dir: str,
         edge_indices        = raw['edge_indices']
         edge_features       = raw['edge_features']
 
-        # Load Branch-and-Bound incumbent trajectory
         df_incumbents = pd.read_parquet(incumbents_path)
         if df_incumbents.empty:
-            logger.warning(f"[{instance_name}] No incumbents found. Skipping.")
             return 0
 
-        # Extract LP relaxation vector at the root node (fallback to first available)
         lp_vector_root = np.zeros(model_features.num_vars)
         if os.path.exists(relaxations_path):
             df_relax = pd.read_parquet(relaxations_path)
@@ -233,10 +231,32 @@ def process_instance(inst_dir: str,
             elif not df_relax.empty:
                 lp_vector_root = np.array(df_relax.iloc[0]['relaxation_vector'])
 
+        # --- MEMORY OPTIMIZATION CORE ---
+        # Build the graph topology ONLY ONCE per instance.
+        # This saves massive amounts of CPU and prevents RAM fragmentation.
+        dummy_sol = np.zeros(model_features.num_vars)
+        base_graph = build_heterodata(
+            model_features    = model_features,
+            variable_features = variable_features,
+            constr_features   = constraint_features,
+            edge_indices      = edge_indices,
+            edge_features     = edge_features,
+            sol_vector        = dummy_sol,
+            lp_vector_root    = lp_vector_root,
+            mip_gap           = 1.0,
+            exec_time         = 0.0,
+            is_optimal        = False,
+            incumbent_node    = -1,
+            instance_name     = instance_name,
+            metadata          = metadata,
+        )
+
+        if base_graph is None:
+            return 0
+
         graphs_generated   = 0
         current_global_idx = global_idx_start
 
-        # Iteratively build graphs for valid solutions
         for _, row in df_incumbents.iterrows():
             try:
                 row_gap = float(row['mip_gap'])
@@ -248,36 +268,34 @@ def process_instance(inst_dir: str,
 
             sol_vector = np.array(row['solution_vector'])
 
-            graph = build_heterodata(
-                model_features    = model_features,
-                variable_features = variable_features,
-                constr_features   = constraint_features,
-                edge_indices      = edge_indices,
-                edge_features     = edge_features,
-                sol_vector        = sol_vector,
-                lp_vector_root    = lp_vector_root,
-                mip_gap           = row_gap,
-                exec_time         = float(row.get('time', 0.0)),
-                is_optimal        = bool(row_gap <= 1e-4),
-                incumbent_node    = int(row.get('node', -1)),
-                instance_name     = instance_name,
-                metadata          = metadata,
-            )
+            # Clone the base topology instead of recalculating everything
+            graph = base_graph.clone()
+            
+            # Inject solution-specific labels
+            graph['variable'].y = torch.FloatTensor(sol_vector)
+            graph.mip_gap       = float(row_gap)
+            graph.exec_time     = float(row.get('time', 0.0))
+            graph.is_optimal    = bool(row_gap <= 1e-4)
+            graph.incumbent_node = int(row.get('node', -1))
 
-            if graph is None:
-                continue
-
-            # Save PyG tensor to disk
             out_file = os.path.join(processed_dir, f"data_{current_global_idx}.pt")
             torch.save(graph, out_file)
             
             current_global_idx += 1
             graphs_generated   += 1
+            
+            # Force memory release for this specific graph tensor
+            del graph
+
+        # Aggressive garbage collection after processing the instance
+        del base_graph, raw, model_features, variable_features, constraint_features
+        del edge_indices, edge_features, df_incumbents
+        gc.collect()
 
         return graphs_generated
 
     except Exception as e:
-        logger.error(f"[{instance_name}] Instance processing failed: {e}\n{traceback.format_exc()}")
+        logger.error(f"[{instance_name}] Processing failed: {e}\n{traceback.format_exc()}")
         return 0
 
 # ---------------------------------------------------------------------------

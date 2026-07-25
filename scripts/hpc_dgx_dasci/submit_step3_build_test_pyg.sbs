@@ -2,7 +2,7 @@
 #SBATCH --job-name=test_pyg_etl
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=30
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH --gres=gpu:0
 #SBATCH --time=01:00:00
 #SBATCH --output=slurm_test_pyg_%j.out
