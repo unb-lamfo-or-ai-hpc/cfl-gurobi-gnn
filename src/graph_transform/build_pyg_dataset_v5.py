@@ -256,6 +256,15 @@ def process_instance(inst_dir: str,
         graphs_generated   = 0
         current_global_idx = global_idx_start
 
+        # Depuration counters
+        # --- NUEVOS CONTADORES DE DEPURACIÓN ---
+        stats = {
+            'evaluados': 0,
+            'descartados_gap': 0,
+            'errores_memoria': 0,
+            'otros_errores': 0
+        }
+
         # 4. STREAMING PARQUET (The Ultimate OOM Fix)
         # Instead of loading all solutions, we stream them 50 at a time.
         parquet_file = pq.ParquetFile(incumbents_path)
@@ -264,34 +273,44 @@ def process_instance(inst_dir: str,
             df_chunk = batch.to_pandas()
             
             for _, row in df_chunk.iterrows():
+                stats['evaluados'] += 1
                 try:
                     row_gap = float(row['mip_gap'])
                 except (ValueError, KeyError):
                     row_gap = 1.0
 
                 if row_gap > MAX_MIP_GAP:
+                    stats['descartados_gap'] += 1
                     continue
 
-                sol_vector = np.array(row['solution_vector'])
+                try:
+                    sol_vector = np.array(row['solution_vector'])
+                    
+                    # Clone the base topology
+                    graph = base_graph.clone()
                 
-                # Clone the base topology
-                graph = base_graph.clone()
-                
-                # Inject solution-specific labels
-                graph['variable'].y = torch.FloatTensor(sol_vector)
-                graph.mip_gap       = float(row_gap)
-                graph.exec_time     = float(row.get('time', 0.0))
-                graph.is_optimal    = bool(row_gap <= 1e-4)
-                graph.incumbent_node = int(row.get('node', -1))
+                    # Inject solution-specific labels
+                    graph['variable'].y = torch.FloatTensor(sol_vector)
+                    graph.mip_gap       = float(row_gap)
+                    graph.exec_time     = float(row.get('time', 0.0))
+                    graph.is_optimal    = bool(row_gap <= 1e-4)
+                    graph.incumbent_node = int(row.get('node', -1))
 
-                out_file = os.path.join(processed_dir, f"data_{current_global_idx}.pt")
-                torch.save(graph, out_file)
-                
-                current_global_idx += 1
-                graphs_generated   += 1
-                
-                # Clear individual graph tensor
-                del graph
+                    out_file = os.path.join(processed_dir, f"data_{current_global_idx}.pt")
+                    torch.save(graph, out_file)
+                    
+                    current_global_idx += 1
+                    graphs_generated   += 1
+                    
+                    # Clear individual graph tensor
+                    del graph
+
+                except MemoryError:
+                    stats['errores_memoria'] += 1
+                    logger.error(f"  [{instance_name}] ERROR OOM (Falta RAM) al clonar el grafo.")
+                except Exception as e:
+                    stats['otros_errores'] += 1
+                    logger.error(f"  [{instance_name}] ERROR al guardar grafo: {e}")
                 
             # Force memory release for this chunk before loading the next 50 solutions
             del df_chunk
