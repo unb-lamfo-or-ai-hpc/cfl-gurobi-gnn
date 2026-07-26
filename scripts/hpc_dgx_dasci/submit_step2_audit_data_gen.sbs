@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=audit_phase1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
-#SBATCH --mem=16G
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
 #SBATCH --gres=gpu:0
 #SBATCH --time=00:30:00
 #SBATCH --output=slurm_audit_data_gen_%j.out
@@ -18,7 +18,7 @@ cd /raid/vrcelestino/data/cfl-gurobi-gnn
 
 echo "=== Running Audit Script ==="
 # Execute the script
-srun python3 src/data_transformation/audit_phase1_eda_v2.py --instance CFL_easy_instance_30
+srun python3 src/data_transformation/audit_phase1_eda_v2.py --instance CFL_easy_instance_29
 
 echo "---------------------------------------------------"
 echo "=== Job Completed ==="

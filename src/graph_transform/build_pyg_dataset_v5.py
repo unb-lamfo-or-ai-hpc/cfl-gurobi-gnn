@@ -32,6 +32,7 @@ import numpy as np
 import pandas as pd
 import torch
 import gc
+import pyarrow.parquet as pq
 from torch_geometric.data import HeteroData
 from tqdm import tqdm
 from collections import namedtuple
@@ -190,14 +191,18 @@ def build_heterodata(
 # Per-Instance ETL Processing (Memory Optimized)
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Per-Instance ETL Processing (Extreme Memory Optimization via Streaming)
+# ---------------------------------------------------------------------------
+
 def process_instance(inst_dir: str,
                      global_idx_start: int,
                      processed_dir: str,
                      metadata: dict) -> int:
     """
-    Reads a specific instance directory and generates PyG .pt files for 
-    every qualifying solution present in the incumbents parquet.
-    Optimized via Base-Graph cloning to prevent Out-Of-Memory (OOM) errors.
+    Reads a specific instance directory and generates PyG .pt files.
+    Optimized via Base-Graph cloning AND Parquet batch-streaming to strictly
+    prevent Out-Of-Memory (OOM) errors on large MILP instances.
     """
     features_path    = os.path.join(inst_dir, "original_features.pickle.gz")
     incumbents_path  = os.path.join(inst_dir, "incumbents.parquet")
@@ -209,6 +214,7 @@ def process_instance(inst_dir: str,
         return 0
 
     try:
+        # 1. Load static graph topology
         with gzip.open(features_path, 'rb') as fh:
             raw = pickle.load(fh)
             
@@ -218,22 +224,15 @@ def process_instance(inst_dir: str,
         edge_indices        = raw['edge_indices']
         edge_features       = raw['edge_features']
 
-        df_incumbents = pd.read_parquet(incumbents_path)
-        if df_incumbents.empty:
-            return 0
-
+        # 2. Safely fetch LP relaxation ONLY for the root node
+        # Using filters prevents loading the entire relaxation tree into RAM
         lp_vector_root = np.zeros(model_features.num_vars)
         if os.path.exists(relaxations_path):
-            df_relax = pd.read_parquet(relaxations_path)
-            root_relax = df_relax[df_relax['node'] == 0]
-            if not root_relax.empty:
-                lp_vector_root = np.array(root_relax.iloc[0]['relaxation_vector'])
-            elif not df_relax.empty:
+            df_relax = pd.read_parquet(relaxations_path, filters=[('node', '==', 0)])
+            if not df_relax.empty:
                 lp_vector_root = np.array(df_relax.iloc[0]['relaxation_vector'])
 
-        # --- MEMORY OPTIMIZATION CORE ---
-        # Build the graph topology ONLY ONCE per instance.
-        # This saves massive amounts of CPU and prevents RAM fragmentation.
+        # 3. Build the Base Graph ONCE per instance
         dummy_sol = np.zeros(model_features.num_vars)
         base_graph = build_heterodata(
             model_features    = model_features,
@@ -257,39 +256,50 @@ def process_instance(inst_dir: str,
         graphs_generated   = 0
         current_global_idx = global_idx_start
 
-        for _, row in df_incumbents.iterrows():
-            try:
-                row_gap = float(row['mip_gap'])
-            except (ValueError, KeyError):
-                row_gap = 1.0
-
-            if row_gap > MAX_MIP_GAP:
-                continue
-
-            sol_vector = np.array(row['solution_vector'])
-
-            # Clone the base topology instead of recalculating everything
-            graph = base_graph.clone()
+        # 4. STREAMING PARQUET (The Ultimate OOM Fix)
+        # Instead of loading all solutions, we stream them 50 at a time.
+        parquet_file = pq.ParquetFile(incumbents_path)
+        
+        for batch in parquet_file.iter_batches(batch_size=50):
+            df_chunk = batch.to_pandas()
             
-            # Inject solution-specific labels
-            graph['variable'].y = torch.FloatTensor(sol_vector)
-            graph.mip_gap       = float(row_gap)
-            graph.exec_time     = float(row.get('time', 0.0))
-            graph.is_optimal    = bool(row_gap <= 1e-4)
-            graph.incumbent_node = int(row.get('node', -1))
+            for _, row in df_chunk.iterrows():
+                try:
+                    row_gap = float(row['mip_gap'])
+                except (ValueError, KeyError):
+                    row_gap = 1.0
 
-            out_file = os.path.join(processed_dir, f"data_{current_global_idx}.pt")
-            torch.save(graph, out_file)
-            
-            current_global_idx += 1
-            graphs_generated   += 1
-            
-            # Force memory release for this specific graph tensor
-            del graph
+                if row_gap > MAX_MIP_GAP:
+                    continue
 
-        # Aggressive garbage collection after processing the instance
+                sol_vector = np.array(row['solution_vector'])
+                
+                # Clone the base topology
+                graph = base_graph.clone()
+                
+                # Inject solution-specific labels
+                graph['variable'].y = torch.FloatTensor(sol_vector)
+                graph.mip_gap       = float(row_gap)
+                graph.exec_time     = float(row.get('time', 0.0))
+                graph.is_optimal    = bool(row_gap <= 1e-4)
+                graph.incumbent_node = int(row.get('node', -1))
+
+                out_file = os.path.join(processed_dir, f"data_{current_global_idx}.pt")
+                torch.save(graph, out_file)
+                
+                current_global_idx += 1
+                graphs_generated   += 1
+                
+                # Clear individual graph tensor
+                del graph
+                
+            # Force memory release for this chunk before loading the next 50 solutions
+            del df_chunk
+            gc.collect()
+
+        # Final aggressive garbage collection
         del base_graph, raw, model_features, variable_features, constraint_features
-        del edge_indices, edge_features, df_incumbents
+        del edge_indices, edge_features
         gc.collect()
 
         return graphs_generated

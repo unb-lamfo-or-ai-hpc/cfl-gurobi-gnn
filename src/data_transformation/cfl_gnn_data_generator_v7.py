@@ -55,6 +55,7 @@ import pickle
 import gzip
 import logging
 import argparse
+import gc
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple, Any
@@ -110,7 +111,7 @@ class DataCollectionCallback:
     - MIPSOL_PHASE == 1 filter (only B&B search solutions)
     """
     
-    BUFFER_LIMIT = 500  # Flush to disk when buffer reaches this size
+    BUFFER_LIMIT = 50  # Flush to disk when buffer reaches this size (reduced from 500 to 50)
     
     def __init__(self, model: gp.Model, instance_dir: str):
         """
@@ -782,7 +783,15 @@ def process_single_instance(
         
         logger.info(f"  [SUCCESS] Instance processed: {callback.total_incumbents_written} incumbents, "
                    f"{callback.total_nodes_written} nodes")
-        
+
+        # Liberate Gurobi internal memory and Python references
+        model.dispose() # Free Gurobi internal memory
+        del model
+        del callback
+        del features
+        del pool
+        gc.collect()    # Force Python to liberate RAM
+
         return metadata
     
     except Exception as e:
