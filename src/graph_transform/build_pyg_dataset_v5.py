@@ -321,6 +321,13 @@ def process_instance(inst_dir: str,
         del edge_indices, edge_features
         gc.collect()
 
+        logger.info(
+            f"[{instance_name}] ETL completado | "
+            f"Evaluados: {stats['evaluados']} | Guardados: {graphs_generated} | "
+            f"Descartados (> {MAX_MIP_GAP*100}% Gap): {stats['descartados_gap']} | "
+            f"Errores RAM: {stats['errores_memoria']} | Otros: {stats['otros_errores']}"
+        )
+
         return graphs_generated
 
     except Exception as e:
