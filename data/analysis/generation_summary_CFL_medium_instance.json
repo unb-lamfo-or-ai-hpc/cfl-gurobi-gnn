@@ -1,0 +1,385 @@
+{
+  "timestamp": "2026-07-27T16:10:33.862306",
+  "category": "CFL_medium_instance",
+  "category_statistics": {
+    "total_instances_processed": 12,
+    "avg_runtime_sec": 3630.122702717781,
+    "max_best_mip_gap_pct": 84.72560275237504,
+    "avg_pct_ones": 0.11110460882230545,
+    "avg_incumbents": 136.91666666666666
+  },
+  "metadata": [
+    {
+      "instance": "CFL_medium_instance_0",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_0.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.2786250114440918,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3645.923134326935,
+      "node_count": 4448,
+      "num_solutions_found": 18,
+      "pool_solutions_found": 18,
+      "num_incumbents_collected": 181,
+      "num_nodes_collected": 4499,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 17.489760727099757,
+      "best_bound": 2.671455531031592,
+      "mip_gap": 0.8472560275285946,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1152000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 84.72560275237504,
+        "pct_ones": 0.11235955056179775
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_1",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_1.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.2673180103302002,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3654.394340276718,
+      "node_count": 4340,
+      "num_solutions_found": 13,
+      "pool_solutions_found": 13,
+      "num_incumbents_collected": 164,
+      "num_nodes_collected": 4390,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 12.803139946054458,
+      "best_bound": 2.6261971011111664,
+      "mip_gap": 0.7948786694376108,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1169600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 79.48786694314023,
+        "pct_ones": 0.1104868913857678
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_15",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_15.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.2681550979614258,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3603.3580820560455,
+      "node_count": 2284,
+      "num_solutions_found": 10,
+      "pool_solutions_found": 10,
+      "num_incumbents_collected": 145,
+      "num_nodes_collected": 2318,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 11.499241644557518,
+      "best_bound": 3.120921366419219,
+      "mip_gap": 0.7285976360105171,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1180800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 75.40986012498773,
+        "pct_ones": 0.11196941323345817
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_16",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_16.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.27094531059265137,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3634.8099682331085,
+      "node_count": 4909,
+      "num_solutions_found": 12,
+      "pool_solutions_found": 12,
+      "num_incumbents_collected": 33,
+      "num_nodes_collected": 4953,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 13.83997581444897,
+      "best_bound": 2.6696505454399655,
+      "mip_gap": 0.8071058373777761,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1168000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 80.71058373719443,
+        "pct_ones": 0.11079900124843944
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_17",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_17.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.24991536140441895,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3639.0589649677277,
+      "node_count": 4401,
+      "num_solutions_found": 19,
+      "pool_solutions_found": 19,
+      "num_incumbents_collected": 152,
+      "num_nodes_collected": 4447,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 17.306830886687592,
+      "best_bound": 2.788319314165407,
+      "mip_gap": 0.8388890876428347,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1163200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 83.88890876379877,
+        "pct_ones": 0.11165730337078651
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_18",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_18.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.25067949295043945,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3653.828447341919,
+      "node_count": 5064,
+      "num_solutions_found": 20,
+      "pool_solutions_found": 20,
+      "num_incumbents_collected": 130,
+      "num_nodes_collected": 5115,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 14.256290019184886,
+      "best_bound": 2.68355937082894,
+      "mip_gap": 0.8117631328194336,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1150400,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 81.17631328137395,
+        "pct_ones": 0.11134519350811485
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_19",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_19.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.25173091888427734,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3635.7335345745087,
+      "node_count": 4792,
+      "num_solutions_found": 8,
+      "pool_solutions_found": 8,
+      "num_incumbents_collected": 132,
+      "num_nodes_collected": 4835,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 10.348723560112635,
+      "best_bound": 2.62071827613294,
+      "mip_gap": 0.7467592731692974,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1185600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 74.67592731620813,
+        "pct_ones": 0.10978464419475656
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_2",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_2.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.23879766464233398,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3651.7176475524902,
+      "node_count": 4825,
+      "num_solutions_found": 8,
+      "pool_solutions_found": 8,
+      "num_incumbents_collected": 73,
+      "num_nodes_collected": 4875,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 14.985783821505358,
+      "best_bound": 2.67875730706519,
+      "mip_gap": 0.8212467670045368,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1136000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 82.12467669990566,
+        "pct_ones": 0.11087702871410736
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_3",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_3.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.2539646625518799,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3601.708871603012,
+      "node_count": 1767,
+      "num_solutions_found": 14,
+      "pool_solutions_found": 14,
+      "num_incumbents_collected": 180,
+      "num_nodes_collected": 1664,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 6.44167879936491,
+      "best_bound": 3.6529817496734363,
+      "mip_gap": 0.4329146386445741,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1188800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 56.541860314061275,
+        "pct_ones": 0.11087702871410736
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_4",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_4.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.2581648826599121,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3600.5393476486206,
+      "node_count": 1486,
+      "num_solutions_found": 12,
+      "pool_solutions_found": 12,
+      "num_incumbents_collected": 142,
+      "num_nodes_collected": 1519,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 9.903598733276265,
+      "best_bound": 3.3879420859390237,
+      "mip_gap": 0.6579079810094205,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1188800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 66.43593837881005,
+        "pct_ones": 0.11142322097378277
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_5",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_5.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.23782062530517578,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3635.8157529830933,
+      "node_count": 4206,
+      "num_solutions_found": 11,
+      "pool_solutions_found": 11,
+      "num_incumbents_collected": 162,
+      "num_nodes_collected": 4252,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 11.5072239570187,
+      "best_bound": 2.8037409042754557,
+      "mip_gap": 0.756349497085668,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1172800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 75.63494970790951,
+        "pct_ones": 0.11150124843945068
+      }
+    },
+    {
+      "instance": "CFL_medium_instance_6",
+      "lp_file": "/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/raw/MILPBench/CFL/CFL_medium_instance/LP/CFL_medium_instance_6.lp.gz",
+      "probe_node_count": 0,
+      "probe_runtime": 0.25484538078308105,
+      "complexity_class": "easy",
+      "presolve_setting": 0,
+      "status": 9,
+      "runtime": 3604.5843410491943,
+      "node_count": 4413,
+      "num_solutions_found": 20,
+      "pool_solutions_found": 20,
+      "num_incumbents_collected": 149,
+      "num_nodes_collected": 4461,
+      "objective_sense_override": "MINIMIZE",
+      "original_objective_sense": "MAXIMIZE",
+      "best_objective": 13.017272671533826,
+      "best_bound": 2.862902927692762,
+      "mip_gap": 0.7800689130563149,
+      "topological_features": {
+        "num_vars": 1281600,
+        "num_constrs": 2400,
+        "nnz": 2561600,
+        "num_binary": 1184000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 78.16659045383399,
+        "pct_ones": 0.11017478152309614
+      }
+    }
+  ]
+}

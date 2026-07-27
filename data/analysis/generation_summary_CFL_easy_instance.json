@@ -1,7 +1,13 @@
 {
-  "timestamp": "2026-07-27T15:45:44.255146",
+  "timestamp": "2026-07-27T16:10:04.069332",
   "category": "CFL_easy_instance",
-  "instances_processed": 30,
+  "category_statistics": {
+    "total_instances_processed": 30,
+    "avg_runtime_sec": 340.459849357605,
+    "max_best_mip_gap_pct": 0.0016542146834068743,
+    "avg_pct_ones": 0.4072319201995012,
+    "avg_incumbents": 284.3666666666667
+  },
   "metadata": [
     {
       "instance": "CFL_easy_instance_0",
@@ -20,7 +26,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 6.130863210247613,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 1.1589603476405294e-13,
+        "pct_ones": 0.4014962593516209
+      }
     },
     {
       "instance": "CFL_easy_instance_1",
@@ -39,7 +56,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.74839266670663,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148400,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0009011768229450914,
+        "pct_ones": 0.40336658354114713
+      }
     },
     {
       "instance": "CFL_easy_instance_10",
@@ -58,7 +86,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.865087116077255,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 149200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 7.302466726622662e-14,
+        "pct_ones": 0.40399002493765584
+      }
     },
     {
       "instance": "CFL_easy_instance_11",
@@ -77,7 +116,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.492961638497635,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 144800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0004720407568840178,
+        "pct_ones": 0.41084788029925184
+      }
     },
     {
       "instance": "CFL_easy_instance_12",
@@ -96,7 +146,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.879469860387231,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0,
+        "pct_ones": 0.4077306733167082
+      }
     },
     {
       "instance": "CFL_easy_instance_13",
@@ -115,7 +176,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.707430271338021,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 142400,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.001122915134341147,
+        "pct_ones": 0.40399002493765584
+      }
     },
     {
       "instance": "CFL_easy_instance_14",
@@ -134,7 +206,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.256041651637308,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 145200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.000721622458647006,
+        "pct_ones": 0.40399002493765584
+      }
     },
     {
       "instance": "CFL_easy_instance_15",
@@ -153,7 +236,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.0438232736982025,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 150400,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 3.5218459152368e-14,
+        "pct_ones": 0.40586034912718205
+      }
     },
     {
       "instance": "CFL_easy_instance_16",
@@ -172,7 +266,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.446785573827579,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 146400,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 9.986746661540174e-14,
+        "pct_ones": 0.4021197007481297
+      }
     },
     {
       "instance": "CFL_easy_instance_17",
@@ -191,7 +296,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.109543784909757,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 143600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0011944400787770601,
+        "pct_ones": 0.4096009975062344
+      }
     },
     {
       "instance": "CFL_easy_instance_18",
@@ -210,7 +326,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.125895820586324,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 145600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0005449875202221468,
+        "pct_ones": 0.41209476309226933
+      }
     },
     {
       "instance": "CFL_easy_instance_19",
@@ -229,7 +356,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.383310644430981,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 145200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0011083679149140662,
+        "pct_ones": 0.4027431421446384
+      }
     },
     {
       "instance": "CFL_easy_instance_2",
@@ -248,7 +386,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 6.4574785319594685,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 147200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 5.972640456037009e-08,
+        "pct_ones": 0.4102244389027431
+      }
     },
     {
       "instance": "CFL_easy_instance_20",
@@ -267,7 +416,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.043556545914448,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 147200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 3.5220321675663076e-14,
+        "pct_ones": 0.40648379052369077
+      }
     },
     {
       "instance": "CFL_easy_instance_21",
@@ -286,7 +446,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.758006544538281,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148400,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 9.333514060641624e-14,
+        "pct_ones": 0.4077306733167082
+      }
     },
     {
       "instance": "CFL_easy_instance_22",
@@ -305,7 +476,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.672478311812267,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 143200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 3.13153570930343e-14,
+        "pct_ones": 0.415211970074813
+      }
     },
     {
       "instance": "CFL_easy_instance_23",
@@ -324,7 +506,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.4549866499560995,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0006376046032832351,
+        "pct_ones": 0.4102244389027431
+      }
     },
     {
       "instance": "CFL_easy_instance_24",
@@ -343,7 +536,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.9346280072527975,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 145600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 4.2937205427101877e-08,
+        "pct_ones": 0.40648379052369077
+      }
     },
     {
       "instance": "CFL_easy_instance_25",
@@ -362,7 +566,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.967962078388355,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 147600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0004087302362075583,
+        "pct_ones": 0.4102244389027431
+      }
     },
     {
       "instance": "CFL_easy_instance_26",
@@ -381,7 +596,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.25298436324352,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 146000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0,
+        "pct_ones": 0.4027431421446384
+      }
     },
     {
       "instance": "CFL_easy_instance_27",
@@ -400,7 +626,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.613803033094205,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 3.850092486870754e-14,
+        "pct_ones": 0.415211970074813
+      }
     },
     {
       "instance": "CFL_easy_instance_28",
@@ -419,7 +656,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.247605071260926,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 144800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0,
+        "pct_ones": 0.40461346633416456
+      }
     },
     {
       "instance": "CFL_easy_instance_29",
@@ -438,7 +686,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.258786973056033,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 147200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 1.6889416213927556e-14,
+        "pct_ones": 0.4170822942643391
+      }
     },
     {
       "instance": "CFL_easy_instance_3",
@@ -457,7 +716,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.322173005485017,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 147200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0005793293285895031,
+        "pct_ones": 0.4077306733167082
+      }
     },
     {
       "instance": "CFL_easy_instance_4",
@@ -476,7 +746,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.879727654459359,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 145200,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.00034177533918752534,
+        "pct_ones": 0.3983790523690773
+      }
     },
     {
       "instance": "CFL_easy_instance_5",
@@ -495,7 +776,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 4.8319191846317535,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 146800,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 1.7488161626362762e-08,
+        "pct_ones": 0.4027431421446384
+      }
     },
     {
       "instance": "CFL_easy_instance_6",
@@ -514,7 +806,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.048701307021278,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 145600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 3.518443122976337e-14,
+        "pct_ones": 0.41209476309226933
+      }
     },
     {
       "instance": "CFL_easy_instance_7",
@@ -533,7 +836,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.342702082321045,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 143600,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.0016542146834068743,
+        "pct_ones": 0.40399002493765584
+      }
     },
     {
       "instance": "CFL_easy_instance_8",
@@ -552,7 +866,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.443442328751586,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 148000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 6.382039506172656e-08,
+        "pct_ones": 0.4077306733167082
+      }
     },
     {
       "instance": "CFL_easy_instance_9",
@@ -571,7 +896,18 @@
       "objective_sense_override": "MINIMIZE",
       "original_objective_sense": "MAXIMIZE",
       "best_objective": 5.206624048286239,
-      "mip_gap": 0.0
+      "mip_gap": 0.0,
+      "topological_features": {
+        "num_vars": 160400,
+        "num_constrs": 800,
+        "nnz": 320400,
+        "num_binary": 146000,
+        "num_integer": 0
+      },
+      "empirical_metrics": {
+        "best_mip_gap_pct": 0.001651154990683642,
+        "pct_ones": 0.4102244389027431
+      }
     }
   ]
 }
