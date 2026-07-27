@@ -5,11 +5,11 @@ Validates the raw outputs from cfl_gnn_data_generator.py to isolate
 whether the pipeline bugs originate in Phase 1 (Data Generation) or 
 Phase 2 (PyG ETL).
 
-V3 Updates:
-- Extracts topological statistics (rows, columns, nnz, var types).
-- Compiles and saves 'generation_summary_{category}.json' robustly.
-- Analyzes MIP Gap distributions to inform ETL quality filters.
-- Generates a 4x2 visual dashboard with sample sizes (N) and dynamic legends.
+V4 Updates:
+- Generates separate visual dashboards PER CATEGORY to avoid scale distortion.
+- Integrates N (sample sizes) directly into plot titles.
+- Fixes Seaborn v0.14 deprecation warnings (hue & palette assignments).
+- Adds dedicated plots for MIP Gap distribution and Topological sizes (Rows, Cols, NNZ, Var Types).
 """
 
 import os
@@ -141,7 +141,7 @@ def generate_full_report_and_json(base_dir, categories, output_path):
         instance_dirs = glob.glob(os.path.join(cat_dir, f"{cat}_*"))
         print(f"\nScanning {cat}: {len(instance_dirs)} instances found")
         
-        cat_metadata_list = [] # List to hold metadata for JSON generation
+        cat_metadata_list = []
         
         for inst_dir in sorted(instance_dirs):
             inst_name = os.path.basename(inst_dir)
@@ -162,7 +162,7 @@ def generate_full_report_and_json(base_dir, categories, output_path):
                 with open(meta_path) as f:
                     meta = json.load(f)
                 
-                cat_metadata_list.append(meta) # Append to category list for JSON
+                cat_metadata_list.append(meta)
                 
                 # 2. Process Incumbents & MIP Gap
                 df_inc = pd.read_parquet(inc_path)
@@ -211,7 +211,8 @@ def generate_full_report_and_json(base_dir, categories, output_path):
 
         # --- GENERATE SUMMARY JSON FOR THIS CATEGORY ---
         if cat_metadata_list:
-            summary_path = os.path.join(base_dir, f"generation_summary_{cat}.json")
+            analysis_dir = os.path.dirname(output_path)
+            summary_path = os.path.join(analysis_dir, f"generation_summary_{cat}.json")
             with open(summary_path, 'w') as f:
                 json.dump({
                     'timestamp': datetime.now().isoformat(),
@@ -256,10 +257,11 @@ def generate_full_report_and_json(base_dir, categories, output_path):
     
     print(summary.to_string())
 
+
 def plot_audit_metrics(csv_path):
     """
-    Reads the Phase 1 audit CSV report and generates a visual dashboard
-    (4x2 grid), saving it as a high-resolution PNG file.
+    Reads the Phase 1 audit CSV report and generates a dedicated visual dashboard
+    (4x2 grid) for EACH category present in the dataset.
     """
     if not os.path.exists(csv_path):
         print(f"\n[WARN] Cannot generate plots, file not found: {csv_path}")
@@ -272,75 +274,87 @@ def plot_audit_metrics(csv_path):
             print("\n[WARN] The CSV is empty. Skipping plot generation.")
             return
 
+        # Calculate continuous variable count
         df['num_continuous'] = df['n_vars'] - df['num_binary'] - df['num_integer']
-        total_instances = len(df)
-        total_incumbents = int(df['n_incumbents'].sum())
+        
+        categories = df['category'].unique()
 
         sns.set_theme(style="whitegrid")
-        # Expanded to 4x2 grid
-        fig, axes = plt.subplots(4, 2, figsize=(16, 24))
 
-        # 1. Execution time distribution
-        sns.histplot(data=df, x='runtime_sec', hue='category', kde=True, ax=axes[0, 0], bins=15, multiple="stack")
-        axes[0, 0].set_title(f'Resolution Time Distribution (N = {total_instances} Instances)')
-        axes[0, 0].set_xlabel('Time (s)')
-        axes[0, 0].set_ylabel('Frequency')
+        # Iterate and generate one separate plot matrix per category
+        for cat in categories:
+            cat_df = df[df['category'] == cat].copy()
+            
+            total_instances = len(cat_df)
+            total_incumbents = int(cat_df['n_incumbents'].sum())
 
-        # 2. Number of incumbents collected
-        sns.histplot(data=df, x='n_incumbents', hue='category', kde=True, ax=axes[0, 1], bins=15, multiple="stack")
-        axes[0, 1].set_title(f'Collected Incumbent Solutions (Total N = {total_incumbents:,})')
-        axes[0, 1].set_xlabel('Number of Incumbents')
-        axes[0, 1].set_ylabel('Frequency')
+            fig, axes = plt.subplots(4, 2, figsize=(16, 24))
+            fig.suptitle(f'EDA Audit Dashboard: {cat}', fontsize=20, fontweight='bold', y=0.92)
 
-        # 3. Scatter plot: Time vs Incumbents
-        sns.scatterplot(data=df, x='runtime_sec', y='n_incumbents', hue='category', ax=axes[1, 0], s=100, alpha=0.7)
-        axes[1, 0].set_title('Relationship: Resolution Time vs. Incumbents')
-        axes[1, 0].set_xlabel('Resolution Time (s)')
-        axes[1, 0].set_ylabel('Number of Incumbents')
+            # 1. Execution time distribution
+            sns.histplot(data=cat_df, x='runtime_sec', kde=True, ax=axes[0, 0], color='skyblue', bins=15)
+            axes[0, 0].set_title(f'Resolution Time Distribution (N = {total_instances} Instances)')
+            axes[0, 0].set_xlabel('Time (s)')
+            axes[0, 0].set_ylabel('Frequency')
 
-        # 4. Boxplot of active variables (pct_ones)
-        sns.boxplot(data=df, x='category', y='pct_ones', ax=axes[1, 1], palette='Set2')
-        axes[1, 1].set_title('Active Variables Distribution (pct_ones)')
-        axes[1, 1].set_ylabel('% of Variables at 1.0')
+            # 2. Number of incumbents collected
+            sns.histplot(data=cat_df, x='n_incumbents', kde=True, ax=axes[0, 1], color='salmon', bins=15)
+            axes[0, 1].set_title(f'Collected Incumbent Solutions (Total N = {total_incumbents:,})')
+            axes[0, 1].set_xlabel('Number of Incumbents')
+            axes[0, 1].set_ylabel('Frequency')
 
-        # 5. Model Dimensions (Rows, Columns, NNZ)
-        df_dims = df.melt(id_vars=['instance', 'category'], 
-                          value_vars=['num_constrs', 'n_vars', 'nnz'], 
-                          var_name='Dimension', value_name='Count')
-        
-        sns.boxplot(data=df_dims, x='Dimension', y='Count', hue='category', ax=axes[2, 0], palette='Set1')
-        axes[2, 0].set_yscale('log')
-        axes[2, 0].set_title('Instance Topology: Rows, Columns, and Non-Zeros (Log Scale)')
-        axes[2, 0].set_xticklabels(['Rows (num_constrs)', 'Cols (n_vars)', 'Non-Zeros (nnz)'])
+            # 3. Scatter plot: Time vs Incumbents
+            sns.scatterplot(data=cat_df, x='runtime_sec', y='n_incumbents', ax=axes[1, 0], color='purple', s=100, alpha=0.7)
+            axes[1, 0].set_title('Relationship: Resolution Time vs. Incumbents')
+            axes[1, 0].set_xlabel('Resolution Time (s)')
+            axes[1, 0].set_ylabel('Number of Incumbents')
 
-        # 6. Variable Types Distribution
-        df_vars = df.melt(id_vars=['instance', 'category'], 
-                          value_vars=['num_binary', 'num_integer', 'num_continuous'], 
-                          var_name='Var_Type', value_name='Count')
-        
-        sns.boxplot(data=df_vars, x='Var_Type', y='Count', hue='category', ax=axes[2, 1], palette='pastel')
-        axes[2, 1].set_yscale('log')
-        axes[2, 1].set_title('Variable Types Distribution (Log Scale)')
-        axes[2, 1].set_xticklabels(['Binary', 'Integer', 'Continuous'])
+            # 4. Boxplot of active variables (pct_ones)
+            sns.boxplot(y=cat_df['pct_ones'], ax=axes[1, 1], color='lightgreen')
+            axes[1, 1].set_title('Active Variables Distribution (pct_ones)')
+            axes[1, 1].set_ylabel('% of Variables at 1.0')
 
-        # 7. MIP Gap Boxplot
-        sns.boxplot(data=df, x='category', y='best_mip_gap_pct', ax=axes[3, 0], palette='rocket')
-        axes[3, 0].set_title('Best MIP Gap Reached per Category (%)')
-        axes[3, 0].set_ylabel('MIP Gap (%)')
+            # 5. Model Dimensions (Rows, Columns, NNZ)
+            df_dims = cat_df.melt(id_vars=['instance'], 
+                                  value_vars=['num_constrs', 'n_vars', 'nnz'], 
+                                  var_name='Dimension', value_name='Count')
+            
+            sns.boxplot(data=df_dims, x='Dimension', y='Count', hue='Dimension', legend=False, ax=axes[2, 0], palette='Set1')
+            axes[2, 0].set_yscale('log')
+            axes[2, 0].set_title('Instance Topology: Rows, Columns, and Non-Zeros (Log Scale)')
+            axes[2, 0].set_xticklabels(['Rows (num_constrs)', 'Cols (n_vars)', 'Non-Zeros (nnz)'])
+            axes[2, 0].set_xlabel('')
 
-        # 8. Scatter: Time vs MIP Gap
-        sns.scatterplot(data=df, x='runtime_sec', y='best_mip_gap_pct', hue='category', ax=axes[3, 1], s=100, alpha=0.7)
-        axes[3, 1].set_title('Resolution Time vs. Final MIP Gap')
-        axes[3, 1].set_xlabel('Resolution Time (s)')
-        axes[3, 1].set_ylabel('MIP Gap (%)')
+            # 6. Variable Types Distribution
+            df_vars = cat_df.melt(id_vars=['instance'], 
+                                  value_vars=['num_binary', 'num_integer', 'num_continuous'], 
+                                  var_name='Var_Type', value_name='Count')
+            
+            sns.boxplot(data=df_vars, x='Var_Type', y='Count', hue='Var_Type', legend=False, ax=axes[2, 1], palette='pastel')
+            axes[2, 1].set_yscale('log')
+            axes[2, 1].set_title('Variable Types Distribution (Log Scale)')
+            axes[2, 1].set_xticklabels(['Binary', 'Integer', 'Continuous'])
+            axes[2, 1].set_xlabel('')
 
-        plt.tight_layout()
-        
-        plot_path = csv_path.replace('.csv', '_plots.png')
-        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
-        plt.close()
-        
-        print(f"\n[OK] Plots successfully generated and saved to: {plot_path}")
+            # 7. MIP Gap Boxplot
+            sns.boxplot(y=cat_df['best_mip_gap_pct'], ax=axes[3, 0], color='coral')
+            axes[3, 0].set_title('Best MIP Gap Reached (%)')
+            axes[3, 0].set_ylabel('MIP Gap (%)')
+
+            # 8. Scatter: Time vs MIP Gap
+            sns.scatterplot(data=cat_df, x='runtime_sec', y='best_mip_gap_pct', ax=axes[3, 1], color='teal', s=100, alpha=0.7)
+            axes[3, 1].set_title('Resolution Time vs. Final MIP Gap')
+            axes[3, 1].set_xlabel('Resolution Time (s)')
+            axes[3, 1].set_ylabel('MIP Gap (%)')
+
+            plt.tight_layout(rect=[0, 0, 1, 0.96])
+            
+            # Save the figure independently for the category
+            plot_path = csv_path.replace('.csv', f'_{cat}_plots.png')
+            plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            print(f"  [OK] Plots successfully generated and saved for {cat} to: {plot_path}")
         
     except Exception as e:
         print(f"\n[ERROR] Failed to generate plots: {e}")

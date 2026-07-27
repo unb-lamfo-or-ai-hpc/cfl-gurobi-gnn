@@ -18,7 +18,7 @@ cd /raid/vrcelestino/data/cfl-gurobi-gnn
 
 echo "=== Running Audit Script ==="
 # Execute the script
-srun python3 src/data_transformation/audit_phase1_eda_v3.py --instance CFL_medium_instance_0
+srun python3 src/data_transformation/audit_phase1_eda_v3.py --instance CFL_easy_instance_0
 
 echo "---------------------------------------------------"
 echo "=== Job Completed ==="
