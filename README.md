@@ -37,19 +37,19 @@ The pipeline is structured into four functional pillars:
 ```
 Raw MILPBench .lp.gz files
         |
-        | Step 1 — cfl_gnn_data_generator_v4.py
+        | Step 1 — cfl_gnn_data_generator_v7.py
         v
 per-instance/  [original_features.pickle.gz, incumbents.parquet, metadata.json]
         |
-        +-----> Step 2 — audit_phase1_eda_v2.py  (Phase 1 EDA & Data Validation)
+        +-----> Step 2 — audit_phase1_eda_v3.py  (Phase 1 EDA & Data Validation)
         |
-        | Step 3 — build_pyg_dataset_v4.py
+        | Step 3 — build_pyg_dataset_v6.py
         v
 pyg_dataset/  [data_0.pt ... data_N.pt]
         |
-        | Step 4 — test_pyg_dataset_v4.py
-        |          dataset_statistics_v2.py
-        |          graph_clustering_v2.py
+        | Step 4 — test_pyg_dataset_v5.py
+        |          pyg_dataset_statistics.py
+        |          pyg_clustering_pca_umap.py
         |
         | Step 5 — train_neural_diving_serial_v4.py  (smoke test)
         | Step 6 — train_neural_diving_parallel_v4.py  (full DGX run)
@@ -79,13 +79,13 @@ hints/  [instance_gnn_hint.hnt]
 │   └── graph_transform/
 │       └── milp_dataset_v2.py               # NeuralDivingDataset (PyG, cached I/O)
 │
-├── cfl_gnn_data_generator_v4.py             # Step 1: Gurobi data extraction
+├── cfl_gnn_data_generator_v7.py             # Step 1: Gurobi data extraction
 ├── gurobi_hpc_runner_v2.py                  # Step 1 / Step 8: HPC parametric runner
-├── audit_phase1_eda_v2.py                   # Step 2: Phase 1 EDA & Data Validation
-├── build_pyg_dataset_v4.py                  # Step 3: PyG ETL pipeline
-├── test_pyg_dataset_v4.py                   # Step 4: Dataset schema audit
-├── dataset_statistics_v2.py                 # Step 4: Statistical summary
-├── graph_clustering_v2.py                   # Step 4: PCA / UMAP visualisation
+├── audit_phase1_eda_v3.py                   # Step 2: Phase 1 EDA & Data Validation
+├── build_pyg_dataset_v6.py                  # Step 3: PyG ETL pipeline
+├── test_pyg_dataset_v5.py                   # Step 4: Dataset schema audit
+├── pyg_dataset_statistics.py                 # Step 4: Statistical summary
+├── pyg_clustering_pca_umap.py                   # Step 4: PCA / UMAP visualisation
 ├── train_neural_diving_serial_v4.py         # Step 5: Single-GPU smoke test
 ├── train_neural_diving_parallel_v4.py       # Step 6: DDP multi-GPU training
 ├── generate_mip_hints.py                    # Step 7: GNN inference to .hnt files
@@ -103,10 +103,10 @@ Follow this dependency-ordered sequence for reproducible results.
 
 **STEP 1 — Data Generation**
 ```bash
-python3 cfl_gnn_data_generator_v4.py \
+python3 cfl_gnn_data_generator_v7.py \
     --input_dir            /path/to/milpbench_lp_files \
-    --output_dir           /raid/.../raw_instances \
-    --time_limit           300 \
+    --output_dir           /path/to/intemediate_lps \
+    --time_limit           3600 \
     --probe_time           30 \
     --complexity_threshold 500 \
     --pool_size            20 \
@@ -116,26 +116,25 @@ python3 cfl_gnn_data_generator_v4.py \
 
 **STEP 2 — Phase 1 EDA & Data Validation** *(requires Step 1 complete)*
 ```bash
-python3 audit_phase1_eda_v2.py \
-    --category CFL_easy_instance \
-    --instance CFL_easy_instance_0
+python3 audit_phase1_eda_v3.py
 
 **STEP 3 — PyG ETL** *(requires Step 1 complete)*
 ```bash
-python3 build_pyg_dataset_v4.py \
+python3 build_pyg_dataset_v6.py \
     --categories    CFL_easy_instance CFL_medium_instance CFL_hard_instance \
+    --gaps          0.10 0.85 0.90 \
     --base_raw_dir  /raid/.../raw_instances \
     --base_pyg_dir  /raid/.../pyg_dataset
 ```
 
 **STEP 4 — Dataset Validation** *(requires Step 3 complete)*
 ```bash
-python3 test_pyg_dataset_v4.py \
+python3 test_pyg_dataset_v5.py \
     --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
 
-python3 dataset_statistics_v2.py
+python3 pyg_dataset_statistics.py
 
-python3 graph_clustering_v2.py
+python3 pyg_clustering_pca_umap.py
 ```
 
 **STEP 5 — Serial Training: Smoke Test** *(requires Step 4 validated)*
