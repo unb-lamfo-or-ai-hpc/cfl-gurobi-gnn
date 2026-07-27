@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
-#SBATCH --time=04:00:00
+#SBATCH --time=08:00:00
 #SBATCH --output=slurm_real_gnn_%j.out
 
 echo "=== Entrenamiento GNN con Dataset Real (Neural Diving) ==="
@@ -25,7 +25,7 @@ SCRIPT_NAME="src/gnn/train_neural_diving_serial_v5.py"
 
 # Opción B: Escenario con full EASY y MEDIUM parcial
 srun python $SCRIPT_NAME \
-    --experiment_name run_final_full_dataset \
+    --experiment_name run_02_partial_dataset \
     --easy_split 4605 986 988 \
     --medium_split 214 46 47 \
     --hard_split 0 0 0 \

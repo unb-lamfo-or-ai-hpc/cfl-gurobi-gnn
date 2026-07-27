@@ -36,7 +36,7 @@ SCRIPT_NAME="src/gnn/train_neural_diving_parallel_v5.py"
 # Opción B: Escenario con full EASY y MEDIUM parcial
 # Ejecución DDP: Sin srun, usando torchrun en las 4 GPUs
 torchrun --nproc_per_node=4 $SCRIPT_NAME \
-    --experiment_name run_02_partial_dataset \
+    --experiment_name run_02_partial_dataset_ddp \
     --easy_split 4605 986 988 \
     --medium_split 214 46 47 \
     --hard_split 0 0 0 \
