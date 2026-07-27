@@ -25,13 +25,10 @@ warnings.filterwarnings('ignore', category=UserWarning, module='umap')
 def extract_macro_features(pt_file):
     """Extracts a vector of condensed features from a PyG HeteroData graph."""
     try:
-        # weights_only=False required for PyG HeteroData objects
         data = torch.load(pt_file, map_location='cpu', weights_only=False)
         
         num_vars = data['variable'].x.shape[0]
         num_constrs = data['constraint'].x.shape[0]
-        
-        # Number of non-zeros (NNZ) in the constraint matrix
         num_edges = data['variable', 'rev_coef', 'constraint'].edge_index.shape[1]
         
         # Density of the bipartite graph
@@ -42,12 +39,12 @@ def extract_macro_features(pt_file):
         is_int = (data['variable'].x[:, 5] == 1.0).sum().item()
         prop_discrete = (is_bin + is_int) / num_vars if num_vars > 0 else 0
         
-        # Performance metrics (safe extraction with fallback)
+        # Performance metrics
         exec_time = float(getattr(data, 'exec_time', 0.0))
         mip_gap = float(getattr(data, 'mip_gap', 1.0))
         
         # Cap MIP gap at 1.0 (100%) for visualization purposes
-        if mip_gap == float('inf') or mip_gap > 1.0:
+        if np.isinf(mip_gap) or np.isnan(mip_gap) or mip_gap > 1.0:
             mip_gap = 1.0
             
         return {
@@ -67,16 +64,14 @@ def main():
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset"
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
     
-    # Define and create output directory
     output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis"
     os.makedirs(output_dir, exist_ok=True)
     
-    print("=== Starting Macro-Feature Extraction for Clustering ===")
+    print("=== Starting Macro-Feature Extraction for PyG Clustering ===")
     
     data_records = []
     
     for category in categories:
-        # Clean category name for plotting (e.g., 'Easy', 'Medium', 'Hard')
         cat_clean = category.replace("CFL_", "").replace("_instance", "").capitalize()
         processed_dir = os.path.join(base_dir, category, "processed")
         pt_files = glob.glob(os.path.join(processed_dir, "data_*.pt"))
@@ -84,21 +79,20 @@ def main():
         if not pt_files:
             continue
             
-        print(f"Scanning {category}...")
+        print(f"Scanning {category} ({len(pt_files)} graphs)...")
         for pt_file in pt_files:
             features = extract_macro_features(pt_file)
             if features is not None:
                 features['Category'] = cat_clean
                 data_records.append(features)
                 
-    # Create DataFrame
     df = pd.DataFrame(data_records)
     
     if df.empty:
         print(" [ERROR] No valid data could be extracted. Nothing to plot.")
         return
         
-    print(f"Total valid graphs processed: {len(df)}")
+    print(f"\nTotal valid graphs processed: {len(df)}")
     
     # --- 1. Empirical Plot: Time vs MIP Gap ---
     print("Generating empirical plot (Time vs MIP Gap)...")
@@ -109,19 +103,18 @@ def main():
                     palette={'Easy': '#2ecc71', 'Medium': '#f1c40f', 'Hard': '#e74c3c'},
                     alpha=0.7, edgecolor=None)
                     
-    plt.title('Gurobi Computational Performance by Difficulty Class', fontsize=14, weight='bold')
+    plt.title('PyG Graph Performance by Difficulty Class', fontsize=14, weight='bold')
     plt.xlabel('Solve Time (s)')
     plt.ylabel('MIP Gap (Capped at 100%)')
     plt.legend(title='Difficulty')
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "plot_time_vs_gap.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "pyg_plot_time_vs_gap.png"), dpi=300)
     plt.close()
 
     # --- Prepare matrix for Dimensionality Reduction ---
     feature_cols = ['Vars', 'Constrs', 'Density', 'Prop_Discrete', 'Time', 'Gap']
     X = df[feature_cols].values
     
-    # Scaling is mandatory for PCA and UMAP
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
@@ -137,7 +130,6 @@ def main():
     
     # --- 3. UMAP Reduction ---
     print("Computing UMAP...")
-    # Dynamic n_neighbors to prevent ValueError if dataset is very small
     n_neighbors = min(15, max(2, len(X_scaled) - 1))
     reducer = umap.UMAP(n_components=2, random_state=42, n_neighbors=n_neighbors, min_dist=0.1)
     X_umap = reducer.fit_transform(X_scaled)
@@ -148,7 +140,6 @@ def main():
     print("Generating clustering plots...")
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
     
-    # PCA Plot
     sns.scatterplot(ax=axes[0], data=df, x='PCA1', y='PCA2', hue='Category', 
                     palette={'Easy': '#2ecc71', 'Medium': '#f1c40f', 'Hard': '#e74c3c'},
                     alpha=0.8, edgecolor='w', s=50)
@@ -157,7 +148,6 @@ def main():
     axes[0].set_ylabel('Principal Component 2')
     axes[0].legend(title='Difficulty')
     
-    # UMAP Plot
     sns.scatterplot(ax=axes[1], data=df, x='UMAP1', y='UMAP2', hue='Category', 
                     palette={'Easy': '#2ecc71', 'Medium': '#f1c40f', 'Hard': '#e74c3c'},
                     alpha=0.8, edgecolor='w', s=50)
@@ -167,7 +157,7 @@ def main():
     axes[1].legend(title='Difficulty')
     
     plt.tight_layout()
-    combined_plot_path = os.path.join(output_dir, "plot_pca_vs_umap.png")
+    combined_plot_path = os.path.join(output_dir, "pyg_plot_pca_vs_umap.png")
     plt.savefig(combined_plot_path, dpi=300)
     plt.close()
     

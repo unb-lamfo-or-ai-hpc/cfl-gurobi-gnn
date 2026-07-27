@@ -1,5 +1,5 @@
 """
-Phase 1: Dataset Statistical Analysis
+Phase 2: Dataset Statistical Analysis
 =====================================
 Analyzes generated .pt files to extract structural metrics (variables, 
 constraints, non-zeros) and performance metrics (solve time, MIP gap) 
@@ -27,7 +27,7 @@ def main():
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset"
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
     
-    print("=== Starting Dataset Statistical Analysis ===")
+    print("=== Starting PyG Dataset Statistical Analysis ===")
     
     report_rows = []
     
@@ -36,25 +36,26 @@ def main():
         pt_files = glob.glob(os.path.join(processed_dir, "data_*.pt"))
         
         if not pt_files:
-            print(f"No files found in {processed_dir}")
+            print(f" [WARN] No files found in {processed_dir}")
             continue
             
+        print(f" Processing {cat}: {len(pt_files)} graphs found...")
         metrics = {'vars': [], 'rows': [], 'nnz': [], 'time': [], 'gap': []}
         
         for pt_file in pt_files:
-            # Fixed: weights_only=False required for PyG HeteroData objects
             data = torch.load(pt_file, map_location='cpu', weights_only=False)
             
             # Structural metrics
             metrics['vars'].append(data['variable'].x.shape[0])
             metrics['rows'].append(data['constraint'].x.shape[0])
+            
             # NNZ calculation: number of edges in the bipartite constraint-variable graph
             nnz = data['variable', 'rev_coef', 'constraint'].edge_index.shape[1]
             metrics['nnz'].append(nnz)
             
-            # Performance metrics: Fallback to instance-level attributes if necessary
-            exec_time = getattr(data, 'exec_time', getattr(data['instance'], 'exec_time', 0.0))
-            mip_gap = getattr(data, 'mip_gap', getattr(data['instance'], 'mip_gap', 0.0))
+            # Performance metrics (Updated to match v6 ETL attribute naming)
+            exec_time = getattr(data, 'exec_time', 0.0)
+            mip_gap = getattr(data, 'mip_gap', 1.0)
             
             metrics['time'].append(float(exec_time))
             metrics['gap'].append(float(mip_gap))
@@ -84,15 +85,15 @@ def main():
             'Gap 95% CI': f"± {g_ci*100:.3f}%"
         })
         
-    #report_df = pd.DataFrame(report_rows)
-    #report_df.to_csv("dataset_statistics_report_v2.csv", index=False)
-    #print("Report saved successfully to dataset_statistics_report_v2.csv")
+    if not report_rows:
+        print("[ERROR] No graphs processed. Exiting.")
+        return
 
     report_df = pd.DataFrame(report_rows)
     
-    # Mostrar resultados en consola de forma limpia
+    # Mostrar resultados en consola
     print("\n" + "="*120)
-    print(" REPORTE ESTADÍSTICO DEL DATASET (LPs Intermedios)")
+    print(" REPORTE ESTADÍSTICO DE GRAFOS MATERIALIZADOS (PyG)")
     print("="*120)
     print(report_df.to_string(index=False))
     print("="*120)
@@ -101,9 +102,9 @@ def main():
     output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis"
     os.makedirs(output_dir, exist_ok=True)
     
-    out_csv = os.path.join(output_dir, "dataset_statistics_report.csv")
+    out_csv = os.path.join(output_dir, "pyg_dataset_statistics_report.csv")
     report_df.to_csv(out_csv, index=False)
-    print(f"\nReport saved successfully to: {out_csv}")
+    print(f"\n[OK] Report saved successfully to: {out_csv}")
 
 if __name__ == "__main__":
     main()

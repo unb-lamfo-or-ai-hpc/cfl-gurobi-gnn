@@ -1,0 +1,34 @@
+#!/bin/bash
+#SBATCH --job-name=pyg_audit_full
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --gres=gpu:0        # No necesitamos GPU para estadística, clustering ni X-Ray
+#SBATCH --time=01:00:00    # Tiempo suficiente para ejecutar los 3 scripts secuencialmente
+#SBATCH --output=slurm_pyg_audit_full_%j.out
+
+echo "=== Iniciando Auditoría Completa de Grafos PyG (CPU Node) ==="
+EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
+cd $EXEC_DIR
+
+# Activar entorno
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+# ---------------------------------------------------------
+echo -e "\n--- PASO 1: Extracción de Estadísticas ---"
+# ---------------------------------------------------------
+srun python3 src/data_transformation/pyg_dataset_statistics.py
+
+# ---------------------------------------------------------
+echo -e "\n--- PASO 2: Reducción de Dimensionalidad (PCA/UMAP) ---"
+# ---------------------------------------------------------
+srun python3 src/data_transformation/pyg_clustering_pca_umap.py
+
+# ---------------------------------------------------------
+echo -e "\n--- PASO 3: Data X-Ray (Inspección Profunda de un Tensor) ---"
+# Puedes modificar la categoría y el índice (data_idx) para inspeccionar otro grafo específico
+# ---------------------------------------------------------
+srun python3 src/data_transformation/pyg_data_xray.py --category CFL_medium_instance --data_idx 0
+
+echo -e "\n=== Job Finalizado ==="

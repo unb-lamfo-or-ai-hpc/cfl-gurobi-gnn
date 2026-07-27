@@ -6,17 +6,9 @@ This script encodes the MILP structure as a variable-constraint bipartite graph
 and attaches multi-task labels for node-level (solution assignment) and
 graph-level (MIP gap, solve time, optimality) prediction.
 
-Architecture:
-    Variable nodes  : [obj_coeff, lb, ub, is_cont, is_bin, is_int, lp_relax]  -> shape [N_v, 7]
-    Constraint nodes: [rhs, sense_lt, sense_eq, sense_gt, dummy]               -> shape [N_c, 5]
-    Edges (v->c)    : log-scaled constraint matrix coefficients                -> shape [nnz, 1]
-    Edges (c->v)    : same coefficients, reversed direction                    -> shape [nnz, 1]
-
-Key Design Decisions:
-    - Log-scale (sign * ln(1 + |x|)) is applied to compress Big-M magnitudes.
-    - LP relaxations remain unscaled to preserve the [0, 1] probability space.
-    - Constraints use string comparison ('<', '=', '>') for numpy dtype safety.
-    - Centralized metadata mapping ensures safe curriculum learning splits.
+V6 Updates:
+- Dynamic MAX_MIP_GAP per category via argparse.
+- Removed hardcoded global MAX_MIP_GAP.
 """
 
 import os
@@ -47,11 +39,6 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 logger = logging.getLogger(__name__)
-
-# ---------------------------------------------------------------------------
-# Quality Filter
-# ---------------------------------------------------------------------------
-MAX_MIP_GAP = 0.10   # Discard B&B incumbents with a MIP gap strictly > 10%
 
 # ---------------------------------------------------------------------------
 # Data Definitions (Synchronized with Phase 1 Generator)
@@ -121,7 +108,6 @@ def build_heterodata(
         is_bin  = torch.FloatTensor((variable_features.types == 'B').astype(float)).unsqueeze(-1)
         is_int  = torch.FloatTensor((variable_features.types == 'I').astype(float)).unsqueeze(-1)
 
-        # Fallback to zero-vector if relaxation length mismatches due to presolve anomalies
         if len(lp_vector_root) != model_features.num_vars:
             lp_vector_root = np.zeros(model_features.num_vars)
             
@@ -143,7 +129,6 @@ def build_heterodata(
         )
 
         # 3. Bipartite Edge Indices and Attributes Mapping
-        # Edge indices shape: (2, E) -> [0] represents constraints, [1] represents variables
         rows = torch.LongTensor(edge_indices[0])
         cols = torch.LongTensor(edge_indices[1])
         edge_weight = sanitize_array(edge_features, name="A", apply_log_scale=True)
@@ -162,7 +147,6 @@ def build_heterodata(
             return None
 
         graph_data['variable'].y = torch.FloatTensor(sol_vector)
-        # Identify discrete variables to compute localized loss during training
         graph_data['variable'].is_discrete = (is_bin + is_int).clamp(0.0, 1.0).squeeze(-1)
 
         # 5. Graph-Level Multi-Task Labels & Centralized Metadata
@@ -172,7 +156,6 @@ def build_heterodata(
         graph_data.incumbent_node = int(incumbent_node)
         graph_data.instance_name  = str(instance_name)
         
-        # Safe extraction from the master summary JSON
         graph_data.complexity_class  = metadata.get('complexity_class', 'unknown')
         graph_data.probe_node_count  = metadata.get('probe_node_count', -1)
         graph_data.presolve_used     = (metadata.get('presolve_setting', 0) == -1)
@@ -184,21 +167,14 @@ def build_heterodata(
         return None
 
 # ---------------------------------------------------------------------------
-# Per-Instance ETL Processing
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# Per-Instance ETL Processing (Memory Optimized)
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
 # Per-Instance ETL Processing (Extreme Memory Optimization via Streaming)
 # ---------------------------------------------------------------------------
 
 def process_instance(inst_dir: str,
                      global_idx_start: int,
                      processed_dir: str,
-                     metadata: dict) -> int:
+                     metadata: dict,
+                     max_mip_gap: float) -> int:
     """
     Reads a specific instance directory and generates PyG .pt files.
     Optimized via Base-Graph cloning AND Parquet batch-streaming to strictly
@@ -225,7 +201,6 @@ def process_instance(inst_dir: str,
         edge_features       = raw['edge_features']
 
         # 2. Safely fetch LP relaxation ONLY for the root node
-        # Using filters prevents loading the entire relaxation tree into RAM
         lp_vector_root = np.zeros(model_features.num_vars)
         if os.path.exists(relaxations_path):
             df_relax = pd.read_parquet(relaxations_path, filters=[('node', '==', 0)])
@@ -257,7 +232,6 @@ def process_instance(inst_dir: str,
         current_global_idx = global_idx_start
 
         # Depuration counters
-        # --- NUEVOS CONTADORES DE DEPURACIÓN ---
         stats = {
             'evaluados': 0,
             'descartados_gap': 0,
@@ -266,7 +240,6 @@ def process_instance(inst_dir: str,
         }
 
         # 4. STREAMING PARQUET (The Ultimate OOM Fix)
-        # Instead of loading all solutions, we stream them 50 at a time.
         parquet_file = pq.ParquetFile(incumbents_path)
         
         for batch in parquet_file.iter_batches(batch_size=50):
@@ -279,17 +252,15 @@ def process_instance(inst_dir: str,
                 except (ValueError, KeyError):
                     row_gap = 1.0
 
-                if row_gap > MAX_MIP_GAP:
+                if row_gap > max_mip_gap:
                     stats['descartados_gap'] += 1
                     continue
 
                 try:
                     sol_vector = np.array(row['solution_vector'])
                     
-                    # Clone the base topology
                     graph = base_graph.clone()
                 
-                    # Inject solution-specific labels
                     graph['variable'].y = torch.FloatTensor(sol_vector)
                     graph.mip_gap       = float(row_gap)
                     graph.exec_time     = float(row.get('time', 0.0))
@@ -302,7 +273,6 @@ def process_instance(inst_dir: str,
                     current_global_idx += 1
                     graphs_generated   += 1
                     
-                    # Clear individual graph tensor
                     del graph
 
                 except MemoryError:
@@ -312,11 +282,9 @@ def process_instance(inst_dir: str,
                     stats['otros_errores'] += 1
                     logger.error(f"  [{instance_name}] ERROR al guardar grafo: {e}")
                 
-            # Force memory release for this chunk before loading the next 50 solutions
             del df_chunk
             gc.collect()
 
-        # Final aggressive garbage collection
         del base_graph, raw, model_features, variable_features, constraint_features
         del edge_indices, edge_features
         gc.collect()
@@ -324,7 +292,7 @@ def process_instance(inst_dir: str,
         logger.info(
             f"[{instance_name}] ETL completado | "
             f"Evaluados: {stats['evaluados']} | Guardados: {graphs_generated} | "
-            f"Descartados (> {MAX_MIP_GAP*100}% Gap): {stats['descartados_gap']} | "
+            f"Descartados (> {max_mip_gap*100}% Gap): {stats['descartados_gap']} | "
             f"Errores RAM: {stats['errores_memoria']} | Otros: {stats['otros_errores']}"
         )
 
@@ -347,6 +315,12 @@ def main():
         default=["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"],
         help="List of MILP instance categories to process."
     )
+    # NUEVO PARÁMETRO: Lista de gaps por categoría
+    parser.add_argument(
+        '--gaps', nargs='+', type=float,
+        default=[0.10, 0.80, 0.85],
+        help="List of MAX_MIP_GAP values corresponding to each category (e.g., 0.10 0.80 0.85)."
+    )
     parser.add_argument(
         '--base_raw_dir',
         default="/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps",
@@ -361,13 +335,24 @@ def main():
         '--clear_processed', action='store_true',
         help="If set, strictly purge existing data_*.pt files before rebuilding."
     )
+    parser.add_argument(
+        '--analysis_dir', type=str,
+        default='/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis',
+        help='Directory where the Phase 1 audit saved the JSON summaries.'
+    )
     args = parser.parse_args()
 
-    logger.info("=== Starting Multi-Task PyG ETL Pipeline ===")
-    logger.info(f"MAX_MIP_GAP filter   : {MAX_MIP_GAP * 100:.1f}%")
-    logger.info(f"Categories targeted  : {args.categories}")
+    # Validación de argumentos
+    if len(args.categories) != len(args.gaps):
+        logger.error("The number of categories must match the number of gap values provided.")
+        sys.exit(1)
 
-    for category in args.categories:
+    logger.info("=== Starting Multi-Task PyG ETL Pipeline ===")
+    logger.info(f"Categories targeted  : {args.categories}")
+    logger.info(f"Target MIP Gaps      : {args.gaps}")
+
+    # Bucle emparejado (categoría, gap)
+    for category, category_gap in zip(args.categories, args.gaps):
         cat_raw_dir   = os.path.join(args.base_raw_dir, category)
         cat_pyg_dir   = os.path.join(args.base_pyg_dir, category)
         processed_dir = os.path.join(cat_pyg_dir, "processed")
@@ -380,10 +365,10 @@ def main():
             for f in old_files:
                 os.remove(f)
 
-        logger.info(f"\n=== Processing Category: {category} ===")
+        logger.info(f"\n=== Processing Category: {category} (MAX_MIP_GAP: {category_gap * 100:.1f}%) ===")
 
-        # Centralized metadata loading from Phase 1 summary
-        summary_path = os.path.join(args.base_raw_dir, f"generation_summary_{category}.json")
+        # Centralized metadata loading from Phase 1 summary (now from analysis_dir)
+        summary_path = os.path.join(args.analysis_dir, f"generation_summary_{category}.json")
         category_metadata = {}
         
         if os.path.exists(summary_path):
@@ -404,11 +389,13 @@ def main():
             instance_name = os.path.basename(inst_dir)
             inst_metadata = category_metadata.get(instance_name, {})
             
+            # Pasar el gap dinámico a la función
             num_generated = process_instance(
                 inst_dir          = inst_dir,
                 global_idx_start  = global_graph_counter,
                 processed_dir     = processed_dir,
                 metadata          = inst_metadata,
+                max_mip_gap       = category_gap
             )
             global_graph_counter += num_generated
 
