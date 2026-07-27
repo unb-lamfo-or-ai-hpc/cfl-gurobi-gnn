@@ -207,7 +207,8 @@ class DataCollectionCallback:
         node_count = model.cbGet(GRB.Callback.MIPSOL_NODCNT)
         sol_count = model.cbGet(GRB.Callback.MIPSOL_SOLCNT)
         mip_gap = abs(obj_val - bnd_val) / (abs(obj_val) + 1e-10)
-        timestamp = time.time()
+        #timestamp = time.time()
+        timestamp = model.cbGet(GRB.Callback.RUNTIME)
         
         # Log with real-time progress tracking
         self.logger.info(

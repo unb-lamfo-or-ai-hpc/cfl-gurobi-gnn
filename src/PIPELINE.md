@@ -39,7 +39,7 @@ For a project overview and quick-start guide, see the root
 ```
 Raw MILPBench LP files
         |
-        | Step 1: cfl_gnn_data_generator_v4.py
+        | Step 1: cfl_gnn_data_generator_v7.py
         |         gurobi_hpc_runner_v2.py
         v
 per-instance directories
@@ -48,15 +48,15 @@ per-instance directories
   node_relaxations.parquet
   metadata.json
         |
-        | Step 2: audit_phase1_eda_v2.py  (Phase 1 EDA & Data Validation)
+        | Step 2: audit_phase1_eda_v3.py  (Phase 1 EDA & Data Validation)
         |
-        | Step 3: build_pyg_dataset_v4.py
+        | Step 3: build_pyg_dataset_v6.py
         v
   data_0.pt ... data_N.pt   (PyG HeteroData bipartite graphs)
         |
-        | Step 4: test_pyg_dataset_v4.py
-        |         dataset_statistics_v2.py
-        |         graph_clustering_v2.py
+        | Step 4: test_pyg_dataset_v5.py
+        |         pyg_dataset_statistics.py
+        |         pyg_clustering_pca_umap.py
         |
         | Step 5: train_neural_diving_serial_v4.py  (smoke test)
         | Step 6: train_neural_diving_parallel_v4.py  (full DGX run)
@@ -95,13 +95,13 @@ vector, and edges are weighted by log-scaled constraint matrix coefficients $A_{
 │   └── graph_transform/
 │       └── milp_dataset_v2.py               # NeuralDivingDataset (PyG, cached I/O)
 │
-├── cfl_gnn_data_generator_v4.py             # Step 1: Gurobi data extraction
+├── cfl_gnn_data_generator_v7.py             # Step 1: Gurobi data extraction
 ├── gurobi_hpc_runner_v2.py                  # Step 1 / Step 8: HPC parametric runner
-├── audit_phase1_eda_v2.py                   # Step 2: Phase 1 EDA & Data Validation
-├── build_pyg_dataset_v4.py                  # Step 3: PyG ETL pipeline
-├── test_pyg_dataset_v4.py                   # Step 4: Dataset schema audit
-├── dataset_statistics_v2.py                 # Step 4: Statistical summary
-├── graph_clustering_v2.py                   # Step 4: PCA / UMAP visualisation
+├── audit_phase1_eda_v3.py                   # Step 2: Phase 1 EDA & Data Validation
+├── build_pyg_dataset_v6.py                  # Step 3: PyG ETL pipeline
+├── test_pyg_dataset_v5.py                   # Step 4: Dataset schema audit
+├── pyg_dataset_statistics.py                 # Step 4: Statistical summary
+├── pyg_clustering_pca_umap.py                   # Step 4: PCA / UMAP visualisation
 ├── train_neural_diving_serial_v4.py         # Step 5: Single-GPU training
 ├── train_neural_diving_parallel_v4.py       # Step 6: DDP multi-GPU training
 ├── generate_mip_hints.py                    # Step 7: GNN inference to .hnt files
@@ -181,12 +181,12 @@ Step 1  →  Step 3  →  Step 4  →  Step 5  →  Step 6  →  Step 7         
 
 | Step | Script | Depends on |
 | :---: | :--- | :--- |
-| 1 | `cfl_gnn_data_generator_v4.py` | Raw MILPBench `.lp.gz` files |
-| 2 | `audit_phase1_eda_v2.py` | Step 1 complete |
-| 3 | `build_pyg_dataset_v4.py` | Step 1 complete |
-| 4a | `test_pyg_dataset_v4.py` | Step 3 complete — **cannot run before Step 3** |
-| 4b | `dataset_statistics_v2.py` | Step 3 complete |
-| 4c | `graph_clustering_v2.py` | Step 3 complete |
+| 1 | `cfl_gnn_data_generator_v7.py` | Raw MILPBench `.lp.gz` files |
+| 2 | `audit_phase1_eda_v3.py` | Step 1 complete |
+| 3 | `build_pyg_dataset_v6.py` | Step 1 complete |
+| 4a | `test_pyg_dataset_v5.py` | Step 3 complete — **cannot run before Step 3** |
+| 4b | `pyg_dataset_statistics.py` | Step 3 complete |
+| 4c | `pyg_clustering_pca_umap.py` | Step 3 complete |
 | 5 | `train_neural_diving_serial_v4.py` | Step 4 validated |
 | 6 | `train_neural_diving_parallel_v4.py` | Step 5 smoke test passed |
 | 7 | `generate_mip_hints.py` | Step 6 complete (`best_model.pt`) |
@@ -194,7 +194,7 @@ Step 1  →  Step 3  →  Step 4  →  Step 5  →  Step 6  →  Step 7         
 | 8b | `gurobi_hpc_runner_v2.py` (GNN-guided) | Step 7 complete |
 | 9 | `evaluate_model_v2.py` | Steps 3 and 6 complete |
 
-> **Critical:** `test_pyg_dataset_v4.py` loads `.pt` files via `NeuralDivingDataset`
+> **Critical:** `test_pyg_dataset_v5.py` loads `.pt` files via `NeuralDivingDataset`
 > and **requires Step 3 to have completed**.  It cannot be used as a pre-ETL
 > schema validator.
 
@@ -205,20 +205,20 @@ Step 1  →  Step 3  →  Step 4  →  Step 5  →  Step 6  →  Step 7         
 ### Step 1 — Data Generation
 
 ```bash
-python cfl_gnn_data_generator_v4.py \
+python cfl_gnn_data_generator_v7.py \
     --categories           CFL_easy_instance CFL_medium_instance CFL_hard_instance \
     --start_idx            0 \
     --end_idx              500 \
-    --time_limit           300 \
+    --time_limit           3600 \
     --probe_time           30 \
     --complexity_threshold 500 \
     --input_dir            /path/to/MILPBench/CFL \
-    --output_dir           /raid/.../raw_instances
+    --output_dir           /path/to/intermediate_lps
 ```
 
 | Parameter | Default | Description |
 | :--- | :---: | :--- |
-| `--time_limit` | `60` | Main solve time budget per instance (seconds). |
+| `--time_limit` | `3600` | Main solve time budget per instance (seconds). |
 | `--probe_time` | `30` | Probe solve budget for complexity classification (seconds). |
 | `--complexity_threshold` | `500` | B&B node count boundary: easy vs. hard. |
 | `--pool_size` | `20` | Maximum number of incumbents to retain per instance. |
@@ -227,9 +227,7 @@ python cfl_gnn_data_generator_v4.py \
 ### Step 2 — Phase 1 EDA & Data Validation
 
 ```bash
-python audit_phase1_eda_v2.py \
-    --category CFL_easy_instance \
-    --instance CFL_easy_instance_0
+python audit_phase1_eda_v3.py
 ```
 
 Verify:
@@ -240,8 +238,9 @@ Verify:
 ### Step 3 — PyG ETL
 
 ```bash
-python build_pyg_dataset_v4.py \
-    --categories      CFL_easy_instance CFL_medium_instance CFL_hard_instance \
+python build_pyg_dataset_v6.py \
+    --categories    CFL_easy_instance CFL_medium_instance CFL_hard_instance \
+    --gaps          0.10 0.85 0.90 \
     --base_raw_dir    /raid/.../raw_instances \
     --base_pyg_dir    /raid/.../pyg_dataset \
     --clear_processed       # Include only when rebuilding from scratch
@@ -251,14 +250,14 @@ python build_pyg_dataset_v4.py \
 
 ```bash
 # 4a: Schema and topology audit
-python test_pyg_dataset_v4.py \
+python test_pyg_dataset_v5.py \
     --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
 
 # 4b: Statistical summary
-python dataset_statistics_v2.py
+python pyg_dataset_statistics.py
 
 # 4c: PCA / UMAP cluster visualisation
-python graph_clustering_v2.py
+python pyg_clustering_pca_umap.py
 ```
 
 **Stop and review before Step 5:**

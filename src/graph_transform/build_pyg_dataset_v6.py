@@ -239,6 +239,13 @@ def process_instance(inst_dir: str,
             'otros_errores': 0
         }
 
+        # --- UNIX TIMESTAMP CORRECTION ---
+        # Read only column 'time' (fast with RAM) to find t0
+        df_times = pq.read_table(incumbents_path, columns=['time']).to_pandas()
+        t0_timestamp = df_times['time'].min()
+        del df_times
+        # ------------------------------------------
+
         # 4. STREAMING PARQUET (The Ultimate OOM Fix)
         parquet_file = pq.ParquetFile(incumbents_path)
         
@@ -262,6 +269,16 @@ def process_instance(inst_dir: str,
                     graph = base_graph.clone()
                 
                     graph['variable'].y = torch.FloatTensor(sol_vector)
+
+                    # --- APPLY TIME CORRECTION ---
+                    raw_time = float(row.get('time', 0.0))
+                    # If time is Unix Epoch (> 100 millons), normalize to seconds
+                    if raw_time > 1e8:
+                        exec_time = raw_time - t0_timestamp
+                    else:
+                        exec_time = raw_time # Forward-compatibility si se arregla la Fase 1
+                    # ------------------------------------
+
                     graph.mip_gap       = float(row_gap)
                     graph.exec_time     = float(row.get('time', 0.0))
                     graph.is_optimal    = bool(row_gap <= 1e-4)
