@@ -1,11 +1,15 @@
 """
-Phase 1 Exploratory Data Analysis (EDA) & Audit - v2
+Phase 1 Exploratory Data Analysis (EDA) & Audit - v3
 ====================================================
-Validates the raw outputs from cfl_gnn_data_generator_v5.py to isolate
+Validates the raw outputs from cfl_gnn_data_generator.py to isolate
 whether the pipeline bugs originate in Phase 1 (Data Generation) or 
 Phase 2 (PyG ETL).
 
-This version includes safety checks for missing files and empty dataframes.
+V3 Updates:
+- Extracts topological statistics (rows, columns, nnz, var types).
+- Compiles and saves 'generation_summary_{category}.json' robustly.
+- Analyzes MIP Gap distributions to inform ETL quality filters.
+- Generates a 4x2 visual dashboard with sample sizes (N) and dynamic legends.
 """
 
 import os
@@ -13,16 +17,16 @@ import glob
 import json
 import gzip
 import pickle
+from datetime import datetime
 import pandas as pd
 import numpy as np
 
 import argparse
-import os
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from collections import namedtuple  # ← Add this
+from collections import namedtuple
 
 # ================================================================
 # NAMEDTUPLE DEFINITIONS (must match data generator)
@@ -89,7 +93,6 @@ def audit_single_instance(instance_dir):
     print(f"Ones (1.0)       : {n_ones:,} ({100.0*n_ones/len(sol_0):.1f}%)")
     print(f"Fractional       : {n_frac:,}")
     
-    # Critical check: For CFL, we expect 10-40% ones, not 90%+
     pct_ones = 100.0 * n_ones / len(sol_0)
     if pct_ones > 80.0:
         print(f"[RED ALERT] Trivial incumbent detected: {pct_ones:.1f}% ones (expected 10-40%)")
@@ -119,33 +122,11 @@ def audit_single_instance(instance_dir):
     else:
         print(f"[ERROR] Dimension mismatch: {num_vars} != {len(sol_0)}")
 
-    # 4. Compare Pool vs Incumbents (if pool exists)
-    sol_path = os.path.join(instance_dir, "solutions.pickle.gz")
-    if os.path.exists(sol_path):
-        try:
-            with gzip.open(sol_path, 'rb') as f:
-                sol_data = pickle.load(f)
-            
-            if 'solution_pool' in sol_data and len(sol_data['solution_pool']) > 0:
-                inc_best = df_inc['objective'].min()
-                pool_best = min([p['objective'] for p in sol_data['solution_pool']])
-                
-                print(f"\n--- POOL CONSISTENCY ---")
-                print(f"Best incumbent objective : {inc_best:.6f}")
-                print(f"Best pool objective      : {pool_best:.6f}")
-                print(f"Match (within 1e-6)      : {abs(inc_best - pool_best) < 1e-6}")
-            else:
-                print(f"[WARN] Solution pool is empty or missing 'solution_pool' key")
-        except Exception as e:
-            print(f"[WARN] Could not load solutions.pickle.gz: {e}")
-    else:
-        print(f"[WARN] solutions.pickle.gz not found (not critical for this audit)")
 
-
-def generate_full_report(base_dir, categories, output_path):
-    """Aggregates statistics across all instances in all categories."""
+def generate_full_report_and_json(base_dir, categories, output_path):
+    """Aggregates statistics and centrally generates the JSON summary for ETL."""
     print(f"\n{'='*60}")
-    print(f"STEP 2 & 4: FULL DATASET AGGREGATION")
+    print(f"STEP 2 & 4: DATASET AGGREGATION & JSON CREATION")
     print(f"{'='*60}")
     
     report = []
@@ -160,10 +141,13 @@ def generate_full_report(base_dir, categories, output_path):
         instance_dirs = glob.glob(os.path.join(cat_dir, f"{cat}_*"))
         print(f"\nScanning {cat}: {len(instance_dirs)} instances found")
         
+        cat_metadata_list = [] # List to hold metadata for JSON generation
+        
         for inst_dir in sorted(instance_dirs):
             inst_name = os.path.basename(inst_dir)
             meta_path = os.path.join(inst_dir, "metadata.json")
             inc_path  = os.path.join(inst_dir, "incumbents.parquet")
+            feat_path = os.path.join(inst_dir, "original_features.pickle.gz")
             
             if not os.path.exists(meta_path):
                 failed_instances.append((inst_name, "missing metadata.json"))
@@ -174,11 +158,14 @@ def generate_full_report(base_dir, categories, output_path):
                 continue
             
             try:
+                # 1. Process Metadata
                 with open(meta_path) as f:
                     meta = json.load(f)
                 
-                df_inc = pd.read_parquet(inc_path)
+                cat_metadata_list.append(meta) # Append to category list for JSON
                 
+                # 2. Process Incumbents & MIP Gap
+                df_inc = pd.read_parquet(inc_path)
                 if len(df_inc) == 0:
                     failed_instances.append((inst_name, "empty incumbents.parquet"))
                     continue
@@ -186,6 +173,20 @@ def generate_full_report(base_dir, categories, output_path):
                 sol_0 = np.array(df_inc.iloc[0]['solution_vector'])
                 n_ones = (sol_0 == 1.0).sum()
                 
+                # Extract MIP Gap info (multiplying by 100 for percentage)
+                best_mip_gap = df_inc['mip_gap'].min() * 100.0 if 'mip_gap' in df_inc else np.nan
+                median_mip_gap = df_inc['mip_gap'].median() * 100.0 if 'mip_gap' in df_inc else np.nan
+                
+                # 3. Extract Topological Features
+                num_constrs, nnz, num_binary, num_integer = np.nan, np.nan, np.nan, np.nan
+                if os.path.exists(feat_path):
+                    with gzip.open(feat_path, 'rb') as f:
+                        orig = pickle.load(f)
+                    num_constrs = orig['model_features'].num_constrs
+                    num_binary  = orig['model_features'].num_binary
+                    num_integer = orig['model_features'].num_integer
+                    nnz         = len(orig['edge_features'])
+
                 report.append({
                     'category': cat,
                     'instance': inst_name,
@@ -194,7 +195,13 @@ def generate_full_report(base_dir, categories, output_path):
                     'runtime_sec': meta.get('runtime', 0.0),
                     'status': meta.get('status', -1),
                     'n_incumbents': len(df_inc),
+                    'best_mip_gap_pct': best_mip_gap,
+                    'median_mip_gap_pct': median_mip_gap,
                     'n_vars': len(sol_0),
+                    'num_constrs': num_constrs,
+                    'nnz': nnz,
+                    'num_binary': num_binary,
+                    'num_integer': num_integer,
                     'best_obj': df_inc['objective'].min(),
                     'worst_obj': df_inc['objective'].max(),
                     'pct_ones': 100.0 * n_ones / len(sol_0)
@@ -202,70 +209,57 @@ def generate_full_report(base_dir, categories, output_path):
             except Exception as e:
                 failed_instances.append((inst_name, str(e)))
 
+        # --- GENERATE SUMMARY JSON FOR THIS CATEGORY ---
+        if cat_metadata_list:
+            summary_path = os.path.join(base_dir, f"generation_summary_{cat}.json")
+            with open(summary_path, 'w') as f:
+                json.dump({
+                    'timestamp': datetime.now().isoformat(),
+                    'category': cat,
+                    'instances_processed': len(cat_metadata_list),
+                    'metadata': cat_metadata_list
+                }, f, indent=2)
+            print(f"[OK] Summary JSON strictly generated for ETL: {summary_path}")
+
     if not report:
         print("\n[CRITICAL ERROR] No valid instances found in any category!")
-        print("Cannot generate report.")
+        print("Cannot generate CSV report.")
         return
     
     df_report = pd.DataFrame(report)
     
-    # Save to disk
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     df_report.to_csv(output_path, index=False)
     
-    print(f"\n[OK] Saved aggregate report to: {output_path}")
+    print(f"\n[OK] Saved aggregate CSV report to: {output_path}")
     print(f"Total instances processed: {len(report)}")
     print(f"Failed instances: {len(failed_instances)}")
     
     if failed_instances:
         print("\n--- FAILED INSTANCES ---")
-        for inst, reason in failed_instances[:10]:  # Show first 10
+        for inst, reason in failed_instances[:10]:
             print(f"  {inst}: {reason}")
         if len(failed_instances) > 10:
             print(f"  ... and {len(failed_instances) - 10} more")
     
-    # Print summary statistics to console
     print("\n" + "="*60)
     print("AGGREGATE STATISTICS BY CATEGORY")
     print("="*60)
     
     summary = df_report.groupby('category').agg({
-        'n_incumbents': ['count', 'mean', 'std'],
-        'n_vars': ['mean', 'std', 'min', 'max'],
-        'pct_ones': ['mean', 'std', 'min', 'max']
+        'n_incumbents': ['count', 'mean'],
+        'best_mip_gap_pct': ['min', 'mean', 'max'],
+        'n_vars': ['mean'],
+        'num_constrs': ['mean'],
+        'pct_ones': ['mean']
     }).round(2)
     
     print(summary.to_string())
-    
-    # Flag problematic patterns
-    print("\n" + "="*60)
-    print("RED FLAGS CHECK")
-    print("="*60)
-    
-    high_ones = df_report[df_report['pct_ones'] > 80.0]
-    if len(high_ones) > 0:
-        print(f"[RED ALERT] {len(high_ones)} instances have >80% ones (trivial incumbent problem)")
-        print(high_ones[['instance', 'pct_ones', 'n_vars']].head(5).to_string(index=False))
-    else:
-        print("[OK] No trivial incumbent problems detected")
-    
-    low_incumbents = df_report[df_report['n_incumbents'] < 5]
-    if len(low_incumbents) > 0:
-        print(f"\n[WARN] {len(low_incumbents)} instances have <5 incumbents (insufficient training labels)")
-    else:
-        print("\n[OK] All instances have sufficient incumbents")
-    
-    var_variance = df_report.groupby('category')['n_vars'].std()
-    if (var_variance > 100).any():
-        print(f"\n[WARN] High variance in n_vars within categories (possible dimension mismatch)")
-        print(var_variance)
-    else:
-        print("\n[OK] Variable counts are consistent within categories")
 
 def plot_audit_metrics(csv_path):
     """
-    Reads the Phase 1 audit CSV report and generates a visual dashboard, 
-    saving it as a high-resolution PNG file.
+    Reads the Phase 1 audit CSV report and generates a visual dashboard
+    (4x2 grid), saving it as a high-resolution PNG file.
     """
     if not os.path.exists(csv_path):
         print(f"\n[WARN] Cannot generate plots, file not found: {csv_path}")
@@ -274,42 +268,76 @@ def plot_audit_metrics(csv_path):
     try:
         df = pd.read_csv(csv_path)
         
-        # Validate that we have enough data to plot
         if len(df) == 0:
             print("\n[WARN] The CSV is empty. Skipping plot generation.")
             return
 
+        df['num_continuous'] = df['n_vars'] - df['num_binary'] - df['num_integer']
+        total_instances = len(df)
+        total_incumbents = int(df['n_incumbents'].sum())
+
         sns.set_theme(style="whitegrid")
-        fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+        # Expanded to 4x2 grid
+        fig, axes = plt.subplots(4, 2, figsize=(16, 24))
 
         # 1. Execution time distribution
-        sns.histplot(df['runtime_sec'], kde=True, ax=axes[0, 0], color='skyblue', bins=10)
-        axes[0, 0].set_title('Resolution Time Distribution (Seconds)')
+        sns.histplot(data=df, x='runtime_sec', hue='category', kde=True, ax=axes[0, 0], bins=15, multiple="stack")
+        axes[0, 0].set_title(f'Resolution Time Distribution (N = {total_instances} Instances)')
         axes[0, 0].set_xlabel('Time (s)')
         axes[0, 0].set_ylabel('Frequency')
 
         # 2. Number of incumbents collected
-        sns.histplot(df['n_incumbents'], kde=True, ax=axes[0, 1], color='salmon', bins=10)
-        axes[0, 1].set_title('Number of Collected Incumbent Solutions')
+        sns.histplot(data=df, x='n_incumbents', hue='category', kde=True, ax=axes[0, 1], bins=15, multiple="stack")
+        axes[0, 1].set_title(f'Collected Incumbent Solutions (Total N = {total_incumbents:,})')
         axes[0, 1].set_xlabel('Number of Incumbents')
         axes[0, 1].set_ylabel('Frequency')
 
         # 3. Scatter plot: Time vs Incumbents
-        sns.scatterplot(data=df, x='runtime_sec', y='n_incumbents', ax=axes[1, 0], color='purple', s=100, alpha=0.7)
+        sns.scatterplot(data=df, x='runtime_sec', y='n_incumbents', hue='category', ax=axes[1, 0], s=100, alpha=0.7)
         axes[1, 0].set_title('Relationship: Resolution Time vs. Incumbents')
         axes[1, 0].set_xlabel('Resolution Time (s)')
         axes[1, 0].set_ylabel('Number of Incumbents')
 
         # 4. Boxplot of active variables (pct_ones)
-        sns.boxplot(y=df['pct_ones'], ax=axes[1, 1], color='lightgreen')
+        sns.boxplot(data=df, x='category', y='pct_ones', ax=axes[1, 1], palette='Set2')
         axes[1, 1].set_title('Active Variables Distribution (pct_ones)')
         axes[1, 1].set_ylabel('% of Variables at 1.0')
 
+        # 5. Model Dimensions (Rows, Columns, NNZ)
+        df_dims = df.melt(id_vars=['instance', 'category'], 
+                          value_vars=['num_constrs', 'n_vars', 'nnz'], 
+                          var_name='Dimension', value_name='Count')
+        
+        sns.boxplot(data=df_dims, x='Dimension', y='Count', hue='category', ax=axes[2, 0], palette='Set1')
+        axes[2, 0].set_yscale('log')
+        axes[2, 0].set_title('Instance Topology: Rows, Columns, and Non-Zeros (Log Scale)')
+        axes[2, 0].set_xticklabels(['Rows (num_constrs)', 'Cols (n_vars)', 'Non-Zeros (nnz)'])
+
+        # 6. Variable Types Distribution
+        df_vars = df.melt(id_vars=['instance', 'category'], 
+                          value_vars=['num_binary', 'num_integer', 'num_continuous'], 
+                          var_name='Var_Type', value_name='Count')
+        
+        sns.boxplot(data=df_vars, x='Var_Type', y='Count', hue='category', ax=axes[2, 1], palette='pastel')
+        axes[2, 1].set_yscale('log')
+        axes[2, 1].set_title('Variable Types Distribution (Log Scale)')
+        axes[2, 1].set_xticklabels(['Binary', 'Integer', 'Continuous'])
+
+        # 7. MIP Gap Boxplot
+        sns.boxplot(data=df, x='category', y='best_mip_gap_pct', ax=axes[3, 0], palette='rocket')
+        axes[3, 0].set_title('Best MIP Gap Reached per Category (%)')
+        axes[3, 0].set_ylabel('MIP Gap (%)')
+
+        # 8. Scatter: Time vs MIP Gap
+        sns.scatterplot(data=df, x='runtime_sec', y='best_mip_gap_pct', hue='category', ax=axes[3, 1], s=100, alpha=0.7)
+        axes[3, 1].set_title('Resolution Time vs. Final MIP Gap')
+        axes[3, 1].set_xlabel('Resolution Time (s)')
+        axes[3, 1].set_ylabel('MIP Gap (%)')
+
         plt.tight_layout()
         
-        # Save the figure in the same directory as the CSV report
         plot_path = csv_path.replace('.csv', '_plots.png')
-        plt.savefig(plot_path, dpi=300)
+        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
         plt.close()
         
         print(f"\n[OK] Plots successfully generated and saved to: {plot_path}")
@@ -317,19 +345,17 @@ def plot_audit_metrics(csv_path):
     except Exception as e:
         print(f"\n[ERROR] Failed to generate plots: {e}")
 
-def main():
 
+def main():
     parser = argparse.ArgumentParser(description='Audit Phase 1 Data')
     parser.add_argument('--instance', type=str, default="CFL_easy_instance_0",
                         help='Name of the specific instance to deep dive (e.g., CFL_easy_instance_0)')
     args = parser.parse_args()
     
     target_instance_name = args.instance
-
     category_name = target_instance_name.rsplit('_', 1)[0]
 
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
-    #output_report = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report.csv"
     output_report = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report_{category_name}.csv"
     
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
@@ -340,8 +366,6 @@ def main():
     print(f"Base directory: {base_dir}")
     print(f"Output report:  {output_report}")
     
-    # Target one known instance for the deep dive
-    #target_instance = os.path.join(base_dir, "CFL_easy_instance", "CFL_easy_instance_0")
     target_instance_path = os.path.join(base_dir, category_name, target_instance_name)
 
     if os.path.exists(target_instance_path):
@@ -350,20 +374,15 @@ def main():
         print(f"\n[WARN] Target instance not found: {target_instance_path}")
         print("Proceeding to aggregate report only...")
 
-    generate_full_report(base_dir, categories, output_report)
-
-    # Generate plots from the CSV report
+    generate_full_report_and_json(base_dir, categories, output_report)
     plot_audit_metrics(output_report)
     
     print("\n" + "="*60)
     print("AUDIT COMPLETE")
     print("="*60)
     print("\nNext steps:")
-    print("1. Review the console output above")
-    print("2. Open the CSV report for detailed per-instance analysis")
-    print("3. If RED ALERTS appear, Phase 1 needs fixing (v5 → v6)")
-    print("4. If all checks pass, the bug is in Phase 2 ETL (build_pyg_dataset_v4)")
-
+    print("1. Review the generated plots to find the optimal MAX_MIP_GAP.")
+    print("2. Proceed to Phase 2 (ETL) ensuring PyG filters align with audit metrics.")
 
 if __name__ == "__main__":
     main()
