@@ -16,27 +16,24 @@ conda activate tfm_env
 
 SCRIPT_NAME="src/gnn/train_neural_diving_serial_v5.py"
 
-# Opción A: El escenario ideal (Rápido y Máxima Inteligencia):
-
-## Ejemplo A: Entrenamiento Equilibrado Clásico
-srun python $SCRIPT_NAME \
-    --easy_split 30 0 0 \
-    --medium_split 15 10 5 \
-    --hard_split 0 0 0 \
-    --hidden_dim 64 --lr 0.00005 --grad_clip 1.0
-
-# Ejemplo B: El Reto OOD (Out-of-Distribution)
-#srun python $SCRIPT_NAME \
-#    --easy_split 430 0 0 \
-#    --medium_split 300 99 0 \
-#    --hard_split 130 85 184 \
-#    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0
-
-## Opción B: Si la Opción A falla por OOM (Modo Supervivencia Extrema)
+# Opción A: Teste
 #srun python $SCRIPT_NAME \
 #    --easy_split 30 0 0 \
-#    --medium_split 0 10 0 \
-#    --hard_split 0 0 10 \
-#    --hidden_dim 32 --lr 0.0001 --grad_clip 1.0 --clear_cache
+#    --medium_split 15 10 5 \
+#    --hard_split 0 0 0 \
+#    --hidden_dim 64 --lr 0.00005 --grad_clip 1.0
+
+# Opción B: Escenario con full EASY y MEDIUM parcial
+srun python $SCRIPT_NAME \
+    --experiment_name run_final_full_dataset \
+    --easy_split 4605 986 988 \
+    --medium_split 214 46 47 \
+    --hard_split 0 0 0 \
+    --hidden_dim 64 \
+    --lr 0.00005 \
+    --grad_clip 1.0 \
+    --epochs 150 \
+    --patience 20 \
+    --clear_cache
 
 echo "=== Job Finalizado ==="

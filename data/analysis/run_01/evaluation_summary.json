@@ -1,0 +1,10 @@
+{
+  "experiment_name": "run_01",
+  "n_test_variables": 5924800,
+  "optimal_threshold": 0.9937,
+  "roc_auc": 0.9964,
+  "pr_auc": 0.2237,
+  "precision": 0.2642,
+  "recall": 0.3172,
+  "f1_score": 0.2883
+}
