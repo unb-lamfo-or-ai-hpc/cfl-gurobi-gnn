@@ -1,0 +1,16 @@
+{
+    "experiment_name": "run_01_ddp",
+    "hyperparameters": {
+        "hidden_dim": 64,
+        "learning_rate": 5e-05,
+        "pos_weight": 955.2522583007812
+    },
+    "best_epoch_results": {
+        "best_epoch": 99,
+        "val_loss": 0.1792826453844706,
+        "accuracy": 0.9543548180784537,
+        "f1_score": 0.028354332340487974,
+        "precision": 0.014381225227602991,
+        "recall": 0.9991471215351813
+    }
+}

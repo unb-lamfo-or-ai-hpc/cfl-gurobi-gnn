@@ -14,6 +14,7 @@ import os
 import argparse
 import logging
 import random
+import json
 
 import numpy as np
 import torch
@@ -212,10 +213,12 @@ def main():
     loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
     best_val_loss = float('inf')
+    best_epoch_info = {}
     patience_counter = 0
-    hist_train_loss, hist_val_loss = [], []
     
-    fig, ax = plt.subplots(figsize=(10, 6))
+    hist_train_loss, hist_val_loss = [], []
+    hist_acc, hist_f1, hist_prec, hist_rec = [], [], [], []
+    
     log_path = os.path.join(output_dir, "training_log_serial.csv")
     
     header = f"{'Ep':<4} | {'T.Loss':<8} | {'V.Loss':<8} | {'Acc%':<7} | {'F1':<6} | {'Prec':<6} | {'Rec':<6}"
@@ -234,8 +237,14 @@ def main():
                 val_loss, tp, tn, fp, fn = eval_loop(model, val_loader, loss_fn, device, args)
             
             acc, prec, rec, f1 = calc_metrics(tp, tn, fp, fn)
+            
+            # Almacenar métricas
             hist_train_loss.append(train_loss)
             hist_val_loss.append(val_loss if val_loader else train_loss)
+            hist_acc.append(acc)
+            hist_f1.append(f1)
+            hist_prec.append(prec)
+            hist_rec.append(rec)
 
             marker = ""
             if val_loader and val_loss < best_val_loss:
@@ -243,6 +252,15 @@ def main():
                 patience_counter = 0
                 torch.save(model.state_dict(), os.path.join(output_dir, "best_model.pt"))
                 marker = " -> Best"
+                
+                best_epoch_info = {
+                    "best_epoch": epoch + 1,
+                    "val_loss": val_loss,
+                    "accuracy": acc,
+                    "f1_score": f1,
+                    "precision": prec,
+                    "recall": rec
+                }
             elif val_loader:
                 patience_counter += 1
 
@@ -250,23 +268,64 @@ def main():
             log_file.write(f"{epoch+1},{train_loss},{val_loss},{acc},{f1},{prec},{rec}\n")
             log_file.flush()
 
-            # Plot updates
-            ax.clear()
-            ax.set_title('Learning Curve — Neural Diving (Serial)')
+            # --- GENERACIÓN DEL DASHBOARD VISUAL (2x2) ---
+            fig, axes = plt.subplots(2, 2, figsize=(14, 10))
             epochs_range = range(1, len(hist_train_loss) + 1)
-            ax.plot(epochs_range, hist_train_loss, label='Train Loss', color='tab:red')
+            
+            # Subplot 1: Loss
+            axes[0, 0].plot(epochs_range, hist_train_loss, color='tab:red', label='Train Loss', lw=2)
+            if val_loader: 
+                axes[0, 0].plot(epochs_range, hist_val_loss, color='tab:orange', linestyle='dashed', label='Val Loss', lw=2)
+            axes[0, 0].set_title('BCE Loss', weight='bold')
+            axes[0, 0].legend()
+            axes[0, 0].grid(alpha=0.3)
+
+            # Subplot 2: F1-Score
             if val_loader:
-                ax.plot(epochs_range, hist_val_loss, label='Val Loss', color='tab:orange', linestyle='dashed')
-            ax.legend()
+                axes[0, 1].plot(epochs_range, hist_f1, color='tab:purple', label='Val F1', lw=2)
+            axes[0, 1].set_title('F1-Score Evolution', weight='bold')
+            axes[0, 1].legend()
+            axes[0, 1].grid(alpha=0.3)
+
+            # Subplot 3: Precision vs Recall
+            if val_loader:
+                axes[1, 0].plot(epochs_range, hist_prec, color='tab:blue', label='Val Precision', lw=2)
+                axes[1, 0].plot(epochs_range, hist_rec, color='tab:green', label='Val Recall', lw=2)
+            axes[1, 0].set_title('Precision vs Recall', weight='bold')
+            axes[1, 0].legend()
+            axes[1, 0].grid(alpha=0.3)
+
+            # Subplot 4: Accuracy
+            if val_loader:
+                axes[1, 1].plot(epochs_range, hist_acc, color='tab:cyan', label='Val Accuracy', lw=2)
+            axes[1, 1].set_title('Accuracy', weight='bold')
+            axes[1, 1].legend()
+            axes[1, 1].grid(alpha=0.3)
+
             fig.tight_layout()
-            plt.savefig(os.path.join(output_dir, "loss_curve.png"), dpi=120)
+            plt.savefig(os.path.join(output_dir, "training_dashboard.png"), dpi=150)
+            plt.close(fig)
+            # ---------------------------------------------
 
             if val_loader and patience_counter >= args.patience:
                 logger.info(f"[Early Stopping] Triggered at epoch {epoch+1}")
                 break
 
-    plt.close(fig)
-    logger.info("Training complete.")
+    # --- GENERACIÓN DEL JSON DE RESUMEN ---
+    summary = {
+        "experiment_name": args.experiment_name,
+        "hyperparameters": {
+            "hidden_dim": args.hidden_dim,
+            "learning_rate": args.lr,
+            "pos_weight": pos_weight.item()
+        },
+        "best_epoch_results": best_epoch_info
+    }
+    with open(os.path.join(output_dir, "experiment_summary.json"), 'w') as f:
+        json.dump(summary, f, indent=4)
+        
+    logger.info(f"Dashboard y JSON de resumen guardados en: {output_dir}")
+    logger.info("Serial training complete.")
 
 if __name__ == "__main__":
     main()
