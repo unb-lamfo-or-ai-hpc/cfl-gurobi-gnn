@@ -76,7 +76,7 @@ def main():
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset"
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
     
-    output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis"
+    output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step2"
     os.makedirs(output_dir, exist_ok=True)
     
     print("=== Starting Relative Feature Extraction for PyG Clustering ===")

@@ -1,0 +1,3 @@
+Category,Vars (Mean ± SD),Rows (Mean ± SD),NNZ (Mean ± SD),Time Mean ± SD,"Time Range [Min, Max]",Time 95% CI,Gap Mean ± SD,"Gap Range [Min, Max]",Gap 95% CI
+CFL_easy_instance (N=6579),160400.0 ± 0.0,800.0 ± 0.0,320400.0 ± 0.0,265.07s ± 65.45s,"[121.68s, 755.80s]",± 1.582s,0.74% ± 1.41%,"[0.00%, 9.93%]",± 0.034%
+CFL_medium_instance (N=307),1281600.0 ± 0.0,2400.0 ± 0.0,2561600.0 ± 0.0,1565.54s ± 989.27s,"[551.79s, 3582.74s]",± 110.843s,79.20% ± 6.96%,"[56.54%, 85.00%]",± 0.780%

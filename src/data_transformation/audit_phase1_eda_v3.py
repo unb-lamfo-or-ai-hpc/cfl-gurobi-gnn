@@ -238,7 +238,7 @@ def generate_category_plots(df, cat, analysis_dir):
 def main():
     # Rutas absolutas fijas según la estructura de tu clúster
     base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
-    analysis_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis"
+    analysis_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step1"
     os.makedirs(analysis_dir, exist_ok=True)
     
     categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
@@ -253,7 +253,7 @@ def main():
     print("\n" + "="*70)
     print("AUDIT FULLY COMPLETE")
     print("="*70)
-    print("Check ./data/analysis/ for the specific JSON, CSV and PNGs of each category.")
+    print("Check ./data/analysis/step1/ for the specific JSON, CSV and PNGs of each category.")
 
 if __name__ == "__main__":
     main()

@@ -221,7 +221,7 @@ def main():
     parser.add_argument("--hard_split", type=int, nargs=3, default=[0, 0, 0])
     args = parser.parse_args()
 
-    output_dir = os.path.join(project_root, "data", "analysis", args.experiment_name)
+    output_dir = os.path.join(project_root, "data", "analysis", "step3", args.experiment_name)
     if is_master:
         os.makedirs(output_dir, exist_ok=True)
         logger.info(f"=== Evaluation started. DDP Mode: {is_ddp} ===")

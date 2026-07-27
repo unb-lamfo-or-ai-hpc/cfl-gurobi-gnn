@@ -99,7 +99,7 @@ def main():
     print("="*120)
     
     # Guardar en disco para incluir en el paper
-    output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis"
+    output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step2"
     os.makedirs(output_dir, exist_ok=True)
     
     out_csv = os.path.join(output_dir, "pyg_dataset_statistics_report.csv")

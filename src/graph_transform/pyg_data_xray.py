@@ -148,7 +148,7 @@ def main():
     args = parser.parse_args()
 
     pt_file = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset/{args.category}/processed/data_{args.data_idx}.pt"
-    audit_csv = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/phase1_audit_report_{args.category}.csv"
+    audit_csv = f"/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step2/phase1_audit_report_{args.category}.csv"
     
     instance_name, complexity = x_ray_pt_file(pt_file)
     
