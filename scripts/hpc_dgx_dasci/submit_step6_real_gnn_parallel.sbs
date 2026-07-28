@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:4
-#SBATCH --time=04:00:00
+#SBATCH --time=08:00:00
 #SBATCH --output=slurm_real_gnn_%j.out
 
 echo "=== Entrenamiento GNN con Dataset Real (Neural Diving con hasta 8 GPUs DDP) ==="

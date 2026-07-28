@@ -208,6 +208,17 @@ def main():
             )
             break
 
+    # ==========================================
+    # WARM-START (Reinitiate from checkpoint)
+    # ==========================================
+    model_checkpoint = os.path.join(output_dir, "best_model.pt")
+    if os.path.exists(model_checkpoint):
+        logger.info(f"Checkpoint encontrado en {model_checkpoint}. Cargando pesos para reanudar...")
+        model.load_state_dict(torch.load(model_checkpoint, map_location=device, weights_only=True))
+    else:
+        logger.info("No se encontró checkpoint previo. Iniciando entrenamiento desde cero.")
+    # ==========================================
+
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     pos_weight = compute_pos_weight(train_loader, device)
     loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)

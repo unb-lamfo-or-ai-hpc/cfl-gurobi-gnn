@@ -17,7 +17,7 @@ conda activate tfm_env
 
 # --- PANEL DE CONTROL DE EVALUACIÓN ---
 # Apuntamos al modelo resultante de nuestro entrenamiento definitivo DDP
-MODELO_PATH="data/models/discodatos/cfl-gurobi-gnn/data/models/run_02_partial_dataset/best_model.pt"
+MODELO_PATH="/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/models/run_02_partial_dataset/best_model.pt"
 EXPERIMENT_NAME="run_02_partial_dataset"
 # --------------------------------------
 
@@ -29,6 +29,7 @@ srun python3 src/gnn/evaluate_model_v3.py \
     --model_path $MODELO_PATH \
     --experiment_name $EXPERIMENT_NAME \
     --hidden_dim 64 \
+    --batch_size 1 \
     --easy_split 4605 986 988 \
     --medium_split 214 46 47 \
     --hard_split 0 0 0

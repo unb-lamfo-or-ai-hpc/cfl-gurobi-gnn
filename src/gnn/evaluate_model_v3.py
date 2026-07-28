@@ -275,6 +275,9 @@ def main():
             logger.error("No valid predictions collected.")
             return
 
+        y_true = np.array(y_true).astype(int)
+        y_probs = np.array(y_probs).astype(float)
+
         optimal_thr = find_optimal_threshold(y_true, y_probs)
         y_pred = (y_probs >= optimal_thr).astype(int)
 

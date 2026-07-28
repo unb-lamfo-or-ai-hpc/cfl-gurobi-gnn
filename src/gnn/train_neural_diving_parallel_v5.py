@@ -228,6 +228,21 @@ def main():
             )
             break
 
+    # =======================================================
+    # WARM-START DDP (Reinitiate from checkpoint before DDP)
+    # =======================================================
+    model_checkpoint = os.path.join(output_dir, "best_model.pt")
+    if os.path.exists(model_checkpoint):
+        if is_master: logger.info(f"Checkpoint encontrado en {model_checkpoint}. Cargando pesos...")
+        # Nota: Los modelos DDP guardados usan el prefijo 'module.'. Al cargarlos 
+        # en el modelo base antes de DDP, limpiamos las llaves por seguridad:
+        state_dict = torch.load(model_checkpoint, map_location=device, weights_only=True)
+        clean_state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
+        model.load_state_dict(clean_state_dict)
+    else:
+        if is_master: logger.info("No se encontró checkpoint previo. Iniciando desde cero.")
+    # ====================================================================
+
     model = DDP(model, device_ids=[local_rank])
     dist.barrier()
 

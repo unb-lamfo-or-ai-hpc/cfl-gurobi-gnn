@@ -1,0 +1,10 @@
+{
+  "experiment_name": "run_02_partial_dataset",
+  "n_test_variables": 199870000,
+  "optimal_threshold": 0.9968,
+  "roc_auc": 0.9996,
+  "pr_auc": 0.8477,
+  "precision": 0.7409,
+  "recall": 0.836,
+  "f1_score": 0.7856
+}
