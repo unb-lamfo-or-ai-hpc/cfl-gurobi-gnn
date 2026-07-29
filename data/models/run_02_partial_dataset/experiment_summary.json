@@ -1,0 +1,16 @@
+{
+    "experiment_name": "run_02_partial_dataset",
+    "hyperparameters": {
+        "hidden_dim": 64,
+        "learning_rate": 5e-05,
+        "pos_weight": 486.3001403808594
+    },
+    "best_epoch_results": {
+        "best_epoch": 9,
+        "val_loss": 0.03454449990323868,
+        "accuracy": 0.9957712816496377,
+        "f1_score": 0.4894226016406655,
+        "precision": 0.3247214617994945,
+        "recall": 0.99316149784938
+    }
+}
