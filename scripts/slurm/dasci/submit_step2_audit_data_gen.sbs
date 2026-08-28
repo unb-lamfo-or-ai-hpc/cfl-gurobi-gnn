@@ -20,7 +20,8 @@ export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
 echo "=== Running Audit Script ==="
 # Execute the script
-srun python3 -m cfl_gnn.cli.audit_collection --instance CFL_easy_instance_0
+srun python3 -m cfl_gnn.cli.audit_collection \
+    --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
 
 echo "---------------------------------------------------"
 echo "=== Job Completed ==="

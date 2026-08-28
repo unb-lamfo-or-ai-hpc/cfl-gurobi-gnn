@@ -912,22 +912,20 @@ Examples:
             metadata = process_single_instance(lp_path, category_output_dir, args, env, logger)
             all_metadata.append(metadata)
     
-    # Save summary report
-    #summary_path = os.path.join(args.output_dir, "generation_summary.json")
-
-    # Transfered to audit_phase1_eda code
-    ## Save summary report with dynamic name based on categories
-    #categories_str = "_".join(args.categories)
-    #dynamic_filename = f"generation_summary_{categories_str}.json"
-    #summary_path = os.path.join(args.output_dir, dynamic_filename)
-
-    #with open(summary_path, 'w') as f:
-    #    json.dump({
-    #        'timestamp': datetime.now().isoformat(),
-    #        'arguments': vars(args),
-    #        'instances_processed': len(all_metadata),
-    #        'metadata': all_metadata
-    #    }, f, indent=2)
+    # Save a run-level summary.  The phase-1 audit creates richer per-category
+    # reports later, but the collector must still finish cleanly and preserve
+    # the metadata for this exact invocation.
+    categories_str = "_".join(args.categories)
+    summary_path = os.path.join(
+        args.output_dir, f"generation_summary_{categories_str}.json"
+    )
+    with open(summary_path, 'w') as f:
+        json.dump({
+            'timestamp': datetime.now().isoformat(),
+            'arguments': vars(args),
+            'instances_processed': len(all_metadata),
+            'metadata': all_metadata
+        }, f, indent=2)
     
     logger.info(f"\n{'='*70}")
     logger.info(f"PIPELINE COMPLETE")

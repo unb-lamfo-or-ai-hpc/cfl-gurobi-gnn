@@ -303,7 +303,7 @@ Output (written by rank 0 only):
 ```bash
 python -m cfl_gnn.cli.generate_hints \
     --model_path  /raid/.../neural_diving_best_parallel.pt \
-    --input_dir   /raid/.../raw_instances \
+    --lp_file     /raid/.../CFL_easy_instance_0.lp.gz \
     --output_dir  /raid/.../hints \
     --hidden_dim  64
 ```

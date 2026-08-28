@@ -96,6 +96,7 @@ Follow this dependency-ordered sequence for reproducible results.
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \
+    --categories           CFL_easy_instance CFL_medium_instance CFL_hard_instance \
     --input_dir            /path/to/milpbench_lp_files \
     --output_dir           /path/to/intemediate_lps \
     --time_limit           3600 \
@@ -103,7 +104,7 @@ python3 -m cfl_gnn.cli.collect_incumbents \
     --complexity_threshold 500 \
     --pool_size            20 \
     --pool_gap             0.10 \
-    --workers              8
+    --threads              8
 ```
 
 **STEP 2 — Phase 1 EDA & Data Validation** *(requires Step 1 complete)*
@@ -150,7 +151,7 @@ torchrun --nproc_per_node=8 -m cfl_gnn.cli.train_distributed \
 ```bash
 python3 -m cfl_gnn.cli.generate_hints \
     --model_path /raid/.../best_model.pt \
-    --input_dir  /raid/.../raw_instances \
+    --lp_file    /raid/.../CFL_easy_instance_0.lp.gz \
     --output_dir /raid/.../hints \
     --hidden_dim 64
 ```
@@ -161,14 +162,14 @@ python3 -m cfl_gnn.cli.generate_hints \
 python3 -m cfl_gnn.cli.benchmark_gurobi \
     --input_dir  /path/to/milpbench_lp_files \
     --output_dir /raid/.../benchmark_baseline \
-    --time_limit 300 --workers 8
+    --time_limit 300 --threads 8
 
 # GNN-guided run — with variable hints
 python3 -m cfl_gnn.cli.benchmark_gurobi \
     --input_dir  /path/to/milpbench_lp_files \
     --output_dir /raid/.../benchmark_with_hints \
     --hint_dir   /raid/.../hints \
-    --time_limit 300 --workers 8
+    --time_limit 300 --threads 8
 ```
 
 **STEP 9 — Academic Evaluation** *(requires Steps 3 and 6 complete)*

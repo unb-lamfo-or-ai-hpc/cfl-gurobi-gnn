@@ -53,6 +53,40 @@ def test_slurm_scripts_do_not_reference_removed_source_tree() -> None:
         assert not any(fragment in contents for fragment in removed_fragments)
 
 
+def test_slurm_launchers_use_supported_cli_arguments() -> None:
+    slurm_root = PROJECT_ROOT / "scripts" / "slurm" / "dasci"
+    hint_launcher = (slurm_root / "submit_step7_miphints_generator.sbs").read_text(
+        encoding="utf-8"
+    )
+    audit_launcher = (slurm_root / "submit_step2_audit_data_gen.sbs").read_text(
+        encoding="utf-8"
+    )
+    assert "--confidence" not in hint_launcher
+    assert "--min_priority" in hint_launcher
+    assert "--instance" not in audit_launcher
+    assert "--categories" in audit_launcher
+
+
+def test_toy_gasse_training_helpers_are_preserved() -> None:
+    toy = (PROJECT_ROOT / "sandbox" / "toy_bipartite.py").read_text(
+        encoding="utf-8"
+    )
+    scheme = PACKAGE_ROOT / "training" / "toy_scheme.py"
+    assert scheme.is_file()
+    assert "from cfl_gnn.training.toy_scheme import" in toy
+    for helper in ("def train_model(", "def test_torch(", "def test_sklearn("):
+        assert helper in scheme.read_text(encoding="utf-8")
+
+
+def test_documented_pipeline_flags_match_the_cli_contract() -> None:
+    documentation = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (PROJECT_ROOT / "README.md", PROJECT_ROOT / "docs" / "pipeline.md")
+    )
+    assert "--workers" not in documentation
+    assert "--confidence" not in documentation
+
+
 def test_cfl_minimization_override_is_preserved() -> None:
     collector = (PACKAGE_ROOT / "pipelines" / "gurobi_incumbents.py").read_text(
         encoding="utf-8"

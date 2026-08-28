@@ -19,10 +19,7 @@ from torch_geometric.data import HeteroData
 from torch_geometric.loader import DataLoader
 
 from cfl_gnn.models import GasseGNN, LiangBiGNN
-
-# This legacy toy still depends on ml_scheme, which is not part of the tracked
-# production pipeline. Keep the failure explicit until the toy is modernized.
-from cfl_gnn.ml_scheme import train_model, test_torch, test_sklearn
+from cfl_gnn.training.toy_scheme import train_model, test_sklearn, test_torch
 
 # ── Config ────────────────────────────────────────────────────────────────────
 

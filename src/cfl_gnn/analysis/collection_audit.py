@@ -236,24 +236,44 @@ def generate_category_plots(df, cat, analysis_dir):
 
 
 def main():
-    # Rutas absolutas fijas según la estructura de tu clúster
-    base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps"
-    analysis_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step1"
-    os.makedirs(analysis_dir, exist_ok=True)
-    
-    categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
+    parser = argparse.ArgumentParser(
+        description="Audit the artifacts collected for one or more CFL categories."
+    )
+    parser.add_argument(
+        "--base_dir",
+        default="/raid/vrcelestino/data/cfl-gurobi-gnn/data/intermediate_lps",
+        help="Directory containing category subdirectories.",
+    )
+    parser.add_argument(
+        "--analysis_dir",
+        default="/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step1",
+        help="Directory where audit reports will be written.",
+    )
+    parser.add_argument(
+        "--categories",
+        nargs="+",
+        default=[
+            "CFL_easy_instance",
+            "CFL_medium_instance",
+            "CFL_hard_instance",
+        ],
+        help="CFL categories to audit.",
+    )
+    args = parser.parse_args()
+
+    os.makedirs(args.analysis_dir, exist_ok=True)
     
     print("="*70)
     print("PHASE 1 AUDIT: ISOLATED METRICS PIPELINE (JSON, CSV, PLOTS)")
     print("="*70)
     
-    for cat in categories:
-        process_category(cat, base_dir, analysis_dir)
+    for cat in args.categories:
+        process_category(cat, args.base_dir, args.analysis_dir)
 
     print("\n" + "="*70)
     print("AUDIT FULLY COMPLETE")
     print("="*70)
-    print("Check ./data/analysis/step1/ for the specific JSON, CSV and PNGs of each category.")
+    print(f"Check {args.analysis_dir} for the JSON, CSV and PNG reports.")
 
 if __name__ == "__main__":
     main()
