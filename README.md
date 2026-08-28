@@ -93,6 +93,28 @@ hints/  [instance_gnn_hint.hnt]
 
 Follow this dependency-ordered sequence for reproducible results.
 
+### Instance-level baseline folds
+
+The planned baseline contains 30 easy, 30 medium, and 30 hard parent
+instances. Its canonical five-fold assignment is versioned at
+`configs/splits/cfl_90_seed42_folds.csv`. Generate it and, when collected
+artifacts are available, audit the current partial inventory without changing
+any existing fold assignment:
+
+```bash
+python3 -m cfl_gnn.cli.plan_instance_folds \
+    --inventory_root /raid/.../intermediate_lps \
+    --available_output /raid/.../available_rotation_0.csv \
+    --rotation 0
+```
+
+Partial inventories are suitable for pipeline development only. Final academic
+evaluation uses all five rotations and requires the complete planned population
+or a separately reviewed missing-data protocol. The derived CSV records this as
+`population_status=development_partial`; use `--strict_inventory` as the final
+completeness gate. See
+[`ADR 0002`](docs/decisions/0002-instance-level-cross-validation.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \

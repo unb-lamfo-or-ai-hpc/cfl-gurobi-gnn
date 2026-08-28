@@ -26,6 +26,7 @@ def test_stable_cli_modules_exist() -> None:
         "graph_clustering.py",
         "graph_statistics.py",
         "graph_xray.py",
+        "plan_instance_folds.py",
         "train_distributed.py",
         "train_serial.py",
     }
