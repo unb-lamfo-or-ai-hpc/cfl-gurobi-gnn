@@ -28,7 +28,6 @@ HNT file format (Gurobi 13.0):
 """
 
 import os
-import sys
 import argparse
 import time
 import numpy as np
@@ -37,14 +36,10 @@ from torch_geometric.data import HeteroData
 import gurobipy as gp
 from gurobipy import GRB
 
-# ---------------------------------------------------------------------------
-# Project root resolution (3-level depth assumption — adjust if needed)
-# ---------------------------------------------------------------------------
-current_file_path = os.path.abspath(__file__)
-project_root      = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
-sys.path.insert(0, project_root)
+from cfl_gnn.models.gasse import GasseGNN
+from cfl_gnn.paths import PROJECT_ROOT
 
-from src.gnn.models.gasse import GasseGNN
+project_root = str(PROJECT_ROOT)
 
 # ---------------------------------------------------------------------------
 # Priority mapping constants

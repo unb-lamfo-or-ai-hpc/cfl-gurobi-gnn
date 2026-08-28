@@ -5,17 +5,11 @@ Verifies graph topology, metadata propagation, and ensures the LP
 relaxation vector is properly bounded by the variable upper bounds.
 """
 
-import sys
 import os
 import argparse
 import torch
 
-# Alternate path resolution for src.graph_transform.milp_dataset
-current_file_path = os.path.abspath(__file__)
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
-sys.path.insert(0, project_root)
-
-from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset
+from cfl_gnn.graph.dataset import NeuralDivingDataset
 
 def inverse_log_scale(tensor: torch.Tensor) -> torch.Tensor:
     """

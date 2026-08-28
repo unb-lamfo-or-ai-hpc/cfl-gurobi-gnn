@@ -9,7 +9,6 @@ V5 Updates:
   - Training loop fully self-contained (no external ml_scheme dependency).
 """
 
-import sys
 import os
 import argparse
 import logging
@@ -25,13 +24,11 @@ import matplotlib.pyplot as plt
 from torch.utils.data import random_split, ConcatDataset
 from torch_geometric.loader import DataLoader
 
-# Project-root detection
-current_file_path = os.path.abspath(__file__)
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
-sys.path.insert(0, project_root)
+from cfl_gnn.graph.dataset import NeuralDivingDataset
+from cfl_gnn.models.gasse import GasseGNN
+from cfl_gnn.paths import PROJECT_ROOT
 
-from src.gnn.models.gasse import GasseGNN
-from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset
+project_root = str(PROJECT_ROOT)
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s — %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)

@@ -14,7 +14,6 @@ import json
 import logging
 import os
 import random
-import sys
 import traceback
 import argparse
 
@@ -51,13 +50,11 @@ def set_global_seed(seed: int = 42) -> None:
 
 set_global_seed(42)
 
-# Project-root detection
-current_file_path = os.path.abspath(__file__)
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
-sys.path.insert(0, project_root)
+from cfl_gnn.graph.dataset import NeuralDivingDataset
+from cfl_gnn.models.gasse import GasseGNN
+from cfl_gnn.paths import PROJECT_ROOT
 
-from src.gnn.models.gasse import GasseGNN
-from src.graph_transform.milp_dataset_v2 import NeuralDivingDataset
+project_root = str(PROJECT_ROOT)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 logger = logging.getLogger(__name__)

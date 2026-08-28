@@ -1,7 +1,10 @@
-from .models import GasseGNN, GasseBipartiteConv, LiangBiGNN
+"""CFL Neural Diving research package.
 
-__all__ = [
-    "GasseGNN",
-    "GasseBipartiteConv",
-    "LiangBiGNN",
-]
+The top-level package deliberately avoids importing solver and deep-learning
+dependencies.  This keeps repository tooling and lightweight diagnostics usable
+on machines without Gurobi, CUDA, or PyTorch Geometric.
+"""
+
+__version__ = "0.1.0"
+
+__all__ = ["__version__"]
