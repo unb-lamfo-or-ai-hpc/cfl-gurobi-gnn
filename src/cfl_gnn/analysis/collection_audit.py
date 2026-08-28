@@ -18,23 +18,12 @@ import numpy as np
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
-from collections import namedtuple
 
-# ================================================================
-# NAMEDTUPLE DEFINITIONS
-# ================================================================
-ModelFeatures = namedtuple('ModelFeatures', [
-    'num_vars', 'num_constrs', 'num_binary', 'num_integer', 
-    'num_continuous', 'obj_sense', 'obj_offset'
-])
-
-VariableFeatures = namedtuple('VariableFeatures', [
-    'types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'
-])
-
-ConstraintFeatures = namedtuple('ConstraintFeatures', [
-    'senses', 'rhs_values', 'row_norms'
-])
+from cfl_gnn.artifacts.schemas import (
+    ConstraintFeatures,
+    ModelFeatures,
+    VariableFeatures,
+)
 
 
 def process_category(cat, base_dir, analysis_dir):

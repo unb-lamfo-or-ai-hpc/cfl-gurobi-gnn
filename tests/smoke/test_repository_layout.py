@@ -102,6 +102,14 @@ def test_build_cli_reexports_legacy_pickle_schema_names() -> None:
         assert schema_name in entrypoint
 
 
+def test_audit_cli_reexports_legacy_pickle_schema_names() -> None:
+    entrypoint = (PACKAGE_ROOT / "cli" / "audit_collection.py").read_text(
+        encoding="utf-8"
+    )
+    for schema_name in ("ConstraintFeatures", "ModelFeatures", "VariableFeatures"):
+        assert schema_name in entrypoint
+
+
 def test_artifact_schemas_keep_legacy_field_order() -> None:
     from cfl_gnn.artifacts.schemas import (
         ConstraintFeatures,
