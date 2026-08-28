@@ -72,6 +72,7 @@ hints/  [instance_gnn_hint.hnt]
 ├── docs/                       # Architecture, decisions, and pipeline reference
 ├── src/cfl_gnn/
 │   ├── cli/                    # Stable command-line entrypoints
+│   ├── artifacts/              # Dependency-free persisted-data schemas
 │   ├── pipelines/              # Solver + sampling-strategy composition
 │   ├── solvers/gurobi/         # Gurobi collection, hints, and benchmarks
 │   ├── graph/                  # MILP-to-PyG transformation and dataset access

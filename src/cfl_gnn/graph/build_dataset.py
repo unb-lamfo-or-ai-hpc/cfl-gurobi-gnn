@@ -25,15 +25,16 @@ import gc
 import pyarrow.parquet as pq
 from torch_geometric.data import HeteroData
 from tqdm import tqdm
-from collections import namedtuple
 from typing import Optional
+
+from cfl_gnn.artifacts.schemas import (
+    ConstraintFeatures,
+    ModelFeatures,
+    VariableFeatures,
+)
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s", handlers=[logging.StreamHandler(sys.stdout)])
 logger = logging.getLogger(__name__)
-
-ModelFeatures = namedtuple('ModelFeatures', ['num_vars', 'num_constrs', 'num_binary', 'num_integer', 'num_continuous', 'obj_sense', 'obj_offset'])
-VariableFeatures = namedtuple('VariableFeatures', ['types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'])
-ConstraintFeatures = namedtuple('ConstraintFeatures', ['senses', 'rhs_values', 'row_norms'])
 
 def sanitize_array(arr: np.ndarray, name: str = "array", apply_log_scale: bool = False) -> torch.Tensor:
     arr = np.nan_to_num(arr, nan=0.0, posinf=60000.0, neginf=-60000.0)

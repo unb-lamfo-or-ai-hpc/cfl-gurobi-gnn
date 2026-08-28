@@ -67,24 +67,11 @@ import pyarrow.parquet as pq
 import gurobipy as gp
 from gurobipy import GRB
 
-# ================================================================
-# GLOBAL NAMEDTUPLE DEFINITIONS (for pickle compatibility)
-# ================================================================
-from collections import namedtuple
-    
-# Named tuples for structured feature storage
-ModelFeatures = namedtuple('ModelFeatures', [
-        'num_vars', 'num_constrs', 'num_binary', 'num_integer', 
-        'num_continuous', 'obj_sense', 'obj_offset'
-])
-    
-VariableFeatures = namedtuple('VariableFeatures', [
-        'types', 'lower_bounds', 'upper_bounds', 'obj_coeffs'
-])
-    
-ConstraintFeatures = namedtuple('ConstraintFeatures', [
-        'senses', 'rhs_values', 'row_norms'
-])
+from cfl_gnn.artifacts.schemas import (
+    ConstraintFeatures,
+    ModelFeatures,
+    VariableFeatures,
+)
 
 # ============================================================
 # PHASE 1 STEP 1: DATA COLLECTION CALLBACK (MEMORY-SAFE)

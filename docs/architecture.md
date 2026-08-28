@@ -5,6 +5,9 @@ pipelines, graph transformation, learning, and evaluation. Command-line modules
 under `cfl_gnn.cli` compose those layers and are the only paths referenced by
 the Slurm scripts.
 
+Artifact schemas live in the dependency-free `cfl_gnn.artifacts` package so
+datasets can be read without importing a solver backend.
+
 ```text
 CLI -> pipeline -> solver
  |        |

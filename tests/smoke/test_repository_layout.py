@@ -66,3 +66,28 @@ def test_build_cli_reexports_legacy_pickle_schema_names() -> None:
     )
     for schema_name in ("ConstraintFeatures", "ModelFeatures", "VariableFeatures"):
         assert schema_name in entrypoint
+
+
+def test_artifact_schemas_keep_legacy_field_order() -> None:
+    from cfl_gnn.artifacts.schemas import (
+        ConstraintFeatures,
+        ModelFeatures,
+        VariableFeatures,
+    )
+
+    assert ModelFeatures._fields == (
+        "num_vars",
+        "num_constrs",
+        "num_binary",
+        "num_integer",
+        "num_continuous",
+        "obj_sense",
+        "obj_offset",
+    )
+    assert VariableFeatures._fields == (
+        "types",
+        "lower_bounds",
+        "upper_bounds",
+        "obj_coeffs",
+    )
+    assert ConstraintFeatures._fields == ("senses", "rhs_values", "row_norms")

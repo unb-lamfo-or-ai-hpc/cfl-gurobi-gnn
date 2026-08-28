@@ -88,6 +88,7 @@ vector, and edges are weighted by log-scaled constraint matrix coefficients $A_{
 ├── docs/                       # Architecture, decisions, and this reference
 ├── src/cfl_gnn/
 │   ├── cli/                    # Stable command-line entrypoints
+│   ├── artifacts/              # Dependency-free persisted-data schemas
 │   ├── pipelines/              # Solver + sampling-strategy composition
 │   ├── solvers/gurobi/         # Gurobi collection, hints, and benchmarks
 │   ├── graph/                  # MILP-to-PyG transformation and datasets
