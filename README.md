@@ -115,6 +115,22 @@ or a separately reviewed missing-data protocol. The derived CSV records this as
 completeness gate. See
 [`ADR 0002`](docs/decisions/0002-instance-level-cross-validation.md).
 
+Build one graph for every currently eligible parent instance in a separate
+output root. The builder selects the minimum-objective valid solution across
+the final solution pool and true branch-and-bound incumbents:
+
+```bash
+python3 -m cfl_gnn.cli.build_instance_dataset \
+    --manifest configs/splits/cfl_90_seed42_folds.csv \
+    --base_raw_dir /raid/.../intermediate_lps \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline
+```
+
+Use `--strict_inventory` only for the final complete-population gate. Until
+then, generated graphs and `instance_dataset_summary.json` are development
+artifacts. See
+[`ADR 0003`](docs/decisions/0003-parent-instance-label-selection.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \

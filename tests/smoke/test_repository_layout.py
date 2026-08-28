@@ -19,6 +19,7 @@ def test_stable_cli_modules_exist() -> None:
         "audit_collection.py",
         "audit_dataset.py",
         "benchmark_gurobi.py",
+        "build_instance_dataset.py",
         "build_dataset.py",
         "collect_incumbents.py",
         "evaluate.py",
@@ -97,6 +98,14 @@ def test_cfl_minimization_override_is_preserved() -> None:
 
 def test_build_cli_reexports_legacy_pickle_schema_names() -> None:
     entrypoint = (PACKAGE_ROOT / "cli" / "build_dataset.py").read_text(
+        encoding="utf-8"
+    )
+    for schema_name in ("ConstraintFeatures", "ModelFeatures", "VariableFeatures"):
+        assert schema_name in entrypoint
+
+
+def test_instance_build_cli_reexports_legacy_pickle_schema_names() -> None:
+    entrypoint = (PACKAGE_ROOT / "cli" / "build_instance_dataset.py").read_text(
         encoding="utf-8"
     )
     for schema_name in ("ConstraintFeatures", "ModelFeatures", "VariableFeatures"):
