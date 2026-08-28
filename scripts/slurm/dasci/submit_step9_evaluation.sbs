@@ -9,7 +9,8 @@
 
 echo "=== Iniciando Evaluación Académica (Neural Diving) ==="
 EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
-cd $EXEC_DIR
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
 # Activar entorno
 eval "$(conda shell.bash hook)"
@@ -25,7 +26,7 @@ echo "Evaluando modelo: $MODELO_PATH"
 echo "Guardando resultados en: data/analysis/$EXPERIMENT_NAME"
 
 # Ejecutamos la v3 en modo serial (limpiará el DDP state_dict automáticamente)
-srun python3 src/gnn/evaluate_model_v3.py \
+srun python3 -m cfl_gnn.cli.evaluate \
     --model_path $MODELO_PATH \
     --experiment_name $EXPERIMENT_NAME \
     --hidden_dim 64 \

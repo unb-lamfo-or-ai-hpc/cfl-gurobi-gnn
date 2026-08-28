@@ -13,7 +13,7 @@ predictions into Gurobi as **Variable Hints (`.hnt`)** to accelerate
 Branch-and-Bound convergence.
 
 > Full technical documentation, CLI references, feature layout tables, and
-> Slurm deployment scripts are in [`src/PIPELINE.md`](src/PIPELINE.md).
+> Slurm deployment scripts are in [`docs/pipeline.md`](docs/pipeline.md).
 
 ---
 
@@ -37,32 +37,30 @@ The pipeline is structured into four functional pillars:
 ```
 Raw MILPBench .lp.gz files
         |
-        | Step 1 — cfl_gnn_data_generator_v7.py
+        | Step 1 — collect_incumbents
         v
 per-instance/  [original_features.pickle.gz, incumbents.parquet, metadata.json]
         |
-        +-----> Step 2 — audit_phase1_eda_v3.py  (Phase 1 EDA & Data Validation)
+        +-----> Step 2 — audit_collection  (Phase 1 EDA & Data Validation)
         |
-        | Step 3 — build_pyg_dataset_v6.py
+        | Step 3 — build_dataset
         v
 pyg_dataset/  [data_0.pt ... data_N.pt]
         |
-        | Step 4 — test_pyg_dataset_v5.py
-        |          pyg_dataset_statistics.py
-        |          pyg_clustering_pca_umap.py
+        | Step 4 — audit_dataset / graph diagnostics
         |
-        | Step 5 — train_neural_diving_serial_v4.py  (smoke test)
-        | Step 6 — train_neural_diving_parallel_v4.py  (full DGX run)
+        | Step 5 — train_serial  (smoke test)
+        | Step 6 — train_distributed  (full DGX run)
         v
 best_model.pt
         |
-        | Step 7 — generate_mip_hints.py
+        | Step 7 — generate_hints
         v
 hints/  [instance_gnn_hint.hnt]
         |
-        +-----> Step 8 — gurobi_hpc_runner_v2.py  (baseline + GNN-guided)
+        +-----> Step 8 — benchmark_gurobi  (baseline + GNN-guided)
         |
-        +-----> Step 9 — evaluate_model_v2.py  (thesis evaluation figures)
+        +-----> Step 9 — evaluate  (thesis evaluation figures)
 ```
 
 ---
@@ -71,28 +69,21 @@ hints/  [instance_gnn_hint.hnt]
 
 ```
 .
-├── src/
-│   ├── PIPELINE.md                          # Full technical documentation
-│   ├── gnn/
-│   │   └── models/
-│   │       └── gasse.py                     # GNN architecture (GasseGNN)
-│   └── graph_transform/
-│       └── milp_dataset_v2.py               # NeuralDivingDataset (PyG, cached I/O)
-│
-├── cfl_gnn_data_generator_v7.py             # Step 1: Gurobi data extraction
-├── gurobi_hpc_runner_v2.py                  # Step 1 / Step 8: HPC parametric runner
-├── audit_phase1_eda_v3.py                   # Step 2: Phase 1 EDA & Data Validation
-├── build_pyg_dataset_v6.py                  # Step 3: PyG ETL pipeline
-├── test_pyg_dataset_v5.py                   # Step 4: Dataset schema audit
-├── pyg_dataset_statistics.py                 # Step 4: Statistical summary
-├── pyg_clustering_pca_umap.py                   # Step 4: PCA / UMAP visualisation
-├── train_neural_diving_serial_v4.py         # Step 5: Single-GPU smoke test
-├── train_neural_diving_parallel_v4.py       # Step 6: DDP multi-GPU training
-├── generate_mip_hints.py                    # Step 7: GNN inference to .hnt files
-├── ml_scheme_v2.py                          # Shared training and plotting utilities
-├── evaluate_model_v2.py                     # Step 9: Academic evaluation
-├── README.md                                # This file
-└── .gitignore
+├── docs/                       # Architecture, decisions, and pipeline reference
+├── src/cfl_gnn/
+│   ├── cli/                    # Stable command-line entrypoints
+│   ├── pipelines/              # Solver + sampling-strategy composition
+│   ├── solvers/gurobi/         # Gurobi collection, hints, and benchmarks
+│   ├── graph/                  # MILP-to-PyG transformation and dataset access
+│   ├── models/                 # Gasse and Liang architectures
+│   ├── training/               # Serial and distributed training
+│   ├── evaluation/             # Academic model evaluation
+│   └── analysis/               # Collection and graph diagnostics
+├── scripts/slurm/dasci/        # Reproducible HPC launchers
+├── tests/                      # Dependency-free structural smoke tests
+├── notebooks/                  # Research notebooks
+├── data/                       # Existing experiment artifacts (unchanged)
+└── pyproject.toml              # Python package metadata
 ```
 
 ---
@@ -103,7 +94,7 @@ Follow this dependency-ordered sequence for reproducible results.
 
 **STEP 1 — Data Generation**
 ```bash
-python3 cfl_gnn_data_generator_v7.py \
+python3 -m cfl_gnn.cli.collect_incumbents \
     --input_dir            /path/to/milpbench_lp_files \
     --output_dir           /path/to/intemediate_lps \
     --time_limit           3600 \
@@ -116,11 +107,12 @@ python3 cfl_gnn_data_generator_v7.py \
 
 **STEP 2 — Phase 1 EDA & Data Validation** *(requires Step 1 complete)*
 ```bash
-python3 audit_phase1_eda_v3.py
+python3 -m cfl_gnn.cli.audit_collection
+```
 
 **STEP 3 — PyG ETL** *(requires Step 1 complete)*
 ```bash
-python3 build_pyg_dataset_v6.py \
+python3 -m cfl_gnn.cli.build_dataset \
     --categories    CFL_easy_instance CFL_medium_instance CFL_hard_instance \
     --gaps          0.10 0.85 0.90 \
     --base_raw_dir  /raid/.../raw_instances \
@@ -129,24 +121,24 @@ python3 build_pyg_dataset_v6.py \
 
 **STEP 4 — Dataset Validation** *(requires Step 3 complete)*
 ```bash
-python3 test_pyg_dataset_v5.py \
+python3 -m cfl_gnn.cli.audit_dataset \
     --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
 
-python3 pyg_dataset_statistics.py
+python3 -m cfl_gnn.cli.graph_statistics
 
-python3 pyg_clustering_pca_umap.py
+python3 -m cfl_gnn.cli.graph_clustering
 ```
 
 **STEP 5 — Serial Training: Smoke Test** *(requires Step 4 validated)*
 ```bash
-python3 train_neural_diving_serial_v4.py \
+python3 -m cfl_gnn.cli.train_serial \
     --easy_split 10 2 2 --medium_split 5 1 1 --hard_split 5 1 1 \
     --epochs 10 --hidden_dim 32
 ```
 
 **STEP 6 — Parallel Training: Full DGX Run** *(requires Step 5 passed)*
 ```bash
-torchrun --nproc_per_node=8 train_neural_diving_parallel_v4.py \
+torchrun --nproc_per_node=8 -m cfl_gnn.cli.train_distributed \
     --easy_split    300 50 50 \
     --medium_split  200 30 30 \
     --hard_split    100 15 15 \
@@ -155,7 +147,7 @@ torchrun --nproc_per_node=8 train_neural_diving_parallel_v4.py \
 
 **STEP 7 — Generate Variable Hints** *(requires Step 6 complete)*
 ```bash
-python3 generate_mip_hints.py \
+python3 -m cfl_gnn.cli.generate_hints \
     --model_path /raid/.../best_model.pt \
     --input_dir  /raid/.../raw_instances \
     --output_dir /raid/.../hints \
@@ -165,13 +157,13 @@ python3 generate_mip_hints.py \
 **STEP 8 — Gurobi Warm-Start Benchmark** *(requires Steps 1 and 7 complete)*
 ```bash
 # Baseline run — control group
-python3 gurobi_hpc_runner_v2.py \
+python3 -m cfl_gnn.cli.benchmark_gurobi \
     --input_dir  /path/to/milpbench_lp_files \
     --output_dir /raid/.../benchmark_baseline \
     --time_limit 300 --workers 8
 
 # GNN-guided run — with variable hints
-python3 gurobi_hpc_runner_v2.py \
+python3 -m cfl_gnn.cli.benchmark_gurobi \
     --input_dir  /path/to/milpbench_lp_files \
     --output_dir /raid/.../benchmark_with_hints \
     --hint_dir   /raid/.../hints \
@@ -180,7 +172,7 @@ python3 gurobi_hpc_runner_v2.py \
 
 **STEP 9 — Academic Evaluation** *(requires Steps 3 and 6 complete)*
 ```bash
-python3 evaluate_model_v2.py \
+python3 -m cfl_gnn.cli.evaluate \
     --model_path      /raid/.../best_model.pt \
     --base_root       /raid/.../pyg_dataset \
     --experiment_name parallel_v4 \
@@ -194,7 +186,7 @@ python3 evaluate_model_v2.py \
 ## Getting Started
 
 ### Prerequisites
-* Python 3.8+
+* Python 3.10+
 * Gurobi Optimizer with a valid license
 * PyTorch and PyTorch Geometric (for the GNN)
 
@@ -237,6 +229,7 @@ cd cfl-gurobi-gnn
 Install the required dependencies:
 ```bash
 pip install -r requirements.txt
+pip install -e . --no-deps
 ```
 ---
 

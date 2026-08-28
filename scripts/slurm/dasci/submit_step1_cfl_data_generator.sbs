@@ -8,11 +8,12 @@
 #SBATCH --output=slurm_cfl_data_%j.out
 
 echo "=== Inicializando Construcción de Dataset GNN (V2 DGX) ==="
-EXEC_DIR="/raid/vrcelestino/data"
-cd $EXEC_DIR
+EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
 # Carga de credenciales de Gurobi
-export GRB_LICENSE_FILE="${EXEC_DIR}/gurobi.lic"
+export GRB_LICENSE_FILE="/raid/vrcelestino/data/gurobi.lic"
 export WLSACCESSID=$(grep WLSACCESSID $GRB_LICENSE_FILE | cut -d '=' -f 2)
 export WLSSECRET=$(grep WLSSECRET $GRB_LICENSE_FILE | cut -d '=' -f 2)
 export LICENSEID=$(grep LICENSEID $GRB_LICENSE_FILE | cut -d '=' -f 2 | tr -d '"')
@@ -30,6 +31,6 @@ TIEMPO_GUROBI=3600
 echo "Lanzando lote controlado para: ${CATEGORIA} del índice ${INICIO} al ${FIN}"
 
 # Ejecución en una sola línea (A prueba de fallos)
-srun python3 cfl-gurobi-gnn/src/data_transformation/cfl_gnn_data_generator_v7.py --categories $CATEGORIA --start_idx $INICIO --end_idx $FIN --time_limit $TIEMPO_GUROBI
+srun python3 -m cfl_gnn.cli.collect_incumbents --categories $CATEGORIA --start_idx $INICIO --end_idx $FIN --time_limit $TIEMPO_GUROBI
 
 echo "=== Job Finalizado ==="

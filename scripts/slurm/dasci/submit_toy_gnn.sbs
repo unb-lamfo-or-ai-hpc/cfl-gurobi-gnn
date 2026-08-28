@@ -9,7 +9,8 @@
 
 echo "=== Iniciando Entrenamiento GNN (Toy Sandbox) ==="
 EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
-cd $EXEC_DIR
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
 # Activar el entorno
 eval "$(conda shell.bash hook)"

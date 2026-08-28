@@ -9,7 +9,8 @@
 
 echo "=== Launching Gurobi HPC Runner v2 ==="
 EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
-cd $EXEC_DIR
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
 # 1. Environment Setup
 eval "$(conda shell.bash hook)"
@@ -45,7 +46,7 @@ POOL_SIZE=20
 POOL_GAP=0.10
 
 # 3. Build Command
-CMD="srun python3 src/gurobi_solver/gurobi_hpc_runner_v2.py \
+CMD="srun python3 -m cfl_gnn.cli.benchmark_gurobi \
     --categories $CATEGORIA \
     --start_idx $START_IDX \
     --end_idx $END_IDX \
