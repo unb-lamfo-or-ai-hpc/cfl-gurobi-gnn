@@ -229,6 +229,11 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     parser.add_argument("--categories", nargs="+", choices=list(CATEGORIES))
+    parser.add_argument(
+        "--instances",
+        nargs="+",
+        help="Optional source_instance_id subset for a targeted smoke run.",
+    )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument(
         "--strict_inventory",
@@ -241,7 +246,23 @@ def main(argv: list[str] | None = None) -> int:
     manifest = read_manifest(args.manifest)
     validate_manifest(manifest)
     selected_categories = set(args.categories or CATEGORIES)
-    requested = [entry for entry in manifest if entry.category in selected_categories]
+    selected_instances = set(args.instances or ())
+    unknown_instances = selected_instances - {
+        entry.source_instance_id for entry in manifest
+    }
+    if unknown_instances:
+        parser.error(
+            "unknown source_instance_id: " + ", ".join(sorted(unknown_instances))
+        )
+    requested = [
+        entry
+        for entry in manifest
+        if entry.category in selected_categories
+        and (
+            not selected_instances
+            or entry.source_instance_id in selected_instances
+        )
+    ]
 
     all_available = [
         entry

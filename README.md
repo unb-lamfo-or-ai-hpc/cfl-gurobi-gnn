@@ -126,6 +126,8 @@ python3 -m cfl_gnn.cli.build_instance_dataset \
     --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline
 ```
 
+For a targeted DaSCI smoke run, add
+`--instances CFL_easy_instance_0` (using an available instance identifier).
 Use `--strict_inventory` only for the final complete-population gate. Until
 then, generated graphs and `instance_dataset_summary.json` are development
 artifacts. See
