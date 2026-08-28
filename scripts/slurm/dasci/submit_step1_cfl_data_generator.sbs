@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --job-name=gnn_milp_data
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8 # reduced from 30 to save memory
+#SBATCH --mem=128G        # expanded from 64G to accommodate larger datasets
+#SBATCH --gres=gpu:0
+#SBATCH --time=08:00:00
+#SBATCH --output=slurm_cfl_data_%j.out
+
+echo "=== Inicializando Construcción de Dataset GNN (V2 DGX) ==="
+EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+# Carga de credenciales de Gurobi
+export GRB_LICENSE_FILE="/raid/vrcelestino/data/gurobi.lic"
+export WLSACCESSID=$(grep WLSACCESSID $GRB_LICENSE_FILE | cut -d '=' -f 2)
+export WLSSECRET=$(grep WLSSECRET $GRB_LICENSE_FILE | cut -d '=' -f 2)
+export LICENSEID=$(grep LICENSEID $GRB_LICENSE_FILE | cut -d '=' -f 2 | tr -d '"')
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+echo "=== Ejecutando Extracción Avanzada de Gurobi ==="
+
+CATEGORIA="CFL_medium_instance"
+INICIO=7
+FIN=15
+TIEMPO_GUROBI=3600
+
+echo "Lanzando lote controlado para: ${CATEGORIA} del índice ${INICIO} al ${FIN}"
+
+# Ejecución en una sola línea (A prueba de fallos)
+srun python3 -m cfl_gnn.cli.collect_incumbents --categories $CATEGORIA --start_idx $INICIO --end_idx $FIN --time_limit $TIEMPO_GUROBI
+
+echo "=== Job Finalizado ==="

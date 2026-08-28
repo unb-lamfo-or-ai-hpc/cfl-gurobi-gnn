@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --job-name=gnn_hints
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:0       # Inferencia en CPU para simular HPC
+#SBATCH --time=01:00:00
+#SBATCH --output=slurm_miphints_generation_%j.out
+
+echo "=== Generando Variable Hints (.hnt) en CPU ==="
+EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env 
+
+# Parámetros (Ajuste el LP_FILE a la instancia que desee acelerar)
+LP_FILE="data/raw/MILPBench/CFL/CFL_hard_instance/LP/CFL_hard_instance_10.lp.gz"
+MODEL_PATH="data/real_train_output/neural_diving_best_serial.pt"
+MIN_PRIORITY=0
+
+srun python3 -m cfl_gnn.cli.generate_hints \
+    --lp_file $LP_FILE \
+    --model_path $MODEL_PATH \
+    --min_priority $MIN_PRIORITY
+
+echo "=== Job Finalizado ==="

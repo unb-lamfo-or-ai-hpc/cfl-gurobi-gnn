@@ -8,15 +8,18 @@ Run from the repo root:
 import sys
 import os
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(
+    0,
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"),
+)
 
 import torch
 from sklearn.metrics import accuracy_score
 from torch_geometric.data import HeteroData
 from torch_geometric.loader import DataLoader
 
-from src.gnn.models import GasseGNN, LiangBiGNN
-from src.gnn.ml_scheme import train_model, test_torch, test_sklearn
+from cfl_gnn.models import GasseGNN, LiangBiGNN
+from cfl_gnn.training.toy_scheme import train_model, test_sklearn, test_torch
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
