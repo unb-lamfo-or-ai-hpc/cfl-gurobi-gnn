@@ -17,8 +17,8 @@ conda activate tfm_env
 
 # --- PANEL DE CONTROL DE EVALUACIÓN ---
 # Apuntamos al modelo resultante de nuestro entrenamiento definitivo DDP
-MODELO_PATH="/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/models/run_02_partial_dataset/best_model.pt"
-EXPERIMENT_NAME="run_02_partial_dataset"
+MODELO_PATH="/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/models/run_02_partial_dataset_ddp/best_model.pt"
+EXPERIMENT_NAME="run_02_partial_dataset_ddp"
 # --------------------------------------
 
 echo "Evaluando modelo: $MODELO_PATH"
