@@ -126,6 +126,21 @@ def select_best_solution(
     objective_sense: str = MINIMIZE,
 ) -> SelectedSolution:
     """Select the minimum-objective valid label from a streaming candidate set."""
+    selected, _ = select_best_solution_with_audit(
+        records,
+        expected_num_vars=expected_num_vars,
+        objective_sense=objective_sense,
+    )
+    return selected
+
+
+def select_best_solution_with_audit(
+    records: Iterable[Mapping[str, Any]],
+    *,
+    expected_num_vars: int,
+    objective_sense: str = MINIMIZE,
+) -> tuple[SelectedSolution, dict[str, Any]]:
+    """Select one label and report candidate validity and quality by artifact."""
     if objective_sense.upper() != MINIMIZE:
         raise SolutionSelectionError(
             "the parent-instance baseline only supports corrected CFL minimization"
@@ -134,14 +149,44 @@ def select_best_solution(
         raise SolutionSelectionError("expected_num_vars must be positive")
 
     best: SelectedSolution | None = None
+    best_by_source: dict[str, SelectedSolution] = {}
+    by_source: dict[str, dict[str, Any]] = {
+        source: {
+            "evaluated": 0,
+            "valid": 0,
+            "invalid": 0,
+            "best_objective": None,
+            "best_mip_gap_at_best_objective": None,
+        }
+        for source in SOURCE_PRIORITY
+    }
     evaluated = 0
     valid = 0
     for fallback_index, record in enumerate(records):
         evaluated += 1
+        source = str(record.get("source", "unknown"))
+        source_stats = by_source.setdefault(
+            source,
+            {
+                "evaluated": 0,
+                "valid": 0,
+                "invalid": 0,
+                "best_objective": None,
+                "best_mip_gap_at_best_objective": None,
+            },
+        )
+        source_stats["evaluated"] += 1
         candidate = _normalize_candidate(record, expected_num_vars, fallback_index)
         if candidate is None:
+            source_stats["invalid"] += 1
             continue
         valid += 1
+        source_stats["valid"] += 1
+        source_best = best_by_source.get(candidate.source)
+        if source_best is None or _selection_key(candidate) < _selection_key(
+            source_best
+        ):
+            best_by_source[candidate.source] = candidate
         if best is None or _selection_key(candidate) < _selection_key(best):
             best = candidate
 
@@ -150,4 +195,33 @@ def select_best_solution(
             f"no valid solution among {evaluated} candidates "
             f"(expected vector length {expected_num_vars})"
         )
-    return best
+
+    for source, source_best in best_by_source.items():
+        by_source[source]["best_objective"] = source_best.objective
+        by_source[source]["best_mip_gap_at_best_objective"] = source_best.mip_gap
+
+    valid_sources = list(best_by_source)
+    if len(valid_sources) == 1:
+        selection_reason = "only_artifact_with_valid_candidates"
+    else:
+        other_objectives = [
+            candidate.objective
+            for source, candidate in best_by_source.items()
+            if source != best.source
+        ]
+        selection_reason = (
+            "minimum_objective_across_artifacts"
+            if other_objectives and best.objective < min(other_objectives)
+            else "deterministic_tie_break"
+        )
+
+    audit = {
+        "evaluated_candidates": evaluated,
+        "valid_candidates": valid,
+        "invalid_candidates": evaluated - valid,
+        "by_artifact": dict(sorted(by_source.items())),
+        "selected_artifact": best.source,
+        "selected_source_index": best.source_index,
+        "selection_reason": selection_reason,
+    }
+    return best, audit

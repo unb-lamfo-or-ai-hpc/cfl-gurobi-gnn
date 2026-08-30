@@ -133,7 +133,9 @@ variable target. The optional root-LP-relaxation context comes separately from
 `node_relaxations.parquet`, with a documented zero fallback. Every graph has a
 `.provenance.json` sidecar containing paths and SHA-256 hashes for the raw,
 structural, collection-metadata, context, label, and graph artifacts, with
-their roles recorded separately.
+their roles recorded separately. Each result exposes `label_source` explicitly;
+label provenance also records normalized time and a per-artifact candidate
+audit, avoiding confusion between the supervised target and graph structure.
 `--base_raw_dir` remains a compatibility alias for `--base_intermediate_dir`.
 
 For a targeted DaSCI smoke run, add
@@ -142,6 +144,8 @@ Use `--strict_inventory` only for the final complete-population gate. Until
 then, generated graphs and `instance_dataset_summary.json` are development
 artifacts. See
 [`ADR 0003`](docs/decisions/0003-parent-instance-label-selection.md).
+The sanitized DaSCI evidence is recorded in
+[`docs/validation`](docs/validation/2026-08-30-instance-baseline-smoke.md).
 
 **STEP 1 — Data Generation**
 ```bash

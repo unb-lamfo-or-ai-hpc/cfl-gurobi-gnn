@@ -42,9 +42,13 @@ dataset. Missing or invalid instances are recorded in a JSON summary.
 Each graph has a `.provenance.json` sidecar. It records the raw parent path and
 SHA-256; structural-feature, collection-metadata, and root-context provenance;
 separate label artifact, path, SHA-256, objective, MIP gap, quality band, time,
-node, and source index; and the graph SHA-256. The run summary aggregates label
-counts by artifact and MIP-gap band. Existing graphs are reused only when the
-sidecar is present and all recorded hashes still match.
+node, and source index; the candidate counts and best objective per artifact;
+the deterministic selection reason; and the graph SHA-256. Legacy Unix-epoch
+incumbent timestamps are normalized relative to the first recorded incumbent,
+while native Gurobi runtime seconds are preserved. Both recorded and normalized
+times and the normalization method remain auditable. The run summary aggregates
+label counts by artifact and MIP-gap band. Existing graphs are reused only when
+the sidecar is present and all recorded hashes still match.
 
 ## Partial-inventory policy
 

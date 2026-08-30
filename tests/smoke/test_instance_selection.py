@@ -8,6 +8,7 @@ from cfl_gnn.graph.instance_selection import (
     SolutionSelectionError,
     require_minimization,
     select_best_solution,
+    select_best_solution_with_audit,
 )
 
 
@@ -84,6 +85,44 @@ def test_selected_vector_is_not_copied_into_python_tuple_storage() -> None:
 def test_no_valid_candidate_fails_closed() -> None:
     with pytest.raises(SolutionSelectionError, match="no valid solution"):
         select_best_solution([candidate(None)], expected_num_vars=2)
+
+
+def test_candidate_audit_explains_cross_artifact_selection() -> None:
+    selected, audit = select_best_solution_with_audit(
+        [
+            candidate(10.0, source="solutions.pickle.gz"),
+            candidate(9.0, source="incumbents.parquet"),
+            candidate(None, source="incumbents.parquet"),
+        ],
+        expected_num_vars=2,
+    )
+    assert selected.source == "incumbents.parquet"
+    assert audit["selection_reason"] == "minimum_objective_across_artifacts"
+    assert audit["by_artifact"]["solutions.pickle.gz"] == {
+        "evaluated": 1,
+        "valid": 1,
+        "invalid": 0,
+        "best_objective": 10.0,
+        "best_mip_gap_at_best_objective": 0.1,
+    }
+    assert audit["by_artifact"]["incumbents.parquet"] == {
+        "evaluated": 2,
+        "valid": 1,
+        "invalid": 1,
+        "best_objective": 9.0,
+        "best_mip_gap_at_best_objective": 0.1,
+    }
+
+
+def test_candidate_audit_marks_the_only_valid_artifact() -> None:
+    _, audit = select_best_solution_with_audit(
+        [
+            candidate(None, source="solutions.pickle.gz"),
+            candidate(9.0, source="incumbents.parquet"),
+        ],
+        expected_num_vars=2,
+    )
+    assert audit["selection_reason"] == "only_artifact_with_valid_candidates"
 
 
 def test_non_minimization_artifacts_are_rejected() -> None:

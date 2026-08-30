@@ -20,7 +20,7 @@ graph transformation -> training -> evaluation -> solver hints/benchmark
 
 | Solver | One graph per parent instance | Incumbent-conditioned graphs |
 |---|---|---|
-| Gurobi | Initial DaSCI smoke passed; provenance rerun pending | Preserved from the legacy pipeline |
+| Gurobi | Full provenance smoke passed; targeted time-audit rerun pending | Preserved from the legacy pipeline |
 | SCIP/Pyomo | Future | Future |
 
 The four variants must share graph schemas, model implementations, evaluation

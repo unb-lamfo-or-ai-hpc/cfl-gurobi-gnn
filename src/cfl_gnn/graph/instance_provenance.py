@@ -64,19 +64,23 @@ def load_verified_graph_provenance(
         with sidecar_path.open("r", encoding="utf-8") as stream:
             result = json.load(stream)
         if (
-            result.get("schema_version") != 1
+            result.get("schema_version") != 2
             or result.get("instance") != expected_instance
             or result.get("fold") != expected_fold
+            or not isinstance(result.get("label_source"), str)
             or not isinstance(result.get("structure_provenance"), Mapping)
             or not isinstance(result.get("collection_provenance"), Mapping)
             or not isinstance(result.get("context_provenance"), Mapping)
             or not isinstance(result.get("label_provenance"), Mapping)
+            or not isinstance(result.get("candidate_audit"), Mapping)
         ):
             return None
         structure = result["structure_provenance"]
         collection = result["collection_provenance"]
         context = result["context_provenance"]
         label = result["label_provenance"]
+        if result["label_source"] != label.get("artifact"):
+            return None
         if (
             sha256_file(graph_path) != result.get("graph_sha256")
             or not _digest_matches(
@@ -141,6 +145,48 @@ def mip_gap_band(value: Any) -> str:
     if gap <= 0.40:
         return "gap_le_40pct"
     return "gap_gt_40pct"
+
+
+def normalize_recorded_time(
+    recorded_time: Any, *, epoch_origin: Any = None
+) -> dict[str, float | str | None]:
+    """Normalize mixed Gurobi-runtime and legacy Unix-epoch timestamps."""
+    try:
+        recorded = float(recorded_time)
+    except (TypeError, ValueError, OverflowError):
+        recorded = math.nan
+    if not math.isfinite(recorded) or recorded < 0.0:
+        return {
+            "recorded_time": None,
+            "normalized_time": None,
+            "time_normalization_method": "missing_or_invalid",
+            "time_origin": None,
+        }
+    if recorded <= 1e8:
+        return {
+            "recorded_time": recorded,
+            "normalized_time": recorded,
+            "time_normalization_method": "recorded_gurobi_runtime_seconds",
+            "time_origin": None,
+        }
+
+    try:
+        origin = float(epoch_origin)
+    except (TypeError, ValueError, OverflowError):
+        origin = math.nan
+    if not math.isfinite(origin) or origin < 0.0 or origin > recorded:
+        return {
+            "recorded_time": recorded,
+            "normalized_time": None,
+            "time_normalization_method": "unix_epoch_unresolved",
+            "time_origin": None,
+        }
+    return {
+        "recorded_time": recorded,
+        "normalized_time": recorded - origin,
+        "time_normalization_method": "unix_epoch_minus_first_incumbent",
+        "time_origin": origin,
+    }
 
 
 def summarize_label_quality(

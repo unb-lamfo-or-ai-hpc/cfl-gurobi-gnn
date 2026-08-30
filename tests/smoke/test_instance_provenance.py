@@ -8,6 +8,7 @@ import pytest
 from cfl_gnn.graph.instance_provenance import (
     load_verified_graph_provenance,
     mip_gap_band,
+    normalize_recorded_time,
     provenance_path,
     resolve_raw_instance_path,
     sha256_file,
@@ -22,9 +23,10 @@ def write_verified_fixture(tmp_path):
         path.write_bytes(name.encode("utf-8"))
         artifacts[name] = path
     result = {
-        "schema_version": 1,
+        "schema_version": 2,
         "instance": "CFL_easy_instance_0",
         "fold": 0,
+        "label_source": "label.gz",
         "graph_sha256": sha256_file(artifacts["graph.pt"]),
         "structure_provenance": {
             "raw_instance_path": str(artifacts["raw.lp.gz"]),
@@ -42,9 +44,11 @@ def write_verified_fixture(tmp_path):
             "artifact_sha256": None,
         },
         "label_provenance": {
+            "artifact": "label.gz",
             "artifact_path": str(artifacts["label.gz"]),
             "artifact_sha256": sha256_file(artifacts["label.gz"]),
         },
+        "candidate_audit": {},
     }
     provenance_path(artifacts["graph.pt"]).write_text(
         json.dumps(result), encoding="utf-8"
@@ -134,6 +138,30 @@ def test_new_root_relaxation_invalidates_a_zero_fallback_graph(tmp_path) -> None
 )
 def test_mip_gap_bands_are_explicit(gap, expected) -> None:
     assert mip_gap_band(gap) == expected
+
+
+def test_runtime_seconds_are_preserved() -> None:
+    assert normalize_recorded_time(3604.5) == {
+        "recorded_time": 3604.5,
+        "normalized_time": 3604.5,
+        "time_normalization_method": "recorded_gurobi_runtime_seconds",
+        "time_origin": None,
+    }
+
+
+def test_legacy_epoch_time_is_normalized_from_first_incumbent() -> None:
+    assert normalize_recorded_time(1_784_905_257.5, epoch_origin=1_784_905_000.0) == {
+        "recorded_time": 1_784_905_257.5,
+        "normalized_time": 257.5,
+        "time_normalization_method": "unix_epoch_minus_first_incumbent",
+        "time_origin": 1_784_905_000.0,
+    }
+
+
+def test_unresolved_epoch_time_is_not_misrepresented_as_runtime() -> None:
+    result = normalize_recorded_time(1_784_905_257.5)
+    assert result["normalized_time"] is None
+    assert result["time_normalization_method"] == "unix_epoch_unresolved"
 
 
 def test_label_quality_summary_includes_generated_and_reused_graphs() -> None:
