@@ -115,6 +115,38 @@ or a separately reviewed missing-data protocol. The derived CSV records this as
 completeness gate. See
 [`ADR 0002`](docs/decisions/0002-instance-level-cross-validation.md).
 
+Build one graph for every currently eligible parent instance in a separate
+output root. The builder selects the minimum-objective valid solution across
+the final solution pool and true branch-and-bound incumbents:
+
+```bash
+python3 -m cfl_gnn.cli.build_instance_dataset \
+    --manifest configs/splits/cfl_90_seed42_folds.csv \
+    --base_source_dir /raid/.../raw/MILPBench/CFL \
+    --base_intermediate_dir /raid/.../intermediate_lps \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline
+```
+
+Graph structure comes from `original_features.pickle.gz`, extracted from the
+raw MILPBench `.lp.gz`; solutions and incumbents supply only the supervised
+variable target. The optional root-LP-relaxation context comes separately from
+`node_relaxations.parquet`, with a documented zero fallback. Every graph has a
+`.provenance.json` sidecar containing paths and SHA-256 hashes for the raw,
+structural, collection-metadata, context, label, and graph artifacts, with
+their roles recorded separately. Each result exposes `label_source` explicitly;
+label provenance also records normalized time and a per-artifact candidate
+audit, avoiding confusion between the supervised target and graph structure.
+`--base_raw_dir` remains a compatibility alias for `--base_intermediate_dir`.
+
+For a targeted DaSCI smoke run, add
+`--instances CFL_easy_instance_0` (using an available instance identifier).
+Use `--strict_inventory` only for the final complete-population gate. Until
+then, generated graphs and `instance_dataset_summary.json` are development
+artifacts. See
+[`ADR 0003`](docs/decisions/0003-parent-instance-label-selection.md).
+The sanitized DaSCI evidence is recorded in
+[`docs/validation`](docs/validation/2026-08-30-instance-baseline-smoke.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \

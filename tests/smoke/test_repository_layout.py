@@ -1,5 +1,6 @@
 """Dependency-free smoke tests for the repository contract."""
 
+import ast
 import importlib
 import re
 from pathlib import Path
@@ -19,6 +20,7 @@ def test_stable_cli_modules_exist() -> None:
         "audit_collection.py",
         "audit_dataset.py",
         "benchmark_gurobi.py",
+        "build_instance_dataset.py",
         "build_dataset.py",
         "collect_incumbents.py",
         "evaluate.py",
@@ -101,6 +103,27 @@ def test_build_cli_reexports_legacy_pickle_schema_names() -> None:
     )
     for schema_name in ("ConstraintFeatures", "ModelFeatures", "VariableFeatures"):
         assert schema_name in entrypoint
+
+
+def test_instance_build_cli_reexports_legacy_pickle_schema_names() -> None:
+    entrypoint = (PACKAGE_ROOT / "cli" / "build_instance_dataset.py").read_text(
+        encoding="utf-8"
+    )
+    for schema_name in ("ConstraintFeatures", "ModelFeatures", "VariableFeatures"):
+        assert schema_name in entrypoint
+
+
+def test_instance_builder_keeps_inventory_return_and_writable_label_copy() -> None:
+    builder_path = PACKAGE_ROOT / "graph" / "build_instance_dataset.py"
+    builder = builder_path.read_text(encoding="utf-8")
+    syntax_tree = ast.parse(builder)
+    availability = next(
+        node
+        for node in syntax_tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "_is_available"
+    )
+    assert any(isinstance(node, ast.Return) for node in ast.walk(availability))
+    assert "np.array(selected.solution_vector, dtype=np.float64, copy=True)" in builder
 
 
 def test_audit_cli_reexports_legacy_pickle_schema_names() -> None:
