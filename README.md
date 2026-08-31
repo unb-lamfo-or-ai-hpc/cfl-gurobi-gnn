@@ -377,4 +377,3 @@ or [Hugging Face Datasets](https://huggingface.co/datasets).
 - Gurobi Optimization, LLC. (2024).
   *Gurobi Optimizer Reference Manual, Version 13.0.*
   [gurobi.com/documentation/13.0](https://www.gurobi.com/documentation/13.0/)
-
