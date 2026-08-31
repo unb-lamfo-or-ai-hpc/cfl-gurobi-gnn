@@ -625,4 +625,3 @@ The final dataset and trained model should be distributed through:
 - Gurobi Optimization, LLC. (2024).
   *Gurobi Optimizer Reference Manual, Version 13.0.*
   [gurobi.com/documentation/13.0](https://www.gurobi.com/documentation/13.0/)
-
