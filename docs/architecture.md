@@ -32,4 +32,3 @@ the codebase.
 Files in `cfl_gnn.cli` provide stable, unversioned entrypoints. Implementation
 modules may evolve behind those entrypoints. Generated data and experimental
 outputs remain outside the Python package.
-
