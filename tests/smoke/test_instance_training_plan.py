@@ -148,4 +148,3 @@ def test_instance_serial_entrypoint_keeps_test_partition_held_out() -> None:
     assert 'ParentInstanceDataset(plan.records_for_role("validation"))' in trainer
     assert 'ParentInstanceDataset(plan.records_for_role("test"))' not in trainer
     assert "Heavy ML imports remain behind" in trainer
-
