@@ -33,4 +33,3 @@ srun python3 -m cfl_gnn.cli.train_instance_serial \
     --epochs 1 \
     --patience 1 \
     --device cuda
-
