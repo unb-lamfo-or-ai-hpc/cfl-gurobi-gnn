@@ -48,4 +48,3 @@ an explicit `--overwrite`; experiment directories are otherwise fail-closed.
 - Final scientific runs require a complete, eligible 90-parent inventory with
   easy, medium, and hard instances.
 - DDP adaptation and test-set evaluation remain separate future changes.
-
