@@ -167,6 +167,27 @@ If an audit reports schema-v1 sidecars from an earlier development run, rerun
 `build_instance_dataset` for the available inventory. Its reuse guard rejects
 the stale schema and regenerates the graphs without rerunning the Gurobi solve.
 
+Construct the exact serial-training plan before starting a GPU process:
+
+```bash
+python3 -m cfl_gnn.cli.train_instance_serial \
+    --manifest configs/splits/cfl_90_seed42_folds.csv \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline \
+    --rotation 0 \
+    --label_policy optimal_only \
+    --development_only \
+    --dry_run
+```
+
+For the current 42-graph inventory, the strict-label development plan contains
+18 training, 6 validation, and 6 held-out test parents, all from the easy
+category. Remove `--dry_run` to execute the serial Gasse training. The test
+partition is recorded in the run contract but is never instantiated during
+training. `--development_only` is required while the inventory is incomplete;
+such outputs are explicitly ineligible for scientific reporting. The existing
+`train_serial` entrypoint remains the incumbent-conditioned legacy trainer.
+See [`ADR 0005`](docs/decisions/0005-parent-instance-serial-training.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \
@@ -205,7 +226,7 @@ python3 -m cfl_gnn.cli.graph_statistics
 python3 -m cfl_gnn.cli.graph_clustering
 ```
 
-**STEP 5 — Serial Training: Smoke Test** *(requires Step 4 validated)*
+**STEP 5 — Incumbent-conditioned Serial Training: Legacy Smoke Test** *(requires Step 4 validated)*
 ```bash
 python3 -m cfl_gnn.cli.train_serial \
     --easy_split 10 2 2 --medium_split 5 1 1 --hard_split 5 1 1 \
