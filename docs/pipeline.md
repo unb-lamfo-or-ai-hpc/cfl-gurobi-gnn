@@ -260,7 +260,26 @@ python -m cfl_gnn.cli.graph_clustering
 - `complexity_class` is not `'unknown'` for all instances.
 - Computed `pos_weight` preview: `N_neg / N_pos` should be in `[5, 500]`.
 
-### Step 5 — Serial Smoke Test
+### Step 5a — Parent-instance Serial Smoke Test
+
+The parent-instance baseline uses the canonical fold manifest and never accepts
+graph-count splits. Audit the run contract first without importing PyTorch:
+
+```bash
+python -m cfl_gnn.cli.train_instance_serial \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline_smoke \
+    --rotation 0 \
+    --label_policy optimal_only \
+    --development_only \
+    --dry_run
+```
+
+For the current partial inventory, remove `--dry_run` and use a unique
+`--experiment_name` for a one-epoch GPU smoke. The test parents are held out
+and are not loaded by this trainer. A run bearing `development_only=true`
+cannot be used as a final experimental result.
+
+### Step 5b — Incumbent-conditioned Serial Smoke Test (legacy)
 
 ```bash
 python -m cfl_gnn.cli.train_serial \
@@ -606,3 +625,4 @@ The final dataset and trained model should be distributed through:
 - Gurobi Optimization, LLC. (2024).
   *Gurobi Optimizer Reference Manual, Version 13.0.*
   [gurobi.com/documentation/13.0](https://www.gurobi.com/documentation/13.0/)
+
