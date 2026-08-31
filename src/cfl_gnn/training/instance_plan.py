@@ -177,4 +177,3 @@ def write_instance_training_plan(
         json.dumps(plan.to_summary(), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-
