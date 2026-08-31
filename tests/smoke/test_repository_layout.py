@@ -159,4 +159,3 @@ def test_artifact_schemas_keep_legacy_field_order() -> None:
         "obj_coeffs",
     )
     assert ConstraintFeatures._fields == ("senses", "rhs_values", "row_norms")
-
