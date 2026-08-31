@@ -147,6 +147,26 @@ artifacts. See
 The sanitized DaSCI evidence is recorded in
 [`docs/validation`](docs/validation/2026-08-30-instance-baseline-smoke.md).
 
+Before training, audit one canonical rotation without loading PyTorch graphs:
+
+```bash
+python3 -m cfl_gnn.cli.audit_instance_training_split \
+    --manifest configs/splits/cfl_90_seed42_folds.csv \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline \
+    --rotation 0 \
+    --label_policy optimal_only
+```
+
+The default `optimal_only` policy is the scientific baseline. Use
+`--label_policy all_available` only for an explicitly identified development
+smoke; non-optimal labels remain flagged in the JSON report. Graph hashes are
+verified by default, and stale or mismatched sidecars fail closed. The loader
+never uses `random_split`; roles come only from the canonical manifest. See
+[`ADR 0004`](docs/decisions/0004-parent-instance-training-eligibility.md).
+If an audit reports schema-v1 sidecars from an earlier development run, rerun
+`build_instance_dataset` for the available inventory. Its reuse guard rejects
+the stale schema and regenerates the graphs without rerunning the Gurobi solve.
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \

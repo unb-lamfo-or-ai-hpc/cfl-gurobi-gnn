@@ -12,6 +12,17 @@ from .instance_folds import (
     validate_manifest,
     write_manifest,
 )
+from .instance_partitions import (
+    LABEL_POLICIES,
+    ROLES,
+    ExcludedInstance,
+    InstanceDatasetAudit,
+    InstanceDatasetContractError,
+    InstanceGraphRecord,
+    InvalidInstance,
+    assert_no_partition_leakage,
+    audit_instance_dataset,
+)
 
 __all__ = [
     "CATEGORIES",
@@ -24,4 +35,13 @@ __all__ = [
     "role_for_fold",
     "validate_manifest",
     "write_manifest",
+    "LABEL_POLICIES",
+    "ROLES",
+    "ExcludedInstance",
+    "InstanceDatasetAudit",
+    "InstanceDatasetContractError",
+    "InstanceGraphRecord",
+    "InvalidInstance",
+    "assert_no_partition_leakage",
+    "audit_instance_dataset",
 ]
