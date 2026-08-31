@@ -20,7 +20,7 @@ graph transformation -> training -> evaluation -> solver hints/benchmark
 
 | Solver | One graph per parent instance | Incumbent-conditioned graphs |
 |---|---|---|
-| Gurobi | Provenance and targeted time-audit smoke passed; fold-aware loader available | Preserved from the legacy pipeline |
+| Gurobi | Provenance, fold-aware loader, and separate serial trainer available | Preserved from the legacy pipeline |
 | SCIP/Pyomo | Future | Future |
 
 The four variants must share graph schemas, model implementations, evaluation
@@ -32,3 +32,4 @@ the codebase.
 Files in `cfl_gnn.cli` provide stable, unversioned entrypoints. Implementation
 modules may evolve behind those entrypoints. Generated data and experimental
 outputs remain outside the Python package.
+
