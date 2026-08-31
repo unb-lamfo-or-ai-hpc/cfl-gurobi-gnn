@@ -50,5 +50,5 @@ instances or a separately reviewed missing-data protocol.
 - The next ETL change may select one best available label per parent instance
   without revisiting the split methodology.
 - The preserved incumbent collector remains untouched.
-- Existing graph-count arguments in training are not yet replaced; manifest
-  consumption belongs to the next implementation PR.
+- The parent-instance consumer derives every role from this manifest and
+  rejects stale, unplanned, or mismatched graphs before training.
