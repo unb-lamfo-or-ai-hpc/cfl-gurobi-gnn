@@ -224,6 +224,29 @@ distinguishes runtime observations from fields that the documented Gurobi API
 does not expose. Existing incumbent artifacts and collectors are untouched.
 See [`ADR 0007`](docs/decisions/0007-gurobi-node-subproblem-feasibility.md).
 
+The follow-up PySCIPOpt prototype is intentionally isolated from datasets and
+training. Install its optional dependency only in the environment used for the
+probe, then validate the controlled toy tree before any CFL instance:
+
+```bash
+python3 -m pip install -e '.[scip]'
+
+python3 -m cfl_gnn.cli.audit_pyscipopt_node_subproblems \
+    --toy \
+    --output_dir /raid/.../analysis/pyscipopt_node_prototype/toy \
+    --time_limit 60 \
+    --node_limit 100 \
+    --max_samples 4 \
+    --presolve off \
+    --dry_run
+```
+
+The real run captures bounded `NODEFOCUSED` samples, writes experimental
+candidate models, and audits them in fresh Python/SCIP processes. Every
+candidate remains `dataset_eligible=false` pending independent review. Pyomo
+is not used. See [`ADR 0008`](docs/decisions/0008-pyscipopt-only-node-subproblem-prototype.md)
+and the [prototype protocol](docs/research/pyscipopt-node-subproblem-prototype.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \

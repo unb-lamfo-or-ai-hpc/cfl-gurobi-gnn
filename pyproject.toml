@@ -10,6 +10,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
 
+[project.optional-dependencies]
+scip = ["pyscipopt>=6.1,<7"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

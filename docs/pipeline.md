@@ -335,6 +335,35 @@ does not alter the solve or emit LP, MPS, graph, or incumbent artifacts. A
 nonzero real-run exit means that callback errors occurred or no optimal
 `MIPNODE` event was observed. See ADR 0007 for the exact interpretation.
 
+### Research Gate — PySCIPOpt Node-subproblem Prototype
+
+This optional experiment runs only after the Gurobi capability boundary has
+been accepted. It uses PySCIPOpt directly; Pyomo is neither installed nor used.
+Start with the controlled toy MILP:
+
+```bash
+python -m pip install -e '.[scip]'
+
+python -m cfl_gnn.cli.audit_pyscipopt_node_subproblems \
+    --toy \
+    --output_dir /raid/.../analysis/pyscipopt_node_prototype/toy \
+    --time_limit 60 \
+    --node_limit 100 \
+    --max_samples 4 \
+    --min_depth 1 \
+    --max_depth 8 \
+    --presolve off \
+    --dry_run
+```
+
+Remove `--dry_run` only after inspecting the hash-bound plan. Candidate CIP
+files are written by `writeMIP()` and `writeProblem(trans=True)` at bounded
+non-root `NODEFOCUSED` events, then opened by fresh Python processes. The
+reports keep structural and semantic identity separate and always retain
+`dataset_eligible=false`. A successful mechanical round trip is evidence for
+review, not permission to build graphs. See ADR 0008 and the PySCIPOpt
+prototype protocol.
+
 ### Step 6 — Full Parallel Training
 
 ```bash
