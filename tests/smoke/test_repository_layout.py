@@ -19,6 +19,7 @@ def test_stable_cli_modules_exist() -> None:
     expected = {
         "audit_collection.py",
         "audit_dataset.py",
+        "audit_gurobi_node_subproblems.py",
         "audit_instance_training_split.py",
         "benchmark_gurobi.py",
         "build_instance_dataset.py",

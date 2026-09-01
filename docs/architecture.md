@@ -20,7 +20,7 @@ graph transformation -> training -> evaluation -> solver hints/benchmark
 
 | Solver | One graph per parent instance | Incumbent-conditioned graphs |
 |---|---|---|
-| Gurobi | Provenance, fold-aware serial trainer, and contract-locked evaluator available | Preserved from the legacy pipeline |
+| Gurobi | Provenance, fold-aware serial trainer, and contract-locked evaluator available | Preserved; isolated node-materialization feasibility audit available |
 | SCIP/Pyomo | Future | Future |
 
 The four variants must share graph schemas, model implementations, evaluation
