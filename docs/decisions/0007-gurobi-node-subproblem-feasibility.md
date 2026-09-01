@@ -66,9 +66,9 @@ a new MILP instance without exact branch-local state.
   alone does not imply remote optimization.
 - If DaSCI confirms callback observation, the documented capability boundary
   is sufficient to reject exact Gurobi node-subproblem serialization.
-- The subsequent SCIP design must distinguish formulation portability from
-  tree instrumentation: Pyomo can express/export a model, but node-local state
-  will require a SCIP-native interface such as PySCIPOpt.
+- The subsequent SCIP design must use the solver-native PySCIPOpt interface.
+  Pyomo is excluded because the research question concerns node-local tree
+  state rather than formulation portability.
 
 ## Official references
 
