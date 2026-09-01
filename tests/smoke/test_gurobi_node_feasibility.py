@@ -171,6 +171,31 @@ def test_dry_run_writes_only_a_sanitized_plan(tmp_path: Path) -> None:
     assert "gurobipy" not in feasibility.__dict__
 
 
+def test_failure_report_classifies_license_error_without_leaking_message(
+    tmp_path: Path,
+) -> None:
+    instance = tmp_path / "CFL_easy_instance_1.lp.gz"
+    instance.write_bytes(b"model")
+    plan = feasibility.build_probe_plan(instance)
+    secret = tmp_path / "secrets" / "gurobi.lic"
+    error = RuntimeError(
+        f"Model too large for size-limited license loaded from {secret}"
+    )
+
+    report = feasibility.failure_report(plan, error)
+    serialized = json.dumps(report)
+
+    assert report["probe_completed"] is False
+    assert report["failure"] == {
+        "error_type": "RuntimeError",
+        "reason_code": "gurobi_size_limited_license",
+    }
+    assert report["decision"]["runtime_probe_status"] == "solver_error"
+    assert report["decision"]["exact_subproblem_materialization"] is False
+    assert str(tmp_path) not in serialized
+    assert "Model too large" not in serialized
+
+
 @pytest.mark.parametrize(
     ("kwargs", "message"),
     [

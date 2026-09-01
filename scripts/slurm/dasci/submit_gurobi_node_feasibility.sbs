@@ -13,9 +13,16 @@ DATA_ROOT="/raid/vrcelestino/data/cfl-gurobi-gnn/data"
 INSTANCE_PATH="${INSTANCE_PATH:-${DATA_ROOT}/raw/MILPBench/CFL/CFL_easy_instance/LP/CFL_easy_instance_0.lp.gz}"
 EXPERIMENT_NAME="${EXPERIMENT_NAME:-gurobi_node_feasibility_${SLURM_JOB_ID}}"
 OUTPUT_DIR="${DATA_ROOT}/analysis/gurobi_node_feasibility/${EXPERIMENT_NAME}"
+LICENSE_PATH="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
 
 cd "$EXEC_DIR"
 export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+if [[ ! -s "$LICENSE_PATH" ]]; then
+    echo "Gurobi license file is missing or empty; set GRB_LICENSE_FILE" >&2
+    exit 2
+fi
+export GRB_LICENSE_FILE="$LICENSE_PATH"
 
 eval "$(conda shell.bash hook)"
 conda activate tfm_env

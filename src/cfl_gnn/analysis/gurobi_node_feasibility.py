@@ -367,6 +367,48 @@ def feasibility_decision(
     }
 
 
+def _failure_reason_code(error: Exception) -> str:
+    message = str(error).lower()
+    if "size-limited license" in message or "model too large" in message:
+        return "gurobi_size_limited_license"
+    if "license" in message:
+        return "gurobi_license_error"
+    return "solver_runtime_error"
+
+
+def failure_report(plan: ProbePlan, error: Exception) -> dict[str, Any]:
+    """Describe an aborted probe without persisting paths or error messages."""
+
+    decision = feasibility_decision(samples_recorded=0, callback_errors=0)
+    decision.update(
+        {
+            "runtime_probe_status": "solver_error",
+            "reason_code": "probe_failed_before_capability_assessment",
+        }
+    )
+    return {
+        **plan.to_summary(),
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "probe_completed": False,
+        "failure": {
+            "error_type": type(error).__name__,
+            "reason_code": _failure_reason_code(error),
+        },
+        "source_model": {"status": "unavailable_due_to_probe_failure"},
+        "solve": {"status": "NOT_COMPLETED"},
+        "observations": {
+            "mipnode_callback_calls": 0,
+            "optimal_mipnode_callback_calls": 0,
+            "samples_recorded": 0,
+            "callback_error_count": 0,
+            "samples": [],
+        },
+        "capabilities": capability_assessment(samples_recorded=0),
+        "decision": decision,
+        "official_references": list(OFFICIAL_REFERENCES),
+    }
+
+
 def _model_signature(model: Any, grb: Any) -> dict[str, Any]:
     variables = model.getVars()
     return {
@@ -462,6 +504,7 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
         report = {
             **plan.to_summary(),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "probe_completed": True,
             "gurobi_version": list(gp.gurobi.version()),
             "source_model": {
                 "original_objective_sense": original_sense,
@@ -547,7 +590,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.dry_run:
         return 0
 
-    report = run_probe(plan)
+    try:
+        report = run_probe(plan)
+    except Exception as error:
+        report = failure_report(plan, error)
+        _write_json(report_path, report)
+        LOGGER.error(
+            "Gurobi feasibility probe failed: %s",
+            report["failure"]["reason_code"],
+        )
+        print(f"[INFO] Failure report: {report_path}")
+        raise
     _write_json(report_path, report)
     observations = report["observations"]
     print(
