@@ -137,6 +137,7 @@ def _run_training(
     import matplotlib.pyplot as plt
 
     from cfl_gnn.graph.instance_dataset import ParentInstanceDataset
+    from cfl_gnn.graph.instance_provenance import sha256_file
     from cfl_gnn.models.gasse import GasseGNN
     from cfl_gnn.training.serial import (
         calc_metrics,
@@ -274,6 +275,7 @@ def _run_training(
         "experiment_name": args.experiment_name,
         "dataset_variant": "gurobi_parent_instance",
         "contract_sha256": plan.contract_sha256,
+        "checkpoint_sha256": sha256_file(checkpoint),
         "rotation": plan.audit.rotation,
         "label_policy": plan.audit.label_policy,
         "development_only": plan.development_only,

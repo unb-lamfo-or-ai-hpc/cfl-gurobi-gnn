@@ -188,6 +188,23 @@ such outputs are explicitly ineligible for scientific reporting. The existing
 `train_serial` entrypoint remains the incumbent-conditioned legacy trainer.
 See [`ADR 0005`](docs/decisions/0005-parent-instance-serial-training.md).
 
+Evaluate the resulting checkpoint only after rebuilding and matching its saved
+contract. The decision threshold is fixed at probability 0.5 and is never
+calibrated on the test fold:
+
+```bash
+python3 -m cfl_gnn.cli.evaluate_instance \
+    --checkpoint /raid/.../models/instance_baseline/<run>/best_model.pt \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline \
+    --manifest configs/splits/cfl_90_seed42_folds.csv \
+    --dry_run
+```
+
+Remove `--dry_run` only after the contract SHA-256, checkpoint SHA-256, and
+held-out membership pass. The evaluator deserializes test graphs exclusively
+and emits path-sanitized aggregate, per-difficulty, and per-instance metrics.
+See [`ADR 0006`](docs/decisions/0006-parent-instance-held-out-evaluation.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \

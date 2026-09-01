@@ -25,6 +25,7 @@ def test_stable_cli_modules_exist() -> None:
         "build_dataset.py",
         "collect_incumbents.py",
         "evaluate.py",
+        "evaluate_instance.py",
         "generate_hints.py",
         "graph_clustering.py",
         "graph_statistics.py",

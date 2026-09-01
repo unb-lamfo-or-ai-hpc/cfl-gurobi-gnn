@@ -279,7 +279,25 @@ For the current partial inventory, remove `--dry_run` and use a unique
 and are not loaded by this trainer. A run bearing `development_only=true`
 cannot be used as a final experimental result.
 
-### Step 5b — Incumbent-conditioned Serial Smoke Test (legacy)
+### Step 5b — Parent-instance Held-out Evaluation
+
+The evaluator reconstructs the training contract and verifies both the
+contract and checkpoint SHA-256 values before importing PyTorch. Its fixed
+probability threshold is 0.5; no threshold sweep or calibration is performed
+on test data.
+
+```bash
+python -m cfl_gnn.cli.evaluate_instance \
+    --checkpoint /raid/.../models/instance_baseline/<run>/best_model.pt \
+    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline_smoke \
+    --dry_run
+```
+
+Remove `--dry_run` to evaluate. Only the canonical test parents are
+deserialized. The output contains `instance_evaluation_summary.json` and
+`per_instance_metrics.csv`; development-only status is retained.
+
+### Step 5c — Incumbent-conditioned Serial Smoke Test (legacy)
 
 ```bash
 python -m cfl_gnn.cli.train_serial \
