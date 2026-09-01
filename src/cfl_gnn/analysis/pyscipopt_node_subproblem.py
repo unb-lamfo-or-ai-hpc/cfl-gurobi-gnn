@@ -272,12 +272,12 @@ def _active_path(node: Any) -> list[Any]:
 
 
 def _normalized_bound_type(direction: Any) -> str:
-    numeric = int(direction)
-    if numeric == 0:
+    normalized = str(direction).strip().lower()
+    if normalized == "0" or normalized.endswith("lower"):
         return "lower"
-    if numeric == 1:
+    if normalized == "1" or normalized.endswith("upper"):
         return "upper"
-    return f"unknown_{numeric}"
+    raise PyScipOptProbeError("unsupported branching bound type")
 
 
 def _node_branchings(node: Any) -> list[dict[str, Any]]:
@@ -817,6 +817,31 @@ def _build_toy_model(Model: Any) -> Any:
     return model
 
 
+def determine_gate_status(
+    observations: Mapping[str, Any],
+    roundtrip_by_writer: Mapping[str, Mapping[str, Any]],
+) -> tuple[str, str]:
+    write_mip = roundtrip_by_writer["writeMIP"]
+    if observations["capture_error_count"]:
+        reason = "node_capture_failed"
+    elif observations["samples_recorded"] == 0:
+        reason = "no_nonroot_node_sampled"
+    elif write_mip["candidates_audited"] == 0:
+        reason = "write_mip_candidate_not_serialized"
+    elif write_mip["fresh_process_readable"] == 0:
+        reason = "write_mip_candidate_not_readable"
+    elif write_mip["mechanical_checks_passed"] == 0:
+        reason = "write_mip_mechanical_checks_failed"
+    else:
+        reason = "write_mip_mechanical_check_observed_pending_review"
+    status = (
+        "passed"
+        if reason == "write_mip_mechanical_check_observed_pending_review"
+        else "failed"
+    )
+    return status, reason
+
+
 def run_probe(plan: ProbePlan) -> dict[str, Any]:
     import pyscipopt
     from pyscipopt import Model, SCIP_EVENTTYPE, SCIP_PARAMSETTING
@@ -879,10 +904,15 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                     for item in writer_roundtrips
                 ),
             }
+        observations = observer.summary()
+        gate_status, gate_reason = determine_gate_status(
+            observations, roundtrip_by_writer
+        )
         report = {
             **plan.to_summary(),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "probe_completed": True,
+            "gate_status": gate_status,
             "environment": {
                 "python": sys.version.split()[0],
                 "pyscipopt": str(getattr(pyscipopt, "__version__", "unknown")),
@@ -901,7 +931,7 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                 "primal_bound": _finite_or_none(model.getPrimalbound()),
                 "dual_bound": _finite_or_none(model.getDualbound()),
             },
-            "observations": observer.summary(),
+            "observations": observations,
             "roundtrip": {
                 "candidates_audited": len(roundtrips),
                 "fresh_process_readable": sum(
@@ -924,7 +954,7 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                 ),
                 "exact_node_subproblem_proven": False,
                 "dataset_eligible": False,
-                "reason_code": "prototype_requires_independent_scientific_review",
+                "reason_code": gate_reason,
             },
             "official_references": list(OFFICIAL_REFERENCES),
         }
@@ -943,6 +973,7 @@ def failure_report(plan: ProbePlan, error: Exception) -> dict[str, Any]:
         **plan.to_summary(),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "probe_completed": False,
+        "gate_status": "failed",
         "failure": {
             "error_type": type(error).__name__,
             "reason_code": "pyscipopt_probe_failed",
@@ -1039,20 +1070,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"candidates={observations['candidate_files_written']}"
     )
     print(f"[INFO] Report: {report_path}")
-    if observations["capture_error_count"]:
-        raise PyScipOptProbeError("one or more node captures failed")
-    if observations["samples_recorded"] == 0:
-        raise PyScipOptProbeError("no node in the requested depth window was sampled")
-    if report["roundtrip"]["fresh_process_readable"] == 0:
-        raise PyScipOptProbeError("no candidate passed fresh-process deserialization")
-    if (
-        report["roundtrip"]["by_writer"]["writeMIP"][
-            "mechanical_checks_passed"
-        ]
-        == 0
-    ):
+    if report["gate_status"] != "passed":
         raise PyScipOptProbeError(
-            "no writeMIP candidate passed the strengthened mechanical checks"
+            f"prototype gate failed: {report['decision']['reason_code']}"
         )
     return 0
 

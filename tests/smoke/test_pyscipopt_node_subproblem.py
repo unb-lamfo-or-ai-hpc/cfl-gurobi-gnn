@@ -54,6 +54,16 @@ class _Constraint:
         self.name = name
 
 
+class _StringOnlyDirection:
+    """Match PySCIPOpt 6.2 enums that stringify but reject int()."""
+
+    def __init__(self, value: str) -> None:
+        self.value = value
+
+    def __str__(self) -> str:
+        return self.value
+
+
 class _Node:
     def __init__(self, number: int, depth: int, parent: "_Node | None") -> None:
         self._number = number
@@ -79,7 +89,7 @@ class _Node:
         if self._parent is None:
             return [], [], []
         variable = _Variable("x0", "BINARY", 0, 1, 0, 0)
-        return [variable], [0.0], [1]
+        return [variable], [0.0], [_StringOnlyDirection("1")]
 
     def getAddedConss(self):
         return [_Constraint("local_cut")] if self._parent is not None else []
@@ -359,6 +369,53 @@ def test_branch_bound_comparison_checks_direction() -> None:
     assert not prototype._branch_bound_matches(
         fixed_zero, {"bound": 1.0, "bound_type": "lower"}
     )
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        (_StringOnlyDirection("0"), "lower"),
+        (_StringOnlyDirection("1"), "upper"),
+        (_StringOnlyDirection("SCIP_BOUNDTYPE_LOWER"), "lower"),
+        (_StringOnlyDirection("SCIP_BOUNDTYPE_UPPER"), "upper"),
+    ],
+)
+def test_bound_type_normalization_accepts_string_only_enums(
+    raw: object, expected: str
+) -> None:
+    assert prototype._normalized_bound_type(raw) == expected
+
+
+def test_gate_reports_capture_failure_before_downstream_absence() -> None:
+    status, reason = prototype.determine_gate_status(
+        {"capture_error_count": 2, "samples_recorded": 0},
+        {
+            "writeMIP": {
+                "candidates_audited": 0,
+                "fresh_process_readable": 0,
+                "mechanical_checks_passed": 0,
+            }
+        },
+    )
+
+    assert status == "failed"
+    assert reason == "node_capture_failed"
+
+
+def test_gate_passes_only_after_write_mip_mechanical_success() -> None:
+    status, reason = prototype.determine_gate_status(
+        {"capture_error_count": 0, "samples_recorded": 2},
+        {
+            "writeMIP": {
+                "candidates_audited": 2,
+                "fresh_process_readable": 2,
+                "mechanical_checks_passed": 1,
+            }
+        },
+    )
+
+    assert status == "passed"
+    assert reason == "write_mip_mechanical_check_observed_pending_review"
 
 
 def test_dry_run_does_not_import_pyscipopt(tmp_path: Path) -> None:
