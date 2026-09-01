@@ -42,6 +42,12 @@ class _Variable:
     def getUbLocal(self) -> float:
         return self._local_ub
 
+    def getLbOriginal(self) -> float:
+        return self._local_lb
+
+    def getUbOriginal(self) -> float:
+        return self._local_ub
+
 
 class _Constraint:
     def __init__(self, name: str) -> None:
@@ -73,7 +79,7 @@ class _Node:
         if self._parent is None:
             return [], [], []
         variable = _Variable("x0", "BINARY", 0, 1, 0, 0)
-        return [variable], [0.0], ["DOWNWARDS"]
+        return [variable], [0.0], [1]
 
     def getAddedConss(self):
         return [_Constraint("local_cut")] if self._parent is not None else []
@@ -91,14 +97,20 @@ class _Event:
 
 
 class _Model:
-    def __init__(self, variables: list[_Variable]) -> None:
+    def __init__(
+        self, variables: list[_Variable], current_node: _Node | None = None
+    ) -> None:
         self.variables = variables
+        self.current_node = current_node
 
     def getVars(self, transformed: bool = True):
         return list(self.variables)
 
     def getCurrentNode(self):
-        raise AssertionError("event node should be preferred")
+        return self.current_node
+
+    def getStage(self) -> str:
+        return "SOLVING"
 
     def writeMIP(self, filename: str, **_: object) -> None:
         Path(filename).write_text("MIP candidate\n", encoding="utf-8")
@@ -169,8 +181,18 @@ def test_capture_node_state_separates_semantic_and_structural_identity() -> None
     assert state["local_bound_change_count"] == 1
     assert state["local_bound_changes"][0]["name"] == "x0"
     assert state["parent_branchings"][0]["variable"] == "x0"
+    assert state["branch_path"] == [
+        {
+            "at_node_number": 2,
+            "parent_number": 1,
+            "variable": "x0",
+            "bound": 0.0,
+            "bound_type": "upper",
+        }
+    ]
     assert state["added_constraints"] == [
         {
+            "at_node_number": 2,
             "name": "local_cut",
             "linear_terms": [["x0", 1.0]],
             "representation": "linear_terms",
@@ -202,15 +224,21 @@ def test_observer_writes_bounded_candidates_without_promoting_them(
     root = _Node(1, 0, None)
     child = _Node(2, 1, root)
     observer = prototype.NodeProbeObserver(plan)
+    model = _Model(_variables(), current_node=child)
 
-    observer(_Model(_variables()), _Event(child))
-    observer(_Model(_variables()), _Event(child))
+    observer.on_node_focused(model, _Event(child))
+    observer.on_node_focused(model, _Event(child))
+    observer.on_lp_solved(model, _Event(child))
+    observer.on_lp_solved(model, _Event(child))
 
     summary = observer.summary()
     assert summary["nodefocused_events"] == 2
+    assert summary["lp_solved_events"] == 2
     assert summary["samples_recorded"] == 1
     assert summary["candidate_files_written"] == 2
     assert len(observer.candidates) == 2
+    assert observer.samples[0]["state_capture_event"] == "LPSOLVED"
+    assert observer.samples[0]["focused_semantic_node_sha256"]
     assert all(
         export["status"] == "written"
         for export in observer.samples[0]["candidate_exports"]
@@ -223,17 +251,26 @@ def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> N
         "node_number": 2,
         "depth": 1,
         "parent_branchings": [{"variable": "x0"}],
+        "branch_path": [
+            {"variable": "x0", "bound": 0.0, "bound_type": "upper"}
+        ],
         "local_bound_change_count": 1,
         "added_constraint_count": 0,
         "semantic_node_sha256": "c" * 64,
         "transformed_variable_types": {"BINARY": 3},
     }
-    export = {"writer": "writeMIP", "file_name": "node.cip", "sha256": "d" * 64}
+    export = {
+        "writer": "writeMIP",
+        "writer_role": "node_mip_candidate",
+        "file_name": "node.cip",
+        "sha256": "d" * 64,
+    }
     inspection = {
         "status": "readable",
         "objective_sense": "minimize",
         "expected_local_bounds_match": True,
         "expected_local_constraints_match": True,
+        "expected_branch_bounds_match": True,
         "signature": {"variable_types": {"BINARY": 3}},
     }
 
@@ -242,6 +279,86 @@ def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> N
     assert audit["roundtrip_status"] == "candidate_passed_mechanical_checks"
     assert audit["dataset_eligible"] is False
     assert audit["eligibility_reason"] == "prototype_requires_independent_scientific_review"
+
+
+def test_parent_branching_cannot_pass_without_bound_materialization() -> None:
+    sample = {
+        "sample_index": 1,
+        "node_number": 3,
+        "depth": 1,
+        "branch_path": [
+            {"variable": "x0", "bound": 1.0, "bound_type": "lower"}
+        ],
+        "local_bound_change_count": 0,
+        "added_constraint_count": 0,
+        "semantic_node_sha256": "e" * 64,
+        "transformed_variable_types": {"BINARY": 3},
+    }
+    export = {
+        "writer": "writeMIP",
+        "writer_role": "node_mip_candidate",
+        "file_name": "node.cip",
+    }
+    inspection = {
+        "status": "readable",
+        "objective_sense": "minimize",
+        "expected_local_bounds_match": True,
+        "expected_local_constraints_match": True,
+        "expected_branch_bounds_match": False,
+        "signature": {"variable_types": {"BINARY": 3}},
+    }
+
+    audit = prototype.evaluate_roundtrip(sample, export, inspection)
+
+    assert audit["semantic_distinction_observed"] is True
+    assert audit["expected_branch_bounds_match"] is False
+    assert audit["roundtrip_status"] == "candidate_failed_or_incomplete"
+
+
+def test_transformed_problem_is_always_a_control() -> None:
+    sample = {
+        "sample_index": 0,
+        "node_number": 2,
+        "depth": 1,
+        "branch_path": [{"variable": "x0"}],
+        "local_bound_change_count": 1,
+        "added_constraint_count": 0,
+        "semantic_node_sha256": "f" * 64,
+        "transformed_variable_types": {"BINARY": 3},
+    }
+    export = {
+        "writer": "writeProblem_transformed",
+        "writer_role": "transformed_problem_control",
+        "file_name": "control.cip",
+    }
+    inspection = {
+        "status": "readable",
+        "objective_sense": "minimize",
+        "expected_local_bounds_match": True,
+        "expected_local_constraints_match": True,
+        "expected_branch_bounds_match": True,
+        "signature": {"variable_types": {"BINARY": 3}},
+    }
+
+    audit = prototype.evaluate_roundtrip(sample, export, inspection)
+
+    assert audit["roundtrip_status"] == "transformed_problem_control_only"
+    assert audit["dataset_eligible"] is False
+
+
+def test_branch_bound_comparison_checks_direction() -> None:
+    fixed_zero = _Variable("x0", "BINARY", 0, 1, 0, 0)
+    fixed_one = _Variable("x1", "BINARY", 0, 1, 1, 1)
+
+    assert prototype._branch_bound_matches(
+        fixed_zero, {"bound": 0.0, "bound_type": "upper"}
+    )
+    assert prototype._branch_bound_matches(
+        fixed_one, {"bound": 1.0, "bound_type": "lower"}
+    )
+    assert not prototype._branch_bound_matches(
+        fixed_zero, {"bound": 1.0, "bound_type": "lower"}
+    )
 
 
 def test_dry_run_does_not_import_pyscipopt(tmp_path: Path) -> None:

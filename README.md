@@ -241,10 +241,15 @@ python3 -m cfl_gnn.cli.audit_pyscipopt_node_subproblems \
     --dry_run
 ```
 
-The real run captures bounded `NODEFOCUSED` samples, writes experimental
-candidate models, and audits them in fresh Python/SCIP processes. Every
-candidate remains `dataset_eligible=false` pending independent review. Pyomo
-is not used. See [`ADR 0008`](docs/decisions/0008-pyscipopt-only-node-subproblem-prototype.md)
+The real run identifies bounded samples at `NODEFOCUSED`, recaptures their
+post-processing state, and attempts serialization only at the later
+`LPSOLVED` event. `writeMIP()` is the node-MIP candidate;
+`writeProblem(trans=True)` is retained only as a transformed-problem control.
+Fresh Python/SCIP processes must verify every ancestral branching bound as well
+as local bounds and constraints. A run fails closed if no `writeMIP` candidate
+passes these mechanical checks, and every candidate remains
+`dataset_eligible=false` pending independent review. Pyomo is not used. See
+[`ADR 0008`](docs/decisions/0008-pyscipopt-only-node-subproblem-prototype.md)
 and the [prototype protocol](docs/research/pyscipopt-node-subproblem-prototype.md).
 
 **STEP 1 — Data Generation**

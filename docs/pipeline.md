@@ -356,13 +356,17 @@ python -m cfl_gnn.cli.audit_pyscipopt_node_subproblems \
     --dry_run
 ```
 
-Remove `--dry_run` only after inspecting the hash-bound plan. Candidate CIP
-files are written by `writeMIP()` and `writeProblem(trans=True)` at bounded
-non-root `NODEFOCUSED` events, then opened by fresh Python processes. The
-reports keep structural and semantic identity separate and always retain
-`dataset_eligible=false`. A successful mechanical round trip is evidence for
-review, not permission to build graphs. See ADR 0008 and the PySCIPOpt
-prototype protocol.
+Remove `--dry_run` only after inspecting the hash-bound plan. Non-root nodes are
+identified at `NODEFOCUSED`; their state is recaptured and serialization is
+performed only at `LPSOLVED`.
+`writeMIP()` is audited as the node-MIP candidate;
+`writeProblem(trans=True)` is a transformed-problem control and cannot pass the
+candidate gate. Fresh Python processes verify every ancestral branching bound,
+local bound, and available local constraint. The run fails closed unless at
+least one `writeMIP` candidate passes all mechanical checks. Reports keep
+structural and semantic identity separate and always retain
+`dataset_eligible=false`. A successful round trip is evidence for review, not
+permission to build graphs. See ADR 0008 and the PySCIPOpt prototype protocol.
 
 ### Step 6 — Full Parallel Training
 

@@ -19,7 +19,7 @@ from cfl_gnn.graph.instance_provenance import sha256_file
 
 
 LOGGER = logging.getLogger(__name__)
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DATASET_VARIANT = "pyscipopt_node_subproblem_prototype"
 PLAN_NAME = "pyscipopt_node_probe_plan.json"
 REPORT_NAME = "pyscipopt_node_capability_report.json"
@@ -159,7 +159,10 @@ class ProbePlan:
                 "threads": 1,
                 "seed": self.seed,
             },
-            "event": "NODEFOCUSED",
+            "events": {
+                "capture": "NODEFOCUSED",
+                "serialization": "LPSOLVED",
+            },
             "candidate_writers": ["writeMIP", "writeProblem_transformed"],
             "roundtrip_mode": "fresh_python_process",
             "eligibility": "experimental_ineligible_pending_review",
@@ -256,16 +259,50 @@ def model_signature(model: Any, *, transformed: bool) -> dict[str, Any]:
     }
 
 
-def _ancestry(node: Any) -> list[int]:
-    ancestry: list[int] = []
+def _active_path(node: Any) -> list[Any]:
+    path: list[Any] = []
     current = node
     while current is not None:
-        ancestry.append(int(current.getNumber()))
-        if len(ancestry) > 10_000:
+        path.append(current)
+        if len(path) > 10_000:
             raise PyScipOptProbeError("node ancestry exceeds safety limit")
         current = current.getParent()
-    ancestry.reverse()
-    return ancestry
+    path.reverse()
+    return path
+
+
+def _normalized_bound_type(direction: Any) -> str:
+    numeric = int(direction)
+    if numeric == 0:
+        return "lower"
+    if numeric == 1:
+        return "upper"
+    return f"unknown_{numeric}"
+
+
+def _node_branchings(node: Any) -> list[dict[str, Any]]:
+    variables, bounds, directions = node.getParentBranchings()
+    parent = node.getParent()
+    return sorted(
+        [
+            {
+                "at_node_number": int(node.getNumber()),
+                "parent_number": (
+                    int(parent.getNumber()) if parent is not None else None
+                ),
+                "variable": str(variable.name),
+                "bound": _bound_token(bound),
+                "bound_type": _normalized_bound_type(direction),
+            }
+            for variable, bound, direction in zip(variables, bounds, directions)
+        ],
+        key=lambda item: (
+            item["at_node_number"],
+            item["variable"],
+            item["bound_type"],
+            str(item["bound"]),
+        ),
+    )
 
 
 def _constraint_descriptor(model: Any, constraint: Any) -> dict[str, Any]:
@@ -337,30 +374,26 @@ def capture_node_state(model: Any, node: Any, source_sha256: str) -> dict[str, A
                 )
     local_vector.sort(key=lambda item: item[0])
     parent = node.getParent()
-    branch_variables, branch_bounds, branch_directions = node.getParentBranchings()
-    branchings = sorted(
-        [
-            {
-                "variable": str(variable.name),
-                "bound": _bound_token(bound),
-                "direction": str(direction),
-            }
-            for variable, bound, direction in zip(
-                branch_variables, branch_bounds, branch_directions
-            )
-        ],
-        key=lambda item: (item["variable"], str(item["direction"]), str(item["bound"])),
-    )
-    added_constraints = sorted(
-        [_constraint_descriptor(model, constraint) for constraint in node.getAddedConss()],
-        key=lambda item: item["name"],
-    )
+    active_path = _active_path(node)
+    branch_path = [
+        branching
+        for path_node in active_path
+        for branching in _node_branchings(path_node)
+    ]
+    branchings = _node_branchings(node)
+    added_constraints = []
+    for path_node in active_path:
+        for constraint in path_node.getAddedConss():
+            descriptor = _constraint_descriptor(model, constraint)
+            descriptor["at_node_number"] = int(path_node.getNumber())
+            added_constraints.append(descriptor)
+    added_constraints.sort(key=lambda item: (item["at_node_number"], item["name"]))
     domain_change_counts = [int(value) for value in node.getNDomchg()]
     semantic_payload = {
         "source_sha256": source_sha256,
         "depth": int(node.getDepth()),
-        "ancestry": _ancestry(node),
-        "parent_branchings": branchings,
+        "ancestry": [int(path_node.getNumber()) for path_node in active_path],
+        "branch_path": branch_path,
         "local_bound_vector_sha256": _canonical_sha256(local_vector),
         "added_constraints": added_constraints,
     }
@@ -372,6 +405,7 @@ def capture_node_state(model: Any, node: Any, source_sha256: str) -> dict[str, A
         "node_lower_bound": _finite_or_none(node.getLowerbound()),
         "ancestry": semantic_payload["ancestry"],
         "parent_branchings": branchings,
+        "branch_path": branch_path,
         "domain_change_counts": {
             "branching": domain_change_counts[0],
             "constraint_propagation": domain_change_counts[1],
@@ -396,24 +430,45 @@ def _candidate_name(sample_index: int, node_number: int, writer: str) -> str:
     return f"node_{sample_index:03d}_{node_number}_{normalized_writer}.cip"
 
 
+def _safe_scip_stage(model: Any) -> str:
+    try:
+        return str(model.getStage())
+    except Exception:
+        return "unavailable"
+
+
+def _serialization_reason(error: Exception) -> str:
+    normalized = str(error).lower()
+    if "stage" in normalized or "cannot be called" in normalized:
+        return "writer_unavailable_at_scip_stage"
+    if "write" in normalized or "file" in normalized:
+        return "candidate_writer_rejected_output"
+    return "candidate_serialization_failed"
+
+
 class NodeProbeObserver:
-    """Bounded passive observer attached to SCIP's NODEFOCUSED event."""
+    """Capture focused nodes, then serialize them only after their LP is solved."""
 
     def __init__(self, plan: ProbePlan) -> None:
         self.plan = plan
-        self.events_seen = 0
+        self.nodefocused_events = 0
+        self.lp_solved_events = 0
         self.events_outside_depth = 0
         self.samples: list[dict[str, Any]] = []
         self.candidates: list[dict[str, Any]] = []
         self.errors: list[dict[str, Any]] = []
+        self._samples_by_node: dict[int, dict[str, Any]] = {}
         self._candidate_dir = plan.output_dir / "candidates"
 
-    def __call__(self, model: Any, event: Any) -> None:
-        self.events_seen += 1
+    def on_node_focused(self, model: Any, event: Any) -> None:
+        self.nodefocused_events += 1
         if len(self.samples) >= self.plan.max_samples:
             return
         try:
             node = event.getNode() or model.getCurrentNode()
+            node_number = int(node.getNumber())
+            if node_number in self._samples_by_node:
+                return
             depth = int(node.getDepth())
             if depth < self.plan.min_depth or depth > self.plan.max_depth:
                 self.events_outside_depth += 1
@@ -421,62 +476,116 @@ class NodeProbeObserver:
             sample = capture_node_state(model, node, self.plan.source_sha256)
             sample_index = len(self.samples)
             sample["sample_index"] = sample_index
+            sample["focused_semantic_node_sha256"] = sample[
+                "semantic_node_sha256"
+            ]
+            sample["state_capture_event"] = "NODEFOCUSED"
             sample["candidate_exports"] = []
-            self._candidate_dir.mkdir(parents=True, exist_ok=True)
-            for writer in ("writeMIP", "writeProblem_transformed"):
-                filename = _candidate_name(sample_index, sample["node_number"], writer)
-                path = self._candidate_dir / filename
-                export = {
-                    "writer": writer,
-                    "file_name": filename,
-                    "relative_path": f"candidates/{filename}",
-                    "status": "failed",
-                }
-                try:
-                    if writer == "writeMIP":
-                        model.writeMIP(
-                            str(path), genericnames=False, origobj=True, lazyconss=True
-                        )
-                    else:
-                        model.writeProblem(
-                            str(path), trans=True, genericnames=False, verbose=False
-                        )
-                    if not path.is_file() or path.stat().st_size == 0:
-                        raise PyScipOptProbeError("candidate writer produced no bytes")
-                    export.update(
-                        {
-                            "status": "written",
-                            "sha256": sha256_file(path),
-                            "size_bytes": path.stat().st_size,
-                        }
-                    )
-                    self.candidates.append(
-                        {
-                            "path": path,
-                            "sample": sample,
-                            "export": export,
-                        }
-                    )
-                except Exception as error:
-                    export["error_type"] = type(error).__name__
-                    export["reason_code"] = "candidate_serialization_failed"
-                sample["candidate_exports"].append(export)
+            sample["serialization_event"] = None
             self.samples.append(sample)
+            self._samples_by_node[node_number] = sample
         except Exception as error:
             self.errors.append(
                 {
-                    "event_index": self.events_seen - 1,
+                    "event": "NODEFOCUSED",
+                    "event_index": self.nodefocused_events - 1,
                     "error_type": type(error).__name__,
                     "reason_code": "node_capture_failed",
                 }
             )
 
+    def on_lp_solved(self, model: Any, event: Any) -> None:
+        self.lp_solved_events += 1
+        try:
+            node = model.getCurrentNode()
+            if node is None:
+                return
+            sample = self._samples_by_node.get(int(node.getNumber()))
+            if sample is None or sample["candidate_exports"]:
+                return
+            serialization_state = capture_node_state(
+                model, node, self.plan.source_sha256
+            )
+            sample.update(serialization_state)
+            sample["state_capture_event"] = "LPSOLVED"
+            sample["serialization_event"] = "LPSOLVED"
+            self._candidate_dir.mkdir(parents=True, exist_ok=True)
+            for writer in ("writeMIP", "writeProblem_transformed"):
+                self._export_candidate(model, sample, writer)
+        except Exception as error:
+            self.errors.append(
+                {
+                    "event": "LPSOLVED",
+                    "event_index": self.lp_solved_events - 1,
+                    "error_type": type(error).__name__,
+                    "reason_code": "node_serialization_dispatch_failed",
+                }
+            )
+
+    def _export_candidate(
+        self, model: Any, sample: dict[str, Any], writer: str
+    ) -> None:
+        filename = _candidate_name(sample["sample_index"], sample["node_number"], writer)
+        path = self._candidate_dir / filename
+        export = {
+            "writer": writer,
+            "writer_role": (
+                "node_mip_candidate"
+                if writer == "writeMIP"
+                else "transformed_problem_control"
+            ),
+            "serialization_event": "LPSOLVED",
+            "scip_stage": _safe_scip_stage(model),
+            "file_name": filename,
+            "relative_path": f"candidates/{filename}",
+            "status": "failed",
+        }
+        try:
+            if writer == "writeMIP":
+                model.writeMIP(
+                    str(path), genericnames=False, origobj=True, lazyconss=True
+                )
+            else:
+                model.writeProblem(
+                    str(path), trans=True, genericnames=False, verbose=False
+                )
+            if not path.is_file() or path.stat().st_size == 0:
+                raise PyScipOptProbeError("candidate writer produced no bytes")
+            export.update(
+                {
+                    "status": "written",
+                    "sha256": sha256_file(path),
+                    "size_bytes": path.stat().st_size,
+                }
+            )
+            self.candidates.append(
+                {
+                    "path": path,
+                    "sample": sample,
+                    "export": export,
+                }
+            )
+        except Exception as error:
+            export["error_type"] = type(error).__name__
+            export["reason_code"] = _serialization_reason(error)
+        sample["candidate_exports"].append(export)
+
     def summary(self) -> dict[str, Any]:
+        writer_attempts = Counter()
+        writer_successes = Counter()
+        for sample in self.samples:
+            for export in sample["candidate_exports"]:
+                writer_attempts[export["writer"]] += 1
+                if export["status"] == "written":
+                    writer_successes[export["writer"]] += 1
         return {
-            "nodefocused_events": self.events_seen,
+            "nodefocused_events": self.nodefocused_events,
+            "lp_solved_events": self.lp_solved_events,
             "events_outside_depth_window": self.events_outside_depth,
             "samples_recorded": len(self.samples),
             "candidate_files_written": len(self.candidates),
+            "writer_attempts": dict(sorted(writer_attempts.items())),
+            "writer_successes": dict(sorted(writer_successes.items())),
             "capture_error_count": len(self.errors),
             "capture_errors": list(self.errors),
         }
@@ -497,20 +606,42 @@ def evaluate_roundtrip(
     constraints_match = readable and bool(
         inspection.get("expected_local_constraints_match")
     )
+    branch_bounds_match = readable and bool(
+        inspection.get("expected_branch_bounds_match")
+    )
     objective_minimize = readable and inspection.get("objective_sense") == "minimize"
     semantic_distinction = (
         int(sample.get("depth", 0)) > 0
         and (
             int(sample.get("local_bound_change_count", 0)) > 0
             or int(sample.get("added_constraint_count", 0)) > 0
-            or bool(sample.get("parent_branchings"))
+            or bool(sample.get("branch_path"))
         )
     )
+    writer_supports_node_mip = export["writer"] == "writeMIP"
+    checks_passed = all(
+        [
+            readable,
+            objective_minimize,
+            integrality_preserved,
+            bounds_match,
+            constraints_match,
+            branch_bounds_match,
+            semantic_distinction,
+        ]
+    )
+    if not writer_supports_node_mip:
+        roundtrip_status = "transformed_problem_control_only"
+    elif checks_passed:
+        roundtrip_status = "candidate_passed_mechanical_checks"
+    else:
+        roundtrip_status = "candidate_failed_or_incomplete"
     return {
         "sample_index": sample["sample_index"],
         "node_number": sample["node_number"],
         "semantic_node_sha256": sample["semantic_node_sha256"],
         "writer": export["writer"],
+        "writer_role": export["writer_role"],
         "file_name": export["file_name"],
         "artifact_sha256": export.get("sha256"),
         "fresh_process_readable": readable,
@@ -518,25 +649,26 @@ def evaluate_roundtrip(
         "integrality_preserved": integrality_preserved,
         "expected_local_bounds_match": bounds_match,
         "expected_local_constraints_match": constraints_match,
+        "expected_branch_bounds_match": branch_bounds_match,
         "semantic_distinction_observed": semantic_distinction,
         "candidate_signature": inspection.get("signature"),
-        "roundtrip_status": (
-            "candidate_passed_mechanical_checks"
-            if all(
-                [
-                    readable,
-                    objective_minimize,
-                    integrality_preserved,
-                    bounds_match,
-                    constraints_match,
-                    semantic_distinction,
-                ]
-            )
-            else "candidate_failed_or_incomplete"
-        ),
+        "roundtrip_status": roundtrip_status,
         "dataset_eligible": False,
         "eligibility_reason": "prototype_requires_independent_scientific_review",
     }
+
+
+def _branch_bound_matches(variable: Any, branching: Mapping[str, Any]) -> bool:
+    expected = branching.get("bound")
+    if not isinstance(expected, (int, float)) or isinstance(expected, bool):
+        return False
+    bound_type = branching.get("bound_type")
+    tolerance = 1e-9 * max(1.0, abs(float(expected)))
+    if bound_type == "lower":
+        return float(variable.getLbOriginal()) + tolerance >= float(expected)
+    if bound_type == "upper":
+        return float(variable.getUbOriginal()) - tolerance <= float(expected)
+    return False
 
 
 def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict[str, Any]:
@@ -562,6 +694,25 @@ def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict
             actual_ub = _bound_token(variable.getUbOriginal())
             if actual_lb != change["local_lb"] or actual_ub != change["local_ub"]:
                 mismatches.append({"name": change["name"], "reason": "bound_mismatch"})
+        branch_mismatches: list[dict[str, Any]] = []
+        for branching in expected.get("branch_path", []):
+            variable = by_name.get(str(branching["variable"]))
+            if variable is None:
+                branch_mismatches.append(
+                    {
+                        "name": branching["variable"],
+                        "bound_type": branching.get("bound_type"),
+                        "reason": "missing_branch_variable",
+                    }
+                )
+            elif not _branch_bound_matches(variable, branching):
+                branch_mismatches.append(
+                    {
+                        "name": branching["variable"],
+                        "bound_type": branching.get("bound_type"),
+                        "reason": "branch_bound_not_materialized",
+                    }
+                )
         constraint_mismatches = []
         for expected_constraint in expected.get("added_constraints", []):
             if not any(
@@ -580,12 +731,16 @@ def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict
             "signature": model_signature(model, transformed=False),
             "expected_local_bound_count": len(expected.get("local_bound_changes", [])),
             "expected_local_bounds_match": not mismatches,
+            "expected_branch_bound_count": len(expected.get("branch_path", [])),
+            "expected_branch_bounds_match": not branch_mismatches,
             "expected_local_constraint_count": len(
                 expected.get("added_constraints", [])
             ),
             "expected_local_constraints_match": not constraint_mismatches,
             "bound_mismatch_count": len(mismatches),
             "bound_mismatches": mismatches[:20],
+            "branch_bound_mismatch_count": len(branch_mismatches),
+            "branch_bound_mismatches": branch_mismatches[:20],
             "constraint_mismatch_count": len(constraint_mismatches),
             "constraint_mismatches": constraint_mismatches[:20],
         }
@@ -618,6 +773,7 @@ def _fresh_process_inspection(candidate: Mapping[str, Any]) -> dict[str, Any]:
     output_path = path.with_suffix(path.suffix + ".inspection.json")
     expected = {
         "local_bound_changes": candidate["sample"]["local_bound_changes"],
+        "branch_path": candidate["sample"]["branch_path"],
         "added_constraints": candidate["sample"]["added_constraints"],
     }
     _write_json(expected_path, expected)
@@ -684,10 +840,16 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
             model.setSeparating(SCIP_PARAMSETTING.OFF)
         observer = NodeProbeObserver(plan)
         model.attachEventHandlerCallback(
-            observer,
+            observer.on_node_focused,
             [SCIP_EVENTTYPE.NODEFOCUSED],
-            name="cfl_gnn_node_probe",
-            description="Passive bounded node-subproblem feasibility audit",
+            name="cfl_gnn_node_capture",
+            description="Passive bounded node-state capture",
+        )
+        model.attachEventHandlerCallback(
+            observer.on_lp_solved,
+            [SCIP_EVENTTYPE.LPSOLVED],
+            name="cfl_gnn_node_serializer",
+            description="Post-LP node-subproblem serialization probe",
         )
         model.optimize()
         roundtrips = []
@@ -696,6 +858,27 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
             roundtrips.append(
                 evaluate_roundtrip(candidate["sample"], candidate["export"], inspection)
             )
+        roundtrip_by_writer = {}
+        for writer in ("writeMIP", "writeProblem_transformed"):
+            writer_roundtrips = [
+                item for item in roundtrips if item["writer"] == writer
+            ]
+            roundtrip_by_writer[writer] = {
+                "candidates_audited": len(writer_roundtrips),
+                "fresh_process_readable": sum(
+                    bool(item["fresh_process_readable"])
+                    for item in writer_roundtrips
+                ),
+                "branch_bounds_matched": sum(
+                    bool(item["expected_branch_bounds_match"])
+                    for item in writer_roundtrips
+                ),
+                "mechanical_checks_passed": sum(
+                    item["roundtrip_status"]
+                    == "candidate_passed_mechanical_checks"
+                    for item in writer_roundtrips
+                ),
+            }
         report = {
             **plan.to_summary(),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -728,10 +911,17 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                     item["roundtrip_status"] == "candidate_passed_mechanical_checks"
                     for item in roundtrips
                 ),
+                "by_writer": roundtrip_by_writer,
             },
             "decision": {
                 "local_node_state_observed": bool(observer.samples),
                 "candidate_serialization_observed": bool(observer.candidates),
+                "write_mip_candidate_observed": bool(
+                    roundtrip_by_writer["writeMIP"]["candidates_audited"]
+                ),
+                "write_mip_mechanical_check_observed": bool(
+                    roundtrip_by_writer["writeMIP"]["mechanical_checks_passed"]
+                ),
                 "exact_node_subproblem_proven": False,
                 "dataset_eligible": False,
                 "reason_code": "prototype_requires_independent_scientific_review",
@@ -844,6 +1034,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(
         "[INFO] "
         f"NODEFOCUSED={observations['nodefocused_events']} | "
+        f"LPSOLVED={observations['lp_solved_events']} | "
         f"samples={observations['samples_recorded']} | "
         f"candidates={observations['candidate_files_written']}"
     )
@@ -854,6 +1045,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise PyScipOptProbeError("no node in the requested depth window was sampled")
     if report["roundtrip"]["fresh_process_readable"] == 0:
         raise PyScipOptProbeError("no candidate passed fresh-process deserialization")
+    if (
+        report["roundtrip"]["by_writer"]["writeMIP"][
+            "mechanical_checks_passed"
+        ]
+        == 0
+    ):
+        raise PyScipOptProbeError(
+            "no writeMIP candidate passed the strengthened mechanical checks"
+        )
     return 0
 
 
