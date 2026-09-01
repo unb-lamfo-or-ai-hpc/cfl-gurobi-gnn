@@ -314,6 +314,27 @@ python -m cfl_gnn.cli.train_serial \
 - No CUDA out-of-memory error.
 - `neural_diving_best_serial.pt` written to disk.
 
+### Research Gate — Gurobi Node-subproblem Feasibility
+
+Before treating a pruned branch-and-bound region as a new MILP, run the
+isolated capability audit on one original CFL instance:
+
+```bash
+python -m cfl_gnn.cli.audit_gurobi_node_subproblems \
+    --instance /raid/.../CFL_easy_instance_0.lp.gz \
+    --output_dir /raid/.../analysis/gurobi_node_feasibility/easy_0 \
+    --time_limit 60 \
+    --node_limit 100 \
+    --max_samples 20 \
+    --dry_run
+```
+
+Remove `--dry_run` only after inspecting the hash-bound plan. The callback is
+an observer: it records relaxation hashes and callback-visible metadata, but
+does not alter the solve or emit LP, MPS, graph, or incumbent artifacts. A
+nonzero real-run exit means that callback errors occurred or no optimal
+`MIPNODE` event was observed. See ADR 0007 for the exact interpretation.
+
 ### Step 6 — Full Parallel Training
 
 ```bash

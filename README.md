@@ -205,6 +205,25 @@ held-out membership pass. The evaluator deserializes test graphs exclusively
 and emits path-sanitized aggregate, per-difficulty, and per-instance metrics.
 See [`ADR 0006`](docs/decisions/0006-parent-instance-held-out-evaluation.md).
 
+Audit Gurobi's ability to expose a structurally distinct branch-and-bound node
+model with the isolated, research-only probe:
+
+```bash
+python3 -m cfl_gnn.cli.audit_gurobi_node_subproblems \
+    --instance /raid/.../CFL_easy_instance_0.lp.gz \
+    --output_dir /raid/.../analysis/gurobi_node_feasibility/easy_0 \
+    --time_limit 60 \
+    --node_limit 100 \
+    --max_samples 20 \
+    --dry_run
+```
+
+The real run passively observes `MIPNODE`; it never turns a relaxation or
+incumbent into a purported new instance. Its sanitized capability report
+distinguishes runtime observations from fields that the documented Gurobi API
+does not expose. Existing incumbent artifacts and collectors are untouched.
+See [`ADR 0007`](docs/decisions/0007-gurobi-node-subproblem-feasibility.md).
+
 **STEP 1 — Data Generation**
 ```bash
 python3 -m cfl_gnn.cli.collect_incumbents \
