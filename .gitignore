@@ -236,3 +236,7 @@ sandbox/toy_outputs/
 
 # Output files
 *.out
+
+# Secrets
+secrets/*
+*.lic
