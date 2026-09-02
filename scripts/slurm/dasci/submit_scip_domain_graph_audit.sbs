@@ -1,0 +1,48 @@
+#!/bin/bash
+#SBATCH --job-name=scip_graph_audit
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=00:15:00
+#SBATCH --output=slurm_scip_domain_graph_audit_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
+DATA_ROOT="/raid/vrcelestino/data/cfl-gurobi-gnn/data"
+SOURCE_RUN_DIR="${SOURCE_RUN_DIR:-}"
+EXPERIMENT_NAME="${EXPERIMENT_NAME:-scip_domain_graph_audit_${SLURM_JOB_ID}}"
+OUTPUT_DIR="${DATA_ROOT}/analysis/scip_domain_graph_audit/${EXPERIMENT_NAME}"
+
+if [[ -z "$SOURCE_RUN_DIR" || ! -d "$SOURCE_RUN_DIR/candidates" ]]; then
+    echo "Set SOURCE_RUN_DIR to a completed schema-v3 PySCIPOpt probe" >&2
+    exit 2
+fi
+
+ROOT_MIP="${SOURCE_RUN_DIR}/candidates/root_mip_baseline.lp"
+if [[ ! -s "$ROOT_MIP" ]]; then
+    echo "Missing root MIP baseline: $ROOT_MIP" >&2
+    exit 2
+fi
+
+mapfile -t NODE_MIPS < <(
+    find "${SOURCE_RUN_DIR}/candidates" \
+        -maxdepth 1 -type f -name 'node_*_mip.lp' -print | sort
+)
+if [[ "${#NODE_MIPS[@]}" -eq 0 ]]; then
+    echo "No node writeMIP candidates found in $SOURCE_RUN_DIR" >&2
+    exit 2
+fi
+
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env
+
+python3 -c 'import numpy, pyscipopt, torch, torch_geometric'
+
+srun python3 -m cfl_gnn.cli.audit_scip_domain_graph_observability \
+    --root_mip "$ROOT_MIP" \
+    --node_mips "${NODE_MIPS[@]}" \
+    --output_dir "$OUTPUT_DIR"
