@@ -634,9 +634,10 @@ def evaluate_roundtrip(
     sample: Mapping[str, Any], export: Mapping[str, Any], inspection: Mapping[str, Any]
 ) -> dict[str, Any]:
     readable = inspection.get("status") == "readable"
-    integrality_preserved = readable and bool(
+    variable_domains_match = readable and bool(
         inspection.get("expected_variable_domains_match")
     )
+    integrality_preserved = variable_domains_match
     bounds_match = readable and bool(inspection.get("expected_local_bounds_match"))
     constraints_match = readable and bool(
         inspection.get("expected_local_constraints_match")
@@ -686,6 +687,16 @@ def evaluate_roundtrip(
         "fresh_process_readable": readable,
         "objective_minimize": objective_minimize,
         "integrality_preserved": integrality_preserved,
+        "expected_variable_domain_count": inspection.get(
+            "expected_variable_domain_count"
+        ),
+        "expected_variable_domains_match": variable_domains_match,
+        "variable_domain_mismatch_count": inspection.get(
+            "variable_domain_mismatch_count"
+        ),
+        "variable_domain_mismatches": inspection.get(
+            "variable_domain_mismatches", []
+        ),
         "expected_local_bounds_match": bounds_match,
         "expected_local_constraints_match": constraints_match,
         "expected_branch_bounds_match": branch_bounds_match,

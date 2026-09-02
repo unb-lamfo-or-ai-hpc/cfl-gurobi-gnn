@@ -304,13 +304,20 @@ def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> N
         "expected_local_bounds_match": True,
         "expected_local_constraints_match": True,
         "expected_branch_bounds_match": True,
+        "expected_variable_domain_count": 3,
         "expected_variable_domains_match": True,
+        "variable_domain_mismatch_count": 0,
+        "variable_domain_mismatches": [],
         "signature": {"variable_types": {"BINARY": 3}},
     }
 
     audit = prototype.evaluate_roundtrip(sample, export, inspection)
 
     assert audit["roundtrip_status"] == "candidate_passed_mechanical_checks"
+    assert audit["expected_variable_domain_count"] == 3
+    assert audit["expected_variable_domains_match"] is True
+    assert audit["variable_domain_mismatch_count"] == 0
+    assert audit["variable_domain_mismatches"] == []
     assert audit["dataset_eligible"] is False
     assert audit["eligibility_reason"] == "prototype_requires_independent_scientific_review"
 
@@ -348,6 +355,50 @@ def test_parent_branching_cannot_pass_without_bound_materialization() -> None:
 
     assert audit["semantic_distinction_observed"] is True
     assert audit["expected_branch_bounds_match"] is False
+    assert audit["roundtrip_status"] == "candidate_failed_or_incomplete"
+
+
+def test_variable_domain_failure_is_explicit_in_roundtrip_audit() -> None:
+    sample = {
+        "sample_index": 2,
+        "node_number": 4,
+        "depth": 1,
+        "branch_path": [
+            {"variable": "x0", "bound": 0.0, "bound_type": "upper"}
+        ],
+        "local_bound_change_count": 1,
+        "added_constraint_count": 0,
+        "semantic_node_sha256": "a" * 64,
+    }
+    export = {
+        "writer": "writeMIP",
+        "writer_role": "node_mip_candidate",
+        "file_name": "node.lp",
+        "artifact_format": "lp",
+    }
+    inspection = {
+        "status": "readable",
+        "objective_sense": "minimize",
+        "expected_local_bounds_match": True,
+        "expected_local_constraints_match": True,
+        "expected_branch_bounds_match": True,
+        "expected_variable_domain_count": 1,
+        "expected_variable_domains_match": False,
+        "variable_domain_mismatch_count": 1,
+        "variable_domain_mismatches": [
+            {"name": "x0", "reason": "integrality_lost"}
+        ],
+        "signature": {"variable_types": {"CONTINUOUS": 1}},
+    }
+
+    audit = prototype.evaluate_roundtrip(sample, export, inspection)
+
+    assert audit["integrality_preserved"] is False
+    assert audit["expected_variable_domains_match"] is False
+    assert audit["variable_domain_mismatch_count"] == 1
+    assert audit["variable_domain_mismatches"] == [
+        {"name": "x0", "reason": "integrality_lost"}
+    ]
     assert audit["roundtrip_status"] == "candidate_failed_or_incomplete"
 
 
