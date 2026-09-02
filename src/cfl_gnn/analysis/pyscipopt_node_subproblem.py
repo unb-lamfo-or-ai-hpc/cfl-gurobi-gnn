@@ -164,6 +164,10 @@ class ProbePlan:
                 "serialization": "LPSOLVED",
             },
             "candidate_writers": ["writeMIP", "writeProblem_transformed"],
+            "candidate_formats": {
+                "writeMIP": "lp",
+                "writeProblem_transformed": "cip",
+            },
             "roundtrip_mode": "fresh_python_process",
             "eligibility": "experimental_ineligible_pending_review",
         }
@@ -430,7 +434,30 @@ def capture_node_state(model: Any, node: Any, source_sha256: str) -> dict[str, A
 
 def _candidate_name(sample_index: int, node_number: int, writer: str) -> str:
     normalized_writer = "mip" if writer == "writeMIP" else "transformed"
-    return f"node_{sample_index:03d}_{node_number}_{normalized_writer}.cip"
+    suffix = ".lp" if writer == "writeMIP" else ".cip"
+    return f"node_{sample_index:03d}_{node_number}_{normalized_writer}{suffix}"
+
+
+def _candidate_format(writer: str) -> str:
+    return "lp" if writer == "writeMIP" else "cip"
+
+
+def _variable_domains(model: Any, *, transformed: bool) -> list[dict[str, Any]]:
+    domains = []
+    for variable in model.getVars(transformed=transformed):
+        domains.append(
+            {
+                "name": str(variable.name),
+                "variable_type": str(variable.vtype()),
+                "lb": _bound_token(
+                    variable.getLbLocal() if transformed else variable.getLbOriginal()
+                ),
+                "ub": _bound_token(
+                    variable.getUbLocal() if transformed else variable.getUbOriginal()
+                ),
+            }
+        )
+    return sorted(domains, key=lambda item: item["name"])
 
 
 def _safe_scip_stage(model: Any) -> str:
@@ -513,8 +540,11 @@ class NodeProbeObserver:
             sample["state_capture_event"] = "LPSOLVED"
             sample["serialization_event"] = "LPSOLVED"
             self._candidate_dir.mkdir(parents=True, exist_ok=True)
+            expected_variable_domains = _variable_domains(model, transformed=True)
             for writer in ("writeMIP", "writeProblem_transformed"):
-                self._export_candidate(model, sample, writer)
+                self._export_candidate(
+                    model, sample, writer, expected_variable_domains
+                )
         except Exception as error:
             self.errors.append(
                 {
@@ -526,7 +556,11 @@ class NodeProbeObserver:
             )
 
     def _export_candidate(
-        self, model: Any, sample: dict[str, Any], writer: str
+        self,
+        model: Any,
+        sample: dict[str, Any],
+        writer: str,
+        expected_variable_domains: list[dict[str, Any]],
     ) -> None:
         filename = _candidate_name(sample["sample_index"], sample["node_number"], writer)
         path = self._candidate_dir / filename
@@ -541,6 +575,7 @@ class NodeProbeObserver:
             "scip_stage": _safe_scip_stage(model),
             "file_name": filename,
             "relative_path": f"candidates/{filename}",
+            "artifact_format": _candidate_format(writer),
             "status": "failed",
         }
         try:
@@ -566,6 +601,7 @@ class NodeProbeObserver:
                     "path": path,
                     "sample": sample,
                     "export": export,
+                    "expected_variable_domains": expected_variable_domains,
                 }
             )
         except Exception as error:
@@ -598,12 +634,8 @@ def evaluate_roundtrip(
     sample: Mapping[str, Any], export: Mapping[str, Any], inspection: Mapping[str, Any]
 ) -> dict[str, Any]:
     readable = inspection.get("status") == "readable"
-    expected_types = sample.get("transformed_variable_types", {})
-    actual_types = inspection.get("signature", {}).get("variable_types", {})
-    integrality_preserved = readable and all(
-        int(actual_types.get(key, 0)) >= int(value)
-        for key, value in expected_types.items()
-        if key in {"BINARY", "INTEGER", "IMPLINT"}
+    integrality_preserved = readable and bool(
+        inspection.get("expected_variable_domains_match")
     )
     bounds_match = readable and bool(inspection.get("expected_local_bounds_match"))
     constraints_match = readable and bool(
@@ -646,7 +678,11 @@ def evaluate_roundtrip(
         "writer": export["writer"],
         "writer_role": export["writer_role"],
         "file_name": export["file_name"],
+        "artifact_format": export.get("artifact_format"),
         "artifact_sha256": export.get("sha256"),
+        "inspection_status": inspection.get("status"),
+        "inspection_error_type": inspection.get("error_type"),
+        "inspection_reason_code": inspection.get("reason_code"),
         "fresh_process_readable": readable,
         "objective_minimize": objective_minimize,
         "integrality_preserved": integrality_preserved,
@@ -674,6 +710,33 @@ def _branch_bound_matches(variable: Any, branching: Mapping[str, Any]) -> bool:
     return False
 
 
+def _bounds_match(actual: Any, expected: Any) -> bool:
+    actual_token = _bound_token(actual)
+    if isinstance(actual_token, str) or isinstance(expected, str):
+        return actual_token == expected
+    tolerance = 1e-9 * max(1.0, abs(float(expected)))
+    return abs(float(actual_token) - float(expected)) <= tolerance
+
+
+def _variable_domain_matches(
+    variable: Any, expected: Mapping[str, Any]
+) -> tuple[bool, str | None]:
+    lower_matches = _bounds_match(variable.getLbOriginal(), expected.get("lb"))
+    upper_matches = _bounds_match(variable.getUbOriginal(), expected.get("ub"))
+    if not lower_matches or not upper_matches:
+        return False, "bounds_changed"
+    expected_type = str(expected.get("variable_type"))
+    actual_type = str(variable.vtype())
+    integral_types = {"BINARY", "INTEGER", "IMPLINT"}
+    if expected_type in integral_types:
+        if actual_type not in integral_types:
+            return False, "integrality_lost"
+        return True, None
+    if actual_type != expected_type:
+        return False, "variable_type_changed"
+    return True, None
+
+
 def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict[str, Any]:
     from pyscipopt import Model
 
@@ -687,6 +750,23 @@ def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict
             for constraint in model.getConss(transformed=False)
         ]
         by_name = {str(variable.name): variable for variable in variables}
+        expected_domains = expected.get("variable_domains", [])
+        domain_mismatches: list[dict[str, Any]] = []
+        expected_names = set()
+        for expected_domain in expected_domains:
+            name = str(expected_domain["name"])
+            expected_names.add(name)
+            variable = by_name.get(name)
+            if variable is None:
+                domain_mismatches.append({"name": name, "reason": "missing_variable"})
+                continue
+            matches, reason = _variable_domain_matches(variable, expected_domain)
+            if not matches:
+                domain_mismatches.append({"name": name, "reason": reason})
+        for unexpected_name in sorted(set(by_name) - expected_names):
+            domain_mismatches.append(
+                {"name": unexpected_name, "reason": "unexpected_variable"}
+            )
         mismatches: list[dict[str, Any]] = []
         for change in expected.get("local_bound_changes", []):
             variable = by_name.get(str(change["name"]))
@@ -732,6 +812,10 @@ def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict
             "status": "readable",
             "objective_sense": str(model.getObjectiveSense()).lower(),
             "signature": model_signature(model, transformed=False),
+            "expected_variable_domain_count": len(expected_domains),
+            "expected_variable_domains_match": not domain_mismatches,
+            "variable_domain_mismatch_count": len(domain_mismatches),
+            "variable_domain_mismatches": domain_mismatches[:20],
             "expected_local_bound_count": len(expected.get("local_bound_changes", [])),
             "expected_local_bounds_match": not mismatches,
             "expected_branch_bound_count": len(expected.get("branch_path", [])),
@@ -775,6 +859,7 @@ def _fresh_process_inspection(candidate: Mapping[str, Any]) -> dict[str, Any]:
     expected_path = path.with_suffix(path.suffix + ".expected.json")
     output_path = path.with_suffix(path.suffix + ".inspection.json")
     expected = {
+        "variable_domains": candidate["expected_variable_domains"],
         "local_bound_changes": candidate["sample"]["local_bound_changes"],
         "branch_path": candidate["sample"]["branch_path"],
         "added_constraints": candidate["sample"]["added_constraints"],

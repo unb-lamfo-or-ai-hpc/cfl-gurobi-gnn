@@ -164,6 +164,10 @@ def test_toy_plan_is_deterministic_and_path_sanitized(tmp_path: Path) -> None:
     serialized = json.dumps(first.to_summary())
     assert str(tmp_path) not in serialized
     assert first.to_summary()["eligibility"].startswith("experimental_ineligible")
+    assert first.to_summary()["candidate_formats"] == {
+        "writeMIP": "lp",
+        "writeProblem_transformed": "cip",
+    }
 
 
 def test_instance_plan_binds_original_bytes_without_path(tmp_path: Path) -> None:
@@ -260,6 +264,17 @@ def test_observer_writes_bounded_candidates_without_promoting_them(
         export["status"] == "written"
         for export in observer.samples[0]["candidate_exports"]
     )
+    exports = {
+        export["writer"]: export
+        for export in observer.samples[0]["candidate_exports"]
+    }
+    assert exports["writeMIP"]["file_name"].endswith("_mip.lp")
+    assert exports["writeMIP"]["artifact_format"] == "lp"
+    assert exports["writeProblem_transformed"]["file_name"].endswith(
+        "_transformed.cip"
+    )
+    assert exports["writeProblem_transformed"]["artifact_format"] == "cip"
+    assert len(observer.candidates[0]["expected_variable_domains"]) == 3
 
 
 def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> None:
@@ -279,7 +294,8 @@ def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> N
     export = {
         "writer": "writeMIP",
         "writer_role": "node_mip_candidate",
-        "file_name": "node.cip",
+        "file_name": "node.lp",
+        "artifact_format": "lp",
         "sha256": "d" * 64,
     }
     inspection = {
@@ -288,6 +304,7 @@ def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> N
         "expected_local_bounds_match": True,
         "expected_local_constraints_match": True,
         "expected_branch_bounds_match": True,
+        "expected_variable_domains_match": True,
         "signature": {"variable_types": {"BINARY": 3}},
     }
 
@@ -314,7 +331,8 @@ def test_parent_branching_cannot_pass_without_bound_materialization() -> None:
     export = {
         "writer": "writeMIP",
         "writer_role": "node_mip_candidate",
-        "file_name": "node.cip",
+        "file_name": "node.lp",
+        "artifact_format": "lp",
     }
     inspection = {
         "status": "readable",
@@ -322,6 +340,7 @@ def test_parent_branching_cannot_pass_without_bound_materialization() -> None:
         "expected_local_bounds_match": True,
         "expected_local_constraints_match": True,
         "expected_branch_bounds_match": False,
+        "expected_variable_domains_match": True,
         "signature": {"variable_types": {"BINARY": 3}},
     }
 
@@ -347,6 +366,7 @@ def test_transformed_problem_is_always_a_control() -> None:
         "writer": "writeProblem_transformed",
         "writer_role": "transformed_problem_control",
         "file_name": "control.cip",
+        "artifact_format": "cip",
     }
     inspection = {
         "status": "readable",
@@ -354,6 +374,7 @@ def test_transformed_problem_is_always_a_control() -> None:
         "expected_local_bounds_match": True,
         "expected_local_constraints_match": True,
         "expected_branch_bounds_match": True,
+        "expected_variable_domains_match": True,
         "signature": {"variable_types": {"BINARY": 3}},
     }
 
@@ -375,6 +396,38 @@ def test_branch_bound_comparison_checks_direction() -> None:
     )
     assert not prototype._branch_bound_matches(
         fixed_zero, {"bound": 1.0, "bound_type": "lower"}
+    )
+
+
+def test_binary_to_bounded_integer_preserves_exact_domain() -> None:
+    serialized = _Variable("x", "INTEGER", 1, 1, 1, 1)
+
+    matches, reason = prototype._variable_domain_matches(
+        serialized,
+        {"name": "x", "variable_type": "BINARY", "lb": 1.0, "ub": 1.0},
+    )
+
+    assert matches is True
+    assert reason is None
+
+
+def test_binary_to_continuous_or_wider_bounds_fails_domain_check() -> None:
+    continuous = _Variable("x", "CONTINUOUS", 0, 1, 0, 1)
+    wider_integer = _Variable("x", "INTEGER", 0, 2, 0, 2)
+    expected = {
+        "name": "x",
+        "variable_type": "BINARY",
+        "lb": 0.0,
+        "ub": 1.0,
+    }
+
+    assert prototype._variable_domain_matches(continuous, expected) == (
+        False,
+        "integrality_lost",
+    )
+    assert prototype._variable_domain_matches(wider_integer, expected) == (
+        False,
+        "bounds_changed",
     )
 
 
