@@ -74,14 +74,29 @@ node, depth, and sample limits. Preserve the original MILPBench file as the
 source of structure and force `MINIMIZE`. Compare presolve disabled and default
 presolve in separate reports.
 
+### Phase F: root-relative identity audit
+
+Serialize `root_mip_baseline.lp` with `writeMIP()` after the root LP is solved.
+Compare every node MIP with that baseline using separate canonical hashes for
+matrix, objective, domains, and the complete formulation. Report dimensional
+deltas independently: equal rows, columns, nonzeros, or file size do not imply
+equal formulations when branching changes variable domains.
+
+Classify each mechanically valid node MIP according to ADR 0009 and report
+unique semantic nodes, artifacts, formulations, duplicates, and storage. The
+transformed-problem writer remains a control and may be disabled with
+`--skip_transformed_controls` (or `WRITE_TRANSFORMED_CONTROLS=0` in Slurm) after
+its behavior has been replicated.
+
 ## Planned artifacts
 
 All reports are path-sanitized and written under a research-only output root:
 
 - `pyscipopt_node_probe_plan.json`;
 - `pyscipopt_node_capability_report.json`;
+- `candidates/root_mip_baseline.lp` as the comparison baseline;
 - `node_manifest.jsonl` with bounded node metadata;
-- candidate `.cip` or `.mps` files only when the writer succeeds;
+- candidate `.lp` or control `.cip` files only when the writer succeeds;
 - `roundtrip_audit.jsonl` for candidate-versus-source comparisons.
 
 The manifest must label every candidate as `experimental_ineligible` until all
@@ -109,6 +124,9 @@ Stop without dataset integration when any of the following holds:
 - [ ] transformed-problem writer behavior tested independently;
 - [ ] all ancestral branching bounds are verified after a fresh-process read;
 - [ ] semantic and structural signatures compared separately;
+- [ ] every node MIP is compared with the mechanically valid root MIP baseline;
+- [ ] matrix, objective, domain, and formulation fingerprints are reported;
+- [ ] dimensional deltas and storage projections are reported separately;
 - [ ] fresh-model round trip passes or fails with an explicit reason;
 - [ ] no Gurobi, graph, training, or evaluation artifact is modified;
 - [ ] no Pyomo import, dependency, documentation path, or fallback exists.
