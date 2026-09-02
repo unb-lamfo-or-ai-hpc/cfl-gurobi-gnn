@@ -541,6 +541,56 @@ def compare_graph_snapshots(
     }
 
 
+def summarize_candidate_results(
+    candidates: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    passed = sum(item.get("gate_status") == "passed" for item in candidates)
+    graph_hashes = {
+        item.get("graph_fingerprints", {}).get("complete_graph_sha256")
+        for item in candidates
+        if item.get("gate_status") == "passed"
+    }
+    formulation_hashes = {
+        item.get("formulation_fingerprints", {}).get("formulation_sha256")
+        for item in candidates
+        if item.get("gate_status") == "passed"
+    }
+    graph_hashes.discard(None)
+    formulation_hashes.discard(None)
+    individually_passed = passed == len(candidates) and bool(candidates)
+    all_graphs_unique = len(graph_hashes) == len(candidates)
+    all_formulations_unique = len(formulation_hashes) == len(candidates)
+    gate_passed = individually_passed and all_graphs_unique and all_formulations_unique
+    if not individually_passed:
+        reason = "one_or_more_domain_variants_not_observable"
+    elif not all_formulations_unique:
+        reason = "duplicate_candidate_formulation"
+    elif not all_graphs_unique:
+        reason = "candidate_graph_fingerprint_collision"
+    else:
+        reason = "all_domain_variants_observable_pending_review"
+    return {
+        "gate_passed": gate_passed,
+        "reason_code": reason,
+        "candidates_audited": len(candidates),
+        "candidates_passed": passed,
+        "candidates_failed": len(candidates) - passed,
+        "raw_bound_changes": sum(
+            int(item.get("raw_bound_change_count", 0)) for item in candidates
+        ),
+        "encoded_bound_changes": sum(
+            int(item.get("encoded_bound_change_count", 0)) for item in candidates
+        ),
+        "lost_raw_domain_changes": sum(
+            int(item.get("lost_raw_domain_change_count", 0)) for item in candidates
+        ),
+        "unique_formulations": len(formulation_hashes),
+        "unique_graphs": len(graph_hashes),
+        "all_candidate_formulations_unique": all_formulations_unique,
+        "all_candidate_graphs_unique": all_graphs_unique,
+    }
+
+
 def run_audit(plan: GraphAuditPlan) -> dict[str, Any]:
     root_snapshot = _extract_graph_snapshot(plan.root_mip)
     candidates = []
@@ -560,42 +610,24 @@ def run_audit(plan: GraphAuditPlan) -> dict[str, Any]:
                     "label_eligible": False,
                 }
             )
-    passed = sum(item["gate_status"] == "passed" for item in candidates)
-    all_passed = passed == len(candidates) and bool(candidates)
+    summary = summarize_candidate_results(candidates)
+    all_passed = bool(summary["gate_passed"])
     report = {
         **plan.to_summary(),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "probe_completed": True,
         "gate_status": "passed" if all_passed else "failed",
         "root_graph": _public_snapshot(root_snapshot),
-        "summary": {
-            "candidates_audited": len(candidates),
-            "candidates_passed": passed,
-            "candidates_failed": len(candidates) - passed,
-            "raw_bound_changes": sum(
-                int(item.get("raw_bound_change_count", 0)) for item in candidates
-            ),
-            "encoded_bound_changes": sum(
-                int(item.get("encoded_bound_change_count", 0)) for item in candidates
-            ),
-            "lost_raw_domain_changes": sum(
-                int(item.get("lost_raw_domain_change_count", 0))
-                for item in candidates
-            ),
-            "unique_graphs": len(
-                {
-                    item.get("graph_fingerprints", {}).get("complete_graph_sha256")
-                    for item in candidates
-                    if item.get("gate_status") == "passed"
-                }
-            ),
-        },
+        "summary": summary,
         "decision": {
             "graph_observability_proven": all_passed,
             "all_raw_domain_changes_preserved": all_passed
             and all(
                 int(item.get("lost_raw_domain_change_count", 0)) == 0
                 for item in candidates
+            ),
+            "all_candidate_graphs_unique": bool(
+                summary["all_candidate_graphs_unique"]
             ),
             "dataset_eligible": False,
             "label_eligible": False,
@@ -604,11 +636,7 @@ def run_audit(plan: GraphAuditPlan) -> dict[str, Any]:
                 if all_passed
                 else "stop_or_correct_graph_observability"
             ),
-            "reason_code": (
-                "all_domain_variants_observable_pending_review"
-                if all_passed
-                else "one_or_more_domain_variants_not_observable"
-            ),
+            "reason_code": summary["reason_code"],
         },
     }
     _write_jsonl(plan.output_dir / PER_CANDIDATE_NAME, candidates)

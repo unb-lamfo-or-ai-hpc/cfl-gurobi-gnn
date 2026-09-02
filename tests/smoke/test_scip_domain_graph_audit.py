@@ -177,6 +177,28 @@ def test_domain_only_candidate_cannot_change_topology() -> None:
     assert result["reason_code"] == "graph_structure_changed_for_domain_only_candidate"
 
 
+def test_sibling_graph_fingerprint_collision_fails_overall_gate() -> None:
+    candidate = {
+        "gate_status": "passed",
+        "raw_bound_change_count": 1,
+        "encoded_bound_change_count": 1,
+        "lost_raw_domain_change_count": 0,
+        "formulation_fingerprints": {"formulation_sha256": "formulation-a"},
+        "graph_fingerprints": {"complete_graph_sha256": "graph-a"},
+    }
+    collision = {
+        **candidate,
+        "formulation_fingerprints": {"formulation_sha256": "formulation-b"},
+    }
+
+    summary = audit.summarize_candidate_results([candidate, collision])
+
+    assert summary["gate_passed"] is False
+    assert summary["unique_formulations"] == 2
+    assert summary["unique_graphs"] == 1
+    assert summary["reason_code"] == "candidate_graph_fingerprint_collision"
+
+
 def test_dry_run_does_not_import_solver_or_graph_stack(tmp_path: Path) -> None:
     root = tmp_path / "root.lp"
     node = tmp_path / "node.lp"

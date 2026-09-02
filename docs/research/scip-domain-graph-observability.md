@@ -30,6 +30,8 @@ For a `domain_distinct_same_matrix` candidate:
 - no encoded bound difference appears without a raw domain difference;
 - non-bound variable features remain unchanged;
 - variable-feature and complete-graph fingerprints differ from the root.
+- distinct candidate formulations have distinct complete-graph fingerprints;
+  a sibling graph collision fails the overall gate.
 
 The audit fails closed if clipping, type normalization, ordering, or any other
 step removes a raw domain change.
