@@ -35,12 +35,15 @@ changes, local bounds, and added constraints against the known construction.
 
 ### Phase C: candidate serialization
 
-At bounded non-root samples, attempt both:
+Identify bounded non-root samples at `NODEFOCUSED`, but recapture their state
+and defer serialization until the node LP has completed at `LPSOLVED`. Attempt
+both:
 
 - `Model.writeMIP()`, documented as writing the MIP relaxation of the current
   branch-and-bound node;
-- `Model.writeProblem(trans=True)`, which writes the transformed problem valid
-  at the current node.
+- `Model.writeProblem(trans=True)`, retained only as a transformed-problem
+  control; its readability is not evidence that node-local branch bounds were
+  materialized.
 
 The event handler must remain observational. Serialization errors, invalid
 solver stages, unsupported formats, or missing local state are reportable
@@ -52,12 +55,17 @@ Open each candidate in a fresh PySCIPOpt model. Compare:
 
 - minimization objective and objective coefficients;
 - variable names/types and original, global, and local bounds;
+- every normalized lower/upper branching bound along the complete ancestral
+  path, including branchings that no longer differ from a reported global
+  bound;
 - active and node-added constraints;
 - rows, columns, nonzeros, and handler-specific constraint counts;
 - source, semantic-node, and artifact SHA-256 values.
 
 Solve the reloaded candidate only after structural validation. Feasibility or
 an objective value alone does not prove that it represents the sampled node.
+Only a `writeMIP()` artifact can pass the node-candidate mechanical gate;
+transformed-problem artifacts remain controls.
 
 ### Phase E: one CFL smoke
 
@@ -96,8 +104,10 @@ Stop without dataset integration when any of the following holds:
 - [ ] PySCIPOpt and SCIP version pair selected for DaSCI;
 - [ ] toy MILP and expected branch semantics reviewed;
 - [ ] callback/event stage supports passive node capture;
+- [ ] serialization is attempted after LP completion, separately from focus;
 - [ ] `writeMIP()` behavior tested independently;
 - [ ] transformed-problem writer behavior tested independently;
+- [ ] all ancestral branching bounds are verified after a fresh-process read;
 - [ ] semantic and structural signatures compared separately;
 - [ ] fresh-model round trip passes or fails with an explicit reason;
 - [ ] no Gurobi, graph, training, or evaluation artifact is modified;
