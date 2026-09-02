@@ -281,7 +281,10 @@ def _normalized_bound_type(direction: Any) -> str:
 
 
 def _node_branchings(node: Any) -> list[dict[str, Any]]:
-    variables, bounds, directions = node.getParentBranchings()
+    raw_branchings = node.getParentBranchings()
+    if raw_branchings is None:
+        return []
+    variables, bounds, directions = raw_branchings
     parent = node.getParent()
     return sorted(
         [

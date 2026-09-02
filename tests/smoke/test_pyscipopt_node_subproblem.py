@@ -87,7 +87,7 @@ class _Node:
 
     def getParentBranchings(self):
         if self._parent is None:
-            return [], [], []
+            return None
         variable = _Variable("x0", "BINARY", 0, 1, 0, 0)
         return [variable], [0.0], [_StringOnlyDirection("1")]
 
@@ -211,6 +211,13 @@ def test_capture_node_state_separates_semantic_and_structural_identity() -> None
         }
     ]
     assert len(state["semantic_node_sha256"]) == 64
+
+
+def test_root_none_parent_branchings_match_pyscipopt_contract() -> None:
+    root = _Node(1, 0, None)
+
+    assert root.getParentBranchings() is None
+    assert prototype._node_branchings(root) == []
 
 
 def test_semantic_hash_does_not_depend_on_variable_iteration_order() -> None:
