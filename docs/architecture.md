@@ -21,7 +21,7 @@ graph transformation -> training -> evaluation -> solver hints/benchmark
 | Solver | One graph per parent instance | Incumbent-conditioned graphs |
 |---|---|---|
 | Gurobi | Provenance, fold-aware serial trainer, and contract-locked evaluator available | Preserved; isolated node-materialization feasibility audit available |
-| SCIP/PySCIPOpt | Direct solver-native node-extraction prototype planned | Future, only after the extraction audit passes |
+| SCIP/PySCIPOpt | Direct solver-native prototype with root-relative node-MIP identity audit | Future, only after independent scientific review of the extraction audit |
 
 The four variants must share graph schemas, model implementations, evaluation
 metrics, and artifact contracts. They must not be maintained as four copies of

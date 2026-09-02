@@ -13,13 +13,13 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterable, Mapping, Sequence
 
 from cfl_gnn.graph.instance_provenance import sha256_file
 
 
 LOGGER = logging.getLogger(__name__)
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 DATASET_VARIANT = "pyscipopt_node_subproblem_prototype"
 PLAN_NAME = "pyscipopt_node_probe_plan.json"
 REPORT_NAME = "pyscipopt_node_capability_report.json"
@@ -134,6 +134,7 @@ class ProbePlan:
     max_depth: int
     presolve: str
     seed: int
+    write_transformed_controls: bool
 
     @property
     def contract_payload(self) -> dict[str, Any]:
@@ -158,17 +159,24 @@ class ProbePlan:
                 "presolve": self.presolve,
                 "threads": 1,
                 "seed": self.seed,
+                "write_transformed_controls": self.write_transformed_controls,
             },
             "events": {
                 "capture": "NODEFOCUSED",
                 "serialization": "LPSOLVED",
             },
-            "candidate_writers": ["writeMIP", "writeProblem_transformed"],
+            "candidate_writers": (
+                ["writeMIP", "writeProblem_transformed"]
+                if self.write_transformed_controls
+                else ["writeMIP"]
+            ),
             "candidate_formats": {
                 "writeMIP": "lp",
                 "writeProblem_transformed": "cip",
             },
             "roundtrip_mode": "fresh_python_process",
+            "root_baseline": "writeMIP_at_root_LPSOLVED",
+            "distinctness_basis": "root_writeMIP_fingerprints",
             "eligibility": "experimental_ineligible_pending_review",
         }
 
@@ -200,6 +208,7 @@ def build_probe_plan(
     max_depth: int = 8,
     presolve: str = "off",
     seed: int = 42,
+    write_transformed_controls: bool = True,
 ) -> ProbePlan:
     if toy == (instance_path is not None):
         raise ValueError("select exactly one of toy or instance_path")
@@ -237,6 +246,7 @@ def build_probe_plan(
         max_depth=maximum,
         presolve=presolve,
         seed=_positive_int(seed, "seed"),
+        write_transformed_controls=bool(write_transformed_controls),
     )
 
 
@@ -315,6 +325,10 @@ def _node_branchings(node: Any) -> list[dict[str, Any]]:
 def _constraint_descriptor(model: Any, constraint: Any) -> dict[str, Any]:
     descriptor: dict[str, Any] = {"name": str(constraint.name)}
     try:
+        descriptor["handler"] = str(constraint.getConshdlrName())
+    except (TypeError, ValueError, RuntimeError, AttributeError):
+        descriptor["handler"] = "unavailable"
+    try:
         variables = list(model.getConsVars(constraint))
         coefficients = list(model.getConsVals(constraint))
         descriptor["linear_terms"] = sorted(
@@ -349,6 +363,131 @@ def _constraint_matches(
         if side in expected and expected.get(side) != actual.get(side):
             return False
     return True
+
+
+def _canonical_stream_sha256(records: Iterable[Mapping[str, Any]]) -> str:
+    digest = hashlib.sha256()
+    for record in records:
+        digest.update(
+            json.dumps(
+                record,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=True,
+                allow_nan=False,
+            ).encode("utf-8")
+        )
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+
+def formulation_fingerprints(model: Any, *, transformed: bool) -> dict[str, Any]:
+    """Hash matrix, objective, and domains independently of file formatting."""
+
+    variables = sorted(
+        model.getVars(transformed=transformed), key=lambda variable: str(variable.name)
+    )
+    constraints = sorted(
+        model.getConss(transformed=transformed),
+        key=lambda constraint: str(constraint.name),
+    )
+
+    def matrix_records() -> Iterable[Mapping[str, Any]]:
+        for variable in variables:
+            yield {"record": "column", "name": str(variable.name)}
+        for constraint in constraints:
+            yield {
+                "record": "row",
+                **_constraint_descriptor(model, constraint),
+            }
+
+    def objective_records() -> Iterable[Mapping[str, Any]]:
+        yield {
+            "record": "objective_sense",
+            "sense": str(model.getObjectiveSense()).lower(),
+        }
+        for variable in variables:
+            yield {
+                "record": "objective_term",
+                "name": str(variable.name),
+                "coefficient": _bound_token(variable.getObj()),
+            }
+
+    def domain_records() -> Iterable[Mapping[str, Any]]:
+        for variable in variables:
+            yield {
+                "record": "variable_domain",
+                "name": str(variable.name),
+                "variable_type": str(variable.vtype()),
+                "lb": _bound_token(
+                    variable.getLbLocal()
+                    if transformed
+                    else variable.getLbOriginal()
+                ),
+                "ub": _bound_token(
+                    variable.getUbLocal()
+                    if transformed
+                    else variable.getUbOriginal()
+                ),
+            }
+
+    matrix_sha256 = _canonical_stream_sha256(matrix_records())
+    objective_sha256 = _canonical_stream_sha256(objective_records())
+    domain_sha256 = _canonical_stream_sha256(domain_records())
+    formulation_sha256 = _canonical_sha256(
+        {
+            "matrix_sha256": matrix_sha256,
+            "objective_sha256": objective_sha256,
+            "domain_sha256": domain_sha256,
+        }
+    )
+    return {
+        "fingerprint_schema_version": 1,
+        "matrix_sha256": matrix_sha256,
+        "objective_sha256": objective_sha256,
+        "domain_sha256": domain_sha256,
+        "formulation_sha256": formulation_sha256,
+    }
+
+
+def signature_delta(
+    baseline: Mapping[str, Any], candidate: Mapping[str, Any]
+) -> dict[str, Any]:
+    delta = {}
+    for key in ("rows", "columns", "nonzeros"):
+        before = baseline.get(key)
+        after = candidate.get(key)
+        delta[key] = (
+            int(after) - int(before)
+            if isinstance(before, int) and isinstance(after, int)
+            else None
+        )
+    return delta
+
+
+def classify_materialization(
+    *,
+    writer_role: str,
+    mechanically_valid: bool,
+    matrix_distinct: bool,
+    objective_distinct: bool,
+    domain_distinct: bool,
+) -> str:
+    if writer_role != "node_mip_candidate":
+        return "transformed_problem_control_only"
+    if not mechanically_valid:
+        return "invalid_or_incomplete"
+    if matrix_distinct and domain_distinct:
+        return "matrix_and_domain_distinct"
+    if matrix_distinct:
+        return "matrix_distinct_domain_unchanged"
+    if objective_distinct and domain_distinct:
+        return "objective_and_domain_distinct"
+    if objective_distinct:
+        return "objective_distinct_only"
+    if domain_distinct:
+        return "domain_distinct_same_matrix"
+    return "identical_to_root"
 
 
 def capture_node_state(model: Any, node: Any, source_sha256: str) -> dict[str, Any]:
@@ -486,6 +625,8 @@ class NodeProbeObserver:
         self.events_outside_depth = 0
         self.samples: list[dict[str, Any]] = []
         self.candidates: list[dict[str, Any]] = []
+        self.root_baseline: dict[str, Any] | None = None
+        self.root_baseline_attempted = False
         self.errors: list[dict[str, Any]] = []
         self._samples_by_node: dict[int, dict[str, Any]] = {}
         self._candidate_dir = plan.output_dir / "candidates"
@@ -530,6 +671,10 @@ class NodeProbeObserver:
             node = model.getCurrentNode()
             if node is None:
                 return
+            if int(node.getDepth()) == 0:
+                if not self.root_baseline_attempted:
+                    self._capture_root_baseline(model, node)
+                return
             sample = self._samples_by_node.get(int(node.getNumber()))
             if sample is None or sample["candidate_exports"]:
                 return
@@ -541,7 +686,10 @@ class NodeProbeObserver:
             sample["serialization_event"] = "LPSOLVED"
             self._candidate_dir.mkdir(parents=True, exist_ok=True)
             expected_variable_domains = _variable_domains(model, transformed=True)
-            for writer in ("writeMIP", "writeProblem_transformed"):
+            writers = ["writeMIP"]
+            if self.plan.write_transformed_controls:
+                writers.append("writeProblem_transformed")
+            for writer in writers:
                 self._export_candidate(
                     model, sample, writer, expected_variable_domains
                 )
@@ -554,6 +702,63 @@ class NodeProbeObserver:
                     "reason_code": "node_serialization_dispatch_failed",
                 }
             )
+
+    def _capture_root_baseline(self, model: Any, node: Any) -> None:
+        self.root_baseline_attempted = True
+        self._candidate_dir.mkdir(parents=True, exist_ok=True)
+        path = self._candidate_dir / "root_mip_baseline.lp"
+        sample = capture_node_state(model, node, self.plan.source_sha256)
+        sample.update(
+            {
+                "sample_index": -1,
+                "state_capture_event": "LPSOLVED",
+                "serialization_event": "LPSOLVED",
+                "candidate_exports": [],
+            }
+        )
+        export = {
+            "writer": "writeMIP",
+            "writer_role": "root_node_mip_baseline",
+            "serialization_event": "LPSOLVED",
+            "scip_stage": _safe_scip_stage(model),
+            "file_name": path.name,
+            "relative_path": f"candidates/{path.name}",
+            "artifact_format": "lp",
+            "status": "failed",
+        }
+        try:
+            model.writeMIP(
+                str(path), genericnames=False, origobj=True, lazyconss=True
+            )
+            if not path.is_file() or path.stat().st_size == 0:
+                raise PyScipOptProbeError("root baseline writer produced no bytes")
+            export.update(
+                {
+                    "status": "written",
+                    "sha256": sha256_file(path),
+                    "size_bytes": path.stat().st_size,
+                }
+            )
+            self.root_baseline = {
+                "path": path,
+                "sample": sample,
+                "export": export,
+                "expected_variable_domains": _variable_domains(
+                    model, transformed=True
+                ),
+            }
+        except Exception as error:
+            export["error_type"] = type(error).__name__
+            export["reason_code"] = _serialization_reason(error)
+            self.errors.append(
+                {
+                    "event": "ROOT_LPSOLVED",
+                    "event_index": self.lp_solved_events - 1,
+                    "error_type": type(error).__name__,
+                    "reason_code": "root_baseline_serialization_failed",
+                }
+            )
+        sample["candidate_exports"].append(export)
 
     def _export_candidate(
         self,
@@ -623,6 +828,8 @@ class NodeProbeObserver:
             "events_outside_depth_window": self.events_outside_depth,
             "samples_recorded": len(self.samples),
             "candidate_files_written": len(self.candidates),
+            "root_baseline_attempted": self.root_baseline_attempted,
+            "root_baseline_written": self.root_baseline is not None,
             "writer_attempts": dict(sorted(writer_attempts.items())),
             "writer_successes": dict(sorted(writer_successes.items())),
             "capture_error_count": len(self.errors),
@@ -702,10 +909,124 @@ def evaluate_roundtrip(
         "expected_branch_bounds_match": branch_bounds_match,
         "semantic_distinction_observed": semantic_distinction,
         "candidate_signature": inspection.get("signature"),
+        "fingerprints": inspection.get("fingerprints"),
+        "root_domain_comparison_available": inspection.get(
+            "root_domain_comparison_available", False
+        ),
+        "root_domain_change_count": inspection.get("root_domain_change_count"),
+        "root_domain_changes": inspection.get("root_domain_changes", []),
         "roundtrip_status": roundtrip_status,
         "dataset_eligible": False,
         "eligibility_reason": "prototype_requires_independent_scientific_review",
     }
+
+
+def evaluate_root_baseline(
+    export: Mapping[str, Any], inspection: Mapping[str, Any]
+) -> dict[str, Any]:
+    readable = inspection.get("status") == "readable"
+    domains_match = readable and bool(
+        inspection.get("expected_variable_domains_match")
+    )
+    objective_minimize = readable and inspection.get("objective_sense") == "minimize"
+    passed = readable and domains_match and objective_minimize
+    return {
+        "writer": export.get("writer"),
+        "writer_role": export.get("writer_role"),
+        "file_name": export.get("file_name"),
+        "artifact_format": export.get("artifact_format"),
+        "artifact_sha256": export.get("sha256"),
+        "size_bytes": export.get("size_bytes"),
+        "fresh_process_readable": readable,
+        "objective_minimize": objective_minimize,
+        "expected_variable_domains_match": domains_match,
+        "candidate_signature": inspection.get("signature"),
+        "fingerprints": inspection.get("fingerprints"),
+        "baseline_status": (
+            "root_baseline_passed_mechanical_checks"
+            if passed
+            else "root_baseline_failed_or_incomplete"
+        ),
+        "dataset_eligible": False,
+    }
+
+
+def apply_distinctness_audit(
+    audit: Mapping[str, Any],
+    root_baseline: Mapping[str, Any] | None,
+    source_signature: Mapping[str, Any],
+) -> dict[str, Any]:
+    result = dict(audit)
+    candidate_signature = audit.get("candidate_signature") or {}
+    candidate_fingerprints = audit.get("fingerprints") or {}
+    root_signature = (root_baseline or {}).get("candidate_signature") or {}
+    root_fingerprints = (root_baseline or {}).get("fingerprints") or {}
+    baseline_valid = (
+        (root_baseline or {}).get("baseline_status")
+        == "root_baseline_passed_mechanical_checks"
+    )
+    mechanically_valid = (
+        audit.get("roundtrip_status") == "candidate_passed_mechanical_checks"
+    )
+
+    def hash_differs(key: str) -> bool:
+        before = root_fingerprints.get(key)
+        after = candidate_fingerprints.get(key)
+        return (
+            baseline_valid
+            and isinstance(before, str)
+            and isinstance(after, str)
+            and before != after
+        )
+
+    matrix_distinct = hash_differs("matrix_sha256")
+    objective_distinct = hash_differs("objective_sha256")
+    domain_distinct = hash_differs("domain_sha256")
+    formulation_distinct = hash_differs("formulation_sha256")
+    root_delta = (
+        signature_delta(root_signature, candidate_signature)
+        if baseline_valid
+        else {"rows": None, "columns": None, "nonzeros": None}
+    )
+    source_delta = signature_delta(source_signature, candidate_signature)
+    dimensionally_distinct = any(
+        isinstance(value, int) and value != 0 for value in root_delta.values()
+    )
+    materialization_class = classify_materialization(
+        writer_role=str(audit.get("writer_role")),
+        mechanically_valid=mechanically_valid and baseline_valid,
+        matrix_distinct=matrix_distinct,
+        objective_distinct=objective_distinct,
+        domain_distinct=domain_distinct,
+    )
+    result.update(
+        {
+            "root_baseline_available": baseline_valid,
+            "root_baseline_artifact_sha256": (
+                (root_baseline or {}).get("artifact_sha256")
+            ),
+            "artifact_distinct_from_root": (
+                baseline_valid
+                and audit.get("artifact_sha256")
+                != (root_baseline or {}).get("artifact_sha256")
+            ),
+            "root_signature_delta": root_delta,
+            "source_signature_delta": source_delta,
+            "matrix_structurally_distinct": matrix_distinct,
+            "objective_distinct": objective_distinct,
+            "domain_distinct": domain_distinct,
+            "formulation_distinct": formulation_distinct,
+            "dimensionally_distinct": dimensionally_distinct,
+            "node_mip_distinct_from_root": (
+                mechanically_valid
+                and baseline_valid
+                and formulation_distinct
+                and audit.get("writer_role") == "node_mip_candidate"
+            ),
+            "materialization_class": materialization_class,
+        }
+    )
+    return result
 
 
 def _branch_bound_matches(variable: Any, branching: Mapping[str, Any]) -> bool:
@@ -778,6 +1099,26 @@ def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict
             domain_mismatches.append(
                 {"name": unexpected_name, "reason": "unexpected_variable"}
             )
+        root_domain_changes: list[dict[str, Any]] = []
+        root_domains = expected.get("root_variable_domains")
+        if isinstance(root_domains, list):
+            root_names = set()
+            for root_domain in root_domains:
+                name = str(root_domain["name"])
+                root_names.add(name)
+                variable = by_name.get(name)
+                if variable is None:
+                    root_domain_changes.append(
+                        {"name": name, "reason": "missing_variable"}
+                    )
+                    continue
+                matches, reason = _variable_domain_matches(variable, root_domain)
+                if not matches:
+                    root_domain_changes.append({"name": name, "reason": reason})
+            for unexpected_name in sorted(set(by_name) - root_names):
+                root_domain_changes.append(
+                    {"name": unexpected_name, "reason": "unexpected_variable"}
+                )
         mismatches: list[dict[str, Any]] = []
         for change in expected.get("local_bound_changes", []):
             variable = by_name.get(str(change["name"]))
@@ -823,10 +1164,16 @@ def inspect_candidate(candidate_path: Path, expected: Mapping[str, Any]) -> dict
             "status": "readable",
             "objective_sense": str(model.getObjectiveSense()).lower(),
             "signature": model_signature(model, transformed=False),
+            "fingerprints": formulation_fingerprints(model, transformed=False),
             "expected_variable_domain_count": len(expected_domains),
             "expected_variable_domains_match": not domain_mismatches,
             "variable_domain_mismatch_count": len(domain_mismatches),
             "variable_domain_mismatches": domain_mismatches[:20],
+            "root_domain_comparison_available": isinstance(root_domains, list),
+            "root_domain_change_count": (
+                len(root_domain_changes) if isinstance(root_domains, list) else None
+            ),
+            "root_domain_changes": root_domain_changes[:20],
             "expected_local_bound_count": len(expected.get("local_bound_changes", [])),
             "expected_local_bounds_match": not mismatches,
             "expected_branch_bound_count": len(expected.get("branch_path", [])),
@@ -865,7 +1212,10 @@ def _run_roundtrip_worker(
     return 0 if inspection["status"] == "readable" else 2
 
 
-def _fresh_process_inspection(candidate: Mapping[str, Any]) -> dict[str, Any]:
+def _fresh_process_inspection(
+    candidate: Mapping[str, Any],
+    root_baseline: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     path = Path(candidate["path"])
     expected_path = path.with_suffix(path.suffix + ".expected.json")
     output_path = path.with_suffix(path.suffix + ".inspection.json")
@@ -875,6 +1225,10 @@ def _fresh_process_inspection(candidate: Mapping[str, Any]) -> dict[str, Any]:
         "branch_path": candidate["sample"]["branch_path"],
         "added_constraints": candidate["sample"]["added_constraints"],
     }
+    if root_baseline is not None:
+        expected["root_variable_domains"] = root_baseline[
+            "expected_variable_domains"
+        ]
     _write_json(expected_path, expected)
     try:
         result = subprocess.run(
@@ -919,10 +1273,26 @@ def _build_toy_model(Model: Any) -> Any:
 def determine_gate_status(
     observations: Mapping[str, Any],
     roundtrip_by_writer: Mapping[str, Mapping[str, Any]],
+    root_baseline: Mapping[str, Any] | None,
 ) -> tuple[str, str]:
     write_mip = roundtrip_by_writer["writeMIP"]
-    if observations["capture_error_count"]:
+    capture_errors = observations.get("capture_errors")
+    nonroot_capture_failed = bool(observations["capture_error_count"]) and (
+        not isinstance(capture_errors, list)
+        or any(
+            error.get("reason_code") != "root_baseline_serialization_failed"
+            for error in capture_errors
+        )
+    )
+    if nonroot_capture_failed:
         reason = "node_capture_failed"
+    elif not observations.get("root_baseline_written"):
+        reason = "root_mip_baseline_not_serialized"
+    elif (
+        (root_baseline or {}).get("baseline_status")
+        != "root_baseline_passed_mechanical_checks"
+    ):
+        reason = "root_mip_baseline_mechanical_checks_failed"
     elif observations["samples_recorded"] == 0:
         reason = "no_nonroot_node_sampled"
     elif write_mip["candidates_audited"] == 0:
@@ -931,14 +1301,97 @@ def determine_gate_status(
         reason = "write_mip_candidate_not_readable"
     elif write_mip["mechanical_checks_passed"] == 0:
         reason = "write_mip_mechanical_checks_failed"
+    elif write_mip["distinct_from_root"] == 0:
+        reason = "write_mip_candidate_not_distinct_from_root"
     else:
-        reason = "write_mip_mechanical_check_observed_pending_review"
+        reason = "write_mip_distinct_candidate_observed_pending_review"
     status = (
         "passed"
-        if reason == "write_mip_mechanical_check_observed_pending_review"
+        if reason == "write_mip_distinct_candidate_observed_pending_review"
         else "failed"
     )
     return status, reason
+
+
+def build_distinctness_summary(
+    roundtrips: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    candidates = [
+        item
+        for item in roundtrips
+        if item.get("writer_role") == "node_mip_candidate"
+    ]
+    class_counts = Counter(str(item["materialization_class"]) for item in candidates)
+
+    def unique_hashes(path: Sequence[str]) -> set[str]:
+        values: set[str] = set()
+        for item in candidates:
+            value: Any = item
+            for key in path:
+                value = value.get(key) if isinstance(value, Mapping) else None
+            if isinstance(value, str):
+                values.add(value)
+        return values
+
+    artifact_hashes = unique_hashes(("artifact_sha256",))
+    semantic_hashes = unique_hashes(("semantic_node_sha256",))
+    formulation_hashes = unique_hashes(("fingerprints", "formulation_sha256"))
+    return {
+        "comparison_baseline": "root_writeMIP_after_root_LP",
+        "node_mip_candidates": len(candidates),
+        "mechanically_valid_node_mips": sum(
+            item.get("roundtrip_status") == "candidate_passed_mechanical_checks"
+            for item in candidates
+        ),
+        "distinct_from_root": sum(
+            bool(item.get("node_mip_distinct_from_root")) for item in candidates
+        ),
+        "dimensionally_distinct_from_root": sum(
+            bool(item.get("dimensionally_distinct")) for item in candidates
+        ),
+        "matrix_distinct_from_root": sum(
+            bool(item.get("matrix_structurally_distinct")) for item in candidates
+        ),
+        "domain_distinct_from_root": sum(
+            bool(item.get("domain_distinct")) for item in candidates
+        ),
+        "materialization_classes": dict(sorted(class_counts.items())),
+        "unique_semantic_nodes": len(semantic_hashes),
+        "unique_artifacts": len(artifact_hashes),
+        "unique_formulations": len(formulation_hashes),
+        "duplicate_artifacts": max(0, len(candidates) - len(artifact_hashes)),
+        "duplicate_formulations": max(0, len(candidates) - len(formulation_hashes)),
+    }
+
+
+def build_storage_summary(observer: NodeProbeObserver) -> dict[str, Any]:
+    written_exports = []
+    if observer.root_baseline is not None:
+        written_exports.append(observer.root_baseline["export"])
+    written_exports.extend(candidate["export"] for candidate in observer.candidates)
+    by_role: dict[str, dict[str, int]] = {}
+    for export in written_exports:
+        role = str(export["writer_role"])
+        bucket = by_role.setdefault(role, {"files": 0, "bytes": 0})
+        bucket["files"] += 1
+        bucket["bytes"] += int(export.get("size_bytes", 0))
+    total_bytes = sum(bucket["bytes"] for bucket in by_role.values())
+    candidate_bytes = sum(
+        int(export.get("size_bytes", 0))
+        for export in written_exports
+        if export.get("writer_role") != "transformed_problem_control"
+    )
+    return {
+        "files_written": len(written_exports),
+        "bytes_written": total_bytes,
+        "by_writer_role": dict(sorted(by_role.items())),
+        "bytes_without_transformed_controls": candidate_bytes,
+        "projected_90_instances_bytes_at_same_sample_count": total_bytes * 90,
+        "projected_90_instances_bytes_without_transformed_controls": (
+            candidate_bytes * 90
+        ),
+        "projection_assumption": "linear_scaling_from_this_single_probe",
+    }
 
 
 def run_probe(plan: ProbePlan) -> dict[str, Any]:
@@ -976,11 +1429,20 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
             description="Post-LP node-subproblem serialization probe",
         )
         model.optimize()
+        root_audit = None
+        if observer.root_baseline is not None:
+            root_inspection = _fresh_process_inspection(observer.root_baseline)
+            root_audit = evaluate_root_baseline(
+                observer.root_baseline["export"], root_inspection
+            )
         roundtrips = []
         for candidate in observer.candidates:
-            inspection = _fresh_process_inspection(candidate)
+            inspection = _fresh_process_inspection(candidate, observer.root_baseline)
+            audit = evaluate_roundtrip(
+                candidate["sample"], candidate["export"], inspection
+            )
             roundtrips.append(
-                evaluate_roundtrip(candidate["sample"], candidate["export"], inspection)
+                apply_distinctness_audit(audit, root_audit, source_signature)
             )
         roundtrip_by_writer = {}
         for writer in ("writeMIP", "writeProblem_transformed"):
@@ -1002,11 +1464,16 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                     == "candidate_passed_mechanical_checks"
                     for item in writer_roundtrips
                 ),
+                "distinct_from_root": sum(
+                    bool(item["node_mip_distinct_from_root"])
+                    for item in writer_roundtrips
+                ),
             }
         observations = observer.summary()
         gate_status, gate_reason = determine_gate_status(
-            observations, roundtrip_by_writer
+            observations, roundtrip_by_writer, root_audit
         )
+        distinctness = build_distinctness_summary(roundtrips)
         report = {
             **plan.to_summary(),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -1031,6 +1498,7 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                 "dual_bound": _finite_or_none(model.getDualbound()),
             },
             "observations": observations,
+            "root_baseline": root_audit,
             "roundtrip": {
                 "candidates_audited": len(roundtrips),
                 "fresh_process_readable": sum(
@@ -1042,6 +1510,8 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                 ),
                 "by_writer": roundtrip_by_writer,
             },
+            "distinctness": distinctness,
+            "storage": build_storage_summary(observer),
             "decision": {
                 "local_node_state_observed": bool(observer.samples),
                 "candidate_serialization_observed": bool(observer.candidates),
@@ -1050,6 +1520,14 @@ def run_probe(plan: ProbePlan) -> dict[str, Any]:
                 ),
                 "write_mip_mechanical_check_observed": bool(
                     roundtrip_by_writer["writeMIP"]["mechanical_checks_passed"]
+                ),
+                "root_mip_baseline_observed": bool(
+                    root_audit
+                    and root_audit.get("baseline_status")
+                    == "root_baseline_passed_mechanical_checks"
+                ),
+                "distinct_node_mip_observed": bool(
+                    roundtrip_by_writer["writeMIP"]["distinct_from_root"]
                 ),
                 "exact_node_subproblem_proven": False,
                 "dataset_eligible": False,
@@ -1101,6 +1579,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max_depth", type=int, default=8)
     parser.add_argument("--presolve", choices=("off", "default"), default="off")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--skip_transformed_controls", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--dry_run", action="store_true")
     parser.add_argument("--inspect_candidate", type=Path, help=argparse.SUPPRESS)
@@ -1135,6 +1614,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         max_depth=args.max_depth,
         presolve=args.presolve,
         seed=args.seed,
+        write_transformed_controls=not args.skip_transformed_controls,
     )
     plan_path = plan.output_dir / PLAN_NAME
     report_path = plan.output_dir / REPORT_NAME

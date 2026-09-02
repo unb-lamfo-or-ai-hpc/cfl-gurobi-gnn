@@ -13,6 +13,7 @@ DATA_ROOT="/raid/vrcelestino/data/cfl-gurobi-gnn/data"
 PROBE_MODE="${PROBE_MODE:-toy}"
 INSTANCE_PATH="${INSTANCE_PATH:-}"
 EXPERIMENT_NAME="${EXPERIMENT_NAME:-pyscipopt_node_prototype_${SLURM_JOB_ID}}"
+WRITE_TRANSFORMED_CONTROLS="${WRITE_TRANSFORMED_CONTROLS:-1}"
 OUTPUT_DIR="${DATA_ROOT}/analysis/pyscipopt_node_prototype/${EXPERIMENT_NAME}"
 
 cd "$EXEC_DIR"
@@ -32,8 +33,14 @@ fi
 
 python3 -c 'import pyscipopt'
 
+CONTROL_ARGS=()
+if [[ "$WRITE_TRANSFORMED_CONTROLS" == "0" ]]; then
+    CONTROL_ARGS+=(--skip_transformed_controls)
+fi
+
 srun python3 -m cfl_gnn.cli.audit_pyscipopt_node_subproblems \
     "${SOURCE_ARGS[@]}" \
+    "${CONTROL_ARGS[@]}" \
     --output_dir "$OUTPUT_DIR" \
     --time_limit 60 \
     --node_limit 100 \
