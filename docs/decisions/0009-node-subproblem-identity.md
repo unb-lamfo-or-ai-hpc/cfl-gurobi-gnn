@@ -2,7 +2,8 @@
 
 ## Status
 
-Experimental, pending one real CFL validation on DaSCI.
+Validated mechanically on one real easy-CFL instance; scientific dataset
+eligibility remains unresolved by this ADR.
 
 ## Context
 
@@ -65,5 +66,14 @@ checks and has a distinct formulation fingerprint. The report must also expose
 artifact/formulation duplicates, dimensional deltas, materialization classes,
 and measured/projected storage.
 
-After local dependency-free tests, one bounded easy-CFL smoke on DaSCI is
-required before this pull request is ready for review.
+## DaSCI validation result
+
+The bounded easy-CFL run passed the schema-v3 gate. The root MIP and all four
+sampled node MIPs were readable and mechanically valid. All four node MIPs were
+unique formulations classified as `domain_distinct_same_matrix`: their local
+domains differed from the root, while rows, columns, nonzeros, matrix, and
+objective remained unchanged. The transformed-problem artifacts were readable
+controls but failed the node-candidate mechanical gate.
+
+This validates the identity instrumentation. It does not make the artifacts
+independent MILP instances. ADR 0010 defines their admissible interpretation.
