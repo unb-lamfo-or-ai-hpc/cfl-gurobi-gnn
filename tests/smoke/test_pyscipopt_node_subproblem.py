@@ -19,6 +19,7 @@ class _Variable:
         global_ub: float,
         local_lb: float,
         local_ub: float,
+        objective: float = 0.0,
     ) -> None:
         self.name = name
         self._type = variable_type
@@ -26,6 +27,7 @@ class _Variable:
         self._global_ub = global_ub
         self._local_lb = local_lb
         self._local_ub = local_ub
+        self._objective = objective
 
     def vtype(self) -> str:
         return self._type
@@ -48,10 +50,16 @@ class _Variable:
     def getUbOriginal(self) -> float:
         return self._local_ub
 
+    def getObj(self) -> float:
+        return self._objective
+
 
 class _Constraint:
     def __init__(self, name: str) -> None:
         self.name = name
+
+    def getConshdlrName(self) -> str:
+        return "linear"
 
 
 class _StringOnlyDirection:
@@ -119,6 +127,12 @@ class _Model:
     def getCurrentNode(self):
         return self.current_node
 
+    def getConss(self, transformed: bool = True):
+        return [_Constraint("local_cut")]
+
+    def getObjectiveSense(self) -> str:
+        return "minimize"
+
     def getStage(self) -> str:
         return "SOLVING"
 
@@ -168,6 +182,19 @@ def test_toy_plan_is_deterministic_and_path_sanitized(tmp_path: Path) -> None:
         "writeMIP": "lp",
         "writeProblem_transformed": "cip",
     }
+    assert first.to_summary()["schema_version"] == 3
+    assert first.to_summary()["root_baseline"] == "writeMIP_at_root_LPSOLVED"
+
+
+def test_plan_can_omit_transformed_controls(tmp_path: Path) -> None:
+    plan = prototype.build_probe_plan(
+        output_dir=tmp_path / "probe",
+        toy=True,
+        write_transformed_controls=False,
+    )
+
+    assert plan.to_summary()["candidate_writers"] == ["writeMIP"]
+    assert plan.to_summary()["parameters"]["write_transformed_controls"] is False
 
 
 def test_instance_plan_binds_original_bytes_without_path(tmp_path: Path) -> None:
@@ -208,6 +235,7 @@ def test_capture_node_state_separates_semantic_and_structural_identity() -> None
         {
             "at_node_number": 2,
             "name": "local_cut",
+            "handler": "linear",
             "linear_terms": [["x0", 1.0]],
             "representation": "linear_terms",
             "lhs": 1.0,
@@ -275,6 +303,30 @@ def test_observer_writes_bounded_candidates_without_promoting_them(
     )
     assert exports["writeProblem_transformed"]["artifact_format"] == "cip"
     assert len(observer.candidates[0]["expected_variable_domains"]) == 3
+
+
+def test_observer_serializes_root_baseline_before_node_candidates(
+    tmp_path: Path,
+) -> None:
+    plan = prototype.build_probe_plan(
+        output_dir=tmp_path / "probe", toy=True, max_samples=1
+    )
+    root = _Node(1, 0, None)
+    child = _Node(2, 1, root)
+    observer = prototype.NodeProbeObserver(plan)
+    model = _Model(_variables(), current_node=root)
+
+    observer.on_lp_solved(model, _Event(root))
+    model.current_node = child
+    observer.on_node_focused(model, _Event(child))
+    observer.on_lp_solved(model, _Event(child))
+
+    assert observer.summary()["root_baseline_written"] is True
+    assert observer.root_baseline is not None
+    assert observer.root_baseline["export"]["file_name"] == "root_mip_baseline.lp"
+    assert observer.root_baseline["export"]["writer_role"] == (
+        "root_node_mip_baseline"
+    )
 
 
 def test_roundtrip_evaluation_remains_ineligible_after_mechanical_success() -> None:
@@ -435,6 +487,83 @@ def test_transformed_problem_is_always_a_control() -> None:
     assert audit["dataset_eligible"] is False
 
 
+def test_root_relative_classification_detects_domain_only_distinctness() -> None:
+    root = {
+        "baseline_status": "root_baseline_passed_mechanical_checks",
+        "artifact_sha256": "1" * 64,
+        "candidate_signature": {"rows": 3, "columns": 3, "nonzeros": 7},
+        "fingerprints": {
+            "matrix_sha256": "a" * 64,
+            "objective_sha256": "b" * 64,
+            "domain_sha256": "c" * 64,
+            "formulation_sha256": "d" * 64,
+        },
+    }
+    candidate = {
+        "writer_role": "node_mip_candidate",
+        "artifact_sha256": "2" * 64,
+        "roundtrip_status": "candidate_passed_mechanical_checks",
+        "candidate_signature": {"rows": 3, "columns": 3, "nonzeros": 7},
+        "fingerprints": {
+            "matrix_sha256": "a" * 64,
+            "objective_sha256": "b" * 64,
+            "domain_sha256": "e" * 64,
+            "formulation_sha256": "f" * 64,
+        },
+    }
+
+    audit = prototype.apply_distinctness_audit(
+        candidate, root, {"rows": 3, "columns": 3, "nonzeros": 7}
+    )
+
+    assert audit["root_signature_delta"] == {
+        "rows": 0,
+        "columns": 0,
+        "nonzeros": 0,
+    }
+    assert audit["matrix_structurally_distinct"] is False
+    assert audit["domain_distinct"] is True
+    assert audit["dimensionally_distinct"] is False
+    assert audit["node_mip_distinct_from_root"] is True
+    assert audit["materialization_class"] == "domain_distinct_same_matrix"
+
+
+def test_same_size_artifacts_are_distinguished_by_hash_not_dimensions() -> None:
+    records = [
+        {
+            "writer_role": "node_mip_candidate",
+            "artifact_sha256": "a" * 64,
+            "semantic_node_sha256": "1" * 64,
+            "fingerprints": {"formulation_sha256": "x" * 64},
+            "roundtrip_status": "candidate_passed_mechanical_checks",
+            "node_mip_distinct_from_root": True,
+            "dimensionally_distinct": False,
+            "matrix_structurally_distinct": False,
+            "domain_distinct": True,
+            "materialization_class": "domain_distinct_same_matrix",
+        },
+        {
+            "writer_role": "node_mip_candidate",
+            "artifact_sha256": "b" * 64,
+            "semantic_node_sha256": "2" * 64,
+            "fingerprints": {"formulation_sha256": "y" * 64},
+            "roundtrip_status": "candidate_passed_mechanical_checks",
+            "node_mip_distinct_from_root": True,
+            "dimensionally_distinct": False,
+            "matrix_structurally_distinct": False,
+            "domain_distinct": True,
+            "materialization_class": "domain_distinct_same_matrix",
+        },
+    ]
+
+    summary = prototype.build_distinctness_summary(records)
+
+    assert summary["node_mip_candidates"] == 2
+    assert summary["unique_artifacts"] == 2
+    assert summary["unique_formulations"] == 2
+    assert summary["dimensionally_distinct_from_root"] == 0
+
+
 def test_branch_bound_comparison_checks_direction() -> None:
     fixed_zero = _Variable("x0", "BINARY", 0, 1, 0, 0)
     fixed_one = _Variable("x1", "BINARY", 0, 1, 1, 1)
@@ -505,28 +634,58 @@ def test_gate_reports_capture_failure_before_downstream_absence() -> None:
                 "candidates_audited": 0,
                 "fresh_process_readable": 0,
                 "mechanical_checks_passed": 0,
+                "distinct_from_root": 0,
             }
         },
+        None,
     )
 
     assert status == "failed"
     assert reason == "node_capture_failed"
 
 
-def test_gate_passes_only_after_write_mip_mechanical_success() -> None:
+def test_gate_passes_only_after_distinct_write_mip_and_root_baseline() -> None:
     status, reason = prototype.determine_gate_status(
-        {"capture_error_count": 0, "samples_recorded": 2},
+        {
+            "capture_error_count": 0,
+            "samples_recorded": 2,
+            "root_baseline_written": True,
+        },
         {
             "writeMIP": {
                 "candidates_audited": 2,
                 "fresh_process_readable": 2,
                 "mechanical_checks_passed": 1,
+                "distinct_from_root": 1,
             }
         },
+        {"baseline_status": "root_baseline_passed_mechanical_checks"},
     )
 
     assert status == "passed"
-    assert reason == "write_mip_mechanical_check_observed_pending_review"
+    assert reason == "write_mip_distinct_candidate_observed_pending_review"
+
+
+def test_gate_rejects_mechanical_candidate_identical_to_root() -> None:
+    status, reason = prototype.determine_gate_status(
+        {
+            "capture_error_count": 0,
+            "samples_recorded": 1,
+            "root_baseline_written": True,
+        },
+        {
+            "writeMIP": {
+                "candidates_audited": 1,
+                "fresh_process_readable": 1,
+                "mechanical_checks_passed": 1,
+                "distinct_from_root": 0,
+            }
+        },
+        {"baseline_status": "root_baseline_passed_mechanical_checks"},
+    )
+
+    assert status == "failed"
+    assert reason == "write_mip_candidate_not_distinct_from_root"
 
 
 def test_dry_run_does_not_import_pyscipopt(tmp_path: Path) -> None:
