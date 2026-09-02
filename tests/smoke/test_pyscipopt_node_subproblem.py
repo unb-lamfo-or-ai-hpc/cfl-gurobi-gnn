@@ -564,6 +564,31 @@ def test_same_size_artifacts_are_distinguished_by_hash_not_dimensions() -> None:
     assert summary["dimensionally_distinct_from_root"] == 0
 
 
+def test_formulation_fingerprints_are_order_invariant_and_componentized() -> None:
+    first = prototype.formulation_fingerprints(
+        _Model(_variables()), transformed=False
+    )
+    reordered = prototype.formulation_fingerprints(
+        _Model(list(reversed(_variables()))), transformed=False
+    )
+    objective_changed = prototype.formulation_fingerprints(
+        _Model(
+            [
+                _Variable("x1", "BINARY", 0, 1, 0, 1),
+                _Variable("x0", "BINARY", 0, 1, 0, 0, objective=1),
+                _Variable("y", "CONTINUOUS", 0, 10, 0, 10),
+            ]
+        ),
+        transformed=False,
+    )
+
+    assert first == reordered
+    assert first["matrix_sha256"] == objective_changed["matrix_sha256"]
+    assert first["domain_sha256"] == objective_changed["domain_sha256"]
+    assert first["objective_sha256"] != objective_changed["objective_sha256"]
+    assert first["formulation_sha256"] != objective_changed["formulation_sha256"]
+
+
 def test_branch_bound_comparison_checks_direction() -> None:
     fixed_zero = _Variable("x0", "BINARY", 0, 1, 0, 0)
     fixed_one = _Variable("x1", "BINARY", 0, 1, 1, 1)

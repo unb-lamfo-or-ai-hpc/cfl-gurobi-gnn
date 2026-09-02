@@ -96,7 +96,7 @@ All reports are path-sanitized and written under a research-only output root:
 - `pyscipopt_node_capability_report.json`;
 - `candidates/root_mip_baseline.lp` as the comparison baseline;
 - `node_manifest.jsonl` with bounded node metadata;
-- candidate `.cip` or `.mps` files only when the writer succeeds;
+- candidate `.lp` or control `.cip` files only when the writer succeeds;
 - `roundtrip_audit.jsonl` for candidate-versus-source comparisons.
 
 The manifest must label every candidate as `experimental_ineligible` until all

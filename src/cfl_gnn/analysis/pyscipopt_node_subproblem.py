@@ -1276,7 +1276,15 @@ def determine_gate_status(
     root_baseline: Mapping[str, Any] | None,
 ) -> tuple[str, str]:
     write_mip = roundtrip_by_writer["writeMIP"]
-    if observations["capture_error_count"]:
+    capture_errors = observations.get("capture_errors")
+    nonroot_capture_failed = bool(observations["capture_error_count"]) and (
+        not isinstance(capture_errors, list)
+        or any(
+            error.get("reason_code") != "root_baseline_serialization_failed"
+            for error in capture_errors
+        )
+    )
+    if nonroot_capture_failed:
         reason = "node_capture_failed"
     elif not observations.get("root_baseline_written"):
         reason = "root_mip_baseline_not_serialized"
