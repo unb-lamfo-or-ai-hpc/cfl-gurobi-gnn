@@ -10,7 +10,10 @@ optimal label without consuming the parent instance's incumbent?
 This audit accepts exactly the root and node artifacts approved by the upstream
 graph-observability report. It verifies their names and SHA-256 values before
 solving. Every node MIP is then loaded and optimized by a fresh Python process
-and a fresh PySCIPOpt model.
+and a fresh PySCIPOpt model. Candidate processes may run concurrently, but each
+SCIP model remains single-threaded. Completed worker artifacts are reusable
+only when their schema, contract hash, candidate name, and candidate hash all
+match the current run.
 
 No warm start, parent incumbent, solution pool, or Gurobi artifact is supplied.
 The root artifact is inspected only to recover canonical domains and types; it
@@ -46,6 +49,41 @@ solution artifact.
   `candidate_solutions/`.
 
 Reports contain only file names and hashes, never absolute source paths.
+
+## Outcome semantics
+
+Execution success and scientific eligibility are independent dimensions:
+
+- `passed`: every candidate has an independently proven optimal label;
+- `inconclusive`: every candidate has valid feasible solution evidence, but at
+  least one stopped before proving optimality;
+- `failed`: a contract, independence, domain, feasibility, or integrity check
+  failed, or no valid solution evidence was produced.
+
+An inconclusive run exits successfully because the experiment completed and
+wrote valid evidence. Its solutions remain `label_eligible=false`. Only an
+execution or integrity failure produces a failing process exit.
+
+## Performance feature tags
+
+MIP gap and execution time are first-class experimental features. The schema
+stores both the machine-readable tag vocabulary and its values:
+
+- instance: `execution_time_seconds`, `mip_gap_relative`, and
+  `mip_gap_percent`;
+- incumbent: `incumbent_objective`, `incumbent_discovery_time_seconds`,
+  `incumbent_mip_gap_relative_at_discovery`, and
+  `incumbent_mip_gap_percent_at_discovery`.
+
+The relative gap is the raw SCIP ratio; the percent field is exactly one
+hundred times that ratio. A `BESTSOLFOUND` trace records incumbent metrics at
+discovery, while the instance metrics describe termination.
+
+These canonical names are solver-neutral. When the Gurobi instance and
+incumbent collectors are reviewed, their native callback fields must be mapped
+to this same vocabulary rather than introducing parallel names. Solver-native
+names and units may be retained as provenance, but not as the canonical feature
+tags.
 
 ## Eligibility boundary
 

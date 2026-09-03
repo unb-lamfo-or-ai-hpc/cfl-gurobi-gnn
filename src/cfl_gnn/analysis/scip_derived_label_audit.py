@@ -9,6 +9,7 @@ import json
 import math
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,7 +18,7 @@ from typing import Any, Mapping, Sequence
 from cfl_gnn.graph.instance_provenance import sha256_file
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DATASET_VARIANT = "scip_derived_mip_independent_label_audit"
 PLAN_NAME = "scip_derived_label_audit_plan.json"
 REPORT_NAME = "scip_derived_label_validation_report.json"
@@ -25,6 +26,20 @@ PER_CANDIDATE_NAME = "per_candidate_label_audit.jsonl"
 SOLUTION_DIR_NAME = "candidate_solutions"
 SUPPORTED_SUFFIXES = (".lp", ".mps", ".cip")
 MAX_MISMATCH_DETAILS = 100
+DEFAULT_MAX_PARALLEL = 4
+PERFORMANCE_FEATURE_TAGS = {
+    "instance": {
+        "execution_time": "execution_time_seconds",
+        "mip_gap_relative": "mip_gap_relative",
+        "mip_gap_percent": "mip_gap_percent",
+    },
+    "incumbent": {
+        "objective": "incumbent_objective",
+        "discovery_time": "incumbent_discovery_time_seconds",
+        "mip_gap_relative_at_discovery": "incumbent_mip_gap_relative_at_discovery",
+        "mip_gap_percent_at_discovery": "incumbent_mip_gap_percent_at_discovery",
+    },
+}
 
 
 class DerivedLabelAuditError(RuntimeError):
@@ -122,6 +137,10 @@ def _finite_or_none(value: Any) -> float | None:
     return normalized if math.isfinite(normalized) and abs(normalized) < 1e19 else None
 
 
+def _gap_percent(relative_gap: float | None) -> float | None:
+    return None if relative_gap is None else 100.0 * relative_gap
+
+
 def _bound_token(value: Any) -> float | str:
     normalized = float(value)
     if not math.isfinite(normalized) or normalized >= 1e19:
@@ -173,6 +192,7 @@ class LabelAuditPlan:
     time_limit: float
     node_limit: int
     seed: int
+    max_parallel: int
     feasibility_tolerance: float
     optimality_tolerance: float
 
@@ -203,6 +223,7 @@ class LabelAuditPlan:
                 "time_limit": self.time_limit,
                 "node_limit": self.node_limit,
                 "seed": self.seed,
+                "max_parallel_candidates": self.max_parallel,
                 "warm_start_supplied": False,
                 "parent_incumbent_consumed": False,
             },
@@ -216,6 +237,7 @@ class LabelAuditPlan:
                 "feasibility_tolerance": self.feasibility_tolerance,
                 "optimality_tolerance": self.optimality_tolerance,
             },
+            "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
             "eligibility": {
                 "dataset_eligible": False,
                 "scientific_reporting_eligible": False,
@@ -252,9 +274,10 @@ def build_audit_plan(
     node_mips: Sequence[str | Path],
     graph_audit_report: str | Path,
     output_dir: str | Path,
-    time_limit: float = 600.0,
+    time_limit: float = 3600.0,
     node_limit: int = 1_000_000,
     seed: int = 42,
+    max_parallel: int = DEFAULT_MAX_PARALLEL,
     feasibility_tolerance: float = 1e-6,
     optimality_tolerance: float = 1e-8,
 ) -> LabelAuditPlan:
@@ -311,6 +334,7 @@ def build_audit_plan(
         time_limit=_positive_finite(time_limit, "time_limit"),
         node_limit=_positive_int(node_limit, "node_limit"),
         seed=_positive_int(seed, "seed"),
+        max_parallel=_positive_int(max_parallel, "max_parallel"),
         feasibility_tolerance=_nonnegative_finite(
             feasibility_tolerance, "feasibility_tolerance"
         ),
@@ -440,6 +464,7 @@ def _worker_request(
     plan: LabelAuditPlan,
 ) -> dict[str, Any]:
     return {
+        "contract_sha256": plan.contract_sha256,
         "candidate_path": str(candidate),
         "candidate_file_name": candidate.name,
         "candidate_sha256": sha256_file(candidate),
@@ -451,11 +476,42 @@ def _worker_request(
 
 
 def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
-    from pyscipopt import Model
+    from pyscipopt import Model, SCIP_EVENTTYPE
 
     candidate = Path(str(request["candidate_path"]))
     solution_path = Path(str(request["solution_path"]))
     model = Model()
+    incumbent_trace: list[dict[str, Any]] = []
+    incumbent_trace_errors = 0
+
+    def observe_best_solution(observed_model: Any, _event: Any) -> None:
+        nonlocal incumbent_trace_errors
+        try:
+            relative_gap = _finite_or_none(observed_model.getGap())
+            incumbent_trace.append(
+                {
+                    "incumbent_index": len(incumbent_trace),
+                    "incumbent_objective": _finite_or_none(
+                        observed_model.getObjVal()
+                    ),
+                    "incumbent_discovery_time_seconds": _finite_or_none(
+                        observed_model.getSolvingTime()
+                    ),
+                    "incumbent_mip_gap_relative_at_discovery": relative_gap,
+                    "incumbent_mip_gap_percent_at_discovery": _gap_percent(
+                        relative_gap
+                    ),
+                    "dual_bound_at_discovery": _finite_or_none(
+                        observed_model.getDualbound()
+                    ),
+                    "nodes_total_at_discovery": int(
+                        observed_model.getNTotalNodes()
+                    ),
+                }
+            )
+        except Exception:
+            incumbent_trace_errors += 1
+
     try:
         model.hideOutput(True)
         model.readProblem(str(candidate))
@@ -466,6 +522,12 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
         model.setParam("parallel/maxnthreads", 1)
         model.setParam("randomization/randomseedshift", int(request["seed"]))
         model.setParam("display/verblevel", 0)
+        model.attachEventHandlerCallback(
+            observe_best_solution,
+            [SCIP_EVENTTYPE.BESTSOLFOUND],
+            name="cfl_gnn_incumbent_metrics",
+            description="Record incumbent objective, gap, and execution time",
+        )
         model.optimize()
 
         status = str(model.getStatus()).lower()
@@ -475,6 +537,7 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
         solver_feasibility_check = False
         objective = None
         solution_objective = None
+        best_incumbent_discovery_time = None
         if best_solution is not None:
             solver_feasibility_check = bool(
                 model.checkSol(
@@ -490,6 +553,12 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
                 )
             except (AttributeError, TypeError):
                 solution_objective = objective
+            try:
+                best_incumbent_discovery_time = _finite_or_none(
+                    model.getSolTime(best_solution)
+                )
+            except (AttributeError, TypeError):
+                best_incumbent_discovery_time = None
             for variable in model.getVars(transformed=False):
                 variables.append(
                     {
@@ -502,11 +571,14 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
                 )
             variables.sort(key=lambda record: record["name"])
 
+        relative_gap = _finite_or_none(model.getGap())
+        execution_time = _finite_or_none(model.getSolvingTime())
         payload = {
             "schema_version": SCHEMA_VERSION,
+            "contract_sha256": str(request["contract_sha256"]),
             "candidate_file_name": str(request["candidate_file_name"]),
             "candidate_sha256": str(request["candidate_sha256"]),
-            "label_source": "independent_pyscipopt_optimization",
+            "solution_source": "independent_pyscipopt_optimization",
             "fresh_process": True,
             "warm_start_supplied": False,
             "parent_incumbent_consumed": False,
@@ -517,9 +589,21 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
             "objective": objective,
             "solution_objective": solution_objective,
             "best_bound": _finite_or_none(model.getDualbound()),
-            "mip_gap": _finite_or_none(model.getGap()),
-            "runtime": _finite_or_none(model.getSolvingTime()),
-            "node_count": int(model.getNNodes()),
+            "mip_gap_relative": relative_gap,
+            "mip_gap_percent": _gap_percent(relative_gap),
+            "execution_time_seconds": execution_time,
+            "reading_time_seconds": _finite_or_none(model.getReadingTime()),
+            "presolving_time_seconds": _finite_or_none(
+                model.getPresolvingTime()
+            ),
+            "nodes_current_run": int(model.getNNodes()),
+            "nodes_total": int(model.getNTotalNodes()),
+            "best_incumbent_discovery_time_seconds": (
+                best_incumbent_discovery_time
+            ),
+            "incumbent_trace": incumbent_trace,
+            "incumbent_trace_error_count": incumbent_trace_errors,
+            "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
             "solver_feasibility_check": solver_feasibility_check,
             "variables": variables,
         }
@@ -580,7 +664,7 @@ def evaluate_candidate_label(
             abs_tol=optimality_tolerance,
         )
     )
-    gap = worker_payload.get("mip_gap")
+    gap = worker_payload.get("mip_gap_relative")
     optimal_gap = gap is not None and float(gap) <= optimality_tolerance
     checks = {
         "fresh_process": worker_payload.get("fresh_process") is True,
@@ -609,11 +693,82 @@ def evaluate_candidate_label(
         is True,
         "integrality_preserved": domain_audit.get("integrality_preserved") is True,
     }
-    label_eligible = all(checks.values())
+    evidence_checks = {
+        key: value
+        for key, value in checks.items()
+        if key not in {"optimal_status", "optimal_gap"}
+    }
+    feasible_solution_evidence = all(evidence_checks.values())
+    label_eligible = feasible_solution_evidence and all(
+        checks[key] for key in ("optimal_status", "optimal_gap")
+    )
+    solve_status = str(worker_payload.get("solve_status", "unknown"))
+    if label_eligible:
+        gate_status = "passed"
+        optimality_status = "proven_optimal"
+        reason_code = "independent_optimal_label_validated"
+    elif feasible_solution_evidence:
+        gate_status = "inconclusive"
+        optimality_status = f"not_proven_{solve_status}"
+        reason_code = f"feasible_nonoptimal_{solve_status}"
+    else:
+        gate_status = "failed"
+        optimality_status = "not_proven_invalid_or_absent_solution"
+        reason_code = "independent_solution_evidence_failed"
+
+    relative_gap = worker_payload.get("mip_gap_relative")
+    incumbent_trace = worker_payload.get("incumbent_trace", [])
+    best_incumbent_trace = (
+        incumbent_trace[-1] if isinstance(incumbent_trace, list) and incumbent_trace else {}
+    )
+    performance_features = {
+        "solver": "SCIP",
+        "feature_tags": PERFORMANCE_FEATURE_TAGS,
+        "instance": {
+            "execution_time_seconds": worker_payload.get(
+                "execution_time_seconds"
+            ),
+            "mip_gap_relative": relative_gap,
+            "mip_gap_percent": worker_payload.get("mip_gap_percent"),
+        },
+        "best_incumbent": {
+            "incumbent_objective": objective,
+            "incumbent_discovery_time_seconds": worker_payload.get(
+                "best_incumbent_discovery_time_seconds"
+            ),
+            "incumbent_mip_gap_relative_at_discovery": (
+                best_incumbent_trace.get(
+                    "incumbent_mip_gap_relative_at_discovery"
+                )
+            ),
+            "incumbent_mip_gap_percent_at_discovery": (
+                best_incumbent_trace.get(
+                    "incumbent_mip_gap_percent_at_discovery"
+                )
+            ),
+            "terminal_mip_gap_relative": relative_gap,
+            "terminal_mip_gap_percent": worker_payload.get("mip_gap_percent"),
+        },
+        "incumbent_trace_count": len(incumbent_trace),
+        "incumbent_trace_error_count": worker_payload.get(
+            "incumbent_trace_error_count"
+        ),
+    }
     return {
         "candidate_file_name": worker_payload.get("candidate_file_name"),
         "candidate_sha256": worker_payload.get("candidate_sha256"),
-        "label_source": worker_payload.get("label_source"),
+        "solution_source": worker_payload.get("solution_source"),
+        "label_source": (
+            worker_payload.get("solution_source") if label_eligible else None
+        ),
+        "execution_status": "completed",
+        "solution_evidence_status": (
+            "validated_feasible"
+            if feasible_solution_evidence
+            else "invalid_or_absent"
+        ),
+        "optimality_status": optimality_status,
+        "gate_status": gate_status,
         "solve": {
             key: worker_payload.get(key)
             for key in (
@@ -622,11 +777,16 @@ def evaluate_candidate_label(
                 "objective",
                 "solution_objective",
                 "best_bound",
-                "mip_gap",
-                "runtime",
-                "node_count",
+                "mip_gap_relative",
+                "mip_gap_percent",
+                "execution_time_seconds",
+                "reading_time_seconds",
+                "presolving_time_seconds",
+                "nodes_current_run",
+                "nodes_total",
             )
         },
+        "performance_features": performance_features,
         "independence": {
             "fresh_process": worker_payload.get("fresh_process"),
             "pre_solve_solution_count": worker_payload.get(
@@ -639,6 +799,7 @@ def evaluate_candidate_label(
         },
         "domain_and_solution_audit": dict(domain_audit),
         "checks": checks,
+        "feasible_solution_evidence": feasible_solution_evidence,
         "solution_artifact": {
             "file_name": solution_file_name,
             "sha256": solution_sha256,
@@ -646,18 +807,29 @@ def evaluate_candidate_label(
         "label_eligible": label_eligible,
         "dataset_eligible": False,
         "scientific_reporting_eligible": False,
-        "reason_code": (
-            "independent_optimal_label_validated"
-            if label_eligible
-            else "independent_label_validation_failed"
-        ),
+        "reason_code": reason_code,
     }
 
 
 def summarize_candidate_results(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     eligible = sum(record.get("label_eligible") is True for record in records)
+    feasible_evidence = sum(
+        record.get("feasible_solution_evidence") is True for record in records
+    )
+    passed = bool(records) and eligible == len(records)
+    inconclusive = (
+        bool(records)
+        and not passed
+        and feasible_evidence == len(records)
+        and all(record.get("gate_status") == "inconclusive" for record in records)
+    )
+    gate_status = "passed" if passed else "inconclusive" if inconclusive else "failed"
     return {
         "candidates_audited": len(records),
+        "candidate_execution_completed": sum(
+            record.get("execution_status") == "completed" for record in records
+        ),
+        "feasible_solution_evidence": feasible_evidence,
         "labels_validated": eligible,
         "labels_rejected": len(records) - eligible,
         "all_independently_optimal": all(
@@ -673,17 +845,51 @@ def summarize_candidate_results(records: Sequence[Mapping[str, Any]]) -> dict[st
             and record.get("checks", {}).get("strict_domain_restriction") is True
             for record in records
         ),
-        "gate_passed": bool(records) and eligible == len(records),
+        "gate_status": gate_status,
+        "gate_passed": passed,
     }
 
 
-def run_audit(plan: LabelAuditPlan) -> dict[str, Any]:
-    root_domains = _model_domain_records(plan.root_mip)
+def _load_reusable_worker_payload(
+    solution_path: Path,
+    candidate: Path,
+    plan: LabelAuditPlan,
+) -> dict[str, Any] | None:
+    if not solution_path.is_file() or solution_path.stat().st_size == 0:
+        return None
+    try:
+        payload = _read_gzip_json(solution_path)
+    except (OSError, json.JSONDecodeError, DerivedLabelAuditError):
+        return None
+    expected = {
+        "schema_version": SCHEMA_VERSION,
+        "contract_sha256": plan.contract_sha256,
+        "candidate_file_name": candidate.name,
+        "candidate_sha256": sha256_file(candidate),
+        "fresh_process": True,
+    }
+    if any(payload.get(key) != value for key, value in expected.items()):
+        return None
+    return payload
+
+
+def _solve_and_evaluate_candidate(
+    index: int,
+    candidate: Path,
+    root_domains: Sequence[Mapping[str, Any]],
+    plan: LabelAuditPlan,
+    *,
+    reuse_existing: bool,
+) -> tuple[int, dict[str, Any]]:
     solution_dir = plan.output_dir / SOLUTION_DIR_NAME
-    solution_dir.mkdir(parents=True, exist_ok=True)
-    records: list[dict[str, Any]] = []
-    for index, candidate in enumerate(plan.node_mips):
-        solution_path = solution_dir / f"{candidate.stem}.solution.json.gz"
+    solution_path = solution_dir / f"{candidate.stem}.solution.json.gz"
+    payload = (
+        _load_reusable_worker_payload(solution_path, candidate, plan)
+        if reuse_existing
+        else None
+    )
+    reused = payload is not None
+    if payload is None:
         request_path = plan.output_dir / f".worker_request_{index:03d}.json"
         worker_result_path = plan.output_dir / f".worker_result_{index:03d}.json"
         _write_json(request_path, _worker_request(candidate, solution_path, plan))
@@ -693,42 +899,94 @@ def run_audit(plan: LabelAuditPlan) -> dict[str, Any]:
             if worker_result.get("worker_status") != "completed":
                 raise DerivedLabelAuditError("candidate worker did not complete")
             payload = _read_gzip_json(solution_path)
-            variables = payload.get("variables")
-            if not isinstance(variables, list):
-                raise DerivedLabelAuditError("candidate worker omitted solution vector")
-            domain_audit = validate_solution_vector(
-                root_domains,
-                variables,
-                tolerance=plan.feasibility_tolerance,
-            )
-            payload["variables"] = variables
-            payload["canonical_type_policy"] = (
-                "root_bounded_integer_0_1_as_binary"
-            )
-            payload["contract_sha256"] = plan.contract_sha256
-            _write_gzip_json(solution_path, payload)
-            record = evaluate_candidate_label(
-                payload,
-                domain_audit,
-                solution_file_name=solution_path.name,
-                solution_sha256=sha256_file(solution_path),
-                optimality_tolerance=plan.optimality_tolerance,
-            )
         finally:
             request_path.unlink(missing_ok=True)
             worker_result_path.unlink(missing_ok=True)
-        records.append(record)
-        _write_jsonl(plan.output_dir / PER_CANDIDATE_NAME, records)
+
+    variables = payload.get("variables")
+    if not isinstance(variables, list):
+        raise DerivedLabelAuditError("candidate worker omitted solution vector")
+    domain_audit = validate_solution_vector(
+        root_domains,
+        variables,
+        tolerance=plan.feasibility_tolerance,
+    )
+    payload["variables"] = variables
+    payload["canonical_type_policy"] = "root_bounded_integer_0_1_as_binary"
+    payload["contract_sha256"] = plan.contract_sha256
+    _write_gzip_json(solution_path, payload)
+    record = evaluate_candidate_label(
+        payload,
+        domain_audit,
+        solution_file_name=solution_path.name,
+        solution_sha256=sha256_file(solution_path),
+        optimality_tolerance=plan.optimality_tolerance,
+    )
+    record["worker_result_reused"] = reused
+    return index, record
+
+
+def run_audit(
+    plan: LabelAuditPlan,
+    *,
+    reuse_existing: bool = True,
+) -> dict[str, Any]:
+    root_domains = _model_domain_records(plan.root_mip)
+    solution_dir = plan.output_dir / SOLUTION_DIR_NAME
+    solution_dir.mkdir(parents=True, exist_ok=True)
+    records_by_index: dict[int, dict[str, Any]] = {}
+    workers = min(plan.max_parallel, len(plan.node_mips))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(
+                _solve_and_evaluate_candidate,
+                index,
+                candidate,
+                root_domains,
+                plan,
+                reuse_existing=reuse_existing,
+            ): index
+            for index, candidate in enumerate(plan.node_mips)
+        }
+        for future in as_completed(futures):
+            index, record = future.result()
+            records_by_index[index] = record
+            partial = [records_by_index[key] for key in sorted(records_by_index)]
+            _write_jsonl(plan.output_dir / PER_CANDIDATE_NAME, partial)
+
+    records = [records_by_index[index] for index in range(len(plan.node_mips))]
+    _write_jsonl(plan.output_dir / PER_CANDIDATE_NAME, records)
 
     summary = summarize_candidate_results(records)
     gate_passed = summary["gate_passed"]
+    gate_status = summary["gate_status"]
+    reused_workers = sum(record["worker_result_reused"] for record in records)
+    execution = {
+        "status": "completed",
+        "mode": "parallel_fresh_processes",
+        "max_parallel_candidates": plan.max_parallel,
+        "workers_used": workers,
+        "worker_results_reused": reused_workers,
+        "worker_results_executed": len(records) - reused_workers,
+    }
+    if gate_status == "passed":
+        reason_code = "all_derived_mip_labels_independently_validated_pending_review"
+        next_gate = "grouped_parent_dataset_contract_and_sampling_policy"
+    elif gate_status == "inconclusive":
+        reason_code = "feasible_independent_solutions_optimality_not_proven"
+        next_gate = "increase_compute_or_controlled_solver_experiment"
+    else:
+        reason_code = "derived_mip_solution_evidence_failed"
+        next_gate = "stop_or_correct_independent_label_validation"
     return {
         "schema_version": SCHEMA_VERSION,
         "contract_sha256": plan.contract_sha256,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "probe_completed": True,
-        "gate_status": "passed" if gate_passed else "failed",
+        "execution": execution,
+        "gate_status": gate_status,
         "upstream_graph_audit": plan.contract_payload["upstream_graph_audit"],
+        "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
         "summary": summary,
         "eligibility": {
             "label_eligible": gate_passed,
@@ -739,16 +997,11 @@ def run_audit(plan: LabelAuditPlan) -> dict[str, Any]:
             "independent_labels_validated": gate_passed,
             "label_eligible": gate_passed,
             "dataset_eligible": False,
-            "reason_code": (
-                "all_derived_mip_labels_independently_validated_pending_review"
-                if gate_passed
-                else "derived_mip_label_validation_failed"
+            "feasible_solution_evidence_validated": (
+                summary["feasible_solution_evidence"] == len(records)
             ),
-            "next_gate": (
-                "grouped_parent_dataset_contract_and_sampling_policy"
-                if gate_passed
-                else "stop_or_correct_independent_label_validation"
-            ),
+            "reason_code": reason_code,
+            "next_gate": next_gate,
         },
     }
 
@@ -759,6 +1012,7 @@ def failure_report(plan: LabelAuditPlan, error: Exception) -> dict[str, Any]:
         "contract_sha256": plan.contract_sha256,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "probe_completed": False,
+        "execution": {"status": "failed"},
         "gate_status": "failed",
         "failure": {
             "error_type": type(error).__name__,
@@ -780,9 +1034,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--node_mips", nargs="+")
     parser.add_argument("--graph_audit_report")
     parser.add_argument("--output_dir")
-    parser.add_argument("--time_limit", type=float, default=600.0)
+    parser.add_argument("--time_limit", type=float, default=3600.0)
     parser.add_argument("--node_limit", type=int, default=1_000_000)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--max_parallel", type=int, default=DEFAULT_MAX_PARALLEL)
     parser.add_argument("--feasibility_tolerance", type=float, default=1e-6)
     parser.add_argument("--optimality_tolerance", type=float, default=1e-8)
     parser.add_argument("--dry_run", action="store_true")
@@ -817,6 +1072,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         time_limit=args.time_limit,
         node_limit=args.node_limit,
         seed=args.seed,
+        max_parallel=args.max_parallel,
         feasibility_tolerance=args.feasibility_tolerance,
         optimality_tolerance=args.optimality_tolerance,
     )
@@ -836,7 +1092,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.dry_run:
         return 0
     try:
-        report = run_audit(plan)
+        report = run_audit(plan, reuse_existing=not args.overwrite)
     except Exception as error:
         report = failure_report(plan, error)
         _write_json(report_path, report)
@@ -851,9 +1107,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "dataset_eligible=false"
     )
     print(f"[INFO] Report: {report_path}")
-    if report["gate_status"] != "passed":
+    if report["gate_status"] == "failed":
         raise DerivedLabelAuditError(
-            "independent label validation failed; inspect per-candidate audit"
+            "independent solution evidence failed; inspect per-candidate audit"
         )
     return 0
 

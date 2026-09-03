@@ -67,7 +67,7 @@ def _worker_payload() -> dict[str, object]:
     return {
         "candidate_file_name": "node_000_2_mip.lp",
         "candidate_sha256": "b" * 64,
-        "label_source": "independent_pyscipopt_optimization",
+        "solution_source": "independent_pyscipopt_optimization",
         "fresh_process": True,
         "pre_solve_solution_count": 0,
         "warm_start_supplied": False,
@@ -78,9 +78,16 @@ def _worker_payload() -> dict[str, object]:
         "objective": 3.5,
         "solution_objective": 3.5,
         "best_bound": 3.5,
-        "mip_gap": 0.0,
-        "runtime": 0.1,
-        "node_count": 1,
+        "mip_gap_relative": 0.0,
+        "mip_gap_percent": 0.0,
+        "execution_time_seconds": 0.1,
+        "reading_time_seconds": 0.01,
+        "presolving_time_seconds": 0.02,
+        "nodes_current_run": 1,
+        "nodes_total": 1,
+        "best_incumbent_discovery_time_seconds": 0.05,
+        "incumbent_trace": [],
+        "incumbent_trace_error_count": 0,
         "solver_feasibility_check": True,
     }
 
@@ -103,11 +110,16 @@ def test_plan_binds_exact_passed_graph_audit_and_is_path_sanitized(
     )
 
     assert first.contract_sha256 == second.contract_sha256
+    assert first.to_summary()["schema_version"] == 2
     assert [path.name for path in first.node_mips] == sorted(path.name for path in nodes)
     serialized = json.dumps(first.to_summary())
     assert str(tmp_path) not in serialized
     assert first.to_summary()["solve_contract"]["fresh_process_per_candidate"] is True
     assert first.to_summary()["solve_contract"]["warm_start_supplied"] is False
+    assert first.to_summary()["solve_contract"]["max_parallel_candidates"] == 4
+    assert first.to_summary()["performance_feature_tags"] == (
+        audit.PERFORMANCE_FEATURE_TAGS
+    )
     assert first.to_summary()["eligibility"]["dataset_eligible"] is False
 
 
@@ -209,9 +221,17 @@ def test_candidate_becomes_label_eligible_only_when_all_checks_pass() -> None:
 
     assert all(result["checks"].values())
     assert result["label_eligible"] is True
+    assert result["gate_status"] == "passed"
+    assert result["solution_evidence_status"] == "validated_feasible"
+    assert result["optimality_status"] == "proven_optimal"
     assert result["dataset_eligible"] is False
     assert result["scientific_reporting_eligible"] is False
     assert result["reason_code"] == "independent_optimal_label_validated"
+    assert result["performance_features"]["instance"] == {
+        "execution_time_seconds": 0.1,
+        "mip_gap_relative": 0.0,
+        "mip_gap_percent": 0.0,
+    }
 
 
 @pytest.mark.parametrize(
@@ -221,7 +241,7 @@ def test_candidate_becomes_label_eligible_only_when_all_checks_pass() -> None:
         ("warm_start_supplied", True),
         ("parent_incumbent_consumed", True),
         ("solve_status", "timelimit"),
-        ("mip_gap", 0.1),
+        ("mip_gap_relative", 0.1),
         ("solver_feasibility_check", False),
     ],
 )
@@ -268,6 +288,171 @@ def test_overall_gate_requires_every_candidate_label() -> None:
 
     assert audit.summarize_candidate_results([passed, passed])["gate_passed"] is True
     assert audit.summarize_candidate_results([passed, failed])["gate_passed"] is False
+
+
+def test_feasible_time_limit_is_inconclusive_not_execution_failure() -> None:
+    payload = _worker_payload()
+    payload.update(
+        {
+            "solve_status": "timelimit",
+            "mip_gap_relative": 25.0,
+            "mip_gap_percent": 2500.0,
+            "execution_time_seconds": 3600.0,
+        }
+    )
+    domain = audit.validate_solution_vector(
+        _root_domains(), _candidate_variables(), tolerance=1e-6
+    )
+
+    result = audit.evaluate_candidate_label(
+        payload,
+        domain,
+        solution_file_name="node.solution.json.gz",
+        solution_sha256="c" * 64,
+        optimality_tolerance=1e-8,
+    )
+
+    assert result["execution_status"] == "completed"
+    assert result["solution_evidence_status"] == "validated_feasible"
+    assert result["feasible_solution_evidence"] is True
+    assert result["optimality_status"] == "not_proven_timelimit"
+    assert result["gate_status"] == "inconclusive"
+    assert result["label_eligible"] is False
+    assert result["label_source"] is None
+    assert result["reason_code"] == "feasible_nonoptimal_timelimit"
+    assert result["performance_features"]["instance"]["mip_gap_percent"] == 2500.0
+
+
+def test_overall_gate_classifies_all_feasible_nonoptimal_as_inconclusive() -> None:
+    record = {
+        "execution_status": "completed",
+        "feasible_solution_evidence": True,
+        "label_eligible": False,
+        "gate_status": "inconclusive",
+        "checks": {
+            "optimal_status": False,
+            "solver_feasibility_check": True,
+            "candidate_domain_subset_of_root": True,
+            "strict_domain_restriction": True,
+        },
+    }
+
+    summary = audit.summarize_candidate_results([record, record])
+
+    assert summary["gate_status"] == "inconclusive"
+    assert summary["candidate_execution_completed"] == 2
+    assert summary["feasible_solution_evidence"] == 2
+    assert summary["labels_validated"] == 0
+    assert summary["gate_passed"] is False
+
+
+def test_completed_worker_artifact_is_reused_only_for_exact_contract(
+    tmp_path: Path,
+) -> None:
+    root, nodes, report = _artifacts(tmp_path)
+    plan = audit.build_audit_plan(
+        root_mip=root,
+        node_mips=nodes,
+        graph_audit_report=report,
+        output_dir=tmp_path / "output",
+    )
+    solution = tmp_path / "candidate.solution.json.gz"
+    payload = {
+        "schema_version": audit.SCHEMA_VERSION,
+        "contract_sha256": plan.contract_sha256,
+        "candidate_file_name": nodes[0].name,
+        "candidate_sha256": sha256_file(nodes[0]),
+        "fresh_process": True,
+    }
+    audit._write_gzip_json(solution, payload)
+
+    assert audit._load_reusable_worker_payload(solution, nodes[0], plan) == payload
+    payload["contract_sha256"] = "f" * 64
+    audit._write_gzip_json(solution, payload)
+    assert audit._load_reusable_worker_payload(solution, nodes[0], plan) is None
+
+
+def test_run_audit_uses_parallel_orchestration_and_deterministic_order(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, nodes, graph_report = _artifacts(tmp_path)
+    plan = audit.build_audit_plan(
+        root_mip=root,
+        node_mips=nodes,
+        graph_audit_report=graph_report,
+        output_dir=tmp_path / "output",
+        max_parallel=2,
+    )
+    monkeypatch.setattr(audit, "_model_domain_records", lambda _path: [])
+
+    def fake_candidate(index: int, candidate: Path, *_args: object, **_kwargs: object):
+        return index, {
+            "candidate_file_name": candidate.name,
+            "execution_status": "completed",
+            "feasible_solution_evidence": True,
+            "label_eligible": False,
+            "gate_status": "inconclusive",
+            "worker_result_reused": index == 0,
+            "checks": {
+                "optimal_status": False,
+                "solver_feasibility_check": True,
+                "candidate_domain_subset_of_root": True,
+                "strict_domain_restriction": True,
+            },
+        }
+
+    monkeypatch.setattr(audit, "_solve_and_evaluate_candidate", fake_candidate)
+
+    result = audit.run_audit(plan)
+
+    assert result["execution"] == {
+        "status": "completed",
+        "mode": "parallel_fresh_processes",
+        "max_parallel_candidates": 2,
+        "workers_used": 2,
+        "worker_results_reused": 1,
+        "worker_results_executed": 1,
+    }
+    assert result["gate_status"] == "inconclusive"
+    rows = (plan.output_dir / audit.PER_CANDIDATE_NAME).read_text(
+        encoding="utf-8"
+    ).splitlines()
+    assert [json.loads(row)["candidate_file_name"] for row in rows] == [
+        node.name for node in nodes
+    ]
+
+
+def test_inconclusive_completed_probe_returns_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, nodes, graph_report = _artifacts(tmp_path)
+    output = tmp_path / "output"
+    monkeypatch.setattr(
+        audit,
+        "run_audit",
+        lambda *_args, **_kwargs: {
+            "gate_status": "inconclusive",
+            "summary": {"labels_validated": 0, "candidates_audited": 2},
+        },
+    )
+
+    result = audit.main(
+        [
+            "--root_mip",
+            str(root),
+            "--node_mips",
+            *(str(node) for node in nodes),
+            "--graph_audit_report",
+            str(graph_report),
+            "--output_dir",
+            str(output),
+        ]
+    )
+
+    assert result == 0
+    assert json.loads((output / audit.REPORT_NAME).read_text())["gate_status"] == (
+        "inconclusive"
+    )
 
 
 def test_dry_run_does_not_import_pyscipopt(tmp_path: Path) -> None:
