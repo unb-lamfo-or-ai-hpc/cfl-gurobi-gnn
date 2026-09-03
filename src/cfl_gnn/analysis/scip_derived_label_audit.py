@@ -18,7 +18,7 @@ from typing import Any, Mapping, Sequence
 from cfl_gnn.graph.instance_provenance import sha256_file
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 DATASET_VARIANT = "scip_derived_mip_independent_label_audit"
 PLAN_NAME = "scip_derived_label_audit_plan.json"
 REPORT_NAME = "scip_derived_label_validation_report.json"
@@ -27,6 +27,7 @@ SOLUTION_DIR_NAME = "candidate_solutions"
 SUPPORTED_SUFFIXES = (".lp", ".mps", ".cip")
 MAX_MISMATCH_DETAILS = 100
 DEFAULT_MAX_PARALLEL = 4
+INCUMBENT_GAP_AVAILABILITY = "not_reliably_exposed_by_pyscipopt"
 PERFORMANCE_FEATURE_TAGS = {
     "instance": {
         "execution_time": "execution_time_seconds",
@@ -141,6 +142,128 @@ def _gap_percent(relative_gap: float | None) -> float | None:
     return None if relative_gap is None else 100.0 * relative_gap
 
 
+def reconstruct_incumbent_trace(
+    solution_observations: Sequence[Mapping[str, Any]],
+    *,
+    objective_sense: str,
+    tolerance: float = 1e-9,
+) -> list[dict[str, Any]]:
+    """Reconstruct strict incumbent improvements from post-solve observations."""
+
+    if objective_sense not in {"minimize", "maximize"}:
+        raise ValueError("objective_sense must be minimize or maximize")
+    ordered = sorted(
+        solution_observations,
+        key=lambda item: (
+            float(item["discovery_time_seconds"]),
+            float(item["objective"])
+            if objective_sense == "minimize"
+            else -float(item["objective"]),
+            int(item.get("source_index", 0)),
+        ),
+    )
+    trace: list[dict[str, Any]] = []
+    best_objective: float | None = None
+    for observation in ordered:
+        objective = float(observation["objective"])
+        discovery_time = float(observation["discovery_time_seconds"])
+        if not math.isfinite(objective) or not math.isfinite(discovery_time):
+            continue
+        improved = (
+            best_objective is None
+            or (
+                objective < best_objective - tolerance
+                if objective_sense == "minimize"
+                else objective > best_objective + tolerance
+            )
+        )
+        if not improved:
+            continue
+        best_objective = objective
+        trace.append(
+            {
+                "incumbent_index": len(trace),
+                "incumbent_objective": objective,
+                "incumbent_discovery_time_seconds": discovery_time,
+                "incumbent_mip_gap_relative_at_discovery": None,
+                "incumbent_mip_gap_percent_at_discovery": None,
+                "mip_gap_at_discovery_availability": (
+                    INCUMBENT_GAP_AVAILABILITY
+                ),
+                "observation_method": "postsolve_stored_solution_reconstruction",
+            }
+        )
+    return trace
+
+
+def validate_incumbent_trace(
+    trace: Sequence[Mapping[str, Any]],
+    *,
+    objective_sense: str,
+    final_objective: float | None,
+    final_discovery_time: float | None,
+    tolerance: float,
+) -> dict[str, Any]:
+    times = [float(record["incumbent_discovery_time_seconds"]) for record in trace]
+    objectives = [float(record["incumbent_objective"]) for record in trace]
+    times_monotonic = all(
+        later + tolerance >= earlier for earlier, later in zip(times, times[1:])
+    )
+    if objective_sense == "minimize":
+        objectives_monotonic = all(
+            later < earlier - tolerance
+            for earlier, later in zip(objectives, objectives[1:])
+        )
+    elif objective_sense == "maximize":
+        objectives_monotonic = all(
+            later > earlier + tolerance
+            for earlier, later in zip(objectives, objectives[1:])
+        )
+    else:
+        objectives_monotonic = False
+    final_objective_matches = bool(trace) and final_objective is not None and math.isclose(
+        objectives[-1],
+        float(final_objective),
+        rel_tol=tolerance,
+        abs_tol=tolerance,
+    )
+    final_time_matches = (
+        bool(trace)
+        and final_discovery_time is not None
+        and math.isclose(
+            times[-1],
+            float(final_discovery_time),
+            rel_tol=tolerance,
+            abs_tol=tolerance,
+        )
+    )
+    gap_semantics_explicit = all(
+        record.get("incumbent_mip_gap_relative_at_discovery") is None
+        and record.get("incumbent_mip_gap_percent_at_discovery") is None
+        and record.get("mip_gap_at_discovery_availability")
+        == INCUMBENT_GAP_AVAILABILITY
+        for record in trace
+    )
+    return {
+        "incumbent_trace_present": bool(trace),
+        "incumbent_times_monotonic": times_monotonic,
+        "incumbent_objectives_monotonic": objectives_monotonic,
+        "final_incumbent_objective_matches": final_objective_matches,
+        "final_incumbent_discovery_time_matches": final_time_matches,
+        "incumbent_gap_semantics_explicit": gap_semantics_explicit,
+        "incumbent_trace_consistent": all(
+            (
+                bool(trace),
+                times_monotonic,
+                objectives_monotonic,
+                final_objective_matches,
+                final_time_matches,
+                gap_semantics_explicit,
+            )
+        ),
+    }
+
+
 def _bound_token(value: Any) -> float | str:
     normalized = float(value)
     if not math.isfinite(normalized) or normalized >= 1e19:
@@ -238,6 +361,15 @@ class LabelAuditPlan:
                 "optimality_tolerance": self.optimality_tolerance,
             },
             "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
+            "performance_feature_availability": {
+                "instance_execution_time": "observed",
+                "instance_terminal_mip_gap": "observed",
+                "incumbent_objective": "postsolve_reconstructed",
+                "incumbent_discovery_time": "postsolve_reconstructed",
+                "incumbent_mip_gap_at_discovery": (
+                    INCUMBENT_GAP_AVAILABILITY
+                ),
+            },
             "eligibility": {
                 "dataset_eligible": False,
                 "scientific_reporting_eligible": False,
@@ -476,42 +608,11 @@ def _worker_request(
 
 
 def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
-    from pyscipopt import Model, SCIP_EVENTTYPE
+    from pyscipopt import Model
 
     candidate = Path(str(request["candidate_path"]))
     solution_path = Path(str(request["solution_path"]))
     model = Model()
-    incumbent_trace: list[dict[str, Any]] = []
-    incumbent_trace_errors = 0
-
-    def observe_best_solution(observed_model: Any, _event: Any) -> None:
-        nonlocal incumbent_trace_errors
-        try:
-            relative_gap = _finite_or_none(observed_model.getGap())
-            incumbent_trace.append(
-                {
-                    "incumbent_index": len(incumbent_trace),
-                    "incumbent_objective": _finite_or_none(
-                        observed_model.getObjVal()
-                    ),
-                    "incumbent_discovery_time_seconds": _finite_or_none(
-                        observed_model.getSolvingTime()
-                    ),
-                    "incumbent_mip_gap_relative_at_discovery": relative_gap,
-                    "incumbent_mip_gap_percent_at_discovery": _gap_percent(
-                        relative_gap
-                    ),
-                    "dual_bound_at_discovery": _finite_or_none(
-                        observed_model.getDualbound()
-                    ),
-                    "nodes_total_at_discovery": int(
-                        observed_model.getNTotalNodes()
-                    ),
-                }
-            )
-        except Exception:
-            incumbent_trace_errors += 1
-
     try:
         model.hideOutput(True)
         model.readProblem(str(candidate))
@@ -522,18 +623,31 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
         model.setParam("parallel/maxnthreads", 1)
         model.setParam("randomization/randomseedshift", int(request["seed"]))
         model.setParam("display/verblevel", 0)
-        model.attachEventHandlerCallback(
-            observe_best_solution,
-            [SCIP_EVENTTYPE.BESTSOLFOUND],
-            name="cfl_gnn_incumbent_metrics",
-            description="Record incumbent objective, gap, and execution time",
-        )
         model.optimize()
 
         status = str(model.getStatus()).lower()
         solution_count = int(model.getNSols())
         best_solution = model.getBestSol() if solution_count > 0 else None
         variables: list[dict[str, Any]] = []
+        solution_observations: list[dict[str, Any]] = []
+        incumbent_trace_errors = 0
+        for source_index, stored_solution in enumerate(model.getSols()):
+            try:
+                stored_objective = _finite_or_none(
+                    model.getSolObjVal(stored_solution, original=True)
+                )
+                stored_time = _finite_or_none(model.getSolTime(stored_solution))
+                if stored_objective is None or stored_time is None:
+                    raise ValueError("non-finite stored solution observation")
+                solution_observations.append(
+                    {
+                        "source_index": source_index,
+                        "objective": stored_objective,
+                        "discovery_time_seconds": stored_time,
+                    }
+                )
+            except Exception:
+                incumbent_trace_errors += 1
         solver_feasibility_check = False
         objective = None
         solution_objective = None
@@ -573,6 +687,17 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
 
         relative_gap = _finite_or_none(model.getGap())
         execution_time = _finite_or_none(model.getSolvingTime())
+        incumbent_trace = reconstruct_incumbent_trace(
+            solution_observations,
+            objective_sense=objective_sense,
+        )
+        incumbent_trace_audit = validate_incumbent_trace(
+            incumbent_trace,
+            objective_sense=objective_sense,
+            final_objective=objective,
+            final_discovery_time=best_incumbent_discovery_time,
+            tolerance=1e-8,
+        )
         payload = {
             "schema_version": SCHEMA_VERSION,
             "contract_sha256": str(request["contract_sha256"]),
@@ -603,6 +728,13 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
             ),
             "incumbent_trace": incumbent_trace,
             "incumbent_trace_error_count": incumbent_trace_errors,
+            "incumbent_trace_audit": incumbent_trace_audit,
+            "incumbent_trace_source": (
+                "postsolve_model_getSols_getSolTime_getSolObjVal"
+            ),
+            "incumbent_gap_at_discovery_availability": (
+                INCUMBENT_GAP_AVAILABILITY
+            ),
             "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
             "solver_feasibility_check": solver_feasibility_check,
             "variables": variables,
@@ -666,6 +798,7 @@ def evaluate_candidate_label(
     )
     gap = worker_payload.get("mip_gap_relative")
     optimal_gap = gap is not None and float(gap) <= optimality_tolerance
+    incumbent_trace_audit = worker_payload.get("incumbent_trace_audit", {})
     checks = {
         "fresh_process": worker_payload.get("fresh_process") is True,
         "zero_pre_solve_solutions": worker_payload.get("pre_solve_solution_count") == 0,
@@ -692,6 +825,14 @@ def evaluate_candidate_label(
         )
         is True,
         "integrality_preserved": domain_audit.get("integrality_preserved") is True,
+        "incumbent_trace_consistent": incumbent_trace_audit.get(
+            "incumbent_trace_consistent"
+        )
+        is True,
+        "incumbent_trace_observation_errors_absent": worker_payload.get(
+            "incumbent_trace_error_count"
+        )
+        == 0,
     }
     evidence_checks = {
         key: value
@@ -746,6 +887,12 @@ def evaluate_candidate_label(
                     "incumbent_mip_gap_percent_at_discovery"
                 )
             ),
+            "mip_gap_at_discovery_availability": (
+                INCUMBENT_GAP_AVAILABILITY
+            ),
+            "observation_method": (
+                "postsolve_stored_solution_reconstruction"
+            ),
             "terminal_mip_gap_relative": relative_gap,
             "terminal_mip_gap_percent": worker_payload.get("mip_gap_percent"),
         },
@@ -753,6 +900,7 @@ def evaluate_candidate_label(
         "incumbent_trace_error_count": worker_payload.get(
             "incumbent_trace_error_count"
         ),
+        "incumbent_trace_audit": incumbent_trace_audit,
     }
     return {
         "candidate_file_name": worker_payload.get("candidate_file_name"),
@@ -787,6 +935,7 @@ def evaluate_candidate_label(
             )
         },
         "performance_features": performance_features,
+        "incumbent_trace_audit": incumbent_trace_audit,
         "independence": {
             "fresh_process": worker_payload.get("fresh_process"),
             "pre_solve_solution_count": worker_payload.get(

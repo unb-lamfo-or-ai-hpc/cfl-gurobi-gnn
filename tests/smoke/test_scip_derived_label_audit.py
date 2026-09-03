@@ -86,8 +86,31 @@ def _worker_payload() -> dict[str, object]:
         "nodes_current_run": 1,
         "nodes_total": 1,
         "best_incumbent_discovery_time_seconds": 0.05,
-        "incumbent_trace": [],
+        "incumbent_trace": [
+            {
+                "incumbent_index": 0,
+                "incumbent_objective": 3.5,
+                "incumbent_discovery_time_seconds": 0.05,
+                "incumbent_mip_gap_relative_at_discovery": None,
+                "incumbent_mip_gap_percent_at_discovery": None,
+                "mip_gap_at_discovery_availability": (
+                    audit.INCUMBENT_GAP_AVAILABILITY
+                ),
+                "observation_method": (
+                    "postsolve_stored_solution_reconstruction"
+                ),
+            }
+        ],
         "incumbent_trace_error_count": 0,
+        "incumbent_trace_audit": {
+            "incumbent_trace_present": True,
+            "incumbent_times_monotonic": True,
+            "incumbent_objectives_monotonic": True,
+            "final_incumbent_objective_matches": True,
+            "final_incumbent_discovery_time_matches": True,
+            "incumbent_gap_semantics_explicit": True,
+            "incumbent_trace_consistent": True,
+        },
         "solver_feasibility_check": True,
     }
 
@@ -110,7 +133,7 @@ def test_plan_binds_exact_passed_graph_audit_and_is_path_sanitized(
     )
 
     assert first.contract_sha256 == second.contract_sha256
-    assert first.to_summary()["schema_version"] == 2
+    assert first.to_summary()["schema_version"] == 3
     assert [path.name for path in first.node_mips] == sorted(path.name for path in nodes)
     serialized = json.dumps(first.to_summary())
     assert str(tmp_path) not in serialized
@@ -120,7 +143,68 @@ def test_plan_binds_exact_passed_graph_audit_and_is_path_sanitized(
     assert first.to_summary()["performance_feature_tags"] == (
         audit.PERFORMANCE_FEATURE_TAGS
     )
+    assert first.to_summary()["performance_feature_availability"][
+        "incumbent_mip_gap_at_discovery"
+    ] == audit.INCUMBENT_GAP_AVAILABILITY
     assert first.to_summary()["eligibility"]["dataset_eligible"] is False
+
+
+def test_incumbent_trace_is_reconstructed_from_postsolve_solutions() -> None:
+    observations = [
+        {"source_index": 0, "objective": 8.0, "discovery_time_seconds": 4.0},
+        {"source_index": 1, "objective": 10.0, "discovery_time_seconds": 1.0},
+        {"source_index": 2, "objective": 9.0, "discovery_time_seconds": 2.0},
+        {"source_index": 3, "objective": 9.5, "discovery_time_seconds": 3.0},
+        {"source_index": 4, "objective": 8.0, "discovery_time_seconds": 5.0},
+    ]
+
+    trace = audit.reconstruct_incumbent_trace(
+        observations,
+        objective_sense="minimize",
+    )
+
+    assert [record["incumbent_objective"] for record in trace] == [10.0, 9.0, 8.0]
+    assert [record["incumbent_discovery_time_seconds"] for record in trace] == [
+        1.0,
+        2.0,
+        4.0,
+    ]
+    assert all(
+        record["incumbent_mip_gap_relative_at_discovery"] is None
+        and record["incumbent_mip_gap_percent_at_discovery"] is None
+        and record["mip_gap_at_discovery_availability"]
+        == audit.INCUMBENT_GAP_AVAILABILITY
+        for record in trace
+    )
+
+
+def test_incumbent_trace_audit_requires_final_solution_match() -> None:
+    trace = audit.reconstruct_incumbent_trace(
+        [
+            {"source_index": 0, "objective": 5.0, "discovery_time_seconds": 1.0},
+            {"source_index": 1, "objective": 4.0, "discovery_time_seconds": 2.0},
+        ],
+        objective_sense="minimize",
+    )
+
+    passed = audit.validate_incumbent_trace(
+        trace,
+        objective_sense="minimize",
+        final_objective=4.0,
+        final_discovery_time=2.0,
+        tolerance=1e-8,
+    )
+    failed = audit.validate_incumbent_trace(
+        trace,
+        objective_sense="minimize",
+        final_objective=3.0,
+        final_discovery_time=2.0,
+        tolerance=1e-8,
+    )
+
+    assert passed["incumbent_trace_consistent"] is True
+    assert failed["final_incumbent_objective_matches"] is False
+    assert failed["incumbent_trace_consistent"] is False
 
 
 def test_plan_rejects_artifact_not_approved_by_graph_audit(tmp_path: Path) -> None:
@@ -264,6 +348,31 @@ def test_candidate_fails_closed_when_independence_or_optimality_fails(
 
     assert result["label_eligible"] is False
     assert result["dataset_eligible"] is False
+
+
+def test_candidate_fails_closed_for_inconsistent_incumbent_trace() -> None:
+    payload = _worker_payload()
+    payload["incumbent_trace_audit"] = {
+        **payload["incumbent_trace_audit"],
+        "final_incumbent_objective_matches": False,
+        "incumbent_trace_consistent": False,
+    }
+    domain = audit.validate_solution_vector(
+        _root_domains(), _candidate_variables(), tolerance=1e-6
+    )
+
+    result = audit.evaluate_candidate_label(
+        payload,
+        domain,
+        solution_file_name="node.solution.json.gz",
+        solution_sha256="c" * 64,
+        optimality_tolerance=1e-8,
+    )
+
+    assert result["checks"]["incumbent_trace_consistent"] is False
+    assert result["feasible_solution_evidence"] is False
+    assert result["label_eligible"] is False
+    assert result["gate_status"] == "failed"
 
 
 def test_overall_gate_requires_every_candidate_label() -> None:
@@ -488,3 +597,5 @@ def test_source_excludes_pyomo_parent_labels_and_dataset_writes() -> None:
     assert "incumbents.parquet" not in source
     assert '"parent_incumbent_consumed": False' in source
     assert '"dataset_eligible": False' in source
+    assert "BESTSOLFOUND" not in source
+    assert "attachEventHandlerCallback" not in source

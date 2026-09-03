@@ -50,6 +50,14 @@ solution artifact.
 
 Reports contain only file names and hashes, never absolute source paths.
 
+The schema-v3 worker reconstructs its incumbent sequence only after
+`optimize()` from the solutions retained by SCIP, using `getSols()`,
+`getSolTime()`, and `getSolObjVal()`. It sorts those observations by discovery
+time, retains strict objective improvements, and fails closed unless times are
+monotonic, objectives improve monotonically, and the final trace entry matches
+the best solution and its discovery time. This avoids reading stale global
+primal-bound state inside a `BESTSOLFOUND` callback.
+
 ## Outcome semantics
 
 Execution success and scientific eligibility are independent dimensions:
@@ -75,15 +83,21 @@ stores both the machine-readable tag vocabulary and its values:
   `incumbent_mip_gap_relative_at_discovery`, and
   `incumbent_mip_gap_percent_at_discovery`.
 
-The relative gap is the raw SCIP ratio; the percent field is exactly one
-hundred times that ratio. A `BESTSOLFOUND` trace records incumbent metrics at
-discovery, while the instance metrics describe termination.
+The relative terminal gap is the raw SCIP ratio; the percent field is exactly
+one hundred times that ratio. PySCIPOpt reliably exposes each retained
+incumbent's objective and discovery time after the solve, but it does not
+reliably expose the contemporaneous dual bound needed to reconstruct the MIP
+gap at discovery. Consequently, schema v3 records both incumbent gap fields as
+`null` and tags their availability as
+`not_reliably_exposed_by_pyscipopt`. The terminal instance gap remains observed
+and valid.
 
 These canonical names are solver-neutral. When the Gurobi instance and
 incumbent collectors are reviewed, their native callback fields must be mapped
 to this same vocabulary rather than introducing parallel names. Solver-native
 names and units may be retained as provenance, but not as the canonical feature
-tags.
+tags. In particular, the incumbent gap-at-discovery tags remain reserved for a
+future Gurobi collector that can populate them from coherent callback state.
 
 ## Eligibility boundary
 
