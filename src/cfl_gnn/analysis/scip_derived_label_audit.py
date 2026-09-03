@@ -28,6 +28,7 @@ SUPPORTED_SUFFIXES = (".lp", ".mps", ".cip")
 MAX_MISMATCH_DETAILS = 100
 DEFAULT_MAX_PARALLEL = 4
 INCUMBENT_GAP_AVAILABILITY = "not_reliably_exposed_by_pyscipopt"
+SUPPORTED_SOLVER_PROFILES = ("default", "feasibility", "optimality")
 PERFORMANCE_FEATURE_TAGS = {
     "instance": {
         "execution_time": "execution_time_seconds",
@@ -140,6 +141,34 @@ def _finite_or_none(value: Any) -> float | None:
 
 def _gap_percent(relative_gap: float | None) -> float | None:
     return None if relative_gap is None else 100.0 * relative_gap
+
+
+def _normalized_parameter_map(parameters: Mapping[str, Any]) -> dict[str, Any]:
+    normalized: dict[str, Any] = {}
+    for key, value in sorted(parameters.items()):
+        if isinstance(value, (bool, int, str)) or value is None:
+            normalized[str(key)] = value
+        elif isinstance(value, float) and math.isfinite(value):
+            normalized[str(key)] = value
+        else:
+            normalized[str(key)] = str(value)
+    return normalized
+
+
+def apply_solver_profile(model: Any, profile_id: str) -> None:
+    """Apply one precommitted SCIP emphasis profile before locked controls."""
+
+    if profile_id not in SUPPORTED_SOLVER_PROFILES:
+        raise ValueError(f"unsupported solver profile: {profile_id}")
+    if profile_id == "default":
+        return
+    from pyscipopt import SCIP_PARAMEMPHASIS
+
+    emphasis = {
+        "feasibility": SCIP_PARAMEMPHASIS.FEASIBILITY,
+        "optimality": SCIP_PARAMEMPHASIS.OPTIMALITY,
+    }[profile_id]
+    model.setEmphasis(emphasis)
 
 
 def reconstruct_incumbent_trace(
@@ -608,6 +637,7 @@ def _worker_request(
 
 
 def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
+    import pyscipopt
     from pyscipopt import Model
 
     candidate = Path(str(request["candidate_path"]))
@@ -618,11 +648,23 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
         model.readProblem(str(candidate))
         objective_sense = str(model.getObjectiveSense()).lower()
         pre_solve_solution_count = int(model.getNSols())
+        solver_profile = str(request.get("solver_profile", "default"))
+        apply_solver_profile(model, solver_profile)
         model.setParam("limits/time", float(request["time_limit"]))
         model.setParam("limits/nodes", int(request["node_limit"]))
         model.setParam("parallel/maxnthreads", 1)
         model.setParam("randomization/randomseedshift", int(request["seed"]))
         model.setParam("display/verblevel", 0)
+        solver_parameter_map = _normalized_parameter_map(model.getParams())
+        solver_parameter_sha256 = _canonical_sha256(solver_parameter_map)
+        scip_version = ".".join(
+            str(component)
+            for component in (
+                model.getMajorVersion(),
+                model.getMinorVersion(),
+                model.getTechVersion(),
+            )
+        )
         model.optimize()
 
         status = str(model.getStatus()).lower()
@@ -703,6 +745,13 @@ def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
             "contract_sha256": str(request["contract_sha256"]),
             "candidate_file_name": str(request["candidate_file_name"]),
             "candidate_sha256": str(request["candidate_sha256"]),
+            "solver_profile": solver_profile,
+            "solver_versions": {
+                "scip": scip_version,
+                "pyscipopt": str(getattr(pyscipopt, "__version__", "unknown")),
+            },
+            "solver_parameter_map": solver_parameter_map,
+            "solver_parameter_sha256": solver_parameter_sha256,
             "solution_source": "independent_pyscipopt_optimization",
             "fresh_process": True,
             "warm_start_supplied": False,
