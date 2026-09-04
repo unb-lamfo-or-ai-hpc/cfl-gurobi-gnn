@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from cfl_gnn.graph.instance_provenance import sha256_file
+from cfl_gnn.solvers.pyscipopt_solution import ONLINE_GAP_AVAILABILITY
 
 
 SCHEMA_VERSION = 3
@@ -393,11 +394,9 @@ class LabelAuditPlan:
             "performance_feature_availability": {
                 "instance_execution_time": "observed",
                 "instance_terminal_mip_gap": "observed",
-                "incumbent_objective": "postsolve_reconstructed",
-                "incumbent_discovery_time": "postsolve_reconstructed",
-                "incumbent_mip_gap_at_discovery": (
-                    INCUMBENT_GAP_AVAILABILITY
-                ),
+                "incumbent_objective": "online_bestsolfound_event",
+                "incumbent_discovery_time": "online_bestsolfound_event",
+                "incumbent_mip_gap_at_discovery": ONLINE_GAP_AVAILABILITY,
             },
             "eligibility": {
                 "dataset_eligible": False,
@@ -637,168 +636,9 @@ def _worker_request(
 
 
 def _solve_worker(request: Mapping[str, Any]) -> dict[str, Any]:
-    import pyscipopt
-    from pyscipopt import Model
+    from cfl_gnn.solvers.pyscipopt_solution import solve_named_mip
 
-    candidate = Path(str(request["candidate_path"]))
-    solution_path = Path(str(request["solution_path"]))
-    model = Model()
-    try:
-        model.hideOutput(True)
-        model.readProblem(str(candidate))
-        objective_sense = str(model.getObjectiveSense()).lower()
-        pre_solve_solution_count = int(model.getNSols())
-        solver_profile = str(request.get("solver_profile", "default"))
-        apply_solver_profile(model, solver_profile)
-        model.setParam("limits/time", float(request["time_limit"]))
-        model.setParam("limits/nodes", int(request["node_limit"]))
-        model.setParam("parallel/maxnthreads", 1)
-        model.setParam("randomization/randomseedshift", int(request["seed"]))
-        model.setParam("display/verblevel", 0)
-        solver_parameter_map = _normalized_parameter_map(model.getParams())
-        solver_parameter_sha256 = _canonical_sha256(solver_parameter_map)
-        scip_version = ".".join(
-            str(component)
-            for component in (
-                model.getMajorVersion(),
-                model.getMinorVersion(),
-                model.getTechVersion(),
-            )
-        )
-        model.optimize()
-
-        status = str(model.getStatus()).lower()
-        solution_count = int(model.getNSols())
-        best_solution = model.getBestSol() if solution_count > 0 else None
-        variables: list[dict[str, Any]] = []
-        solution_observations: list[dict[str, Any]] = []
-        incumbent_trace_errors = 0
-        for source_index, stored_solution in enumerate(model.getSols()):
-            try:
-                stored_objective = _finite_or_none(
-                    model.getSolObjVal(stored_solution, original=True)
-                )
-                stored_time = _finite_or_none(model.getSolTime(stored_solution))
-                if stored_objective is None or stored_time is None:
-                    raise ValueError("non-finite stored solution observation")
-                solution_observations.append(
-                    {
-                        "source_index": source_index,
-                        "objective": stored_objective,
-                        "discovery_time_seconds": stored_time,
-                    }
-                )
-            except Exception:
-                incumbent_trace_errors += 1
-        solver_feasibility_check = False
-        objective = None
-        solution_objective = None
-        best_incumbent_discovery_time = None
-        if best_solution is not None:
-            solver_feasibility_check = bool(
-                model.checkSol(
-                    best_solution,
-                    printreason=False,
-                    completely=True,
-                )
-            )
-            objective = _finite_or_none(model.getObjVal())
-            try:
-                solution_objective = _finite_or_none(
-                    model.getSolObjVal(best_solution, original=True)
-                )
-            except (AttributeError, TypeError):
-                solution_objective = objective
-            try:
-                best_incumbent_discovery_time = _finite_or_none(
-                    model.getSolTime(best_solution)
-                )
-            except (AttributeError, TypeError):
-                best_incumbent_discovery_time = None
-            for variable in model.getVars(transformed=False):
-                variables.append(
-                    {
-                        "name": str(variable.name),
-                        "raw_type": normalize_variable_type(variable.vtype()),
-                        "lb": _bound_token(variable.getLbOriginal()),
-                        "ub": _bound_token(variable.getUbOriginal()),
-                        "value": float(model.getSolVal(best_solution, variable)),
-                    }
-                )
-            variables.sort(key=lambda record: record["name"])
-
-        relative_gap = _finite_or_none(model.getGap())
-        execution_time = _finite_or_none(model.getSolvingTime())
-        incumbent_trace = reconstruct_incumbent_trace(
-            solution_observations,
-            objective_sense=objective_sense,
-        )
-        incumbent_trace_audit = validate_incumbent_trace(
-            incumbent_trace,
-            objective_sense=objective_sense,
-            final_objective=objective,
-            final_discovery_time=best_incumbent_discovery_time,
-            tolerance=1e-8,
-        )
-        payload = {
-            "schema_version": SCHEMA_VERSION,
-            "contract_sha256": str(request["contract_sha256"]),
-            "candidate_file_name": str(request["candidate_file_name"]),
-            "candidate_sha256": str(request["candidate_sha256"]),
-            "solver_profile": solver_profile,
-            "solver_versions": {
-                "scip": scip_version,
-                "pyscipopt": str(getattr(pyscipopt, "__version__", "unknown")),
-            },
-            "solver_parameter_map": solver_parameter_map,
-            "solver_parameter_sha256": solver_parameter_sha256,
-            "solution_source": "independent_pyscipopt_optimization",
-            "fresh_process": True,
-            "warm_start_supplied": False,
-            "parent_incumbent_consumed": False,
-            "objective_sense": objective_sense,
-            "pre_solve_solution_count": pre_solve_solution_count,
-            "solve_status": status,
-            "solution_count": solution_count,
-            "objective": objective,
-            "solution_objective": solution_objective,
-            "best_bound": _finite_or_none(model.getDualbound()),
-            "mip_gap_relative": relative_gap,
-            "mip_gap_percent": _gap_percent(relative_gap),
-            "execution_time_seconds": execution_time,
-            "reading_time_seconds": _finite_or_none(model.getReadingTime()),
-            "presolving_time_seconds": _finite_or_none(
-                model.getPresolvingTime()
-            ),
-            "nodes_current_run": int(model.getNNodes()),
-            "nodes_total": int(model.getNTotalNodes()),
-            "best_incumbent_discovery_time_seconds": (
-                best_incumbent_discovery_time
-            ),
-            "incumbent_trace": incumbent_trace,
-            "incumbent_trace_error_count": incumbent_trace_errors,
-            "incumbent_trace_audit": incumbent_trace_audit,
-            "incumbent_trace_source": (
-                "postsolve_model_getSols_getSolTime_getSolObjVal"
-            ),
-            "incumbent_gap_at_discovery_availability": (
-                INCUMBENT_GAP_AVAILABILITY
-            ),
-            "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
-            "solver_feasibility_check": solver_feasibility_check,
-            "variables": variables,
-        }
-        _write_gzip_json(solution_path, payload)
-        return {
-            "worker_status": "completed",
-            "solution_file_name": solution_path.name,
-        }
-    finally:
-        try:
-            model.freeProb()
-        except Exception:
-            pass
-
+    return solve_named_mip(request)
 
 def _run_worker(
     request_path: Path,
