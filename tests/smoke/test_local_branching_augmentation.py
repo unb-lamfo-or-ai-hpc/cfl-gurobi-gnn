@@ -28,6 +28,7 @@ def _incumbent(values: dict[str, float], *, solver: str = "gurobi") -> Incumbent
         source_format="test",
         source_artifact="incumbent.test",
         source_artifact_sha256="a" * 64,
+        source_model_sha256=None,
         source_index=0,
         incumbent_id=f"{solver}:test:0",
         objective=6.2,

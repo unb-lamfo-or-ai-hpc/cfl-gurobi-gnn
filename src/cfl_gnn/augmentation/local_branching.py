@@ -77,6 +77,7 @@ class IncumbentRecord:
     source_format: str
     source_artifact: str
     source_artifact_sha256: str
+    source_model_sha256: str | None
     source_index: int | None
     incumbent_id: str
     objective: float
@@ -283,6 +284,11 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
         source_format="pyscipopt_solution_json",
         source_artifact=str(source),
         source_artifact_sha256=digest,
+        source_model_sha256=(
+            None
+            if value.get("candidate_sha256") is None
+            else str(value["candidate_sha256"])
+        ),
         source_index=None,
         incumbent_id=f"scip:{digest[:16]}",
         objective=_finite(
@@ -351,6 +357,7 @@ def incumbent_from_gurobi_record(
         source_format="gurobi_incumbents_parquet",
         source_artifact=str(source),
         source_artifact_sha256=artifact_sha256,
+        source_model_sha256=None,
         source_index=source_index,
         incumbent_id=f"gurobi:{artifact_sha256[:16]}:{source_index}",
         objective=_finite(record.get("objective"), field="incumbent objective"),
@@ -485,6 +492,14 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
         incumbent = load_pyscipopt_solution(args.incumbent_artifact)
     if incumbent.source_solver != args.solver:
         raise AugmentationError("incumbent source solver and generation arm disagree")
+    parent_sha256 = plan_parent_sha256 = sha256_file(args.parent_mip)
+    if (
+        incumbent.source_model_sha256 is not None
+        and incumbent.source_model_sha256 != parent_sha256
+    ):
+        raise AugmentationError(
+            "incumbent artifact is linked to a different parent MILP SHA-256"
+        )
     if (
         incumbent.terminal_mip_gap_relative
         > config.gap_policy.maximum_admissible_relative_gap + 1e-12
@@ -499,6 +514,8 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
         maximum_derived=config.augmentation.maximum_derived_per_parent,
     )
     plan = build_generation_plan(args, config)
+    if plan["parent_mip_sha256"] != plan_parent_sha256:
+        raise AugmentationError("parent MILP changed while building the generation plan")
     outputs: list[dict[str, Any]] = []
     for constraint in constraints:
         stem = (
@@ -535,6 +552,11 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
                 "artifact_sha256": incumbent.source_artifact_sha256,
                 "source_format": incumbent.source_format,
                 "source_index": incumbent.source_index,
+                "parent_linkage": (
+                    "embedded_parent_sha256_match"
+                    if incumbent.source_model_sha256 is not None
+                    else "gurobi_positional_vector_and_parent_variable_order"
+                ),
                 "performance_feature_tags": incumbent.performance_tags(),
             },
             "local_branching": {
