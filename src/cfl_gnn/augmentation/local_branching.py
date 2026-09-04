@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from cfl_gnn.experiments.mvp_contract import load_experiment_config
+from cfl_gnn.graph.instance_provenance import normalize_recorded_time
 from cfl_gnn.paths import PROJECT_ROOT
 from cfl_gnn.splits.instance_folds import role_for_fold
 
@@ -87,6 +88,10 @@ class IncumbentRecord:
     terminal_mip_gap_relative: float | None
     terminal_mip_gap_percent: float | None
     execution_time_seconds: float
+    execution_time_semantics: str
+    recorded_time: float
+    time_normalization_method: str
+    time_origin: float | None
     discovery_time_seconds: float | None
     discovery_mip_gap_relative: float | None
     discovery_mip_gap_percent: float | None
@@ -97,6 +102,10 @@ class IncumbentRecord:
             "source_solver": self.source_solver,
             "incumbent_objective": self.objective,
             "execution_time_seconds": self.execution_time_seconds,
+            "execution_time_semantics": self.execution_time_semantics,
+            "recorded_time": self.recorded_time,
+            "time_normalization_method": self.time_normalization_method,
+            "time_origin": self.time_origin,
             "admission_mip_gap_relative": self.admission_mip_gap_relative,
             "admission_mip_gap_percent": self.admission_mip_gap_percent,
             "admission_mip_gap_measurement": self.admission_mip_gap_measurement,
@@ -311,6 +320,14 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
             field="execution time",
             nonnegative=True,
         ),
+        execution_time_semantics="solver_wall_time",
+        recorded_time=_finite(
+            value.get("execution_time_seconds"),
+            field="execution time",
+            nonnegative=True,
+        ),
+        time_normalization_method="recorded_pyscipopt_execution_time_seconds",
+        time_origin=None,
         discovery_time_seconds=(
             None
             if value.get("best_incumbent_discovery_time_seconds") is None
@@ -353,6 +370,7 @@ def incumbent_from_gurobi_record(
     artifact: str | Path,
     artifact_sha256: str,
     source_index: int,
+    epoch_origin: float | None = None,
 ) -> IncumbentRecord:
     vector = _parquet_cell_to_values(record.get("solution_vector"))
     if len(vector) != len(variable_names):
@@ -360,6 +378,22 @@ def incumbent_from_gurobi_record(
             "Gurobi incumbent length does not match the parent model variable order"
         )
     gap, gap_percent = _gap_pair(record.get("mip_gap"), None)
+    normalized_time = normalize_recorded_time(
+        record.get("time"), epoch_origin=epoch_origin
+    )
+    if normalized_time["normalized_time"] is None:
+        raise AugmentationError("Gurobi incumbent time cannot be normalized")
+    elapsed = _finite(
+        normalized_time["normalized_time"],
+        field="normalized incumbent time",
+        nonnegative=True,
+    )
+    recorded_time = _finite(
+        normalized_time["recorded_time"],
+        field="recorded incumbent time",
+        nonnegative=True,
+    )
+    method = str(normalized_time["time_normalization_method"])
     source = Path(artifact).resolve()
     return IncumbentRecord(
         source_solver="gurobi",
@@ -375,12 +409,20 @@ def incumbent_from_gurobi_record(
         admission_mip_gap_measurement="callback_at_incumbent_discovery",
         terminal_mip_gap_relative=None,
         terminal_mip_gap_percent=None,
-        execution_time_seconds=_finite(
-            record.get("time"), field="incumbent time", nonnegative=True
+        execution_time_seconds=elapsed,
+        execution_time_semantics=(
+            "elapsed_since_first_recorded_incumbent_proxy"
+            if method == "unix_epoch_minus_first_incumbent"
+            else "gurobi_runtime_at_incumbent"
         ),
-        discovery_time_seconds=_finite(
-            record.get("time"), field="incumbent time", nonnegative=True
+        recorded_time=recorded_time,
+        time_normalization_method=method,
+        time_origin=(
+            None
+            if normalized_time["time_origin"] is None
+            else float(normalized_time["time_origin"])
         ),
+        discovery_time_seconds=elapsed,
         discovery_mip_gap_relative=gap,
         discovery_mip_gap_percent=gap_percent,
         values_by_name=dict(zip(variable_names, vector, strict=True)),
@@ -434,6 +476,9 @@ def load_gurobi_parquet(
         artifact=source,
         artifact_sha256=sha256_file(source),
         source_index=incumbent_index,
+        epoch_origin=_finite(
+            rows.iloc[0]["time"], field="first incumbent time", nonnegative=True
+        ),
     )
 
 

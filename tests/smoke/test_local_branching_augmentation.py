@@ -38,6 +38,10 @@ def _incumbent(values: dict[str, float], *, solver: str = "gurobi") -> Incumbent
         terminal_mip_gap_relative=0.05,
         terminal_mip_gap_percent=5.0,
         execution_time_seconds=100.0,
+        execution_time_semantics="test",
+        recorded_time=100.0,
+        time_normalization_method="test",
+        time_origin=None,
         discovery_time_seconds=90.0,
         discovery_mip_gap_relative=0.06,
         discovery_mip_gap_percent=6.0,
@@ -145,6 +149,32 @@ def test_gurobi_record_maps_positional_vector_to_parent_names() -> None:
     assert record.admission_mip_gap_percent == pytest.approx(8.0)
     assert record.admission_mip_gap_measurement == "callback_at_incumbent_discovery"
     assert record.terminal_mip_gap_relative is None
+    assert record.execution_time_seconds == pytest.approx(300.0)
+    assert record.time_normalization_method == "recorded_gurobi_runtime_seconds"
+
+
+def test_gurobi_legacy_epoch_is_normalized_from_first_incumbent() -> None:
+    record = incumbent_from_gurobi_record(
+        {
+            "objective": 6.5,
+            "mip_gap": 0.08,
+            "time": 1_784_914_618.5,
+            "solution_vector": [1.0],
+        },
+        ["x0"],
+        artifact="incumbents.parquet",
+        artifact_sha256="b" * 64,
+        source_index=7,
+        epoch_origin=1_784_914_000.0,
+    )
+    assert record.recorded_time == pytest.approx(1_784_914_618.5)
+    assert record.execution_time_seconds == pytest.approx(618.5)
+    assert record.discovery_time_seconds == pytest.approx(618.5)
+    assert record.time_origin == pytest.approx(1_784_914_000.0)
+    assert record.time_normalization_method == "unix_epoch_minus_first_incumbent"
+    assert record.execution_time_semantics == (
+        "elapsed_since_first_recorded_incumbent_proxy"
+    )
 
 
 class _FakeBackend:

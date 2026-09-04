@@ -33,6 +33,12 @@ SCIP's solution-file gap is terminal. The selected incumbent must satisfy the
 MVP maximum admission relative gap of 0.10. CFL objective sense is forced to
 `MINIMIZE` while the original sense remains in provenance.
 
+Legacy Gurobi Parquet files may contain Unix epoch timestamps instead of solver
+runtime. They are normalized with the first recorded incumbent as the origin,
+using `unix_epoch_minus_first_incumbent`. Such a value is explicitly tagged as
+an elapsed-time proxy from the first incumbent, not as full solve wall time;
+the original timestamp and origin remain preserved.
+
 Derived MILPs inherit the parent fold and are marked train-only. Their
 `dataset_eligible`, `label_eligible`, and `scientific_reporting_eligible` flags
 remain false. The next gate must independently solve and label each derived
