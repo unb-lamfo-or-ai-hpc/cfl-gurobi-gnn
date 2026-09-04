@@ -1,0 +1,86 @@
+{
+  "arms": [
+    {
+      "arm_id": "gurobi_original",
+      "sampling_strategy": "original",
+      "solver": "gurobi"
+    },
+    {
+      "arm_id": "gurobi_incumbent_augmented",
+      "sampling_strategy": "incumbent_local_branching",
+      "solver": "gurobi"
+    },
+    {
+      "arm_id": "scip_original",
+      "sampling_strategy": "original",
+      "solver": "scip"
+    },
+    {
+      "arm_id": "scip_incumbent_augmented",
+      "sampling_strategy": "incumbent_local_branching",
+      "solver": "scip"
+    }
+  ],
+  "augmentation": {
+    "binary_variables_only": true,
+    "inherit_parent_fold": true,
+    "maximum_derived_per_parent": 3,
+    "operator": "incumbent_local_branching_v1",
+    "parent_weighting": "equal_parent_mass",
+    "radius_policy": {
+      "fractions": [
+        0.001,
+        0.005,
+        0.01
+      ],
+      "minimum_radius": 1,
+      "mode": "fraction_of_binary_variables"
+    },
+    "train_only": true
+  },
+  "development_only": true,
+  "evaluation": {
+    "classification_probability_threshold": 0.5,
+    "test_reference": "best_known_across_valid_gurobi_and_scip_artifacts",
+    "validation_test_original_only": true
+  },
+  "experiment_id": "cfl_neural_diving_mvp_partial_v1",
+  "exploratory_arms": [
+    {
+      "included_in_factorial_comparison": false,
+      "sampling_strategy": "scip_exact_node_mip",
+      "solver": "scip"
+    }
+  ],
+  "gap_policy": {
+    "maximum_admissible_relative_gap": 0.1,
+    "missing_gap_eligible": false,
+    "sensitivity_thresholds_relative": [
+      0.01,
+      0.05,
+      0.06,
+      0.1
+    ]
+  },
+  "metrics": {
+    "optimization_primary": [
+      "terminal_mip_gap_relative_at_common_budget",
+      "execution_time_seconds_to_common_target_right_censored"
+    ],
+    "optimization_diagnostic": [
+      "terminal_primal_objective",
+      "terminal_dual_bound",
+      "best_incumbent_objective",
+      "best_incumbent_discovery_time_seconds"
+    ],
+    "prediction_secondary": [
+      "weighted_bce_per_variable",
+      "precision",
+      "recall",
+      "f1_score"
+    ]
+  },
+  "objective_sense": "MINIMIZE",
+  "rotation": 0,
+  "schema_version": 1
+}
