@@ -26,10 +26,12 @@ deduplicated, which matters for toy instances.
   emitted by the independent PySCIPOpt solution worker.
 
 Every variant records the parent and incumbent hashes, solver, fold, local
-branching radius, source incumbent objective, terminal MIP gap, execution time,
-and incumbent discovery metrics when available. The selected incumbent must
-satisfy the MVP maximum terminal relative gap of 0.10. CFL objective sense is
-forced to `MINIMIZE` while the original sense remains in provenance.
+branching radius, source incumbent objective, admission MIP gap, its measurement
+point, execution time, and incumbent discovery/terminal metrics when available.
+Gurobi's callback gap is correctly tagged as measured at incumbent discovery;
+SCIP's solution-file gap is terminal. The selected incumbent must satisfy the
+MVP maximum admission relative gap of 0.10. CFL objective sense is forced to
+`MINIMIZE` while the original sense remains in provenance.
 
 Derived MILPs inherit the parent fold and are marked train-only. Their
 `dataset_eligible`, `label_eligible`, and `scientific_reporting_eligible` flags

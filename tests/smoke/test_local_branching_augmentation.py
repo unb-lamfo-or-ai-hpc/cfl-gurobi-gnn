@@ -32,6 +32,9 @@ def _incumbent(values: dict[str, float], *, solver: str = "gurobi") -> Incumbent
         source_index=0,
         incumbent_id=f"{solver}:test:0",
         objective=6.2,
+        admission_mip_gap_relative=0.05,
+        admission_mip_gap_percent=5.0,
+        admission_mip_gap_measurement="test",
         terminal_mip_gap_relative=0.05,
         terminal_mip_gap_percent=5.0,
         execution_time_seconds=100.0,
@@ -139,7 +142,9 @@ def test_gurobi_record_maps_positional_vector_to_parent_names() -> None:
     )
     assert record.incumbent_id.endswith(":7")
     assert record.values_by_name == {"x0": 1.0, "x1": 0.0, "flow": 2.5}
-    assert record.terminal_mip_gap_percent == pytest.approx(8.0)
+    assert record.admission_mip_gap_percent == pytest.approx(8.0)
+    assert record.admission_mip_gap_measurement == "callback_at_incumbent_discovery"
+    assert record.terminal_mip_gap_relative is None
 
 
 class _FakeBackend:
@@ -226,7 +231,7 @@ def test_cli_materializes_unlabelled_train_only_variants(
     assert report["eligibility"]["dataset_eligible"] is False
     assert provenance["role"] == "train"
     assert provenance["source_incumbent"]["performance_feature_tags"][
-        "terminal_mip_gap_relative"
+        "admission_mip_gap_relative"
     ] == pytest.approx(0.05)
 
 

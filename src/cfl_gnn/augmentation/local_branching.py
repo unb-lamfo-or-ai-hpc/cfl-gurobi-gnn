@@ -81,8 +81,11 @@ class IncumbentRecord:
     source_index: int | None
     incumbent_id: str
     objective: float
-    terminal_mip_gap_relative: float
-    terminal_mip_gap_percent: float
+    admission_mip_gap_relative: float
+    admission_mip_gap_percent: float
+    admission_mip_gap_measurement: str
+    terminal_mip_gap_relative: float | None
+    terminal_mip_gap_percent: float | None
     execution_time_seconds: float
     discovery_time_seconds: float | None
     discovery_mip_gap_relative: float | None
@@ -94,6 +97,9 @@ class IncumbentRecord:
             "source_solver": self.source_solver,
             "incumbent_objective": self.objective,
             "execution_time_seconds": self.execution_time_seconds,
+            "admission_mip_gap_relative": self.admission_mip_gap_relative,
+            "admission_mip_gap_percent": self.admission_mip_gap_percent,
+            "admission_mip_gap_measurement": self.admission_mip_gap_measurement,
             "terminal_mip_gap_relative": self.terminal_mip_gap_relative,
             "terminal_mip_gap_percent": self.terminal_mip_gap_percent,
             "incumbent_discovery_time_seconds": self.discovery_time_seconds,
@@ -295,6 +301,9 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
             value.get("solution_objective", value.get("objective")),
             field="incumbent objective",
         ),
+        admission_mip_gap_relative=gap,
+        admission_mip_gap_percent=gap_percent,
+        admission_mip_gap_measurement="terminal_solver_gap",
         terminal_mip_gap_relative=gap,
         terminal_mip_gap_percent=gap_percent,
         execution_time_seconds=_finite(
@@ -361,8 +370,11 @@ def incumbent_from_gurobi_record(
         source_index=source_index,
         incumbent_id=f"gurobi:{artifact_sha256[:16]}:{source_index}",
         objective=_finite(record.get("objective"), field="incumbent objective"),
-        terminal_mip_gap_relative=gap,
-        terminal_mip_gap_percent=gap_percent,
+        admission_mip_gap_relative=gap,
+        admission_mip_gap_percent=gap_percent,
+        admission_mip_gap_measurement="callback_at_incumbent_discovery",
+        terminal_mip_gap_relative=None,
+        terminal_mip_gap_percent=None,
         execution_time_seconds=_finite(
             record.get("time"), field="incumbent time", nonnegative=True
         ),
@@ -501,7 +513,7 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
             "incumbent artifact is linked to a different parent MILP SHA-256"
         )
     if (
-        incumbent.terminal_mip_gap_relative
+        incumbent.admission_mip_gap_relative
         > config.gap_policy.maximum_admissible_relative_gap + 1e-12
     ):
         raise AugmentationError("selected incumbent exceeds the MIP-gap policy")
