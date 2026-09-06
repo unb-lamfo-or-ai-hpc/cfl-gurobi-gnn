@@ -28,6 +28,15 @@ REPORT_NAME = "derived_mip_solution_report.json"
 PER_CANDIDATE_NAME = "per_candidate_derived_metrics.jsonl"
 DEFAULT_CONFIG = PROJECT_ROOT / "configs" / "experiments" / "mvp_partial_v1.json"
 SOLVERS = ("gurobi", "scip")
+SOLUTION_SOURCES = {
+    "gurobi": "independent_gurobi_optimization",
+    "scip": "independent_pyscipopt_optimization",
+}
+FEASIBILITY_CHECK_SPACES = {
+    "gurobi": "original_model_solution_quality",
+    "scip": "original_problem",
+}
+GENERATION_PLAN_NAME = "local_branching_generation_plan.json"
 
 
 class DerivedMipSolveError(RuntimeError):
@@ -423,6 +432,80 @@ def _sensitivity_memberships(
     ]
 
 
+def audit_local_branching_membership(
+    plan: DerivedSolvePlan,
+    candidate: CandidateSpec,
+    payload: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Verify the independently found solution belongs to its declared ball."""
+    generation_plan_path = plan.candidate_dir / GENERATION_PLAN_NAME
+    evidence: dict[str, Any] = {
+        "audited": False,
+        "source_incumbent_artifact_match": False,
+        "binary_variables_compared": 0,
+        "hamming_distance": None,
+        "radius": candidate.radius,
+        "local_branching_satisfied": False,
+        "reason_code": "local_branching_evidence_unavailable",
+    }
+    try:
+        generation_plan = _read_json(generation_plan_path)
+        center_path = Path(str(generation_plan["incumbent_artifact"]))
+        center_sha256 = sha256_file(center_path)
+        artifact_matches = (
+            center_sha256 == candidate.source_incumbent_artifact_sha256
+            and generation_plan.get("incumbent_artifact_sha256") == center_sha256
+            and generation_plan.get("parent_instance_id")
+            == candidate.parent_instance_id
+            and generation_plan.get("solver") == plan.solver
+        )
+        evidence["source_incumbent_artifact_match"] = artifact_matches
+        if not artifact_matches:
+            evidence["reason_code"] = "source_incumbent_or_parent_mismatch"
+            return evidence
+        if generation_plan.get("incumbent_format") not in {
+            "gurobi_solution_json",
+            "pyscipopt_solution_json",
+        }:
+            evidence["reason_code"] = "legacy_positional_center_not_auditable"
+            return evidence
+        center = _read_gzip_json(center_path)
+        center_binary = {
+            str(item["name"]): int(round(float(item["value"])))
+            for item in center.get("variables", [])
+            if isinstance(item, Mapping)
+            and item.get("canonical_type") == "BINARY"
+        }
+        solution_by_name = {
+            str(item["name"]): float(item["value"])
+            for item in payload.get("variables", [])
+            if isinstance(item, Mapping) and item.get("name") is not None
+        }
+        if not center_binary or not set(center_binary).issubset(solution_by_name):
+            evidence["reason_code"] = "binary_solution_vector_incomplete"
+            return evidence
+        hamming_distance = sum(
+            int(round(solution_by_name[name])) != value
+            for name, value in center_binary.items()
+        )
+        evidence.update(
+            {
+                "audited": True,
+                "binary_variables_compared": len(center_binary),
+                "hamming_distance": hamming_distance,
+                "local_branching_satisfied": hamming_distance <= candidate.radius,
+                "reason_code": (
+                    "local_branching_membership_verified"
+                    if hamming_distance <= candidate.radius
+                    else "solution_outside_local_branching_radius"
+                ),
+            }
+        )
+        return evidence
+    except (KeyError, OSError, TypeError, ValueError, DerivedMipSolveError):
+        return evidence
+
+
 def evaluate_candidate(
     plan: DerivedSolvePlan,
     candidate: CandidateSpec,
@@ -440,7 +523,10 @@ def evaluate_candidate(
     gap_raw = payload.get("mip_gap_relative")
     gap = float(gap_raw) if gap_raw is not None else None
     gap_finite = gap is not None and math.isfinite(gap) and gap >= 0.0
-    expected_source = f"independent_{plan.solver}_optimization"
+    expected_source = SOLUTION_SOURCES[plan.solver]
+    local_branching_audit = audit_local_branching_membership(
+        plan, candidate, payload
+    )
     execution_checks = {
         "candidate_sha256_match": payload.get("candidate_sha256") == candidate.sha256,
         "solution_source_match": payload.get("solution_source") == expected_source,
@@ -454,6 +540,10 @@ def evaluate_candidate(
     solution_checks = {
         "solution_present": has_solution,
         "solver_feasibility_check": payload.get("solver_feasibility_check") is True,
+        "solver_feasibility_check_space": (
+            payload.get("solver_feasibility_check_space")
+            == FEASIBILITY_CHECK_SPACES[plan.solver]
+        ),
         "named_solution_present": bool(payload.get("variables")),
         "online_incumbent_observed": events > 0,
         "incumbent_vectors_match_events": vectors == events and events > 0,
@@ -465,6 +555,15 @@ def evaluate_candidate(
         "solution_artifact_present": artifacts["solution"].is_file(),
         "incumbent_artifact_present": artifacts["incumbents"].is_file(),
         "variable_order_artifact_present": artifacts["variable_order"].is_file(),
+        "local_branching_membership_audited": (
+            local_branching_audit["audited"] is True
+        ),
+        "source_incumbent_artifact_match": (
+            local_branching_audit["source_incumbent_artifact_match"] is True
+        ),
+        "local_branching_satisfied": (
+            local_branching_audit["local_branching_satisfied"] is True
+        ),
     }
     execution_valid = all(execution_checks.values())
     solution_valid = all(solution_checks.values())
@@ -531,6 +630,7 @@ def evaluate_candidate(
         },
         "online_incumbent_capture": dict(online),
         "incumbent_trace_audit": dict(trace_audit),
+        "local_branching_membership_audit": local_branching_audit,
         "checks": {**execution_checks, **solution_checks},
         "gap_sensitivity_memberships": memberships,
         "artifacts": {
@@ -828,4 +928,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

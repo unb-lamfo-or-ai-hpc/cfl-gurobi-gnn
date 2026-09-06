@@ -14,6 +14,7 @@ from cfl_gnn.augmentation.local_branching import (
     build_local_branching_constraints,
     incumbent_from_gurobi_record,
     load_pyscipopt_solution,
+    validate_artifact_parent_instance,
 )
 from cfl_gnn.augmentation.solver_backends import ParentInspection
 
@@ -175,6 +176,17 @@ def test_gurobi_legacy_epoch_is_normalized_from_first_incumbent() -> None:
     assert record.execution_time_semantics == (
         "elapsed_since_first_recorded_incumbent_proxy"
     )
+
+
+def test_legacy_gurobi_artifact_rejects_equal_size_wrong_parent(
+    tmp_path: Path,
+) -> None:
+    wrong = tmp_path / "CFL_easy_instance_28" / "incumbents.parquet"
+    wrong.parent.mkdir()
+    wrong.write_bytes(b"same-shaped incumbent stream")
+
+    with pytest.raises(AugmentationError, match="does not belong"):
+        validate_artifact_parent_instance(wrong, "CFL_easy_instance_2")
 
 
 class _FakeBackend:

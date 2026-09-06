@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import gzip
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -24,6 +26,33 @@ def _cohort(tmp_path: Path, *, solver: str = "gurobi") -> Path:
     source = tmp_path / "variants"
     source.mkdir()
     config = load_experiment_config(CONFIG)
+    center = source / f"{solver}_parent.solution.json.gz"
+    with gzip.open(center, "wt", encoding="utf-8") as stream:
+        json.dump(
+            {
+                "variables": [
+                    {"name": "x", "canonical_type": "BINARY", "value": 1.0}
+                ]
+            },
+            stream,
+        )
+    center_sha256 = sha256_file(center)
+    (source / "local_branching_generation_plan.json").write_text(
+        json.dumps(
+            {
+                "solver": solver,
+                "parent_instance_id": "CFL_easy_instance_2",
+                "incumbent_artifact": str(center),
+                "incumbent_artifact_sha256": center_sha256,
+                "incumbent_format": (
+                    "gurobi_solution_json"
+                    if solver == "gurobi"
+                    else "pyscipopt_solution_json"
+                ),
+            }
+        ),
+        encoding="utf-8",
+    )
     for radius, fraction in ((148, 0.001), (736, 0.005), (1472, 0.01)):
         candidate = source / f"CFL_easy_instance_2__{solver}__lb_r{radius}.lp"
         candidate.write_text(f"candidate-{solver}-{radius}", encoding="utf-8")
@@ -41,7 +70,7 @@ def _cohort(tmp_path: Path, *, solver: str = "gurobi") -> Path:
             "role": "train",
             "source_incumbent": {
                 "incumbent_id": f"{solver}:incumbent",
-                "artifact_sha256": "b" * 64,
+                "artifact_sha256": center_sha256,
             },
             "local_branching": {
                 "radius": radius,
@@ -80,7 +109,11 @@ def _payload(plan, candidate, *, gap: float = 0.05) -> dict[str, object]:
     event_type = "MIPSOL" if plan.solver == "gurobi" else "BESTSOLFOUND"
     return {
         "candidate_sha256": candidate.sha256,
-        "solution_source": f"independent_{plan.solver}_optimization",
+        "solution_source": (
+            "independent_gurobi_optimization"
+            if plan.solver == "gurobi"
+            else "independent_pyscipopt_optimization"
+        ),
         "fresh_process": True,
         "pre_solve_solution_count": 0,
         "warm_start_supplied": False,
@@ -98,6 +131,11 @@ def _payload(plan, candidate, *, gap: float = 0.05) -> dict[str, object]:
         "nodes_current_run": 100,
         "nodes_total": 100,
         "solver_feasibility_check": True,
+        "solver_feasibility_check_space": (
+            "original_model_solution_quality"
+            if plan.solver == "gurobi"
+            else "original_problem"
+        ),
         "variables": [{"name": "x", "value": 1.0}],
         "online_incumbent_capture": {
             "event_type": event_type,
@@ -108,6 +146,32 @@ def _payload(plan, candidate, *, gap: float = 0.05) -> dict[str, object]:
         },
         "incumbent_trace_audit": {"incumbent_trace_consistent": True},
     }
+
+
+def test_scip_source_contract_matches_shared_pyscipopt_kernel(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="scip")
+    candidate = plan.candidates[0]
+
+    report = evaluate_candidate(
+        plan, candidate, _payload(plan, candidate), reused=False
+    )
+
+    assert report["checks"]["solution_source_match"] is True
+    assert report["checks"]["solver_feasibility_check_space"] is True
+    assert report["checks"]["local_branching_satisfied"] is True
+    assert report["gate_status"] == "passed"
+
+
+def test_solution_outside_local_branching_radius_fails_closed(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="scip")
+    candidate = replace(plan.candidates[0], radius=0)
+    payload = _payload(plan, candidate)
+    payload["variables"] = [{"name": "x", "value": 0.0}]
+
+    report = evaluate_candidate(plan, candidate, payload, reused=False)
+
+    assert report["checks"]["local_branching_satisfied"] is False
+    assert report["gate_status"] == "failed"
 
 
 @pytest.mark.parametrize("solver", ["gurobi", "scip"])
@@ -206,5 +270,3 @@ def test_pipeline_source_excludes_pyomo_and_solver_imports_are_lazy() -> None:
     assert "from pyomo" not in source
     assert "fresh_process_per_candidate" in source
     assert "parent_incumbent_consumed" in source
-
-

@@ -100,6 +100,7 @@ def test_gurobi_and_pyarrow_are_lazy_and_pyomo_is_absent() -> None:
     assert "def solve_named_mip" in source
     assert "GRB.Callback.MIPSOL" in source
     assert "MIPNODE" not in source
+    assert '"solver_feasibility_check_space"' in source
+    assert '"original_model_solution_quality"' in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
-

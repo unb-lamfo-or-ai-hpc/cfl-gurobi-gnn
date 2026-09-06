@@ -421,7 +421,12 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         best_incumbent_time = None
         if best_solution is not None:
             feasibility_check = bool(
-                model.checkSol(best_solution, printreason=False, completely=True)
+                model.checkSol(
+                    best_solution,
+                    printreason=False,
+                    completely=True,
+                    original=True,
+                )
             )
             objective = _finite_or_none(model.getObjVal())
             solution_objective = _finite_or_none(
@@ -506,6 +511,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             },
             "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
             "solver_feasibility_check": feasibility_check,
+            "solver_feasibility_check_space": "original_problem",
             "variables": named_variables,
         }
         _write_gzip_json(solution_path, payload)
@@ -520,4 +526,3 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             model.freeProb()
         except Exception:
             pass
-

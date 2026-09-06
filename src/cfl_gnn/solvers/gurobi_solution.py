@@ -254,6 +254,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         objective = None
         solution_objective = None
         feasibility_check = False
+        max_violation = None
         if solution_count > 0:
             objective = _finite_or_none(model.ObjVal)
             solution_objective = objective
@@ -345,6 +346,8 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             },
             "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
             "solver_feasibility_check": feasibility_check,
+            "solver_feasibility_check_space": "original_model_solution_quality",
+            "maximum_constraint_violation": max_violation,
             "variables": named_variables,
         }
         _write_gzip_json(solution_path, payload)
@@ -356,5 +359,3 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         if stream is not None and stream.writer is not None:
             stream.close(commit=False)
         model.dispose()
-
-

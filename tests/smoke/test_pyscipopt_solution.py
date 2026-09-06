@@ -142,7 +142,7 @@ def test_shared_kernel_uses_callback_api_without_pyomo() -> None:
     assert "BESTSOLFOUND" in source
     assert "attachEventHandlerCallback" in source
     assert "getSolTime(solution)" in source
+    assert "original=True" in source
+    assert '"solver_feasibility_check_space": "original_problem"' in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
-
-

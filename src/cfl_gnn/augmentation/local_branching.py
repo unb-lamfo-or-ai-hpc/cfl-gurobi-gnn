@@ -363,6 +363,18 @@ def _parquet_cell_to_values(value: Any) -> list[float]:
     return [_finite(item, field="Gurobi incumbent value") for item in value]
 
 
+def validate_artifact_parent_instance(
+    artifact: str | Path, parent_instance_id: str
+) -> None:
+    """Fail closed when a legacy positional artifact names another parent."""
+    source = Path(artifact).resolve()
+    if parent_instance_id not in source.parts:
+        raise AugmentationError(
+            "Gurobi incumbent artifact does not belong to the parent instance: "
+            f"expected path component {parent_instance_id!r}"
+        )
+
+
 def incumbent_from_gurobi_record(
     record: Mapping[str, Any],
     variable_names: Sequence[str],
@@ -435,12 +447,15 @@ def load_gurobi_parquet(
     *,
     maximum_gap: float,
     incumbent_index: int | None,
+    parent_instance_id: str | None = None,
 ) -> IncumbentRecord:
     try:
         import pandas as pd
     except ImportError as error:
         raise AugmentationError("pandas/pyarrow is required for Gurobi Parquet") from error
     source = Path(path).resolve()
+    if parent_instance_id is not None:
+        validate_artifact_parent_instance(source, parent_instance_id)
     try:
         frame = pd.read_parquet(source)
     except Exception as error:
@@ -544,6 +559,7 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
             names,
             maximum_gap=config.gap_policy.maximum_admissible_relative_gap,
             incumbent_index=args.incumbent_index,
+            parent_instance_id=args.parent_instance_id,
         )
     else:
         incumbent = load_pyscipopt_solution(args.incumbent_artifact)
