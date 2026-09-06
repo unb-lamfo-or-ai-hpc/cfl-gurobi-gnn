@@ -65,6 +65,23 @@ def _write_jsonl(path: Path, records: Sequence[Mapping[str, Any]]) -> None:
     temporary.replace(path)
 
 
+def _write_worker_log(
+    path: Path,
+    completed: subprocess.CompletedProcess[str],
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
+        f"returncode={completed.returncode}\n"
+        "[stdout]\n"
+        f"{completed.stdout}\n"
+        "[stderr]\n"
+        f"{completed.stderr}\n",
+        encoding="utf-8",
+    )
+    temporary.replace(path)
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     loaded = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(loaded, dict):
@@ -212,6 +229,7 @@ class DerivedSolvePlan:
                 "solutions_dir": "solutions",
                 "incumbents_dir": "incumbents",
                 "variable_orders_dir": "variable_orders",
+                "worker_logs_dir": "worker_logs",
             },
         }
 
@@ -542,6 +560,7 @@ def _failed_worker_record(
     candidate: CandidateSpec,
     *,
     returncode: int,
+    worker_log: Path | None = None,
 ) -> dict[str, Any]:
     return {
         "sample_id": candidate.stem,
@@ -561,7 +580,19 @@ def _failed_worker_record(
         "gate_status": "failed",
         "checks": {"worker_completed": False},
         "gap_sensitivity_memberships": [],
-        "artifacts": {"solution": None, "incumbents": None, "variable_order": None},
+        "artifacts": {
+            "solution": None,
+            "incumbents": None,
+            "variable_order": None,
+            "worker_log": (
+                {
+                    "file_name": worker_log.name,
+                    "sha256": sha256_file(worker_log),
+                }
+                if worker_log is not None and worker_log.is_file()
+                else None
+            ),
+        },
         "eligibility": {
             "label_eligible": False,
             "dataset_eligible": False,
@@ -592,24 +623,36 @@ def _solve_candidate(
     worker_dir = plan.output_dir / ".workers"
     request_path = worker_dir / f"{candidate.stem}.request.json"
     result_path = worker_dir / f"{candidate.stem}.result.json"
+    worker_log = plan.output_dir / "worker_logs" / f"{candidate.stem}.worker.log"
     for path in artifacts.values():
         path.unlink(missing_ok=True)
     _write_json(request_path, worker_request(plan, candidate))
     completed = _run_worker_process(request_path, result_path)
+    _write_worker_log(worker_log, completed)
     try:
         if completed.returncode != 0 or not result_path.is_file():
             return _failed_worker_record(
-                plan, candidate, returncode=completed.returncode
+                plan,
+                candidate,
+                returncode=completed.returncode,
+                worker_log=worker_log,
             )
         result = _read_json(result_path)
         if result.get("worker_status") != "completed":
-            return _failed_worker_record(plan, candidate, returncode=1)
-        return evaluate_candidate(
+            return _failed_worker_record(
+                plan, candidate, returncode=1, worker_log=worker_log
+            )
+        record = evaluate_candidate(
             plan,
             candidate,
             _read_gzip_json(solution_path),
             reused=False,
         )
+        record["artifacts"]["worker_log"] = {
+            "file_name": worker_log.name,
+            "sha256": sha256_file(worker_log),
+        }
+        return record
     finally:
         request_path.unlink(missing_ok=True)
         result_path.unlink(missing_ok=True)
