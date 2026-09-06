@@ -140,6 +140,14 @@ def _find_artifact(run_dir: Path, names: Sequence[str], *, field: str) -> Path:
     return matches[0]
 
 
+def _safe_child(root: Path, name: Any, *, field: str) -> Path:
+    raw = str(name)
+    relative = Path(raw)
+    if not raw or relative.is_absolute() or relative.name != raw:
+        raise MvpDatasetError(f"unsafe {field} file name")
+    return root / relative
+
+
 @dataclass(frozen=True, slots=True)
 class ParentRunInput:
     solver: str
@@ -205,6 +213,7 @@ class OriginalGraphSpec:
 class DatasetPlan:
     output_dir: Path
     derived_graph_dir: Path
+    derived_manifest_sha256: str
     experiment_contract_sha256: str
     originals: tuple[OriginalGraphSpec, ...]
     derived_records: tuple[dict[str, Any], ...]
@@ -225,7 +234,7 @@ class DatasetPlan:
             "originals": [item.contract_payload() for item in self.originals],
             "derived_manifest": {
                 "file_name": MANIFEST_NAME,
-                "sha256": sha256_file(self.derived_graph_dir / MANIFEST_NAME),
+                "sha256": self.derived_manifest_sha256,
                 "records": len(self.derived_records),
             },
             "eligibility": {
@@ -298,11 +307,19 @@ def _load_original(
         raise MvpDatasetError(
             "parent metadata differs from the canonical fold manifest"
         )
-    candidate = base_source_dir / category / "LP" / str(parent.get("file_name"))
+    candidate = _safe_child(
+        base_source_dir / category / "LP",
+        parent.get("file_name"),
+        field="parent MIP",
+    )
     if not candidate.is_file() or sha256_file(candidate) != parent.get("sha256"):
         raise MvpDatasetError(f"original parent SHA-256 mismatch: {parent_id}")
     solution_info = report.get("artifacts", {}).get("solution", {})
-    solution = source.run_dir / str(solution_info.get("file_name"))
+    solution = _safe_child(
+        source.run_dir,
+        solution_info.get("file_name"),
+        field="parent solution",
+    )
     if not solution.is_file() or sha256_file(solution) != solution_info.get("sha256"):
         raise MvpDatasetError(f"parent solution SHA-256 mismatch: {parent_id}")
     payload = _read_gzip_json(solution)
@@ -404,6 +421,7 @@ def build_plan(
         raise MvpDatasetError("Gurobi and SCIP original parent sets must match")
     derived_root = Path(derived_graph_dir).resolve()
     derived_manifest = derived_root / MANIFEST_NAME
+    derived_manifest_sha256 = sha256_file(derived_manifest)
     derived_report = _read_json(derived_root / "mvp_derived_graph_report.json")
     if (
         derived_report.get("gate_status") != "passed"
@@ -411,7 +429,7 @@ def build_plan(
         or derived_report.get("experiment_contract_sha256")
         != config.contract_sha256
         or derived_report.get("outputs", {}).get("sample_manifest_sha256")
-        != sha256_file(derived_manifest)
+        != derived_manifest_sha256
     ):
         raise MvpDatasetError("derived graph report is not admissible")
     derived_records = tuple(_read_jsonl(derived_manifest))
@@ -421,6 +439,9 @@ def build_plan(
     for record in derived_records:
         if record.get("sampling_strategy") != "incumbent_local_branching":
             raise MvpDatasetError("derived manifest contains an original sample")
+        sample_id = str(record.get("sample_id"))
+        if Path(sample_id).name != sample_id:
+            raise MvpDatasetError("derived sample identifier is unsafe")
         graph = _safe_derived_graph(derived_root, record.get("graph_path"))
         if not graph.is_file() or sha256_file(graph) != record.get("graph_sha256"):
             raise MvpDatasetError("derived graph SHA-256 mismatch")
@@ -447,6 +468,7 @@ def build_plan(
     return DatasetPlan(
         output_dir=Path(output_dir).resolve(),
         derived_graph_dir=derived_root,
+        derived_manifest_sha256=derived_manifest_sha256,
         experiment_contract_sha256=config.contract_sha256,
         originals=tuple(sorted(originals, key=lambda item: item.sample_id)),
         derived_records=tuple(
@@ -561,6 +583,10 @@ def run_composition(
         item.source_instance_id: role_for_fold(item.fold, config.rotation)
         for item in parents
     }
+    if sha256_file(plan.derived_graph_dir / MANIFEST_NAME) != (
+        plan.derived_manifest_sha256
+    ):
+        raise MvpDatasetError("derived manifest changed after planning")
     existing = (
         [path for path in plan.output_dir.iterdir() if path.name != PLAN_NAME]
         if plan.output_dir.exists()
