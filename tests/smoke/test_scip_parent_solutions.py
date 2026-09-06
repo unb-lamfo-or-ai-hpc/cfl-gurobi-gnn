@@ -17,7 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONFIG = PROJECT_ROOT / "configs" / "experiments" / "mvp_partial_v1.json"
 
 
-def _plan(tmp_path: Path, *, fold: int = 2):
+def _plan(tmp_path: Path, *, fold: int = 2, solver: str = "scip"):
     parent = tmp_path / "parent.lp"
     parent.write_text("Minimize\n obj: x\nBinary\n x\nEnd\n", encoding="utf-8")
     return build_plan(
@@ -33,6 +33,7 @@ def _plan(tmp_path: Path, *, fold: int = 2):
         seed=42,
         threads=1,
         solver_profile="default",
+        solver=solver,
     )
 
 
@@ -43,6 +44,11 @@ def _payload(plan, *, gap: float = 0.05) -> dict[str, object]:
     (plan.output_dir / VARIABLE_ORDER_NAME).write_bytes(b"order")
     return {
         "candidate_sha256": plan.parent_sha256,
+        "solution_source": (
+            "independent_gurobi_optimization"
+            if plan.solver == "gurobi"
+            else "independent_pyscipopt_optimization"
+        ),
         "fresh_process": True,
         "pre_solve_solution_count": 0,
         "warm_start_supplied": False,
@@ -59,6 +65,11 @@ def _payload(plan, *, gap: float = 0.05) -> dict[str, object]:
         "nodes_current_run": 100,
         "nodes_total": 100,
         "solver_feasibility_check": True,
+        "solver_feasibility_check_space": (
+            "original_model_solution_quality"
+            if plan.solver == "gurobi"
+            else "original_problem"
+        ),
         "variables": [{"name": "x", "value": 1.0}],
         "online_incumbent_capture": {
             "events_recorded": 3,
@@ -81,6 +92,18 @@ def test_parent_plan_is_train_only_and_deterministic(tmp_path: Path) -> None:
     assert request["force_minimize"] is True
     assert request["capture_incumbent_vectors"] is True
     assert request["solver_profile"] == "default"
+
+
+def test_gurobi_parent_contract_is_symmetric_and_uses_mipsol(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="gurobi")
+
+    report = evaluate_solution(plan, _payload(plan, gap=0.05))
+
+    assert plan.contract_payload["solver_contract"]["event_handler"] == "MIPSOL"
+    assert report["checks"]["solution_source_match"] is True
+    assert report["checks"]["solver_feasibility_check_space"] is True
+    assert report["eligibility"]["augmentation_source_eligible"] is True
+    assert report["decision"]["reason_code"].startswith("gurobi_parent_")
 
 
 def test_five_percent_train_solution_is_augmentation_eligible(tmp_path: Path) -> None:
@@ -123,7 +146,6 @@ def test_parent_pipeline_contract_excludes_pyomo_and_records_primary_metrics() -
     assert "mip_gap_relative" in source
     assert "execution_time_seconds" in source
     assert "BESTSOLFOUND" in source
+    assert "MIPSOL" in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
-
-

@@ -15,6 +15,7 @@ from cfl_gnn.augmentation.local_branching import (
     incumbent_from_gurobi_record,
     load_pyscipopt_solution,
     validate_artifact_parent_instance,
+    load_solver_solution_json,
 )
 from cfl_gnn.augmentation.solver_backends import ParentInspection
 
@@ -103,6 +104,7 @@ def test_fractional_binary_incumbent_is_rejected() -> None:
 def test_pyscipopt_solution_loader_preserves_primary_metrics(tmp_path: Path) -> None:
     path = tmp_path / "solution.json.gz"
     payload = {
+        "solution_source": "independent_pyscipopt_optimization",
         "solution_objective": 6.23,
         "mip_gap_relative": 0.054,
         "mip_gap_percent": 5.4,
@@ -130,6 +132,32 @@ def test_pyscipopt_solution_loader_preserves_primary_metrics(tmp_path: Path) -> 
     assert record.execution_time_seconds == pytest.approx(3600.0)
     assert record.discovery_time_seconds == pytest.approx(1200.0)
     assert record.values_by_name == {"x0": 0.0, "x1": 1.0}
+
+
+def test_modern_gurobi_solution_loader_preserves_named_parent_linkage(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "gurobi_parent.solution.json.gz"
+    with gzip.open(path, "wt", encoding="utf-8") as stream:
+        json.dump(
+            {
+                "solution_source": "independent_gurobi_optimization",
+                "candidate_sha256": "c" * 64,
+                "solution_objective": 6.2,
+                "mip_gap_relative": 0.05,
+                "mip_gap_percent": 5.0,
+                "execution_time_seconds": 3600.0,
+                "variables": [{"name": "x", "value": 1.0}],
+            },
+            stream,
+        )
+
+    record = load_solver_solution_json(path, source_solver="gurobi")
+
+    assert record.source_solver == "gurobi"
+    assert record.source_model_sha256 == "c" * 64
+    assert record.source_format == "gurobi_solution_json"
+    assert record.values_by_name == {"x": 1.0}
 
 
 def test_gurobi_record_maps_positional_vector_to_parent_names() -> None:
@@ -217,6 +245,7 @@ def test_cli_materializes_unlabelled_train_only_variants(
     with gzip.open(solution, "wt", encoding="utf-8") as stream:
         json.dump(
             {
+                "solution_source": "independent_pyscipopt_optimization",
                 "objective": 6.0,
                 "mip_gap_relative": 0.05,
                 "mip_gap_percent": 5.0,
