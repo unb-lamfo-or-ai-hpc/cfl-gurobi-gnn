@@ -37,6 +37,7 @@ FEASIBILITY_CHECK_SPACES = {
     "scip": "original_problem",
 }
 GENERATION_PLAN_NAME = "local_branching_generation_plan.json"
+BINARY_CANONICAL_TYPES = frozenset({"B", "BINARY"})
 
 
 class DerivedMipSolveError(RuntimeError):
@@ -447,6 +448,7 @@ def audit_local_branching_membership(
         "radius": candidate.radius,
         "local_branching_satisfied": False,
         "reason_code": "local_branching_evidence_unavailable",
+        "error_type": None,
     }
     try:
         generation_plan = _read_json(generation_plan_path)
@@ -470,12 +472,20 @@ def audit_local_branching_membership(
             evidence["reason_code"] = "legacy_positional_center_not_auditable"
             return evidence
         center = _read_gzip_json(center_path)
-        center_binary = {
-            str(item["name"]): int(round(float(item["value"])))
-            for item in center.get("variables", [])
-            if isinstance(item, Mapping)
-            and item.get("canonical_type") == "BINARY"
-        }
+        center_binary: dict[str, int] = {}
+        for item in center.get("variables", []):
+            if not isinstance(item, Mapping) or (
+                item.get("canonical_type") not in BINARY_CANONICAL_TYPES
+            ):
+                continue
+            value = float(item["value"])
+            rounded = int(round(value))
+            if rounded not in {0, 1} or not math.isclose(
+                value, rounded, rel_tol=0.0, abs_tol=1e-6
+            ):
+                evidence["reason_code"] = "center_binary_value_not_integral"
+                return evidence
+            center_binary[str(item["name"])] = rounded
         solution_by_name = {
             str(item["name"]): float(item["value"])
             for item in payload.get("variables", [])
@@ -502,7 +512,9 @@ def audit_local_branching_membership(
             }
         )
         return evidence
-    except (KeyError, OSError, TypeError, ValueError, DerivedMipSolveError):
+    except (KeyError, OSError, TypeError, ValueError, DerivedMipSolveError) as error:
+        evidence["reason_code"] = "local_branching_audit_error"
+        evidence["error_type"] = type(error).__name__
         return evidence
 
 

@@ -31,7 +31,7 @@ def _cohort(tmp_path: Path, *, solver: str = "gurobi") -> Path:
         json.dump(
             {
                 "variables": [
-                    {"name": "x", "canonical_type": "BINARY", "value": 1.0}
+                    {"name": "x", "canonical_type": "B", "value": 1.0}
                 ]
             },
             stream,
@@ -172,6 +172,30 @@ def test_solution_outside_local_branching_radius_fails_closed(tmp_path: Path) ->
 
     assert report["checks"]["local_branching_satisfied"] is False
     assert report["gate_status"] == "failed"
+
+
+def test_resume_reaudits_existing_solution_without_solver_worker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _plan(tmp_path, solver="gurobi")
+    candidate = plan.candidates[0]
+    payload = _payload(plan, candidate)
+    payload["contract_sha256"] = plan.contract_sha256
+    solution_path = _artifact_paths(plan, candidate)["solution"]
+    with gzip.open(solution_path, "wt", encoding="utf-8") as stream:
+        json.dump(payload, stream)
+    monkeypatch.setattr(
+        "cfl_gnn.pipelines.derived_mip_solutions._run_worker_process",
+        lambda *args, **kwargs: pytest.fail("resume must not invoke a solver"),
+    )
+
+    from cfl_gnn.pipelines.derived_mip_solutions import _solve_candidate
+
+    report = _solve_candidate(plan, candidate, resume=True)
+
+    assert report["execution"]["reused"] is True
+    assert report["local_branching_membership_audit"]["hamming_distance"] == 0
+    assert report["gate_status"] == "passed"
 
 
 @pytest.mark.parametrize("solver", ["gurobi", "scip"])
