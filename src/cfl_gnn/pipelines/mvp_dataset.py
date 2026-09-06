@@ -29,6 +29,7 @@ from cfl_gnn.experiments.mvp_contract import (
 from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.paths import PROJECT_ROOT
 from cfl_gnn.pipelines.derived_graphs import (
+    DerivedGraphError,
     GRAPH_FEATURE_SCHEMA,
     build_graph_artifact,
 )
@@ -326,6 +327,11 @@ def _load_original(
     if payload.get("candidate_sha256") != parent.get("sha256"):
         raise MvpDatasetError("parent solution is linked to another model")
     solve = report.get("solve", {})
+    if (
+        str(solve.get("original_objective_sense")).lower() != "maximize"
+        or str(solve.get("objective_sense")).lower() != "minimize"
+    ):
+        raise MvpDatasetError("parent objective-sense normalization is not auditable")
     gap = _finite(solve.get("mip_gap_relative"), field="label gap", nonnegative=True)
     gap_percent = _finite(
         solve.get("mip_gap_percent"), field="label gap percent", nonnegative=True
@@ -604,6 +610,9 @@ def run_composition(
         if (
             audit.get("roundtrip_readable") is not True
             or audit.get("label_variable_identity_match") is not True
+            or audit.get("input_objective_sense") != "MAXIMIZE"
+            or audit.get("effective_objective_sense") != "MINIMIZE"
+            or audit.get("objective_sense_override_applied") is not True
             or audit.get("graph_sha256")
             != sha256_file(plan.output_dir / relative)
         ):
@@ -845,7 +854,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         print(f"[INFO] Report: {plan.output_dir / REPORT_NAME}")
         return 0
-    except (OSError, ValueError, MvpDatasetError) as error:
+    except (OSError, ValueError, DerivedGraphError, MvpDatasetError) as error:
         print(f"[ERROR] {error}")
         return 2
 

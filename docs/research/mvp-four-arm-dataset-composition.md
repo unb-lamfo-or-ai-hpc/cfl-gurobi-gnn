@@ -11,6 +11,12 @@ parent model bytes, fold, role, solution hash, objective, terminal MIP gap and
 execution time are verified against the parent-solve plan and report. Labels
 above the precommitted 10% relative-gap ceiling fail closed.
 
+The original MILPBench CFL file remains immutable and retains its erroneous
+`MAXIMIZE` declaration for provenance. The common in-memory reader records that
+input sense, applies `setMinimize()` before feature extraction, and audits the
+effective `MINIMIZE` sense. Derived MIPs are already normalized and continue to
+fail closed if they declare any other sense.
+
 Original and derived samples use the same PySCIPOpt reader and production
 `build_heterodata` encoder. The seventh variable feature is zero for every MVP
 graph. For each parent, the original structural graph fingerprint must be

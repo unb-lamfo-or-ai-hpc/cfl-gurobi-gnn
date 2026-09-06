@@ -55,6 +55,8 @@ def _parent_run(tmp_path: Path, solver: str, parent: Path) -> pipeline.ParentRun
             "sha256": parent_sha,
         },
         "solve": {
+            "original_objective_sense": "maximize",
+            "objective_sense": "minimize",
             "solution_objective": payload["solution_objective"],
             "mip_gap_relative": 0.0 if solver == "gurobi" else 0.05,
             "mip_gap_percent": 0.0 if solver == "gurobi" else 5.0,
@@ -207,6 +209,9 @@ def test_composition_writes_four_arms_with_equal_parent_mass(tmp_path: Path) -> 
             "binary_variables": 1,
             "integer_variables": 0,
             "continuous_variables": 2,
+            "input_objective_sense": "MAXIMIZE",
+            "effective_objective_sense": "MINIMIZE",
+            "objective_sense_override_applied": True,
             "roundtrip_readable": True,
             "label_variable_identity_match": True,
         }
@@ -257,6 +262,9 @@ def test_original_structure_must_match_across_solvers(tmp_path: Path) -> None:
             "graph_sha256": sha256_file(output),
             "structural_graph_sha256": spec.solver,
             "graph_content_sha256": spec.solver,
+            "input_objective_sense": "MAXIMIZE",
+            "effective_objective_sense": "MINIMIZE",
+            "objective_sense_override_applied": True,
             "roundtrip_readable": True,
             "label_variable_identity_match": True,
         }
@@ -280,4 +288,35 @@ def test_pipeline_excludes_pyomo_and_reuses_the_common_graph_builder() -> None:
     assert "equal_parent_mass" in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
+
+
+class _ObjectiveModel:
+    def __init__(self, sense: str) -> None:
+        self.sense = sense
+
+    def getObjectiveSense(self) -> str:
+        return self.sense
+
+    def setMinimize(self) -> None:
+        self.sense = "minimize"
+
+
+def test_original_cfl_objective_is_forced_but_derived_maximize_is_rejected() -> None:
+    original = _ObjectiveModel("maximize")
+    assert pipeline.build_graph_artifact.__module__.endswith("derived_graphs")
+
+    from cfl_gnn.pipelines.derived_graphs import (
+        DerivedGraphError,
+        _normalize_mvp_objective_sense,
+    )
+
+    assert _normalize_mvp_objective_sense(original, "original") == (
+        "MAXIMIZE",
+        True,
+    )
+    assert original.sense == "minimize"
+    with pytest.raises(DerivedGraphError, match="derived candidate"):
+        _normalize_mvp_objective_sense(
+            _ObjectiveModel("maximize"), "incumbent_local_branching"
+        )
 

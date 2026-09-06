@@ -597,6 +597,23 @@ def _tensor_sha256(array: Any) -> str:
     return digest.hexdigest()
 
 
+def _normalize_mvp_objective_sense(
+    model: Any, sampling_strategy: str
+) -> tuple[str, bool]:
+    """Return the input sense and force the known CFL originals to minimize."""
+    input_sense = str(model.getObjectiveSense()).strip().upper()
+    if input_sense == "MINIMIZE":
+        return input_sense, False
+    if input_sense == "MAXIMIZE" and sampling_strategy == "original":
+        model.setMinimize()
+        if str(model.getObjectiveSense()).strip().upper() != "MINIMIZE":
+            raise DerivedGraphError(
+                "failed to force original CFL objective to minimize"
+            )
+        return input_sense, True
+    raise DerivedGraphError("derived candidate objective is not minimize")
+
+
 def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str, Any]:
     """Build one MVP graph through the common LP reader and production encoder.
 
@@ -616,12 +633,16 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
     from cfl_gnn.graph.build_dataset import build_heterodata
 
     solution = _solution_by_name(spec)
+    sampling_strategy = getattr(
+        spec, "sampling_strategy", "incumbent_local_branching"
+    )
     model = Model()
     try:
         model.hideOutput(True)
         model.readProblem(str(spec.candidate_path))
-        if str(model.getObjectiveSense()).lower() != "minimize":
-            raise DerivedGraphError("derived candidate objective is not minimize")
+        input_objective_sense, objective_sense_override_applied = (
+            _normalize_mvp_objective_sense(model, sampling_strategy)
+        )
         variables = sorted(
             model.getVars(transformed=False), key=lambda variable: str(variable.name)
         )
@@ -720,14 +741,13 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
         graph.source_instance_id = spec.parent_instance_id
         graph.parent_instance_id = spec.parent_instance_id
         graph.instance_fold = spec.fold
-        sampling_strategy = getattr(
-            spec, "sampling_strategy", "incumbent_local_branching"
-        )
         graph.role = getattr(spec, "role", "train")
         graph.solver = spec.solver
         graph.arm_id = spec.arm_id
         graph.sampling_strategy = sampling_strategy
         graph.objective_sense = "MINIMIZE"
+        graph.input_objective_sense = input_objective_sense
+        graph.objective_sense_override_applied = objective_sense_override_applied
         graph.root_lp_relaxation_mode = "zero_ablation_for_all_mvp_graphs"
         graph.label_source = spec.solution_path.name
         graph.label_solution_sha256 = spec.solution_sha256
@@ -785,6 +805,11 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
             "binary_variables": int(np.sum(variable_types == "B")),
             "integer_variables": int(np.sum(variable_types == "I")),
             "continuous_variables": int(np.sum(variable_types == "C")),
+            "input_objective_sense": input_objective_sense,
+            "effective_objective_sense": "MINIMIZE",
+            "objective_sense_override_applied": (
+                objective_sense_override_applied
+            ),
             "roundtrip_readable": True,
             "label_variable_identity_match": True,
         }
