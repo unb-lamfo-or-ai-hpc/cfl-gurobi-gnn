@@ -130,6 +130,34 @@ def test_incumbent_trace_audit_rejects_wrong_final_incumbent() -> None:
     assert audit["incumbent_trace_consistent"] is False
 
 
+def test_trace_audit_accepts_numerically_tiny_improvement() -> None:
+    trace = [
+        {
+            "incumbent_objective": 10.0,
+            "incumbent_discovery_time_seconds": 1.0,
+            "incumbent_mip_gap_relative_at_discovery": 0.5,
+            "incumbent_mip_gap_percent_at_discovery": 50.0,
+        },
+        {
+            "incumbent_objective": 10.0 - 5e-9,
+            "incumbent_discovery_time_seconds": 2.0,
+            "incumbent_mip_gap_relative_at_discovery": 0.4,
+            "incumbent_mip_gap_percent_at_discovery": 40.0,
+        },
+    ]
+
+    audit = audit_incumbent_trace(
+        trace,
+        objective_sense="minimize",
+        final_objective=10.0 - 5e-9,
+        final_discovery_time=2.0,
+    )
+
+    assert audit["incumbent_objectives_monotonic"] is True
+    assert audit["incumbent_trace_consistent"] is True
+    assert audit["objective_tolerance"] == 1e-9
+
+
 def test_shared_kernel_uses_callback_api_without_pyomo() -> None:
     source = (
         Path(__file__).resolve().parents[2]

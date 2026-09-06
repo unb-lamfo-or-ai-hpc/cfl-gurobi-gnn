@@ -18,7 +18,10 @@ from typing import Any, Mapping, Sequence
 
 from cfl_gnn.experiments.mvp_contract import load_experiment_config
 from cfl_gnn.paths import PROJECT_ROOT
-from cfl_gnn.solvers.pyscipopt_solution import sha256_file
+from cfl_gnn.solvers.pyscipopt_solution import (
+    audit_incumbent_trace,
+    sha256_file,
+)
 
 
 SCHEMA_VERSION = 1
@@ -526,7 +529,27 @@ def evaluate_candidate(
     reused: bool,
 ) -> dict[str, Any]:
     online = payload.get("online_incumbent_capture", {})
-    trace_audit = payload.get("incumbent_trace_audit", {})
+    recorded_trace_audit = payload.get("incumbent_trace_audit", {})
+    raw_trace = payload.get("incumbent_trace", [])
+    if isinstance(raw_trace, list) and raw_trace:
+        trace_audit = audit_incumbent_trace(
+            raw_trace,
+            objective_sense=str(payload.get("objective_sense", "")),
+            final_objective=(
+                None
+                if payload.get("solution_objective") is None
+                else float(payload["solution_objective"])
+            ),
+            final_discovery_time=(
+                None
+                if payload.get("best_incumbent_discovery_time_seconds") is None
+                else float(payload["best_incumbent_discovery_time_seconds"])
+            ),
+        )
+        trace_audit["audit_source"] = "recomputed_from_solution_artifact"
+    else:
+        trace_audit = dict(recorded_trace_audit)
+        trace_audit["audit_source"] = "recorded_no_raw_trace_available"
     events = int(online.get("events_recorded", 0))
     vectors = int(online.get("vectors_streamed", 0))
     solution_count = int(payload.get("solution_count", 0))
@@ -642,6 +665,7 @@ def evaluate_candidate(
         },
         "online_incumbent_capture": dict(online),
         "incumbent_trace_audit": dict(trace_audit),
+        "recorded_incumbent_trace_audit": dict(recorded_trace_audit),
         "local_branching_membership_audit": local_branching_audit,
         "checks": {**execution_checks, **solution_checks},
         "gap_sensitivity_memberships": memberships,

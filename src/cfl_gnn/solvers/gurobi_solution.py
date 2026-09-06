@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from cfl_gnn.solvers.pyscipopt_solution import (
+    INCUMBENT_OBJECTIVE_TOLERANCE,
     IncumbentParquetStream,
     audit_incumbent_trace,
     canonical_sha256,
@@ -82,7 +83,7 @@ def _improves(
     incumbent: float,
     objective_sense: str,
     *,
-    tolerance: float = 1e-9,
+    tolerance: float = INCUMBENT_OBJECTIVE_TOLERANCE,
 ) -> bool:
     if objective_sense == "minimize":
         return candidate < incumbent - tolerance

@@ -198,6 +198,32 @@ def test_resume_reaudits_existing_solution_without_solver_worker(
     assert report["gate_status"] == "passed"
 
 
+def test_resume_recomputes_stale_trace_audit_from_raw_trace(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="gurobi")
+    candidate = plan.candidates[0]
+    payload = _payload(plan, candidate)
+    payload["incumbent_trace_audit"] = {"incumbent_trace_consistent": False}
+    payload["incumbent_trace"] = [
+        {
+            "incumbent_objective": 6.2,
+            "incumbent_discovery_time_seconds": 1000.0,
+            "incumbent_mip_gap_relative_at_discovery": 0.05,
+            "incumbent_mip_gap_percent_at_discovery": 5.0,
+        }
+    ]
+
+    report = evaluate_candidate(plan, candidate, payload, reused=True)
+
+    assert report["recorded_incumbent_trace_audit"][
+        "incumbent_trace_consistent"
+    ] is False
+    assert report["incumbent_trace_audit"]["incumbent_trace_consistent"] is True
+    assert report["incumbent_trace_audit"]["audit_source"] == (
+        "recomputed_from_solution_artifact"
+    )
+    assert report["gate_status"] == "passed"
+
+
 @pytest.mark.parametrize("solver", ["gurobi", "scip"])
 def test_plan_is_solver_symmetric_path_sanitized_and_deterministic(
     tmp_path: Path, solver: str
