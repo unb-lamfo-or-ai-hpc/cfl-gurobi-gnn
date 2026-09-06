@@ -24,6 +24,7 @@ def test_stable_cli_modules_exist() -> None:
         "audit_instance_training_split.py",
         "benchmark_gurobi.py",
         "build_instance_dataset.py",
+        "build_mvp_derived_graphs.py",
         "build_dataset.py",
         "collect_incumbents.py",
         "evaluate.py",
