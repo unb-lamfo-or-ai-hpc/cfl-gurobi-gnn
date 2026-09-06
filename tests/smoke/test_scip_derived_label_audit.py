@@ -145,7 +145,7 @@ def test_plan_binds_exact_passed_graph_audit_and_is_path_sanitized(
     )
     assert first.to_summary()["performance_feature_availability"][
         "incumbent_mip_gap_at_discovery"
-    ] == audit.INCUMBENT_GAP_AVAILABILITY
+    ] == audit.ONLINE_GAP_AVAILABILITY
     assert first.to_summary()["eligibility"]["dataset_eligible"] is False
 
 
@@ -590,12 +590,20 @@ def test_dry_run_does_not_import_pyscipopt(tmp_path: Path) -> None:
 
 def test_source_excludes_pyomo_parent_labels_and_dataset_writes() -> None:
     source = Path(audit.__file__).read_text(encoding="utf-8")
-    assert "import pyomo" not in source
-    assert "from pyomo" not in source
-    assert "torch.save" not in source
-    assert "solutions.pickle" not in source
+    core_source = (
+        Path(audit.__file__).resolve().parents[1]
+        / "solvers"
+        / "pyscipopt_solution.py"
+    ).read_text(encoding="utf-8")
+    assert "import pyomo" not in source + core_source
+    assert "from pyomo" not in source + core_source
+    assert "torch.save" not in source + core_source
+    assert "solutions.pickle" not in source + core_source
     assert "incumbents.parquet" not in source
-    assert '"parent_incumbent_consumed": False' in source
+    assert "solve_named_mip" in source
+    assert '"parent_incumbent_consumed": False' in core_source
     assert '"dataset_eligible": False' in source
     assert "BESTSOLFOUND" not in source
     assert "attachEventHandlerCallback" not in source
+    assert "BESTSOLFOUND" in core_source
+    assert "attachEventHandlerCallback" in core_source
