@@ -270,16 +270,27 @@ def _gap_pair(relative: Any, percent: Any) -> tuple[float, float]:
     return relative_value, percent_value
 
 
-def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
+def load_solver_solution_json(
+    path: str | Path, *, source_solver: str
+) -> IncumbentRecord:
+    if source_solver not in {"gurobi", "scip"}:
+        raise AugmentationError("named solution solver must be gurobi or scip")
     source = Path(path).resolve()
     value = _read_json(source)
+    expected_source = (
+        "independent_gurobi_optimization"
+        if source_solver == "gurobi"
+        else "independent_pyscipopt_optimization"
+    )
+    if value.get("solution_source") != expected_source:
+        raise AugmentationError("named solution source does not match solver arm")
     raw_variables = value.get("variables")
     if not isinstance(raw_variables, list) or not raw_variables:
-        raise AugmentationError("PySCIPOpt solution has no named variable vector")
+        raise AugmentationError("solver solution has no named variable vector")
     values_by_name: dict[str, float] = {}
     for variable in raw_variables:
         if not isinstance(variable, Mapping) or not variable.get("name"):
-            raise AugmentationError("PySCIPOpt solution has an invalid variable record")
+            raise AugmentationError("solver solution has an invalid variable record")
         name = str(variable["name"])
         if name in values_by_name:
             raise AugmentationError(f"duplicate incumbent variable: {name}")
@@ -295,8 +306,8 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
     )
     digest = sha256_file(source)
     return IncumbentRecord(
-        source_solver="scip",
-        source_format="pyscipopt_solution_json",
+        source_solver=source_solver,
+        source_format=f"{source_solver}_solution_json",
         source_artifact=str(source),
         source_artifact_sha256=digest,
         source_model_sha256=(
@@ -305,7 +316,7 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
             else str(value["candidate_sha256"])
         ),
         source_index=None,
-        incumbent_id=f"scip:{digest[:16]}",
+        incumbent_id=f"{source_solver}:{digest[:16]}",
         objective=_finite(
             value.get("solution_objective", value.get("objective")),
             field="incumbent objective",
@@ -326,7 +337,7 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
             field="execution time",
             nonnegative=True,
         ),
-        time_normalization_method="recorded_pyscipopt_execution_time_seconds",
+        time_normalization_method=f"recorded_{source_solver}_execution_time_seconds",
         time_origin=None,
         discovery_time_seconds=(
             None
@@ -355,12 +366,32 @@ def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
     )
 
 
+def load_pyscipopt_solution(path: str | Path) -> IncumbentRecord:
+    return load_solver_solution_json(path, source_solver="scip")
+
+
+def load_gurobi_solution(path: str | Path) -> IncumbentRecord:
+    return load_solver_solution_json(path, source_solver="gurobi")
+
+
 def _parquet_cell_to_values(value: Any) -> list[float]:
     if hasattr(value, "tolist"):
         value = value.tolist()
     if not isinstance(value, (list, tuple)):
         raise AugmentationError("Gurobi solution_vector is not an array")
     return [_finite(item, field="Gurobi incumbent value") for item in value]
+
+
+def validate_artifact_parent_instance(
+    artifact: str | Path, parent_instance_id: str
+) -> None:
+    """Fail closed when a legacy positional artifact names another parent."""
+    source = Path(artifact).resolve()
+    if parent_instance_id not in source.parts:
+        raise AugmentationError(
+            "Gurobi incumbent artifact does not belong to the parent instance: "
+            f"expected path component {parent_instance_id!r}"
+        )
 
 
 def incumbent_from_gurobi_record(
@@ -435,12 +466,15 @@ def load_gurobi_parquet(
     *,
     maximum_gap: float,
     incumbent_index: int | None,
+    parent_instance_id: str | None = None,
 ) -> IncumbentRecord:
     try:
         import pandas as pd
     except ImportError as error:
         raise AugmentationError("pandas/pyarrow is required for Gurobi Parquet") from error
     source = Path(path).resolve()
+    if parent_instance_id is not None:
+        validate_artifact_parent_instance(source, parent_instance_id)
     try:
         frame = pd.read_parquet(source)
     except Exception as error:
@@ -544,7 +578,10 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
             names,
             maximum_gap=config.gap_policy.maximum_admissible_relative_gap,
             incumbent_index=args.incumbent_index,
+            parent_instance_id=args.parent_instance_id,
         )
+    elif args.incumbent_format == "gurobi_solution_json":
+        incumbent = load_gurobi_solution(args.incumbent_artifact)
     else:
         incumbent = load_pyscipopt_solution(args.incumbent_artifact)
     if incumbent.source_solver != args.solver:
@@ -680,7 +717,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--incumbent_artifact", type=Path, required=True)
     parser.add_argument(
         "--incumbent_format",
-        choices=("gurobi_parquet", "pyscipopt_solution_json"),
+        choices=(
+            "gurobi_parquet",
+            "gurobi_solution_json",
+            "pyscipopt_solution_json",
+        ),
         required=True,
     )
     parser.add_argument("--incumbent_index", type=int)
@@ -701,7 +742,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         config = load_experiment_config(args.config)
         if not args.parent_mip.is_file() or not args.incumbent_artifact.is_file():
             raise AugmentationError("parent MILP and incumbent artifact must exist")
-        if (args.solver == "gurobi") != (args.incumbent_format == "gurobi_parquet"):
+        allowed_formats = {
+            "gurobi": {"gurobi_solution_json", "gurobi_parquet"},
+            "scip": {"pyscipopt_solution_json"},
+        }
+        if args.incumbent_format not in allowed_formats[args.solver]:
             raise AugmentationError("incumbent format must match the solver arm")
         role = role_for_fold(args.fold, config.rotation)
         if role != "train":

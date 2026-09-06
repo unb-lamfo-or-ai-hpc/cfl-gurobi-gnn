@@ -1,0 +1,322 @@
+from __future__ import annotations
+
+import gzip
+import json
+from dataclasses import replace
+from pathlib import Path
+
+import pytest
+
+from cfl_gnn.experiments.mvp_contract import load_experiment_config
+from cfl_gnn.pipelines.derived_mip_solutions import (
+    DerivedMipSolveError,
+    _artifact_paths,
+    build_plan,
+    evaluate_candidate,
+    worker_request,
+)
+from cfl_gnn.solvers.pyscipopt_solution import sha256_file
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CONFIG = PROJECT_ROOT / "configs" / "experiments" / "mvp_partial_v1.json"
+
+
+def _cohort(tmp_path: Path, *, solver: str = "gurobi") -> Path:
+    source = tmp_path / "variants"
+    source.mkdir()
+    config = load_experiment_config(CONFIG)
+    center = source / f"{solver}_parent.solution.json.gz"
+    with gzip.open(center, "wt", encoding="utf-8") as stream:
+        json.dump(
+            {
+                "variables": [
+                    {"name": "x", "canonical_type": "B", "value": 1.0}
+                ]
+            },
+            stream,
+        )
+    center_sha256 = sha256_file(center)
+    (source / "local_branching_generation_plan.json").write_text(
+        json.dumps(
+            {
+                "solver": solver,
+                "parent_instance_id": "CFL_easy_instance_2",
+                "incumbent_artifact": str(center),
+                "incumbent_artifact_sha256": center_sha256,
+                "incumbent_format": (
+                    "gurobi_solution_json"
+                    if solver == "gurobi"
+                    else "pyscipopt_solution_json"
+                ),
+            }
+        ),
+        encoding="utf-8",
+    )
+    for radius, fraction in ((148, 0.001), (736, 0.005), (1472, 0.01)):
+        candidate = source / f"CFL_easy_instance_2__{solver}__lb_r{radius}.lp"
+        candidate.write_text(f"candidate-{solver}-{radius}", encoding="utf-8")
+        provenance = {
+            "schema_version": 1,
+            "experiment_contract_sha256": config.contract_sha256,
+            "operator_contract_sha256": "a" * 64,
+            "sample_status": "derived_mip_unlabelled",
+            "solver": solver,
+            "sampling_strategy": "incumbent_local_branching",
+            "parent_instance_id": "CFL_easy_instance_2",
+            "category": "CFL_easy_instance",
+            "difficulty": "easy",
+            "fold": 2,
+            "role": "train",
+            "source_incumbent": {
+                "incumbent_id": f"{solver}:incumbent",
+                "artifact_sha256": center_sha256,
+            },
+            "local_branching": {
+                "radius": radius,
+                "radius_fraction": fraction,
+            },
+            "output": {
+                "file_name": candidate.name,
+                "sha256": sha256_file(candidate),
+            },
+        }
+        candidate.with_suffix(".provenance.json").write_text(
+            json.dumps(provenance), encoding="utf-8"
+        )
+    return source
+
+
+def _plan(tmp_path: Path, *, solver: str = "gurobi"):
+    return build_plan(
+        solver=solver,
+        candidate_dir=_cohort(tmp_path, solver=solver),
+        output_dir=tmp_path / "output",
+        config_path=CONFIG,
+        time_limit=3600,
+        node_limit=1_000_000,
+        threads_per_candidate=1,
+        seed=42,
+        max_parallel=3,
+    )
+
+
+def _payload(plan, candidate, *, gap: float = 0.05) -> dict[str, object]:
+    paths = _artifact_paths(plan, candidate)
+    for path in paths.values():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(path.name.encode())
+    event_type = "MIPSOL" if plan.solver == "gurobi" else "BESTSOLFOUND"
+    return {
+        "candidate_sha256": candidate.sha256,
+        "solution_source": (
+            "independent_gurobi_optimization"
+            if plan.solver == "gurobi"
+            else "independent_pyscipopt_optimization"
+        ),
+        "fresh_process": True,
+        "pre_solve_solution_count": 0,
+        "warm_start_supplied": False,
+        "parent_incumbent_consumed": False,
+        "original_objective_sense": "minimize",
+        "objective_sense": "minimize",
+        "solve_status": "timelimit",
+        "solution_count": 4,
+        "solution_objective": 6.2,
+        "best_bound": 5.89,
+        "mip_gap_relative": gap,
+        "mip_gap_percent": 100.0 * gap,
+        "execution_time_seconds": 3600.0,
+        "best_incumbent_discovery_time_seconds": 1000.0,
+        "nodes_current_run": 100,
+        "nodes_total": 100,
+        "solver_feasibility_check": True,
+        "solver_feasibility_check_space": (
+            "original_model_solution_quality"
+            if plan.solver == "gurobi"
+            else "original_problem"
+        ),
+        "variables": [{"name": "x", "value": 1.0}],
+        "online_incumbent_capture": {
+            "event_type": event_type,
+            "events_recorded": 3,
+            "vectors_streamed": 3,
+            "capture_error_count": 0,
+            "stream_committed": True,
+        },
+        "incumbent_trace_audit": {"incumbent_trace_consistent": True},
+    }
+
+
+def test_scip_source_contract_matches_shared_pyscipopt_kernel(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="scip")
+    candidate = plan.candidates[0]
+
+    report = evaluate_candidate(
+        plan, candidate, _payload(plan, candidate), reused=False
+    )
+
+    assert report["checks"]["solution_source_match"] is True
+    assert report["checks"]["solver_feasibility_check_space"] is True
+    assert report["checks"]["local_branching_satisfied"] is True
+    assert report["gate_status"] == "passed"
+
+
+def test_solution_outside_local_branching_radius_fails_closed(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="scip")
+    candidate = replace(plan.candidates[0], radius=0)
+    payload = _payload(plan, candidate)
+    payload["variables"] = [{"name": "x", "value": 0.0}]
+
+    report = evaluate_candidate(plan, candidate, payload, reused=False)
+
+    assert report["checks"]["local_branching_satisfied"] is False
+    assert report["gate_status"] == "failed"
+
+
+def test_resume_reaudits_existing_solution_without_solver_worker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _plan(tmp_path, solver="gurobi")
+    candidate = plan.candidates[0]
+    payload = _payload(plan, candidate)
+    payload["contract_sha256"] = plan.contract_sha256
+    solution_path = _artifact_paths(plan, candidate)["solution"]
+    with gzip.open(solution_path, "wt", encoding="utf-8") as stream:
+        json.dump(payload, stream)
+    monkeypatch.setattr(
+        "cfl_gnn.pipelines.derived_mip_solutions._run_worker_process",
+        lambda *args, **kwargs: pytest.fail("resume must not invoke a solver"),
+    )
+
+    from cfl_gnn.pipelines.derived_mip_solutions import _solve_candidate
+
+    report = _solve_candidate(plan, candidate, resume=True)
+
+    assert report["execution"]["reused"] is True
+    assert report["local_branching_membership_audit"]["hamming_distance"] == 0
+    assert report["gate_status"] == "passed"
+
+
+def test_resume_recomputes_stale_trace_audit_from_raw_trace(tmp_path: Path) -> None:
+    plan = _plan(tmp_path, solver="gurobi")
+    candidate = plan.candidates[0]
+    payload = _payload(plan, candidate)
+    payload["incumbent_trace_audit"] = {"incumbent_trace_consistent": False}
+    payload["incumbent_trace"] = [
+        {
+            "incumbent_objective": 6.2,
+            "incumbent_discovery_time_seconds": 1000.0,
+            "incumbent_mip_gap_relative_at_discovery": 0.05,
+            "incumbent_mip_gap_percent_at_discovery": 5.0,
+        }
+    ]
+
+    report = evaluate_candidate(plan, candidate, payload, reused=True)
+
+    assert report["recorded_incumbent_trace_audit"][
+        "incumbent_trace_consistent"
+    ] is False
+    assert report["incumbent_trace_audit"]["incumbent_trace_consistent"] is True
+    assert report["incumbent_trace_audit"]["audit_source"] == (
+        "recomputed_from_solution_artifact"
+    )
+    assert report["gate_status"] == "passed"
+
+
+@pytest.mark.parametrize("solver", ["gurobi", "scip"])
+def test_plan_is_solver_symmetric_path_sanitized_and_deterministic(
+    tmp_path: Path, solver: str
+) -> None:
+    plan = _plan(tmp_path, solver=solver)
+
+    assert len(plan.candidates) == 3
+    assert plan.max_parallel == 3
+    assert plan.maximum_admissible_relative_gap == 0.10
+    assert str(tmp_path) not in json.dumps(plan.to_summary())
+    assert plan.to_summary()["metric_semantics"]["comparative_use"].endswith(
+        "not_final_solver_benchmark"
+    )
+    request = worker_request(plan, plan.candidates[0])
+    assert request["force_minimize"] is True
+    assert request["capture_incumbent_vectors"] is True
+    assert request["threads"] == 1
+
+
+@pytest.mark.parametrize("solver", ["gurobi", "scip"])
+def test_admissible_independent_label_passes_but_dataset_stays_closed(
+    tmp_path: Path, solver: str
+) -> None:
+    plan = _plan(tmp_path, solver=solver)
+    candidate = plan.candidates[0]
+
+    record = evaluate_candidate(
+        plan, candidate, _payload(plan, candidate, gap=0.05), reused=False
+    )
+
+    assert record["gate_status"] == "passed"
+    assert record["eligibility"]["label_eligible"] is True
+    assert record["eligibility"]["dataset_eligible"] is False
+    assert record["gap_sensitivity_memberships"] == [
+        "gap_le_0.05",
+        "gap_le_0.06",
+        "gap_le_0.1",
+    ]
+
+
+def test_gap_above_ten_percent_is_inconclusive_not_failed(tmp_path: Path) -> None:
+    plan = _plan(tmp_path)
+    candidate = plan.candidates[0]
+
+    record = evaluate_candidate(
+        plan, candidate, _payload(plan, candidate, gap=0.1001), reused=False
+    )
+
+    assert record["gate_status"] == "inconclusive"
+    assert record["eligibility"]["label_eligible"] is False
+    assert record["decision"]["reason_code"] == "terminal_gap_above_label_policy"
+
+
+def test_callback_evidence_failure_fails_closed(tmp_path: Path) -> None:
+    plan = _plan(tmp_path)
+    candidate = plan.candidates[0]
+    payload = _payload(plan, candidate)
+    payload["online_incumbent_capture"]["capture_error_count"] = 1  # type: ignore[index]
+
+    record = evaluate_candidate(plan, candidate, payload, reused=False)
+
+    assert record["gate_status"] == "failed"
+    assert record["eligibility"]["label_eligible"] is False
+
+
+def test_cross_solver_provenance_is_rejected(tmp_path: Path) -> None:
+    source = _cohort(tmp_path, solver="scip")
+    with pytest.raises(DerivedMipSolveError, match="expected 3 gurobi"):
+        build_plan(
+            solver="gurobi",
+            candidate_dir=source,
+            output_dir=tmp_path / "output",
+            config_path=CONFIG,
+            time_limit=3600,
+            node_limit=1_000_000,
+            threads_per_candidate=1,
+            seed=42,
+            max_parallel=3,
+        )
+
+
+def test_pipeline_source_excludes_pyomo_and_solver_imports_are_lazy() -> None:
+    source = (
+        PROJECT_ROOT
+        / "src"
+        / "cfl_gnn"
+        / "pipelines"
+        / "derived_mip_solutions.py"
+    ).read_text(encoding="utf-8")
+
+    assert "import gurobipy" not in source
+    assert "import pyscipopt" not in source
+    assert "import pyomo" not in source
+    assert "from pyomo" not in source
+    assert "fresh_process_per_candidate" in source
+    assert "parent_incumbent_consumed" in source

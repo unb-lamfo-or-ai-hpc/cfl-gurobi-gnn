@@ -1,4 +1,4 @@
-"""Solve one original CFL parent and qualify its SCIP incumbent artifacts."""
+"""Solve one original CFL parent and qualify modern solver artifacts."""
 
 from __future__ import annotations
 
@@ -88,6 +88,7 @@ def _positive_int(value: Any, *, field: str) -> int:
 
 @dataclass(frozen=True, slots=True)
 class ParentSolvePlan:
+    solver: str
     parent_mip: Path
     output_dir: Path
     parent_instance_id: str
@@ -111,7 +112,7 @@ class ParentSolvePlan:
     def contract_payload(self) -> dict[str, Any]:
         return {
             "schema_version": SCHEMA_VERSION,
-            "dataset_variant": "scip_original_parent_solution",
+            "dataset_variant": f"{self.solver}_original_parent_solution",
             "experiment_contract_sha256": self.experiment_contract_sha256,
             "parent": {
                 "source_instance_id": self.parent_instance_id,
@@ -123,8 +124,10 @@ class ParentSolvePlan:
                 "sha256": self.parent_sha256,
             },
             "solver_contract": {
-                "solver": "scip",
-                "interface": "pyscipopt",
+                "solver": self.solver,
+                "interface": (
+                    "gurobipy" if self.solver == "gurobi" else "pyscipopt"
+                ),
                 "solver_profile": self.solver_profile,
                 "force_minimize": True,
                 "time_limit_seconds": self.time_limit,
@@ -133,8 +136,14 @@ class ParentSolvePlan:
                 "seed": self.seed,
                 "fresh_process": True,
                 "warm_start_supplied": False,
-                "event_handler": "BESTSOLFOUND",
-                "event_handler_api": "Model.attachEventHandlerCallback",
+                "event_handler": (
+                    "MIPSOL" if self.solver == "gurobi" else "BESTSOLFOUND"
+                ),
+                "event_handler_api": (
+                    "gurobipy_Model.optimize_callback"
+                    if self.solver == "gurobi"
+                    else "Model.attachEventHandlerCallback"
+                ),
                 "incumbent_vectors": "streamed_float64_parquet",
             },
             "gap_policy": {
@@ -181,6 +190,7 @@ def build_plan(
     seed: int,
     threads: int,
     solver_profile: str,
+    solver: str = "scip",
 ) -> ParentSolvePlan:
     source = Path(parent_mip).resolve()
     if not source.is_file() or source.stat().st_size == 0:
@@ -190,8 +200,11 @@ def build_plan(
         raise ValueError("difficulty must be easy, medium, or hard")
     if solver_profile != "default":
         raise ValueError("the parent MVP solve is precommitted to the default profile")
+    if solver not in {"gurobi", "scip"}:
+        raise ValueError("solver must be gurobi or scip")
     role = role_for_fold(int(fold), config.rotation)
     return ParentSolvePlan(
+        solver=solver,
         parent_mip=source,
         output_dir=Path(output_dir).resolve(),
         parent_instance_id=str(parent_instance_id),
@@ -239,7 +252,7 @@ def _run_fresh_worker(plan: ParentSolvePlan) -> None:
         [
             sys.executable,
             "-m",
-            "cfl_gnn.cli.collect_scip_parent_solution",
+            f"cfl_gnn.cli.collect_{plan.solver}_parent_solution",
             "--_worker_request",
             str(request_path),
             "--_worker_result",
@@ -252,11 +265,14 @@ def _run_fresh_worker(plan: ParentSolvePlan) -> None:
     try:
         if completed.returncode != 0:
             raise ScipParentSolveError(
-                "fresh SCIP parent worker failed: " + completed.stderr.strip()[-500:]
+                f"fresh {plan.solver} parent worker failed: "
+                + completed.stderr.strip()[-500:]
             )
         result = _read_json(result_path)
         if result.get("worker_status") != "completed":
-            raise ScipParentSolveError("fresh SCIP parent worker did not complete")
+            raise ScipParentSolveError(
+                f"fresh {plan.solver} parent worker did not complete"
+            )
     finally:
         request_path.unlink(missing_ok=True)
         result_path.unlink(missing_ok=True)
@@ -280,12 +296,22 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
     streamed = int(online.get("vectors_streamed", 0))
     checks = {
         "parent_sha256_match": payload.get("candidate_sha256") == plan.parent_sha256,
+        "solution_source_match": payload.get("solution_source")
+        == f"independent_{'gurobi' if plan.solver == 'gurobi' else 'pyscipopt'}_optimization",
+        "solver_feasibility_check_space": payload.get(
+            "solver_feasibility_check_space"
+        )
+        == (
+            "original_model_solution_quality"
+            if plan.solver == "gurobi"
+            else "original_problem"
+        ),
         "fresh_process": payload.get("fresh_process") is True,
         "zero_pre_solve_solutions": payload.get("pre_solve_solution_count") == 0,
         "no_warm_start": payload.get("warm_start_supplied") is False,
         "objective_minimize": payload.get("objective_sense") == "minimize",
         "feasible_solution": feasible,
-        "bestsolfound_observed": events > 0,
+        "online_incumbent_observed": events > 0,
         "callback_errors_absent": online.get("capture_error_count") == 0,
         "stream_matches_events": events == streamed,
         "stream_committed": online.get("stream_committed") is True,
@@ -298,7 +324,7 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
     augmentation_eligible = label_eligible and plan.role == "train"
     if augmentation_eligible:
         gate_status = "passed"
-        reason_code = "scip_parent_incumbent_eligible_for_local_branching"
+        reason_code = f"{plan.solver}_parent_incumbent_eligible_for_local_branching"
     elif instrumentation_valid:
         gate_status = "inconclusive"
         reason_code = (
@@ -308,7 +334,7 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
         )
     else:
         gate_status = "failed"
-        reason_code = "scip_parent_solution_instrumentation_failed"
+        reason_code = f"{plan.solver}_parent_solution_instrumentation_failed"
     solution_path = plan.output_dir / SOLUTION_NAME
     incumbent_path = plan.output_dir / INCUMBENTS_NAME
     order_path = plan.output_dir / VARIABLE_ORDER_NAME
@@ -363,7 +389,7 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
         "decision": {
             "reason_code": reason_code,
             "next_gate": (
-                "scip_original_parent_local_branching_generation"
+                f"{plan.solver}_original_parent_local_branching_generation"
                 if augmentation_eligible
                 else "increase_budget_or_repair_instrumentation"
             ),
@@ -377,9 +403,9 @@ def run(plan: ParentSolvePlan) -> dict[str, Any]:
     return evaluate_solution(plan, payload)
 
 
-def build_parser() -> argparse.ArgumentParser:
+def build_parser(*, solver: str = "scip") -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Solve one original CFL parent with online SCIP incumbents."
+        description=f"Solve one original CFL parent with online {solver} incumbents."
     )
     parser.add_argument("--parent_mip", type=Path)
     parser.add_argument("--parent_instance_id")
@@ -400,12 +426,18 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+def main(
+    argv: Sequence[str] | None = None, *, solver: str = "scip"
+) -> int:
+    args = build_parser(solver=solver).parse_args(argv)
     if args._worker_request or args._worker_result:
         if not args._worker_request or not args._worker_result:
             raise ValueError("worker request and result must be supplied together")
-        result = solve_named_mip(_read_json(Path(args._worker_request)))
+        if solver == "gurobi":
+            from cfl_gnn.solvers.gurobi_solution import solve_named_mip as solve
+        else:
+            solve = solve_named_mip
+        result = solve(_read_json(Path(args._worker_request)))
         _write_json(Path(args._worker_result), result)
         return 0
     required = {
@@ -434,6 +466,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             seed=args.seed,
             threads=args.threads,
             solver_profile=args.solver_profile,
+            solver=solver,
         )
         plan.output_dir.mkdir(parents=True, exist_ok=True)
         plan_path = plan.output_dir / PLAN_NAME
@@ -447,7 +480,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"[INFO] parent={plan.parent_instance_id} | fold={plan.fold} | "
             f"role={plan.role} | contract={plan.contract_sha256}"
         )
-        print("[INFO] callback=BESTSOLFOUND | passive=true | vectors=streamed")
+        callback = "MIPSOL" if solver == "gurobi" else "BESTSOLFOUND"
+        print(f"[INFO] solver={solver} | callback={callback} | passive=true | vectors=streamed")
         print(f"[INFO] Plan: {plan_path}")
         if args.dry_run:
             return 0
@@ -469,4 +503,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

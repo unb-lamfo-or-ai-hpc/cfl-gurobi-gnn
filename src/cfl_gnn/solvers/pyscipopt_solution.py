@@ -12,6 +12,7 @@ from typing import Any, Mapping, Sequence
 
 
 ONLINE_GAP_AVAILABILITY = "bestsolfound_primal_dual_snapshot"
+INCUMBENT_OBJECTIVE_TOLERANCE = 1e-9
 PERFORMANCE_FEATURE_TAGS = {
     "instance": {
         "execution_time": "execution_time_seconds",
@@ -277,7 +278,7 @@ def audit_incumbent_trace(
     objective_sense: str,
     final_objective: float | None,
     final_discovery_time: float | None,
-    tolerance: float = 1e-8,
+    tolerance: float = INCUMBENT_OBJECTIVE_TOLERANCE,
 ) -> dict[str, Any]:
     times = [float(item["incumbent_discovery_time_seconds"]) for item in trace]
     objectives = [float(item["incumbent_objective"]) for item in trace]
@@ -286,12 +287,12 @@ def audit_incumbent_trace(
     )
     if objective_sense == "minimize":
         objectives_monotonic = all(
-            later < earlier - tolerance
+            later <= earlier + tolerance
             for earlier, later in zip(objectives, objectives[1:])
         )
     elif objective_sense == "maximize":
         objectives_monotonic = all(
-            later > earlier + tolerance
+            later >= earlier - tolerance
             for earlier, later in zip(objectives, objectives[1:])
         )
     else:
@@ -323,6 +324,10 @@ def audit_incumbent_trace(
         "incumbent_trace_present": bool(trace),
         "incumbent_times_monotonic": times_monotonic,
         "incumbent_objectives_monotonic": objectives_monotonic,
+        "objective_monotonicity_semantics": (
+            "non_worsening_with_absolute_tolerance"
+        ),
+        "objective_tolerance": tolerance,
         "final_incumbent_objective_matches": final_objective_matches,
         "final_incumbent_discovery_time_matches": final_time_matches,
         "incumbent_gap_semantics_explicit": gaps_consistent,
@@ -421,7 +426,12 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         best_incumbent_time = None
         if best_solution is not None:
             feasibility_check = bool(
-                model.checkSol(best_solution, printreason=False, completely=True)
+                model.checkSol(
+                    best_solution,
+                    printreason=False,
+                    completely=True,
+                    original=True,
+                )
             )
             objective = _finite_or_none(model.getObjVal())
             solution_objective = _finite_or_none(
@@ -506,6 +516,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             },
             "performance_feature_tags": PERFORMANCE_FEATURE_TAGS,
             "solver_feasibility_check": feasibility_check,
+            "solver_feasibility_check_space": "original_problem",
             "variables": named_variables,
         }
         _write_gzip_json(solution_path, payload)
@@ -520,4 +531,3 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             model.freeProb()
         except Exception:
             pass
-
