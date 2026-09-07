@@ -34,6 +34,7 @@ def test_stable_cli_modules_exist() -> None:
         "graph_statistics.py",
         "graph_xray.py",
         "plan_instance_folds.py",
+        "plan_mvp_training.py",
         "train_instance_serial.py",
         "train_distributed.py",
         "train_serial.py",
@@ -163,3 +164,4 @@ def test_artifact_schemas_keep_legacy_field_order() -> None:
         "obj_coeffs",
     )
     assert ConstraintFeatures._fields == ("senses", "rhs_values", "row_norms")
+
