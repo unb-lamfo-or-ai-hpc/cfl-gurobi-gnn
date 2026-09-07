@@ -597,8 +597,30 @@ def _tensor_sha256(array: Any) -> str:
     return digest.hexdigest()
 
 
+def _normalize_mvp_objective_sense(
+    model: Any, sampling_strategy: str
+) -> tuple[str, bool]:
+    """Return the input sense and force the known CFL originals to minimize."""
+    input_sense = str(model.getObjectiveSense()).strip().upper()
+    if input_sense == "MINIMIZE":
+        return input_sense, False
+    if input_sense == "MAXIMIZE" and sampling_strategy == "original":
+        model.setMinimize()
+        if str(model.getObjectiveSense()).strip().upper() != "MINIMIZE":
+            raise DerivedGraphError(
+                "failed to force original CFL objective to minimize"
+            )
+        return input_sense, True
+    raise DerivedGraphError("derived candidate objective is not minimize")
+
+
 def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str, Any]:
-    """Build one graph through a common PySCIPOpt LP reader and production encoder."""
+    """Build one MVP graph through the common LP reader and production encoder.
+
+    ``OriginalGraphSpec`` from the four-arm composition pipeline deliberately
+    uses this same function.  Keeping one encoder is what makes the zero root-LP
+    ablation and feature ordering identical between original and augmented arms.
+    """
     import numpy as np
     import torch
     from pyscipopt import Model
@@ -611,12 +633,16 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
     from cfl_gnn.graph.build_dataset import build_heterodata
 
     solution = _solution_by_name(spec)
+    sampling_strategy = getattr(
+        spec, "sampling_strategy", "incumbent_local_branching"
+    )
     model = Model()
     try:
         model.hideOutput(True)
         model.readProblem(str(spec.candidate_path))
-        if str(model.getObjectiveSense()).lower() != "minimize":
-            raise DerivedGraphError("derived candidate objective is not minimize")
+        input_objective_sense, objective_sense_override_applied = (
+            _normalize_mvp_objective_sense(model, sampling_strategy)
+        )
         variables = sorted(
             model.getVars(transformed=False), key=lambda variable: str(variable.name)
         )
@@ -715,22 +741,29 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
         graph.source_instance_id = spec.parent_instance_id
         graph.parent_instance_id = spec.parent_instance_id
         graph.instance_fold = spec.fold
-        graph.role = "train"
+        graph.role = getattr(spec, "role", "train")
         graph.solver = spec.solver
         graph.arm_id = spec.arm_id
-        graph.sampling_strategy = "incumbent_local_branching"
+        graph.sampling_strategy = sampling_strategy
         graph.objective_sense = "MINIMIZE"
-        graph.root_lp_relaxation_mode = "zero_ablation_for_mvp_derived_graphs"
+        graph.input_objective_sense = input_objective_sense
+        graph.objective_sense_override_applied = objective_sense_override_applied
+        graph.root_lp_relaxation_mode = "zero_ablation_for_all_mvp_graphs"
         graph.label_source = spec.solution_path.name
         graph.label_solution_sha256 = spec.solution_sha256
         graph.label_objective = spec.label_objective
-        graph.source_incumbent_id = spec.source_incumbent_id
-        graph.source_incumbent_artifact_sha256 = (
-            spec.source_incumbent_artifact_sha256
-        )
-        graph.local_branching_radius = spec.radius
-        graph.local_branching_radius_fraction = spec.radius_fraction
-        graph.derived_solve_contract_sha256 = spec.derived_solve_contract_sha256
+        if sampling_strategy == "incumbent_local_branching":
+            graph.source_incumbent_id = spec.source_incumbent_id
+            graph.source_incumbent_artifact_sha256 = (
+                spec.source_incumbent_artifact_sha256
+            )
+            graph.local_branching_radius = spec.radius
+            graph.local_branching_radius_fraction = spec.radius_fraction
+            graph.derived_solve_contract_sha256 = spec.derived_solve_contract_sha256
+        elif sampling_strategy != "original":
+            raise DerivedGraphError(
+                f"unsupported MVP sampling strategy: {sampling_strategy}"
+            )
         graph.experiment_contract_sha256 = spec.experiment_contract_sha256
         output_path.parent.mkdir(parents=True, exist_ok=True)
         temporary = output_path.with_suffix(output_path.suffix + ".tmp")
@@ -772,6 +805,11 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
             "binary_variables": int(np.sum(variable_types == "B")),
             "integer_variables": int(np.sum(variable_types == "I")),
             "continuous_variables": int(np.sum(variable_types == "C")),
+            "input_objective_sense": input_objective_sense,
+            "effective_objective_sense": "MINIMIZE",
+            "objective_sense_override_applied": (
+                objective_sense_override_applied
+            ),
             "roundtrip_readable": True,
             "label_variable_identity_match": True,
         }
@@ -1071,3 +1109,4 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
