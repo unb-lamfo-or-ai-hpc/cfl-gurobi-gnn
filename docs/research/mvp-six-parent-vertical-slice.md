@@ -46,7 +46,9 @@ no-warm-start settings. When coverage is incomplete it writes a deterministic
 uses a separate four-hour single-thread budget, selects Gurobi `default` and
 SCIP `feasibility` profiles, and prohibits cross-solver warm starts.
 
-The next gate applies the symmetric local-branching operator to the four
-solver/train-parent pairs, solves the descendants independently, generates the
-graphs, composes the four manifests, and repeats the PR #30 loader audit.
+The next gate executes and audits the precommitted parent-label rescue described
+in `mvp-label-rescue.md`. Only after all required labels are admissible does the
+pipeline apply the symmetric local-branching operator to the four
+solver/train-parent pairs, solve the descendants independently, generate the
+graphs, compose the four manifests, and repeat the PR #30 loader audit.
 

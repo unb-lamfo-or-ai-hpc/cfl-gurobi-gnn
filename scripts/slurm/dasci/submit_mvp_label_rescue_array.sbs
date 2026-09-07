@@ -1,0 +1,46 @@
+#!/bin/bash
+#SBATCH --job-name=mvp_label_rescue
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=04:30:00
+#SBATCH --array=0-2%3
+#SBATCH --output=slurm_mvp_label_rescue_%A_%a.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${VERTICAL_SLICE_DIR:?Set VERTICAL_SLICE_DIR}"
+: "${BENCHMARK_RUN_ROOT:?Set BENCHMARK_RUN_ROOT}"
+: "${BASE_SOURCE_DIR:?Set BASE_SOURCE_DIR}"
+: "${RESCUE_RUN_ROOT:?Set RESCUE_RUN_ROOT}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+
+OVERWRITE_ARGS=()
+if [[ "${OVERWRITE:-0}" == "1" ]]; then
+    OVERWRITE_ARGS=(--overwrite)
+fi
+
+echo "[INFO] rescue_task=${SLURM_ARRAY_TASK_ID}"
+echo "[INFO] rescue_root=${RESCUE_RUN_ROOT}"
+
+srun python3 -m cfl_gnn.cli.run_mvp_label_rescue_task \
+    --vertical_slice_dir "${VERTICAL_SLICE_DIR}" \
+    --benchmark_run_root "${BENCHMARK_RUN_ROOT}" \
+    --base_source_dir "${BASE_SOURCE_DIR}" \
+    --rescue_run_root "${RESCUE_RUN_ROOT}" \
+    --task_index "${SLURM_ARRAY_TASK_ID}" \
+    "${OVERWRITE_ARGS[@]}"
+
