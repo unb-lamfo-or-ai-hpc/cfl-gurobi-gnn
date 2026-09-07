@@ -302,7 +302,7 @@ def write_vertical_slice_plan(
 def audit_vertical_slice_parent_runs(
     *, plan_dir: str | Path, run_root: str | Path, overwrite: bool = False
 ) -> dict[str, Any]:
-    """Fail closed unless all twelve paired parent solves are admissible."""
+    """Separate benchmark validity from downstream label-coverage gates."""
     plan_root = Path(plan_dir).resolve()
     runs = Path(run_root).resolve()
     report_path = plan_root / AUDIT_REPORT_NAME
@@ -320,7 +320,7 @@ def audit_vertical_slice_parent_runs(
         raise MvpVerticalSliceError("vertical-slice plan contract mismatch")
 
     audits: list[dict[str, Any]] = []
-    run_rows: list[tuple[str, str]] = []
+    benchmark_run_rows: list[tuple[str, str]] = []
     maximum_gap = float(plan["maximum_admissible_relative_gap"])
     for task in tasks:
         run_relative = str(task["run_dir_relative_path"])
@@ -335,6 +335,8 @@ def audit_vertical_slice_parent_runs(
                     "role": task["role"],
                     "difficulty": task["difficulty"],
                     "run_dir_relative_path": run_relative,
+                    "benchmark_status": "failed",
+                    "label_eligible": False,
                     "status": "failed",
                     "reason_code": "parent_solve_report_missing",
                 }
@@ -347,17 +349,19 @@ def audit_vertical_slice_parent_runs(
         role = str(task["role"])
         raw_gap = solve.get("mip_gap_relative")
         raw_time = solve.get("execution_time_seconds")
-        gap_admissible = (
+        terminal_gap_finite = (
             isinstance(raw_gap, (int, float))
             and math.isfinite(float(raw_gap))
-            and 0.0 <= float(raw_gap) <= maximum_gap + 1e-12
+            and float(raw_gap) >= 0.0
         )
+        gap_admissible = terminal_gap_finite and float(raw_gap) <= maximum_gap + 1e-12
         execution_time_valid = (
             isinstance(raw_time, (int, float))
             and math.isfinite(float(raw_time))
             and float(raw_time) >= 0.0
         )
-        checks = {
+        parent_checks = parent_report.get("checks", {})
+        benchmark_checks = {
             "parent_identity_match": parent.get("source_instance_id") == task["source_instance_id"],
             "parent_sha256_match": parent.get("sha256") == task["parent_mip_sha256"],
             "parent_metadata_match": all(
@@ -365,11 +369,13 @@ def audit_vertical_slice_parent_runs(
                 for field in ("category", "difficulty", "fold", "role")
             ),
             "objective_minimize": solve.get("objective_sense") == "minimize",
-            "mip_gap_admissible": gap_admissible,
+            "terminal_gap_finite": terminal_gap_finite,
             "execution_time_valid": execution_time_valid,
-            "label_eligible": eligibility.get("label_eligible") is True,
-            "augmentation_policy_match": eligibility.get("augmentation_source_eligible") == (role == "train"),
-            "gate_status_expected": parent_report.get("gate_status") == ("passed" if role == "train" else "inconclusive"),
+            "parent_instrumentation_checks_passed": (
+                isinstance(parent_checks, dict)
+                and bool(parent_checks)
+                and all(value is True for value in parent_checks.values())
+            ),
         }
         artifacts = parent_report.get("artifacts", {})
         artifact_checks: dict[str, bool] = {}
@@ -379,7 +385,29 @@ def audit_vertical_slice_parent_runs(
             artifact_checks[artifact_name] = (
                 artifact.is_file() and sha256_file(artifact) == descriptor.get("sha256")
             )
-        passed = all(checks.values()) and all(artifact_checks.values())
+        mechanically_valid = all(benchmark_checks.values()) and all(artifact_checks.values())
+        computed_label_eligible = mechanically_valid and gap_admissible
+        computed_augmentation_eligible = computed_label_eligible and role == "train"
+        expected_gate_status = (
+            "failed"
+            if not mechanically_valid
+            else "passed"
+            if computed_augmentation_eligible
+            else "inconclusive"
+        )
+        contract_checks = {
+            "label_eligibility_consistent": (
+                eligibility.get("label_eligible") is computed_label_eligible
+            ),
+            "augmentation_eligibility_consistent": (
+                eligibility.get("augmentation_source_eligible")
+                is computed_augmentation_eligible
+            ),
+            "gate_status_consistent": (
+                parent_report.get("gate_status") == expected_gate_status
+            ),
+        }
+        benchmark_passed = mechanically_valid and all(contract_checks.values())
         audits.append(
             {
                 "task_index": task["task_index"],
@@ -390,29 +418,86 @@ def audit_vertical_slice_parent_runs(
                 "run_dir_relative_path": run_relative,
                 "mip_gap_relative": solve.get("mip_gap_relative"),
                 "execution_time_seconds": solve.get("execution_time_seconds"),
-                "checks": checks,
+                "solution_objective": solve.get("solution_objective"),
+                "benchmark_checks": benchmark_checks,
+                "contract_checks": contract_checks,
+                "label_checks": {
+                    "maximum_admissible_relative_gap": maximum_gap,
+                    "mip_gap_admissible": gap_admissible,
+                },
                 "artifact_checks": artifact_checks,
-                "status": "passed" if passed else "failed",
+                "benchmark_status": "passed" if benchmark_passed else "failed",
+                "label_eligible": benchmark_passed and gap_admissible,
+                "augmentation_source_eligible": (
+                    benchmark_passed and gap_admissible and role == "train"
+                ),
+                "status": "passed" if benchmark_passed else "failed",
             }
         )
-        if passed:
-            run_rows.append((str(task["solver"]), run_relative))
+        if benchmark_passed:
+            benchmark_run_rows.append((str(task["solver"]), run_relative))
 
-    passed_count = sum(item["status"] == "passed" for item in audits)
+    benchmark_passed_count = sum(
+        item.get("benchmark_status") == "passed" for item in audits
+    )
     parent_sets = defaultdict(set)
     for item in audits:
-        if item["status"] == "passed":
+        if item.get("benchmark_status") == "passed":
             parent_sets[item["solver"]].add(item["source_instance_id"])
-    paired = (
+    paired_benchmark_population = (
         len(parent_sets) == 2
         and parent_sets["gurobi"] == parent_sets["scip"]
         and len(parent_sets["gurobi"]) == 6
     )
-    gate = "passed" if passed_count == 12 and paired else "failed"
+    benchmark_gate = (
+        "passed"
+        if benchmark_passed_count == len(tasks) and paired_benchmark_population
+        else "failed"
+    )
+    training_records = [item for item in audits if item.get("role") == "train"]
+    training_labels_eligible = sum(
+        item.get("label_eligible") is True for item in training_records
+    )
+    training_label_gate = (
+        "passed" if training_labels_eligible == len(training_records) == 4 else "incomplete"
+    )
+    evaluation_parent_ids = {
+        str(task["source_instance_id"])
+        for task in tasks
+        if task["role"] in {"validation", "test"}
+    }
+    evaluation_references_covered = sum(
+        any(
+            item.get("source_instance_id") == parent_id
+            and item.get("label_eligible") is True
+            for item in audits
+        )
+        for parent_id in evaluation_parent_ids
+    )
+    evaluation_reference_gate = (
+        "passed"
+        if evaluation_references_covered == len(evaluation_parent_ids) == 4
+        else "incomplete"
+    )
+    composition_ready = (
+        benchmark_gate == "passed"
+        and training_label_gate == "passed"
+        and evaluation_reference_gate == "passed"
+    )
+    gate = (
+        "failed"
+        if benchmark_gate == "failed"
+        else "passed"
+        if composition_ready
+        else "inconclusive"
+    )
     _write_jsonl(audit_path, audits)
-    if gate == "passed":
+    if benchmark_gate == "passed":
         parent_runs_path.write_text(
-            "".join(f"{solver}\t{relative}\n" for solver, relative in sorted(run_rows)),
+            "".join(
+                f"{solver}\t{relative}\n"
+                for solver, relative in sorted(benchmark_run_rows)
+            ),
             encoding="utf-8",
         )
     report = {
@@ -420,37 +505,67 @@ def audit_vertical_slice_parent_runs(
         "contract_sha256": contract_sha256,
         "probe_completed": True,
         "gate_status": gate,
+        "gates": {
+            "benchmark_observation_gate": benchmark_gate,
+            "solver_arm_training_label_gate": training_label_gate,
+            "common_evaluation_reference_gate": evaluation_reference_gate,
+        },
         "summary": {
             "tasks_planned": len(tasks),
-            "tasks_passed": passed_count,
-            "tasks_failed": len(tasks) - passed_count,
-            "paired_parent_population": paired,
-            "parent_runs_written": len(run_rows) if gate == "passed" else 0,
+            "benchmark_tasks_passed": benchmark_passed_count,
+            "benchmark_tasks_failed": len(tasks) - benchmark_passed_count,
+            "labels_eligible": sum(
+                item.get("label_eligible") is True for item in audits
+            ),
+            "labels_ineligible": sum(
+                item.get("benchmark_status") == "passed"
+                and item.get("label_eligible") is not True
+                for item in audits
+            ),
+            "paired_parent_population": paired_benchmark_population,
+            "training_solver_parent_pairs": len(training_records),
+            "training_labels_eligible": training_labels_eligible,
+            "evaluation_parents": len(evaluation_parent_ids),
+            "evaluation_references_covered": evaluation_references_covered,
+            "parent_runs_written": (
+                len(benchmark_run_rows) if benchmark_gate == "passed" else 0
+            ),
         },
         "eligibility": {
-            "original_parent_labels_eligible": gate == "passed",
-            "vertical_slice_composition_ready": gate == "passed",
+            "benchmark_observations_eligible": benchmark_gate == "passed",
+            "solver_arm_training_labels_complete": training_label_gate == "passed",
+            "common_evaluation_references_complete": (
+                evaluation_reference_gate == "passed"
+            ),
+            "vertical_slice_composition_ready": composition_ready,
             "dataset_eligible": False,
             "development_only": True,
             "scientific_reporting_eligible": False,
         },
         "outputs": {
             "per_parent_solve_audit": AUDIT_NAME,
-            "parent_runs": PARENT_RUNS_NAME if gate == "passed" else None,
+            "parent_runs": (
+                PARENT_RUNS_NAME if benchmark_gate == "passed" else None
+            ),
             "parent_run_path_semantics": "relative_to_runtime_parent_run_root",
         },
         "decision": {
             "reason_code": (
-                "all_paired_parent_solves_admissible"
-                if gate == "passed"
-                else "one_or_more_parent_solves_not_admissible"
+                "all_vertical_slice_labels_available"
+                if composition_ready
+                else "benchmark_observations_valid_label_rescue_required"
+                if benchmark_gate == "passed"
+                else "one_or_more_benchmark_observations_invalid"
             ),
             "next_gate": (
                 "train_parent_local_branching_and_derived_labels"
-                if gate == "passed"
-                else "repair_or_repeat_failed_parent_solves"
+                if composition_ready
+                else "prepare_deterministic_label_rescue_manifest"
+                if benchmark_gate == "passed"
+                else "repair_invalid_benchmark_observations"
             ),
         },
     }
     _write_json(report_path, report)
     return report
+

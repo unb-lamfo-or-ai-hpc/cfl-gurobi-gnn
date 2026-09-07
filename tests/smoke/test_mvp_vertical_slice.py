@@ -86,7 +86,9 @@ def test_vertical_slice_rejects_missing_parent_mip(tmp_path: Path) -> None:
         )
 
 
-def _write_parent_run(run_dir: Path, task: dict[str, object]) -> None:
+def _write_parent_run(
+    run_dir: Path, task: dict[str, object], *, mip_gap_relative: float = 0.05
+) -> None:
     run_dir.mkdir(parents=True, exist_ok=True)
     artifacts: dict[str, dict[str, object]] = {}
     for name, file_name in (
@@ -98,8 +100,11 @@ def _write_parent_run(run_dir: Path, task: dict[str, object]) -> None:
         path.write_bytes(f"{task['solver']}:{task['source_instance_id']}:{name}".encode())
         artifacts[name] = {"file_name": file_name, "sha256": sha256_file(path)}
     role = str(task["role"])
+    label_eligible = mip_gap_relative <= 0.10
     report = {
-        "gate_status": "passed" if role == "train" else "inconclusive",
+        "gate_status": (
+            "passed" if role == "train" and label_eligible else "inconclusive"
+        ),
         "parent": {
             "source_instance_id": task["source_instance_id"],
             "category": task["category"],
@@ -110,12 +115,14 @@ def _write_parent_run(run_dir: Path, task: dict[str, object]) -> None:
         },
         "solve": {
             "objective_sense": "minimize",
-            "mip_gap_relative": 0.05,
+            "mip_gap_relative": mip_gap_relative,
             "execution_time_seconds": 3600.0,
+            "solution_objective": 10.0,
         },
+        "checks": {"synthetic_instrumentation": True},
         "eligibility": {
-            "label_eligible": True,
-            "augmentation_source_eligible": role == "train",
+            "label_eligible": label_eligible,
+            "augmentation_source_eligible": role == "train" and label_eligible,
         },
         "artifacts": artifacts,
     }
@@ -135,15 +142,57 @@ def test_parent_run_audit_requires_all_twelve_paired_results(tmp_path: Path) -> 
         _write_parent_run(run_root / task["run_dir_relative_path"], task)
     report = audit_vertical_slice_parent_runs(plan_dir=plan_dir, run_root=run_root)
     assert report["gate_status"] == "passed"
-    assert report["summary"] == {
-        "tasks_planned": 12,
-        "tasks_passed": 12,
-        "tasks_failed": 0,
-        "paired_parent_population": True,
-        "parent_runs_written": 12,
+    assert report["gates"] == {
+        "benchmark_observation_gate": "passed",
+        "solver_arm_training_label_gate": "passed",
+        "common_evaluation_reference_gate": "passed",
     }
+    assert report["summary"]["benchmark_tasks_passed"] == 12
+    assert report["summary"]["paired_parent_population"] is True
+    assert report["summary"]["parent_runs_written"] == 12
     rows = (plan_dir / PARENT_RUNS_NAME).read_text(encoding="utf-8").splitlines()
     assert len(rows) == 12
     assert all(not Path(row.split("\t", 1)[1]).is_absolute() for row in rows)
     serialized = (plan_dir / AUDIT_REPORT_NAME).read_text(encoding="utf-8")
     assert str(tmp_path) not in serialized
+
+
+def test_parent_audit_preserves_benchmark_and_separates_label_gates(
+    tmp_path: Path,
+) -> None:
+    plan_dir = _plan(tmp_path)
+    tasks = [
+        json.loads(line)
+        for line in (plan_dir / TASKS_NAME).read_text(encoding="utf-8").splitlines()
+    ]
+    ineligible = {
+        ("scip", "CFL_easy_instance_1"),
+        ("scip", "CFL_medium_instance_0"),
+        ("gurobi", "CFL_medium_instance_2"),
+        ("scip", "CFL_medium_instance_2"),
+        ("gurobi", "CFL_medium_instance_5"),
+        ("scip", "CFL_medium_instance_5"),
+    }
+    run_root = tmp_path / "runs"
+    for task in tasks:
+        key = (str(task["solver"]), str(task["source_instance_id"]))
+        _write_parent_run(
+            run_root / task["run_dir_relative_path"],
+            task,
+            mip_gap_relative=0.20 if key in ineligible else 0.05,
+        )
+
+    report = audit_vertical_slice_parent_runs(plan_dir=plan_dir, run_root=run_root)
+
+    assert report["gate_status"] == "inconclusive"
+    assert report["gates"] == {
+        "benchmark_observation_gate": "passed",
+        "solver_arm_training_label_gate": "incomplete",
+        "common_evaluation_reference_gate": "incomplete",
+    }
+    assert report["summary"]["benchmark_tasks_passed"] == 12
+    assert report["summary"]["labels_eligible"] == 6
+    assert report["summary"]["training_labels_eligible"] == 2
+    assert report["summary"]["evaluation_references_covered"] == 3
+    assert report["summary"]["parent_runs_written"] == 12
+

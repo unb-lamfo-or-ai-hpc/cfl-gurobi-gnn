@@ -31,10 +31,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         summary = report["summary"]
         print(
             f"[INFO] gate={report['gate_status']} | "
-            f"passed={summary['tasks_passed']}/{summary['tasks_planned']} | "
-            f"paired={str(summary['paired_parent_population']).lower()}"
+            f"benchmark={summary['benchmark_tasks_passed']}/{summary['tasks_planned']} | "
+            f"train_labels={summary['training_labels_eligible']}/"
+            f"{summary['training_solver_parent_pairs']} | "
+            f"evaluation_references={summary['evaluation_references_covered']}/"
+            f"{summary['evaluation_parents']}"
         )
-        return 0 if report["gate_status"] == "passed" else 1
+        return (
+            0
+            if report["gates"]["benchmark_observation_gate"] == "passed"
+            else 1
+        )
     except (OSError, TypeError, ValueError, MvpVerticalSliceError) as error:
         print(f"[ERROR] {error}")
         return 2
@@ -42,3 +49,4 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

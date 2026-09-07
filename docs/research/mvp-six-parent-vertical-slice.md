@@ -28,14 +28,18 @@ local-branching descendants; validation and test remain original-only.
 
 The preflight writes a path-sanitized plan and twelve-task JSONL manifest. A
 Slurm array runs at most four fresh solver processes concurrently. The audit
-then requires all twelve labels, checks solver artifacts and hashes, and emits
-`parent_runs.tsv` with paths relative to the configured runtime run root.
+separates valid fixed-budget benchmark observations from label admissibility.
+An observation with a terminal gap above 10% remains valid right-censored
+benchmark evidence, but it cannot label a graph. `parent_runs.tsv` inventories
+all mechanically valid paired runs using paths relative to the runtime root.
 
-Training-parent reports must pass the augmentation gate. Validation/test
-reports are expected to be `inconclusive` only because augmentation is
-prohibited; their original labels must still be gap-eligible. No test graph is
-loaded or inspected at this stage.
+Every solver-specific training parent must eventually have an admissible label.
+Validation/test require one common best-known admissible reference per parent,
+not an admissible label from both solvers. Missing labels are completed under a
+separate rescue contract; the one-hour benchmark artifacts remain immutable.
+No test graph is loaded or inspected at this stage.
 
 The next gate applies the symmetric local-branching operator to the four
 solver/train-parent pairs, solves the descendants independently, generates the
 graphs, composes the four manifests, and repeats the PR #30 loader audit.
+
