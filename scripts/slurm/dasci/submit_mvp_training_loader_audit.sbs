@@ -8,8 +8,12 @@
 
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-EXEC_DIR="${EXEC_DIR:-$(cd "${SCRIPT_DIR}/../../.." && pwd)}"
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
 DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
 CONDA_ENV="${CONDA_ENV:-tfm_env}"
 

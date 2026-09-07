@@ -77,6 +77,19 @@ def test_slurm_launchers_use_supported_cli_arguments() -> None:
     assert "--categories" in audit_launcher
 
 
+def test_mvp_loader_launcher_resolves_the_submission_checkout() -> None:
+    launcher = (
+        PROJECT_ROOT
+        / "scripts"
+        / "slurm"
+        / "dasci"
+        / "submit_mvp_training_loader_audit.sbs"
+    ).read_text(encoding="utf-8")
+    assert "SLURM_SUBMIT_DIR" in launcher
+    assert 'dirname "${BASH_SOURCE[0]}"' not in launcher
+    assert "${EXEC_DIR}/pyproject.toml" in launcher
+
+
 def test_toy_gasse_training_helpers_are_preserved() -> None:
     toy = (PROJECT_ROOT / "sandbox" / "toy_bipartite.py").read_text(
         encoding="utf-8"
