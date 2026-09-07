@@ -1,0 +1,48 @@
+{
+  "development_only": true,
+  "parents": [
+    {
+      "difficulty": "easy",
+      "role": "test",
+      "source_instance_id": "CFL_easy_instance_0"
+    },
+    {
+      "difficulty": "medium",
+      "role": "test",
+      "source_instance_id": "CFL_medium_instance_0"
+    },
+    {
+      "difficulty": "easy",
+      "role": "validation",
+      "source_instance_id": "CFL_easy_instance_1"
+    },
+    {
+      "difficulty": "medium",
+      "role": "validation",
+      "source_instance_id": "CFL_medium_instance_5"
+    },
+    {
+      "difficulty": "easy",
+      "role": "train",
+      "source_instance_id": "CFL_easy_instance_2"
+    },
+    {
+      "difficulty": "medium",
+      "role": "train",
+      "source_instance_id": "CFL_medium_instance_2"
+    }
+  ],
+  "schema_version": 1,
+  "selection_policy": "explicit_balanced_role_difficulty_v1",
+  "slice_id": "mvp_vertical_slice_easy_medium_v1",
+  "solvers": [
+    "gurobi",
+    "scip"
+  ],
+  "solve_budget": {
+    "node_limit": 1000000,
+    "seed": 42,
+    "threads": 1,
+    "time_limit_seconds": 3600
+  }
+}
