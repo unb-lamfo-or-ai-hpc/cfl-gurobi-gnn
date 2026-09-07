@@ -35,7 +35,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"train_labels={summary['training_labels_eligible']}/"
             f"{summary['training_solver_parent_pairs']} | "
             f"evaluation_references={summary['evaluation_references_covered']}/"
-            f"{summary['evaluation_parents']}"
+            f"{summary['evaluation_parents']} | "
+            f"rescue={report['label_rescue']['tasks_planned']}"
         )
         return (
             0

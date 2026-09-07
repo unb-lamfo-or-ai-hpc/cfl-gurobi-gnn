@@ -39,6 +39,13 @@ not an admissible label from both solvers. Missing labels are completed under a
 separate rescue contract; the one-hour benchmark artifacts remain immutable.
 No test graph is loaded or inspected at this stage.
 
+The audit also verifies every parent-plan contract hash and the precommitted
+solver, profile, time, node, thread, seed, objective-sense, fresh-process, and
+no-warm-start settings. When coverage is incomplete it writes a deterministic
+`label_rescue_tasks.jsonl`. The rescue keeps the one-hour benchmark immutable,
+uses a separate four-hour single-thread budget, selects Gurobi `default` and
+SCIP `feasibility` profiles, and prohibits cross-solver warm starts.
+
 The next gate applies the symmetric local-branching operator to the four
 solver/train-parent pairs, solves the descendants independently, generates the
 graphs, composes the four manifests, and repeats the PR #30 loader audit.

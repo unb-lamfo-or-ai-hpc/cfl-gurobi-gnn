@@ -23,6 +23,8 @@ PREFLIGHT_REPORT_NAME = "mvp_vertical_slice_preflight_report.json"
 AUDIT_NAME = "per_parent_solve_audit.jsonl"
 AUDIT_REPORT_NAME = "mvp_vertical_slice_parent_audit_report.json"
 PARENT_RUNS_NAME = "parent_runs.tsv"
+LABEL_RESCUE_TASKS_NAME = "label_rescue_tasks.jsonl"
+PARENT_SOLVE_PLAN_NAME = "scip_parent_solve_plan.json"
 PARENT_SOLVE_REPORT_NAME = "scip_parent_solve_report.json"
 REQUIRED_SOLVERS = ("gurobi", "scip")
 REQUIRED_ROLES = ("train", "validation", "test")
@@ -308,7 +310,11 @@ def audit_vertical_slice_parent_runs(
     report_path = plan_root / AUDIT_REPORT_NAME
     audit_path = plan_root / AUDIT_NAME
     parent_runs_path = plan_root / PARENT_RUNS_NAME
-    if not overwrite and any(path.exists() for path in (report_path, audit_path, parent_runs_path)):
+    rescue_tasks_path = plan_root / LABEL_RESCUE_TASKS_NAME
+    if not overwrite and any(
+        path.exists()
+        for path in (report_path, audit_path, parent_runs_path, rescue_tasks_path)
+    ):
         raise MvpVerticalSliceError("parent audit exists; use --overwrite")
     plan = _read_json(plan_root / PLAN_NAME)
     tasks = _read_jsonl(plan_root / TASKS_NAME)
@@ -325,8 +331,9 @@ def audit_vertical_slice_parent_runs(
     for task in tasks:
         run_relative = str(task["run_dir_relative_path"])
         run_dir = runs / run_relative
+        parent_plan_path = run_dir / PARENT_SOLVE_PLAN_NAME
         parent_report_path = run_dir / PARENT_SOLVE_REPORT_NAME
-        if not parent_report_path.is_file():
+        if not parent_plan_path.is_file() or not parent_report_path.is_file():
             audits.append(
                 {
                     "task_index": task["task_index"],
@@ -338,10 +345,15 @@ def audit_vertical_slice_parent_runs(
                     "benchmark_status": "failed",
                     "label_eligible": False,
                     "status": "failed",
-                    "reason_code": "parent_solve_report_missing",
+                    "reason_code": (
+                        "parent_solve_plan_missing"
+                        if not parent_plan_path.is_file()
+                        else "parent_solve_report_missing"
+                    ),
                 }
             )
             continue
+        parent_plan = _read_json(parent_plan_path)
         parent_report = _read_json(parent_report_path)
         parent = parent_report.get("parent", {})
         solve = parent_report.get("solve", {})
@@ -361,6 +373,40 @@ def audit_vertical_slice_parent_runs(
             and float(raw_time) >= 0.0
         )
         parent_checks = parent_report.get("checks", {})
+        parent_plan_contract_payload = {
+            key: value
+            for key, value in parent_plan.items()
+            if key not in {"contract_sha256", "outputs"}
+        }
+        parent_plan_contract_sha256 = _canonical_sha256(parent_plan_contract_payload)
+        solver_contract = parent_plan.get("solver_contract", {})
+        expected_budget = plan["solve_budget"]
+        provenance_checks = {
+            "parent_plan_contract_valid": (
+                parent_plan.get("contract_sha256") == parent_plan_contract_sha256
+            ),
+            "parent_report_contract_match": (
+                parent_report.get("contract_sha256") == parent_plan_contract_sha256
+            ),
+            "experiment_contract_match": (
+                parent_plan.get("experiment_contract_sha256")
+                == plan["experiment_contract_sha256"]
+            ),
+            "solver_identity_match": solver_contract.get("solver") == task["solver"],
+            "solver_profile_default": solver_contract.get("solver_profile") == "default",
+            "time_limit_match": (
+                solver_contract.get("time_limit_seconds")
+                == expected_budget["time_limit_seconds"]
+            ),
+            "node_limit_match": (
+                solver_contract.get("node_limit") == expected_budget["node_limit"]
+            ),
+            "threads_match": solver_contract.get("threads") == expected_budget["threads"],
+            "seed_match": solver_contract.get("seed") == expected_budget["seed"],
+            "force_minimize": solver_contract.get("force_minimize") is True,
+            "fresh_process": solver_contract.get("fresh_process") is True,
+            "no_warm_start": solver_contract.get("warm_start_supplied") is False,
+        }
         benchmark_checks = {
             "parent_identity_match": parent.get("source_instance_id") == task["source_instance_id"],
             "parent_sha256_match": parent.get("sha256") == task["parent_mip_sha256"],
@@ -385,7 +431,11 @@ def audit_vertical_slice_parent_runs(
             artifact_checks[artifact_name] = (
                 artifact.is_file() and sha256_file(artifact) == descriptor.get("sha256")
             )
-        mechanically_valid = all(benchmark_checks.values()) and all(artifact_checks.values())
+        mechanically_valid = (
+            all(provenance_checks.values())
+            and all(benchmark_checks.values())
+            and all(artifact_checks.values())
+        )
         computed_label_eligible = mechanically_valid and gap_admissible
         computed_augmentation_eligible = computed_label_eligible and role == "train"
         expected_gate_status = (
@@ -415,11 +465,16 @@ def audit_vertical_slice_parent_runs(
                 "source_instance_id": task["source_instance_id"],
                 "role": role,
                 "difficulty": task["difficulty"],
+                "parent_contract_sha256": parent_plan_contract_sha256,
+                "solver_contract_sha256": _canonical_sha256(solver_contract),
+                "parent_plan_sha256": sha256_file(parent_plan_path),
+                "parent_report_sha256": sha256_file(parent_report_path),
                 "run_dir_relative_path": run_relative,
                 "mip_gap_relative": solve.get("mip_gap_relative"),
                 "execution_time_seconds": solve.get("execution_time_seconds"),
                 "solution_objective": solve.get("solution_objective"),
                 "benchmark_checks": benchmark_checks,
+                "provenance_checks": provenance_checks,
                 "contract_checks": contract_checks,
                 "label_checks": {
                     "maximum_admissible_relative_gap": maximum_gap,
@@ -491,6 +546,90 @@ def audit_vertical_slice_parent_runs(
         if composition_ready
         else "inconclusive"
     )
+    tasks_by_index = {int(task["task_index"]): task for task in tasks}
+
+    def rescue_record(
+        audit: Mapping[str, Any], *, reason_code: str
+    ) -> dict[str, Any]:
+        task = tasks_by_index[int(audit["task_index"])]
+        solver = str(task["solver"])
+        return {
+            "rescue_task_index": -1,
+            "source_task_index": task["task_index"],
+            "solver": solver,
+            "source_instance_id": task["source_instance_id"],
+            "category": task["category"],
+            "difficulty": task["difficulty"],
+            "fold": task["fold"],
+            "role": task["role"],
+            "parent_mip_relative_path": task["parent_mip_relative_path"],
+            "parent_mip_sha256": task["parent_mip_sha256"],
+            "benchmark_run_dir_relative_path": task["run_dir_relative_path"],
+            "benchmark_parent_contract_sha256": audit["parent_contract_sha256"],
+            "benchmark_terminal_mip_gap_relative": audit["mip_gap_relative"],
+            "reason_code": reason_code,
+            "rescue_run_dir_relative_path": (
+                f"{solver}/{task['source_instance_id']}"
+            ),
+            "solver_profile": "default" if solver == "gurobi" else "feasibility",
+            "solve_budget": {
+                "time_limit_seconds": 14400.0,
+                "node_limit": 4000000,
+                "threads": expected_budget["threads"],
+                "seed": expected_budget["seed"],
+            },
+            "fresh_process": True,
+            "warm_start_supplied": False,
+            "cross_solver_warm_start_prohibited": True,
+            "benchmark_artifacts_immutable": True,
+        }
+
+    rescue_tasks: list[dict[str, Any]] = []
+    if benchmark_gate == "passed":
+        for audit in sorted(audits, key=lambda item: int(item["task_index"])):
+            if audit.get("role") == "train" and audit.get("label_eligible") is not True:
+                rescue_tasks.append(
+                    rescue_record(
+                        audit, reason_code="solver_arm_training_label_missing"
+                    )
+                )
+        for parent_id in sorted(evaluation_parent_ids):
+            records = [
+                item
+                for item in audits
+                if item.get("source_instance_id") == parent_id
+                and item.get("benchmark_status") == "passed"
+            ]
+            if any(item.get("label_eligible") is True for item in records):
+                continue
+            selected = min(
+                records,
+                key=lambda item: (
+                    float(item["mip_gap_relative"]),
+                    str(item["solver"]),
+                ),
+            )
+            rescue_tasks.append(
+                rescue_record(
+                    selected,
+                    reason_code="common_evaluation_reference_missing",
+                )
+            )
+    rescue_tasks.sort(key=lambda item: int(item["source_task_index"]))
+    for rescue_index, rescue_task in enumerate(rescue_tasks):
+        rescue_task["rescue_task_index"] = rescue_index
+    rescue_contract_payload = {
+        "schema_version": SCHEMA_VERSION,
+        "dataset_variant": "mvp_vertical_slice_label_rescue",
+        "vertical_slice_contract_sha256": contract_sha256,
+        "selection_policy": (
+            "missing_train_solver_labels_and_missing_common_evaluation_references_v1"
+        ),
+        "benchmark_results_immutable": True,
+        "tasks": rescue_tasks,
+    }
+    rescue_contract_sha256 = _canonical_sha256(rescue_contract_payload)
+    _write_jsonl(rescue_tasks_path, rescue_tasks)
     _write_jsonl(audit_path, audits)
     if benchmark_gate == "passed":
         parent_runs_path.write_text(
@@ -505,6 +644,16 @@ def audit_vertical_slice_parent_runs(
         "contract_sha256": contract_sha256,
         "probe_completed": True,
         "gate_status": gate,
+        "label_rescue": {
+            "contract_sha256": rescue_contract_sha256,
+            "tasks_planned": len(rescue_tasks),
+            "solver_profiles": {
+                "gurobi": "default",
+                "scip": "feasibility",
+            },
+            "time_limit_seconds_per_task": 14400.0,
+            "benchmark_results_immutable": True,
+        },
         "gates": {
             "benchmark_observation_gate": benchmark_gate,
             "solver_arm_training_label_gate": training_label_gate,
@@ -547,6 +696,8 @@ def audit_vertical_slice_parent_runs(
             "parent_runs": (
                 PARENT_RUNS_NAME if benchmark_gate == "passed" else None
             ),
+            "label_rescue_tasks": LABEL_RESCUE_TASKS_NAME,
+            "label_rescue_tasks_sha256": sha256_file(rescue_tasks_path),
             "parent_run_path_semantics": "relative_to_runtime_parent_run_root",
         },
         "decision": {
