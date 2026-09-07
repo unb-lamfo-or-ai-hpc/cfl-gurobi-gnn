@@ -1,0 +1,75 @@
+#!/bin/bash
+#SBATCH --job-name=mvp_loader
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=00:20:00
+#SBATCH --output=slurm_mvp_loader_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${MVP_DATASET_DIR:?Set the passing PR 29 dataset directory}"
+
+REQUIRED_INPUTS=(
+    "mvp_dataset_composition_plan.json"
+    "mvp_dataset_composition_report.json"
+    "mvp_sample_manifest.jsonl"
+    "evaluation_reference_manifest.jsonl"
+    "arms/gurobi_original.jsonl"
+    "arms/gurobi_incumbent_augmented.jsonl"
+    "arms/scip_original.jsonl"
+    "arms/scip_incumbent_augmented.jsonl"
+)
+for relative_path in "${REQUIRED_INPUTS[@]}"; do
+    if [[ ! -s "${MVP_DATASET_DIR}/${relative_path}" ]]; then
+        echo "[ERROR] missing PR 29 input: ${relative_path}" >&2
+        exit 2
+    fi
+done
+if ! jq -e '
+    .gate_status == "passed"
+    and .eligibility.dataset_eligible == true
+    and .summary.four_arm_manifests_written == 4
+' "${MVP_DATASET_DIR}/mvp_dataset_composition_report.json" >/dev/null; then
+    echo "[ERROR] PR 29 composition report is not eligible" >&2
+    exit 2
+fi
+
+EXPERIMENT_NAME="${EXPERIMENT_NAME:-mvp_training_loader_${SLURM_JOB_ID}}"
+OUTPUT_DIR="${OUTPUT_DIR:-${DATA_ROOT}/models/mvp/training_plans/${EXPERIMENT_NAME}}"
+EXPERIMENT_CONFIG="${EXPERIMENT_CONFIG:-${EXEC_DIR}/configs/experiments/mvp_partial_v1.json}"
+LOADER_POLICY="${LOADER_POLICY:-${EXEC_DIR}/configs/training/mvp_four_arm_loader_v1.json}"
+
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+eval "$(conda shell.bash hook)"
+conda activate "$CONDA_ENV"
+python3 -c 'import torch, torch_geometric'
+
+echo "[INFO] repository=${EXEC_DIR}"
+echo "[INFO] dataset=${MVP_DATASET_DIR}"
+echo "[INFO] output=${OUTPUT_DIR}"
+
+OVERWRITE_ARGS=()
+if [[ "${OVERWRITE:-0}" == "1" ]]; then
+    OVERWRITE_ARGS=(--overwrite)
+fi
+
+srun python3 -m cfl_gnn.cli.plan_mvp_training \
+    --dataset_dir "$MVP_DATASET_DIR" \
+    --output_dir "$OUTPUT_DIR" \
+    --experiment_config "$EXPERIMENT_CONFIG" \
+    --loader_policy "$LOADER_POLICY" \
+    --verify_loads \
+    "${OVERWRITE_ARGS[@]}"
+

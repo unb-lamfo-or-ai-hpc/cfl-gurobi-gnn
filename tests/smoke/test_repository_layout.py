@@ -34,6 +34,7 @@ def test_stable_cli_modules_exist() -> None:
         "graph_statistics.py",
         "graph_xray.py",
         "plan_instance_folds.py",
+        "plan_mvp_training.py",
         "train_instance_serial.py",
         "train_distributed.py",
         "train_serial.py",
@@ -74,6 +75,19 @@ def test_slurm_launchers_use_supported_cli_arguments() -> None:
     assert "--min_priority" in hint_launcher
     assert "--instance" not in audit_launcher
     assert "--categories" in audit_launcher
+
+
+def test_mvp_loader_launcher_resolves_the_submission_checkout() -> None:
+    launcher = (
+        PROJECT_ROOT
+        / "scripts"
+        / "slurm"
+        / "dasci"
+        / "submit_mvp_training_loader_audit.sbs"
+    ).read_text(encoding="utf-8")
+    assert "SLURM_SUBMIT_DIR" in launcher
+    assert 'dirname "${BASH_SOURCE[0]}"' not in launcher
+    assert "${EXEC_DIR}/pyproject.toml" in launcher
 
 
 def test_toy_gasse_training_helpers_are_preserved() -> None:
@@ -163,3 +177,4 @@ def test_artifact_schemas_keep_legacy_field_order() -> None:
         "obj_coeffs",
     )
     assert ConstraintFeatures._fields == ("senses", "rhs_values", "row_norms")
+
