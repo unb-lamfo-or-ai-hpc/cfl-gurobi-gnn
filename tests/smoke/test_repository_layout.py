@@ -21,6 +21,7 @@ def test_stable_cli_modules_exist() -> None:
         "audit_dataset.py",
         "audit_gurobi_node_subproblems.py",
         "audit_pyscipopt_node_subproblems.py",
+        "audit_mvp_vertical_slice_parents.py",
         "audit_instance_training_split.py",
         "benchmark_gurobi.py",
         "build_instance_dataset.py",
@@ -35,6 +36,7 @@ def test_stable_cli_modules_exist() -> None:
         "graph_xray.py",
         "plan_instance_folds.py",
         "plan_mvp_training.py",
+        "plan_mvp_vertical_slice.py",
         "train_instance_serial.py",
         "train_distributed.py",
         "train_serial.py",
@@ -88,6 +90,17 @@ def test_mvp_loader_launcher_resolves_the_submission_checkout() -> None:
     assert "SLURM_SUBMIT_DIR" in launcher
     assert 'dirname "${BASH_SOURCE[0]}"' not in launcher
     assert "${EXEC_DIR}/pyproject.toml" in launcher
+
+
+def test_vertical_slice_launchers_resolve_the_submission_checkout() -> None:
+    slurm_root = PROJECT_ROOT / "scripts" / "slurm" / "dasci"
+    for name in (
+        "submit_mvp_vertical_slice_parent_solutions.sbs",
+        "submit_mvp_vertical_slice_parent_audit.sbs",
+    ):
+        launcher = (slurm_root / name).read_text(encoding="utf-8")
+        assert "SLURM_SUBMIT_DIR" in launcher
+        assert 'dirname "${BASH_SOURCE[0]}"' not in launcher
 
 
 def test_toy_gasse_training_helpers_are_preserved() -> None:
