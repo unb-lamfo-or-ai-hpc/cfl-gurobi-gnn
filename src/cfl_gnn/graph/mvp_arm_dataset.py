@@ -49,7 +49,7 @@ class MvpArmDataset:
         graph.parent_instance_id = str(record["parent_instance_id"])
         graph.role = str(record["role"])
         graph.sample_weight = float(
-            record.get("effective_within_parent_weight", 1.0)
+            record.get("target_within_parent_weight", 1.0)
         )
         return graph
 

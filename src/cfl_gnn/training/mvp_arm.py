@@ -263,8 +263,8 @@ class ArmSample:
             "label_objective": self.sample.label_objective,
             "label_execution_time_seconds": self.sample.label_execution_time_seconds,
             "stored_sample_weight": self.stored_sample_weight,
-            "effective_within_parent_weight": 1.0 / eligible_siblings,
-            "effective_sampling_probability": (
+            "target_within_parent_weight": 1.0 / eligible_siblings,
+            "target_sampling_probability": (
                 1.0 / (common_parent_count * eligible_siblings)
             ),
         }
@@ -600,7 +600,10 @@ def build_training_data_plan(
         warnings.append("validation_partition_missing")
     if test_count == 0:
         warnings.append("held_out_test_partition_missing")
-    if len(unified_records) < 90 * 2:
+    parent_population = {
+        record.parent_instance_id for record in unified_records
+    }
+    if len(parent_population) < 90:
         warnings.append("development_partial_parent_population")
 
     contract_payload = {

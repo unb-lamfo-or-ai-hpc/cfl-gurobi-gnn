@@ -303,8 +303,8 @@ def test_four_arm_plan_uses_common_parents_and_references(tmp_path: Path) -> Non
         assert arm["draws_per_epoch"] == 4
         assert arm["eligible_training_parent_count"] == 1
         assert all(
-            record["effective_sampling_probability"]
-            == record["effective_within_parent_weight"]
+            record["target_sampling_probability"]
+            == record["target_within_parent_weight"]
             for record in arm["eligible_training_records"]
         )
     assert len(plan["arms"]["gurobi_original"]["eligible_training_records"]) == 1
@@ -336,7 +336,7 @@ def test_gap_filter_recomputes_augmented_parent_weight(tmp_path: Path) -> None:
     for arm_id in ARM_IDS:
         records = plan["arms"][arm_id]["eligible_training_records"]
         assert len(records) == 1
-        assert records[0]["effective_within_parent_weight"] == 1.0
+        assert records[0]["target_within_parent_weight"] == 1.0
     assert plan["arms"]["scip_incumbent_augmented"]["excluded_by_gap_count"] == 1
 
 
