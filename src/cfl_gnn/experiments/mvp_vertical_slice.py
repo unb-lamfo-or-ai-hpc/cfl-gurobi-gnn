@@ -729,4 +729,3 @@ def audit_vertical_slice_parent_runs(
     }
     _write_json(report_path, report)
     return report
-

@@ -547,4 +547,3 @@ def audit_rescue_runs(
     }
     _write_json(report_path, report)
     return report
-

@@ -51,4 +51,3 @@ in `mvp-label-rescue.md`. Only after all required labels are admissible does the
 pipeline apply the symmetric local-branching operator to the four
 solver/train-parent pairs, solve the descendants independently, generate the
 graphs, compose the four manifests, and repeat the PR #30 loader audit.
-

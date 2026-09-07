@@ -89,9 +89,9 @@ def test_mvp_loader_launcher_resolves_the_submission_checkout() -> None:
         / "dasci"
         / "submit_mvp_training_loader_audit.sbs"
     ).read_text(encoding="utf-8")
-    assert 'SLURM_SUBMIT_DIR' in launcher
+    assert "SLURM_SUBMIT_DIR" in launcher
     assert 'dirname "${BASH_SOURCE[0]}"' not in launcher
-    assert '${EXEC_DIR}/pyproject.toml' in launcher
+    assert "${EXEC_DIR}/pyproject.toml" in launcher
 
 
 def test_vertical_slice_launchers_resolve_the_submission_checkout() -> None:
@@ -204,4 +204,3 @@ def test_artifact_schemas_keep_legacy_field_order() -> None:
         "obj_coeffs",
     )
     assert ConstraintFeatures._fields == ("senses", "rhs_values", "row_norms")
-

@@ -344,4 +344,3 @@ def test_aggregate_audit_requires_all_three_rescue_reports(tmp_path: Path) -> No
     }
     assert (plan_dir / PER_TASK_AUDIT_NAME).is_file()
     assert (plan_dir / AUDIT_REPORT_NAME).is_file()
-

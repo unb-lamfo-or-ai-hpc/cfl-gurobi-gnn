@@ -43,4 +43,3 @@ srun python3 -m cfl_gnn.cli.run_mvp_label_rescue_task \
     --rescue_run_root "${RESCUE_RUN_ROOT}" \
     --task_index "${SLURM_ARRAY_TASK_ID}" \
     "${OVERWRITE_ARGS[@]}"
-

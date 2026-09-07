@@ -44,4 +44,3 @@ After all three labels pass, compose the authoritative six-parent label index.
 Then apply the symmetric local-branching operator only to the four
 solver/train-parent pairs and independently solve their descendants. Validation
 and held-out test parents remain original-only.
-
