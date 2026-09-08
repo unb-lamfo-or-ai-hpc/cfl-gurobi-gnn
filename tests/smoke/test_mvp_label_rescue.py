@@ -319,13 +319,19 @@ def test_aggregate_audit_requires_all_three_rescue_reports(tmp_path: Path) -> No
             descriptors[key] = {"file_name": name, "sha256": sha256_file(path)}
         report = {
             "rescue_contract_sha256": rescue_contract,
+            "probe_completed": True,
             "gate_status": "passed",
             "task": task,
             "solve": {"mip_gap_relative": 0.05, "execution_time_seconds": 5000.0},
             "checks": {
+                "execution_contract_valid": True,
+                "parent_solve_contract_match": True,
                 "benchmark_artifacts_unchanged": True,
                 "fresh_process": True,
                 "no_warm_start": True,
+                "objective_minimize": True,
+                "terminal_gap_admissible": True,
+                "label_eligible": True,
             },
             "artifacts": descriptors,
             "eligibility": {"label_rescue_eligible": True},
@@ -339,8 +345,124 @@ def test_aggregate_audit_requires_all_three_rescue_reports(tmp_path: Path) -> No
     assert report["gate_status"] == "passed"
     assert report["summary"] == {
         "tasks_planned": 3,
+        "execution_integrity_passed": 3,
+        "execution_integrity_failed": 0,
+        "labels_admissible": 3,
+        "labels_inadmissible": 0,
+        "labels_unavailable": 0,
         "tasks_passed": 3,
+        "tasks_inconclusive": 0,
         "tasks_failed": 0,
     }
     assert (plan_dir / PER_TASK_AUDIT_NAME).is_file()
     assert (plan_dir / AUDIT_REPORT_NAME).is_file()
+
+
+def test_aggregate_audit_marks_valid_inadmissible_labels_inconclusive(
+    tmp_path: Path,
+) -> None:
+    plan_dir, _, _ = _corrected_fixture(tmp_path)
+    rescue_root = tmp_path / "rescue"
+    tasks = [
+        json.loads(line)
+        for line in (plan_dir / LABEL_RESCUE_TASKS_NAME)
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    benchmark_report = json.loads(
+        (plan_dir / "mvp_vertical_slice_parent_audit_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    rescue_contract = benchmark_report["label_rescue"]["contract_sha256"]
+    for task in tasks:
+        run_dir = rescue_root / task["rescue_run_dir_relative_path"]
+        run_dir.mkdir(parents=True, exist_ok=True)
+        descriptors = {}
+        for key, name in (
+            ("execution_plan", EXECUTION_PLAN_NAME),
+            ("parent_solve_plan", PARENT_PLAN_NAME),
+            ("parent_solve_report", PARENT_REPORT_NAME),
+            ("solution", "parent_solution.json.gz"),
+            ("incumbents", "incumbents.parquet"),
+            ("variable_order", "incumbent_variable_order.json.gz"),
+        ):
+            path = run_dir / name
+            path.write_bytes(f"rescue:{task['rescue_task_index']}:{key}".encode())
+            descriptors[key] = {"file_name": name, "sha256": sha256_file(path)}
+        admissible = task["rescue_task_index"] == 0
+        execution_report = {
+            "rescue_contract_sha256": rescue_contract,
+            "probe_completed": True,
+            "gate_status": "passed" if admissible else "inconclusive",
+            "task": task,
+            "solve": {
+                "mip_gap_relative": 0.05 if admissible else 0.20,
+                "execution_time_seconds": 14400.0,
+            },
+            "checks": {
+                "execution_contract_valid": True,
+                "parent_solve_contract_match": True,
+                "benchmark_artifacts_unchanged": True,
+                "fresh_process": True,
+                "no_warm_start": True,
+                "objective_minimize": True,
+                "terminal_gap_admissible": admissible,
+                "label_eligible": admissible,
+            },
+            "artifacts": descriptors,
+            "eligibility": {"label_rescue_eligible": admissible},
+        }
+        (run_dir / EXECUTION_REPORT_NAME).write_text(
+            json.dumps(execution_report) + "\n", encoding="utf-8"
+        )
+
+    report = audit_rescue_runs(
+        vertical_slice_dir=plan_dir, rescue_run_root=rescue_root
+    )
+
+    assert report["schema_version"] == 2
+    assert report["gate_status"] == "inconclusive"
+    assert report["summary"] == {
+        "tasks_planned": 3,
+        "execution_integrity_passed": 3,
+        "execution_integrity_failed": 0,
+        "labels_admissible": 1,
+        "labels_inadmissible": 2,
+        "labels_unavailable": 0,
+        "tasks_passed": 1,
+        "tasks_inconclusive": 2,
+        "tasks_failed": 0,
+    }
+    assert report["decision"] == {
+        "reason_code": "rescue_execution_valid_labels_incomplete",
+        "next_gate": "define_reduced_mvp_slice_or_precommit_additional_rescue",
+    }
+    audits = [
+        json.loads(line)
+        for line in (plan_dir / PER_TASK_AUDIT_NAME)
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert [item["status"] for item in audits] == [
+        "passed",
+        "inconclusive",
+        "inconclusive",
+    ]
+    assert all(item["integrity_status"] == "passed" for item in audits)
+
+
+def test_aggregate_audit_reserves_failed_for_missing_execution(
+    tmp_path: Path,
+) -> None:
+    plan_dir, _, _ = _corrected_fixture(tmp_path)
+    report = audit_rescue_runs(
+        vertical_slice_dir=plan_dir, rescue_run_root=tmp_path / "missing"
+    )
+    assert report["gate_status"] == "failed"
+    assert report["summary"]["execution_integrity_failed"] == 3
+    assert report["summary"]["labels_unavailable"] == 3
+    assert report["summary"]["tasks_failed"] == 3
+    assert report["decision"]["reason_code"] == (
+        "one_or_more_rescue_executions_invalid"
+    )

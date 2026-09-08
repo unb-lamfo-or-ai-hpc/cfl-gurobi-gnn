@@ -28,9 +28,12 @@ artifact hash. The same benchmark fingerprints are recomputed after the solve.
 The execution report is eligible only when the benchmark is unchanged, the
 new run is independent, and its terminal relative MIP gap is at most 10%.
 
-The aggregate audit fails closed unless all three reports match the
-precommitted task identities, contract hashes, artifact hashes, and eligibility
-checks. Its outputs are:
+The aggregate audit uses three outcomes. `passed` means that execution integrity
+and all labels passed. `inconclusive` means that every execution and artifact is
+valid but one or more labels exceed the precommitted gap policy. `failed` is
+reserved for missing outputs, corrupt artifacts, or broken contracts. An
+inconclusive result remains fail-closed for downstream dataset composition. Its
+outputs are:
 
 - `mvp_label_rescue_audit_report.json`;
 - `per_label_rescue_task_audit.jsonl`.
@@ -41,6 +44,12 @@ development-only and is not yet eligible for scientific reporting.
 ## Next gate
 
 After all three labels pass, compose the authoritative six-parent label index.
-Then apply the symmetric local-branching operator only to the four
-solver/train-parent pairs and independently solve their descendants. Validation
-and held-out test parents remain original-only.
+If execution integrity passes but label coverage remains incomplete, either
+precommit another rescue experiment or define a reduced development-only slice;
+the threshold must not be relaxed after observing results. The validated
+development fallback uses the already precommitted easy parents only: easy-2
+for training, easy-1 for validation, and easy-0 for held-out testing.
+
+Only after a complete slice is declared does the pipeline apply the symmetric
+local-branching operator to solver/train-parent pairs and independently solve
+their descendants. Validation and held-out test parents remain original-only.

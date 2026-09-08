@@ -29,6 +29,7 @@ from cfl_gnn.pipelines.scip_parent_solutions import (
 
 
 SCHEMA_VERSION = 1
+AUDIT_SCHEMA_VERSION = 2
 EXECUTION_PLAN_NAME = "mvp_label_rescue_execution_plan.json"
 EXECUTION_REPORT_NAME = "mvp_label_rescue_execution_report.json"
 PER_TASK_AUDIT_NAME = "per_label_rescue_task_audit.jsonl"
@@ -439,7 +440,7 @@ def audit_rescue_runs(
     rescue_run_root: str | Path,
     overwrite: bool = False,
 ) -> dict[str, Any]:
-    """Fail closed unless all precommitted rescue labels are admissible."""
+    """Separate execution integrity from rescue-label admissibility."""
     vertical_root = Path(vertical_slice_dir).resolve()
     rescue_root = Path(rescue_run_root).resolve()
     inputs = load_rescue_inputs(vertical_root)
@@ -458,36 +459,85 @@ def audit_rescue_runs(
                     "rescue_task_index": task["rescue_task_index"],
                     "solver": task["solver"],
                     "source_instance_id": task["source_instance_id"],
+                    "role": task["role"],
+                    "integrity_status": "failed",
+                    "label_status": "unavailable",
                     "status": "failed",
                     "reason_code": "rescue_execution_report_missing",
                 }
             )
             continue
         execution_report = _read_json(execution_report_path)
-        checks = {
+        reported_checks = execution_report.get("checks", {})
+        if not isinstance(reported_checks, dict):
+            reported_checks = {}
+        integrity_checks = {
             "rescue_contract_match": (
                 execution_report.get("rescue_contract_sha256")
                 == inputs.rescue_contract_sha256
             ),
             "task_identity_match": execution_report.get("task") == task,
-            "execution_gate_passed": execution_report.get("gate_status") == "passed",
-            "label_eligible": execution_report.get("eligibility", {}).get(
-                "label_rescue_eligible"
+            "probe_completed": execution_report.get("probe_completed") is True,
+            "execution_contract_valid": reported_checks.get(
+                "execution_contract_valid"
             )
             is True,
-            "execution_checks_passed": all(
-                value is True
-                for value in execution_report.get("checks", {}).values()
-            ),
+            "parent_solve_contract_match": reported_checks.get(
+                "parent_solve_contract_match"
+            )
+            is True,
+            "benchmark_artifacts_unchanged": reported_checks.get(
+                "benchmark_artifacts_unchanged"
+            )
+            is True,
+            "fresh_process": reported_checks.get("fresh_process") is True,
+            "no_warm_start": reported_checks.get("no_warm_start") is True,
+            "objective_minimize": reported_checks.get("objective_minimize") is True,
+        }
+        label_checks = {
+            "execution_gate_passed": execution_report.get("gate_status") == "passed",
+            "terminal_gap_admissible": reported_checks.get(
+                "terminal_gap_admissible"
+            )
+            is True,
+            "execution_label_check_passed": reported_checks.get("label_eligible")
+            is True,
+            "label_eligibility_declared": execution_report.get(
+                "eligibility", {}
+            ).get("label_rescue_eligible")
+            is True,
         }
         artifact_checks: dict[str, bool] = {}
-        for name, descriptor in execution_report.get("artifacts", {}).items():
+        descriptors = execution_report.get("artifacts", {})
+        if not isinstance(descriptors, dict):
+            descriptors = {}
+        required_artifacts = (
+            "execution_plan",
+            "parent_solve_plan",
+            "parent_solve_report",
+            "solution",
+            "incumbents",
+            "variable_order",
+        )
+        for name in required_artifacts:
+            descriptor = descriptors.get(name)
+            if not isinstance(descriptor, dict):
+                artifact_checks[name] = False
+                continue
             path = run_dir / str(descriptor.get("file_name", ""))
-            artifact_checks[name] = (
-                path.is_file() and sha256_file(path) == descriptor.get("sha256")
-            )
-        passed = all(checks.values()) and bool(artifact_checks) and all(
+            artifact_checks[name] = path.is_file() and sha256_file(
+                path
+            ) == descriptor.get("sha256")
+        integrity_passed = all(integrity_checks.values()) and all(
             artifact_checks.values()
+        )
+        label_admissible = integrity_passed and all(label_checks.values())
+        status = (
+            "failed"
+            if not integrity_passed
+            else "passed"
+            if label_admissible
+            else "inconclusive"
         )
         audits.append(
             {
@@ -503,24 +553,59 @@ def audit_rescue_runs(
                 "execution_time_seconds": execution_report.get("solve", {}).get(
                     "execution_time_seconds"
                 ),
-                "checks": checks,
+                "integrity_checks": integrity_checks,
+                "label_checks": label_checks,
                 "artifact_checks": artifact_checks,
-                "status": "passed" if passed else "failed",
+                "integrity_status": "passed" if integrity_passed else "failed",
+                "label_status": (
+                    "unavailable"
+                    if not integrity_passed
+                    else "admissible"
+                    if label_admissible
+                    else "inadmissible"
+                ),
+                "status": status,
             }
         )
-    passed_count = sum(item["status"] == "passed" for item in audits)
-    gate = "passed" if passed_count == len(inputs.tasks) and inputs.tasks else "failed"
+    integrity_passed_count = sum(
+        item.get("integrity_status") == "passed" for item in audits
+    )
+    labels_admissible_count = sum(
+        item.get("label_status") == "admissible" for item in audits
+    )
+    labels_inadmissible_count = sum(
+        item.get("label_status") == "inadmissible" for item in audits
+    )
+    labels_unavailable_count = sum(
+        item.get("label_status") == "unavailable" for item in audits
+    )
+    tasks_failed = sum(item["status"] == "failed" for item in audits)
+    tasks_inconclusive = sum(item["status"] == "inconclusive" for item in audits)
+    if tasks_failed:
+        gate = "failed"
+    elif labels_admissible_count == len(inputs.tasks) and inputs.tasks:
+        gate = "passed"
+    else:
+        gate = "inconclusive"
     _write_jsonl(audit_path, audits)
     report = {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": AUDIT_SCHEMA_VERSION,
         "rescue_contract_sha256": inputs.rescue_contract_sha256,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "probe_completed": True,
         "gate_status": gate,
         "summary": {
             "tasks_planned": len(inputs.tasks),
-            "tasks_passed": passed_count,
-            "tasks_failed": len(inputs.tasks) - passed_count,
+            "execution_integrity_passed": integrity_passed_count,
+            "execution_integrity_failed": (
+                len(inputs.tasks) - integrity_passed_count
+            ),
+            "labels_admissible": labels_admissible_count,
+            "labels_inadmissible": labels_inadmissible_count,
+            "labels_unavailable": labels_unavailable_count,
+            "tasks_passed": labels_admissible_count,
+            "tasks_inconclusive": tasks_inconclusive,
+            "tasks_failed": tasks_failed,
         },
         "eligibility": {
             "label_rescue_complete": gate == "passed",
@@ -536,12 +621,16 @@ def audit_rescue_runs(
             "reason_code": (
                 "all_precommitted_parent_labels_rescued"
                 if gate == "passed"
-                else "one_or_more_parent_labels_remain_inadmissible"
+                else "rescue_execution_valid_labels_incomplete"
+                if gate == "inconclusive"
+                else "one_or_more_rescue_executions_invalid"
             ),
             "next_gate": (
                 "train_parent_local_branching_and_derived_labels"
                 if gate == "passed"
-                else "review_rescue_task_metrics"
+                else "define_reduced_mvp_slice_or_precommit_additional_rescue"
+                if gate == "inconclusive"
+                else "review_rescue_integrity_failures"
             ),
         },
     }
