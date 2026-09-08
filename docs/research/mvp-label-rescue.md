@@ -53,3 +53,8 @@ for training, easy-1 for validation, and easy-0 for held-out testing.
 Only after a complete slice is declared does the pipeline apply the symmetric
 local-branching operator to solver/train-parent pairs and independently solve
 their descendants. Validation and held-out test parents remain original-only.
+
+The observed rescue outcome had valid execution integrity but incomplete
+medium-label coverage. The development continuation is therefore the explicit
+easy-only evidence contract documented in `mvp-easy-only-vertical-slice.md`;
+the 10% threshold and the immutable six-parent benchmark are unchanged.
