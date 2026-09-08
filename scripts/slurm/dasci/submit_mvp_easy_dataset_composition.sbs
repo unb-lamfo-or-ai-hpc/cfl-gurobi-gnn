@@ -1,0 +1,43 @@
+#!/bin/bash
+#SBATCH --job-name=mvp_easy_data
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=00:45:00
+#SBATCH --output=slurm_mvp_easy_dataset_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${EASY_SLICE_DIR:?Set EASY_SLICE_DIR}"
+: "${BENCHMARK_RUN_ROOT:?Set BENCHMARK_RUN_ROOT}"
+: "${DERIVED_GRAPH_DIR:?Set DERIVED_GRAPH_DIR}"
+: "${BASE_SOURCE_DIR:?Set BASE_SOURCE_DIR}"
+: "${OUTPUT_DIR:?Set OUTPUT_DIR}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+python3 -c 'import numpy, pyscipopt, torch, torch_geometric'
+
+OVERWRITE_ARGS=()
+if [[ "${OVERWRITE:-0}" == "1" ]]; then
+    OVERWRITE_ARGS=(--overwrite)
+fi
+
+srun python3 -m cfl_gnn.cli.build_mvp_easy_dataset \
+    --easy_slice_dir "${EASY_SLICE_DIR}" \
+    --benchmark_run_root "${BENCHMARK_RUN_ROOT}" \
+    --derived_graph_dir "${DERIVED_GRAPH_DIR}" \
+    --base_source_dir "${BASE_SOURCE_DIR}" \
+    --output_dir "${OUTPUT_DIR}" \
+    "${OVERWRITE_ARGS[@]}"
+
