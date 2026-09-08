@@ -1,5 +1,11 @@
 {
   "development_only": true,
+  "common_reference_selection_order": [
+    "minimum_objective",
+    "minimum_mip_gap",
+    "minimum_execution_time",
+    "solver_name"
+  ],
   "fallback_evidence": {
     "execution_integrity_passed": 3,
     "labels_admissible": 1,

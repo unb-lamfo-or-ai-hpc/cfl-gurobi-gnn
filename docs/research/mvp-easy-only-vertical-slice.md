@@ -18,9 +18,11 @@ Rotation 0 supplies one parent per role:
 | test | `CFL_easy_instance_0` | one deterministic common reference; held out and original graph only |
 
 The common validation and test references are selected among admissible
-one-hour observations by relative gap, objective, execution time, and solver
-name. Both solver-specific easy-2 labels must be admissible. The 10% threshold
-is unchanged.
+one-hour observations by minimization objective, relative gap, execution time,
+and solver name. This preserves the established best-available-label rule;
+gap and time are deterministic tie-breakers, not substitutes for label quality.
+Both solver-specific easy-2 labels must be admissible. The 10% threshold is
+unchanged.
 
 ## Evidence boundary
 
@@ -39,4 +41,3 @@ This slice remains `development_only=true`, `dataset_eligible=false`, and
 `scientific_reporting_eligible=false`. The next gate composes the easy-only
 four-arm dataset, retaining train-only local-branching descendants and common
 original-only validation/test partitions.
-

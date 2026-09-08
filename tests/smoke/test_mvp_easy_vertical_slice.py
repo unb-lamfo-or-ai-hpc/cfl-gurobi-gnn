@@ -84,9 +84,14 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
             solution.parent.mkdir(parents=True, exist_ok=True)
             solution.write_bytes(f"solution:{instance_id}:{solver}".encode())
             gap = gaps.get((instance_id, solver), 0.50)
+            objective = (
+                9.0
+                if (instance_id, solver) == ("CFL_easy_instance_0", "scip")
+                else 10.0 + len(tasks)
+            )
             report = {
                 "solve": {
-                    "solution_objective": 10.0 + len(tasks),
+                    "solution_objective": objective,
                     "mip_gap_relative": gap,
                     "execution_time_seconds": 3600.0,
                 },
@@ -218,7 +223,7 @@ def test_compose_easy_vertical_slice_passes_and_is_path_free(tmp_path: Path) -> 
         "scip",
     }
     assert [item["source_solver"] for item in labels if item["role"] == "test"] == [
-        "gurobi"
+        "scip"
     ]
     serialized = "".join(
         path.read_text(encoding="utf-8")

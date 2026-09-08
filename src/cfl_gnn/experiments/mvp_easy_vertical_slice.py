@@ -29,6 +29,12 @@ CENSORED_EVIDENCE_NAME = "mvp_censored_evidence.jsonl"
 REPORT_NAME = "mvp_easy_vertical_slice_report.json"
 REQUIRED_SOLVERS = ("gurobi", "scip")
 REQUIRED_ROLES = ("train", "validation", "test")
+COMMON_REFERENCE_SELECTION_ORDER = (
+    "minimum_objective",
+    "minimum_mip_gap",
+    "minimum_execution_time",
+    "solver_name",
+)
 
 
 class MvpEasyVerticalSliceError(RuntimeError):
@@ -96,6 +102,12 @@ def _validate_config(value: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
         raise MvpEasyVerticalSliceError("easy-only slice must remain development-only")
     if value.get("solvers") != list(REQUIRED_SOLVERS):
         raise MvpEasyVerticalSliceError("easy-only slice requires Gurobi and SCIP")
+    if value.get("common_reference_selection_order") != list(
+        COMMON_REFERENCE_SELECTION_ORDER
+    ):
+        raise MvpEasyVerticalSliceError(
+            "unexpected common-reference selection order"
+        )
     if value.get("selection_policy") != (
         "precommitted_easy_stratum_fallback_after_medium_label_incompleteness_v1"
     ):
@@ -326,6 +338,11 @@ def compose_easy_vertical_slice(
             if item.get("label_eligible") is True
             and isinstance(item.get("mip_gap_relative"), (int, float))
             and float(item["mip_gap_relative"]) <= maximum_gap + 1e-12
+            and isinstance(item.get("solution_objective"), (int, float))
+            and math.isfinite(float(item["solution_objective"]))
+            and isinstance(item.get("execution_time_seconds"), (int, float))
+            and math.isfinite(float(item["execution_time_seconds"]))
+            and float(item["execution_time_seconds"]) >= 0.0
         ]
         if parent["role"] == "train":
             if len(eligible) != 2:
@@ -343,8 +360,8 @@ def compose_easy_vertical_slice(
                     min(
                         eligible,
                         key=lambda item: (
-                            float(item["mip_gap_relative"]),
                             float(item["solution_objective"]),
+                            float(item["mip_gap_relative"]),
                             float(item["execution_time_seconds"]),
                             str(item["solver"]),
                         ),
@@ -417,6 +434,9 @@ def compose_easy_vertical_slice(
         "slice_id": config["slice_id"],
         "source_slice_id": config["source_slice_id"],
         "selection_policy": config["selection_policy"],
+        "common_reference_selection_order": list(
+            COMMON_REFERENCE_SELECTION_ORDER
+        ),
         "development_only": True,
         "scientific_reporting_eligible": False,
         "solvers": list(REQUIRED_SOLVERS),
