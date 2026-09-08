@@ -304,6 +304,11 @@ def test_easy_composition_writes_expected_four_arm_dataset(tmp_path: Path) -> No
     manifest = pipeline._read_jsonl(plan.output_dir / MANIFEST_NAME)
     assert len(manifest) == 12
     assert all("label_source_solver" in item for item in manifest)
+    assert all(
+        item["role"] == "train"
+        for item in manifest
+        if item["sampling_strategy"] == "incumbent_local_branching"
+    )
     references = pipeline._read_jsonl(plan.output_dir / REFERENCE_NAME)
     assert len(references) == 3
     assert all(item["candidate_count"] == 2 for item in references)

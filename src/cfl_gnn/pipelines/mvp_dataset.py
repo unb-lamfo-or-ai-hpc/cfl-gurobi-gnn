@@ -704,6 +704,7 @@ def run_composition(
         copied = {
             **record,
             "graph_path": relative.as_posix(),
+            "role": parent_roles[record["parent_instance_id"]],
             "label_source_solver": record["solver"],
             "label_use": "independent_derived_label",
         }
