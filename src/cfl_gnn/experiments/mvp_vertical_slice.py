@@ -82,6 +82,22 @@ def _write_jsonl(path: Path, values: Iterable[Mapping[str, Any]]) -> None:
     )
 
 
+def build_label_rescue_contract_payload(
+    *, vertical_slice_contract_sha256: str, tasks: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
+    """Return the canonical, path-free label-rescue contract payload."""
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "dataset_variant": "mvp_vertical_slice_label_rescue",
+        "vertical_slice_contract_sha256": vertical_slice_contract_sha256,
+        "selection_policy": (
+            "missing_train_solver_labels_and_missing_common_evaluation_references_v1"
+        ),
+        "benchmark_results_immutable": True,
+        "tasks": [dict(task) for task in tasks],
+    }
+
+
 def _positive_int(value: Any, *, field: str) -> int:
     if isinstance(value, bool):
         raise MvpVerticalSliceError(f"{field} must be a positive integer")
@@ -618,16 +634,10 @@ def audit_vertical_slice_parent_runs(
     rescue_tasks.sort(key=lambda item: int(item["source_task_index"]))
     for rescue_index, rescue_task in enumerate(rescue_tasks):
         rescue_task["rescue_task_index"] = rescue_index
-    rescue_contract_payload = {
-        "schema_version": SCHEMA_VERSION,
-        "dataset_variant": "mvp_vertical_slice_label_rescue",
-        "vertical_slice_contract_sha256": contract_sha256,
-        "selection_policy": (
-            "missing_train_solver_labels_and_missing_common_evaluation_references_v1"
-        ),
-        "benchmark_results_immutable": True,
-        "tasks": rescue_tasks,
-    }
+    rescue_contract_payload = build_label_rescue_contract_payload(
+        vertical_slice_contract_sha256=contract_sha256,
+        tasks=rescue_tasks,
+    )
     rescue_contract_sha256 = _canonical_sha256(rescue_contract_payload)
     _write_jsonl(rescue_tasks_path, rescue_tasks)
     _write_jsonl(audit_path, audits)
@@ -719,4 +729,3 @@ def audit_vertical_slice_parent_runs(
     }
     _write_json(report_path, report)
     return report
-
