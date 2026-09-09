@@ -1,0 +1,37 @@
+{
+  "arms": [
+    "gurobi_original",
+    "gurobi_incumbent_augmented",
+    "scip_original",
+    "scip_incumbent_augmented"
+  ],
+  "comparison_controls": {
+    "equal_optimizer_steps_per_epoch": true,
+    "initialization_seed_restarted_per_arm": true,
+    "independent_model_per_arm": true,
+    "pos_weight_policy": "solver_original_training_labels_reused_within_solver_pair",
+    "prenorm_policy": "solver_original_reference_reused_within_solver_pair",
+    "test_access_policy": "held_out_not_loaded_during_training",
+    "validation_policy": "common_reference_shared_across_all_arms"
+  },
+  "development_only": true,
+  "experiment_stage": "engineering_smoke",
+  "model": {
+    "hidden_dim": 32,
+    "model_class": "GasseGNN",
+    "num_layers": 2
+  },
+  "optimization": {
+    "batch_size": 1,
+    "epochs": 2,
+    "gradient_clip": 1.0,
+    "learning_rate": 0.001,
+    "num_workers": 0,
+    "patience": 2,
+    "probability_threshold": 0.5,
+    "seed": 42
+  },
+  "protocol_id": "mvp_four_arm_training_smoke_v1",
+  "schema_version": 1,
+  "scientific_reporting_eligible": false
+}
