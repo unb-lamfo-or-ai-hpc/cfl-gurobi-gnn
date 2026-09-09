@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "analysis_stage": "development_only_descriptive_comparison",
+  "expected_arms": [
+    "gurobi_original",
+    "gurobi_incumbent_augmented",
+    "scip_original",
+    "scip_incumbent_augmented"
+  ],
+  "expected_target_solvers": [
+    "gurobi",
+    "scip"
+  ],
+  "primary_outcomes": {
+    "terminal_mip_gap_relative": "lower_is_better",
+    "model_optimize_wall_time_seconds": "lower_is_better"
+  },
+  "required_time_regions": [
+    "total_wall_time_seconds",
+    "data_read_wall_time_seconds",
+    "model_build_wall_time_seconds",
+    "model_optimize_wall_time_seconds"
+  ],
+  "gap_sensitivity_thresholds_relative": [
+    0.01,
+    0.05,
+    0.1
+  ],
+  "censoring_policy": "retain_and_flag_no_naive_inference",
+  "selection_policy": "no_arm_ranking_or_selection",
+  "inference_policy": "descriptive_only_until_parent_population_is_expanded",
+  "deferred_publication_outputs": [
+    "training_loss_by_epoch",
+    "validation_loss_by_epoch",
+    "gnn_classification_quality_metrics",
+    "solver_gap_comparison_tables",
+    "solver_execution_time_comparison_tables",
+    "publication_quality_figures"
+  ]
+}
