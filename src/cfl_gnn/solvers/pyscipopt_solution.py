@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import math
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -346,14 +347,18 @@ def audit_incumbent_trace(
 
 def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
     """Solve one MIP and emit a named final solution plus online incumbents."""
+    total_started = time.perf_counter()
     import pyscipopt
     from pyscipopt import Model, SCIP_EVENTTYPE
 
+    data_read_started = time.perf_counter()
     candidate = Path(str(request["candidate_path"]))
     solution_path = Path(str(request["solution_path"]))
     expected_sha256 = str(request["candidate_sha256"])
     if sha256_file(candidate) != expected_sha256:
         raise PyScipOptSolveError("candidate SHA-256 changed before solve")
+    data_read_time = time.perf_counter() - data_read_started
+    model_build_started = time.perf_counter()
     stream_path_value = request.get("incumbent_stream_path")
     stream = (
         IncumbentParquetStream(Path(str(stream_path_value)))
@@ -414,7 +419,10 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
                 model.getTechVersion(),
             )
         )
+        model_build_time = time.perf_counter() - model_build_started
+        optimize_started = time.perf_counter()
         model.optimize()
+        optimize_time = time.perf_counter() - optimize_started
 
         status = str(model.getStatus()).lower()
         solution_count = int(model.getNSols())
@@ -465,6 +473,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             stream.close(commit=not collector.errors)
             stream_committed = not collector.errors
         relative_gap = _finite_or_none(model.getGap())
+        total_time = time.perf_counter() - total_started
         payload = {
             "schema_version": int(request.get("schema_version", 3)),
             "contract_sha256": str(request["contract_sha256"]),
@@ -493,6 +502,26 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             "mip_gap_relative": relative_gap,
             "mip_gap_percent": _gap_percent(relative_gap),
             "execution_time_seconds": _finite_or_none(model.getSolvingTime()),
+            "time_regions": {
+                "total_wall_time_seconds": total_time,
+                "data_read_wall_time_seconds": data_read_time,
+                "model_build_wall_time_seconds": model_build_time,
+                "model_optimize_wall_time_seconds": optimize_time,
+            },
+            "time_region_semantics": {
+                "total_wall_time_seconds": (
+                    "external_wall_clock_from_worker_entry_through_outcome_extraction"
+                ),
+                "data_read_wall_time_seconds": (
+                    "external_wall_clock_for_input_identity_and_sha256_verification"
+                ),
+                "model_build_wall_time_seconds": (
+                    "external_wall_clock_for_model_parse_configuration_and_callback_setup"
+                ),
+                "model_optimize_wall_time_seconds": (
+                    "external_wall_clock_around_model_optimize_only"
+                ),
+            },
             "reading_time_seconds": _finite_or_none(model.getReadingTime()),
             "presolving_time_seconds": _finite_or_none(model.getPresolvingTime()),
             "nodes_current_run": int(model.getNNodes()),

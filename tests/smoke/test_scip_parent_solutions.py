@@ -61,6 +61,15 @@ def _payload(plan, *, gap: float = 0.05) -> dict[str, object]:
         "mip_gap_relative": gap,
         "mip_gap_percent": 100.0 * gap,
         "execution_time_seconds": 3600.0,
+        "time_regions": {
+            "total_wall_time_seconds": 3602.0,
+            "data_read_wall_time_seconds": 1.0,
+            "model_build_wall_time_seconds": 1.0,
+            "model_optimize_wall_time_seconds": 3600.0,
+        },
+        "time_region_semantics": {
+            "model_optimize_wall_time_seconds": "external_wall_clock",
+        },
         "best_incumbent_discovery_time_seconds": 1200.0,
         "nodes_current_run": 100,
         "nodes_total": 100,
@@ -149,3 +158,14 @@ def test_parent_pipeline_contract_excludes_pyomo_and_records_primary_metrics() -
     assert "MIPSOL" in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
+
+
+def test_solver_specific_plan_and_report_names_are_unambiguous(tmp_path: Path) -> None:
+    gurobi = _plan(tmp_path, solver="gurobi")
+    scip = _plan(tmp_path, solver="scip")
+
+    assert gurobi.to_summary()["outputs"]["report"] == "gurobi_parent_solve_report.json"
+    assert scip.to_summary()["outputs"]["report"] == "scip_parent_solve_report.json"
+    assert evaluate_solution(gurobi, _payload(gurobi))["checks"][
+        "four_time_regions_valid"
+    ] is True

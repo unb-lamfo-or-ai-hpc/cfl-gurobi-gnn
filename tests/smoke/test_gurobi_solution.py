@@ -104,3 +104,5 @@ def test_gurobi_and_pyarrow_are_lazy_and_pyomo_is_absent() -> None:
     assert '"original_model_solution_quality"' in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
+    assert '"time_regions"' in source
+    assert "model_optimize_wall_time_seconds" in source
