@@ -790,22 +790,22 @@ def process_single_instance(
     #    env.dispose()
 
 
-# ============================================================
-# MAIN ENTRY POINT
-# ============================================================
-
 def solve_parent_mip(request: Dict[str, Any]) -> Dict[str, Any]:
-    """Run the canonical, schema-versioned single-parent Gurobi backend.
+    """Run the canonical named-parent Gurobi solve contract.
 
-    The legacy batch generator below remains behavior-compatible for historical
-    campaigns. New parent campaigns enter the same preserved Gurobi pipeline
-    module through this adapter and use the hardened named-solution kernel
-    shared with the resumable population orchestrator.
+    The production batch collector remains preserved in this module. The
+    parent-population orchestrator uses this small adapter so both entry points
+    retain one Gurobi backend namespace while the new artifact contract is
+    validated independently.
     """
     from cfl_gnn.solvers.gurobi_solution import solve_named_mip
 
     return solve_named_mip(request)
 
+
+# ============================================================
+# MAIN ENTRY POINT
+# ============================================================
 
 def main():
     parser = argparse.ArgumentParser(
