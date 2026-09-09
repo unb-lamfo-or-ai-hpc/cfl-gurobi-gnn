@@ -60,9 +60,17 @@ python3 -m cfl_gnn.cli.plan_parent_collection \
   --base_source_dir "${BASE_SOURCE_DIR}" \
   --output_dir "${PARENT_COLLECTION_PLAN_DIR}" \
   --parent_manifest configs/splits/cfl_90_seed42_folds.csv \
+  --instances CFL_easy_instance_2 \
   --time_limit 3600 \
   --overwrite
 ```
+
+The PR #42 gate is deliberately restricted to the known parent
+`CFL_easy_instance_2`: one fresh Gurobi run and one matched PySCIPOpt run are
+enough to validate collection, timing, provenance, and Phase 1 analysis. Remove
+`--instances CFL_easy_instance_2` only when starting the later approved
+population campaign; doing so during this PR would prematurely spend the
+computational budget reserved for pipeline execution.
 
 The accepted per-parent time budgets are 3,600 or 14,400 seconds. Determine the
 actual array length from the generated solver manifest, then submit Gurobi
