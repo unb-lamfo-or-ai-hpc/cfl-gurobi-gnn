@@ -794,6 +794,19 @@ def process_single_instance(
 # MAIN ENTRY POINT
 # ============================================================
 
+def solve_parent_mip(request: Dict[str, Any]) -> Dict[str, Any]:
+    """Run the canonical, schema-versioned single-parent Gurobi backend.
+
+    The legacy batch generator below remains behavior-compatible for historical
+    campaigns. New parent campaigns enter the same preserved Gurobi pipeline
+    module through this adapter and use the hardened named-solution kernel
+    shared with the resumable population orchestrator.
+    """
+    from cfl_gnn.solvers.gurobi_solution import solve_named_mip
+
+    return solve_named_mip(request)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='CFL GNN Data Generator v7_fixed - Production Final',

@@ -327,6 +327,7 @@ def _run_fresh_worker(plan: ParentSolvePlan) -> None:
 def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict[str, Any]:
     online = payload.get("online_incumbent_capture", {})
     trace_audit = payload.get("incumbent_trace_audit", {})
+    runtime_context = payload.get("runtime_environment", {})
     gap = payload.get("mip_gap_relative")
     feasible = (
         payload.get("solver_feasibility_check") is True
@@ -365,6 +366,16 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
         "named_solution_present": bool(payload.get("variables")),
         "terminal_gap_finite": gap is not None and math.isfinite(float(gap)),
         "four_time_regions_valid": _time_regions_valid(payload),
+        "runtime_environment_recorded": (
+            isinstance(runtime_context, Mapping)
+            and all(
+                runtime_context.get(key) is not None
+                for key in ("hostname", "platform", "machine", "logical_cpu_count")
+            )
+        ),
+        "solver_parameter_contract_recorded": bool(
+            payload.get("solver_parameter_sha256")
+        ),
     }
     instrumentation_valid = all(checks.values())
     label_eligible = instrumentation_valid and gap_valid
@@ -417,6 +428,7 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
         "solver_versions": dict(payload.get("solver_versions", {})),
         "solver_parameter_map": dict(payload.get("solver_parameter_map", {})),
         "solver_parameter_sha256": payload.get("solver_parameter_sha256"),
+        "runtime_environment": dict(payload.get("runtime_environment", {})),
         "online_incumbent_capture": dict(online),
         "incumbent_trace_audit": dict(trace_audit),
         "checks": checks,
@@ -489,7 +501,7 @@ def main(
         if not args._worker_request or not args._worker_result:
             raise ValueError("worker request and result must be supplied together")
         if solver == "gurobi":
-            from cfl_gnn.solvers.gurobi_solution import solve_named_mip as solve
+            from cfl_gnn.pipelines.gurobi_incumbents import solve_parent_mip as solve
         else:
             solve = solve_named_mip
         result = solve(_read_json(Path(args._worker_request)))

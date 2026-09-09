@@ -277,6 +277,7 @@ def audit_parent_collection(
             solution = _read_gzip_json(solution_path)
             solve = report.get("solve", {})
             regions = report.get("time_regions", {})
+            runtime_context = report.get("runtime_environment", {})
             checks = {
                 "parent_identity_match": (
                     report.get("parent", {}).get("source_instance_id") == instance_id
@@ -294,6 +295,18 @@ def audit_parent_collection(
                 ),
                 "solution_candidate_sha256_match": (
                     solution.get("candidate_sha256") == task["parent_mip_sha256"]
+                ),
+                "runtime_environment_recorded": (
+                    isinstance(runtime_context, dict)
+                    and all(
+                        runtime_context.get(key) is not None
+                        for key in (
+                            "hostname", "platform", "machine", "logical_cpu_count"
+                        )
+                    )
+                ),
+                "solver_parameter_contract_recorded": bool(
+                    report.get("solver_parameter_sha256")
                 ),
             }
             if not all(checks.values()):
@@ -334,6 +347,14 @@ def audit_parent_collection(
                 ),
                 "solver_parameter_sha256": report.get("solver_parameter_sha256"),
                 "parent_solve_contract_sha256": report.get("contract_sha256"),
+                "hostname": runtime_context.get("hostname"),
+                "platform": runtime_context.get("platform"),
+                "machine": runtime_context.get("machine"),
+                "processor": runtime_context.get("processor"),
+                "logical_cpu_count": runtime_context.get("logical_cpu_count"),
+                "slurm_partition": runtime_context.get("slurm", {}).get(
+                    "slurm_job_partition"
+                ),
             }
             metrics.append(row)
             valid_by_parent[instance_id][solver] = row
@@ -422,7 +443,8 @@ def audit_parent_collection(
         "time_to_first_incumbent_seconds", "time_to_best_incumbent_seconds",
         "nodes_current_run", "nodes_total", "right_censored", "label_eligible",
         "augmentation_source_eligible", "solver_parameter_sha256",
-        "parent_solve_contract_sha256",
+        "parent_solve_contract_sha256", "hostname", "platform", "machine",
+        "processor", "logical_cpu_count", "slurm_partition",
     )
     trajectory_fields = (
         "source_instance_id", "difficulty", "role", "solver", "incumbent_index",

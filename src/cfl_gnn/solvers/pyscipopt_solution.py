@@ -6,6 +6,10 @@ import gzip
 import hashlib
 import json
 import math
+import os
+import platform
+import socket
+import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -79,6 +83,34 @@ def _gap(objective: Any, bound: Any) -> float | None:
 
 def _gap_percent(relative: float | None) -> float | None:
     return None if relative is None else 100.0 * relative
+
+
+def runtime_environment() -> dict[str, Any]:
+    """Return a path-free execution context for paired solver provenance."""
+    slurm_keys = (
+        "SLURM_CLUSTER_NAME",
+        "SLURM_JOB_ID",
+        "SLURM_ARRAY_JOB_ID",
+        "SLURM_ARRAY_TASK_ID",
+        "SLURM_JOB_PARTITION",
+        "SLURM_CPUS_PER_TASK",
+        "SLURM_MEM_PER_NODE",
+        "SLURM_JOB_NODELIST",
+    )
+    return {
+        "hostname": socket.gethostname(),
+        "platform": platform.system(),
+        "machine": platform.machine(),
+        "processor": platform.processor() or None,
+        "logical_cpu_count": os.cpu_count(),
+        "python_version": platform.python_version(),
+        "python_implementation": sys.implementation.name,
+        "slurm": {
+            key.lower(): os.environ[key]
+            for key in slurm_keys
+            if os.environ.get(key)
+        },
+    }
 
 
 def normalize_variable_type(value: Any) -> str:
@@ -486,6 +518,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             },
             "solver_parameter_map": solver_parameter_map,
             "solver_parameter_sha256": solver_parameter_sha256,
+            "runtime_environment": runtime_environment(),
             "solution_source": "independent_pyscipopt_optimization",
             "fresh_process": True,
             "warm_start_supplied": False,

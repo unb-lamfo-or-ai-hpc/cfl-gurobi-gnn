@@ -98,6 +98,14 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
                 "model_optimize_wall_time_seconds": optimize,
             },
             "solver_parameter_sha256": f"{solver}-parameters",
+            "runtime_environment": {
+                "hostname": f"{solver}-node",
+                "platform": "Linux",
+                "machine": "x86_64",
+                "processor": "test-cpu",
+                "logical_cpu_count": 8,
+                "slurm": {"slurm_job_partition": "batch"},
+            },
             "artifacts": {
                 "solution": {"file_name": solution.name, "sha256": sha256_file(solution)},
                 "incumbents": {"file_name": incumbents.name, "sha256": sha256_file(incumbents)},

@@ -8,6 +8,13 @@ incumbent vector, and emits a common artifact contract for both solvers.
 Gurobi is the priority solver and graph authority. PySCIPOpt is executed only
 as a matched comparison after the complete Gurobi array succeeds.
 
+The historical `collect_incumbents` batch entry point remains available. The
+specialized `collect_gurobi_parent_solution` path now reaches the canonical
+`gurobi_incumbents.solve_parent_mip` backend through the shared parent
+contract; the SCIP entry point reaches the corresponding PySCIPOpt kernel.
+This preserves the legacy implementation surface while removing duplicated
+population orchestration.
+
 The campaign targets the fixed 90-parent manifest. During development, the
 planner records unavailable parents instead of fabricating data or changing the
 population. A partial campaign is always marked `development_only` and cannot

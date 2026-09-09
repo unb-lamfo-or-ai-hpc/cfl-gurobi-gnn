@@ -17,6 +17,7 @@ from cfl_gnn.solvers.pyscipopt_solution import (
     canonical_sha256,
     canonical_variable_type,
     normalize_variable_type,
+    runtime_environment,
     sha256_file,
 )
 
@@ -314,6 +315,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             "solver_versions": {"gurobi": version, "gurobipy": version},
             "solver_parameter_map": solver_parameter_map,
             "solver_parameter_sha256": solver_parameter_sha256,
+            "runtime_environment": runtime_environment(),
             "solution_source": "independent_gurobi_optimization",
             "fresh_process": True,
             "warm_start_supplied": False,
