@@ -752,6 +752,16 @@ def build_graph_artifact(spec: DerivedGraphSpec, output_path: Path) -> dict[str,
         graph.label_source = spec.solution_path.name
         graph.label_solution_sha256 = spec.solution_sha256
         graph.label_objective = spec.label_objective
+        graph.label_source_solver = getattr(spec, "label_source_solver", spec.solver)
+        graph.label_use = getattr(
+            spec,
+            "label_use",
+            (
+                "independent_derived_label"
+                if sampling_strategy == "incumbent_local_branching"
+                else "solver_specific_original_label"
+            ),
+        )
         if sampling_strategy == "incumbent_local_branching":
             graph.source_incumbent_id = spec.source_incumbent_id
             graph.source_incumbent_artifact_sha256 = (
@@ -1109,4 +1119,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

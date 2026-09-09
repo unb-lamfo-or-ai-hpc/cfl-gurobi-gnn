@@ -168,6 +168,8 @@ class OriginalGraphSpec:
     candidate_sha256: str
     solution_path: Path
     solution_sha256: str
+    label_source_solver: str
+    label_use: str
     parent_solve_contract_sha256: str
     experiment_contract_sha256: str
     label_objective: float
@@ -199,6 +201,8 @@ class OriginalGraphSpec:
             "solution": {
                 "file_name": self.solution_path.name,
                 "sha256": self.solution_sha256,
+                "source_solver": self.label_source_solver,
+                "label_use": self.label_use,
             },
             "parent_solve_contract_sha256": self.parent_solve_contract_sha256,
             "label": {
@@ -218,12 +222,14 @@ class DatasetPlan:
     experiment_contract_sha256: str
     originals: tuple[OriginalGraphSpec, ...]
     derived_records: tuple[dict[str, Any], ...]
+    source_evidence_contract: Mapping[str, Any] | None = None
+    dataset_variant: str = DATASET_VARIANT
 
     @property
     def contract_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": SCHEMA_VERSION,
-            "dataset_variant": DATASET_VARIANT,
+            "dataset_variant": self.dataset_variant,
             "experiment_contract_sha256": self.experiment_contract_sha256,
             "experiment_stage": "engineering_four_arm_dataset_composition",
             "objective_sense": "MINIMIZE",
@@ -244,6 +250,11 @@ class DatasetPlan:
                 "scientific_reporting_eligible": False,
             },
         }
+        if self.source_evidence_contract is not None:
+            payload["source_evidence_contract"] = dict(
+                self.source_evidence_contract
+            )
+        return payload
 
     @property
     def contract_sha256(self) -> str:
@@ -360,6 +371,12 @@ def _load_original(
         candidate_sha256=str(parent["sha256"]),
         solution_path=solution,
         solution_sha256=str(solution_info["sha256"]),
+        label_source_solver=source.solver,
+        label_use=(
+            "solver_arm_training_label"
+            if role == "train"
+            else "solver_specific_evaluation_candidate"
+        ),
         parent_solve_contract_sha256=str(report["contract_sha256"]),
         experiment_contract_sha256=experiment_contract_sha256,
         label_objective=objective,
@@ -492,11 +509,14 @@ def _original_manifest_record(
         "category": spec.category,
         "difficulty": spec.difficulty,
         "fold": spec.fold,
+        "role": spec.role,
         "solver": spec.solver,
         "sampling_strategy": "original",
         "graph_path": output_path.as_posix(),
         "graph_sha256": audit["graph_sha256"],
         "label_source": spec.solution_path.name,
+        "label_source_solver": spec.label_source_solver,
+        "label_use": spec.label_use,
         "label_solution_sha256": spec.solution_sha256,
         "label_objective": spec.label_objective,
         "label_mip_gap_relative": spec.label_mip_gap_relative,
@@ -624,7 +644,7 @@ def run_composition(
         original_records.append(record)
         sidecar = {
             "schema_version": SCHEMA_VERSION,
-            "dataset_variant": DATASET_VARIANT,
+            "dataset_variant": plan.dataset_variant,
             "sample": record,
             "parent_mip_sha256": spec.candidate_sha256,
             "parent_solve_contract_sha256": spec.parent_solve_contract_sha256,
@@ -681,7 +701,13 @@ def run_composition(
             / source_provenance.name,
             overwrite=overwrite,
         )
-        copied = {**record, "graph_path": relative.as_posix()}
+        copied = {
+            **record,
+            "graph_path": relative.as_posix(),
+            "role": parent_roles[record["parent_instance_id"]],
+            "label_source_solver": record["solver"],
+            "label_use": "independent_derived_label",
+        }
         if sha256_file(plan.output_dir / relative) != copied["graph_sha256"]:
             raise MvpDatasetError("materialized derived graph SHA-256 mismatch")
         derived_records.append(copied)
@@ -695,6 +721,55 @@ def run_composition(
     mvp_plan = build_mvp_plan(config, parents, parsed)
     if not mvp_plan["contract_valid"]:
         raise MvpDatasetError("composed sample manifest violates the MVP contract")
+    easy_checks: dict[str, bool] = {}
+    if plan.dataset_variant == "mvp_easy_four_arm_dataset":
+        originals_by_role = Counter(item["role"] for item in original_records)
+        derived_by_solver = Counter(item["solver"] for item in derived_records)
+        evaluation_labels_match = True
+        for role in ("validation", "test"):
+            role_records = [
+                item for item in original_records if item["role"] == role
+            ]
+            label_contracts = {
+                (
+                    item["label_solution_sha256"],
+                    item["label_objective"],
+                    item["label_mip_gap_relative"],
+                    item["label_execution_time_seconds"],
+                    item["label_source_solver"],
+                )
+                for item in role_records
+            }
+            evaluation_labels_match &= len(role_records) == 2 and len(
+                label_contracts
+            ) == 1
+        easy_checks = {
+            "three_original_parents": len(structures) == 3,
+            "six_original_graphs": len(original_records) == 6,
+            "six_derived_graphs": len(derived_records) == 6,
+            "original_partition_balance": originals_by_role
+            == Counter({"train": 2, "validation": 2, "test": 2}),
+            "derived_solver_balance": derived_by_solver
+            == Counter({"gurobi": 3, "scip": 3}),
+            "derived_train_only": all(
+                parent_roles[item["parent_instance_id"]] == "train"
+                for item in derived_records
+            ),
+            "training_labels_solver_specific": all(
+                item["label_source_solver"] == item["solver"]
+                and item["label_use"] == "solver_arm_training_label"
+                for item in original_records
+                if item["role"] == "train"
+            ),
+            "common_evaluation_labels_match_across_arms": (
+                evaluation_labels_match
+            ),
+        }
+        if not all(easy_checks.values()):
+            failed = ",".join(
+                key for key, value in easy_checks.items() if not value
+            )
+            raise MvpDatasetError(f"easy four-arm invariant failed: {failed}")
     arms = _compose_arm_records(inventory, parent_roles)
     arm_summary: dict[str, Any] = {}
     for arm_id, records in arms.items():
@@ -743,6 +818,7 @@ def run_composition(
                     "label_execution_time_seconds"
                 ],
                 "label_solution_sha256": selected["label_solution_sha256"],
+                "label_source_solver": selected["label_source_solver"],
                 "candidate_count": len(candidates),
             }
         )
@@ -755,7 +831,7 @@ def run_composition(
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "probe_completed": True,
         "gate_status": "passed",
-        "dataset_variant": DATASET_VARIANT,
+        "dataset_variant": plan.dataset_variant,
         "root_lp_relaxation_policy": "zero_ablation_for_all_mvp_graphs",
         "summary": {
             "matched_original_parents": len(structures),
@@ -768,6 +844,7 @@ def run_composition(
             "original_structures_match_across_solvers": True,
             "equal_parent_mass_valid": True,
             "validation_test_original_only": True,
+            **easy_checks,
         },
         "arms": arm_summary,
         "outputs": {
@@ -785,7 +862,11 @@ def run_composition(
             "scientific_reporting_eligible": False,
         },
         "decision": {
-            "reason_code": "four_arm_partial_dataset_admissible",
+            "reason_code": (
+                "easy_only_four_arm_dataset_admissible"
+                if plan.dataset_variant == "mvp_easy_four_arm_dataset"
+                else "four_arm_partial_dataset_admissible"
+            ),
             "next_gate": "four_arm_training_loader_and_weighted_sampler",
         },
     }
@@ -861,4 +942,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
