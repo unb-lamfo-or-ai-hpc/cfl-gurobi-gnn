@@ -247,3 +247,6 @@ def test_dasci_launchers_are_lf_only_and_bound_maximum_runtime() -> None:
     assert "--time=04:30:00" in task_text
     assert "SLURM_ARRAY_TASK_ID" in task_text
     assert "run-task" in task_text
+    assert "GRB_LICENSE_FILE" in task_text
+    assert "secrets/gurobi.lic" in task_text
+    assert 'TARGET_SOLVER}" == "gurobi"' in task_text

@@ -27,6 +27,18 @@ export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 eval "$(conda shell.bash hook)"
 conda activate "${CONDA_ENV}"
 
+TARGET_SOLVER=$(
+    jq -r ".tasks[${SLURM_ARRAY_TASK_ID}].target_solver" "${PLAN_PATH}"
+)
+if [[ "${TARGET_SOLVER}" == "gurobi" ]]; then
+    LICENSE_PATH="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+    if [[ ! -s "${LICENSE_PATH}" ]]; then
+        echo "[ERROR] Gurobi license is missing; set GRB_LICENSE_FILE" >&2
+        exit 2
+    fi
+    export GRB_LICENSE_FILE="${LICENSE_PATH}"
+fi
+
 OVERWRITE_ARGS=()
 if [[ "${OVERWRITE:-0}" == "1" ]]; then
     OVERWRITE_ARGS=(--overwrite)
