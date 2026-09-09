@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "contract_id": "gurobi_first_legacy_pipeline_recovery_v1",
+  "status": "accepted_for_implementation",
+  "pinned_commits": {
+    "legacy": "9903c1dc66f65e9497d7faa2d8d4f3ee414a0f42",
+    "current": "9f7da7d206129fcd72c72d1a8d682bf3cf413fde"
+  },
+  "scientific_boundary": {
+    "development_only": true,
+    "pipeline_behavior_changes_authorized": false,
+    "pyomo_allowed": false,
+    "graph_authority_solver": "gurobi",
+    "comparison_solvers": [
+      "gurobi",
+      "scip"
+    ],
+    "effective_objective_sense": "MINIMIZE",
+    "record_original_objective_sense": true,
+    "graph_unit": "mathematical_mip",
+    "incumbent_graph_policy": "prohibited",
+    "derived_samples_train_only": true,
+    "derived_samples_inherit_parent_fold": true
+  },
+  "label_contract": {
+    "graph_features_independent_of_label_solver": true,
+    "original_mip_graph_count_per_parent": 1,
+    "synthetic_mip_graph_count_per_artifact": 1,
+    "solver_specific_labels_are_manifest_views": true
+  },
+  "root_lp_feature_contract": {
+    "feature_name": "root_lp_relaxation",
+    "authority_solver": "gurobi",
+    "required": true,
+    "zero_ablation_allowed": false,
+    "missing_value_policy": "fail_closed",
+    "legacy_candidate": "first_optimal_mipnode_at_root",
+    "alternative_candidate": "gurobi_relaxation_copy",
+    "implementation_decision_gate": "legacy_parity_audit_before_builder_change"
+  },
+  "guidance_contract": {
+    "primary": "gurobi_variable_hints",
+    "secondary": "gurobi_partial_mip_start",
+    "scip_role": "comparison_only",
+    "scip_candidates": [
+      "partial_primal_solution",
+      "diving_or_lns"
+    ],
+    "hard_domain_fixing_primary_allowed": false,
+    "pr37_evidence_classification": "historical_engineering_only",
+    "held_out_test_method_selection_allowed": false
+  },
+  "phase1_required_outputs": [
+    "population_coverage",
+    "failures_and_censoring",
+    "terminal_mip_gap",
+    "gap_sensitivity_1_5_6_10_percent",
+    "read_build_optimize_total_times",
+    "incumbent_count_and_trajectory",
+    "time_to_first_and_best_incumbent",
+    "objective_bound_and_nodes",
+    "difficulty_strata",
+    "paired_common_parent_summary"
+  ],
+  "graph_required_outputs": [
+    "dataset_audit",
+    "graph_statistics",
+    "graph_clustering",
+    "parent_vs_synthetic_summary",
+    "feature_and_sparsity_distributions"
+  ],
+  "components": [
+    {
+      "id": "gurobi_parent_collection",
+      "stage": "data_transformation",
+      "legacy_path": "src/data_transformation/cfl_gnn_data_generator_v7.py",
+      "current_path": "src/cfl_gnn/pipelines/gurobi_incumbents.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "consolidate_as_canonical_gurobi_backend"
+    },
+    {
+      "id": "phase1_descriptive_audit",
+      "stage": "data_transformation",
+      "legacy_path": "src/data_transformation/audit_phase1_eda_v3.py",
+      "current_path": "src/cfl_gnn/analysis/collection_audit.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "generalize_to_gurobi_first_paired_solver_eda"
+    },
+    {
+      "id": "bipartite_graph_builder",
+      "stage": "graph_transformation",
+      "legacy_path": "src/graph_transform/build_pyg_dataset_v7.py",
+      "current_path": "src/cfl_gnn/graph/build_dataset.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "restore_gurobi_root_lp_authority"
+    },
+    {
+      "id": "graph_dataset_audit",
+      "stage": "graph_transformation",
+      "legacy_path": "src/graph_transform/test_pyg_dataset_v5.py",
+      "current_path": "src/cfl_gnn/analysis/dataset_audit.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "reconnect_to_canonical_graph_manifest"
+    },
+    {
+      "id": "graph_statistics",
+      "stage": "graph_transformation",
+      "legacy_path": "src/graph_transform/pyg_dataset_statistics.py",
+      "current_path": "src/cfl_gnn/analysis/graph_statistics.py",
+      "relation": "byte_identical",
+      "required_action": "restore_to_executable_pipeline"
+    },
+    {
+      "id": "graph_clustering",
+      "stage": "graph_transformation",
+      "legacy_path": "src/graph_transform/pyg_clustering_pca_umap.py",
+      "current_path": "src/cfl_gnn/analysis/graph_clustering.py",
+      "relation": "byte_identical",
+      "required_action": "restore_as_descriptive_analysis_only"
+    },
+    {
+      "id": "gasse_model",
+      "stage": "gnn_training",
+      "legacy_path": "src/gnn/models/gasse.py",
+      "current_path": "src/cfl_gnn/models/gasse.py",
+      "relation": "byte_identical",
+      "required_action": "retain_as_baseline_architecture"
+    },
+    {
+      "id": "serial_trainer",
+      "stage": "gnn_training",
+      "legacy_path": "src/gnn/train_neural_diving_serial_v5.py",
+      "current_path": "src/cfl_gnn/training/serial.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "reconnect_to_parent_aware_manifests"
+    },
+    {
+      "id": "distributed_trainer",
+      "stage": "gnn_training",
+      "legacy_path": "src/gnn/train_neural_diving_parallel_v5.py",
+      "current_path": "src/cfl_gnn/training/distributed.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "reconnect_after_serial_parity"
+    },
+    {
+      "id": "model_evaluator",
+      "stage": "gnn_evaluation",
+      "legacy_path": "src/gnn/evaluate_model_v3.py",
+      "current_path": "src/cfl_gnn/evaluation/model.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "restore_full_held_out_diagnostics"
+    },
+    {
+      "id": "gurobi_variable_hints",
+      "stage": "solver_guidance",
+      "legacy_path": "src/gurobi_solver/generate_mip_hints.py",
+      "current_path": "src/cfl_gnn/solvers/gurobi/hints.py",
+      "relation": "renamed_and_preserved",
+      "required_action": "restore_as_primary_guidance"
+    },
+    {
+      "id": "gurobi_benchmark",
+      "stage": "solver_guidance",
+      "legacy_path": "src/gurobi_solver/gurobi_hpc_runner_v2.py",
+      "current_path": "src/cfl_gnn/solvers/gurobi/benchmark.py",
+      "relation": "byte_identical",
+      "required_action": "reconnect_to_equal_budget_evaluation"
+    }
+  ],
+  "implementation_sequence": [
+    "pr42_parent_collection_orchestration_and_phase1_eda",
+    "pr43_gurobi_graph_authority_statistics_and_clustering",
+    "pr44_gasse_training_and_evaluation_reconnection",
+    "pr45_native_guidance_and_partial_mip_start_comparison",
+    "pr46_partial_population_execution_and_outputs",
+    "pr47_english_reproducibility_and_dependency_review"
+  ]
+}
+
