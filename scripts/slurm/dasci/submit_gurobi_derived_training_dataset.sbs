@@ -1,0 +1,50 @@
+#!/bin/bash
+#SBATCH --job-name=gurobi_derived
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=64G
+#SBATCH --time=02:00:00
+#SBATCH --output=slurm_gurobi_derived_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${GUROBI_CANDIDATE_DIR:?Set GUROBI_CANDIDATE_DIR}"
+: "${GUROBI_SOLVE_DIR:?Set GUROBI_SOLVE_DIR}"
+: "${SCIP_CANDIDATE_DIR:?Set SCIP_CANDIDATE_DIR}"
+: "${SCIP_SOLVE_DIR:?Set SCIP_SOLVE_DIR}"
+: "${PARENT_GRAPH_DATASET_DIR:?Set PARENT_GRAPH_DATASET_DIR}"
+: "${PARENT_COLLECTION_PLAN_DIR:?Set PARENT_COLLECTION_PLAN_DIR}"
+: "${PARENT_COLLECTION_RUN_ROOT:?Set PARENT_COLLECTION_RUN_ROOT}"
+: "${GASSE_AUGMENTED_DATASET_DIR:?Set GASSE_AUGMENTED_DATASET_DIR}"
+
+GUROBI_LICENSE_FILE="${GUROBI_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+if [[ ! -s "${GUROBI_LICENSE_FILE}" ]]; then
+    echo "[ERROR] Gurobi license is missing; set GUROBI_LICENSE_FILE" >&2
+    exit 2
+fi
+export GRB_LICENSE_FILE="${GUROBI_LICENSE_FILE}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+python3 -c 'import gurobipy, torch, torch_geometric'
+
+srun python3 -m cfl_gnn.cli.build_gurobi_derived_training_dataset \
+    --source gurobi "${GUROBI_CANDIDATE_DIR}" "${GUROBI_SOLVE_DIR}" \
+    --source scip "${SCIP_CANDIDATE_DIR}" "${SCIP_SOLVE_DIR}" \
+    --parent_graph_dataset_dir "${PARENT_GRAPH_DATASET_DIR}" \
+    --parent_collection_plan_dir "${PARENT_COLLECTION_PLAN_DIR}" \
+    --parent_collection_run_root "${PARENT_COLLECTION_RUN_ROOT}" \
+    --output_dir "${GASSE_AUGMENTED_DATASET_DIR}" \
+    --root_time_limit "${ROOT_TIME_LIMIT_SECONDS:-600}" \
+    --allow_partial_smoke \
+    --overwrite
