@@ -7,6 +7,10 @@ from types import SimpleNamespace
 
 import pytest
 
+from cfl_gnn.graph.gurobi_graph_artifact import (
+    GurobiGraphError,
+    _solution_by_name,
+)
 from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.pipelines import gurobi_derived_training_dataset as pipeline
 from cfl_gnn.training.gasse_reconnected import (
@@ -333,6 +337,38 @@ def test_graph_builder_exposes_label_solver_without_changing_authority() -> None
     ).read_text(encoding="utf-8")
     assert 'graph.graph_authority = "gurobi"' in source
     assert 'sample_metadata.get("label_source_solver", "gurobi")' in source
+
+
+@pytest.mark.parametrize(
+    ("solver", "source"),
+    [
+        ("gurobi", "independent_gurobi_optimization"),
+        ("scip", "independent_pyscipopt_optimization"),
+    ],
+)
+def test_graph_builder_accepts_declared_independent_label_source(
+    solver: str, source: str
+) -> None:
+    values = _solution_by_name(
+        {
+            "solution_source": source,
+            "variables": [{"name": "x", "value": 1.0}],
+        },
+        label_source_solver=solver,
+    )
+
+    assert values == {"x": 1.0}
+
+
+def test_graph_builder_rejects_solver_label_mismatch() -> None:
+    with pytest.raises(GurobiGraphError, match="declared graph-label solver"):
+        _solution_by_name(
+            {
+                "solution_source": "independent_pyscipopt_optimization",
+                "variables": [{"name": "x", "value": 1.0}],
+            },
+            label_source_solver="gurobi",
+        )
 
 
 def test_authoritative_pipeline_has_no_zero_ablation_or_pyscipopt_reader() -> None:

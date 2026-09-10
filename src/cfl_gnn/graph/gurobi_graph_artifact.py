@@ -224,12 +224,22 @@ def compare_root_relaxations(
     }
 
 
-def _solution_by_name(payload: Mapping[str, Any]) -> dict[str, float]:
-    if payload.get("solution_source") != "independent_gurobi_optimization":
-        raise GurobiGraphError("graph labels must originate from Gurobi")
+def _solution_by_name(
+    payload: Mapping[str, Any], *, label_source_solver: str
+) -> dict[str, float]:
+    expected_sources = {
+        "gurobi": "independent_gurobi_optimization",
+        "scip": "independent_pyscipopt_optimization",
+    }
+    if label_source_solver not in expected_sources:
+        raise GurobiGraphError("unsupported graph-label solver")
+    if payload.get("solution_source") != expected_sources[label_source_solver]:
+        raise GurobiGraphError(
+            "solution source does not match the declared graph-label solver"
+        )
     variables = payload.get("variables")
     if not isinstance(variables, list) or not variables:
-        raise GurobiGraphError("Gurobi solution contains no named variables")
+        raise GurobiGraphError("solver solution contains no named variables")
     result: dict[str, float] = {}
     for item in variables:
         if not isinstance(item, Mapping):
@@ -274,7 +284,12 @@ def build_graph_artifact(
     if sha256_file(label_path) != solution_sha256:
         raise GurobiGraphError("solution SHA-256 changed before graph construction")
     solution_payload = _read_gzip_json(label_path)
-    solution = _solution_by_name(solution_payload)
+    label_source_solver = str(
+        sample_metadata.get("label_source_solver", "gurobi")
+    )
+    solution = _solution_by_name(
+        solution_payload, label_source_solver=label_source_solver
+    )
     model = gp.read(str(source))
     try:
         original_sense = (
@@ -375,9 +390,7 @@ def build_graph_artifact(
         graph.role = str(sample_metadata["role"])
         graph.sampling_strategy = str(sample_metadata["sampling_strategy"])
         graph.graph_authority = "gurobi"
-        graph.label_source_solver = str(
-            sample_metadata.get("label_source_solver", "gurobi")
-        )
+        graph.label_source_solver = label_source_solver
         graph.root_lp_relaxation_mode = "first_optimal_root_gurobi_mipnode"
         graph.root_lp_relaxation_vector_sha256 = root_payload["vector_sha256"]
         graph.objective_sense = "MINIMIZE"
