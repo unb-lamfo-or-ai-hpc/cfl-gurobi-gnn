@@ -364,14 +364,20 @@ def build_graph_artifact(
             raise GurobiGraphError("production encoder rejected the graph")
         graph.sample_id = str(sample_metadata["sample_id"])
         graph.source_instance_id = str(sample_metadata["source_instance_id"])
-        graph.parent_instance_id = str(sample_metadata["source_instance_id"])
+        graph.parent_instance_id = str(
+            sample_metadata.get(
+                "parent_instance_id", sample_metadata["source_instance_id"]
+            )
+        )
         graph.category = str(sample_metadata["category"])
         graph.difficulty = str(sample_metadata["difficulty"])
         graph.instance_fold = int(sample_metadata["fold"])
         graph.role = str(sample_metadata["role"])
         graph.sampling_strategy = str(sample_metadata["sampling_strategy"])
         graph.graph_authority = "gurobi"
-        graph.label_source_solver = "gurobi"
+        graph.label_source_solver = str(
+            sample_metadata.get("label_source_solver", "gurobi")
+        )
         graph.root_lp_relaxation_mode = "first_optimal_root_gurobi_mipnode"
         graph.root_lp_relaxation_vector_sha256 = root_payload["vector_sha256"]
         graph.objective_sense = "MINIMIZE"
