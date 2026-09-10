@@ -8,8 +8,12 @@ from pathlib import Path
 import pytest
 
 from cfl_gnn.analysis.parent_collection_audit import audit_parent_collection
+from cfl_gnn.analysis.parent_collection_progress import (
+    audit_parent_collection_progress,
+)
 from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.pipelines.parent_population import write_parent_collection_plan
+from cfl_gnn.pipelines.parent_solutions import plan_name
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -106,10 +110,20 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
                 "logical_cpu_count": 8,
                 "slurm": {"slurm_job_partition": "batch"},
             },
+            "checks": {"fixture_contract_valid": True},
             "artifacts": {
-                "solution": {"file_name": solution.name, "sha256": sha256_file(solution)},
-                "incumbents": {"file_name": incumbents.name, "sha256": sha256_file(incumbents)},
-                "variable_order": {"file_name": variable_order.name, "sha256": sha256_file(variable_order)},
+                "solution": {
+                    "file_name": solution.name,
+                    "sha256": sha256_file(solution),
+                },
+                "incumbents": {
+                    "file_name": incumbents.name,
+                    "sha256": sha256_file(incumbents),
+                },
+                "variable_order": {
+                    "file_name": variable_order.name,
+                    "sha256": sha256_file(variable_order),
+                },
             },
             "eligibility": {
                 "label_eligible": True,
@@ -118,6 +132,9 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
         }
         (run_dir / f"{solver}_parent_solve_report.json").write_text(
             json.dumps(report), encoding="utf-8"
+        )
+        (run_dir / plan_name(solver)).write_text(
+            json.dumps({"contract_sha256": contract}), encoding="utf-8"
         )
     return plan_dir, runs
 
@@ -164,3 +181,63 @@ def test_audit_fails_closed_when_one_solver_report_is_missing(tmp_path: Path) ->
     assert report["gate_status"] == "failed"
     assert report["summary"]["failed_tasks"] == 1
     assert report["decision"]["next_gate"] == "resume_or_repair_parent_collection"
+
+
+def test_progress_audit_reports_complete_paired_population(tmp_path: Path) -> None:
+    plan_dir, runs = _fixture(tmp_path)
+    output = tmp_path / "progress"
+
+    report = audit_parent_collection_progress(
+        plan_dir=plan_dir, run_root=runs, output_dir=output
+    )
+
+    assert report["gate_status"] == "passed"
+    assert report["summary"]["valid_tasks"] == 2
+    assert report["summary"]["paired_label_eligible_parents"] == 1
+    assert report["summary"]["rescue_tasks"] == 0
+    assert report["campaign_status"]["current_budget_execution_complete"] is True
+    assert report["eligibility"]["scientific_reporting_eligible"] is False
+
+
+def test_progress_audit_emits_missing_solver_rescue(tmp_path: Path) -> None:
+    plan_dir, runs = _fixture(tmp_path)
+    next(runs.rglob("scip_parent_solve_report.json")).unlink()
+
+    report = audit_parent_collection_progress(
+        plan_dir=plan_dir, run_root=runs, output_dir=tmp_path / "progress"
+    )
+
+    assert report["gate_status"] == "passed"
+    assert report["summary"]["invalid_or_missing_tasks"] == 1
+    assert report["summary"]["rescue_tasks"] == 1
+    assert report["campaign_status"]["current_budget_execution_complete"] is False
+    assert report["decision"]["next_gate"] == (
+        "execute_parent_collection_rescue_manifests"
+    )
+
+
+def test_progress_audit_escalates_censored_label_to_next_budget(
+    tmp_path: Path,
+) -> None:
+    plan_dir, runs = _fixture(tmp_path)
+    report_path = next(runs.rglob("scip_parent_solve_report.json"))
+    solver_report = json.loads(report_path.read_text(encoding="utf-8"))
+    solver_report["solve"]["mip_gap_relative"] = 0.2
+    solver_report["eligibility"]["label_eligible"] = False
+    solver_report["eligibility"]["augmentation_source_eligible"] = False
+    report_path.write_text(json.dumps(solver_report), encoding="utf-8")
+    output = tmp_path / "progress"
+
+    report = audit_parent_collection_progress(
+        plan_dir=plan_dir, run_root=runs, output_dir=output
+    )
+    rescue = [
+        json.loads(line)
+        for line in (output / "scip_parent_rescue_tasks.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+
+    assert report["summary"]["paired_label_eligible_parents"] == 0
+    assert len(rescue) == 1
+    assert rescue[0]["recommended_rescue_time_limit_seconds"] == 14400

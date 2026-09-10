@@ -191,14 +191,18 @@ def build_parent_collection_plan(
     for phase_index, solver in enumerate(SOLVER_ORDER):
         for parent in available:
             solver_index = len(solver_tasks[solver])
+            budget_id = f"budget_{int(budget['time_limit_seconds'])}s"
             task = {
                 "task_index": len(tasks),
                 "solver_task_index": solver_index,
                 "solver_phase_index": phase_index,
                 "solver": solver,
+                "budget_id": budget_id,
+                "time_limit_seconds": budget["time_limit_seconds"],
                 **parent,
                 "run_dir_relative_path": (
-                    f"{solver}/{parent['category']}/{parent['source_instance_id']}"
+                    f"{budget_id}/{solver}/{parent['category']}/"
+                    f"{parent['source_instance_id']}"
                 ),
             }
             tasks.append(task)
@@ -250,6 +254,9 @@ def build_parent_collection_plan(
             "required_submission_order": ["gurobi", "scip"],
             "scip_submission_dependency": "afterok:<gurobi_array_job_id>",
             "resume_policy": "hash_validated_completed_report_only",
+            "preferred_execution_mode": "paired_parent_array_gurobi_then_scip",
+            "recommended_max_parallel_parents": 4,
+            "budget_isolated_run_directories": True,
         },
         "outputs": {
             "combined_tasks": TASKS_NAME,

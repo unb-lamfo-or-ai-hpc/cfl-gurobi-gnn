@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_parent_progress
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=8G
+#SBATCH --time=00:15:00
+#SBATCH --output=slurm_cfl_parent_progress_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${PARENT_COLLECTION_PLAN_DIR:?Set PARENT_COLLECTION_PLAN_DIR}"
+: "${PARENT_COLLECTION_RUN_ROOT:?Set PARENT_COLLECTION_RUN_ROOT}"
+: "${PARENT_COLLECTION_PROGRESS_DIR:?Set PARENT_COLLECTION_PROGRESS_DIR}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+
+srun python3 -m cfl_gnn.cli.audit_parent_collection_progress \
+    --plan_dir "${PARENT_COLLECTION_PLAN_DIR}" \
+    --run_root "${PARENT_COLLECTION_RUN_ROOT}" \
+    --output_dir "${PARENT_COLLECTION_PROGRESS_DIR}" \
+    --overwrite
