@@ -92,6 +92,38 @@ def _materialize(source: Path, destination: Path, *, overwrite: bool) -> str:
         return "copy_fallback"
 
 
+def _require_source_hash(source: Path, expected: str, *, label: str) -> None:
+    if not source.is_file() or sha256_file(source) != expected:
+        raise GurobiDerivedTrainingError(f"{label} SHA-256 mismatch")
+
+
+def _validate_derived_source(specification: Any) -> dict[str, Any]:
+    _require_source_hash(
+        specification.candidate_path,
+        specification.candidate_sha256,
+        label="derived candidate",
+    )
+    _require_source_hash(
+        specification.solution_path,
+        specification.solution_sha256,
+        label="derived solution",
+    )
+    solution_payload = _read_gzip_json(specification.solution_path)
+    expected_source = {
+        "gurobi": "independent_gurobi_optimization",
+        "scip": "independent_pyscipopt_optimization",
+    }[specification.solver]
+    if (
+        solution_payload.get("candidate_sha256")
+        != specification.candidate_sha256
+        or solution_payload.get("solution_source") != expected_source
+    ):
+        raise GurobiDerivedTrainingError(
+            "derived label is not an independent solution of its candidate MIP"
+        )
+    return solution_payload
+
+
 def prepare_dataset(
     *,
     sources: Sequence[SourceInput],
@@ -244,6 +276,22 @@ def _pack_original_records(
     for solver, plan in prepared.original_plans.items():
         records: list[dict[str, Any]] = []
         for source in plan["records"]:
+            graph_source = parent_graph_root / source["graph_relative_path"]
+            root_source = parent_graph_root / source["root_relative_path"]
+            label_source = (
+                parent_label_root
+                / source["label_run_relative_path"]
+                / source["label_file_name"]
+            )
+            _require_source_hash(
+                graph_source, source["graph_sha256"], label="original graph"
+            )
+            _require_source_hash(
+                root_source, source["root_sha256"], label="original root"
+            )
+            _require_source_hash(
+                label_source, source["label_sha256"], label="original label"
+            )
             graph_destination = (
                 output / "graphs" / "original" / f"{source['sample_id']}.pt"
             )
@@ -255,14 +303,14 @@ def _pack_original_records(
             )
             if source["sample_id"] not in materialized_graphs:
                 storage[_materialize(
-                    parent_graph_root / source["graph_relative_path"],
+                    graph_source,
                     graph_destination,
                     overwrite=overwrite,
                 )] += 1
                 materialized_graphs.add(source["sample_id"])
             if source["sample_id"] not in materialized_roots:
                 storage[_materialize(
-                    parent_graph_root / source["root_relative_path"],
+                    root_source,
                     root_destination,
                     overwrite=overwrite,
                 )] += 1
@@ -275,9 +323,7 @@ def _pack_original_records(
                 / f"{source['sample_id']}.solution.json.gz"
             )
             storage[_materialize(
-                parent_label_root
-                / source["label_run_relative_path"]
-                / source["label_file_name"],
+                label_source,
                 label_destination,
                 overwrite=overwrite,
             )] += 1
@@ -384,6 +430,10 @@ def execute_dataset(
     report_path = output / REPORT_NAME
     if report_path.exists() and not overwrite:
         raise GurobiDerivedTrainingError("output exists; use --overwrite")
+    source_payloads = {
+        specification.sample_id: _validate_derived_source(specification)
+        for specification in prepared.source_plan.samples
+    }
     output.mkdir(parents=True, exist_ok=True)
     original, storage = _pack_original_records(
         prepared,
@@ -396,27 +446,11 @@ def execute_dataset(
     audits: list[dict[str, Any]] = []
     mip_hashes: set[str] = set()
     for specification in prepared.source_plan.samples:
-        if sha256_file(specification.candidate_path) != specification.candidate_sha256:
-            raise GurobiDerivedTrainingError(
-                "derived candidate SHA-256 changed after planning"
-            )
-        if sha256_file(specification.solution_path) != specification.solution_sha256:
-            raise GurobiDerivedTrainingError(
-                "derived solution SHA-256 changed after planning"
-            )
-        solution_payload = _read_gzip_json(specification.solution_path)
+        solution_payload = source_payloads[specification.sample_id]
         expected_source = {
             "gurobi": "independent_gurobi_optimization",
             "scip": "independent_pyscipopt_optimization",
         }[specification.solver]
-        if (
-            solution_payload.get("candidate_sha256")
-            != specification.candidate_sha256
-            or solution_payload.get("solution_source") != expected_source
-        ):
-            raise GurobiDerivedTrainingError(
-                "derived label is not an independent solution of its candidate MIP"
-            )
         if specification.candidate_sha256 in mip_hashes:
             raise GurobiDerivedTrainingError("duplicate derived mathematical MIP")
         mip_hashes.add(specification.candidate_sha256)

@@ -277,7 +277,7 @@ def test_changed_candidate_is_rejected_before_gurobi_execution(
 
     with pytest.raises(
         pipeline.GurobiDerivedTrainingError,
-        match="candidate SHA-256 changed",
+        match="derived candidate SHA-256 mismatch",
     ):
         pipeline.execute_dataset(
             prepared,
