@@ -174,3 +174,5 @@ def test_shared_kernel_uses_callback_api_without_pyomo() -> None:
     assert '"solver_feasibility_check_space": "original_problem"' in source
     assert "import pyomo" not in source
     assert "from pyomo" not in source
+    assert '"time_regions"' in source
+    assert "model_optimize_wall_time_seconds" in source

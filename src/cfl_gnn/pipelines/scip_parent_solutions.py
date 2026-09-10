@@ -1,4 +1,8 @@
-"""Solve one original CFL parent and qualify modern solver artifacts."""
+"""Shared original-parent solve pipeline for Gurobi and PySCIPOpt.
+
+The historical module name is retained for import compatibility.  New code
+should import :mod:`cfl_gnn.pipelines.parent_solutions`.
+"""
 
 from __future__ import annotations
 
@@ -30,7 +34,24 @@ DEFAULT_CONFIG = PROJECT_ROOT / "configs" / "experiments" / "mvp_partial_v1.json
 
 
 class ScipParentSolveError(RuntimeError):
-    """Raised when a parent solve violates its reproducibility contract."""
+    """Backward-compatible parent-solve contract error."""
+
+
+ParentSolveError = ScipParentSolveError
+
+
+def plan_name(solver: str) -> str:
+    """Return the solver-specific parent plan artifact name."""
+    if solver not in {"gurobi", "scip"}:
+        raise ValueError("solver must be gurobi or scip")
+    return f"{solver}_parent_solve_plan.json"
+
+
+def report_name(solver: str) -> str:
+    """Return the solver-specific parent report artifact name."""
+    if solver not in {"gurobi", "scip"}:
+        raise ValueError("solver must be gurobi or scip")
+    return f"{solver}_parent_solve_report.json"
 
 
 def _canonical_sha256(payload: Any) -> str:
@@ -164,16 +185,41 @@ class ParentSolvePlan:
         return _canonical_sha256(self.contract_payload)
 
     def to_summary(self) -> dict[str, Any]:
+        outputs = {
+            "solution": SOLUTION_NAME,
+            "incumbents": INCUMBENTS_NAME,
+            "variable_order": VARIABLE_ORDER_NAME,
+            "plan": plan_name(self.solver),
+            "report": report_name(self.solver),
+        }
+        if self.solver == "gurobi":
+            outputs["legacy_plan_alias"] = PLAN_NAME
+            outputs["legacy_report_alias"] = REPORT_NAME
         return {
             **self.contract_payload,
             "contract_sha256": self.contract_sha256,
-            "outputs": {
-                "solution": SOLUTION_NAME,
-                "incumbents": INCUMBENTS_NAME,
-                "variable_order": VARIABLE_ORDER_NAME,
-                "report": REPORT_NAME,
-            },
+            "outputs": outputs,
         }
+
+
+def _time_regions_valid(payload: Mapping[str, Any]) -> bool:
+    regions = payload.get("time_regions")
+    if not isinstance(regions, Mapping):
+        return False
+    required = (
+        "total_wall_time_seconds",
+        "data_read_wall_time_seconds",
+        "model_build_wall_time_seconds",
+        "model_optimize_wall_time_seconds",
+    )
+    try:
+        values = {key: float(regions[key]) for key in required}
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return False
+    if not all(math.isfinite(value) and value >= 0.0 for value in values.values()):
+        return False
+    component_total = sum(values[key] for key in required if key != required[0])
+    return values[required[0]] + 1e-6 >= component_total
 
 
 def build_plan(
@@ -281,6 +327,7 @@ def _run_fresh_worker(plan: ParentSolvePlan) -> None:
 def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict[str, Any]:
     online = payload.get("online_incumbent_capture", {})
     trace_audit = payload.get("incumbent_trace_audit", {})
+    runtime_context = payload.get("runtime_environment", {})
     gap = payload.get("mip_gap_relative")
     feasible = (
         payload.get("solver_feasibility_check") is True
@@ -318,6 +365,17 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
         "trace_consistent": trace_audit.get("incumbent_trace_consistent") is True,
         "named_solution_present": bool(payload.get("variables")),
         "terminal_gap_finite": gap is not None and math.isfinite(float(gap)),
+        "four_time_regions_valid": _time_regions_valid(payload),
+        "runtime_environment_recorded": (
+            isinstance(runtime_context, Mapping)
+            and all(
+                runtime_context.get(key) is not None
+                for key in ("hostname", "platform", "machine", "logical_cpu_count")
+            )
+        ),
+        "solver_parameter_contract_recorded": bool(
+            payload.get("solver_parameter_sha256")
+        ),
     }
     instrumentation_valid = all(checks.values())
     label_eligible = instrumentation_valid and gap_valid
@@ -362,6 +420,15 @@ def evaluate_solution(plan: ParentSolvePlan, payload: Mapping[str, Any]) -> dict
                 "nodes_total",
             )
         },
+        "time_regions": dict(payload.get("time_regions", {})),
+        "time_region_semantics": dict(payload.get("time_region_semantics", {})),
+        "performance_feature_tags": dict(
+            payload.get("performance_feature_tags", {})
+        ),
+        "solver_versions": dict(payload.get("solver_versions", {})),
+        "solver_parameter_map": dict(payload.get("solver_parameter_map", {})),
+        "solver_parameter_sha256": payload.get("solver_parameter_sha256"),
+        "runtime_environment": dict(payload.get("runtime_environment", {})),
         "online_incumbent_capture": dict(online),
         "incumbent_trace_audit": dict(trace_audit),
         "checks": checks,
@@ -434,7 +501,7 @@ def main(
         if not args._worker_request or not args._worker_result:
             raise ValueError("worker request and result must be supplied together")
         if solver == "gurobi":
-            from cfl_gnn.solvers.gurobi_solution import solve_named_mip as solve
+            from cfl_gnn.pipelines.gurobi_incumbents import solve_parent_mip as solve
         else:
             solve = solve_named_mip
         result = solve(_read_json(Path(args._worker_request)))
@@ -469,13 +536,15 @@ def main(
             solver=solver,
         )
         plan.output_dir.mkdir(parents=True, exist_ok=True)
-        plan_path = plan.output_dir / PLAN_NAME
-        report_path = plan.output_dir / REPORT_NAME
+        plan_path = plan.output_dir / plan_name(solver)
+        report_path = plan.output_dir / report_name(solver)
         if not args.overwrite and (
             report_path.exists() or (args.dry_run and plan_path.exists())
         ):
             raise FileExistsError("output exists; choose another directory or use --overwrite")
         _write_json(plan_path, plan.to_summary())
+        if solver == "gurobi":
+            _write_json(plan.output_dir / PLAN_NAME, plan.to_summary())
         print(
             f"[INFO] parent={plan.parent_instance_id} | fold={plan.fold} | "
             f"role={plan.role} | contract={plan.contract_sha256}"
@@ -487,6 +556,8 @@ def main(
             return 0
         report = run(plan)
         _write_json(report_path, report)
+        if solver == "gurobi":
+            _write_json(plan.output_dir / REPORT_NAME, report)
         print(
             f"[INFO] gate={report['gate_status']} | "
             f"events={report['online_incumbent_capture']['events_recorded']} | "

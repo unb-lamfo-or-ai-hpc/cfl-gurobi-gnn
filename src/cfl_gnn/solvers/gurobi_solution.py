@@ -5,6 +5,7 @@ from __future__ import annotations
 import gzip
 import json
 import math
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -16,6 +17,7 @@ from cfl_gnn.solvers.pyscipopt_solution import (
     canonical_sha256,
     canonical_variable_type,
     normalize_variable_type,
+    runtime_environment,
     sha256_file,
 )
 
@@ -182,14 +184,18 @@ def _status_name(status: int, grb: Any) -> str:
 
 def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
     """Solve one MIP from scratch and write a named, audited Gurobi label."""
+    total_started = time.perf_counter()
     import gurobipy as gp
     from gurobipy import GRB
 
+    data_read_started = time.perf_counter()
     candidate = Path(str(request["candidate_path"]))
     solution_path = Path(str(request["solution_path"]))
     expected_sha256 = str(request["candidate_sha256"])
     if sha256_file(candidate) != expected_sha256:
         raise GurobiSolveError("candidate SHA-256 changed before solve")
+    data_read_time = time.perf_counter() - data_read_started
+    model_build_started = time.perf_counter()
     stream_path_value = request.get("incumbent_stream_path")
     stream = (
         IncumbentParquetStream(Path(str(stream_path_value)))
@@ -248,7 +254,10 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             "ModelSense": int(model.ModelSense),
         }
         solver_parameter_sha256 = canonical_sha256(solver_parameter_map)
+        model_build_time = time.perf_counter() - model_build_started
+        optimize_started = time.perf_counter()
         model.optimize(collector.callback)
+        optimize_time = time.perf_counter() - optimize_started
 
         solution_count = int(model.SolCount)
         named_variables: list[dict[str, Any]] = []
@@ -296,6 +305,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             _finite_or_none(model.MIPGap) if solution_count > 0 else None
         )
         version = ".".join(str(part) for part in gp.gurobi.version())
+        total_time = time.perf_counter() - total_started
         payload = {
             "schema_version": int(request.get("schema_version", 1)),
             "contract_sha256": str(request["contract_sha256"]),
@@ -305,6 +315,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             "solver_versions": {"gurobi": version, "gurobipy": version},
             "solver_parameter_map": solver_parameter_map,
             "solver_parameter_sha256": solver_parameter_sha256,
+            "runtime_environment": runtime_environment(),
             "solution_source": "independent_gurobi_optimization",
             "fresh_process": True,
             "warm_start_supplied": False,
@@ -321,6 +332,26 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             "mip_gap_relative": relative_gap,
             "mip_gap_percent": _gap_percent(relative_gap),
             "execution_time_seconds": _finite_or_none(model.Runtime),
+            "time_regions": {
+                "total_wall_time_seconds": total_time,
+                "data_read_wall_time_seconds": data_read_time,
+                "model_build_wall_time_seconds": model_build_time,
+                "model_optimize_wall_time_seconds": optimize_time,
+            },
+            "time_region_semantics": {
+                "total_wall_time_seconds": (
+                    "external_wall_clock_from_worker_entry_through_outcome_extraction"
+                ),
+                "data_read_wall_time_seconds": (
+                    "external_wall_clock_for_input_identity_and_sha256_verification"
+                ),
+                "model_build_wall_time_seconds": (
+                    "external_wall_clock_for_model_parse_configuration_and_callback_setup"
+                ),
+                "model_optimize_wall_time_seconds": (
+                    "external_wall_clock_around_model_optimize_only"
+                ),
+            },
             "work_units": _finite_or_none(model.Work),
             "nodes_current_run": int(model.NodeCount),
             "nodes_total": int(model.NodeCount),
