@@ -1,0 +1,55 @@
+#!/bin/bash
+#SBATCH --job-name=gurobi_graphs
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=01:00:00
+#SBATCH --output=slurm_gurobi_graphs_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable" >&2
+    echo "[ERROR] submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${PARENT_COLLECTION_PLAN_DIR:?Set PARENT_COLLECTION_PLAN_DIR}"
+: "${PARENT_COLLECTION_RUN_ROOT:?Set PARENT_COLLECTION_RUN_ROOT}"
+: "${BASE_SOURCE_DIR:?Set BASE_SOURCE_DIR}"
+: "${GUROBI_GRAPH_OUTPUT_DIR:?Set GUROBI_GRAPH_OUTPUT_DIR}"
+
+GUROBI_LICENSE_FILE="${GUROBI_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+if [[ ! -s "${GUROBI_LICENSE_FILE}" ]]; then
+    echo "[ERROR] Gurobi license is missing; set GUROBI_LICENSE_FILE" >&2
+    exit 2
+fi
+export GRB_LICENSE_FILE="${GUROBI_LICENSE_FILE}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+python3 -c 'import gurobipy, numpy, pyarrow, torch, torch_geometric'
+
+ARGS=(--overwrite)
+if [[ -n "${GRAPH_INSTANCES:-}" ]]; then
+    read -r -a INSTANCE_VALUES <<< "${GRAPH_INSTANCES}"
+    ARGS+=(--instances "${INSTANCE_VALUES[@]}")
+fi
+if [[ "${REQUIRE_LEGACY_PARITY:-0}" == "1" ]]; then
+    : "${LEGACY_INTERMEDIATE_DIR:?Set LEGACY_INTERMEDIATE_DIR}"
+    ARGS+=(--legacy_intermediate_dir "${LEGACY_INTERMEDIATE_DIR}")
+    ARGS+=(--require_legacy_parity)
+fi
+
+srun python3 -m cfl_gnn.cli.build_gurobi_graph_dataset \
+    --parent_collection_plan_dir "${PARENT_COLLECTION_PLAN_DIR}" \
+    --parent_collection_run_root "${PARENT_COLLECTION_RUN_ROOT}" \
+    --base_source_dir "${BASE_SOURCE_DIR}" \
+    --output_dir "${GUROBI_GRAPH_OUTPUT_DIR}" \
+    --root_time_limit "${ROOT_TIME_LIMIT_SECONDS:-600}" \
+    "${ARGS[@]}"

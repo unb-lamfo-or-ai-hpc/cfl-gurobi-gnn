@@ -1,176 +1,247 @@
-"""
-Phase 2: PyG Clustering and Dimensionality Reduction (PCA & UMAP)
-=================================================================
-Extracts relative macro-topological features and performance metrics 
-from the generated PyG bipartite graphs to visualize difficulty clusters
-without scale-distortion.
+"""Deterministic PCA and descriptive clustering for graph manifests."""
 
-Outputs are saved to the defined analysis directory.
-"""
+from __future__ import annotations
 
-import os
-import glob
-import torch
-import warnings
+import argparse
+import csv
+import hashlib
+import json
+from pathlib import Path
+from typing import Any, Mapping, Sequence
+
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-import umap
 
-# Suppress UMAP warning regarding n_jobs and random_state overrides in HPC
-warnings.filterwarnings('ignore', category=UserWarning, module='umap')
 
-def extract_macro_features(pt_file):
-    """Extracts a vector of relative features and class imbalance from a PyG HeteroData graph."""
+REPORT_NAME = "graph_clustering_report.json"
+TABLE_NAME = "graph_clustering.csv"
+FIGURE_NAME = "graph_clustering.svg"
+FEATURES = ("density", "discrete_fraction", "constraint_variable_ratio")
+
+
+class GraphClusteringError(RuntimeError):
+    """Raised when deterministic graph clustering cannot be audited."""
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _read_jsonl(path: Path) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
     try:
-        data = torch.load(pt_file, map_location='cpu', weights_only=False)
-        
-        num_vars = data['variable'].x.shape[0]
-        num_constrs = data['constraint'].x.shape[0]
-        num_edges = data['variable', 'rev_coef', 'constraint'].edge_index.shape[1]
-        
-        # --- RELATIVE TOPOLOGICAL FEATURES ---
-        # 1. Graph Density
-        density = num_edges / (num_vars * num_constrs) if (num_vars * num_constrs) > 0 else 0
-        
-        # 2. Ratio of Constraints to Variables
-        ratio_c_v = num_constrs / num_vars if num_vars > 0 else 0
-        
-        # 3. Proportion of Discrete Variables
-        is_bin = (data['variable'].x[:, 4] == 1.0).sum().item()
-        is_int = (data['variable'].x[:, 5] == 1.0).sum().item()
-        prop_discrete = (is_bin + is_int) / num_vars if num_vars > 0 else 0
-        
-        # --- CLASS IMBALANCE (TARGET 'y') ---
-        # Calculate the percentage of ones (active facilities) in the solution
-        y_tensor = data['variable'].y
-        n_ones = (y_tensor == 1.0).sum().item()
-        pct_ones = (n_ones / num_vars) * 100.0 if num_vars > 0 else 0.0
+        with path.open("r", encoding="utf-8") as stream:
+            for line in stream:
+                if line.strip():
+                    value = json.loads(line)
+                    if not isinstance(value, dict):
+                        raise TypeError("manifest record is not an object")
+                    records.append(value)
+    except (OSError, TypeError, ValueError) as error:
+        raise GraphClusteringError("graph manifest is unreadable") from error
+    if not records:
+        raise GraphClusteringError("graph manifest is empty")
+    return records
 
-        # --- PERFORMANCE METRICS ---
-        exec_time = float(getattr(data, 'exec_time', 0.0))
-        mip_gap = float(getattr(data, 'mip_gap', 1.0))
-        
-        if np.isinf(mip_gap) or np.isnan(mip_gap) or mip_gap > 1.0:
-            mip_gap = 1.0
-            
-        return {
-            'Vars': num_vars,
-            'Constrs': num_constrs,
-            'Density': density,
-            'Prop_Discrete': prop_discrete,
-            'Ratio_C_V': ratio_c_v,
-            'Pct_Ones': pct_ones,
-            'Time': exec_time,
-            'Gap': mip_gap
-        }
-        
-    except Exception as e:
-        print(f"  [WARN] Skipping corrupted file {os.path.basename(pt_file)}: {e}")
-        return None
 
-def main():
-    base_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset"
-    categories = ["CFL_easy_instance", "CFL_medium_instance", "CFL_hard_instance"]
-    
-    output_dir = "/raid/vrcelestino/data/cfl-gurobi-gnn/data/analysis/step2"
-    os.makedirs(output_dir, exist_ok=True)
-    
-    print("=== Starting Relative Feature Extraction for PyG Clustering ===")
-    
-    data_records = []
-    
-    for category in categories:
-        cat_clean = category.replace("CFL_", "").replace("_instance", "").capitalize()
-        processed_dir = os.path.join(base_dir, category, "processed")
-        pt_files = glob.glob(os.path.join(processed_dir, "data_*.pt"))
-        
-        if not pt_files:
-            continue
-            
-        print(f"Scanning {category} ({len(pt_files)} graphs)...")
-        for pt_file in pt_files:
-            features = extract_macro_features(pt_file)
-            if features is not None:
-                features['Category'] = cat_clean
-                data_records.append(features)
-                
-    df = pd.DataFrame(data_records)
-    
-    if df.empty:
-        print(" [ERROR] No valid data could be extracted. Nothing to plot.")
-        return
-        
-    print(f"\nTotal valid PyG graphs processed: {len(df)}")
-    
-    # --- Matrix for Dimensionality Reduction (STRICTLY RELATIVE FEATURES) ---
-    feature_cols = ['Density', 'Prop_Discrete', 'Ratio_C_V']
-    X = df[feature_cols].values
-    
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    
-    # PCA
-    print("Computing PCA...")
-    pca = PCA(n_components=2, random_state=42)
-    X_pca = pca.fit_transform(X_scaled)
-    df['PCA1'] = X_pca[:, 0]
-    df['PCA2'] = X_pca[:, 1]
-    var_exp = pca.explained_variance_ratio_ * 100
-    pca_title = f"PCA (Explained Var: PC1={var_exp[0]:.1f}%, PC2={var_exp[1]:.1f}%)"
-    
-    # UMAP
-    print("Computing UMAP...")
-    n_neighbors = min(15, max(2, len(X_scaled) - 1))
-    reducer = umap.UMAP(n_components=2, random_state=42, n_neighbors=n_neighbors, min_dist=0.1)
-    X_umap = reducer.fit_transform(X_scaled)
-    df['UMAP1'] = X_umap[:, 0]
-    df['UMAP2'] = X_umap[:, 1]
-    
-    # --- Generate Unified 2x2 Dashboard ---
-    print("Generating comprehensive clustering & empirical dashboard...")
-    sns.set_theme(style="whitegrid")
-    
-    fig, axes = plt.subplots(2, 2, figsize=(18, 14))
-    palette = {'Easy': '#2ecc71', 'Medium': '#f1c40f', 'Hard': '#e74c3c'}
-    
-    # 1. PCA Plot
-    sns.scatterplot(ax=axes[0, 0], data=df, x='PCA1', y='PCA2', hue='Category', 
-                    palette=palette, alpha=0.8, edgecolor='w', s=60)
-    axes[0, 0].set_title(pca_title, fontsize=14, weight='bold')
-    axes[0, 0].set_xlabel('Principal Component 1')
-    axes[0, 0].set_ylabel('Principal Component 2')
-    
-    # 2. UMAP Plot
-    sns.scatterplot(ax=axes[0, 1], data=df, x='UMAP1', y='UMAP2', hue='Category', 
-                    palette=palette, alpha=0.8, edgecolor='w', s=60)
-    axes[0, 1].set_title('Uniform Manifold Approximation (UMAP)', fontsize=14, weight='bold')
-    axes[0, 1].set_xlabel('UMAP Dimension 1')
-    axes[0, 1].set_ylabel('UMAP Dimension 2')
-    
-    # 3. Time vs Gap (Empirical Performance)
-    sns.scatterplot(ax=axes[1, 0], data=df, x='Time', y='Gap', hue='Category', 
-                    palette=palette, alpha=0.7, edgecolor=None, s=60)
-    axes[1, 0].set_title('Empirical Performance: Time vs Final MIP Gap', fontsize=14, weight='bold')
-    axes[1, 0].set_xlabel('Solve Time (s)')
-    axes[1, 0].set_ylabel('MIP Gap (Capped at 100%)')
-    
-    # 4. Class Imbalance Boxplot (Target 'y')
-    sns.boxplot(ax=axes[1, 1], data=df, x='Category', y='Pct_Ones', hue='Category', 
-                palette=palette, dodge=False, legend=False)
-    axes[1, 1].set_title('Target Class Imbalance (Distribution of Ones)', fontsize=14, weight='bold')
-    axes[1, 1].set_ylabel('% of Active Variables (y = 1.0)')
-    axes[1, 1].set_xlabel('Difficulty Category')
+def _standardize(matrix: np.ndarray) -> np.ndarray:
+    means = matrix.mean(axis=0)
+    standard_deviations = matrix.std(axis=0)
+    standard_deviations[standard_deviations == 0.0] = 1.0
+    return (matrix - means) / standard_deviations
 
-    plt.tight_layout()
-    dashboard_path = os.path.join(output_dir, "pyg_clustering_dashboard.png")
-    plt.savefig(dashboard_path, dpi=300)
-    plt.close()
-    
-    print(f"=== Analysis Complete. Dashboard saved to: {dashboard_path} ===")
+
+def _pca(matrix: np.ndarray) -> tuple[np.ndarray, list[float]]:
+    if len(matrix) == 1:
+        return np.zeros((1, 2), dtype=np.float64), [0.0, 0.0]
+    _, singular, right = np.linalg.svd(matrix, full_matrices=False)
+    coordinates = matrix @ right[:2].T
+    if coordinates.shape[1] == 1:
+        coordinates = np.column_stack([coordinates[:, 0], np.zeros(len(matrix))])
+    variance = singular**2
+    total = float(variance.sum())
+    ratios = (variance / total).tolist() if total else [0.0] * len(variance)
+    return coordinates[:, :2], (ratios + [0.0, 0.0])[:2]
+
+
+def _kmeans(matrix: np.ndarray, clusters: int) -> np.ndarray:
+    if clusters <= 1:
+        return np.zeros(len(matrix), dtype=np.int64)
+    order = np.argsort(matrix[:, 0], kind="stable")
+    positions = np.linspace(0, len(order) - 1, clusters).round().astype(int)
+    centroids = matrix[order[positions]].copy()
+    assignments = np.full(len(matrix), -1, dtype=np.int64)
+    for _ in range(100):
+        distances = ((matrix[:, None, :] - centroids[None, :, :]) ** 2).sum(axis=2)
+        updated = distances.argmin(axis=1)
+        if np.array_equal(updated, assignments):
+            break
+        assignments = updated
+        for cluster in range(clusters):
+            members = matrix[assignments == cluster]
+            if len(members):
+                centroids[cluster] = members.mean(axis=0)
+    return assignments
+
+
+def _scatter_svg(rows: Sequence[Mapping[str, Any]]) -> str:
+    width, height = 720, 520
+    x_values = [float(row["pca_component_1"]) for row in rows]
+    y_values = [float(row["pca_component_2"]) for row in rows]
+    x_min, x_max = min(x_values), max(x_values)
+    y_min, y_max = min(y_values), max(y_values)
+    x_span = x_max - x_min or 1.0
+    y_span = y_max - y_min or 1.0
+    colors = ("#3264a8", "#d1495b", "#2a9d8f")
+    elements = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        '<text x="360" y="30" text-anchor="middle" font-size="18">'
+        "Graph PCA and deterministic clusters</text>",
+    ]
+    for row, x_value, y_value in zip(rows, x_values, y_values):
+        x = 70 + 580 * (x_value - x_min) / x_span
+        y = 450 - 370 * (y_value - y_min) / y_span
+        color = colors[int(row["cluster_id"]) % len(colors)]
+        elements.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="6" fill="{color}"/>')
+    elements.append('</svg>')
+    return "\n".join(elements) + "\n"
+
+
+def cluster_graph_manifest(
+    *,
+    manifest_path: str | Path,
+    graph_root: str | Path,
+    output_dir: str | Path,
+    overwrite: bool = False,
+) -> dict[str, Any]:
+    """Project audited macro-features and assign deterministic clusters."""
+    import torch
+
+    manifest = Path(manifest_path).resolve()
+    root = Path(graph_root).resolve()
+    output = Path(output_dir).resolve()
+    expected = [output / REPORT_NAME, output / TABLE_NAME, output / FIGURE_NAME]
+    if not overwrite and any(path.exists() for path in expected):
+        raise GraphClusteringError("clustering output exists; use --overwrite")
+    output.mkdir(parents=True, exist_ok=True)
+    records = sorted(_read_jsonl(manifest), key=lambda item: str(item["sample_id"]))
+    raw: list[dict[str, Any]] = []
+    identities: set[str] = set()
+    for record in records:
+        sample_id = str(record.get("sample_id", ""))
+        if not sample_id or sample_id in identities:
+            raise GraphClusteringError("invalid or duplicate graph identity")
+        identities.add(sample_id)
+        path = root / str(record["graph_relative_path"])
+        if not path.is_file() or _sha256(path) != record.get("graph_sha256"):
+            raise GraphClusteringError(f"graph artifact failed SHA-256: {sample_id}")
+        graph = torch.load(path, map_location="cpu", weights_only=False)
+        variables = int(graph["variable"].x.shape[0])
+        constraints = int(graph["constraint"].x.shape[0])
+        nonzeros = int(
+            graph["variable", "rev_coef", "constraint"].edge_index.shape[1]
+        )
+        raw.append(
+            {
+                "sample_id": sample_id,
+                "source_instance_id": str(record["source_instance_id"]),
+                "difficulty": str(record["difficulty"]),
+                "density": nonzeros / (variables * constraints),
+                "discrete_fraction": float(
+                    graph["variable"].is_discrete.sum().item() / variables
+                ),
+                "constraint_variable_ratio": constraints / variables,
+                "positive_label_fraction": float(
+                    (graph["variable"].y >= 0.5).sum().item() / variables
+                ),
+                "mip_gap_relative": float(graph.mip_gap),
+                "execution_time_seconds": float(graph.exec_time),
+            }
+        )
+    matrix = np.asarray([[float(row[key]) for key in FEATURES] for row in raw])
+    standardized = _standardize(matrix)
+    coordinates, explained = _pca(standardized)
+    cluster_count = min(3, len(raw))
+    assignments = _kmeans(standardized, cluster_count)
+    rows: list[dict[str, Any]] = []
+    for row, coordinate, assignment in zip(raw, coordinates, assignments):
+        rows.append(
+            {
+                **row,
+                "pca_component_1": float(coordinate[0]),
+                "pca_component_2": float(coordinate[1]),
+                "cluster_id": int(assignment),
+            }
+        )
+    fields = tuple(rows[0])
+    with (output / TABLE_NAME).open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+    (output / FIGURE_NAME).write_text(_scatter_svg(rows), encoding="utf-8")
+    report = {
+        "schema_version": 1,
+        "gate_status": "passed",
+        "graph_manifest_sha256": _sha256(manifest),
+        "methodology": {
+            "features": list(FEATURES),
+            "standardization": "population_z_score_zero_variance_to_zero",
+            "projection": "deterministic_numpy_svd_pca",
+            "clustering": "deterministic_kmeans_maximum_three_clusters",
+            "random_seed_required": False,
+        },
+        "summary": {
+            "graphs": len(rows),
+            "clusters": cluster_count,
+            "pca_explained_variance_ratio": explained,
+        },
+        "outputs": {
+            TABLE_NAME: {"sha256": _sha256(output / TABLE_NAME)},
+            FIGURE_NAME: {"sha256": _sha256(output / FIGURE_NAME)},
+        },
+        "eligibility": {
+            "descriptive_analysis_complete": True,
+            "inferential_cluster_claims_allowed": False,
+        },
+    }
+    (output / REPORT_NAME).write_text(
+        json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+    return report
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Cluster manifest-bound graph features."
+    )
+    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--graph_root", type=Path, required=True)
+    parser.add_argument("--output_dir", type=Path, required=True)
+    parser.add_argument("--overwrite", action="store_true")
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        report = cluster_graph_manifest(
+            manifest_path=args.manifest,
+            graph_root=args.graph_root,
+            output_dir=args.output_dir,
+            overwrite=args.overwrite,
+        )
+    except (OSError, ValueError, GraphClusteringError) as error:
+        print(f"[ERROR] {error}")
+        return 2
+    print(f"[INFO] gate={report['gate_status']} | graphs={report['summary']['graphs']}")
+    print(f"[INFO] Report: {Path(args.output_dir).resolve() / REPORT_NAME}")
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
