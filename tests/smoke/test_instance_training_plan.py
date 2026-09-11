@@ -247,3 +247,13 @@ def test_existing_graph_confirmation_rejects_label_above_gap_ceiling() -> None:
     )
     with pytest.raises(ValueError, match="confirmation cohort"):
         _validate_expected_inventory(args, plan)
+
+    gate = _validate_expected_inventory(args, plan, fail_closed=False)
+    assert gate["gate_status"] == "failed"
+    assert gate["failed_checks"] == ["all_labels_within_maximum_mip_gap"]
+    assert gate["inadmissible_label_gaps"] == [
+        {
+            "source_instance_id": "CFL_medium_instance_0",
+            "mip_gap_relative": 0.11,
+        }
+    ]
