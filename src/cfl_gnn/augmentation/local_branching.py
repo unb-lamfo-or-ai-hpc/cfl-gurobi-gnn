@@ -13,6 +13,7 @@ import gzip
 import hashlib
 import json
 import math
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -58,6 +59,35 @@ def _finite(value: Any, *, field: str, nonnegative: bool = False) -> float:
         qualifier = "finite and nonnegative" if nonnegative else "finite"
         raise AugmentationError(f"{field} must be {qualifier}")
     return result
+
+
+def package_incumbent_artifact(
+    source: str | Path,
+    output_dir: str | Path,
+    *,
+    expected_sha256: str,
+) -> Path:
+    """Copy a hash-bound incumbent beside its path-neutral generation plan."""
+    source_path = Path(source).resolve()
+    destination_dir = Path(output_dir).resolve()
+    if not source_path.is_file():
+        raise AugmentationError("source incumbent artifact is missing")
+    if sha256_file(source_path) != expected_sha256:
+        raise AugmentationError("source incumbent artifact SHA-256 mismatch")
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    destination = destination_dir / source_path.name
+    if destination != source_path and (
+        not destination.is_file() or sha256_file(destination) != expected_sha256
+    ):
+        temporary = destination.with_name(destination.name + ".tmp")
+        shutil.copyfile(source_path, temporary)
+        if sha256_file(temporary) != expected_sha256:
+            temporary.unlink(missing_ok=True)
+            raise AugmentationError("packaged incumbent artifact SHA-256 mismatch")
+        temporary.replace(destination)
+    if not destination.is_file() or sha256_file(destination) != expected_sha256:
+        raise AugmentationError("packaged incumbent artifact SHA-256 mismatch")
+    return destination
 
 
 @dataclass(frozen=True, slots=True)
@@ -549,9 +579,9 @@ def build_generation_plan(args: argparse.Namespace, config: Any) -> dict[str, An
         "difficulty": args.difficulty,
         "fold": args.fold,
         "role": role_for_fold(args.fold, config.rotation),
-        "parent_mip": str(args.parent_mip.resolve()),
+        "parent_mip_file_name": args.parent_mip.name,
         "parent_mip_sha256": sha256_file(args.parent_mip),
-        "incumbent_artifact": str(args.incumbent_artifact.resolve()),
+        "incumbent_artifact_file_name": args.incumbent_artifact.name,
         "incumbent_artifact_sha256": sha256_file(args.incumbent_artifact),
         "incumbent_format": args.incumbent_format,
         "incumbent_index": args.incumbent_index,
@@ -559,7 +589,7 @@ def build_generation_plan(args: argparse.Namespace, config: Any) -> dict[str, An
         "maximum_admissible_relative_gap": (
             config.gap_policy.maximum_admissible_relative_gap
         ),
-        "output_dir": str(args.output_dir.resolve()),
+        "path_policy": "file_names_and_sha256_only",
         "eligibility": {
             "dataset_eligible": False,
             "label_eligible": False,
@@ -610,6 +640,11 @@ def run_generation(args: argparse.Namespace, config: Any) -> dict[str, Any]:
     plan = build_generation_plan(args, config)
     if plan["parent_mip_sha256"] != plan_parent_sha256:
         raise AugmentationError("parent MILP changed while building the generation plan")
+    package_incumbent_artifact(
+        args.incumbent_artifact,
+        args.output_dir,
+        expected_sha256=plan["incumbent_artifact_sha256"],
+    )
     outputs: list[dict[str, Any]] = []
     for constraint in constraints:
         stem = (
