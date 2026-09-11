@@ -278,7 +278,8 @@ def execute_evaluation(
     import torch.nn as nn
     from torch_geometric.loader import DataLoader
 
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class
+    from cfl_gnn.training.binary_contract import binary_targets
 
     output = Path(output_dir).resolve()
     report_path = output / EVALUATION_REPORT_NAME
@@ -297,7 +298,7 @@ def execute_evaluation(
     first = dataset[0].to(device)
     edge = first["variable", "rev_coef", "constraint"]
     architecture = plan["architecture"]
-    model = GasseGNN(
+    model = model_class(architecture.get("model_version", "legacy"))(
         var_in_dim=int(first["variable"].x.shape[-1]),
         cons_in_dim=int(first["constraint"].x.shape[-1]),
         edge_dim=int(edge.edge_attr.shape[-1]) if edge.edge_attr is not None else 0,
@@ -313,13 +314,19 @@ def execute_evaluation(
     all_targets: list[float] = []
     all_probabilities: list[float] = []
     per_parent_raw: dict[str, tuple[list[float], list[float]]] = {}
+    baseline_scores = []
+    prediction_outputs = {}
     total_loss = 0.0
     with torch.no_grad():
         loader = DataLoader(dataset, batch_size=1, shuffle=False)
         for record, graph in zip(records, loader):
+            from time import perf_counter
             graph = graph.to(device)
             mask = graph["variable"].is_discrete.bool()
             graph_edge = graph["variable", "rev_coef", "constraint"]
+            if device.type == "cuda":
+                torch.cuda.synchronize(device)
+            inference_started = perf_counter()
             logits = model(
                 x_var=graph["variable"].x,
                 x_cons=graph["constraint"].x,
@@ -327,13 +334,42 @@ def execute_evaluation(
                 binary_mask=mask,
                 edge_attr=graph_edge.edge_attr,
             )
-            targets = torch.clamp(graph["variable"].y[mask], 0.0, 1.0)
+            if device.type == "cuda":
+                torch.cuda.synchronize(device)
+            inference_seconds = perf_counter()-inference_started
+            mask, targets = binary_targets(graph)
             probabilities = torch.sigmoid(logits)
             total_loss += float(loss_fn(logits, targets).item())
             local_targets = targets.cpu().tolist()
             local_probabilities = probabilities.cpu().tolist()
             all_targets.extend(local_targets)
             all_probabilities.extend(local_probabilities)
+            baseline_scores.extend(graph["variable"].x[mask, 6].clamp(0, 1).cpu().tolist())
+            # Export only model predictions, never target labels, for solver execution.
+            import gzip
+            names = graph.variable_names
+            if len(names) == 1 and isinstance(names[0], list):
+                names = names[0]  # PyG batch size one.
+            indices = torch.where(mask)[0].cpu().tolist()
+            prediction_name = f"predictions/{record['parent_instance_id']}.json.gz"
+            prediction_path = output / prediction_name
+            prediction_path.parent.mkdir(parents=True, exist_ok=True)
+            prediction_payload = {
+                "schema_version": 1, "role": "test", "sampling_strategy": "original",
+                "source_instance_id": record["parent_instance_id"],
+                "mip_sha256": record["mip_sha256"],
+                "checkpoint_sha256": sha256_file(checkpoint_path),
+                "model_inference_wall_time_seconds": inference_seconds,
+                "root_graph_precomputation_included": False,
+                "evaluation_contract_sha256": plan["contract_sha256"],
+                "probability_threshold": float(plan["probability_threshold"]),
+                "predictions": [{"variable_name": names[i], "predicted_value": int(p >= float(plan["probability_threshold"])),
+                                 "probability": p, "confidence": abs(p-.5)*2,
+                                 "priority": int(abs(p-.5)*200)} for i,p in zip(indices, local_probabilities)]}
+            with prediction_path.open("wb") as raw:
+                with gzip.GzipFile(filename="", fileobj=raw, mode="wb", mtime=0) as stream:
+                    stream.write(json.dumps(prediction_payload, allow_nan=False).encode("utf-8"))
+            prediction_outputs[prediction_name] = {"sha256": sha256_file(prediction_path), "records": len(indices)}
             per_parent_raw[str(record["parent_instance_id"])] = (
                 local_targets,
                 local_probabilities,
@@ -377,12 +413,30 @@ def execute_evaluation(
         ROC_NAME: roc_rows,
         PR_NAME: pr_rows,
     }
-    outputs: dict[str, Any] = {}
+    outputs: dict[str, Any] = dict(prediction_outputs)
     for name, rows in artifacts.items():
         path = output / name
         _write_csv(path, rows)
         outputs[name] = {"sha256": sha256_file(path), "records": len(rows)}
+    from cfl_gnn.evaluation.binary_quality import score_quality
+    parent_quality = [score_quality(y, p) for y, p in per_parent_raw.values()]
     report = {
+        "model_version": architecture.get("model_version", "legacy"),
+        "score_diagnostics": score_quality(all_targets, all_probabilities),
+        "baseline_diagnostics": {
+            "constant_zero": score_quality(all_targets, [0.] * len(all_targets)),
+            "root_lp_clipped_to_binary_domain": score_quality(all_targets, baseline_scores),
+        },
+        "parent_macro_score_diagnostics": {
+            key: (sum(value[key] for value in parent_quality if value[key] is not None)
+                  / sum(value[key] is not None for value in parent_quality)
+                  if any(value[key] is not None for value in parent_quality) else None)
+            for key in ("average_precision", "brier_score", "expected_calibration_error", "binary_cross_entropy")
+        },
+        "parent_macro_classification": {
+            key: sum(row[key] for row in per_parent) / len(per_parent)
+            for key in ("accuracy", "precision", "recall", "f1_score")
+        },
         "schema_version": SCHEMA_VERSION,
         "contract_sha256": plan["contract_sha256"],
         "gate_status": "passed",

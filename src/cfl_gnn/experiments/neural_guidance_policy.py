@@ -230,6 +230,7 @@ def guidance_directives(
     *,
     method: str,
     fraction: float | None = None,
+    radius_fraction: float | None = None,
 ) -> dict[str, Any]:
     """Translate predictions into solver-neutral, audited intervention data."""
     if method not in METHODS or method == "unguided_control":
@@ -237,7 +238,10 @@ def guidance_directives(
             return {"method": method, "assignments": [], "binding": False}
         raise NeuralGuidancePolicyError("unknown guidance method")
     ranked = rank_predictions(rows)
-    selected = ranked if method == "gurobi_variable_hints" else select_coverage(
+    local_branching = method == "local_branching_trust_region_with_recovery"
+    if local_branching and (radius_fraction is None or fraction is not None):
+        raise NeuralGuidancePolicyError("LB requires radius_fraction, not coverage")
+    selected = ranked if method == "gurobi_variable_hints" or local_branching else select_coverage(
         ranked,
         0.1 if fraction is None else fraction,
     )
@@ -254,13 +258,25 @@ def guidance_directives(
         "confidence_partial_fixing_with_recovery",
         "local_branching_trust_region_with_recovery",
     }
-    return {
+    directive = {
         "method": method,
         "assignments": assignments,
         "assignment_sha256": canonical_sha256(assignments),
         "binding_during_restricted_phase": binding,
         "recovery_required": binding,
     }
+    if local_branching:
+        radius = _fractions([radius_fraction], field="LB radius fraction")[0]
+        if radius not in (0.001, 0.005, 0.01):
+            raise NeuralGuidancePolicyError("LB radius is not precommitted")
+        directive.update({"support": "all_canonical_binary_variables",
+                          "binary_variable_count": len(ranked),
+                          "radius_fraction": radius,
+                          "radius": min(len(ranked), max(1, math.ceil(radius*len(ranked))))})
+    if binding:
+        directive["restricted_phase_budget_fraction"] = 0.2
+        directive["recovery_phase_always_executed"] = True
+    return directive
 
 
 def build_plan(config_path: str | Path = DEFAULT_CONFIG) -> dict[str, Any]:
@@ -346,4 +362,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
