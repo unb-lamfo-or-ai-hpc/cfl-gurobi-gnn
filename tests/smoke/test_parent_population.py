@@ -47,6 +47,14 @@ def test_plan_orders_all_gurobi_tasks_before_matched_scip(tmp_path: Path) -> Non
         "CFL_easy_instance_0", "CFL_easy_instance_2"
     }
     assert plan["execution"]["scip_submission_dependency"].startswith("afterok:")
+    assert plan["execution"]["preferred_execution_mode"] == (
+        "paired_parent_array_gurobi_then_scip"
+    )
+    assert all(task["budget_id"] == "budget_3600s" for task in tasks)
+    assert all(
+        task["run_dir_relative_path"].startswith("budget_3600s/")
+        for task in tasks
+    )
     validate_campaign_plan(plan)
 
 
@@ -78,6 +86,30 @@ def test_only_precommitted_time_budgets_are_accepted(tmp_path: Path) -> None:
             instances=("CFL_easy_instance_0",),
             time_limit=7200,
         )
+
+
+def test_time_budgets_use_disjoint_run_directories(tmp_path: Path) -> None:
+    source = _source_root(tmp_path)
+    short, _ = build_parent_collection_plan(
+        base_source_dir=source,
+        parent_manifest_path=MANIFEST,
+        campaign_config_path=CAMPAIGN,
+        experiment_config_path=EXPERIMENT,
+        instances=("CFL_easy_instance_0",),
+        time_limit=3600,
+    )
+    long, _ = build_parent_collection_plan(
+        base_source_dir=source,
+        parent_manifest_path=MANIFEST,
+        campaign_config_path=CAMPAIGN,
+        experiment_config_path=EXPERIMENT,
+        instances=("CFL_easy_instance_0",),
+        time_limit=14400,
+    )
+
+    short_paths = {task["run_dir_relative_path"] for task in short["tasks"]}
+    long_paths = {task["run_dir_relative_path"] for task in long["tasks"]}
+    assert short_paths.isdisjoint(long_paths)
 
 
 def test_written_plan_has_separate_solver_manifests(tmp_path: Path) -> None:
