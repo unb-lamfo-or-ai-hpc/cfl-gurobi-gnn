@@ -359,6 +359,7 @@ def build_campaign_plan(
             "node_limit_per_candidate": int(node_limit),
             "threads_per_candidate": int(threads_per_candidate),
             "max_parallel_tasks": int(max_parallel_tasks),
+            "seed": 42,
         },
         "eligible_parents": [
             {
@@ -543,7 +544,7 @@ def execute_task(
         "--node_limit", str(contract["node_limit_per_candidate"]),
         "--threads_per_candidate", str(contract["threads_per_candidate"]),
         "--max_parallel", "1",
-        "--seed", "42",
+        "--seed", str(contract["seed"]),
     ]
     if resume:
         argv.append("--resume")

@@ -549,9 +549,9 @@ def build_generation_plan(args: argparse.Namespace, config: Any) -> dict[str, An
         "difficulty": args.difficulty,
         "fold": args.fold,
         "role": role_for_fold(args.fold, config.rotation),
-        "parent_mip": str(args.parent_mip.resolve()),
+        "parent_mip_file_name": args.parent_mip.name,
         "parent_mip_sha256": sha256_file(args.parent_mip),
-        "incumbent_artifact": str(args.incumbent_artifact.resolve()),
+        "incumbent_artifact_file_name": args.incumbent_artifact.name,
         "incumbent_artifact_sha256": sha256_file(args.incumbent_artifact),
         "incumbent_format": args.incumbent_format,
         "incumbent_index": args.incumbent_index,
@@ -559,7 +559,7 @@ def build_generation_plan(args: argparse.Namespace, config: Any) -> dict[str, An
         "maximum_admissible_relative_gap": (
             config.gap_policy.maximum_admissible_relative_gap
         ),
-        "output_dir": str(args.output_dir.resolve()),
+        "path_policy": "file_names_and_sha256_only",
         "eligibility": {
             "dataset_eligible": False,
             "label_eligible": False,

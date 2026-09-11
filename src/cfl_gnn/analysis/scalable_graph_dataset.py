@@ -10,10 +10,12 @@ from typing import Any, Mapping, Sequence
 
 from cfl_gnn.analysis.graph_clustering import (
     REPORT_NAME as CLUSTER_REPORT_NAME,
+    GraphClusteringError,
     cluster_graph_manifest,
 )
 from cfl_gnn.analysis.graph_statistics import (
     REPORT_NAME as STATISTICS_REPORT_NAME,
+    GraphStatisticsError,
     analyze_graph_manifest,
 )
 from cfl_gnn.graph.instance_provenance import sha256_file
@@ -60,21 +62,25 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def _write_json(path: Path, value: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
         json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n",
         encoding="utf-8",
     )
+    temporary.replace(path)
 
 
 def _write_jsonl(path: Path, records: Sequence[Mapping[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
         "".join(
             json.dumps(record, sort_keys=True, allow_nan=False) + "\n"
             for record in records
         ),
         encoding="utf-8",
     )
+    temporary.replace(path)
 
 
 def _structural_records(
@@ -143,18 +149,23 @@ def audit_scalable_graph_dataset(
     _write_jsonl(structural_path, structural)
     statistics_dir = output / "statistics"
     clustering_dir = output / "clustering"
-    statistics = analyze_graph_manifest(
-        manifest_path=structural_path,
-        graph_root=dataset,
-        output_dir=statistics_dir,
-        overwrite=overwrite,
-    )
-    clustering = cluster_graph_manifest(
-        manifest_path=structural_path,
-        graph_root=dataset,
-        output_dir=clustering_dir,
-        overwrite=overwrite,
-    )
+    try:
+        statistics = analyze_graph_manifest(
+            manifest_path=structural_path,
+            graph_root=dataset,
+            output_dir=statistics_dir,
+            overwrite=overwrite,
+        )
+        clustering = cluster_graph_manifest(
+            manifest_path=structural_path,
+            graph_root=dataset,
+            output_dir=clustering_dir,
+            overwrite=overwrite,
+        )
+    except (GraphClusteringError, GraphStatisticsError) as error:
+        raise ScalableGraphDatasetError(
+            "graph statistics or clustering failed"
+        ) from error
     passed = (
         statistics.get("gate_status") == "passed"
         and clustering.get("gate_status") == "passed"

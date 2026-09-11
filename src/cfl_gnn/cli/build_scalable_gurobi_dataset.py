@@ -91,6 +91,12 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        output = args.output_dir.resolve()
+        if not args.overwrite and (
+            (output / PLAN_NAME).exists()
+            or (output / "gurobi_derived_training_dataset_report.json").exists()
+        ):
+            raise ScalableDatasetBuildError("output exists; use --overwrite")
         audit_root = args.augmentation_audit_dir.resolve()
         run_root = args.augmentation_run_root.resolve()
         audit = _read_json(audit_root / "scalable_augmentation_audit_report.json")
@@ -117,7 +123,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         prepared = prepare_dataset(
             sources=sources,
-            output_dir=args.output_dir,
+            output_dir=output,
             experiment_config_path=args.experiment_config,
             parent_manifest_path=args.parent_manifest,
             parent_graph_dataset_dir=args.parent_graph_dataset_dir,
@@ -127,28 +133,28 @@ def main(argv: Sequence[str] | None = None) -> int:
             allow_partial_smoke=args.allow_partial_smoke,
             root_time_limit_seconds=args.root_time_limit,
         )
-        args.output_dir.mkdir(parents=True, exist_ok=True)
-        write_json(args.output_dir / PLAN_NAME, prepared.plan)
+        output.mkdir(parents=True, exist_ok=True)
+        write_json(output / PLAN_NAME, prepared.plan)
         print(
             f"[INFO] contract={prepared.plan['contract_sha256']} | "
             f"derived={prepared.plan['summary']['derived_graphs_planned']} | "
             "authority=gurobi"
         )
-        print(f"[INFO] Plan: {args.output_dir / PLAN_NAME}")
+        print(f"[INFO] Plan: {output / PLAN_NAME}")
         if args.dry_run:
             return 0
         dataset_report = execute_dataset(
             prepared,
             parent_graph_dataset_dir=args.parent_graph_dataset_dir,
             parent_collection_run_root=args.parent_collection_run_root,
-            output_dir=args.output_dir,
+            output_dir=output,
             overwrite=args.overwrite,
         )
         if dataset_report.get("gate_status") != "passed":
             return 1
         analysis_report = audit_scalable_graph_dataset(
-            dataset_dir=args.output_dir,
-            output_dir=args.output_dir / "descriptive_analysis",
+            dataset_dir=output,
+            output_dir=output / "descriptive_analysis",
             overwrite=args.overwrite,
         )
     except (
