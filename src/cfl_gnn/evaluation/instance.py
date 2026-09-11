@@ -14,6 +14,7 @@ from typing import Any, Mapping, Sequence
 
 from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.paths import PROJECT_ROOT
+from cfl_gnn.splits.instance_partitions import LABEL_POLICIES
 from cfl_gnn.training.instance_plan import (
     InstanceTrainingPlan,
     build_instance_training_plan,
@@ -147,7 +148,7 @@ def build_instance_evaluation_plan(
     development_only = stored_plan.get("development_only")
     if not isinstance(rotation, int) or not 0 <= rotation < 5:
         raise InstanceEvaluationContractError("training plan rotation is invalid")
-    if label_policy not in ("optimal_only", "all_available"):
+    if label_policy not in LABEL_POLICIES:
         raise InstanceEvaluationContractError("training plan label policy is invalid")
     if not isinstance(development_only, bool):
         raise InstanceEvaluationContractError(
