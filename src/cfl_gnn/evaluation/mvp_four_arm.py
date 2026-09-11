@@ -111,18 +111,23 @@ def _reference_sha256(records: Sequence[Mapping[str, Any]]) -> str:
 class EvaluationProtocol:
     """Immutable threshold, hint, metric, and eligibility policy."""
 
+    schema_version: int
     protocol_id: str
-    probability_threshold: float
+    probability_threshold: float | None
+    threshold_source: str
     maximum_priority: int
 
     @property
     def contract_payload(self) -> dict[str, Any]:
-        return {
-            "schema_version": SCHEMA_VERSION,
+        payload = {
+            "schema_version": self.schema_version,
             "protocol_id": self.protocol_id,
-            "experiment_stage": "engineering_held_out_evaluation",
-            "probability_threshold": self.probability_threshold,
-            "threshold_source": "fixed_precommitted_not_test_calibrated",
+            "experiment_stage": (
+                "engineering_held_out_evaluation"
+                if self.schema_version == 1
+                else "development_four_arm_held_out_evaluation"
+            ),
+            "threshold_source": self.threshold_source,
             "hint_policy": {
                 "solver_neutral": True,
                 "include_all_discrete_variables": True,
@@ -149,6 +154,9 @@ class EvaluationProtocol:
             "development_only": True,
             "scientific_reporting_eligible": False,
         }
+        if self.schema_version == 1:
+            payload["probability_threshold"] = self.probability_threshold
+        return payload
 
     @property
     def contract_sha256(self) -> str:
@@ -156,10 +164,10 @@ class EvaluationProtocol:
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "EvaluationProtocol":
-        if value.get("schema_version") != SCHEMA_VERSION:
+        schema_version = value.get("schema_version")
+        if schema_version not in (1, 2):
             raise MvpFourArmEvaluationError("unsupported evaluation schema")
         try:
-            threshold = float(value.get("probability_threshold"))
             maximum_priority = int(value.get("hint_policy", {}).get(
                 "maximum_priority"
             ))
@@ -167,14 +175,37 @@ class EvaluationProtocol:
             raise MvpFourArmEvaluationError(
                 "invalid evaluation threshold or priority"
             ) from error
-        if threshold != 0.5 or maximum_priority != 100:
+        threshold: float | None = None
+        threshold_source = str(value.get("threshold_source", ""))
+        if schema_version == 1:
+            threshold = float(value.get("probability_threshold"))
+        if maximum_priority != 100 or (
+            schema_version == 1
+            and (
+                threshold != 0.5
+                or threshold_source
+                != "fixed_precommitted_not_test_calibrated"
+            )
+        ):
             raise MvpFourArmEvaluationError(
                 "held-out threshold and priority scale are fixed"
+            )
+        if schema_version == 2 and threshold_source != (
+            "per_arm_maximum_validation_f1_from_training_report"
+        ):
+            raise MvpFourArmEvaluationError(
+                "evaluation thresholds must originate from validation"
             )
         protocol_id = value.get("protocol_id")
         if not isinstance(protocol_id, str) or not protocol_id:
             raise MvpFourArmEvaluationError("evaluation protocol id is missing")
-        protocol = cls(protocol_id, threshold, maximum_priority)
+        protocol = cls(
+            int(schema_version),
+            protocol_id,
+            threshold,
+            threshold_source,
+            maximum_priority,
+        )
         if dict(value) != protocol.contract_payload:
             raise MvpFourArmEvaluationError(
                 "evaluation protocol is not the precommitted contract"
@@ -191,6 +222,7 @@ def load_evaluation_protocol(path: str | Path) -> EvaluationProtocol:
 def _verified_training_artifacts(
     training_root: Path,
     report: Mapping[str, Any],
+    protocol: EvaluationProtocol,
 ) -> dict[str, dict[str, Any]]:
     report_arms = report.get("arms")
     if not isinstance(report_arms, Mapping) or set(report_arms) != set(EXPECTED_ARMS):
@@ -232,6 +264,27 @@ def _verified_training_artifacts(
             raise MvpFourArmEvaluationError(
                 f"{arm_id} summary disagrees with the training report"
             )
+        if protocol.schema_version == 2:
+            threshold = stored_summary.get("selected_probability_threshold")
+            threshold_source = stored_summary.get("threshold_source")
+            try:
+                threshold = float(threshold)
+            except (TypeError, ValueError, OverflowError) as error:
+                raise MvpFourArmEvaluationError(
+                    f"{arm_id} validation threshold is invalid"
+                ) from error
+            if (
+                not 0.0 <= threshold <= 1.0
+                or threshold_source != "maximum_validation_f1"
+                or arm.get("selected_probability_threshold") != threshold
+                or arm.get("threshold_source") != threshold_source
+            ):
+                raise MvpFourArmEvaluationError(
+                    f"{arm_id} validation threshold provenance failed"
+                )
+        else:
+            threshold = protocol.probability_threshold
+            threshold_source = protocol.threshold_source
         result[arm_id] = {
             "solver": str(arm["solver"]),
             "checkpoint_relative_path": (
@@ -239,6 +292,8 @@ def _verified_training_artifacts(
             ).as_posix(),
             "checkpoint_sha256": checkpoint_sha256,
             "training_summary_sha256": summary_sha256,
+            "probability_threshold": threshold,
+            "threshold_source": threshold_source,
         }
     return result
 
@@ -284,7 +339,10 @@ def build_evaluation_plan(
         is not False
     ):
         raise MvpFourArmEvaluationError("training gate is not admissible")
-    checkpoints = _verified_training_artifacts(training_root, training_report)
+    protocol = load_evaluation_protocol(evaluation_protocol_path)
+    checkpoints = _verified_training_artifacts(
+        training_root, training_report, protocol
+    )
     data_plan = build_training_data_plan(
         dataset_root,
         experiment_config_path=experiment_config_path,
@@ -361,7 +419,6 @@ def build_evaluation_plan(
                 ),
             }
         )
-    protocol = load_evaluation_protocol(evaluation_protocol_path)
     contract = {
         "schema_version": SCHEMA_VERSION,
         "experiment_stage": "mvp_four_arm_common_held_out_evaluation",
@@ -470,7 +527,7 @@ def _production_arm_evaluator(
 
     device = _select_device(torch, device_name)
     protocol = plan["evaluation_protocol"]
-    threshold = float(protocol["probability_threshold"])
+    threshold = float(arm["probability_threshold"])
     maximum_priority = int(protocol["hint_policy"]["maximum_priority"])
     checkpoint = _safe_file(
         training_root, arm["checkpoint_relative_path"], artifact="checkpoint"
@@ -599,7 +656,7 @@ def _production_arm_evaluator(
         "checkpoint_sha256": arm["checkpoint_sha256"],
         "device_effective": str(device),
         "probability_threshold": threshold,
-        "threshold_source": protocol["threshold_source"],
+        "threshold_source": arm["threshold_source"],
         "test_reference_sha256": plan["test_reference_sha256"],
         "test_graphs_loaded": len(rows),
         "metrics_by_parent": rows,
@@ -682,7 +739,10 @@ def run_evaluation(
             or result.get("test_reference_sha256")
             != plan["test_reference_sha256"]
             or result.get("test_graphs_loaded") != len(plan["test_records"])
-            or result.get("probability_threshold") != 0.5
+            or result.get("probability_threshold")
+            != plan["arms"][arm_id]["probability_threshold"]
+            or result.get("threshold_source")
+            != plan["arms"][arm_id]["threshold_source"]
             or result.get("test_labels_in_hint_artifacts") is not False
         ):
             raise MvpFourArmEvaluationError(f"evaluation audit failed: {arm_id}")
@@ -693,10 +753,13 @@ def run_evaluation(
             {item["test_reference_sha256"] for item in results}
         )
         == 1,
-        "same_probability_threshold_all_arms": len(
-            {item["probability_threshold"] for item in results}
-        )
-        == 1,
+        "threshold_contract_valid_all_arms": all(
+            item["probability_threshold"]
+            == plan["arms"][item["arm_id"]]["probability_threshold"]
+            and item["threshold_source"]
+            == plan["arms"][item["arm_id"]]["threshold_source"]
+            for item in results
+        ),
         "same_effective_device_all_arms": len(
             {item["device_effective"] for item in results}
         )
@@ -780,6 +843,14 @@ def run_evaluation(
             "policy": "all_four_arms_forwarded_without_test_selection",
             "forwarded_arms": list(EXPECTED_ARMS),
         },
+        "threshold_selection": {
+            "source": plan["evaluation_protocol"]["threshold_source"],
+            "test_labels_used": False,
+            "per_arm_thresholds": {
+                item["arm_id"]: item["probability_threshold"]
+                for item in results
+            },
+        },
         "primary_research_metrics": [
             "mip_gap_relative",
             "execution_time_seconds",
@@ -844,7 +915,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_json(args.output_dir / PLAN_NAME, plan)
         print(
             f"[INFO] contract={plan['contract_sha256']} | arms=4 | "
-            f"test={len(plan['test_records'])} | threshold=0.5"
+            f"test={len(plan['test_records'])} | "
+            f"threshold_source={plan['evaluation_protocol']['threshold_source']}"
         )
         print("[INFO] no threshold calibration or arm selection uses test labels")
         print(f"[INFO] Plan: {args.output_dir / PLAN_NAME}")
@@ -881,3 +953,4 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

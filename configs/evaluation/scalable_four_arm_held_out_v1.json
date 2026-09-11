@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "protocol_id": "scalable_four_arm_held_out_v1",
+  "experiment_stage": "development_four_arm_held_out_evaluation",
+  "threshold_source": "per_arm_maximum_validation_f1_from_training_report",
+  "hint_policy": {
+    "solver_neutral": true,
+    "include_all_discrete_variables": true,
+    "maximum_priority": 100,
+    "priority_formula": "floor_absolute_probability_distance_from_half_times_200"
+  },
+  "arm_selection_policy": "all_four_arms_forwarded_without_test_selection",
+  "metrics": {
+    "secondary_gnn_diagnostics": [
+      "unweighted_bce_per_variable",
+      "f1_score",
+      "precision",
+      "recall"
+    ],
+    "research_primary_outcomes_reserved_for_solver_gate": [
+      "mip_gap_relative",
+      "execution_time_seconds"
+    ]
+  },
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}
+
