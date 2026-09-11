@@ -88,4 +88,3 @@ def test_scalable_protocol_artifacts_are_path_neutral() -> None:
         serialized = json.dumps(payload)
         assert "/raid/" not in serialized
         assert "gurobi.lic" not in serialized
-

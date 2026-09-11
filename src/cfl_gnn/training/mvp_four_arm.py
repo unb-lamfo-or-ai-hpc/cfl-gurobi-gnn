@@ -979,4 +979,3 @@ def run_four_arm_training(
 def write_training_run_plan(path: str | Path, plan: Mapping[str, Any]) -> None:
     """Write the path-sanitized training-run contract."""
     write_json(path, plan)
-

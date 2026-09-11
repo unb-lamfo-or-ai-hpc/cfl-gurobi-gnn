@@ -43,4 +43,3 @@ srun python3 -m cfl_gnn.cli.evaluate_mvp_four_arm \
     --device cuda \
     --clear_cache \
     "${OVERWRITE_ARGS[@]}"
-

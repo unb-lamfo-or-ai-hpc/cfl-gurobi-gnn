@@ -56,4 +56,3 @@ Outputs from the three-parent slice are development-only integration evidence.
 They may be used to inspect training curves and verify the publication-output
 code, but not for population-level scientific inference. Scientific reporting
 remains disabled until the planned complete campaign is executed.
-
