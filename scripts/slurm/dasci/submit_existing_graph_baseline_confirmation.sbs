@@ -1,0 +1,56 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_45graph_gasse
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=96G
+#SBATCH --gres=gpu:1
+#SBATCH --time=24:00:00
+#SBATCH --output=slurm_existing_graph_baseline_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from it or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${INSTANCE_GRAPH_DIR:?Set INSTANCE_GRAPH_DIR to the existing 45-graph dataset}"
+: "${OUTPUT_DIR:?Set OUTPUT_DIR}"
+EXPERIMENT_NAME="${EXPERIMENT_NAME:-existing_45_graph_confirmation_seed42}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+python3 -c 'import matplotlib, torch, torch_geometric'
+
+OVERWRITE_ARGS=()
+if [[ "${OVERWRITE:-0}" == "1" ]]; then
+    OVERWRITE_ARGS=(--overwrite)
+fi
+
+srun python3 -m cfl_gnn.cli.train_instance_serial \
+    --manifest configs/splits/cfl_90_seed42_folds.csv \
+    --base_pyg_dir "${INSTANCE_GRAPH_DIR}" \
+    --output_dir "${OUTPUT_DIR}" \
+    --experiment_name "${EXPERIMENT_NAME}" \
+    --rotation 0 \
+    --label_policy all_available \
+    --development_only \
+    --hidden_dim 32 \
+    --num_layers 2 \
+    --lr 0.001 \
+    --epochs 100 \
+    --patience 100 \
+    --seed 42 \
+    --expected_graphs 45 \
+    --expected_easy_graphs 30 \
+    --expected_medium_graphs 15 \
+    --expected_hard_graphs 0 \
+    --require_full_epoch_budget \
+    --device cuda \
+    --clear_cache \
+    "${OVERWRITE_ARGS[@]}"

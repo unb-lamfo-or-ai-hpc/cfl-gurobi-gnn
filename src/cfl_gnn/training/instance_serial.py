@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 import logging
 import re
@@ -58,6 +59,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--num_workers", type=int, default=0)
     parser.add_argument("--clear_cache", action="store_true")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
+    parser.add_argument("--expected_graphs", type=int)
+    parser.add_argument("--expected_easy_graphs", type=int)
+    parser.add_argument("--expected_medium_graphs", type=int)
+    parser.add_argument("--expected_hard_graphs", type=int)
+    parser.add_argument(
+        "--require_full_epoch_budget",
+        action="store_true",
+        help="Fail unless every requested epoch is completed.",
+    )
     return parser
 
 
@@ -74,6 +84,18 @@ def _validate_numeric_arguments(args: argparse.Namespace) -> None:
         raise ValueError("arguments must be positive: " + ", ".join(invalid))
     if args.grad_clip < 0 or args.num_workers < 0:
         raise ValueError("grad_clip and num_workers must be nonnegative")
+    expectations = (
+        args.expected_graphs,
+        args.expected_easy_graphs,
+        args.expected_medium_graphs,
+        args.expected_hard_graphs,
+    )
+    if any(value is not None and value < 0 for value in expectations):
+        raise ValueError("expected graph counts must be nonnegative")
+    if args.require_full_epoch_budget and args.patience < args.epochs:
+        raise ValueError(
+            "patience must cover all epochs when the full epoch budget is required"
+        )
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", args.experiment_name):
         raise ValueError(
             "experiment_name must contain only letters, digits, dot, dash, "
@@ -122,6 +144,49 @@ def _select_device(torch_module, requested: str):
     return torch_module.device(requested)
 
 
+def _validate_expected_inventory(
+    args: argparse.Namespace,
+    plan: InstanceTrainingPlan,
+) -> dict[str, object]:
+    expected_by_difficulty = {
+        "easy": args.expected_easy_graphs,
+        "medium": args.expected_medium_graphs,
+        "hard": args.expected_hard_graphs,
+    }
+    observed_by_difficulty = Counter(
+        record.difficulty for record in plan.audit.eligible
+    )
+    checks: dict[str, bool] = {}
+    if args.expected_graphs is not None:
+        checks["eligible_graph_count"] = (
+            len(plan.audit.eligible) == args.expected_graphs
+        )
+        checks["discovered_graph_count"] = (
+            plan.audit.discovered_graphs == args.expected_graphs
+        )
+    for difficulty, expected in expected_by_difficulty.items():
+        if expected is not None:
+            checks[f"{difficulty}_eligible_graph_count"] = (
+                observed_by_difficulty.get(difficulty, 0) == expected
+            )
+    if checks and not all(checks.values()):
+        raise ValueError(
+            "existing-graph inventory does not match the precommitted confirmation "
+            "cohort"
+        )
+    return {
+        "gate_status": "passed" if checks else "not_requested",
+        "expected_graphs": args.expected_graphs,
+        "expected_by_difficulty": expected_by_difficulty,
+        "observed_graphs": len(plan.audit.eligible),
+        "observed_by_difficulty": {
+            difficulty: observed_by_difficulty.get(difficulty, 0)
+            for difficulty in ("easy", "medium", "hard")
+        },
+        "checks": checks,
+    }
+
+
 def _run_training(
     args: argparse.Namespace,
     plan: InstanceTrainingPlan,
@@ -139,6 +204,7 @@ def _run_training(
     from cfl_gnn.graph.instance_dataset import ParentInstanceDataset
     from cfl_gnn.graph.instance_provenance import sha256_file
     from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.training.figures import write_training_validation_loss_figure
     from cfl_gnn.training.serial import (
         calc_metrics,
         compute_pos_weight,
@@ -271,6 +337,25 @@ def _run_training(
     figure.savefig(output_dir / "training_dashboard.png", dpi=150)
     plt.close(figure)
 
+    loss_figure_path = output_dir / "training_validation_loss.svg"
+    loss_history = [
+        {
+            "epoch": index + 1,
+            "train_loss": train_loss,
+            "validation_loss": validation_loss,
+        }
+        for index, (train_loss, validation_loss) in enumerate(
+            zip(history["train_loss"], history["validation_loss"])
+        )
+    ]
+    write_training_validation_loss_figure(
+        loss_history,
+        loss_figure_path,
+        title="GasseGNN training and validation loss",
+    )
+    if args.require_full_epoch_budget and len(loss_history) != args.epochs:
+        raise RuntimeError("the required full epoch budget was not completed")
+
     experiment_summary = {
         "experiment_name": args.experiment_name,
         "dataset_variant": "gurobi_parent_instance",
@@ -281,12 +366,28 @@ def _run_training(
         "development_only": plan.development_only,
         "scientific_reporting_eligible": plan.scientific_reporting_eligible,
         "test_partition_usage": "held_out_not_loaded_during_training",
+        "epochs_completed": len(loss_history),
+        "full_epoch_budget_required": args.require_full_epoch_budget,
         "hyperparameters": {
             "hidden_dim": args.hidden_dim,
             "num_layers": args.num_layers,
             "learning_rate": args.lr,
             "seed": args.seed,
             "pos_weight": pos_weight.item(),
+            "epochs": args.epochs,
+            "patience": args.patience,
+        },
+        "artifacts": {
+            "training_log": {
+                "file_name": log_path.name,
+                "sha256": sha256_file(log_path),
+            },
+            "training_validation_loss_figure": {
+                "file_name": loss_figure_path.name,
+                "sha256": sha256_file(loss_figure_path),
+                "curves": ["training_loss", "validation_loss"],
+                "shared_axis": True,
+            },
         },
         "best_epoch_results": best_epoch,
     }
@@ -311,6 +412,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         label_policy=args.label_policy,
         development_only=args.development_only,
     )
+    inventory_gate = _validate_expected_inventory(args, plan)
     output_dir = _resolve_output_dir(args)
     checkpoint = output_dir / "best_model.pt"
     if checkpoint.exists() and not args.dry_run and not args.overwrite:
@@ -321,6 +423,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     report_path = output_dir / "instance_training_plan.json"
     write_instance_training_plan(report_path, plan)
+    (output_dir / "existing_graph_inventory_gate.json").write_text(
+        json.dumps(inventory_gate, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     _print_plan(plan, report_path)
     if args.dry_run:
         return 0

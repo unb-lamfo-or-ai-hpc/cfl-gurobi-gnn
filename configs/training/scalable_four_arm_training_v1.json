@@ -18,8 +18,8 @@
     "batch_size": 1,
     "learning_rate": 0.001,
     "gradient_clip": 1.0,
-    "epochs": 10,
-    "patience": 10,
+    "epochs": 100,
+    "patience": 100,
     "seed": 42,
     "num_workers": 0
   },

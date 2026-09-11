@@ -1,5 +1,7 @@
 """Dependency-free tests for parent-instance serial training admission."""
 
+import argparse
+
 from pathlib import Path
 
 import pytest
@@ -13,6 +15,7 @@ from cfl_gnn.training.instance_plan import (
     InstanceTrainingPlanError,
     validate_instance_training_audit,
 )
+from cfl_gnn.training.instance_serial import _validate_expected_inventory
 
 
 def _record(
@@ -148,3 +151,60 @@ def test_instance_serial_entrypoint_keeps_test_partition_held_out() -> None:
     assert 'ParentInstanceDataset(plan.records_for_role("validation"))' in trainer
     assert 'ParentInstanceDataset(plan.records_for_role("test"))' not in trainer
     assert "Heavy ML imports remain behind" in trainer
+
+
+def test_existing_graph_confirmation_inventory_is_exact() -> None:
+    records = tuple(
+        _record(
+            f"CFL_easy_instance_{index}",
+            role=("test", "validation", "train")[index % 3],
+            fold=index % 3,
+            difficulty="easy",
+        )
+        for index in range(30)
+    ) + tuple(
+        _record(
+            f"CFL_medium_instance_{index}",
+            role=("test", "validation", "train")[index % 3],
+            fold=index % 3,
+            difficulty="medium",
+        )
+        for index in range(15)
+    )
+    plan = validate_instance_training_audit(
+        _audit(
+            label_policy="all_available",
+            manifest_size=90,
+            discovered_graphs=45,
+            eligible=records,
+        ),
+        development_only=True,
+    )
+    args = argparse.Namespace(
+        expected_graphs=45,
+        expected_easy_graphs=30,
+        expected_medium_graphs=15,
+        expected_hard_graphs=0,
+    )
+    gate = _validate_expected_inventory(args, plan)
+    assert gate["gate_status"] == "passed"
+    assert gate["observed_by_difficulty"] == {
+        "easy": 30,
+        "medium": 15,
+        "hard": 0,
+    }
+
+
+def test_existing_graph_confirmation_rejects_inventory_drift() -> None:
+    plan = validate_instance_training_audit(
+        _audit(manifest_size=90, discovered_graphs=3),
+        development_only=True,
+    )
+    args = argparse.Namespace(
+        expected_graphs=45,
+        expected_easy_graphs=30,
+        expected_medium_graphs=15,
+        expected_hard_graphs=0,
+    )
+    with pytest.raises(ValueError, match="confirmation cohort"):
+        _validate_expected_inventory(args, plan)

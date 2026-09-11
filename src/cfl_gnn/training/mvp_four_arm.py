@@ -28,6 +28,7 @@ RUN_PLAN_NAME = "mvp_four_arm_training_plan.json"
 RUN_REPORT_NAME = "mvp_four_arm_training_report.json"
 ARM_SUMMARY_NAME = "arm_training_summary.json"
 HISTORY_NAME = "training_history.csv"
+LOSS_FIGURE_NAME = "training_validation_loss.svg"
 CHECKPOINT_NAME = "best_model.pt"
 EXPECTED_ARMS = (
     "gurobi_original",
@@ -752,6 +753,14 @@ def _production_arm_runner(
         writer = csv.DictWriter(stream, fieldnames=list(history[0]))
         writer.writeheader()
         writer.writerows(history)
+    from cfl_gnn.training.figures import write_training_validation_loss_figure
+
+    loss_figure_path = output_dir / LOSS_FIGURE_NAME
+    write_training_validation_loss_figure(
+        history,
+        loss_figure_path,
+        title=f"{arm_id}: training and validation loss",
+    )
     if best_epoch == 0 or not checkpoint.is_file():
         raise MvpFourArmTrainingError(
             f"no finite validation checkpoint was produced for {arm_id}"
@@ -807,6 +816,12 @@ def _production_arm_runner(
         "history": {
             "file_name": HISTORY_NAME,
             "sha256": sha256_file(history_path),
+        },
+        "training_validation_loss_figure": {
+            "file_name": LOSS_FIGURE_NAME,
+            "sha256": sha256_file(loss_figure_path),
+            "curves": ["training_loss", "validation_loss"],
+            "shared_axis": True,
         },
         "test_graphs_loaded": 0,
     }
