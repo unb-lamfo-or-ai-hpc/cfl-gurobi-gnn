@@ -6,11 +6,14 @@ import hashlib
 import json
 import logging
 import math
+import csv
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 from cfl_gnn.graph.instance_provenance import sha256_file
+from cfl_gnn.paths import PROJECT_ROOT
+from cfl_gnn.training.gasse_reconnected import git_blob_sha1
 from cfl_gnn.training.mvp_arm import (
     DeterministicParentBalancedSampler,
     MvpTrainingDataError,
@@ -25,6 +28,7 @@ RUN_PLAN_NAME = "mvp_four_arm_training_plan.json"
 RUN_REPORT_NAME = "mvp_four_arm_training_report.json"
 ARM_SUMMARY_NAME = "arm_training_summary.json"
 HISTORY_NAME = "training_history.csv"
+LOSS_FIGURE_NAME = "training_validation_loss.svg"
 CHECKPOINT_NAME = "best_model.pt"
 EXPECTED_ARMS = (
     "gurobi_original",
@@ -106,6 +110,7 @@ def _finite_positive(value: Any, *, field: str, allow_zero: bool = False) -> flo
 class TrainingProtocol:
     """Versioned hyperparameters and nuisance-variable controls."""
 
+    schema_version: int
     protocol_id: str
     experiment_stage: str
     hidden_dim: int
@@ -116,12 +121,15 @@ class TrainingProtocol:
     patience: int
     seed: int
     num_workers: int
-    probability_threshold: float
+    probability_threshold: float | None
+    checkpoint_selection_metric: str
+    threshold_selection_method: str
+    legacy_gasse_git_blob_sha1: str | None
 
     @property
     def contract_payload(self) -> dict[str, Any]:
-        return {
-            "schema_version": SCHEMA_VERSION,
+        payload = {
+            "schema_version": self.schema_version,
             "protocol_id": self.protocol_id,
             "experiment_stage": self.experiment_stage,
             "arms": list(EXPECTED_ARMS),
@@ -138,7 +146,6 @@ class TrainingProtocol:
                 "patience": self.patience,
                 "seed": self.seed,
                 "num_workers": self.num_workers,
-                "probability_threshold": self.probability_threshold,
             },
             "comparison_controls": {
                 "independent_model_per_arm": True,
@@ -156,6 +163,29 @@ class TrainingProtocol:
             "development_only": True,
             "scientific_reporting_eligible": False,
         }
+        if self.schema_version == 1:
+            payload["optimization"]["probability_threshold"] = (
+                self.probability_threshold
+            )
+        else:
+            payload["model"]["legacy_gasse_git_blob_sha1"] = (
+                self.legacy_gasse_git_blob_sha1
+            )
+            payload["checkpoint_selection"] = {
+                "metric": self.checkpoint_selection_metric,
+                "mode": "minimum",
+                "test_partition_access": "held_out_evaluation_only",
+            }
+            payload["threshold_selection"] = {
+                "method": self.threshold_selection_method,
+                "population": "common_validation_only",
+                "tie_break": "closest_to_0.5_then_lower",
+                "test_partition_access": "held_out_evaluation_only",
+            }
+            payload["comparison_controls"]["threshold_selection_policy"] = (
+                "per_arm_common_validation_only"
+            )
+        return payload
 
     @property
     def contract_sha256(self) -> str:
@@ -163,12 +193,18 @@ class TrainingProtocol:
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "TrainingProtocol":
-        if value.get("schema_version") != SCHEMA_VERSION:
+        schema_version = value.get("schema_version")
+        if schema_version not in (1, 2):
             raise MvpFourArmTrainingError("unsupported training protocol schema")
         if value.get("arms") != list(EXPECTED_ARMS):
             raise MvpFourArmTrainingError("training protocol requires four fixed arms")
-        if value.get("experiment_stage") != "engineering_smoke":
-            raise MvpFourArmTrainingError("PR #35 is restricted to engineering smoke")
+        expected_stage = (
+            "engineering_smoke"
+            if schema_version == 1
+            else "development_four_arm_training"
+        )
+        if value.get("experiment_stage") != expected_stage:
+            raise MvpFourArmTrainingError("unsupported four-arm experiment stage")
         if value.get("development_only") is not True or value.get(
             "scientific_reporting_eligible"
         ) is not False:
@@ -197,6 +233,10 @@ class TrainingProtocol:
             "validation_policy": "common_reference_shared_across_all_arms",
             "test_access_policy": "held_out_not_loaded_during_training",
         }
+        if schema_version == 2:
+            expected_controls["threshold_selection_policy"] = (
+                "per_arm_common_validation_only"
+            )
         if dict(controls) != expected_controls:
             raise MvpFourArmTrainingError("comparison controls are not precommitted")
         if optimization.get("batch_size") != 1:
@@ -209,17 +249,51 @@ class TrainingProtocol:
             raise MvpFourArmTrainingError("num_workers must be an integer")
         if raw_workers < 0:
             raise MvpFourArmTrainingError("num_workers must be nonnegative")
-        threshold = _finite_positive(
-            optimization.get("probability_threshold"),
-            field="probability_threshold",
-            allow_zero=True,
-        )
-        if threshold > 1.0:
-            raise MvpFourArmTrainingError("probability_threshold must be at most one")
-        if threshold != 0.5:
-            raise MvpFourArmTrainingError(
-                "the engineering smoke uses the fixed logit threshold 0.5"
+        threshold: float | None = None
+        checkpoint_metric = "validation_weighted_bce"
+        threshold_method = "fixed_precommitted"
+        legacy_gasse_git_blob_sha1: str | None = None
+        if schema_version == 1:
+            threshold = _finite_positive(
+                optimization.get("probability_threshold"),
+                field="probability_threshold",
+                allow_zero=True,
             )
+            if threshold != 0.5:
+                raise MvpFourArmTrainingError(
+                    "the engineering smoke uses the fixed logit threshold 0.5"
+                )
+        else:
+            legacy_gasse_git_blob_sha1 = model.get(
+                "legacy_gasse_git_blob_sha1"
+            )
+            if legacy_gasse_git_blob_sha1 != (
+                "e2937ebcca149f8a99ec437c3c8e7fd31e49438b"
+            ):
+                raise MvpFourArmTrainingError(
+                    "training protocol does not pin the preserved Gasse model"
+                )
+            checkpoint = value.get("checkpoint_selection")
+            threshold_selection = value.get("threshold_selection")
+            if checkpoint != {
+                "metric": "validation_weighted_bce",
+                "mode": "minimum",
+                "test_partition_access": "held_out_evaluation_only",
+            }:
+                raise MvpFourArmTrainingError(
+                    "checkpoint selection must use validation weighted BCE"
+                )
+            expected_threshold = {
+                "method": "maximum_validation_f1",
+                "population": "common_validation_only",
+                "tie_break": "closest_to_0.5_then_lower",
+                "test_partition_access": "held_out_evaluation_only",
+            }
+            if threshold_selection != expected_threshold:
+                raise MvpFourArmTrainingError(
+                    "threshold selection must use only common validation labels"
+                )
+            threshold_method = "maximum_validation_f1"
         protocol_id = value.get("protocol_id")
         if not isinstance(protocol_id, str) or not protocol_id.strip():
             raise MvpFourArmTrainingError("protocol_id must be a non-empty string")
@@ -230,8 +304,9 @@ class TrainingProtocol:
                 "patience must cover all epochs to preserve the paired step budget"
             )
         return cls(
+            schema_version=int(schema_version),
             protocol_id=protocol_id.strip(),
-            experiment_stage="engineering_smoke",
+            experiment_stage=expected_stage,
             hidden_dim=_positive_int(model.get("hidden_dim"), field="hidden_dim"),
             num_layers=_positive_int(model.get("num_layers"), field="num_layers"),
             learning_rate=_finite_positive(
@@ -247,6 +322,9 @@ class TrainingProtocol:
             seed=raw_seed,
             num_workers=raw_workers,
             probability_threshold=threshold,
+            checkpoint_selection_metric=checkpoint_metric,
+            threshold_selection_method=threshold_method,
+            legacy_gasse_git_blob_sha1=legacy_gasse_git_blob_sha1,
         )
 
 
@@ -270,6 +348,14 @@ def build_training_run_plan(
         verify_graph_hashes=True,
     )
     protocol = load_training_protocol(training_protocol_path)
+    current_gasse_blob = git_blob_sha1(
+        PROJECT_ROOT / "src" / "cfl_gnn" / "models" / "gasse.py"
+    )
+    if (
+        protocol.schema_version == 2
+        and current_gasse_blob != protocol.legacy_gasse_git_blob_sha1
+    ):
+        raise MvpFourArmTrainingError("preserved Gasse model implementation changed")
     if not data_plan.get("mvp_execution_ready"):
         raise MvpFourArmTrainingError("four-arm dataset is not execution-ready")
     arms = data_plan.get("arms")
@@ -332,6 +418,7 @@ def build_training_run_plan(
         "training_data_contract_sha256": data_plan["contract_sha256"],
         "training_protocol": protocol.contract_payload,
         "training_protocol_sha256": protocol.contract_sha256,
+        "legacy_gasse_git_blob_sha1": current_gasse_blob,
         "arms": arm_payload,
         "solver_pair_references": reference_by_solver,
         "validation_records": validation,
@@ -382,6 +469,117 @@ def _torch_state_sha256(model: Any) -> str:
         digest.update(str(tuple(normalized.shape)).encode("ascii"))
         digest.update(normalized.numpy().tobytes())
     return digest.hexdigest()
+
+
+def select_validation_threshold(
+    targets: Sequence[float], probabilities: Sequence[float]
+) -> dict[str, Any]:
+    """Select the exact maximum-F1 threshold from validation predictions.
+
+    The implementation sorts predictions once, so calibration remains practical
+    for CFL graphs with hundreds of thousands of binary targets. Ties prefer the
+    threshold nearest 0.5 and then the lower threshold. Test labels are never an
+    input to this function.
+    """
+    import numpy as np
+
+    truth = np.asarray(targets, dtype=np.float64) >= 0.5
+    scores = np.asarray(probabilities, dtype=np.float64)
+    if truth.size == 0 or scores.shape != truth.shape:
+        raise MvpFourArmTrainingError(
+            "validation predictions are empty or malformed"
+        )
+    if not np.isfinite(scores).all() or ((scores < 0.0) | (scores > 1.0)).any():
+        raise MvpFourArmTrainingError("validation probabilities are invalid")
+
+    order = np.argsort(-scores, kind="mergesort")
+    sorted_scores = scores[order]
+    sorted_truth = truth[order]
+    cumulative_tp = np.cumsum(sorted_truth, dtype=np.int64)
+    cumulative_fp = np.cumsum(~sorted_truth, dtype=np.int64)
+    boundaries = np.flatnonzero(
+        np.r_[sorted_scores[1:] != sorted_scores[:-1], True]
+    )
+    total_positive = int(truth.sum())
+    candidates: list[tuple[float, int, int]] = []
+    for index in boundaries.tolist():
+        candidates.append(
+            (
+                float(sorted_scores[index]),
+                int(cumulative_tp[index]),
+                int(cumulative_fp[index]),
+            )
+        )
+    for threshold in (0.0, 0.5, 1.0):
+        predicted = scores >= threshold
+        candidates.append(
+            (
+                threshold,
+                int((predicted & truth).sum()),
+                int((predicted & ~truth).sum()),
+            )
+        )
+
+    best_key: tuple[float, float, float] | None = None
+    best_payload: dict[str, Any] | None = None
+    for threshold, tp, fp in candidates:
+        fn = total_positive - tp
+        precision = tp / (tp + fp) if tp + fp else 0.0
+        recall = tp / (tp + fn) if tp + fn else 0.0
+        f1_score = (
+            2.0 * precision * recall / (precision + recall)
+            if precision + recall
+            else 0.0
+        )
+        key = (f1_score, -abs(threshold - 0.5), -threshold)
+        if best_key is None or key > best_key:
+            best_key = key
+            best_payload = {
+                "probability_threshold": threshold,
+                "f1_score": f1_score,
+                "precision": precision,
+                "recall": recall,
+                "tp": tp,
+                "fp": fp,
+                "fn": fn,
+            }
+    assert best_payload is not None
+    best_payload["candidates_evaluated"] = len(candidates)
+    return best_payload
+
+
+def _validation_predictions(
+    model: Any, loader: Any, device: Any, *, clear_cache: bool
+) -> tuple[list[float], list[float]]:
+    """Collect validation targets and probabilities from the chosen checkpoint."""
+    import torch
+
+    model.eval()
+    targets: list[float] = []
+    probabilities: list[float] = []
+    with torch.no_grad():
+        for graph in loader:
+            graph = graph.to(device)
+            mask = graph["variable"].is_discrete.bool()
+            edge = graph["variable", "rev_coef", "constraint"]
+            logits = model(
+                x_var=graph["variable"].x,
+                x_cons=graph["constraint"].x,
+                edge_v2c=edge.edge_index,
+                binary_mask=mask,
+                edge_attr=edge.edge_attr,
+            )
+            probabilities.extend(torch.sigmoid(logits).detach().cpu().tolist())
+            targets.extend(
+                torch.clamp(graph["variable"].y[mask], 0.0, 1.0)
+                .detach()
+                .cpu()
+                .tolist()
+            )
+            if clear_cache:
+                del graph, logits
+                torch.cuda.empty_cache()
+    return targets, probabilities
 
 
 class _OptimizerStepCounter:
@@ -552,20 +750,42 @@ def _production_arm_runner(
 
     history_path = output_dir / HISTORY_NAME
     with history_path.open("w", encoding="utf-8", newline="") as stream:
-        stream.write(
-            "epoch,train_loss,validation_loss,accuracy,precision,recall,f1_score\n"
-        )
-        for row in history:
-            stream.write(
-                f"{row['epoch']},{row['train_loss']},{row['validation_loss']},"
-                f"{row['accuracy']},{row['precision']},{row['recall']},"
-                f"{row['f1_score']}\n"
-            )
+        writer = csv.DictWriter(stream, fieldnames=list(history[0]))
+        writer.writeheader()
+        writer.writerows(history)
+    from cfl_gnn.training.figures import write_training_validation_loss_figure
+
+    loss_figure_path = output_dir / LOSS_FIGURE_NAME
+    write_training_validation_loss_figure(
+        history,
+        loss_figure_path,
+        title=f"{arm_id}: training and validation loss",
+    )
     if best_epoch == 0 or not checkpoint.is_file():
         raise MvpFourArmTrainingError(
             f"no finite validation checkpoint was produced for {arm_id}"
         )
     best = next(row for row in history if row["epoch"] == best_epoch)
+    model.load_state_dict(
+        torch.load(checkpoint, map_location=device, weights_only=True)
+    )
+    if protocol.threshold_selection_method == "maximum_validation_f1":
+        validation_targets, validation_probabilities = _validation_predictions(
+            model, validation_loader, device, clear_cache=clear_cache
+        )
+        threshold_selection = select_validation_threshold(
+            validation_targets, validation_probabilities
+        )
+        threshold_source = "maximum_validation_f1"
+    else:
+        threshold_selection = {
+            "probability_threshold": protocol.probability_threshold,
+            "f1_score": best["f1_score"],
+            "precision": best["precision"],
+            "recall": best["recall"],
+            "candidates_evaluated": 1,
+        }
+        threshold_source = "fixed_precommitted_not_test_calibrated"
     result = {
         "arm_id": arm_id,
         "solver": solver,
@@ -584,6 +804,11 @@ def _production_arm_runner(
         "device_effective": str(device),
         "best_epoch": best_epoch,
         "best_validation_metrics": best,
+        "selected_probability_threshold": threshold_selection[
+            "probability_threshold"
+        ],
+        "threshold_source": threshold_source,
+        "threshold_selection": threshold_selection,
         "checkpoint": {
             "file_name": CHECKPOINT_NAME,
             "sha256": sha256_file(checkpoint),
@@ -591,6 +816,12 @@ def _production_arm_runner(
         "history": {
             "file_name": HISTORY_NAME,
             "sha256": sha256_file(history_path),
+        },
+        "training_validation_loss_figure": {
+            "file_name": LOSS_FIGURE_NAME,
+            "sha256": sha256_file(loss_figure_path),
+            "curves": ["training_loss", "validation_loss"],
+            "shared_axis": True,
         },
         "test_graphs_loaded": 0,
     }
@@ -638,6 +869,13 @@ def run_four_arm_training(
             device_name=device,
             clear_cache=clear_cache,
         )
+        if protocol.schema_version == 1:
+            result.setdefault(
+                "selected_probability_threshold", protocol.probability_threshold
+            )
+            result.setdefault(
+                "threshold_source", "fixed_precommitted_not_test_calibrated"
+            )
         if (
             result.get("arm_id") != arm_id
             or result.get("test_graphs_loaded") != 0
@@ -646,6 +884,16 @@ def run_four_arm_training(
             != plan["optimizer_steps_per_arm_per_epoch"]
             or result.get("validation_reference_sha256")
             != plan["validation_reference_sha256"]
+            or not 0.0
+            <= float(result.get("selected_probability_threshold", -1.0))
+            <= 1.0
+            or result.get("threshold_source")
+            != (
+                "maximum_validation_f1"
+                if protocol.threshold_selection_method
+                == "maximum_validation_f1"
+                else "fixed_precommitted_not_test_calibrated"
+            )
         ):
             raise MvpFourArmTrainingError(f"arm execution audit failed: {arm_id}")
         results.append(result)
@@ -675,6 +923,16 @@ def run_four_arm_training(
             == plan["validation_reference_sha256"]
             for item in results
         ),
+        "validation_only_threshold_selection_all_arms": all(
+            item["threshold_source"]
+            == (
+                "maximum_validation_f1"
+                if protocol.threshold_selection_method
+                == "maximum_validation_f1"
+                else "fixed_precommitted_not_test_calibrated"
+            )
+            for item in results
+        ),
         "solver_pair_pos_weight_match": all(
             len({item["pos_weight"] for item in records}) == 1
             for records in by_solver.values()
@@ -693,6 +951,13 @@ def run_four_arm_training(
     }
     if not all(paired_controls.values()):
         raise MvpFourArmTrainingError("paired four-arm controls were not preserved")
+    eligibility = {
+        "training_smoke_eligible": True,
+        "development_only": True,
+        "scientific_reporting_eligible": False,
+    }
+    if protocol.schema_version == 2:
+        eligibility["held_out_evaluation_ready"] = True
     report = {
         "schema_version": SCHEMA_VERSION,
         "training_run_contract_sha256": plan["contract_sha256"],
@@ -710,13 +975,14 @@ def run_four_arm_training(
         "paired_controls": paired_controls,
         "arms": {item["arm_id"]: item for item in results},
         "held_out_test_contract": plan["held_out_test_contract"],
-        "eligibility": {
-            "training_smoke_eligible": True,
-            "development_only": True,
-            "scientific_reporting_eligible": False,
-        },
+        "eligibility": eligibility,
         "decision": {
-            "reason_code": "four_arm_training_smoke_completed",
+            "reason_code": (
+                "four_arm_validation_selected_training_completed"
+                if protocol.threshold_selection_method
+                == "maximum_validation_f1"
+                else "four_arm_training_smoke_completed"
+            ),
             "next_gate": "common_held_out_evaluation_and_hint_solver_comparison",
         },
     }
