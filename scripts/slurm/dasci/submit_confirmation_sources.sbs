@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_42_sources
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=06:00:00
+#SBATCH --output=slurm_cfl_42_sources_%A_%a.out
+
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "${EXEC_DIR}"
+test -f pyproject.toml
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+test -s "${GRB_LICENSE_FILE}"
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+REPAIR_ARGS=()
+if [[ "${REPAIR_LABELS:-0}" == "1" ]]; then
+    REPAIR_ARGS+=(--repair)
+fi
+srun python3 -m cfl_gnn.cli.run_confirmation_cohort task \
+    --campaign_dir "${CONFIRMATION_EXECUTION_DIR:?set campaign directory}" \
+    --data_root "${DATA_ROOT}" \
+    --task_index "${SLURM_ARRAY_TASK_ID:?submit array 0-41}" \
+    "${REPAIR_ARGS[@]}"
