@@ -37,17 +37,27 @@ are hash-bound to the run summary.
 
 ## Existing-graph confirmation cohort
 
-The accelerated baseline uses only the parent-instance graphs that were
-already materialized in earlier rounds: 30 easy, 15 medium, and zero hard
-instances. The launcher fails closed unless this exact 45-graph inventory is
-observed. The `all_available` label policy is permitted only together with the
-explicit development-only flag, and an additional gate rejects any label whose
-relative MIP gap exceeds the precommitted 10% ceiling.
+The audited storage root contains 42 parent-instance graphs materialized in
+earlier rounds: 30 easy, 12 medium, and zero hard. All 12 medium labels have
+relative MIP gaps above 40%, ranging from approximately 43.29% to 84.73%.
+Consequently they are not admissible under the precommitted 10% ceiling.
 
-This 45-graph cohort is suitable for diagnosing optimization behavior over 100
+The immediate quality-controlled baseline therefore trains on the 30 eligible
+easy graphs while recording that 42 graphs were discovered. The dedicated
+`gap_le_10pct` label policy makes this exclusion part of the dataset contract,
+rather than an informal post-hoc filter. The launcher fails closed unless it
+observes 42 discovered graphs and exactly 30 eligible easy graphs.
+
+This 30-graph cohort is suitable for diagnosing optimization behavior over 100
 epochs and for confirming that training and validation curves are generated.
 It is not a four-arm cohort: it must not be interpreted as having paired SCIP
 labels or incumbent-derived variants when those artifacts do not exist.
+
+The intended 45-graph easy-plus-medium confirmation requires a separate
+Gurobi-first rescue: independently solve and label 15 medium parents to a
+relative MIP gap no greater than 10%, materialize the three missing graphs, and
+rebuild the affected graph labels under the accepted Gurobi-authoritative
+contract. That campaign can run independently of the 30-easy confirmation.
 
 The preserved `sandbox/toy_bipartite.py` path remains a required compatibility
 gate for `GasseGNN`. The smoke suite exercises a deterministic toy graph through
@@ -70,7 +80,7 @@ without affecting the separate 45-graph baseline confirmation. The full
 
 ## Interpretation
 
-Outputs from both the partial four-arm intersection and the 45-graph baseline
+Outputs from both the partial four-arm intersection and the 30-graph baseline
 are development-only integration evidence. The curves confirm pipeline and
 optimization behavior, but they do not support population-level inference
 because hard instances are absent and the planned population is incomplete.

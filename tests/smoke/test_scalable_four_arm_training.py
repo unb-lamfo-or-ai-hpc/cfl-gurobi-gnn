@@ -97,14 +97,15 @@ def test_existing_graph_confirmation_launcher_pins_inventory_and_epochs() -> Non
     assert b"\r" not in payload
     text = payload.decode("utf-8")
     for fragment in (
-        "--label_policy all_available",
+        "--label_policy gap_le_10pct",
         "--development_only",
         "--epochs 100",
         "--patience 100",
         "--seed 42",
-        "--expected_graphs 45",
+        "--expected_graphs 30",
+        "--expected_discovered_graphs 42",
         "--expected_easy_graphs 30",
-        "--expected_medium_graphs 15",
+        "--expected_medium_graphs 0",
         "--expected_hard_graphs 0",
         "--maximum_label_mip_gap 0.10",
         "--require_full_epoch_budget",

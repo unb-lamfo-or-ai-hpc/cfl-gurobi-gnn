@@ -38,7 +38,13 @@ def _record(
             Path("/machine-specific") / f"{source_instance_id}.provenance.json"
         ),
         label_source="solutions.pickle.gz",
-        mip_gap=0.0 if mip_gap_band == "optimal_tolerance" else 0.5,
+        mip_gap=(
+            0.0
+            if mip_gap_band == "optimal_tolerance"
+            else 0.05
+            if mip_gap_band == "gap_le_10pct"
+            else 0.5
+        ),
         mip_gap_band=mip_gap_band,
     )
 
@@ -182,6 +188,7 @@ def test_existing_graph_confirmation_inventory_is_exact() -> None:
     )
     args = argparse.Namespace(
         expected_graphs=45,
+        expected_discovered_graphs=45,
         expected_easy_graphs=30,
         expected_medium_graphs=15,
         expected_hard_graphs=0,
@@ -203,6 +210,7 @@ def test_existing_graph_confirmation_rejects_inventory_drift() -> None:
     )
     args = argparse.Namespace(
         expected_graphs=45,
+        expected_discovered_graphs=45,
         expected_easy_graphs=30,
         expected_medium_graphs=15,
         expected_hard_graphs=0,
@@ -240,6 +248,7 @@ def test_existing_graph_confirmation_rejects_label_above_gap_ceiling() -> None:
     )
     args = argparse.Namespace(
         expected_graphs=None,
+        expected_discovered_graphs=None,
         expected_easy_graphs=None,
         expected_medium_graphs=None,
         expected_hard_graphs=None,
@@ -257,3 +266,22 @@ def test_existing_graph_confirmation_rejects_label_above_gap_ceiling() -> None:
             "mip_gap_relative": 0.11,
         }
     ]
+
+
+def test_gap_le_ten_percent_policy_is_explicit_and_development_only() -> None:
+    records = (
+        _record("CFL_easy_instance_0", role="test", fold=0),
+        _record("CFL_easy_instance_1", role="validation", fold=1),
+        _record(
+            "CFL_medium_instance_0",
+            role="train",
+            fold=2,
+            difficulty="medium",
+            mip_gap_band="gap_le_10pct",
+        ),
+    )
+    audit = _audit(label_policy="gap_le_10pct", eligible=records)
+    with pytest.raises(InstanceTrainingPlanError, match="non-optimal labels"):
+        validate_instance_training_audit(audit, development_only=False)
+    plan = validate_instance_training_audit(audit, development_only=True)
+    assert plan.audit.label_policy == "gap_le_10pct"

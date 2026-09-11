@@ -34,7 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rotation", type=int, choices=range(5), default=0)
     parser.add_argument(
         "--label_policy",
-        choices=("optimal_only", "all_available"),
+        choices=("optimal_only", "gap_le_10pct", "all_available"),
         default="optimal_only",
     )
     parser.add_argument(
@@ -60,6 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--clear_cache", action="store_true")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     parser.add_argument("--expected_graphs", type=int)
+    parser.add_argument("--expected_discovered_graphs", type=int)
     parser.add_argument("--expected_easy_graphs", type=int)
     parser.add_argument("--expected_medium_graphs", type=int)
     parser.add_argument("--expected_hard_graphs", type=int)
@@ -91,6 +92,7 @@ def _validate_numeric_arguments(args: argparse.Namespace) -> None:
         raise ValueError("grad_clip and num_workers must be nonnegative")
     expectations = (
         args.expected_graphs,
+        args.expected_discovered_graphs,
         args.expected_easy_graphs,
         args.expected_medium_graphs,
         args.expected_hard_graphs,
@@ -173,8 +175,9 @@ def _validate_expected_inventory(
         checks["eligible_graph_count"] = (
             len(plan.audit.eligible) == args.expected_graphs
         )
+    if args.expected_discovered_graphs is not None:
         checks["discovered_graph_count"] = (
-            plan.audit.discovered_graphs == args.expected_graphs
+            plan.audit.discovered_graphs == args.expected_discovered_graphs
         )
     for difficulty, expected in expected_by_difficulty.items():
         if expected is not None:
@@ -204,6 +207,7 @@ def _validate_expected_inventory(
             "failed" if failed_checks else "passed" if checks else "not_requested"
         ),
         "expected_graphs": args.expected_graphs,
+        "expected_discovered_graphs": args.expected_discovered_graphs,
         "expected_by_difficulty": expected_by_difficulty,
         "observed_graphs": len(plan.audit.eligible),
         "discovered_graphs": plan.audit.discovered_graphs,
