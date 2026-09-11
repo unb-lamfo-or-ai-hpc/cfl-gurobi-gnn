@@ -523,7 +523,7 @@ def _production_arm_evaluator(
     import torch.nn.functional as functional
 
     from cfl_gnn.graph.mvp_arm_dataset import MvpArmDataset
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class
 
     device = _select_device(torch, device_name)
     protocol = plan["evaluation_protocol"]
@@ -554,7 +554,7 @@ def _production_arm_evaluator(
         if model is None:
             edge_attr = edge_store.edge_attr
             edge_dim = int(edge_attr.shape[-1]) if edge_attr is not None else 0
-            model = GasseGNN(
+            model = model_class(plan["model"].get("model_version", "legacy"))(
                 var_in_dim=int(graph["variable"].x.shape[-1]),
                 cons_in_dim=int(graph["constraint"].x.shape[-1]),
                 edge_dim=edge_dim,
@@ -574,7 +574,8 @@ def _production_arm_evaluator(
                 binary_mask=mask,
                 edge_attr=edge_store.edge_attr,
             )
-            targets = torch.clamp(graph["variable"].y[mask], 0.0, 1.0)
+            from cfl_gnn.training.binary_contract import binary_targets
+            mask, targets = binary_targets(graph)
             probabilities = torch.sigmoid(logits)
             predictions = probabilities >= threshold
             positives = targets >= 0.5

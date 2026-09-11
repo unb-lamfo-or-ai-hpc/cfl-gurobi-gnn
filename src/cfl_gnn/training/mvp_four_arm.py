@@ -14,6 +14,7 @@ from typing import Any, Callable, Mapping, Sequence
 from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.paths import PROJECT_ROOT
 from cfl_gnn.training.gasse_reconnected import git_blob_sha1
+from cfl_gnn.training.binary_contract import binary_targets
 from cfl_gnn.training.mvp_arm import (
     DeterministicParentBalancedSampler,
     MvpTrainingDataError,
@@ -125,6 +126,7 @@ class TrainingProtocol:
     checkpoint_selection_metric: str
     threshold_selection_method: str
     legacy_gasse_git_blob_sha1: str | None
+    model_version: str = "legacy"
 
     @property
     def contract_payload(self) -> dict[str, Any]:
@@ -163,6 +165,9 @@ class TrainingProtocol:
             "development_only": True,
             "scientific_reporting_eligible": False,
         }
+        if self.model_version != "legacy":
+            payload["model"]["model_version"] = self.model_version
+            payload["model"]["implementation_sha256"] = sha256_file(PROJECT_ROOT / "src/cfl_gnn/models/gasse_calibrated.py")
         if self.schema_version == 1:
             payload["optimization"]["probability_threshold"] = (
                 self.probability_threshold
@@ -252,6 +257,8 @@ class TrainingProtocol:
         threshold: float | None = None
         checkpoint_metric = "validation_weighted_bce"
         threshold_method = "fixed_precommitted"
+        if model.get("model_version", "legacy") not in ("legacy", "gasse_v2_alternating_prenorm"):
+            raise MvpFourArmTrainingError("unsupported model version")
         legacy_gasse_git_blob_sha1: str | None = None
         if schema_version == 1:
             threshold = _finite_positive(
@@ -325,6 +332,7 @@ class TrainingProtocol:
             checkpoint_selection_metric=checkpoint_metric,
             threshold_selection_method=threshold_method,
             legacy_gasse_git_blob_sha1=legacy_gasse_git_blob_sha1,
+            model_version=model.get("model_version", "legacy"),
         )
 
 
@@ -571,7 +579,7 @@ def _validation_predictions(
             )
             probabilities.extend(torch.sigmoid(logits).detach().cpu().tolist())
             targets.extend(
-                torch.clamp(graph["variable"].y[mask], 0.0, 1.0)
+                binary_targets(graph)[1]
                 .detach()
                 .cpu()
                 .tolist()
@@ -615,7 +623,7 @@ def _production_arm_runner(
     from torch_geometric.loader import DataLoader
 
     from cfl_gnn.graph.mvp_arm_dataset import MvpArmDataset
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class, fit_versioned_prenorm
     from cfl_gnn.training.serial import (
         calc_metrics,
         compute_pos_weight,
@@ -674,7 +682,7 @@ def _production_arm_runner(
     edge_attr = edge_store.edge_attr
     edge_dim = int(edge_attr.shape[-1]) if edge_attr is not None else 0
     set_global_seed(protocol.seed)
-    model = GasseGNN(
+    model = model_class(protocol.model_version)(
         var_in_dim=int(representative["variable"].x.shape[-1]),
         cons_in_dim=int(representative["constraint"].x.shape[-1]),
         edge_dim=edge_dim,
@@ -682,12 +690,7 @@ def _production_arm_runner(
         num_layers=protocol.num_layers,
     ).to(device)
     initial_model_state_sha256 = _torch_state_sha256(model)
-    model.fit_prenorm(
-        x_var=representative["variable"].x,
-        x_cons=representative["constraint"].x,
-        edge_v2c=edge_store.edge_index,
-        edge_attr=edge_attr,
-    )
+    fit_versioned_prenorm(model, protocol.model_version, original_dataset, representative, device)
     del representative
 
     optimizer = _OptimizerStepCounter(

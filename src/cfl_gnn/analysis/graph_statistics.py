@@ -10,6 +10,7 @@ import math
 import statistics
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
+from cfl_gnn.analysis.graph_descriptors import binary_prevalence, descriptive_distribution
 
 
 REPORT_NAME = "graph_statistics_report.json"
@@ -159,9 +160,8 @@ def analyze_graph_manifest(
                 "discrete_fraction": float(
                     graph["variable"].is_discrete.sum().item() / variables
                 ),
-                "positive_label_fraction": float(
-                    (graph["variable"].y >= 0.5).sum().item() / variables
-                ),
+                "positive_label_fraction": binary_prevalence(graph),
+                "right_censored": record.get("right_censored"),
                 "mip_gap_relative": float(graph.mip_gap),
                 "execution_time_seconds": float(graph.exec_time),
                 "root_lp_minimum": float(graph["variable"].x[:, 6].min().item()),
@@ -183,10 +183,20 @@ def analyze_graph_manifest(
             "graphs": len(selected),
             "mip_gap_relative_mean": _mean(gaps),
             "mip_gap_relative_standard_deviation": _standard_deviation(gaps),
-            "mip_gap_relative_ci95_half_width": _ci95(gaps),
+            "mip_gap_relative_distribution": descriptive_distribution(gaps),
             "execution_time_seconds_mean": _mean(times),
             "execution_time_seconds_standard_deviation": _standard_deviation(times),
-            "execution_time_seconds_ci95_half_width": _ci95(times),
+            "observed_execution_time_distribution": descriptive_distribution(times),
+            "independent_parents": len({row["source_instance_id"] for row in selected}),
+            "by_sampling_strategy": {
+                strategy: {
+                    "graphs": len([row for row in selected if row["sampling_strategy"] == strategy]),
+                    "observed_execution_time": descriptive_distribution([
+                        row["execution_time_seconds"] for row in selected if row["sampling_strategy"] == strategy]),
+                    "mip_gap": descriptive_distribution([
+                        row["mip_gap_relative"] for row in selected if row["sampling_strategy"] == strategy]),
+                } for strategy in sorted({row["sampling_strategy"] for row in selected})
+            },
         }
     report = {
         "schema_version": 1,
@@ -201,7 +211,11 @@ def analyze_graph_manifest(
             TABLE_NAME: {"sha256": _sha256(output / TABLE_NAME)},
             FIGURE_NAME: {"sha256": _sha256(output / FIGURE_NAME)},
         },
-        "eligibility": {"descriptive_analysis_complete": True},
+        "methodology": {"inferential_intervals": "disabled_dependent_graph_rows",
+                        "runtime": "observed_runtime_not_time_to_optimality",
+                        "unknown_censoring_records": sum(row["right_censored"] is None for row in rows)},
+        "eligibility": {"descriptive_analysis_complete": True,
+                        "scientific_reporting_eligible": False},
     }
     _write_json(output / REPORT_NAME, report)
     return report

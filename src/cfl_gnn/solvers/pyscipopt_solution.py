@@ -405,8 +405,7 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         model.hideOutput(True)
         model.readProblem(str(candidate))
         original_objective_sense = str(model.getObjectiveSense()).lower()
-        if request.get("force_minimize") is True:
-            model.setMinimize()
+        model.setMinimize()  # Mandatory CFL source correction, including comparison runs.
         objective_sense = str(model.getObjectiveSense()).lower()
         pre_solve_solution_count = int(model.getNSols())
         solver_profile = str(request.get("solver_profile", "default"))
@@ -506,7 +505,11 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
             stream_committed = not collector.errors
         relative_gap = _finite_or_none(model.getGap())
         total_time = time.perf_counter() - total_started
+        from cfl_gnn.validation.mathematical import common_gap
         payload = {
+            "objective_policy": "milpbench_cfl_force_minimize_v1",
+            "common_mip_gap_relative": common_gap(objective, _finite_or_none(model.getDualbound())),
+            "native_gap_semantics": "scip_native_gap",
             "schema_version": int(request.get("schema_version", 3)),
             "contract_sha256": str(request["contract_sha256"]),
             "candidate_file_name": str(request["candidate_file_name"]),

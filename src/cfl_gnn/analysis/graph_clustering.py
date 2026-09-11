@@ -15,7 +15,7 @@ import numpy as np
 REPORT_NAME = "graph_clustering_report.json"
 TABLE_NAME = "graph_clustering.csv"
 FIGURE_NAME = "graph_clustering.svg"
-FEATURES = ("density", "discrete_fraction", "constraint_variable_ratio")
+from cfl_gnn.analysis.graph_descriptors import FEATURES, graph_descriptors, binary_prevalence
 
 
 class GraphClusteringError(RuntimeError):
@@ -48,10 +48,15 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def _standardize(matrix: np.ndarray) -> np.ndarray:
+    if not np.isfinite(matrix).all():
+        raise GraphClusteringError("projection features must be finite")
     means = matrix.mean(axis=0)
     standard_deviations = matrix.std(axis=0)
-    standard_deviations[standard_deviations == 0.0] = 1.0
-    return (matrix - means) / standard_deviations
+    constant = standard_deviations <= 1e-12 * np.maximum(1., np.abs(means))
+    standard_deviations[constant] = 1.0
+    result = (matrix - means) / standard_deviations
+    result[:, constant] = 0.
+    return result
 
 
 def _pca(matrix: np.ndarray) -> tuple[np.ndarray, list[float]]:
@@ -117,6 +122,7 @@ def cluster_graph_manifest(
     graph_root: str | Path,
     output_dir: str | Path,
     overwrite: bool = False,
+    include_umap: bool = False,
 ) -> dict[str, Any]:
     """Project audited macro-features and assign deterministic clusters."""
     import torch
@@ -155,9 +161,8 @@ def cluster_graph_manifest(
                     graph["variable"].is_discrete.sum().item() / variables
                 ),
                 "constraint_variable_ratio": constraints / variables,
-                "positive_label_fraction": float(
-                    (graph["variable"].y >= 0.5).sum().item() / variables
-                ),
+                "positive_label_fraction": binary_prevalence(graph),
+                **graph_descriptors(graph),
                 "mip_gap_relative": float(graph.mip_gap),
                 "execution_time_seconds": float(graph.exec_time),
             }
@@ -167,6 +172,16 @@ def cluster_graph_manifest(
     coordinates, explained = _pca(standardized)
     cluster_count = min(3, len(raw))
     assignments = _kmeans(standardized, cluster_count)
+    umap_coordinates = None
+    umap_status = "not_requested"
+    if include_umap:
+        if len(np.unique(standardized, axis=0)) < 4:
+            umap_status = "degenerate_insufficient_distinct_graphs"
+        else:
+            from umap import UMAP
+            umap_coordinates = UMAP(n_components=2, n_neighbors=min(15, len(raw)-1),
+                                    random_state=42, n_jobs=1, init="random").fit_transform(standardized)
+            umap_status = "descriptive_seed42"
     rows: list[dict[str, Any]] = []
     for row, coordinate, assignment in zip(raw, coordinates, assignments):
         rows.append(
@@ -178,6 +193,10 @@ def cluster_graph_manifest(
             }
         )
     fields = tuple(rows[0])
+    if umap_coordinates is not None:
+        for row, point in zip(rows, umap_coordinates):
+            row.update(umap_component_1=float(point[0]), umap_component_2=float(point[1]))
+        fields = tuple(rows[0])
     with (output / TABLE_NAME).open("w", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
@@ -190,13 +209,19 @@ def cluster_graph_manifest(
         "methodology": {
             "features": list(FEATURES),
             "standardization": "population_z_score_zero_variance_to_zero",
-            "projection": "deterministic_numpy_svd_pca",
+            "projection": "deterministic_numpy_svd_pca_encoded_macro_descriptors",
+            "outcomes_used_as_projection_inputs": False,
+            "infinite_bounds": "not_reconstructible_from_clipped_encoded_features",
             "clustering": "deterministic_kmeans_maximum_three_clusters",
             "random_seed_required": False,
+            "umap_status": umap_status,
         },
         "summary": {
             "graphs": len(rows),
-            "clusters": cluster_count,
+            "clusters": int(len(np.unique(assignments))),
+            "requested_clusters": cluster_count,
+            "effective_rank": int(np.linalg.matrix_rank(standardized)),
+            "projection_status": "degenerate" if not np.any(standardized) else "descriptive",
             "pca_explained_variance_ratio": explained,
         },
         "outputs": {
@@ -223,6 +248,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--graph_root", type=Path, required=True)
     parser.add_argument("--output_dir", type=Path, required=True)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--umap", action="store_true", help="Optional descriptive projection; requires umap-learn")
     return parser
 
 
@@ -234,6 +260,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             graph_root=args.graph_root,
             output_dir=args.output_dir,
             overwrite=args.overwrite,
+            include_umap=args.umap,
         )
     except (OSError, ValueError, GraphClusteringError) as error:
         print(f"[ERROR] {error}")

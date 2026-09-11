@@ -79,6 +79,7 @@ class InstanceEvaluationPlan:
     num_layers: int
     pos_weight: float
     checkpoint_sha256: str
+    model_version: str = "legacy"
 
     @property
     def contract_sha256(self) -> str:
@@ -237,6 +238,7 @@ def build_instance_evaluation_plan(
             hyperparameters.get("pos_weight"), field="pos_weight"
         ),
         checkpoint_sha256=current_checkpoint_digest,
+        model_version=experiment.get("model_version", "legacy"),
     )
 
 
@@ -303,7 +305,9 @@ def _run_evaluation(
     from torch_geometric.loader import DataLoader
 
     from cfl_gnn.graph.instance_dataset import ParentInstanceDataset
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class
+    from cfl_gnn.training.binary_contract import binary_targets
+    GasseGNN = model_class(plan.model_version)
 
     device = _select_device(torch, args.device)
     state_dict = torch.load(args.checkpoint, map_location=device, weights_only=True)
@@ -349,7 +353,7 @@ def _run_evaluation(
                 binary_mask=mask,
                 edge_attr=edge_store.edge_attr,
             )
-            targets = torch.clamp(batch["variable"].y[mask], min=0.0, max=1.0)
+            mask, targets = binary_targets(batch)
             probabilities = torch.sigmoid(logits)
             predictions = probabilities >= FIXED_PROBABILITY_THRESHOLD
             positives = targets >= 0.5

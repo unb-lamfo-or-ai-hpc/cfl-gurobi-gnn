@@ -343,6 +343,13 @@ def build_graph_artifact(
                 row_values.append(coefficient)
             row_norms.append(float(np.linalg.norm(row_values)))
         labels = np.asarray([solution[name] for name in variable_names])
+        from cfl_gnn.validation.mathematical import audit_gurobi_solution
+        reported_objective = solution_payload.get("solution_objective", solution_payload.get("objective"))
+        if reported_objective is None:
+            raise GurobiGraphError("solution artifact must record its objective")
+        feasibility = audit_gurobi_solution(model, solution, float(reported_objective))
+        if not feasibility["valid"]:
+            raise GurobiGraphError("independent label feasibility audit failed")
         graph = build_heterodata(
             ModelFeatures(
                 num_vars=len(variables),
@@ -374,6 +381,8 @@ def build_graph_artifact(
             -1,
             str(sample_metadata["sample_id"]),
             {"complexity_class": sample_metadata["difficulty"]},
+            strict=True,
+            edge_layout="constraint_variable",
         )
         if graph is None:
             raise GurobiGraphError("production encoder rejected the graph")
@@ -415,6 +424,7 @@ def build_graph_artifact(
             "continuous_variables": int(np.sum(types == "C")),
             "roundtrip_readable": True,
             "label_variable_identity_match": True,
+            "independent_label_feasibility": feasibility,
             "root_lp_feature_exactly_encoded": True,
             "original_objective_sense": original_sense,
             "effective_objective_sense": "MINIMIZE",
