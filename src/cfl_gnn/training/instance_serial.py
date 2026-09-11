@@ -56,6 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--model_version", choices=("legacy", "gasse_v2_alternating_prenorm"), default="legacy")
     parser.add_argument("--num_workers", type=int, default=0)
     parser.add_argument("--clear_cache", action="store_true")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
@@ -249,7 +250,9 @@ def _run_training(
 
     from cfl_gnn.graph.instance_dataset import ParentInstanceDataset
     from cfl_gnn.graph.instance_provenance import sha256_file
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class, fit_versioned_prenorm
+    version = getattr(args, "model_version", "legacy")
+    GasseGNN = model_class(version)
     from cfl_gnn.training.figures import write_training_validation_loss_figure
     from cfl_gnn.training.serial import (
         calc_metrics,
@@ -295,12 +298,7 @@ def _run_training(
         hidden_dim=args.hidden_dim,
         num_layers=args.num_layers,
     ).to(device)
-    model.fit_prenorm(
-        x_var=representative["variable"].x,
-        x_cons=representative["constraint"].x,
-        edge_v2c=edge_store.edge_index,
-        edge_attr=edge_attr,
-    )
+    prenorm_audit = fit_versioned_prenorm(model, version, train_data, representative, device)
     del representative
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -403,6 +401,8 @@ def _run_training(
         raise RuntimeError("the required full epoch budget was not completed")
 
     experiment_summary = {
+        "model_version": version,
+        "prenorm_audit": prenorm_audit,
         "experiment_name": args.experiment_name,
         "dataset_variant": "gurobi_parent_instance",
         "contract_sha256": plan.contract_sha256,

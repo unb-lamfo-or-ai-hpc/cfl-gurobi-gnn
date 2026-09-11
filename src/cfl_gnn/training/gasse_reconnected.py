@@ -19,6 +19,7 @@ from cfl_gnn.pipelines.parent_collection_task import validate_campaign_plan
 from cfl_gnn.pipelines.parent_population import PLAN_NAME as PARENT_PLAN_NAME
 from cfl_gnn.pipelines.parent_solutions import report_name
 from cfl_gnn.training.mvp_arm import build_parent_balanced_epoch_indices
+from cfl_gnn.training.binary_contract import binary_targets
 
 
 SCHEMA_VERSION = 1
@@ -121,6 +122,8 @@ def load_protocol(path: str | Path) -> dict[str, Any]:
     if protocol.get("schema_version") != SCHEMA_VERSION:
         raise GasseTrainingError("unsupported training protocol schema")
     architecture = protocol.get("architecture", {})
+    if architecture.get("model_version", "legacy") not in ("legacy", "gasse_v2_alternating_prenorm"):
+        raise GasseTrainingError("unsupported model_version")
     optimization = protocol.get("optimization", {})
     sampling = protocol.get("sampling", {})
     checkpoint = protocol.get("checkpoint_selection", {})
@@ -354,6 +357,12 @@ def build_gasse_training_plan(
         )
     if not records:
         raise GasseTrainingError("no gap-eligible graph-label views")
+    if protocol.get("protocol_id") == "gasse_42_parent_confirmation_v2":
+        from cfl_gnn.pipelines.confirmation_campaign import COHORT
+        if {r["parent_instance_id"] for r in records} != set(COHORT) or len(records) != 42:
+            raise GasseTrainingError("42-parent confirmation requires exactly the frozen 30 easy and 12 medium parents")
+        if any(r["sampling_strategy"] != "original" for r in records):
+            raise GasseTrainingError("broad confirmation is original-only; keep paired augmentation separate")
     parents_by_role = {
         role: {
             record["parent_instance_id"]
@@ -394,6 +403,9 @@ def build_gasse_training_plan(
         "legacy_gasse_git_blob_sha1": gasse_blob,
         "implementation_sha256": {
             "gasse": sha256_file(gasse_path),
+            "selected_gasse": sha256_file(source_root / "models" / (
+                "gasse_calibrated.py" if protocol["architecture"].get("model_version") == "gasse_v2_alternating_prenorm" else "gasse.py")),
+            "binary_target_contract": sha256_file(source_root / "training" / "binary_contract.py"),
             "serial_backend": sha256_file(source_root / "training" / "serial.py"),
             "ddp_backend": sha256_file(
                 source_root / "training" / "distributed.py"
@@ -521,6 +533,7 @@ class GasseLabelViewDataset:
         )
         graph.label_source_solver = record["label_solver"]
         graph.label_solution_sha256 = record["label_sha256"]
+        graph.variable_names = names
         return graph
 
 
@@ -559,13 +572,19 @@ def threshold_from_validation(targets: Any, probabilities: Any) -> float:
     scores = np.asarray(probabilities, dtype=np.float64)
     if truth.size == 0 or scores.shape != truth.shape:
         raise GasseTrainingError("validation predictions are empty or malformed")
+    if not np.isfinite(scores).all() or np.any((scores < 0) | (scores > 1)):
+        raise GasseTrainingError("validation probabilities are invalid")
+    order = np.argsort(scores, kind="stable")
+    sorted_scores, sorted_truth = scores[order], truth[order]
+    prefix = np.concatenate(([0], np.cumsum(sorted_truth, dtype=np.int64)))
+    positives = int(prefix[-1])
     candidates = np.unique(np.concatenate(([0.0, 0.5, 1.0], scores)))
     best = (float("-inf"), float("-inf"), 0.5)
     for threshold in candidates:
-        predicted = scores >= threshold
-        tp = int((predicted & truth).sum())
-        fp = int((predicted & ~truth).sum())
-        fn = int((~predicted & truth).sum())
+        first = int(np.searchsorted(sorted_scores, threshold, side="left"))
+        tp = positives - int(prefix[first])
+        fp = len(scores) - first - tp
+        fn = positives - tp
         metrics = classification_metrics(tp, 0, fp, fn)
         candidate = (
             metrics["f1_score"],
@@ -597,7 +616,7 @@ def _predict(model: Any, loader: Any, device: Any) -> tuple[list[float], list[fl
             )
             probabilities.extend(torch.sigmoid(logits).cpu().tolist())
             targets.extend(
-                torch.clamp(graph["variable"].y[mask], 0.0, 1.0).cpu().tolist()
+                binary_targets(graph)[1].cpu().tolist()
             )
     return targets, probabilities
 
@@ -618,7 +637,7 @@ def run_serial_training(
     import torch.nn as nn
     from torch_geometric.loader import DataLoader
 
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class, fit_versioned_prenorm
     from cfl_gnn.training.serial import (
         compute_pos_weight,
         eval_loop,
@@ -675,19 +694,15 @@ def run_serial_training(
     representative = next(iter(train_loader)).to(device)
     edge = representative["variable", "rev_coef", "constraint"]
     edge_dim = int(edge.edge_attr.shape[-1]) if edge.edge_attr is not None else 0
-    model = GasseGNN(
+    model_version = protocol["architecture"].get("model_version", "legacy")
+    model = model_class(model_version)(
         var_in_dim=int(representative["variable"].x.shape[-1]),
         cons_in_dim=int(representative["constraint"].x.shape[-1]),
         edge_dim=edge_dim,
         hidden_dim=int(protocol["architecture"]["hidden_dim"]),
         num_layers=int(protocol["architecture"]["num_layers"]),
     ).to(device)
-    model.fit_prenorm(
-        x_var=representative["variable"].x,
-        x_cons=representative["constraint"].x,
-        edge_v2c=edge.edge_index,
-        edge_attr=edge.edge_attr,
-    )
+    prenorm_audit = fit_versioned_prenorm(model, model_version, train_dataset, representative, device)
     optimizer = torch.optim.Adam(
         model.parameters(), lr=float(optimization["learning_rate"])
     )
@@ -760,7 +775,12 @@ def run_serial_training(
         writer = csv.DictWriter(stream, fieldnames=list(history[0]))
         writer.writeheader()
         writer.writerows(history)
+    from cfl_gnn.training.figures import write_training_validation_loss_figure
+    curve_path = output / "training_validation_loss.svg"
+    write_training_validation_loss_figure(history, curve_path, title="Training and validation weighted BCE")
     report = {
+        "model_version": model_version,
+        "prenorm_audit": prenorm_audit,
         "schema_version": SCHEMA_VERSION,
         "training_contract_sha256": plan["contract_sha256"],
         "gate_status": "passed",
@@ -785,6 +805,7 @@ def run_serial_training(
                 "sha256": sha256_file(checkpoint),
             },
             TRAINING_HISTORY_NAME: {"sha256": sha256_file(history_path)},
+            "training_validation_loss.svg": {"sha256": sha256_file(curve_path)},
         },
         "eligibility": {
             "training_complete": True,
@@ -835,7 +856,7 @@ def run_distributed_training(
     from torch.nn.parallel import DistributedDataParallel as DDP
     from torch_geometric.loader import DataLoader
 
-    from cfl_gnn.models.gasse import GasseGNN
+    from cfl_gnn.models.versioning import model_class, fit_versioned_prenorm
     from cfl_gnn.training.distributed import (
         compute_pos_weight,
         eval_loop,
@@ -890,19 +911,15 @@ def run_distributed_training(
     representative = train_dataset[0].to(device)
     edge = representative["variable", "rev_coef", "constraint"]
     edge_dim = int(edge.edge_attr.shape[-1]) if edge.edge_attr is not None else 0
-    base_model = GasseGNN(
+    model_version = protocol["architecture"].get("model_version", "legacy")
+    base_model = model_class(model_version)(
         var_in_dim=int(representative["variable"].x.shape[-1]),
         cons_in_dim=int(representative["constraint"].x.shape[-1]),
         edge_dim=edge_dim,
         hidden_dim=int(protocol["architecture"]["hidden_dim"]),
         num_layers=int(protocol["architecture"]["num_layers"]),
     ).to(device)
-    base_model.fit_prenorm(
-        x_var=representative["variable"].x,
-        x_cons=representative["constraint"].x,
-        edge_v2c=edge.edge_index,
-        edge_attr=edge.edge_attr,
-    )
+    prenorm_audit = fit_versioned_prenorm(base_model, model_version, train_dataset, representative, device)
     model = DDP(
         base_model,
         device_ids=[local_rank] if device.type == "cuda" else None,
@@ -1016,6 +1033,8 @@ def run_distributed_training(
             writer.writeheader()
             writer.writerows(history)
         result = {
+            "model_version": model_version,
+            "prenorm_audit": prenorm_audit,
             "schema_version": SCHEMA_VERSION,
             "training_contract_sha256": plan["contract_sha256"],
             "gate_status": "passed",

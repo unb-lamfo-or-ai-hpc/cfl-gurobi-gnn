@@ -26,6 +26,7 @@ from torch_geometric.loader import DataLoader
 
 from cfl_gnn.graph.dataset import NeuralDivingDataset
 from cfl_gnn.models.gasse import GasseGNN
+from cfl_gnn.training.binary_contract import binary_targets
 from cfl_gnn.paths import PROJECT_ROOT
 
 project_root = str(PROJECT_ROOT)
@@ -48,8 +49,7 @@ set_global_seed(42)
 def compute_pos_weight(loader: DataLoader, device: torch.device) -> torch.Tensor:
     total_pos, total_neg = 0, 0
     for batch in loader:
-        mask    = batch['variable'].is_discrete.bool()
-        labels  = batch['variable'].y[mask]
+        mask, labels = binary_targets(batch)
         total_pos += (labels > 0.5).sum().item()
         total_neg += (labels <= 0.5).sum().item()
 
@@ -85,7 +85,7 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
             edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
             binary_mask=target_mask, edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
-        targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
+        target_mask, targets = binary_targets(batch)
         
         loss = loss_fn(preds, targets)
         loss.backward()
@@ -118,7 +118,7 @@ def eval_loop(model, loader, loss_fn, device, args):
             edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
             binary_mask=target_mask, edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
-        targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
+        target_mask, targets = binary_targets(batch)
         
         loss = loss_fn(preds, targets)
         preds_bin = (preds > 0).float()

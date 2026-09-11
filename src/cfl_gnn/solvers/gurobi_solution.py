@@ -210,8 +210,8 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         original_objective_sense = (
             "minimize" if int(model.ModelSense) == int(GRB.MINIMIZE) else "maximize"
         )
-        if request.get("force_minimize") is True:
-            model.ModelSense = GRB.MINIMIZE
+        # All supported CFL sources carry the erroneous legacy maximize sense.
+        model.ModelSense = GRB.MINIMIZE
         model.Params.OutputFlag = 0
         model.Params.TimeLimit = float(request["time_limit"])
         model.Params.NodeLimit = int(request["node_limit"])
@@ -306,7 +306,11 @@ def solve_named_mip(request: Mapping[str, Any]) -> dict[str, Any]:
         )
         version = ".".join(str(part) for part in gp.gurobi.version())
         total_time = time.perf_counter() - total_started
+        from cfl_gnn.validation.mathematical import common_gap
         payload = {
+            "objective_policy": "milpbench_cfl_force_minimize_v1",
+            "common_mip_gap_relative": common_gap(objective, _finite_or_none(model.ObjBound)),
+            "native_gap_semantics": "gurobi_primal_denominator",
             "schema_version": int(request.get("schema_version", 1)),
             "contract_sha256": str(request["contract_sha256"]),
             "candidate_file_name": str(request["candidate_file_name"]),

@@ -18,8 +18,8 @@ def write_training_validation_loss_figure(
         raise ValueError("training history is empty")
     epochs = [int(row["epoch"]) for row in history]
     training_loss = [float(row["train_loss"]) for row in history]
-    validation_loss = [float(row["validation_loss"]) for row in history]
-    if not all(math.isfinite(value) for value in training_loss + validation_loss):
+    validation_loss = [None if row["validation_loss"] is None else float(row["validation_loss"]) for row in history]
+    if not all(math.isfinite(value) for value in training_loss + [v for v in validation_loss if v is not None]):
         raise ValueError("training history contains a non-finite loss")
 
     import matplotlib
@@ -38,8 +38,8 @@ def write_training_validation_loss_figure(
         figure, axis = plt.subplots(figsize=(8, 5))
         axis.plot(epochs, training_loss, label="Training loss", linewidth=1.8)
         axis.plot(
-            epochs,
-            validation_loss,
+            [epoch for epoch, value in zip(epochs, validation_loss) if value is not None],
+            [value for value in validation_loss if value is not None],
             label="Validation loss",
             linewidth=1.8,
         )
