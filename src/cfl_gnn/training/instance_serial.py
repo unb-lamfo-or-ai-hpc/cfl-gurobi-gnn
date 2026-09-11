@@ -189,9 +189,14 @@ def _validate_expected_inventory(
         ]
         checks["all_labels_within_maximum_mip_gap"] = not inadmissible_gap_ids
     if checks and not all(checks.values()):
+        failed_checks = sorted(name for name, passed in checks.items() if not passed)
         raise ValueError(
             "existing-graph inventory does not match the precommitted confirmation "
-            "cohort"
+            f"cohort; failed_checks={failed_checks}; "
+            f"observed_total={len(plan.audit.eligible)}; "
+            "observed_by_difficulty="
+            f"{dict(sorted(observed_by_difficulty.items()))}; "
+            f"inadmissible_label_gap_instances={inadmissible_gap_ids}"
         )
     return {
         "gate_status": "passed" if checks else "not_requested",
