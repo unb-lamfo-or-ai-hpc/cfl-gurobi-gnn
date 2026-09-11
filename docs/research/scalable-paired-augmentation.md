@@ -42,6 +42,13 @@ report, and referenced artifacts still match their SHA-256 contracts. The
 campaign audit verifies paired radii and emits a path-neutral source index for
 the graph stage.
 
+The path-neutral generation package is self-contained: a byte-identical,
+SHA-256-bound copy of the source incumbent is stored beside the generation
+plan. Membership audits resolve that local file name, while legacy absolute
+references remain readable only for backward compatibility. This prevents
+execution-host paths from entering reports and allows completed independent
+solves to be re-audited without re-optimisation.
+
 ## Graph and descriptive-analysis contract
 
 The graph stage accepts multiple independently audited source directories per

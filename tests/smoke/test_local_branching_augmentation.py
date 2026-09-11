@@ -294,11 +294,17 @@ def test_cli_materializes_unlabelled_train_only_variants(
     )
     report = json.loads((output / module.REPORT_NAME).read_text(encoding="utf-8"))
     provenance = json.loads(next(output.glob("*.provenance.json")).read_text())
+    plan = json.loads((output / module.PLAN_NAME).read_text(encoding="utf-8"))
+    packaged_incumbent = output / solution.name
 
     assert result == 0
     assert report["gate_status"] == "passed"
     assert report["summary"]["variants_written"] == 1
     assert report["parent_model"]["effective_objective_sense"] == "MINIMIZE"
+    assert plan["incumbent_artifact_file_name"] == solution.name
+    assert "incumbent_artifact" not in plan
+    assert packaged_incumbent.read_bytes() == solution.read_bytes()
+    assert module.sha256_file(packaged_incumbent) == plan["incumbent_artifact_sha256"]
     assert report["eligibility"]["dataset_eligible"] is False
     assert provenance["role"] == "train"
     assert provenance["source_incumbent"]["performance_feature_tags"][

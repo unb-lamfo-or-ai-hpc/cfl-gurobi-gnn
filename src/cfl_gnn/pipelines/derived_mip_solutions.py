@@ -455,7 +455,20 @@ def audit_local_branching_membership(
     }
     try:
         generation_plan = _read_json(generation_plan_path)
-        center_path = Path(str(generation_plan["incumbent_artifact"]))
+        incumbent_file_name = generation_plan.get("incumbent_artifact_file_name")
+        if incumbent_file_name is not None:
+            encoded_name = str(incumbent_file_name)
+            safe_name = Path(encoded_name)
+            if safe_name.is_absolute() or safe_name.name != encoded_name:
+                evidence["reason_code"] = "unsafe_source_incumbent_file_name"
+                return evidence
+            center_path = plan.candidate_dir / safe_name
+        elif generation_plan.get("incumbent_artifact") is not None:
+            # Backward compatibility for pre-path-neutral development artifacts.
+            center_path = Path(str(generation_plan["incumbent_artifact"]))
+        else:
+            evidence["reason_code"] = "source_incumbent_reference_missing"
+            return evidence
         center_sha256 = sha256_file(center_path)
         artifact_matches = (
             center_sha256 == candidate.source_incumbent_artifact_sha256

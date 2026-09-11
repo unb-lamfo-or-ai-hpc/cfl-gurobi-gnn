@@ -42,7 +42,7 @@ def _cohort(tmp_path: Path, *, solver: str = "gurobi") -> Path:
             {
                 "solver": solver,
                 "parent_instance_id": "CFL_easy_instance_2",
-                "incumbent_artifact": str(center),
+                "incumbent_artifact_file_name": center.name,
                 "incumbent_artifact_sha256": center_sha256,
                 "incumbent_format": (
                     "gurobi_solution_json"

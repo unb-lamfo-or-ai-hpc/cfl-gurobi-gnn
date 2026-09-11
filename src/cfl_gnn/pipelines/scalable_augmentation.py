@@ -418,9 +418,25 @@ def _generation_valid(
     task: Mapping[str, Any], directory: Path
 ) -> tuple[bool, list[int]]:
     report_path = directory / "local_branching_generation_report.json"
-    if not report_path.is_file():
+    generation_plan_path = directory / "local_branching_generation_plan.json"
+    if not report_path.is_file() or not generation_plan_path.is_file():
         return False, []
     report = _read_json(report_path)
+    generation_plan = _read_json(generation_plan_path)
+    incumbent_file_name = str(
+        generation_plan.get("incumbent_artifact_file_name", "")
+    )
+    incumbent_artifact = directory / incumbent_file_name
+    if (
+        not incumbent_file_name
+        or Path(incumbent_file_name).name != incumbent_file_name
+        or not incumbent_artifact.is_file()
+        or sha256_file(incumbent_artifact)
+        != task.get("parent_solution_sha256")
+        or generation_plan.get("incumbent_artifact_sha256")
+        != task.get("parent_solution_sha256")
+    ):
+        return False, []
     outputs = report.get("outputs")
     if (
         report.get("gate_status") != "passed"
@@ -563,6 +579,13 @@ def execute_task(
     )
     solves = root / _safe_relative(
         task["solve_run_relative_path"], field="solve output path"
+    )
+    from cfl_gnn.augmentation.local_branching import package_incumbent_artifact
+
+    package_incumbent_artifact(
+        solution,
+        variants,
+        expected_sha256=str(task["parent_solution_sha256"]),
     )
     generation_ok, _ = _generation_valid(task, variants)
     if not (resume and generation_ok):
