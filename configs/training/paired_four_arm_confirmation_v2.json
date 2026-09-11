@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "protocol_id": "paired_four_arm_confirmation_v2",
+  "experiment_stage": "development_four_arm_training",
+  "arms": [
+    "gurobi_original",
+    "gurobi_incumbent_augmented",
+    "scip_original",
+    "scip_incumbent_augmented"
+  ],
+  "model": {
+    "model_class": "GasseGNN",
+    "hidden_dim": 32,
+    "num_layers": 2,
+    "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+    "model_version": "gasse_v2_alternating_prenorm"
+  },
+  "optimization": {
+    "batch_size": 1,
+    "learning_rate": 0.001,
+    "gradient_clip": 1,
+    "epochs": 100,
+    "patience": 100,
+    "seed": 42,
+    "num_workers": 0
+  },
+  "checkpoint_selection": {
+    "metric": "validation_weighted_bce",
+    "mode": "minimum",
+    "test_partition_access": "held_out_evaluation_only"
+  },
+  "threshold_selection": {
+    "method": "maximum_validation_f1",
+    "population": "common_validation_only",
+    "tie_break": "closest_to_0.5_then_lower",
+    "test_partition_access": "held_out_evaluation_only"
+  },
+  "comparison_controls": {
+    "independent_model_per_arm": true,
+    "initialization_seed_restarted_per_arm": true,
+    "equal_optimizer_steps_per_epoch": true,
+    "prenorm_policy": "solver_original_reference_reused_within_solver_pair",
+    "pos_weight_policy": "solver_original_training_labels_reused_within_solver_pair",
+    "validation_policy": "common_reference_shared_across_all_arms",
+    "test_access_policy": "held_out_not_loaded_during_training",
+    "threshold_selection_policy": "per_arm_common_validation_only"
+  },
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}

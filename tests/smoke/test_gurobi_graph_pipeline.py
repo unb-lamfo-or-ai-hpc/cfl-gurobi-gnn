@@ -136,7 +136,7 @@ def _write_graph_manifest(tmp_path: Path) -> tuple[Path, Path, object]:
         is_discrete=np.asarray([1.0, 0.0], dtype=np.float32),
     )
     constraint = SimpleNamespace(x=np.ones((1, 5), dtype=np.float32))
-    edge = SimpleNamespace(edge_index=np.asarray([[0, 1], [0, 0]]))
+    edge = SimpleNamespace(edge_index=np.asarray([[0, 1], [0, 0]]), edge_attr=np.ones((2, 1)))
 
     class FakeGraph:
         mip_gap = 0.05
