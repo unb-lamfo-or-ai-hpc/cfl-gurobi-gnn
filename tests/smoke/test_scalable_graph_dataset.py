@@ -133,4 +133,3 @@ def test_structural_audit_deduplicates_original_label_views(
     assert report["summary"]["label_views"] == 2
     assert report["summary"]["structural_graphs"] == 1
     assert structural[0]["label_solver"] == "gurobi"
-

@@ -50,4 +50,3 @@ srun python3 -m cfl_gnn.cli.build_scalable_gurobi_dataset \
     --output_dir "${SCALABLE_DATASET_DIR}" \
     --root_time_limit "${ROOT_TIME_LIMIT_SECONDS:-600}" \
     "${ARGS[@]}"
-

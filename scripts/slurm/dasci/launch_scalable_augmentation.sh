@@ -49,4 +49,3 @@ printf 'AUGMENTATION_JOB_ID=%s\n' "${AUGMENTATION_JOB_ID}"
 printf 'PARENT_GRAPH_JOB_ID=%s\n' "${PARENT_GRAPH_JOB_ID}"
 printf 'AUDIT_JOB_ID=%s\n' "${AUDIT_JOB_ID}"
 printf 'DATASET_JOB_ID=%s\n' "${DATASET_JOB_ID}"
-

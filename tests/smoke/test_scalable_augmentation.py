@@ -237,4 +237,3 @@ def test_audit_requires_symmetric_radii(
 
 def test_canonical_hash_is_order_independent() -> None:
     assert canonical_sha256({"a": 1, "b": 2}) == canonical_sha256({"b": 2, "a": 1})
-

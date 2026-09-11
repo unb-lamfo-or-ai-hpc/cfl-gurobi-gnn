@@ -219,6 +219,16 @@ def build_campaign_plan(
         raise ScalableAugmentationError("paired eligibility SHA-256 mismatch")
     policy = _load_experiment_policy(Path(experiment_config_path).resolve())
     _validate_policy(policy)
+    if float(time_limit_seconds) not in {3600.0, 14400.0}:
+        raise ScalableAugmentationError(
+            "derived solve time limit must be 3600 or 14400 seconds"
+        )
+    if int(node_limit) <= 0 or int(threads_per_candidate) != 1:
+        raise ScalableAugmentationError(
+            "derived solve requires a positive node limit and one thread"
+        )
+    if int(max_parallel_tasks) <= 0:
+        raise ScalableAugmentationError("max_parallel_tasks must be positive")
     requested = None if instances is None else set(instances)
     eligibility = _read_jsonl(eligibility_path)
     selected = []
@@ -749,4 +759,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
