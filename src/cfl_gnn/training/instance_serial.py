@@ -64,6 +64,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--expected_medium_graphs", type=int)
     parser.add_argument("--expected_hard_graphs", type=int)
     parser.add_argument(
+        "--maximum_label_mip_gap",
+        type=float,
+        help="Optional maximum relative MIP gap accepted by this run.",
+    )
+    parser.add_argument(
         "--require_full_epoch_budget",
         action="store_true",
         help="Fail unless every requested epoch is completed.",
@@ -92,6 +97,11 @@ def _validate_numeric_arguments(args: argparse.Namespace) -> None:
     )
     if any(value is not None and value < 0 for value in expectations):
         raise ValueError("expected graph counts must be nonnegative")
+    if (
+        args.maximum_label_mip_gap is not None
+        and not 0.0 <= args.maximum_label_mip_gap <= 1.0
+    ):
+        raise ValueError("maximum_label_mip_gap must be between zero and one")
     if args.require_full_epoch_budget and args.patience < args.epochs:
         raise ValueError(
             "patience must cover all epochs when the full epoch budget is required"
@@ -169,6 +179,15 @@ def _validate_expected_inventory(
             checks[f"{difficulty}_eligible_graph_count"] = (
                 observed_by_difficulty.get(difficulty, 0) == expected
             )
+    inadmissible_gap_ids: list[str] = []
+    if args.maximum_label_mip_gap is not None:
+        inadmissible_gap_ids = [
+            record.source_instance_id
+            for record in plan.audit.eligible
+            if record.mip_gap is None
+            or record.mip_gap > args.maximum_label_mip_gap
+        ]
+        checks["all_labels_within_maximum_mip_gap"] = not inadmissible_gap_ids
     if checks and not all(checks.values()):
         raise ValueError(
             "existing-graph inventory does not match the precommitted confirmation "
@@ -183,6 +202,8 @@ def _validate_expected_inventory(
             difficulty: observed_by_difficulty.get(difficulty, 0)
             for difficulty in ("easy", "medium", "hard")
         },
+        "maximum_label_mip_gap_relative": args.maximum_label_mip_gap,
+        "inadmissible_label_gap_instances": inadmissible_gap_ids,
         "checks": checks,
     }
 

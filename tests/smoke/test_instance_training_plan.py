@@ -185,6 +185,7 @@ def test_existing_graph_confirmation_inventory_is_exact() -> None:
         expected_easy_graphs=30,
         expected_medium_graphs=15,
         expected_hard_graphs=0,
+        maximum_label_mip_gap=0.1,
     )
     gate = _validate_expected_inventory(args, plan)
     assert gate["gate_status"] == "passed"
@@ -205,6 +206,44 @@ def test_existing_graph_confirmation_rejects_inventory_drift() -> None:
         expected_easy_graphs=30,
         expected_medium_graphs=15,
         expected_hard_graphs=0,
+        maximum_label_mip_gap=0.1,
+    )
+    with pytest.raises(ValueError, match="confirmation cohort"):
+        _validate_expected_inventory(args, plan)
+
+
+def test_existing_graph_confirmation_rejects_label_above_gap_ceiling() -> None:
+    records = (
+        _record("CFL_easy_instance_0", role="test", fold=0),
+        _record("CFL_easy_instance_1", role="validation", fold=1),
+        InstanceGraphRecord(
+            source_instance_id="CFL_medium_instance_0",
+            category="CFL_medium_instance",
+            difficulty="medium",
+            fold=2,
+            role="train",
+            graph_path=Path("/machine-specific/medium.pt"),
+            provenance_path=Path("/machine-specific/medium.provenance.json"),
+            label_source="incumbents.parquet",
+            mip_gap=0.11,
+            mip_gap_band="gap_le_20pct",
+        ),
+    )
+    plan = validate_instance_training_audit(
+        _audit(
+            label_policy="all_available",
+            manifest_size=90,
+            discovered_graphs=3,
+            eligible=records,
+        ),
+        development_only=True,
+    )
+    args = argparse.Namespace(
+        expected_graphs=None,
+        expected_easy_graphs=None,
+        expected_medium_graphs=None,
+        expected_hard_graphs=None,
+        maximum_label_mip_gap=0.1,
     )
     with pytest.raises(ValueError, match="confirmation cohort"):
         _validate_expected_inventory(args, plan)

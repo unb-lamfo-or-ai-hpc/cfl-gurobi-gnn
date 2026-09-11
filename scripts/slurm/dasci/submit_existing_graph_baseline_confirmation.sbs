@@ -50,6 +50,7 @@ srun python3 -m cfl_gnn.cli.train_instance_serial \
     --expected_easy_graphs 30 \
     --expected_medium_graphs 15 \
     --expected_hard_graphs 0 \
+    --maximum_label_mip_gap 0.10 \
     --require_full_epoch_budget \
     --device cuda \
     --clear_cache \

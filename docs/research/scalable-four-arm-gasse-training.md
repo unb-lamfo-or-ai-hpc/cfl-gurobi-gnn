@@ -41,7 +41,8 @@ The accelerated baseline uses only the parent-instance graphs that were
 already materialized in earlier rounds: 30 easy, 15 medium, and zero hard
 instances. The launcher fails closed unless this exact 45-graph inventory is
 observed. The `all_available` label policy is permitted only together with the
-explicit development-only flag.
+explicit development-only flag, and an additional gate rejects any label whose
+relative MIP gap exceeds the precommitted 10% ceiling.
 
 This 45-graph cohort is suitable for diagnosing optimization behavior over 100
 epochs and for confirming that training and validation curves are generated.

@@ -106,6 +106,7 @@ def test_existing_graph_confirmation_launcher_pins_inventory_and_epochs() -> Non
         "--expected_easy_graphs 30",
         "--expected_medium_graphs 15",
         "--expected_hard_graphs 0",
+        "--maximum_label_mip_gap 0.10",
         "--require_full_epoch_budget",
     ):
         assert fragment in text
