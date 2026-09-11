@@ -32,8 +32,10 @@ tasks use the same binary-variable local-branching operator and the same radius
 fractions. Each derived MILP is solved independently in a fresh process, with
 no parent incumbent, warm start, or hidden solver state supplied. The default
 per-candidate budget is 3,600 seconds; 14,400 seconds is reserved for an
-explicit rescue campaign. Terminal MIP gap and solver wall time remain the
-primary label-quality measurements.
+explicit rescue campaign. Because a solver-parent task resolves three radii
+serially, its Slurm wall-time accommodates three 14,400-second candidate
+budgets plus bounded orchestration overhead. Terminal MIP gap and solver wall
+time remain the primary label-quality measurements.
 
 The task array is resumable only when the generation report, independent solve
 report, and referenced artifacts still match their SHA-256 contracts. The

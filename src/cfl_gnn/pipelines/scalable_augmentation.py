@@ -441,6 +441,22 @@ def _generation_valid(
             or not provenance.is_file()
         ):
             return False, []
+        evidence = _read_json(provenance)
+        local_branching = evidence.get("local_branching", {})
+        encoded_output = evidence.get("output", {})
+        if (
+            evidence.get("solver") != task.get("solver")
+            or evidence.get("parent_instance_id")
+            != task.get("source_instance_id")
+            or evidence.get("role") != "train"
+            or encoded_output.get("file_name") != candidate.name
+            or encoded_output.get("sha256") != output.get("sha256")
+            or local_branching.get("constraint_sha256")
+            != output.get("constraint_sha256")
+            or int(local_branching.get("radius", -1))
+            != int(output.get("radius", -2))
+        ):
+            return False, []
         radii.append(int(output["radius"]))
     return True, sorted(radii)
 
@@ -454,7 +470,7 @@ def _solve_valid(task: Mapping[str, Any], directory: Path) -> bool:
     report = _read_json(report_path)
     solve_plan = _read_json(plan_path)
     metrics = _read_jsonl(metrics_path)
-    return bool(
+    mechanically_valid = bool(
         report.get("gate_status") == "passed"
         and report.get("solver") == task.get("solver")
         and report.get("contract_sha256") == solve_plan.get("contract_sha256")
@@ -467,6 +483,35 @@ def _solve_valid(task: Mapping[str, Any], directory: Path) -> bool:
             for item in metrics
         )
     )
+    if not mechanically_valid:
+        return False
+    artifact_directories = {
+        "solution": "solutions",
+        "incumbents": "incumbents",
+        "variable_order": "variable_orders",
+        "worker_log": "worker_logs",
+    }
+    for item in metrics:
+        artifacts = item.get("artifacts")
+        if not isinstance(artifacts, Mapping):
+            return False
+        for name, descriptor in artifacts.items():
+            if descriptor is None:
+                continue
+            if name not in artifact_directories or not isinstance(
+                descriptor, Mapping
+            ):
+                return False
+            file_name = str(descriptor.get("file_name", ""))
+            if Path(file_name).name != file_name:
+                return False
+            artifact = directory / artifact_directories[name] / file_name
+            if (
+                not artifact.is_file()
+                or sha256_file(artifact) != descriptor.get("sha256")
+            ):
+                return False
+    return True
 
 
 def execute_task(
@@ -490,6 +535,15 @@ def execute_task(
     task = tasks[task_index]
     if int(task["task_index"]) != task_index:
         raise ScalableAugmentationError("task identity mismatch")
+    experiment_config = Path(experiment_config_path).resolve()
+    if (
+        not experiment_config.is_file()
+        or sha256_file(experiment_config)
+        != plan["experiment_policy"]["experiment_config_sha256"]
+    ):
+        raise ScalableAugmentationError(
+            "experiment configuration is missing or changed"
+        )
     parent = Path(base_source_dir).resolve() / _safe_relative(
         task["parent_mip_relative_path"], field="parent MIP path"
     )
@@ -523,7 +577,7 @@ def execute_task(
             "--category", str(task["category"]),
             "--difficulty", str(task["difficulty"]),
             "--fold", str(task["fold"]),
-            "--config", str(Path(experiment_config_path).resolve()),
+            "--config", str(experiment_config),
             "--output_dir", str(variants),
         ]
         if overwrite:
@@ -539,7 +593,7 @@ def execute_task(
         "--solver", str(task["solver"]),
         "--candidate_dir", str(variants),
         "--output_dir", str(solves),
-        "--config", str(Path(experiment_config_path).resolve()),
+        "--config", str(experiment_config),
         "--time_limit", str(contract["time_limit_seconds_per_candidate"]),
         "--node_limit", str(contract["node_limit_per_candidate"]),
         "--threads_per_candidate", str(contract["threads_per_candidate"]),

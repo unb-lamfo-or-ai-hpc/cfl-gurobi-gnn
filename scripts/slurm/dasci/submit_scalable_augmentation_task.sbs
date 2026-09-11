@@ -3,7 +3,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=64G
-#SBATCH --time=04:15:00
+#SBATCH --time=12:30:00
 #SBATCH --output=slurm_cfl_aug_pair_%A_%a.out
 
 set -euo pipefail
