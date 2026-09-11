@@ -491,8 +491,21 @@ def build_plan(
     parent_manifest_path: Path,
 ) -> DerivedGraphPlan:
     config = load_experiment_config(config_path)
-    if {source.solver for source in sources} != set(SOLVERS) or len(sources) != 2:
-        raise DerivedGraphError("exactly one Gurobi and one SCIP source are required")
+    solver_counts = Counter(source.solver for source in sources)
+    if set(solver_counts) != set(SOLVERS):
+        raise DerivedGraphError(
+            "at least one Gurobi and one SCIP source are required"
+        )
+    source_identities = {
+        (
+            source.solver,
+            source.candidate_dir.resolve(),
+            source.solve_dir.resolve(),
+        )
+        for source in sources
+    }
+    if len(source_identities) != len(sources):
+        raise DerivedGraphError("duplicate derived source directory pair")
     parent_manifest = read_manifest(parent_manifest_path)
     parent_roles = {
         entry.source_instance_id: (
