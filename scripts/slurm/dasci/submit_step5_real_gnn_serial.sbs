@@ -7,7 +7,7 @@
 #SBATCH --time=16:00:00
 #SBATCH --output=slurm_real_gnn_%j.out
 
-echo "=== Entrenamiento GNN con Dataset Real (Neural Diving) ==="
+echo "=== Legacy GNN training with a real dataset ==="
 EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
 cd "$EXEC_DIR"
 export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
@@ -17,14 +17,14 @@ conda activate tfm_env
 
 MODULE_NAME="cfl_gnn.cli.train_serial"
 
-# Opción A: Teste
+# Option A: Small diagnostic configuration
 #srun python -m $MODULE_NAME \
 #    --easy_split 30 0 0 \
 #    --medium_split 15 10 5 \
 #    --hard_split 0 0 0 \
 #    --hidden_dim 64 --lr 0.00005 --grad_clip 1.0
 
-# Opción B: Escenario con full EASY y MEDIUM parcial
+# Option B: Full easy and partial medium legacy graph inventory
 srun python -m $MODULE_NAME \
     --experiment_name run_02_partial_dataset \
     --easy_split 4605 986 988 \
@@ -37,4 +37,5 @@ srun python -m $MODULE_NAME \
     --patience 20 \
     --clear_cache
 
-echo "=== Job Finalizado ==="
+echo "=== Job finished ==="
+

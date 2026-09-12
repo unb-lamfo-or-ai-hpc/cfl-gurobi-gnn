@@ -1,5 +1,10 @@
 # Gurobi-authoritative graph pipeline
 
+> This document records the PR43 root-parity gate. Later confirmation adds
+> independent full-precision label validation and outcome-free encoded graph
+> descriptors; see [PR49 confirmation validation](pr49-confirmation-validation.md).
+> Historical single-parent parity does not certify every subsequent graph.
+
 ## Methodological role
 
 The recovered graph stage creates exactly one bipartite graph for each

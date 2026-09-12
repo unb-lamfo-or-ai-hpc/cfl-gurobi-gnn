@@ -1,7 +1,9 @@
 """
 Neural Diving — Parallel Training Script (DDP Multi-GPU) v5
 ===========================================================
-Multi-graph paradigm: each incumbent solution is an independent training graph.
+Historical incumbent-conditioned graph interface; observations from one parent
+are not independent experimental units. Current confirmation uses parent-aware
+manifests through gasse_reconnected, not this module's random-split CLI.
 
 V5 Updates:
   - Global F1, Precision, Recall mapped safely via DDP all_reduce.
@@ -227,18 +229,18 @@ def main():
             break
 
     # =======================================================
-    # WARM-START DDP (Reinitiate from checkpoint before DDP)
+    # Reload model weights before DDP (optimizer state is not restored).
     # =======================================================
     model_checkpoint = os.path.join(output_dir, "best_model.pt")
     if os.path.exists(model_checkpoint):
-        if is_master: logger.info(f"Checkpoint encontrado en {model_checkpoint}. Cargando pesos...")
-        # Nota: Los modelos DDP guardados usan el prefijo 'module.'. Al cargarlos 
-        # en el modelo base antes de DDP, limpiamos las llaves por seguridad:
+        if is_master: logger.info(f"Checkpoint found at {model_checkpoint}. Loading model weights...")
+        # Saved DDP keys may use the 'module.' prefix. Remove it before loading
+        # the base model prior to wrapping it in DDP.
         state_dict = torch.load(model_checkpoint, map_location=device, weights_only=True)
         clean_state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
         model.load_state_dict(clean_state_dict)
     else:
-        if is_master: logger.info("No se encontró checkpoint previo. Iniciando desde cero.")
+        if is_master: logger.info("No previous checkpoint found. Initializing a new training run.")
     # ====================================================================
 
     model = DDP(model, device_ids=[local_rank])
@@ -256,7 +258,7 @@ def main():
         hist_train_loss, hist_val_loss = [], []
         hist_acc, hist_f1, hist_prec, hist_rec = [], [], [], []
         
-        # Preparar el log CSV
+        # Initialize the epoch-level CSV log.
         log_path = os.path.join(output_dir, "training_log_parallel.csv")
         log_file = open(log_path, 'w')
         log_file.write("epoch,train_loss,val_loss,acc,f1,prec,rec\n")
@@ -279,7 +281,7 @@ def main():
         if is_master:
             acc, prec, rec, f1 = calc_metrics(tp, tn, fp, fn)
             
-            # Guardar históricos
+            # Retain epoch histories.
             hist_train_loss.append(train_loss)
             hist_val_loss.append(val_loss if val_loader else train_loss)
             hist_acc.append(acc)
@@ -294,7 +296,7 @@ def main():
                 torch.save(model.module.state_dict(), os.path.join(output_dir, "best_model.pt"))
                 marker = " -> Best"
                 
-                # Actualizar información de la mejor época para el JSON
+                # Record metrics for the validation-selected checkpoint.
                 best_epoch_info = {
                     "best_epoch": epoch + 1,
                     "val_loss": val_loss,
@@ -310,7 +312,7 @@ def main():
             log_file.write(f"{epoch+1},{train_loss},{val_loss},{acc},{f1},{prec},{rec}\n")
             log_file.flush()
 
-            # --- GENERACIÓN DEL DASHBOARD VISUAL (2x2) ---
+            # Generate the four-panel learning diagnostic.
             fig, axes = plt.subplots(2, 2, figsize=(14, 10))
             epochs_range = range(1, len(hist_train_loss) + 1)
             
@@ -359,7 +361,7 @@ def main():
     if is_master:
         log_file.close()
         
-        # --- GENERACIÓN DEL JSON DE RESUMEN ---
+        # Write the experiment summary.
         summary = {
             "experiment_name": args.experiment_name,
             "hyperparameters": {
@@ -373,7 +375,7 @@ def main():
             import json
             json.dump(summary, f, indent=4)
         
-        logger.info(f"Dashboard y JSON de resumen guardados en: {output_dir}")
+        logger.info(f"Dashboard and JSON summary saved to: {output_dir}")
         logger.info("Parallel training complete.")
 
     dist.barrier()
@@ -381,3 +383,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
