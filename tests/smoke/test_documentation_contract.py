@@ -39,7 +39,10 @@ def test_readme_distinguishes_confirmation_from_historical_routes():
 
 
 def test_readme_and_current_guide_relative_links_resolve():
-    documents = list(ROOT.rglob("README.md"))
+    # Do not traverse large generated datasets, model stores, or local environments.
+    documents = [ROOT / "README.md", ROOT / "data/README.md"]
+    for directory in ("configs", "docs", "notebooks", "sandbox", "scripts", "src", "tests", "tools"):
+        documents.extend((ROOT / directory).rglob("README.md"))
     documents += [
         ROOT / "docs/architecture.md",
         ROOT / "docs/reproducibility.md",
@@ -67,6 +70,7 @@ def test_translated_legacy_launchers_remain_lf_only():
         "submit_step5_real_gnn_serial.sbs",
         "submit_step6_real_gnn_parallel.sbs",
         "submit_step7_miphints_generator.sbs",
+        "submit_step8_gurobi_hpc.sbs",
         "submit_step9_evaluation.sbs",
         "submit_toy_gnn.sbs",
     )
@@ -74,3 +78,4 @@ def test_translated_legacy_launchers_remain_lf_only():
         payload = (ROOT / "scripts/slurm/dasci" / name).read_bytes()
         assert payload.startswith(b"#!/bin/bash\n")
         assert b"\r" not in payload
+
