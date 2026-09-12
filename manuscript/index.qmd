@@ -1,6 +1,40 @@
 ---
 title: "Graph Neural Guidance for Capacitated Facility Location: A Reproducible Experimental Protocol"
-author: []
+author:
+  - name: Victor Rafael Rezende Celestino
+    orcid: 0000-0001-5913-2997
+    email: vrcelestino@unb.br
+    institute: 1
+    affiliations:
+      - id: unb
+        name: University of Brasilia
+  - name: Víctor Alejandro Vargas-Pérez
+    orcid: 0000-0001-6803-3608
+    email: victorvp@go.ugr.es
+    institute: 2
+    affiliations:
+      - id: ugr
+        name: Data Science and Computer Intelligence Institute, University of Granada
+  - name: Óscar Cordón García
+    orcid: 0000-0001-5112-5629
+    email: ocordon@decsai.ugr.es
+    institute: 2
+    affiliations:
+      - ref: ugr
+  - name: Pedro González García
+    orcid: 0000-0002-6733-3868
+    email: pglez@ujaen.es
+    institute: 3
+    affiliations:
+      - id: uja
+        name: Data Science and Computer Intelligence Institute, University of Jaén
+sbc-affiliations:
+  - text: University of Brasilia
+    email: vrcelestino@unb.br
+  - text: "Data Science and Computer Intelligence Institute, University of Granada"
+    email: "victorvp@go.ugr.es, ocordon@decsai.ugr.es"
+  - text: "Data Science and Computer Intelligence Institute, University of Jaén"
+    email: pglez@ujaen.es
 abstract: |
   Learning-assisted mixed-integer optimization requires a clear distinction between the mathematical instance, its solution labels, and the intervention applied to a solver. This manuscript develops an experimental protocol for capacitated facility location using variable-constraint bipartite graphs and a Gasse-inspired graph neural network. Gurobi provides the authoritative model interpretation and root-relaxation features; Gurobi and SCIP supply separately identified solution labels. A symmetric local-branching operator generates training-only synthetic instances from feasible incumbents. The design contrasts original-only and augmented training within each solver-labelled population, while retaining parent-level partitions and independent validation of derived labels. A separate 42-parent confirmation cohort is specified for 100 training epochs with seed 42. Nonbinding Gurobi variable hints are the primary guidance mechanism, and terminal MIP gap and optimization wall time are the primary outcomes. This development-stage draft presents the mathematical formulation, implementation contracts, and analysis plan. The confirmation campaign remains pending acceptance; no empirical improvement, complete 90-instance validation, or achieved technology-readiness level is claimed.
 ---
@@ -127,12 +161,16 @@ Completion requires independent source and label acceptance, strict graph audits
 
 # Reproducibility and availability
 
-The implementation is maintained in the [CFL-Gurobi-GNN repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn). The root README preserves the MILPBench instance-download links. Raw models, solver licences, host paths, checkpoints, and full solution trajectories are not bundled into this manuscript website. Public access to a manuscript does not imply public access to a private source repository or redistribution rights for benchmark data.
+The implementation is maintained in the public [CFL-Gurobi-GNN repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn). The root README preserves the MILPBench instance-download links. Raw models, solver licences, host paths, checkpoints, and full solution trajectories are not bundled into this manuscript website. Public access to source code does not imply redistribution rights for benchmark data.
 
-The manuscript reuses the supplied [quarto-sbc template](https://github.com/cvictorr2508/quarto-sbc), version 0.2.0, pinned by commit. Its original licence and SBC third-party notices accompany the source. A static Quarto Manuscript build produces HTML and PDF without executing the research pipeline. Audited empirical assets can be added later with source hashes and captions that identify their cohort and development status. Authorship, affiliations, funding, and the intended venue remain to be confirmed before submission; no attribution is inferred from repository access.
+The manuscript reuses the supplied [quarto-sbc template](https://github.com/cvictorr2508/quarto-sbc), version 0.2.0, pinned by commit. Its original licence and SBC third-party notices accompany the source. A static Quarto Manuscript build produces HTML and PDF without executing the research pipeline. Audited empirical assets can be added later with source hashes and captions that identify their cohort and development status. Author order, affiliations, ORCID identifiers, and email addresses were supplied by the corresponding project contributor. Funding, contribution statements, and the intended journal remain to be confirmed before submission. The current SBC presentation is a working format, not an Elsevier submission template.
 
 # Conclusion
 
 This protocol separates solver-labelled supervision, mathematical augmentation, graph representation, and solver intervention in a CFL research pipeline. Its central safeguards are parent-level partitioning, independent label validation, a common Gurobi graph authority, versioned neural computation, and paired outcomes with explicit censoring. The present contribution is an inspectable experimental specification and publication artifact. Whether augmentation or neural hints improve optimization remains to be established by the pending campaign and, subsequently, by the deferred full-population study.
+
+# Declaration of generative AI and AI-assisted technologies in the manuscript preparation process {.unnumbered}
+
+During the preparation of this work, the authors used Gurobot, Gemini 3.1 Pro, and ChatGPT Codex with models 5.6 Sol and 6.0 Astra, to assist with the codebase implementation and to support the preparation, structuring, language refinement, and data visualization of this manuscript. After using these tools/services, the authors reviewed and edited the content as needed and took full responsibility for the content of the published article.
 
 # References

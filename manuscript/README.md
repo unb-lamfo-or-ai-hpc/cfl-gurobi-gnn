@@ -36,9 +36,9 @@ deploys the same isolated output directory to GitHub Pages. Manual dispatch also
 requires the develop branch. Main is not a second publication source, avoiding
 an older main checkout replacing a newer reviewed draft.
 
-One repository-administrator setup may be necessary: **Settings > Pages > Build
-and deployment > Source: GitHub Actions**. Permit deployments from develop in
-the `github-pages` environment. The intended URL is
+The repository owner reports public visibility and **Settings > Pages > Build
+and deployment > Source: GitHub Actions** enabled. Permit deployments from develop
+in the `github-pages` environment. The intended URL is
 <https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/>; this is not a claim that
 the site is already live. Successful deployment and an HTTP check are required.
 GitHub Pages availability for a private repository depends on the organization's
@@ -72,17 +72,20 @@ again and inspect the figures and every PDF page. Do not reuse the earlier
 rejected or zero-root-feature outputs as confirmation evidence. The full90
 campaign and manuscript extension remain deferred.
 
-Authorship, affiliations, funding, target venue, data-access arrangements, and
-disclosure requirements require editorial confirmation before submission. The
-current empty author list is deliberate, not an anonymous-submission claim.
-The SBC layout does not imply acceptance by a venue or compliance with its
-current page-limit/language rules.
+The four authors, their order, affiliations, ORCIDs and email addresses are
+user-approved and rendered in HTML and PDF. The supplied AI declaration appears
+verbatim immediately before References. Funding, contributions, target venue,
+data-access arrangements and remaining disclosures still require editorial review.
+The [editorial plan](editorial-plan.md) caps the body at 20 pages plus references
+and lists three Elsevier candidates. SBC remains the working layout, not a claim
+of compliance with a selected Elsevier journal's submission format.
 
 ## Bibliography and template provenance
 
 [Reference review](reference-review.md) records the cited subset, source checks,
-exclusions, and proposed Zotero collection. It is a targeted relevance assessment,
-not a systematic literature review. Local Zotero writes have not been performed.
+exclusions, and the authorized eight-item Zotero collection. It is a targeted
+relevance assessment, not a systematic literature review. Six existing items
+were linked and two missing references imported without changing shared metadata.
 
 [Template provenance](template-provenance/README.md) records the exact upstream
 revision and hashes. Its MIT notice applies to upstream original code; the SBC

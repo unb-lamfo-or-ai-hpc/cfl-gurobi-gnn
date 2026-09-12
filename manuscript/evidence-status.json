@@ -5,7 +5,15 @@
   "development_only": true,
   "scientific_reporting_eligible": false,
   "empirical_results_included": false,
-  "authorship_confirmed": false,
+  "authorship_confirmed": true,
+  "authorship_source": "user_supplied_author_order_orcids_affiliations_and_emails",
+  "editorial_plan": {
+    "maximum_body_pages_including_front_matter_and_declarations": 20,
+    "references_excluded_from_page_budget": true,
+    "journal_selected": false,
+    "target_publisher": "Elsevier",
+    "current_layout": "SBC_working_draft_not_Elsevier_submission_format"
+  },
   "source_base_commit": "a86ab1088d0948e6d1f6c98d571c411bcd8e94fb",
   "confirmation_protocol": {
     "parents": 42,

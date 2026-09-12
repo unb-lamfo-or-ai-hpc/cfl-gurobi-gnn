@@ -11,6 +11,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MANUSCRIPT = ROOT / "manuscript"
+AUTHORS = (
+    ("Victor Rafael Rezende Celestino", "0000-0001-5913-2997", "vrcelestino@unb.br"),
+    ("Víctor Alejandro Vargas-Pérez", "0000-0001-6803-3608", "victorvp@go.ugr.es"),
+    ("Óscar Cordón García", "0000-0001-5112-5629", "ocordon@decsai.ugr.es"),
+    ("Pedro González García", "0000-0002-6733-3868", "pglez@ujaen.es"),
+)
+AI_HEADING = "Declaration of generative AI and AI-assisted technologies in the manuscript preparation process"
+AI_DISCLOSURE = (
+    "During the preparation of this work, the authors used Gurobot, Gemini 3.1 Pro, "
+    "and ChatGPT Codex with models 5.6 Sol and 6.0 Astra, to assist with the codebase "
+    "implementation and to support the preparation, structuring, language refinement, "
+    "and data visualization of this manuscript. After using these tools/services, "
+    "the authors reviewed and edited the content as needed and took full "
+    "responsibility for the content of the published article."
+)
 
 
 def check_source(root: Path = MANUSCRIPT) -> list[str]:
@@ -42,8 +57,19 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("scientific_claim_without_review")
     if evidence.get("empirical_results_included") is not False or evidence.get("empirical_assets") != []:
         failures.append("empirical_assets_require_dedicated_review")
-    if evidence.get("authorship_confirmed") is not False or "author: []" not in article:
-        failures.append("authorship_requires_editorial_confirmation")
+    front = article.split("---", 2)[1]
+    author_records = re.findall(r"  - name: (.+)\n    orcid: (.+)\n    email: (.+)", front)
+    if evidence.get("authorship_confirmed") is not True or tuple(author_records) != AUTHORS:
+        failures.append("confirmed_authorship_mismatch")
+    for affiliation in ("University of Brasilia", "Data Science and Computer Intelligence Institute, University of Granada",
+                        "Data Science and Computer Intelligence Institute, University of Jaén"):
+        if affiliation not in front:
+            failures.append("confirmed_affiliation_missing")
+    expected_tail = f"# {AI_HEADING} {{.unnumbered}}\n\n{AI_DISCLOSURE}\n\n# References"
+    if not article.rstrip().endswith(expected_tail):
+        failures.append("ai_declaration_missing_changed_or_not_before_references")
+    if evidence.get("editorial_plan", {}).get("maximum_body_pages_including_front_matter_and_declarations") != 20:
+        failures.append("editorial_page_budget_changed")
     expected = {"parents": 42, "easy": 30, "medium": 12, "hard": 0,
                 "train": 24, "validation": 10, "test": 8, "seed": 42, "epochs": 100,
                 "maximum_label_gap_relative": 0.1}
@@ -86,6 +112,11 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
     content = html.read_text(encoding="utf-8")
     if "empirical confirmation pending" not in content:
         failures.append("rendered_status_missing")
+    for _, orcid, email in AUTHORS:
+        if orcid not in content or email not in content:
+            failures.append("rendered_author_identity_missing")
+    if AI_HEADING not in content:
+        failures.append("rendered_ai_declaration_missing")
     if not pdf.read_bytes().startswith(b"%PDF-"):
         failures.append("invalid_pdf_header")
     for key in ("gasse2019", "cappart2021", "ding2020", "khalil2022", "canturk2024",
@@ -111,6 +142,17 @@ def check_pdf_text(path: Path) -> list[str]:
             failures.append(f"pdf_text_missing:{expected}")
     if "??" in text or "[?]" in text:
         failures.append("unresolved_pdf_reference")
+    normalized = " ".join(text.split())
+    for _, _, email in AUTHORS:
+        if email not in normalized:
+            failures.append(f"pdf_author_email_missing:{email}")
+    if "Gurobot, Gemini 3.1 Pro" not in normalized:
+        failures.append("pdf_ai_declaration_missing")
+    # pdftotext separates pages with form feeds. Count conservatively, including
+    # the page on which References begins, when it also contains manuscript text.
+    references = re.search(r"(?m)(?:^|[\n\f])[ \t]*(References)[ \t]*(?:\n|$)", text)
+    if "\f" in text and references and text[:references.start(1)].count("\f") + 1 > 20:
+        failures.append("manuscript_body_exceeds_twenty_pages")
     if re.search(r"/raid/|/home/|[A-Za-z]:\\|WLSSecret|LicenseID", text):
         failures.append("private_pdf_content")
     return failures

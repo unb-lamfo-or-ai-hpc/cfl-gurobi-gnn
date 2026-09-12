@@ -23,6 +23,12 @@ $if(natbib)$
 \setcitestyle{authoryear,round,aysep={ }}
 $endif$
 \usepackage{hyperref}
+% A text-based ORCID link keeps full identifiers accessible without a TikZ
+% dependency. The requested macro name is retained; no unofficial logo is used.
+\providecommand{\orcidlink}[1]{\href{https://orcid.org/#1}{\textnormal{\scriptsize ORCID: #1}}}
+% SBC uses address rather than institution; this semantic wrapper preserves
+% the requested institution markup without replacing the vendored style.
+\providecommand{\institution}[1]{#1}
 % Keep hyperlinks printable; supply useful PDF metadata for this draft.
 \hypersetup{hidelinks,pdftitle={$title$}}
 $if(natbib)$
@@ -43,7 +49,8 @@ $if(title)$
 $endif$
 
 $if(by-author)$
-\author{$for(by-author)$$by-author.name.literal$$if(by-author.metadata.institute)$\inst{$by-author.metadata.institute$}$endif$$sep$, $endfor$}
+\author{$for(by-author)$$by-author.name.literal$$if(by-author.orcid)$\,\orcidlink{$by-author.orcid$}$endif$$if(by-author.metadata.institute)$\inst{$by-author.metadata.institute$}$endif$$sep$\\
+$endfor$}
 $else$
 $if(author)$
 \author{$for(author)$$author$$sep$, $endfor$}
@@ -51,7 +58,7 @@ $endif$
 $endif$
 
 $if(sbc-affiliations)$
-\address{$for(sbc-affiliations)$$sbc-affiliations.text$$if(sbc-affiliations.email)$\email{$sbc-affiliations.email$}$endif$$sep$
+\address{$for(sbc-affiliations)$\institution{\parbox[t]{0.90\textwidth}{\centering $sbc-affiliations.text$}}$if(sbc-affiliations.email)$\email{$sbc-affiliations.email$}$endif$$sep$
 \nextinstitute
 $endfor$}
 $else$

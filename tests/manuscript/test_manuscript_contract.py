@@ -31,6 +31,21 @@ class ManuscriptContractTests(unittest.TestCase):
             stream.write("\n@invented2026\n")
         self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
 
+    def test_author_order_and_orcid_are_frozen(self):
+        path = self.root / "index.qmd"
+        path.write_text(path.read_text(encoding="utf-8").replace("0000-0001-5913-2997", "0000-0000-0000-0000"), encoding="utf-8")
+        self.assertIn("confirmed_authorship_mismatch", CHECK.check_source(self.root))
+
+    def test_declaration_is_exact_and_immediately_before_references(self):
+        path = self.root / "index.qmd"
+        path.write_text(path.read_text(encoding="utf-8").replace("# References", "# Additional section\n\n# References"), encoding="utf-8")
+        self.assertIn("ai_declaration_missing_changed_or_not_before_references", CHECK.check_source(self.root))
+
+    def test_twenty_page_body_limit(self):
+        path = self.root / "text.txt"
+        path.write_text(("Body\f" * 20) + "References\n", encoding="utf-8")
+        self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
+
     def test_empirical_claim_fails(self):
         path = self.root / "evidence-status.json"
         data = json.loads(path.read_text(encoding="utf-8"))

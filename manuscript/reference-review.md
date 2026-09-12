@@ -1,4 +1,4 @@
-# Reference selection and proposed Zotero collection
+# Reference selection and Zotero collection
 
 Review date: 12 September 2026. The user supplied 41 bibliography entries exported
 from Zotero. Selection below is based on relevance to the actual study, supplied
@@ -10,7 +10,8 @@ The Zotero skill status helper encountered a profile-access error, but subsequen
 read-only searches and selected BibTeX exports succeeded. `references.bib`
 contains the eight works actually cited, with publisher/arXiv metadata taking
 precedence over incomplete local exports. It is not an unmodified library export.
-No library record was changed. Citation keys in that file are manuscript-local
+At the initial review no library record was changed. The subsequent authorized
+collection update is recorded below. Citation keys in that file are manuscript-local
 and must not be mistaken for Zotero item keys.
 Accented names use TeX escapes in BibTeX so the template's classic BibTeX engine
 does not split UTF-8 characters when abbreviating initials. The rendered names
@@ -18,15 +19,17 @@ retain their diacritics in both formats.
 
 | Manuscript key | Existing Zotero item key | Reconciliation |
 |:--|:--|:--|
+| gasse2019 | QQCGJX5N | Imported after DOI/title search; mandatory arXiv v3 URL and complete five-author list |
+| cappart2021 | VJW42H7B | Imported after DOI/title search; IJCAI DOI, pages and complete six-author list |
 | ding2020 | JDRQIY4P | Matched title/authors/year; publisher supplies pages |
 | khalil2022 | BUGJ8ZVY | Matched DOI; publisher supplies complete journal metadata |
 | canturk2024 | FZ979RLZ | Matched title/authors/year |
 | fischetti2003 | CE68X9VZ | Matched DOI; local conference-paper type differs from publisher journal record |
 | nair2020 | CP86X653 | Matched arXiv v3; local export has only three authors; full authorship and first-submission/revision dates restored from arXiv in manuscript only |
+| gurobi2026 | 7R3T72H3 | Existing reference manual reused; manuscript cites the specific variable-attribute documentation section |
 
-Gasse and Cappart were not returned by the targeted local title/author searches;
-that is not proof of absence from every synced/group library. The mandatory
-Gasse v3 record is verified against arXiv. Recheck DOI identity before any import.
+Gasse and Cappart were not returned by targeted DOI/title/author searches in
+My Library before import. This is not a claim about every group library.
 
 ## Cited subset
 
@@ -90,12 +93,19 @@ scientifically unsound. Reconsider them only when a specific claim needs them.
 | Zhou et al. (2020), GNN review | Broad background duplication; supplied year/DOI would need publication-level reconciliation if cited |
 | Zhou et al. (2025), subgraph branching | No subgraph branching-policy claim |
 
-## Collection proposal, not a library mutation
+## Authorized collection update, 12 September 2026
 
-Proposed collection: **CFL-GNN - Manuscript - Cited References** in My Library.
-It should contain only the eight currently cited works. Once the destination is
-confirmed and Zotero is reachable, match existing items by DOI or exact URL/title
-and add collection membership without duplicating records. Import only genuinely
-missing items from `references.bib`. Do not import the entire supplied list or
-change existing library metadata silently. This proposal has not created a
-collection or added any records.
+The user created **CFL-GNN - Manuscript - Cited References** in My Library and
+authorized its population. Destination key: `NNPXWSYK` (local library1,
+collection72). Six existing items were linked using Zotero's client API;
+their bibliographic metadata and prior collection memberships were preserved.
+Only Gasse and Cappart were imported through the connector after verifying the
+selected destination. Read-back through the local API confirmed exactly eight
+regular items in the collection, matching the table above.
+
+The local `/api/` is read-only; membership writes used the supported Run
+JavaScript interface, and the two imports used the connector. No attachments,
+notes or unrelated collections were imported, deleted or reorganized. Existing
+metadata discrepancies remain explicit; the manuscript bibliography is not a
+blind export of those records. Future citations require a corresponding reviewed
+collection update, rather than importing the entire supplied reading list.
