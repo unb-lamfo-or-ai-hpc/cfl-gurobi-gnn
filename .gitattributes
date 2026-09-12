@@ -1,1 +1,8 @@
 *.sbs text eol=lf
+
+
+# Preserve byte-stable manuscript sources across Windows and Linux checkouts.
+manuscript/** text eol=lf
+scripts/manuscript/** text eol=lf
+tests/manuscript/** text eol=lf
+.github/workflows/manuscript.yml text eol=lf

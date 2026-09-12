@@ -1,0 +1,28 @@
+project:
+  type: manuscript
+  output-dir: _manuscript
+  render:
+    - index.qmd
+
+manuscript:
+  article: index.qmd
+  notebooks: []
+  code-links: false
+  meca-bundle: false
+
+execute:
+  enabled: false
+  freeze: true
+
+lang: en
+bibliography: references.bib
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+  sbc-pdf: default
+
+website:
+  site-url: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/
+  description: Development-stage research manuscript; empirical confirmation is pending.

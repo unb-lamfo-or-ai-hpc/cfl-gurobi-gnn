@@ -1,0 +1,33 @@
+{
+  "repository": "https://github.com/cvictorr2508/quarto-sbc",
+  "upstream_commit": "88eaa11eeee9f86cd8594466e4644b321c8d7b75",
+  "version": "0.2.0",
+  "modifications": "The adapter imports calc for Pandoc 3.10 table widths, hides hyperlink boxes, sets PDF title metadata, and suppresses an orphan institution marker when affiliations are absent. SBC style, extension metadata, licence and upstream provenance resources remain unchanged. Article, project configuration and workflow are adapted separately.",
+  "files": [
+    {
+      "local_path": "_extensions/sbc/_extension.yml",
+      "sha256": "990a1ef787f423b0ef46529b1f78a47f48e137ff39c654b99450e4bd8a265377"
+    },
+    {
+      "local_path": "_extensions/sbc/sbc-template.sty",
+      "sha256": "e7b92596b4bb437cf819173990bb1f1b72db90f7ba1f1538e411a0acc154d3d4"
+    },
+    {
+      "local_path": "_extensions/sbc/template.tex",
+      "upstream_sha256": "70154f79e2b688a98516dfe765ac56f2aa25da56a7b83972ff35347df13dcdb5",
+      "sha256": "0b6654959a92f6c13080d2619649142504a472b40a82c954118cad45fc3a1795"
+    },
+    {
+      "local_path": "template-provenance/LICENSE.quarto-sbc",
+      "sha256": "bd7fa996d713603c27e6686cbdda9f5548fd1704f13eb5c329ae88a33c76dedb"
+    },
+    {
+      "local_path": "template-provenance/SBC_TEMPLATE_PROVENANCE.md",
+      "sha256": "2d4e0adb17fbfbe9bcf72de6d8202969403e1cbc8d55e78fc586483b190e0060"
+    },
+    {
+      "local_path": "template-provenance/THIRD_PARTY_NOTICES.md",
+      "sha256": "6a4c790f2128a0b12d8d0b51c2263545e87eb2658dbe2add44847769eef62331"
+    }
+  ]
+}

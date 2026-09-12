@@ -1,0 +1,76 @@
+name: Manuscript
+
+on:
+  pull_request:
+    paths:
+      - 'manuscript/**'
+      - 'scripts/manuscript/**'
+      - 'tests/manuscript/**'
+      - '.github/workflows/manuscript.yml'
+  push:
+    branches: [develop]
+    paths:
+      - 'manuscript/**'
+      - 'scripts/manuscript/**'
+      - 'tests/manuscript/**'
+      - '.github/workflows/manuscript.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: manuscript-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: '1.10.18'
+          tinytex: true
+      - name: Validate static sources and evidence boundaries
+        run: |
+          python scripts/manuscript/check_manuscript.py
+          python -m unittest discover -s tests/manuscript -v
+      - name: Render the supplied SBC manuscript template
+        run: quarto render manuscript --no-execute
+      - name: Validate publication outputs
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes poppler-utils
+          pdftotext -layout manuscript/_manuscript/index.pdf manuscript-pdf-text.txt
+          python scripts/manuscript/check_manuscript.py --rendered --pdf-text manuscript-pdf-text.txt
+      - name: Preserve HTML and PDF for editorial inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: manuscript-preview
+          path: manuscript/_manuscript
+          if-no-files-found: error
+      - name: Stage reviewed-branch Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: manuscript/_manuscript
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
+    needs: render
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Publish the manuscript only
+        id: deployment
+        uses: actions/deploy-pages@v4

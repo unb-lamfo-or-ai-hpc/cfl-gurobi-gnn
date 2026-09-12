@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-09-12",
+  "manuscript_status": "development_protocol_draft",
+  "development_only": true,
+  "scientific_reporting_eligible": false,
+  "empirical_results_included": false,
+  "authorship_confirmed": false,
+  "source_base_commit": "a86ab1088d0948e6d1f6c98d571c411bcd8e94fb",
+  "confirmation_protocol": {
+    "parents": 42,
+    "easy": 30,
+    "medium": 12,
+    "hard": 0,
+    "train": 24,
+    "validation": 10,
+    "test": 8,
+    "seed": 42,
+    "epochs": 100,
+    "maximum_label_gap_relative": 0.1,
+    "execution_contract_sha256": "27273b1baf3f46e27b229055cfdb1ca41ea2018ac40a7952e0f780dda9da0f7a"
+  },
+  "acceptance": {
+    "complete_source_label_bundle": "pending",
+    "strict_42_graph_bundle": "pending",
+    "confirmation_training_100_epochs": "pending",
+    "held_out_confirmation_evaluation": "pending",
+    "paired_four_arm_comparison": "pending",
+    "full_90_parent_campaign": "deferred"
+  },
+  "empirical_assets": [],
+  "source_scope": "versioned protocol plus user-reported execution status; no final campaign receipts imported"
+}
