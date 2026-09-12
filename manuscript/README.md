@@ -9,7 +9,8 @@ The current article is a **development protocol, not a completed empirical study
 
 Requirements: Quarto 1.10.18, a working TeX distribution with the packages used
 by the SBC extension, and Python 3.10 or later for the standard-library checks.
-GitHub Actions installs TinyTeX and `orcidlink` (including its TikZ dependencies).
+GitHub Actions installs TinyTeX; Quarto automatically installs missing packages,
+including `orcidlink` and its TikZ dependencies, through that private runtime.
 For an existing TeX Live installation, use `tlmgr install orcidlink` if needed.
 No Gurobi, SCIP, Torch, GPU, or HPC access is
 needed to render this article. Do not install the research runtime for this task.
