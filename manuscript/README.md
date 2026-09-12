@@ -9,7 +9,9 @@ The current article is a **development protocol, not a completed empirical study
 
 Requirements: Quarto 1.10.18, a working TeX distribution with the packages used
 by the SBC extension, and Python 3.10 or later for the standard-library checks.
-GitHub Actions installs TinyTeX. No Gurobi, SCIP, Torch, GPU, or HPC access is
+GitHub Actions installs TinyTeX and `orcidlink` (including its TikZ dependencies).
+For an existing TeX Live installation, use `tlmgr install orcidlink` if needed.
+No Gurobi, SCIP, Torch, GPU, or HPC access is
 needed to render this article. Do not install the research runtime for this task.
 
 From the repository root:
@@ -83,9 +85,13 @@ of compliance with a selected Elsevier journal's submission format.
 ## Bibliography and template provenance
 
 [Reference review](reference-review.md) records the cited subset, source checks,
-exclusions, and the authorized eight-item Zotero collection. It is a targeted
+exclusions, and the authorized fifteen-item Zotero collection. It is a targeted
 relevance assessment, not a systematic literature review. Six existing items
 were linked and two missing references imported without changing shared metadata.
+The owner subsequently added seven items, all now cited with explicit scope
+distinctions. The three L2O sources frame the study; four additional GNN sources
+distinguish learning targets and expressivity. See the recorded
+[Zotero JavaScript](zotero-developer-script.md) for the earlier membership update.
 
 [Template provenance](template-provenance/README.md) records the exact upstream
 revision and hashes. Its MIT notice applies to upstream original code; the SBC

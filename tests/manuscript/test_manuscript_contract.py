@@ -36,6 +36,21 @@ class ManuscriptContractTests(unittest.TestCase):
         path.write_text(path.read_text(encoding="utf-8").replace("0000-0001-5913-2997", "0000-0000-0000-0000"), encoding="utf-8")
         self.assertIn("confirmed_authorship_mismatch", CHECK.check_source(self.root))
 
+    def test_text_orcid_fallback_is_rejected(self):
+        path = self.root / "_extensions/sbc/template.tex"
+        path.write_text(path.read_text(encoding="utf-8").replace(r"\usepackage{orcidlink}", ""), encoding="utf-8")
+        self.assertIn("orcid_icon_package_missing_or_replaced", CHECK.check_source(self.root))
+
+    def test_pdf_does_not_print_orcid_identifiers(self):
+        path = self.root / "text.txt"
+        path.write_text("ORCID: 0000-0001-5913-2997", encoding="utf-8")
+        self.assertIn("orcid_identifier_printed_instead_of_icon", CHECK.check_pdf_text(path))
+
+    def test_l2o_context_is_required(self):
+        path = self.root / "index.qmd"
+        path.write_text(path.read_text(encoding="utf-8").replace("## Learning to Optimize", "## Other topic"), encoding="utf-8")
+        self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
+
     def test_declaration_is_exact_and_immediately_before_references(self):
         path = self.root / "index.qmd"
         path.write_text(path.read_text(encoding="utf-8").replace("# References", "# Additional section\n\n# References"), encoding="utf-8")

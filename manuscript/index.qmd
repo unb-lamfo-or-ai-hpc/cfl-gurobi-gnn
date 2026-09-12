@@ -49,7 +49,25 @@ The proposed contribution is a reproducible comparison protocol, not a new claim
 
 # Related work and methodological position
 
+## Learning to Optimize and the role of the solver
+
+Learning to Optimize (L2O) uses experience across optimization problems to learn parts of a solution method. @chen2022primer organize this perspective around learned algorithms, architectures, and training procedures, with particular attention to continuous optimization and distribution-dependent generalization. A method that exploits a recurring problem family need not transfer to arbitrary instances. In the present study, the easy/medium confirmation cohort therefore cannot support a claim about unseen hard CFL instances or other MILP families.
+
+@chen2024tutorial distinguish accelerating optimization algorithms, estimating solutions, and adapting optimization models to application objectives. Their treatment of mixed-integer optimization motivates combining a predictor with conventional solver components rather than treating a raw network output as a feasible, certified solution. Following the research project's L2O motivation, our focus is algorithm acceleration through solution-informed guidance: offline supervision predicts binary assignments, while the online solver interprets hints or candidate starts, checks feasibility, and maintains bounds. We do not learn the economic CFL objective, replace branch-and-bound, or differentiate through an optimization layer. Nor is the Adam optimizer used to train the GNN itself a learned optimizer.
+
+The distinction matters beyond linear models. @tang2024l2o study direct solution generation for parametric mixed-integer nonlinear programs, with integer-correction layers and a feasibility-restoration mechanism. That work supplies a contrasting L2O design, not evidence that unconstrained assignment predictions in our CFL pipeline satisfy MILP constraints. Its problem setting and guarantees are not transferred to our model. Here, a feasible point and a solver-derived bound are separate audited artifacts; a low prediction loss alone certifies neither feasibility nor optimality.
+
+This positioning also narrows the broader research agenda. Learned configuration, cut selection, attention-based architectures, and explanation methods are possible extensions, not implemented contributions of this manuscript. Training and validation curves test the predictor; held-out gap and time measurements test its usefulness inside optimization. Graph projections remain descriptive and are not, by themselves, explanations of solver behaviour.
+
+## Graph learning for distinct MILP decisions
+
 @gasse2019 introduce a variable-constraint bipartite graph convolutional architecture for learning branching decisions through imitation of strong branching. We retain that paper as the principal architectural reference. Our supervised targets are binary solution values, not expert branching actions; consequently, neither the training task nor the downstream intervention is a replication of their experiments.
+
+Other graph-learning tasks operate on different decisions and information. @labassi2022 learn a pairwise branch-and-bound node comparator using a siamese GNN; this ranks search nodes rather than predicting the values of original-model variables. @scavuzzo2024 learn optimal objective values using dynamic information. Such predictions address a different target from binary supervision and do not replace the solver's primal-dual certificate in our protocol. These distinctions prevent the shared use of a bipartite graph from being mistaken for an identical learning problem.
+
+Representation capacity also requires qualification. @chen2024branching identify limitations of message-passing GNNs for representing strong-branching scores and study a higher-order alternative. @chen2024quadratic analyse graph expressivity for continuous and mixed-integer quadratic programs, distinguishing their representable classes. Neither result establishes that our Gasse-inspired network can represent every optimal CFL assignment. We use these studies to motivate explicit architecture, symmetry, and distributional limitations, not to claim a new universality theorem or to add an untested quadratic-programming capability.
+
+## Primal prediction and neighbourhood guidance
 
 Solution prediction has also been used to guide primal search. @ding2020 combine predicted binary values with a local-branching-type intervention. @khalil2022 predict variable biases from near-optimal solutions and use them to guide solver components. The present protocol uses a named, independently checked solution as the label for each mathematical instance; it does not identify that target with the solution-distribution biases of MIP-GNN. @canturk2024 provide a further closely related study of GNN-based primal heuristics. These works motivate separating prediction quality from the quality of solutions ultimately produced by a solver.
 

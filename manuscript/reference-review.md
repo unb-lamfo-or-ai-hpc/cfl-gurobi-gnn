@@ -58,10 +58,6 @@ scientifically unsound. Reconsider them only when a specific claim needs them.
 |:--|:--|
 | Cai et al. (2025), neuro-symbolic motion planning | Different application and constraint setting |
 | Cardillo et al. (2025), MILP-SAT-GNN | SAT prediction is outside the experiment |
-| Chen, T. et al. (2022), learning-to-optimize primer | Broad background already covered by the focused survey |
-| Chen, X. et al. (2024), branching capacity | Branching expressivity is not tested here |
-| Chen, X., Liu and Yin (2024), tutorial | Incomplete publication metadata and overlapping background |
-| Chen, Z. et al. (2024), quadratic programs | Quadratic models are outside this linear study |
 | Chen, Z. et al. (2023), representing LPs | No expressivity theorem is asserted by this draft |
 | Chuang and Qiu (2025), general LPs | Continuous LP solver substitution is not evaluated |
 | Dai et al. (2017), graph combinatorial algorithms | Broad antecedent rather than the implemented MILP intervention |
@@ -78,16 +74,13 @@ scientifically unsound. Reconsider them only when a specific claim needs them.
 | Kapoor (2025), EV route optimization | Different application and explanation target |
 | Khemani et al. (2024), GNN review | Duplicates broad background |
 | Koyama and Tatebe (2022), distributed training | Distributed scaling is not an empirical claim of this article |
-| Labassi et al. (2022), node comparison | No learned node-selection policy |
 | Li et al. (2025), explainability survey | Structural EDA is not an explanation method |
 | Liu et al. (2022), benchmark taxonomy | No graph-benchmark taxonomy contribution |
 | Longa et al. (2025), explainers | No explainer comparison |
 | Nandan et al. (2025), GraphXAI | No XAI experiment |
-| Scavuzzo et al. (2024), objective prediction | Targets are binary assignments, not optimal objective values |
 | Shafi and Kadioglu (2025), FORGE | No foundation-model experiment |
 | Shen et al. (2021), primal heuristics | Relevant reserve reference; current related-work discussion already supported |
 | Stoll et al. (2025), GraphBench | No benchmark-suite construction or cross-suite comparison |
-| Tang et al. (2025), MINLP | Nonlinear optimization is outside scope |
 | Turner et al. (2023), adaptive cut selection | No learned cut selection |
 | Wu et al. (2021), GNN survey | Broad background duplication |
 | Zhou et al. (2020), GNN review | Broad background duplication; supplied year/DOI would need publication-level reconciliation if cited |
@@ -109,3 +102,31 @@ notes or unrelated collections were imported, deleted or reorganized. Existing
 metadata discrepancies remain explicit; the manuscript bibliography is not a
 blind export of those records. Future citations require a corresponding reviewed
 collection update, rather than importing the entire supplied reading list.
+
+## L2O and GNN update, 12 September 2026
+
+The owner added seven regular items. Read-only collection retrieval confirmed
+fifteen regular items in total. All seven additions are now cited; the earlier
+deferrals for these works are superseded, not silently retained. The supplied
+research-project extract (printed pages16-21) was reviewed as research context.
+Its emphasis on algorithm acceleration and initial-solution prediction motivates
+the expanded L2O section. Its broader plans for GAT, reinforcement learning,
+configuration and explanations are not represented as implemented results.
+The private project PDF and its figure are not redistributed in this repository.
+
+| Citation key | Zotero key | Verified primary source and role |
+|:--|:--|:--|
+| chen2022primer | 6UKEUMFZ | [JMLR23(189),1-59](https://jmlr.org/papers/v23/21-0308.html): L2O taxonomy and distributional limits; publisher author order restores Heaton/Liu before Wang |
+| chen2024tutorial | G8DGHSQL | [arXiv2405.15251v1](https://arxiv.org/abs/2405.15251v1): continuous/MILP tutorial, accelerator versus solution/model learning; resolves missing local identifier |
+| tang2024l2o | GFFTKFBN | [arXiv2410.11061v10](https://arxiv.org/abs/2410.11061v10): contrasting MINLP solution generation and feasibility restoration; revised title and accented name retained; first submission2024, revision2025 explicit |
+| labassi2022 | P65M4YSW | [NeurIPS2022](https://proceedings.neurips.cc/paper_files/paper/2022/hash/cf5bb18807a3e9cfaaa51e667e18f807-Abstract.html): node comparison is distinct from assignment prediction |
+| chen2024branching | 7QWEFW9V | [NeurIPS2024](https://proceedings.neurips.cc/paper_files/paper/2024/hash/dff528ce3e1390c88f10bbf5e722a241-Abstract-Conference.html): limits of message-passing strong-branching representation; publisher order is Ziang Chen, Jialin Liu, Xiaohan Chen, Xinshang Wang, Wotao Yin, not the local record's order |
+| chen2024quadratic | 6QZ5ANEC | [arXiv2406.05938v2](https://arxiv.org/abs/2406.05938v2): expressivity depends on problem class; first submission2024 and revision2025 explicit; no QP capability or theorem claimed here |
+| scavuzzo2024 | EXV2FIBY | [arXiv2411.18321v1](https://arxiv.org/abs/2411.18321v1): objective prediction is a different target and is not a replacement certificate |
+
+The bibliography uses primary-source metadata; this update does not overwrite
+the owner's Zotero records or alter collection membership. The MINLP and QP
+papers are included as methodological contrasts, not experimental baselines.
+No unsupported speedup or generalization finding is imported into our results.
+Future additions will receive the same claim-specific review, with an explicit
+reason whenever a work remains uncited. This is not a systematic review.

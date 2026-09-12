@@ -23,9 +23,8 @@ $if(natbib)$
 \setcitestyle{authoryear,round,aysep={ }}
 $endif$
 \usepackage{hyperref}
-% A text-based ORCID link keeps full identifiers accessible without a TikZ
-% dependency. The requested macro name is retained; no unofficial logo is used.
-\providecommand{\orcidlink}[1]{\href{https://orcid.org/#1}{\textnormal{\scriptsize ORCID: #1}}}
+% The maintained package supplies the clickable ORCID icon, not a printed ID.
+\usepackage{orcidlink}
 % SBC uses address rather than institution; this semantic wrapper preserves
 % the requested institution markup without replacing the vendored style.
 \providecommand{\institution}[1]{#1}

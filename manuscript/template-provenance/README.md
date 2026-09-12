@@ -9,11 +9,13 @@ Quarto/Pandoc adapter `template.tex` adds `\usepackage{calc}` because Pandoc
 does not change the SBC style and is not described as an official SBC change.
 The adapter additionally hides coloured hyperlink boxes, sets PDF title metadata,
 and suppresses the style's otherwise orphaned institution marker when no
-affiliations are supplied. It now renders user-approved authors with a text-based,
-clickable `\orcidlink{}` macro and an `\institution{}` wrapper inside SBC
-`\address{}`, retaining `\author{}` and `\email{}`. Full ORCID identifiers are
-accessible in the PDF rather than depending on a logo/TikZ package. These are
-adapter changes, not modifications to the original SBC style.
+affiliations are supplied. It renders user-approved authors with the maintained
+`orcidlink` package's clickable icon and an `\institution{}` wrapper inside SBC
+`\address{}`, retaining `\author{}` and `\email{}`. Identifiers remain in author
+metadata and link targets, but are not printed in the PDF. The package is a TeX
+runtime dependency, not vendored article code; see
+[CTAN](https://ctan.org/pkg/orcidlink) and its LPPL 1.3 licence. These are adapter
+changes, not modifications to the original SBC style.
 The upstream MIT licence, third-party notice and style-provenance document are
 preserved here. `upstream.json` records SHA-256 identities for these six files.
 The cited original SBC archive hashes are upstream statements, not a claim that

@@ -43,6 +43,12 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("mandatory_gasse_v3_reference_missing")
     if "10.48550/arXiv.1906.01629" not in bibliography:
         failures.append("mandatory_gasse_doi_missing")
+    l2o_keys = {"chen2022primer", "chen2024tutorial", "tang2024l2o"}
+    if not l2o_keys.issubset(citation_keys) or "## Learning to Optimize" not in article:
+        failures.append("reviewed_l2o_context_missing")
+    adapter = (root / "_extensions/sbc/template.tex").read_text(encoding="utf-8")
+    if r"\usepackage{orcidlink}" not in adapter or r"\providecommand{\orcidlink}" in adapter:
+        failures.append("orcid_icon_package_missing_or_replaced")
     if re.search(r"```\s*\{", article) or "{{< include" in article:
         failures.append("executable_or_unreviewed_included_content")
     if any(setting not in config for setting in ("enabled: false", "code-links: false", "meca-bundle: false")):
@@ -119,8 +125,8 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("rendered_ai_declaration_missing")
     if not pdf.read_bytes().startswith(b"%PDF-"):
         failures.append("invalid_pdf_header")
-    for key in ("gasse2019", "cappart2021", "ding2020", "khalil2022", "canturk2024",
-                "fischetti2003", "nair2020", "gurobi2026"):
+    bibliography = (root / "references.bib").read_text(encoding="utf-8")
+    for key in re.findall(r"^@\w+\{([^,]+),", bibliography, re.MULTILINE):
         if f'id="ref-{key}"' not in content:
             failures.append(f"rendered_reference_missing:{key}")
     for path in output.rglob("*"):
@@ -143,6 +149,8 @@ def check_pdf_text(path: Path) -> list[str]:
     if "??" in text or "[?]" in text:
         failures.append("unresolved_pdf_reference")
     normalized = " ".join(text.split())
+    if any(orcid in text for _, orcid, _ in AUTHORS) or "ORCID:" in text:
+        failures.append("orcid_identifier_printed_instead_of_icon")
     for _, _, email in AUTHORS:
         if email not in normalized:
             failures.append(f"pdf_author_email_missing:{email}")
