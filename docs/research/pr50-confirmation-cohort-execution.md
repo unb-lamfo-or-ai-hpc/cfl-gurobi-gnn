@@ -56,9 +56,53 @@ only after checking their frozen hashes; do not point this importer at untrusted
 downloaded pickle artifacts.
 
 The imported label identifies its origin as
-`independently_audited_gurobi_confirmation_label`. It is deliberately not
-silently presented to old graph/training loaders as a newly executed solve.
-The strict graph consolidation adapter is the next integration gate.
+`independently_audited_gurobi_confirmation_label`. The strict graph adapter now
+accepts this explicit source only for Gurobi, with a matching original-MIP hash
+and an independent feasibility recheck. The training adapter consumes the named
+label index directly; it does not manufacture legacy parent-solve reports.
+
+## Update: source campaign running on DGX
+
+The maintainer reports 412 passing licensed tests and campaign contract
+`27273b1baf3f46e27b229055cfdb1ca41ea2018ac40a7952e0f780dda9da0f7a`.
+Array 3262 and dependent audit 3263 are in progress. `QOSMaxMemoryPerUser` is a
+scheduler wait reason, not evidence that a task failed. No job was cancelled
+or resubmitted by this development task.
+
+**Do not pull a new checkout into the shared HPC repository while these jobs
+are running.** The source-admission module and its three fingerprinted files
+remain unchanged by the graph/training increment. Wait for the array AND its
+audit to finish before updating the checkout and launching the next stage.
+
+## Strict graphs, 100 epochs, and held-out evaluation
+
+The continuation CLI `run_confirmation_training` implements preflight, per-parent
+graph construction, consolidation with graph statistics/clustering, training,
+and held-out evaluation. It uses the preserved Gasse backend with the versioned
+alternating prenorm model. Source admission must first pass for all 42 parents.
+Each graph uses a fresh Gurobi MIPNODE root capture (600 seconds, seed 42,
+presolve disabled); there is no zero fallback. Graph receipts support hash-bound
+resume, and partially written artifacts are preserved for inspection.
+
+After source completion and a branch update, the next launcher is:
+
+```bash
+bash scripts/slurm/dasci/launch_confirmation_training.sh \
+  "${DATA_ROOT}/analysis/confirmation_execution/pr50_20260912T121753Z"
+```
+
+This command refuses an incomplete source gate. It submits graph tasks with
+32 GB each and at most two concurrently, an `afterany` graph/EDA audit, and a
+GPU training job dependent on successful consolidation. The GPU job executes
+100 epochs, then evaluates exactly the eight held-out parents and exports
+hash-bound predictions. Training/validation losses share one SVG. The training
+allocation is up to 24 hours; actual duration is not known until execution.
+
+Evidence still needed before PR50 can be considered complete: the 42-parent
+source aggregate, strict graph/EDA receipts, 100-epoch training and held-out
+evaluation receipts, followed by the native primary guidance benchmark. Local
+contract tests are not a substitute for these HPC results. No merge is requested
+while these gates remain pending.
 
 ## DGX execution
 

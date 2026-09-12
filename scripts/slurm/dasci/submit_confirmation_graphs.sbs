@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_42_graphs
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=00:40:00
+#SBATCH --output=slurm_cfl_42_graphs_%A_%a.out
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+test -s "$GRB_LICENSE_FILE"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+srun python3 -m cfl_gnn.cli.run_confirmation_training graph \
+    --campaign_dir "${CONFIRMATION_EXECUTION_DIR:?}" \
+    --dataset_dir "${CONFIRMATION_DATASET_DIR:?}" \
+    --data_root "${DATA_ROOT:?}" --task_index "${SLURM_ARRAY_TASK_ID:?}"

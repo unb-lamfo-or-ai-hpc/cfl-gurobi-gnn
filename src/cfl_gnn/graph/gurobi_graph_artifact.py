@@ -233,7 +233,13 @@ def _solution_by_name(
     }
     if label_source_solver not in expected_sources:
         raise GurobiGraphError("unsupported graph-label solver")
-    if payload.get("solution_source") != expected_sources[label_source_solver]:
+    confirmation = (
+        label_source_solver == "gurobi"
+        and payload.get("solution_source") == "independently_audited_gurobi_confirmation_label"
+        and payload.get("mathematical_audit", {}).get("valid") is True
+        and payload.get("effective_objective_sense") == "MINIMIZE"
+    )
+    if payload.get("solution_source") != expected_sources[label_source_solver] and not confirmation:
         raise GurobiGraphError(
             "solution source does not match the declared graph-label solver"
         )
@@ -284,6 +290,9 @@ def build_graph_artifact(
     if sha256_file(label_path) != solution_sha256:
         raise GurobiGraphError("solution SHA-256 changed before graph construction")
     solution_payload = _read_gzip_json(label_path)
+    if solution_payload.get("solution_source") == "independently_audited_gurobi_confirmation_label":
+        if solution_payload.get("source_mip_sha256") != mip_sha256:
+            raise GurobiGraphError("confirmation label belongs to another original MIP")
     label_source_solver = str(
         sample_metadata.get("label_source_solver", "gurobi")
     )
