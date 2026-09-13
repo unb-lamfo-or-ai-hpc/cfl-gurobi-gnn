@@ -256,6 +256,26 @@ The agreed delivery is a research MVP with explicit limitations. It may close wi
 
 # Reproducibility and availability
 
+## Computational environment
+
+Experiments are conducted on the UJA DGX-DaSCI infrastructure, an NVIDIA DGX-1 system used by the DaSCI institute at the [Higher Polytechnic School of Jaén (EPSJ), University of Jaén](https://eps.ujaen.es/), Spain. The institutional location is listed among the [DaSCI sites](https://dasci.es/sedes/). @tbl-computational-environment records the hardware inventory supplied by the project investigator, with component terminology checked against the [NVIDIA DGX-1 user guide](https://images.nvidia.com/content/technologies/deep-learning/pdf/DGX-1-UserGuide.pdf) and [DGX-1 specifications](https://www.nvidia.com/en-in/data-center/dgx-1/). This is an infrastructure description, not a runtime hardware probe.
+
+| Component | Reported system configuration |
+|:--|:--|
+| CPUs | Two x86 processors, each with 20 cores at 2.2 GHz (40 physical cores in total) |
+| Host memory | 512 GB DDR4 RAM at 2,133 MHz |
+| Accelerators | Eight NVIDIA Tesla V100 GPUs, each with 32 GB device memory, 5,120 CUDA cores and 640 Tensor Cores |
+| GPU interconnect | NVLink; nominal aggregate bandwidth of 300 GB/s per GPU |
+| Network | Dual 10 GbE and four InfiniBand EDR interfaces |
+| Operating-system storage | One 480 GB SATA 3.0 SSD; 6 Gb/s interface |
+| Data storage | Four 1.92 TB SSDs configured as RAID 0 |
+
+: Reported DGX-DaSCI system capacity, distinct from resources allocated to an individual experiment. Interface bandwidths are nominal specifications, not measured application throughput. {#tbl-computational-environment}
+
+Slurm schedules the research jobs. The presence of eight GPUs does not establish that a training run uses all eight, and 512 GB of host RAM is not the memory allocation of each job. Reproducible run-level reporting must additionally identify allocated CPUs and GPUs, GPU model and memory, requested and peak host memory, solver threads, serial or distributed execution, and software versions (operating system, Python, PyTorch, PyTorch Geometric, CUDA/driver, Gurobi and SCIP/PySCIPOpt). These fields will be reconciled with the final execution receipts; missing values will remain explicitly unavailable. The four timing regions and terminal MIP gap are reported per run, rather than inferred from hardware specifications or scheduler elapsed time.
+
+## Code, data and manuscript availability
+
 The implementation is maintained in the public [CFL-Gurobi-GNN repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn). The root README preserves the MILPBench instance-download links. Raw models, solver licences, host paths, checkpoints, and full solution trajectories are not bundled into this manuscript website. Public access to source code does not imply redistribution rights for benchmark data.
 
 The project's original code, documentation and manuscript are released under the **MIT License**. Original project-generated metadata, tables and figures use MIT within the authors' rights. This is not a GNU GPL designation. MILPBench data, solver software and third-party materials retain their own terms; the MIT notice does not relicense source instances or guarantee redistribution rights for their derivatives. Licensing notices accompany reviewed exports without changing immutable experimental receipts.

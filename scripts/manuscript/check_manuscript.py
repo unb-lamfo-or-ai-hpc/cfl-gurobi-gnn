@@ -56,6 +56,16 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("static_publication_boundary_missing")
     if "empirical confirmation pending" not in article:
         failures.append("visible_pending_status_missing")
+    environment_boundaries = (
+        "## Computational environment",
+        "{#tbl-computational-environment}",
+        "not a runtime hardware probe",
+        "does not establish that a training run uses all eight",
+        "missing values will remain explicitly unavailable",
+        "6 Gb/s interface",
+    )
+    if any(text not in article for text in environment_boundaries):
+        failures.append("computational_environment_scope_missing")
     if evidence.get("schema_version") != 2:
         failures.append("unsupported_evidence_schema")
     if evidence.get("development_only") is not True:

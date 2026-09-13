@@ -26,6 +26,18 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_source_passes(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
+    def test_hardware_inventory_is_not_run_allocation(self):
+        path = self.root / "index.qmd"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(text.replace("not a runtime hardware probe", "verified run allocation"), encoding="utf-8")
+        self.assertIn("computational_environment_scope_missing", CHECK.check_source(self.root))
+
+    def test_sata_interface_uses_bits_not_bytes(self):
+        path = self.root / "index.qmd"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(text.replace("6 Gb/s interface", "6 GB/s interface"), encoding="utf-8")
+        self.assertIn("computational_environment_scope_missing", CHECK.check_source(self.root))
+
     def test_changed_source_evidence_is_rejected(self):
         path = self.root / "results/source_evidence.json"
         path.write_text(path.read_text() + "\n")

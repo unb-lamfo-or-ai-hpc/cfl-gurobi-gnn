@@ -64,3 +64,22 @@ Actions. These are document-integrity checks, not scientific validation. Final
 campaign receipts, empirical figures, the updated GitHub Actions result and a
 successful live-site deployment are not certified by this local record.
 No research job was submitted or modified for this manuscript build.
+
+## Latest validation: DGX-DaSCI environment (13 September 2026)
+
+This record supersedes the earlier page and test counts above. The current
+manuscript includes the interim source-admission results and the investigator's
+DGX-1 inventory under Reproducibility and availability. Host RAM, GPU device
+memory, nominal interconnect bandwidth and SATA interface rate are distinguished.
+EPSJ/DaSCI institutional links and NVIDIA documentation accompany the table.
+The inventory is not presented as a runtime hardware probe or a per-job allocation;
+missing software versions and resource receipts remain pending reconciliation.
+
+- All 22 manuscript regression tests pass, including allocation-boundary and
+  SATA bit/byte checks. Source, rendered-artifact and PDF-text gates pass.
+- Quarto rendered HTML and a 15-page PDF. References begins on page 14, within
+  the 20-page body ceiling. The changed pages 12-15 were visually inspected;
+  the hardware table, section transitions and references are readable.
+- The MIT scope, four ORCID icons, bibliography and verbatim AI declaration are
+  preserved. No final training metrics or scientific certification were added.
+- No HPC job, pipeline input, PR50 code or PR51 branch was modified.
