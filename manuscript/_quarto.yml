@@ -3,6 +3,12 @@ project:
   output-dir: _manuscript
   render:
     - index.qmd
+  resources:
+    - LICENSE
+    - evidence-status.json
+    - results/**
+    - figures/**
+    - tables/**
 
 manuscript:
   article: index.qmd
@@ -15,6 +21,7 @@ execute:
   freeze: true
 
 lang: en
+license: MIT
 bibliography: references.bib
 format:
   html:
@@ -25,4 +32,4 @@ format:
 
 website:
   site-url: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/
-  description: Development-stage research manuscript; empirical confirmation is pending.
+  description: Development-stage research manuscript with source-admission evidence; training confirmation is pending.

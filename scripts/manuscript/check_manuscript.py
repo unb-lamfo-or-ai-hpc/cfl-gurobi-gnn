@@ -1,4 +1,4 @@
-"""Validate the static, evidence-pending manuscript without a research runtime."""
+"""Validate the static manuscript and explicitly scoped interim evidence."""
 
 from __future__ import annotations
 
@@ -29,13 +29,14 @@ AI_DISCLOSURE = (
 
 
 def check_source(root: Path = MANUSCRIPT) -> list[str]:
-    """Return failures; this gate intentionally supports only the protocol draft."""
+    """Check document integrity, not scientific validity or remote artifact truth."""
     failures: list[str] = []
     article = (root / "index.qmd").read_text(encoding="utf-8")
     bibliography = (root / "references.bib").read_text(encoding="utf-8")
     evidence = json.loads((root / "evidence-status.json").read_text(encoding="utf-8"))
     config = (root / "_quarto.yml").read_text(encoding="utf-8")
-    citation_keys = set(re.findall(r"(?<!\w)@([a-z][a-z0-9_-]+)", article))
+    citation_keys = {key for key in re.findall(r"(?<!\w)@([a-z][a-z0-9_-]+)", article)
+                     if not key.startswith(("fig-", "tbl-"))}
     entries = re.findall(r"^@\w+\{([^,]+),", bibliography, re.MULTILINE)
     if citation_keys != set(entries) or len(entries) != len(set(entries)):
         failures.append("bibliography_not_exactly_cited_or_duplicate_keys")
@@ -55,14 +56,26 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("static_publication_boundary_missing")
     if "empirical confirmation pending" not in article:
         failures.append("visible_pending_status_missing")
-    if evidence.get("schema_version") != 1:
+    if evidence.get("schema_version") != 2:
         failures.append("unsupported_evidence_schema")
     if evidence.get("development_only") is not True:
         failures.append("development_boundary_missing")
     if evidence.get("scientific_reporting_eligible") is not False:
         failures.append("scientific_claim_without_review")
-    if evidence.get("empirical_results_included") is not False or evidence.get("empirical_assets") != []:
-        failures.append("empirical_assets_require_dedicated_review")
+    assets = evidence.get("empirical_assets", [])
+    if evidence.get("empirical_results_included") is not True or len(assets) != 1:
+        failures.append("unreviewed_empirical_asset_scope")
+    for asset in assets:
+        if asset.get("relative_path") != "results/source_evidence.json":
+            failures.append("unreviewed_empirical_asset_scope")
+            continue
+        path = root / asset["relative_path"]
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != asset.get("sha256"):
+            failures.append("source_evidence_hash_mismatch")
+    if evidence.get("license") != "MIT" or "license: MIT" not in config:
+        failures.append("mit_license_metadata_missing")
+    if not (root / "LICENSE").read_text().startswith("MIT License"):
+        failures.append("mit_manuscript_notice_missing")
     front = article.split("---", 2)[1]
     author_records = re.findall(r"  - name: (.+)\n    orcid: (.+)\n    email: (.+)", front)
     if evidence.get("authorship_confirmed") is not True or tuple(author_records) != AUTHORS:
@@ -83,15 +96,37 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if any(protocol.get(key) != value for key, value in expected.items()):
         failures.append("confirmation_protocol_drift")
     acceptance = evidence.get("acceptance", {})
-    required_pending = ("complete_source_label_bundle", "strict_42_graph_bundle",
-                        "confirmation_training_100_epochs", "held_out_confirmation_evaluation",
-                        "paired_four_arm_comparison")
+    required_pending = ("held_out_confirmation_evaluation", "paired_four_arm_comparison")
     if any(acceptance.get(key) != "pending" for key in required_pending):
         failures.append("acceptance_claim_requires_evidence_update")
     if acceptance.get("full_90_parent_campaign") != "deferred":
         failures.append("full_population_scope_changed")
+    boundary = {"complete_source_label_bundle": "incomplete_39_of_42_admitted",
+                "strict_42_graph_bundle": "not_achieved",
+                "revised_39_graph_bundle": "slurm_completed_artifact_review_pending",
+                "confirmation_training_100_epochs": "running_no_final_artifacts"}
+    if any(acceptance.get(k) != v for k, v in boundary.items()):
+        failures.append("unsupported_completion_claim")
+    revision = evidence.get("revised_confirmation_protocol", {})
+    revised_expected = {"parents": 39, "easy": 30, "medium": 9, "hard": 0,
+                        "train": 23, "validation": 8, "test": 8, "seed": 42,
+                        "epochs": 100, "maximum_label_gap_relative": 0.1}
+    if any(revision.get(k) != v for k, v in revised_expected.items()):
+        failures.append("revised_cohort_drift")
+    source = json.loads((root / "results/source_evidence.json").read_text())
+    if source.get("campaign_contract_sha256") != protocol.get("execution_contract_sha256"):
+        failures.append("source_campaign_mismatch")
+    if source.get("training", {}).get("epochs_completed") is not None or source.get("training", {}).get("test_metrics") is not None:
+        failures.append("training_results_not_yet_supplied")
+    for parent in source.get("rejected", []):
+        for run in parent["repairs"]:
+            expected_gap = abs(run["solution_objective"] - run["best_bound"]) / abs(run["solution_objective"])
+            if abs(expected_gap - run["mip_gap_relative"]) > 1e-10 or run["mip_gap_relative"] <= .1:
+                failures.append("rejection_gap_inconsistent")
+            if run["right_censored"] is not True or run["solve_status"] != "timelimit":
+                failures.append("rejection_censoring_missing")
     private_pattern = re.compile(r"/raid/|/home/|(?<![\w{])[A-Za-z]:[\\/]|WLSSecret|LicenseID|gurobi\.lic")
-    for name in ("index.qmd", "references.bib", "evidence-status.json", "_quarto.yml"):
+    for name in ("index.qmd", "references.bib", "evidence-status.json", "_quarto.yml", "results/source_evidence.json"):
         payload = (root / name).read_bytes()
         if b"\r" in payload:
             failures.append(f"non_lf_source:{name}")
@@ -125,6 +160,20 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("rendered_ai_declaration_missing")
     if not pdf.read_bytes().startswith(b"%PDF-"):
         failures.append("invalid_pdf_header")
+    receipt_path = output / "tables/rendered_assets.json"
+    if not receipt_path.is_file():
+        failures.append("rendered_asset_receipt_missing")
+    else:
+        receipt = json.loads(receipt_path.read_text())
+        source_hash = hashlib.sha256((root / "results/source_evidence.json").read_bytes()).hexdigest()
+        if receipt.get("source_sha256") != source_hash or len(receipt.get("outputs", [])) != 7:
+            failures.append("rendered_asset_source_or_count_mismatch")
+        for asset in receipt.get("outputs", []):
+            path = output / asset["relative_path"]
+            if not path.resolve().is_relative_to(output.resolve()) or not path.is_file():
+                failures.append("missing_or_unsafe_rendered_asset")
+            elif hashlib.sha256(path.read_bytes()).hexdigest() != asset["sha256"]:
+                failures.append("rendered_asset_hash_mismatch")
     bibliography = (root / "references.bib").read_text(encoding="utf-8")
     for key in re.findall(r"^@\w+\{([^,]+),", bibliography, re.MULTILINE):
         if f'id="ref-{key}"' not in content:

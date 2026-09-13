@@ -1,5 +1,30 @@
 # Manuscript build validation
 
+## Interim-results and licensing revision, 13 September 2026
+
+- Twenty standard-library manuscript tests pass. The source/rendered/PDF-text
+  integrity gate passes, including the seven generated-asset hashes.
+- A hash-bound, sanitized extract of the supplied rejection diagnostic supports
+  three figures (cohort, rejected-parent gaps, four timing regions) and one CSV.
+  This is not an independent revalidation of the underlying remote artifacts.
+- Quarto rendered HTML and a 14-page A4 PDF. References begins on page13;
+  the body remains below the 20-page ceiling. All pages were visually checked;
+  unchanged pages1-7 also match the preceding render pixel-for-pixel.
+- Four actual ORCID icons and their URI annotations remain present. The fifteen
+  references, accented names and exact AI declaration are preserved.
+- The adapter imports float for in-place result figures; original SBC style and
+  all third-party licensing notices remain unchanged. Provenance hash updated.
+- MIT is explicit for original manuscript/project content and original output
+  metadata within the authors' rights. External data and resources are excluded.
+- Job3307 remains RUNNING at the last supplied observation, 08:12:14. No accepted
+  final training/evaluation metrics, invented curves, solver improvement or
+  scientific eligibility is claimed. All remaining output families are reserved
+  in the article and results register.
+- No DGX job, research source, active input or immutable receipt was changed.
+  PDF text was extracted with pdfplumber locally; CI uses Poppler pdftotext.
+
+The record below describes the previous version, not the current page count.
+
 ## Local evidence, 12 September 2026
 
 - Quarto 1.10.18 and Pandoc 3.10.0 rendered both HTML and SBC PDF with research

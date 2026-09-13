@@ -3,7 +3,10 @@
 This is the independent, English-language manuscript draft for the CFL research
 pipeline. It reuses `cvictorr2508/quarto-sbc` v0.2.0 at commit
 `88eaa11eeee9f86cd8594466e4644b321c8d7b75`; the format was not rewritten.
-The current article is a **development protocol, not a completed empirical study**.
+The current article is a **partial development report, not a completed empirical
+study**. Source diagnostics support an approved 39-parent revision of the
+original 42-parent cohort. Training job3307 is still running at the last supplied
+observation; no final training or evaluation scores are included.
 
 ## Local rendering
 
@@ -20,6 +23,8 @@ From the repository root:
 ```bash
 python scripts/manuscript/check_manuscript.py
 python -m unittest discover -s tests/manuscript -v
+python -m pip install matplotlib==3.10.9
+python scripts/manuscript/build_results_assets.py
 quarto render manuscript --no-execute
 python scripts/manuscript/check_manuscript.py --rendered
 ```
@@ -62,9 +67,11 @@ Official guidance: [Quarto Manuscript publishing](https://quarto.org/docs/manusc
 ## Evidence integration after PR50
 
 `evidence-status.json` freezes the current draft's evidence boundary. The check
-fails if this protocol-only draft gains unreviewed empirical assets, executable
-chunks, or a claim of scientific eligibility. It is intentionally not an
-automatic import of whichever HPC run happens to be newest.
+accepts one hash-bound diagnostic extract and rejects unreviewed empirical
+assets, fabricated completion, executable chunks and scientific eligibility.
+It is not an automatic import of whichever HPC run happens to be newest.
+The [results register](results/README.md) identifies all available and reserved
+tables/figures, including the shared training/validation loss plot.
 
 When acceptance receipts arrive, make a dedicated evidence update: verify cohort,
 source/model/checkpoint/graph identities and all scientific gates; copy only
@@ -97,3 +104,11 @@ distinguish learning targets and expressivity. See the recorded
 [Template provenance](template-provenance/README.md) records the exact upstream
 revision and hashes. Its MIT notice applies to upstream original code; the SBC
 third-party resources retain their distinct notices and are not relicensed.
+
+## License
+
+Original manuscript content, code, project-generated metadata, tables and
+figures are MIT-licensed within the authors' rights; see [MIT License](LICENSE)
+and the root `LICENSE_POLICY.md`. This does not relicense MILPBench data,
+third-party SBC resources or solver software. Existing source receipts and
+active HPC jobs are not modified by the manuscript licensing update.

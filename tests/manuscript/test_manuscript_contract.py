@@ -26,6 +26,34 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_source_passes(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
+    def test_changed_source_evidence_is_rejected(self):
+        path = self.root / "results/source_evidence.json"
+        path.write_text(path.read_text() + "\n")
+        self.assertIn("source_evidence_hash_mismatch", CHECK.check_source(self.root))
+
+    def test_running_training_cannot_be_claimed_complete(self):
+        path = self.root / "evidence-status.json"
+        data = json.loads(path.read_text())
+        data["acceptance"]["confirmation_training_100_epochs"] = "passed"
+        path.write_text(json.dumps(data))
+        self.assertIn("unsupported_completion_claim", CHECK.check_source(self.root))
+
+    def test_revision_cannot_silently_restore_forty_two(self):
+        path = self.root / "evidence-status.json"
+        data = json.loads(path.read_text())
+        data["revised_confirmation_protocol"]["parents"] = 42
+        path.write_text(json.dumps(data))
+        self.assertIn("revised_cohort_drift", CHECK.check_source(self.root))
+
+    def test_mit_declaration_and_pending_panels_exist(self):
+        text = (self.root / "index.qmd").read_text(encoding="utf-8")
+        self.assertIn("MIT License", text)
+        self.assertIn("Reserved training-results panel", text)
+        self.assertIn("Reserved prediction-results panel", text)
+        self.assertIn("Reserved graph-results panel", text)
+        self.assertIn("Reserved optimization-results panel", text)
+        self.assertIn("training and validation weighted BCE on the same axes", text)
+
     def test_unknown_citation_fails(self):
         with (self.root / "index.qmd").open("a", encoding="utf-8") as stream:
             stream.write("\n@invented2026\n")

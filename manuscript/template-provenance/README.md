@@ -16,6 +16,9 @@ metadata and link targets, but are not printed in the PDF. The package is a TeX
 runtime dependency, not vendored article code; see
 [CTAN](https://ctan.org/pkg/orcidlink) and its LPPL 1.3 licence. These are adapter
 changes, not modifications to the original SBC style.
+The adapter also imports `float` so the three interim result figures can remain
+beside their evidence paragraphs (`fig-pos: H`) instead of floating ahead of
+the Results heading. This is an editorial placement change only.
 The upstream MIT licence, third-party notice and style-provenance document are
 preserved here. `upstream.json` records SHA-256 identities for these six files.
 The cited original SBC archive hashes are upstream statements, not a claim that

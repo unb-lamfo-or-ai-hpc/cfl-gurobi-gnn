@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
-  "as_of": "2026-09-12",
-  "manuscript_status": "development_protocol_draft",
+  "schema_version": 2,
+  "as_of": "2026-09-13",
+  "manuscript_status": "development_partial_results_training_running",
   "development_only": true,
   "scientific_reporting_eligible": false,
-  "empirical_results_included": false,
+  "empirical_results_included": true,
   "authorship_confirmed": true,
   "authorship_source": "user_supplied_author_order_orcids_affiliations_and_emails",
   "editorial_plan": {
@@ -29,13 +29,36 @@
     "execution_contract_sha256": "27273b1baf3f46e27b229055cfdb1ca41ea2018ac40a7952e0f780dda9da0f7a"
   },
   "acceptance": {
-    "complete_source_label_bundle": "pending",
-    "strict_42_graph_bundle": "pending",
-    "confirmation_training_100_epochs": "pending",
+    "complete_source_label_bundle": "incomplete_39_of_42_admitted",
+    "strict_42_graph_bundle": "not_achieved",
+    "revised_39_graph_bundle": "slurm_completed_artifact_review_pending",
+    "confirmation_training_100_epochs": "running_no_final_artifacts",
     "held_out_confirmation_evaluation": "pending",
     "paired_four_arm_comparison": "pending",
     "full_90_parent_campaign": "deferred"
   },
-  "empirical_assets": [],
-  "source_scope": "versioned protocol plus user-reported execution status; no final campaign receipts imported"
+  "empirical_assets": [
+    {
+      "relative_path": "results/source_evidence.json",
+      "kind": "supplied_diagnostic_extract",
+      "status": "reviewed_transcription_not_raw_artifact_certification",
+      "sha256": "d891b113383043cf1ec0417b86577c9504375c97bb7b8a6596c585c17e25a3b4"
+    }
+  ],
+  "source_scope": "Supplied source-rejection diagnostic extract and user-reported Slurm status; raw HPC artifacts not independently revalidated by manuscript build.",
+  "license": "MIT",
+  "revised_confirmation_protocol": {
+    "parents": 39,
+    "easy": 30,
+    "medium": 9,
+    "hard": 0,
+    "train": 23,
+    "validation": 8,
+    "test": 8,
+    "seed": 42,
+    "epochs": 100,
+    "maximum_label_gap_relative": 0.1,
+    "approval": "explicit_project_owner_approval",
+    "original_cohort_replaced_silently": false
+  }
 }

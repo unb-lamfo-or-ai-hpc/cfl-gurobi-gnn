@@ -15,7 +15,7 @@
     {
       "local_path": "_extensions/sbc/template.tex",
       "upstream_sha256": "70154f79e2b688a98516dfe765ac56f2aa25da56a7b83972ff35347df13dcdb5",
-      "sha256": "ce02dc6034190594032561d4b59b49f3e73fdd40d66cdae69f6dabe0ebccb05d"
+      "sha256": "55298376794ab845e55768f284ffd3cb1849997358404d5973a54eb8f8ed3ab8"
     },
     {
       "local_path": "template-provenance/LICENSE.quarto-sbc",

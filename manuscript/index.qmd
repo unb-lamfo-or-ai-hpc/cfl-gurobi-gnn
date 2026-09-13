@@ -36,7 +36,7 @@ sbc-affiliations:
   - text: "Data Science and Computer Intelligence Institute, University of Jaén"
     email: pglez@ujaen.es
 abstract: |
-  Learning-assisted mixed-integer optimization requires a clear distinction between the mathematical instance, its solution labels, and the intervention applied to a solver. This manuscript develops an experimental protocol for capacitated facility location using variable-constraint bipartite graphs and a Gasse-inspired graph neural network. Gurobi provides the authoritative model interpretation and root-relaxation features; Gurobi and SCIP supply separately identified solution labels. A symmetric local-branching operator generates training-only synthetic instances from feasible incumbents. The design contrasts original-only and augmented training within each solver-labelled population, while retaining parent-level partitions and independent validation of derived labels. A separate 42-parent confirmation cohort is specified for 100 training epochs with seed 42. Nonbinding Gurobi variable hints are the primary guidance mechanism, and terminal MIP gap and optimization wall time are the primary outcomes. This development-stage draft presents the mathematical formulation, implementation contracts, and analysis plan. The confirmation campaign remains pending acceptance; no empirical improvement, complete 90-instance validation, or achieved technology-readiness level is claimed.
+  Learning-assisted mixed-integer optimization requires a clear distinction between the mathematical instance, its solution labels, and the intervention applied to a solver. This manuscript develops an experimental protocol for capacitated facility location using variable-constraint bipartite graphs and a Gasse-inspired graph neural network. Gurobi provides the authoritative model interpretation and root-relaxation features; Gurobi and SCIP supply separately identified solution labels. A symmetric local-branching operator generates training-only synthetic instances from feasible incumbents. The design contrasts original-only and augmented training within each solver-labelled population, while retaining parent-level partitions and independent validation of derived labels. Source diagnostics admitted 39 of 42 development parents (30 easy and nine medium), while three medium cases remained above a 10 percent gap ceiling after 14,400-second repair solves. An explicitly approved revision uses 23 training, eight validation and eight test parents, with 100 epochs and seed 42. Training remains in execution. Nonbinding Gurobi variable hints are the primary guidance mechanism, and terminal MIP gap and optimization wall time are the primary outcomes. This development-stage draft presents the formulation, implementation contracts, source-admission results and remaining analysis plan. Final neural confirmation remains pending; no empirical improvement, complete 90-instance validation, or achieved technology-readiness level is claimed.
 ---
 
 # Introduction
@@ -139,7 +139,7 @@ Original-only and augmented arms receive equal parent-level sampling mass and eq
 
 ## Populations and leakage controls
 
-The frozen development confirmation cohort comprises 30 easy and 12 medium parents, with no hard instances. Rotation 0 assigns 24 parents to training, 10 to validation, and 8 to test. These are specified counts, not a claim that every source label or graph has already passed acceptance. If any required parent remains inadmissible, the confirmation campaign is incomplete; the protocol does not silently replace it with an easy-only subset. The later 90-parent campaign is outside the current execution scope.
+The frozen development confirmation cohort comprises 30 easy and 12 medium parents, with no hard instances. Rotation 0 originally assigns 24 parents to training, 10 to validation, and eight to test. The strict 42-parent campaign remains incomplete. Following explicit project-owner approval, a separate 39-parent revision retains 30 easy and nine medium parents, with 23 training, eight validation and eight test parents. Existing roles are preserved; no parent is reassigned and no easy-only substitution is made. This outcome-dependent revision does not turn the original campaign into a successful 42-parent experiment. Original evidence and exclusions remain preserved. The later 90-parent campaign is outside the current execution scope.
 
 For the paired experiment, the four training arms are Gurobi original-only, Gurobi augmented, SCIP original-only, and SCIP augmented. Their common eligible parent intersection is reported explicitly, including exclusions and censoring. All descendants inherit the parent fold and remain training-only. Validation and test contain originals only, with a shared evaluation-reference policy. Solver-specific labels can disagree; this is not automatically a model defect, especially when multiple optima exist. Accordingly, assignment agreement and optimization feasibility/objective quality answer different questions.
 
@@ -155,7 +155,7 @@ The primary outcomes are terminal full-model MIP gap and wall time inside optimi
 
 Timeouts are retained as right-censored time-to-completion observations, not counted as completed solves at the time limit. Terminal gap remains an observed outcome at that budget. Pairing is by parent and target solver; descendants and individual binary variables do not inflate the number of independent test units. The current single-seed development study supports descriptive inspection, not a universal superiority claim or a stable estimate of training-seed variability.
 
-The intended publication outputs are specified in Table 1. Every numerical table and figure must be generated from an accepted, hash-bound artifact ledger. No example measurements or simulated loss curves are substituted while the campaign is running.
+The intended outputs are specified in @tbl-output-plan. Final numerical tables and figures require an accepted, hash-bound artifact ledger. Interim source diagnostics below are explicitly transcribed from supplied audit evidence rather than independently revalidated remote artifacts. No example measurements or simulated loss curves are substituted while the campaign is running.
 
 | Stage | Planned output | Interpretation safeguard |
 |:--|:--|:--|
@@ -165,27 +165,106 @@ The intended publication outputs are specified in Table 1. Every numerical table
 | Prediction | Precision, recall, F1, average precision, BCE, Brier score and ECE | Report parent-macro and pooled metrics, prevalence and trivial baselines |
 | Optimization | Paired gap and time outcomes, budget sensitivity and failure counts | Retain censoring and distinguish full from restricted models |
 
-: Planned manuscript outputs; no measured results are represented in this table.
+: Planned manuscript outputs; no measured results are represented in this table. {#tbl-output-plan}
 
 The prediction analysis includes constant-zero and root-relaxation diagnostics. Accuracy alone is insufficient for sparse positive targets. Calibration diagnostics do not retrospectively turn weighted-BCE outputs into calibrated probabilities. High classification agreement can coexist with infeasible rounded assignments, and a different assignment can attain the same optimal objective.
 
-# Current evidence, limitations, and completion criteria
+# Results: source evidence and pending neural confirmation
 
-**Development-stage draft: empirical confirmation pending.** At the evidence cut-off of 12 September 2026, source collection for the frozen confirmation campaign had been submitted, but its complete acceptance bundle was not available to this manuscript. This document therefore does not report final 42-parent losses, test scores, paired solver effects, or a selected best training arm. Earlier small engineering runs are not pooled with the current versioned experiment. The machine-readable evidence ledger records these pending states separately from the executable research protocol.
+**Development-stage draft: empirical confirmation pending.** The evidence cut-off is 13 September 2026. The following results distinguish supplied source-admission diagnostics, operational Slurm status, and measurements not yet available. The sanitized extract in `results/source_evidence.json` retains the campaign identity and referenced report hashes. Those hashes trace the supplied diagnostic; their inclusion does not mean that every underlying remote file has been independently downloaded and revalidated for this manuscript. The final acceptance bundle remains outstanding.
 
-The principal threats to validity are solver-conditioned label selection, correlated synthetic instances, class imbalance, multiple equivalent optima, outcome-dependent missingness, root-feature acquisition overhead, a single training seed, and the absence of hard instances in the confirmation cohort. The study-specific objective-sense correction also limits direct comparison with external results unless their formulations are checked. A common feature extractor controls one source of variation but does not make Gurobi- and SCIP-labelled training sets statistically equivalent.
+## Source admission and cohort revision
 
-Completion requires independent source and label acceptance, strict graph audits, the specified training and validation histories, untouched held-out evaluation, and paired native-guidance measurements on the admitted test population. Tables and figures must reconcile with those receipts, including failed and censored runs. Code review, passing unit tests, and successful document rendering cannot by themselves establish scientific validity or TRL 6. The latter remains a technology-demonstration objective rather than an achieved status in this draft.
+The diagnostic reports 39 admitted parents with accepted artifact hashes valid. Admission uses a terminal relative MIP gap of at most 0.10, not the mere presence of a feasible incumbent. All three exclusions are medium instances. The retained fraction is 39/42 (92.9 percent) overall, 30/30 among easy instances and 9/12 among medium instances. These are cohort-specific admission proportions, not estimates of solver success on MILPBench as a whole.
+
+| Partition | Original cohort | Excluded | Revised cohort |
+|:--|--:|--:|--:|
+| Training | 24 | 1 | 23 |
+| Validation | 10 | 2 | 8 |
+| Test | 8 | 0 | 8 |
+| Total | 42 | 3 | 39 |
+
+: Parent-level cohort revision. Roles were inherited rather than repartitioned; exclusion was based on source-label admissibility. {#tbl-cohort}
+
+![Original and revised parent inventories, by difficulty and role. Counts are transcribed from supplied diagnostic evidence and the approved revision; they are not a trained-model result.](figures/figure_cohort_admission.png){#fig-cohort width=100% fig-pos="H"}
+
+The rejected cases are CFL medium instances 3, 5 and 6. The supplied evidence contains six independent repair runs: one 3,600-second and one 14,400-second attempt per instance. Every attempt ended at the time limit. Their solution and variable-order hash checks are reported as valid, with no missing collector checks or source errors. Their rejection is a label-quality outcome, not evidence of infeasible models or corrupt files. The diagnostic audit itself executed no additional solver runs.
+
+| Medium instance | Role | Gap at 3,600 s (%) | Gap at 14,400 s (%) |
+|:--|:--|--:|--:|
+| 3 | Training | 17.2685 | 12.8804 |
+| 5 | Validation | 15.3026 | 13.5790 |
+| 6 | Validation | 18.4423 | 13.7285 |
+
+: Terminal MIP gaps for excluded parents. Both budgets are right-censored for time to optimality; all final gaps remain above 10 percent. {#tbl-rejections}
+
+![Terminal gaps of excluded parents under two repair budgets. Bars represent separate runs, not samples along one continuous trajectory. The dashed line marks the admission ceiling.](figures/figure_source_gap.png){#fig-source-gap width=100% fig-pos="H"}
+
+Longer attempts reduced the observed terminal gap in these three cases but did not establish optimality or satisfy admission. These selected difficult cases are not an unbiased solver-comparison sample. The retained cohort is easier under the acceptance criterion, and conclusions must remain conditional on that selection.
+
+## Execution time and retained unsuccessful attempts
+
+Four-region timing is available for all six repair attempts (@fig-source-times). Optimization dominates their recorded duration. Small limit overruns and additional reading, construction and orchestration costs remain visible in the full-precision CSV. Total time is not replaced by solver-native runtime; residual overhead is not silently assigned to construction.
+
+![Four timing regions for six source-repair attempts. M3, M5 and M6 denote excluded medium parents; 1h and 4h denote requested budgets. Panels have independent vertical scales. These are source-label repair costs, not GNN-guided solver outcomes.](figures/figure_source_time_regions.png){#fig-source-times width=100% fig-pos="H"}
+
+The accompanying [source-rejection outcome table](tables/table_source_rejection_outcomes.csv) retains objective, bound, relative gap, all four time regions, censoring and source-report identity. Keeping unsuccessful attempts prevents the revised cohort from concealing resources spent on excluded cases. End-to-end accounting must also include source collection, graph preparation, training and prediction; those costs cannot be inferred from these six records alone.
+
+## Graph preparation: operational completion and reserved analysis
+
+The supplied Slurm record reports successful completion of all 39 graph tasks and the consolidation job. This establishes scheduler-level completion. Final graph-artifact validation, descriptor tables and visual inspection of the 39-parent figures require the returned evidence bundle. Successful process exit does not certify variable alignment, root-feature provenance, graph uniqueness or projection interpretation.
+
+**Reserved graph-results panel.** Insert variable/constraint counts, nonzeros, degree and domain summaries, binary-target prevalence and within-parent comparisons. Include descriptor projection and clustering views with method, scaling, retained variance where applicable, population, seed and degeneracy disclosed. Distinguish originals from descendants. No projection is rendered here because accepted numerical descriptors have not yet been supplied. Test outcomes must not determine representation, clusters, selection or cohort.
+
+## Neural training and held-out evaluation: pending
+
+At the last supplied observation, job 3307 was RUNNING with elapsed wall time 08:12:14. A running job's zero exit-code field is not successful completion. No completed-epoch count, accepted loss history, selected checkpoint or held-out score is reported here. The configuration remains 100 full epochs, seed 42, 23 training parents and eight validation parents. Eight test parents are reserved for subsequent held-out evaluation.
+
+**Reserved training-results panel.** Insert training and validation weighted BCE on the same axes for every completed epoch; mark the validation-selected checkpoint and intended 100-epoch budget. Retain the actual completed budget if interrupted or unsuccessful. Export the epoch table and distinguish online training loss from post-epoch validation loss. Illustrative curves, repeated endpoints and zero-filled missing epochs are not used.
+
+**Reserved prediction-results panel.** Report per-parent and per-difficulty precision, recall, F1, average precision, BCE, Brier score and calibration error, with parent-macro and pooled summaries where supported by accepted artifacts. Include precision-recall and calibration plots, threshold provenance, prevalence, confusion counts and constant-zero/root-LP diagnostics. ROC summaries, if produced, are secondary to precision-recall under imbalance. Undefined metrics must be labelled. Checkpoint and threshold selection remain validation-only.
+
+## Solver guidance and the complete output inventory
+
+No paired native-guidance effect based on this training run is available. This draft reports neither neural speedup nor a winning augmentation arm. Earlier engineering experiments are not pooled with the revised confirmation. The four-arm protocol and the present Gurobi-labelled confirmation remain distinct analyses.
+
+**Reserved optimization-results panel.** Insert unguided/hinted paired gaps and optimize times, four timing regions, gap sensitivity and paired effects only after matching parent, target solver, budget and policy. Separate 3,600-second from 14,400-second budgets and retain failures and censoring. Restricted bounds are not full-model certificates. Missing comparisons cannot be inferred from classification quality.
+
+@tbl-results-register identifies all output families, including those deferred beyond this partial MVP. Exact filenames and population requirements appear in the manuscript results register. Pending rows are reserved deliverables, not numerical evidence.
+
+| Output family | Tables and figures | Status at cut-off |
+|:--|:--|:--|
+| Source admission | Cohort table/figure; rejection gap table/figure | Supplied diagnostic |
+| Source costs | Repair CSV; four-region figure | Six repair records |
+| Full source EDA | Descriptors, incumbent trajectories, gap/time distributions | Bundle pending |
+| Graph EDA | Structural statistics, projection, clustering | Artifact review pending |
+| Training | Epoch table; shared training/validation loss figure | Job running |
+| Prediction | Test/per-parent quality; PR/calibration figures | Evaluation pending |
+| Native solver runs | Outcome/time tables; gap/time figures | Current-cohort comparison unavailable |
+| Paired effects | Descriptive-effect table and figure | Current-cohort comparison unavailable |
+| Gap sensitivity | Admission/solver sensitivity table and figure | Full output pending |
+
+: Publication-output register, separating available diagnostics from unobserved training and solver outcomes. {#tbl-results-register}
+
+# Discussion, limitations and MVP closure
+
+The confirmed advance is source-admission bookkeeping with an explicit 39-parent revision and preserved evidence for three rejected parents. Operational graph completion is also reported. These support an inspectable development workflow, not a conclusion that the GNN predicts useful assignments or accelerates optimization. Completed training would still require loss-history checks, validation-based selection and untouched held-out evaluation.
+
+Threats to validity include solver-conditioned selection, correlated descendants, class imbalance, multiple equivalent optima, outcome-dependent missingness, root-feature acquisition overhead, one training seed and no hard instances. Excluding one training and two validation parents changes both learning and model-selection populations even though test identities remain fixed. A common feature extractor does not make solver-labelled populations statistically equivalent. The MINIMIZE correction also limits external comparisons unless formulation conventions are checked.
+
+The agreed delivery is a research MVP with explicit limitations. It may close with documented partial or unsuccessful experiments, but failed checks remain failed and unavailable results remain unavailable. Software delivery is distinct from experimental success and scientific certification. Native-guidance comparisons and the deferred 90-parent extension are future evidence gates, not results to invent to close this draft. Code review, unit tests and document rendering do not establish scientific validity or TRL 6.
 
 # Reproducibility and availability
 
 The implementation is maintained in the public [CFL-Gurobi-GNN repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn). The root README preserves the MILPBench instance-download links. Raw models, solver licences, host paths, checkpoints, and full solution trajectories are not bundled into this manuscript website. Public access to source code does not imply redistribution rights for benchmark data.
 
+The project's original code, documentation and manuscript are released under the **MIT License**. Original project-generated metadata, tables and figures use MIT within the authors' rights. This is not a GNU GPL designation. MILPBench data, solver software and third-party materials retain their own terms; the MIT notice does not relicense source instances or guarantee redistribution rights for their derivatives. Licensing notices accompany reviewed exports without changing immutable experimental receipts.
+
 The manuscript reuses the supplied [quarto-sbc template](https://github.com/cvictorr2508/quarto-sbc), version 0.2.0, pinned by commit. Its original licence and SBC third-party notices accompany the source. A static Quarto Manuscript build produces HTML and PDF without executing the research pipeline. Audited empirical assets can be added later with source hashes and captions that identify their cohort and development status. Author order, affiliations, ORCID identifiers, and email addresses were supplied by the corresponding project contributor. Funding, contribution statements, and the intended journal remain to be confirmed before submission. The current SBC presentation is a working format, not an Elsevier submission template.
 
 # Conclusion
 
-This protocol separates solver-labelled supervision, mathematical augmentation, graph representation, and solver intervention in a CFL research pipeline. Its central safeguards are parent-level partitioning, independent label validation, a common Gurobi graph authority, versioned neural computation, and paired outcomes with explicit censoring. The present contribution is an inspectable experimental specification and publication artifact. Whether augmentation or neural hints improve optimization remains to be established by the pending campaign and, subsequently, by the deferred full-population study.
+This protocol separates solver-labelled supervision, mathematical augmentation, graph representation, and solver intervention in a CFL research pipeline. Its central safeguards are parent-level partitioning, independent label validation, a common Gurobi graph authority, versioned neural computation, and paired outcomes with explicit censoring. The present contribution is an inspectable experimental specification, source-admission evidence for a revised 39-parent development cohort, and a publication artifact. Whether augmentation or neural hints improve optimization remains to be established by the pending campaign and, subsequently, by the deferred full-population study.
 
 # Declaration of generative AI and AI-assisted technologies in the manuscript preparation process {.unnumbered}
 

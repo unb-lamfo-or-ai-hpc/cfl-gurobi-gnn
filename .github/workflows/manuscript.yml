@@ -39,6 +39,10 @@ jobs:
         run: |
           python scripts/manuscript/check_manuscript.py
           python -m unittest discover -s tests/manuscript -v
+      - name: Render reviewed diagnostic figures without solver or training execution
+        run: |
+          python -m pip install matplotlib==3.10.9
+          python scripts/manuscript/build_results_assets.py
       - name: Render the supplied SBC manuscript template
         # Quarto locates its private TinyTeX runtime; tlmgr is not on runner PATH.
         run: quarto render manuscript --no-execute -M latex-auto-install:true
