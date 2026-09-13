@@ -10,6 +10,10 @@ EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
 cd "$EXEC_DIR"
 test -f pyproject.toml
 export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+COHORT_ARGS=()
+if [[ -n "${CONFIRMATION_COHORT_REVISION_DIR:-}" ]]; then
+    COHORT_ARGS=(--cohort_revision_dir "$CONFIRMATION_COHORT_REVISION_DIR")
+fi
 srun python3 -m cfl_gnn.cli.run_confirmation_training consolidate \
     --campaign_dir "${CONFIRMATION_EXECUTION_DIR:?}" \
-    --dataset_dir "${CONFIRMATION_DATASET_DIR:?}"
+    --dataset_dir "${CONFIRMATION_DATASET_DIR:?}" "${COHORT_ARGS[@]}"

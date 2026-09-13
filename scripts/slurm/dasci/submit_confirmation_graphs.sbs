@@ -13,7 +13,12 @@ export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
 export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
 test -s "$GRB_LICENSE_FILE"
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+COHORT_ARGS=()
+if [[ -n "${CONFIRMATION_COHORT_REVISION_DIR:-}" ]]; then
+    COHORT_ARGS=(--cohort_revision_dir "$CONFIRMATION_COHORT_REVISION_DIR")
+fi
 srun python3 -m cfl_gnn.cli.run_confirmation_training graph \
     --campaign_dir "${CONFIRMATION_EXECUTION_DIR:?}" \
     --dataset_dir "${CONFIRMATION_DATASET_DIR:?}" \
-    --data_root "${DATA_ROOT:?}" --task_index "${SLURM_ARRAY_TASK_ID:?}"
+    --data_root "${DATA_ROOT:?}" --task_index "${SLURM_ARRAY_TASK_ID:?}" \
+    "${COHORT_ARGS[@]}"

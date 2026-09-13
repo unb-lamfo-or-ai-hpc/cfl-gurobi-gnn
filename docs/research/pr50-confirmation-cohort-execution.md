@@ -255,3 +255,59 @@ Keep the contract-bound source executor and validator unchanged while inspecting
 this campaign. Review both precommitted budgets (3600 and 14400 seconds) before
 deciding whether a targeted re-audit, repair, or methodological decision is needed.
 PR51 and PR52 are frozen until the maintainer resumes them.
+
+## Approved development-cohort revision (2026-09-13)
+
+The maintainer approved a separate **39-parent development cohort**, not a
+relaxation of the original 42-parent gate. All three pending medium parents
+exhausted the 14400-second budget with valid collector checks and terminal gaps
+of 12.8804%, 13.5790%, and 13.7285%, respectively. These observations remain
+right-censored evidence in the original campaign. Its report, index, labels and
+repair artifacts are not rewritten or moved.
+
+The revision fixes 30 easy and 9 medium parents, retaining their canonical folds:
+23 training, 8 validation, and the same 8 held-out test parents. The excluded
+identities are exactly `CFL_medium_instance_3`, `CFL_medium_instance_5`, and
+`CFL_medium_instance_6`. This selection conditions on solver label admissibility;
+it cannot establish representativeness or generalization over all 42 parents.
+`development_only=true` and `scientific_reporting_eligible=false` remain mandatory.
+
+The new `confirmation_cohort_revision.json` records approval, exclusions, the
+39-parent list, 23/8/8 counts, source campaign/report/index hashes and a hashed
+copy of the sanitised rejection evidence. It is written to a separate directory.
+The default 42-parent path still rejects the incomplete campaign; the revised
+path must be explicitly selected. No solver repair or parent collection is run.
+
+The graph adapter uses the compact 0–38 revision ordering, preserves Gurobi as
+the graph authority, recomputes real MIPNODE root features, and independently
+checks labels against each original MIP. Completed graph tasks can be reused
+only under an identical contract and matching artifact hashes. Graph statistics
+and clustering must pass before training. The versioned Gasse protocol retains
+seed42, 100full epochs, patience100, gap<=10%, training-only prenorm fitting and
+validation-only checkpoint/threshold selection. Training and validation losses
+share one SVG figure. Held-out evaluation executes after training, not during it.
+
+After updating the PR50 branch on DGX with `tfm_env` active, invoke:
+
+```bash
+export DATA_ROOT=/raid/vrcelestino/data/cfl-gurobi-gnn/data
+bash scripts/slurm/dasci/launch_confirmation_training.sh \
+  "${DATA_ROOT}/analysis/confirmation_execution/pr50_20260912T121753Z" \
+  --development39
+```
+
+The child launcher runs the native test suite, creates the revision, validates
+the graph contract, then submits a 39-task graph array (at most2concurrent), an
+`afterany` graph audit and an `afterok` GPU training/evaluation job. Preserve its
+printed `COHORT_REVISION`, `GRAPH_JOB`, `GRAPH_AUDIT_JOB`,
+`TRAIN_AND_EVALUATION_JOB`, `DATASET` and `TRAINING` values. Do not relaunch the
+whole chain while it is active. Source campaign implementation fingerprints
+remain unchanged. Failed graph tasks must be diagnosed before retrying.
+
+Before requesting merge, require all39 graph receipts and both descriptive
+analysis gates, the23/8/8 training plan, 100completed epochs, finite training and
+validation loss on every epoch, the combined loss SVG, validation-selected
+checkpoint/threshold, zero test graphs loaded during training, and an eight-parent
+held-out evaluation with artifact hashes and sanitisation checks. Native primary
+guidance benchmarking remains a subsequent PR50 gate; no local mock test stands
+in for DGX execution evidence. PR51/52 remain frozen.

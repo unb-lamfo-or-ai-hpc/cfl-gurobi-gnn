@@ -1,4 +1,4 @@
-"""Strict graph consolidation and training of the admitted 42-parent cohort.
+"""Strict graph consolidation of a complete or explicitly revised source cohort.
 
 This adapter preserves imported-label provenance. It reuses the versioned Gasse
 backend, not a new trainer, and never manufactures parent solve reports.
@@ -6,8 +6,10 @@ backend, not a new trainer, and never manufactures parent solve reports.
 from __future__ import annotations
 
 import argparse
+import csv
 import gzip
 import json
+import math
 from pathlib import Path
 
 from cfl_gnn.pipelines.confirmation_execution import (
@@ -15,12 +17,16 @@ from cfl_gnn.pipelines.confirmation_execution import (
 from cfl_gnn.training.gasse_reconnected import (
     canonical_sha256, write_json, read_jsonl, load_protocol, git_blob_sha1,
     LEGACY_GASSE_GIT_BLOB_SHA1, validate_training_plan, TRAINING_PLAN_NAME,
-    TRAINING_REPORT_NAME, run_serial_training)
+    TRAINING_REPORT_NAME, TRAINING_HISTORY_NAME, run_serial_training)
 from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.paths import PROJECT_ROOT
 
 
-def admitted_sources(campaign_dir):
+def admitted_sources(campaign_dir, cohort_revision_dir=None):
+    if cohort_revision_dir is not None:
+        from cfl_gnn.pipelines.confirmation_revision import load
+        _, plan, report, rows = load(campaign_dir, cohort_revision_dir)
+        return plan, report, {r["source_instance_id"]: r for r in rows}
     campaign = Path(campaign_dir).resolve()
     plan = read_json(campaign / PLAN)
     validate_plan(plan)
@@ -41,17 +47,21 @@ def admitted_sources(campaign_dir):
     return plan, report, {r["source_instance_id"]: r for r in rows}
 
 
-def graph_contract(campaign_dir):
+def graph_contract(campaign_dir, cohort_revision_dir=None):
     from cfl_gnn.graph import gurobi_graph_artifact
-    plan, report, rows = admitted_sources(campaign_dir)
+    plan, report, rows = admitted_sources(campaign_dir, cohort_revision_dir)
     contract = {"schema_version": 1, "source_contract_sha256": plan["contract_sha256"],
                 "source_report_sha256": sha256_file(Path(campaign_dir) / "confirmation_execution_report.json"),
                 "label_index_sha256": report["label_index"]["sha256"],
                 "root_policy": "first_optimal_root_gurobi_mipnode", "root_time_limit_seconds": 600,
                 "graph_authority": "gurobi", "objective_sense": "MINIMIZE", "seed": 42,
-                "zero_fallback_allowed": False, "cohort": list(COHORT),
+                "zero_fallback_allowed": False, "cohort": list(rows),
                 "implementation_sha256": {"adapter": sha256_file(Path(__file__)),
                     "graph_builder": sha256_file(Path(gurobi_graph_artifact.__file__))}}
+    if cohort_revision_dir is not None:
+        from cfl_gnn.pipelines.confirmation_revision import load
+        revision, _, _, _ = load(campaign_dir, cohort_revision_dir)
+        contract["cohort_revision"] = revision
     return {**contract, "contract_sha256": canonical_sha256(contract)}, plan, rows
 
 
@@ -74,13 +84,14 @@ def checked_label(campaign, row, task):
     return path, label
 
 
-def build_graph(*, campaign_dir, data_root, dataset_dir, task_index):
+def build_graph(*, campaign_dir, data_root, dataset_dir, task_index, cohort_revision_dir=None):
     from cfl_gnn.graph.gurobi_graph_artifact import capture_root_relaxation, write_root_artifact, build_graph_artifact
     campaign, output = Path(campaign_dir).resolve(), Path(dataset_dir).resolve()
-    contract, source_plan, sources = graph_contract(campaign)
-    if not 0 <= task_index < 42:
+    contract, source_plan, sources = graph_contract(campaign, cohort_revision_dir)
+    tasks = [t for t in source_plan["tasks"] if t["source_instance_id"] in sources]
+    if not 0 <= task_index < len(tasks):
         raise ValueError("graph task outside frozen cohort")
-    task = source_plan["tasks"][task_index]
+    task = tasks[task_index]
     identity = task["source_instance_id"]
     row = sources[identity]
     mip = checked(data_root, task["mip"])
@@ -115,12 +126,14 @@ def build_graph(*, campaign_dir, data_root, dataset_dir, task_index):
     return result
 
 
-def consolidate(*, campaign_dir, dataset_dir, descriptive_outputs=True):
+def consolidate(*, campaign_dir, dataset_dir, descriptive_outputs=True, cohort_revision_dir=None):
     campaign, output = Path(campaign_dir).resolve(), Path(dataset_dir).resolve()
-    contract, plan, sources = graph_contract(campaign)
+    contract, plan, sources = graph_contract(campaign, cohort_revision_dir)
     records = []
     for task in plan["tasks"]:
         identity = task["source_instance_id"]
+        if identity not in sources:
+            continue
         receipt_path = output / "receipts" / f"{identity}.json"
         receipt = read_json(receipt_path)
         if (receipt["contract_sha256"] != contract["contract_sha256"] or receipt["source_instance_id"] != identity
@@ -149,7 +162,7 @@ def consolidate(*, campaign_dir, dataset_dir, descriptive_outputs=True):
             "label_mip_gap_relative": label["mip_gap_relative"], "label_objective": label["solution_objective"],
             "label_execution_time_seconds": label["execution_time_seconds"],
             "receipt": descriptor(output, receipt_path)})
-    if len({r["mip_sha256"] for r in records}) != 42:
+    if len({r["mip_sha256"] for r in records}) != len(sources):
         raise ValueError("duplicate parent formulation in frozen cohort")
     manifest = output / "confirmation_graph_manifest.jsonl"
     manifest.write_text("".join(json.dumps(r, sort_keys=True, allow_nan=False)+"\n" for r in records), encoding="utf-8")
@@ -161,7 +174,7 @@ def consolidate(*, campaign_dir, dataset_dir, descriptive_outputs=True):
             analyses[name] = function(manifest_path=manifest, graph_root=output, output_dir=output / "analysis" / name, overwrite=True)
         if not all(r["gate_status"] == "passed" for r in analyses.values()):
             raise ValueError("graph descriptive analysis failed")
-    report = {"contract": contract, "gate_status": "passed", "graphs": 42,
+    report = {"contract": contract, "gate_status": "passed", "graphs": len(sources),
               "manifest": descriptor(output, manifest), "analyses": analyses,
               "descriptive_outputs_complete": descriptive_outputs,
               "development_only": True, "scientific_reporting_eligible": False}
@@ -169,14 +182,14 @@ def consolidate(*, campaign_dir, dataset_dir, descriptive_outputs=True):
     return report
 
 
-def training_plan(*, campaign_dir, dataset_dir):
+def training_plan(*, campaign_dir, dataset_dir, cohort_revision_dir=None):
     output = Path(dataset_dir).resolve()
-    contract, source_plan, _ = graph_contract(campaign_dir)
+    contract, source_plan, sources = graph_contract(campaign_dir, cohort_revision_dir)
     report = read_json(output / "confirmation_graph_report.json")
-    if report.get("gate_status") != "passed" or report.get("contract") != contract or report.get("graphs") != 42:
-        raise ValueError("strict 42-parent graph dataset is not ready")
+    if report.get("gate_status") != "passed" or report.get("contract") != contract or report.get("graphs") != len(sources):
+        raise ValueError("strict approved-cohort graph dataset is not ready")
     records = read_jsonl(checked(output, report["manifest"]))
-    if len(records) != 42 or {r["sample_id"] for r in records} != set(COHORT):
+    if len(records) != len(sources) or {r["sample_id"] for r in records} != set(sources):
         raise ValueError("training inventory changed")
     tasks = {t["source_instance_id"]: t for t in source_plan["tasks"]}
     for record in records:
@@ -188,15 +201,19 @@ def training_plan(*, campaign_dir, dataset_dir):
         checked(output, {"relative_path": record["graph_relative_path"], "sha256": record["graph_sha256"]})
         checked(output, {"relative_path": record["root_relative_path"], "sha256": record["root_sha256"]})
         checked(campaign_dir, {"relative_path": record["label_run_relative_path"]+"/"+record["label_file_name"], "sha256": record["label_sha256"]})
-    protocol_path = PROJECT_ROOT / "configs/training/gasse_confirmation_v2.json"
+    protocol_path = PROJECT_ROOT / "configs/training" / (
+        "gasse_development_39_v1.json" if cohort_revision_dir is not None else "gasse_confirmation_v2.json")
     protocol = load_protocol(protocol_path)
     if protocol["optimization"]["epochs"] != 100 or protocol["optimization"]["patience"] != 100 or protocol["optimization"]["seed"] != 42:
         raise ValueError("confirmation requires 100 full epochs and seed 42")
+    if protocol["sampling"]["maximum_label_mip_gap_relative"] != .1:
+        raise ValueError("confirmation label admission ceiling must remain ten percent")
     model_path = PROJECT_ROOT / "src/cfl_gnn/models/gasse.py"
     if git_blob_sha1(model_path) != LEGACY_GASSE_GIT_BLOB_SHA1:
         raise ValueError("preserved Gasse model changed")
     counts = {role: sum(r["role"] == role for r in records) for role in ("train", "validation", "test")}
-    if counts != {"train": 24, "validation": 10, "test": 8}:
+    expected_counts = contract.get("cohort_revision", {}).get("partition_counts", {"train": 24, "validation": 10, "test": 8})
+    if counts != expected_counts:
         raise ValueError("confirmation partition counts changed")
     payload = {"schema_version": 1, "dataset_variant": "independently_admitted_confirmation_v1",
         "graph_dataset_contract_sha256": contract["contract_sha256"],
@@ -210,54 +227,92 @@ def training_plan(*, campaign_dir, dataset_dir):
         "records": records, "partition_counts": counts,
         "test_partition_usage": "held_out_not_loaded_during_training",
         "development_only": True, "scientific_reporting_eligible": False}
+    if cohort_revision_dir is not None:
+        payload["dataset_variant"] = "approved_39_parent_development_v1"
+        payload["cohort_revision"] = contract["cohort_revision"]
     return {**payload, "contract_sha256": canonical_sha256(payload), "contract_valid": True,
             "training_ready": True, "engineering_smoke_ready": True, "held_out_evaluation_ready": True}
 
 
-def train_and_evaluate(*, campaign_dir, dataset_dir, output_dir, device="cuda"):
+def validate_training_receipt(report, output):
+    """Require a complete finite learning curve before accessing held-out graphs."""
+    if (report.get("gate_status") != "passed" or report.get("epochs_completed") != 100
+            or report.get("test_graphs_loaded") != 0
+            or report.get("checkpoint_selection") != "minimum_validation_weighted_bce"
+            or report.get("threshold_source") != "maximum_validation_f1"):
+        raise ValueError("100-epoch training or validation-only selection contract failed")
+    for key in ("checkpoint", TRAINING_HISTORY_NAME, "training_validation_loss.svg"):
+        item = report["outputs"][key]
+        checked(output, {"relative_path": item.get("file_name", key), "sha256": item["sha256"]})
+    with (Path(output) / TRAINING_HISTORY_NAME).open(encoding="utf-8", newline="") as stream:
+        history = list(csv.DictReader(stream))
+    if ([int(row["epoch"]) for row in history] != list(range(1, 101))
+            or any(not math.isfinite(float(row[key])) or float(row[key]) < 0
+                   for row in history for key in ("train_loss", "validation_loss"))):
+        raise ValueError("training and validation curves must contain 100 finite epochs")
+
+
+def train_and_evaluate(*, campaign_dir, dataset_dir, output_dir, device="cuda", cohort_revision_dir=None):
     from cfl_gnn.evaluation.gasse_reconnected import build_evaluation_plan, execute_evaluation
     output = Path(output_dir).resolve()
     if output.exists() and any(output.iterdir()):
         raise ValueError("use a new training output directory")
-    plan = training_plan(campaign_dir=campaign_dir, dataset_dir=dataset_dir)
+    plan = training_plan(campaign_dir=campaign_dir, dataset_dir=dataset_dir, cohort_revision_dir=cohort_revision_dir)
+    graph_report = read_json(Path(dataset_dir) / "confirmation_graph_report.json")
+    if graph_report.get("descriptive_outputs_complete") is not True:
+        raise ValueError("graph descriptive outputs must pass before training")
     validate_training_plan(plan)
     write_json(output / TRAINING_PLAN_NAME, plan)
     report = run_serial_training(plan, graph_root=dataset_dir, label_root=campaign_dir,
                                  output_dir=output, device_name=device)
-    if report["epochs_completed"] != 100 or report["test_graphs_loaded"] != 0:
-        raise ValueError("100-epoch confirmation contract failed")
+    validate_training_receipt(report, output)
     evaluation = build_evaluation_plan(training_plan_path=output / TRAINING_PLAN_NAME,
         training_report_path=output / TRAINING_REPORT_NAME, checkpoint_path=output / "best_model.pt")
     write_json(output / "evaluation/gasse_evaluation_plan.json", evaluation)
-    return execute_evaluation(evaluation, graph_root=dataset_dir, label_root=campaign_dir,
+    result = execute_evaluation(evaluation, graph_root=dataset_dir, label_root=campaign_dir,
         checkpoint_path=output / "best_model.pt", output_dir=output / "evaluation", device_name=device)
+    if (result.get("gate_status") != "passed" or result.get("test_graphs_loaded") != 8
+            or result.get("test_partition_usage") != "held_out_evaluation_only"):
+        raise ValueError("eight-parent held-out evaluation contract failed")
+    return result
 
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("command", choices=("preflight", "graph", "consolidate", "dry-run", "train"))
+    p.add_argument("command", choices=("revise", "preflight", "graph", "consolidate", "dry-run", "train"))
     p.add_argument("--campaign_dir", type=Path, required=True)
     p.add_argument("--dataset_dir", type=Path, required=True)
+    p.add_argument("--cohort_revision_dir", type=Path)
     p.add_argument("--data_root", type=Path)
     p.add_argument("--task_index", type=int)
     p.add_argument("--output_dir", type=Path)
     p.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     args = p.parse_args(argv)
-    if args.command == "preflight":
-        result, _, _ = graph_contract(args.campaign_dir)
+    revision_args = {"cohort_revision_dir": args.cohort_revision_dir}
+    if args.command == "revise":
+        if args.cohort_revision_dir is None:
+            p.error("revise requires cohort_revision_dir")
+        from cfl_gnn.pipelines.confirmation_revision import prepare
+        result = prepare(args.campaign_dir, args.cohort_revision_dir)
+    elif args.command == "preflight":
+        result, _, _ = graph_contract(args.campaign_dir, **revision_args)
     elif args.command == "graph":
         if args.data_root is None or args.task_index is None:
             p.error("graph requires data_root and task_index")
         result = build_graph(campaign_dir=args.campaign_dir, data_root=args.data_root,
-                             dataset_dir=args.dataset_dir, task_index=args.task_index)
+                             dataset_dir=args.dataset_dir, task_index=args.task_index, **revision_args)
     elif args.command == "consolidate":
-        result = consolidate(campaign_dir=args.campaign_dir, dataset_dir=args.dataset_dir)
+        result = consolidate(campaign_dir=args.campaign_dir, dataset_dir=args.dataset_dir, **revision_args)
     elif args.command == "dry-run":
-        result = training_plan(campaign_dir=args.campaign_dir, dataset_dir=args.dataset_dir)
+        result = training_plan(campaign_dir=args.campaign_dir, dataset_dir=args.dataset_dir, **revision_args)
     else:
         if args.output_dir is None:
             p.error("train requires output_dir")
         result = train_and_evaluate(campaign_dir=args.campaign_dir, dataset_dir=args.dataset_dir,
-                                   output_dir=args.output_dir, device=args.device)
+                                   output_dir=args.output_dir, device=args.device, **revision_args)
+    if args.command in {"revise", "preflight"}:
+        print(json.dumps({"contract_sha256": result["contract_sha256"], "cohort_size": len(result["cohort"]),
+                          "cohort_revision": result.get("cohort_revision", {}).get("revision_id", result.get("revision_id")),
+                          "development_only": True}, sort_keys=True))
     print(f"[INFO] confirmation stage={args.command} completed | development_only=true")
     return 0
