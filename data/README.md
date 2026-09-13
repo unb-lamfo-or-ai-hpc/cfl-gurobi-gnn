@@ -37,4 +37,6 @@ Do not commit large tensors, private paths, licenses, raw credential-bearing
 logs, or unreviewed reports. Do not delete or quarantine files referenced by an
 active manifest. Historical failures are evidence and should remain recoverable.
 External data and solver rights are separate from the repository's MIT license.
-
+Original project-generated metadata, tables and figures use MIT within the
+authors' rights; see [data licensing](LICENSE.md) and the
+[repository policy](../LICENSE_POLICY.md). Neither notice relicenses MILPBench.

@@ -1,5 +1,25 @@
 # Academic-English documentation review
 
+## Licensing clarification, 13 September 2026
+
+The owner resumed this PR for MIT licensing clarification while PR50 training
+job3307 remains active. The root LICENSE and package license reference already
+identify MIT; neither was replaced. LICENSE_POLICY.md and data/LICENSE.md now
+cover original documentation, manuscript content and project-generated metadata,
+tables and figures within the authors' rights. External MILPBench data, solver
+software and third-party resources are not relicensed. Historical receipts and
+active-job inputs remain unchanged.
+
+Validation on the isolated branch: **383 passed, 9 skipped**, four NumPy warnings;
+five focused documentation tests passed. The first full-suite attempt found a
+stale local SCIPOPTDIR pointing to an absent installation; removing that override
+only for the validation process allowed the bundled PySCIPOpt wheel to load.
+No repository fix or DGX environment change was needed. Nine native Gurobi checks
+remain skipped for license availability, not certified as passing.
+
+Final empirical reconciliation still waits for PR50. This licensing update does
+not promote the PR to Ready for review or claim completion of the training run.
+
 ## Scope and provenance
 
 This independent documentation branch starts from develop commit

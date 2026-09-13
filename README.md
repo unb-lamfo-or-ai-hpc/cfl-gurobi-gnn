@@ -171,8 +171,13 @@ embedding or a basis for selecting folds.
 Keep raw instances, solution vectors, graphs, checkpoints, and historical
 evidence outside routine Git commits. Publish only reviewed, sanitized outputs;
 never commit solver licenses or credential-bearing logs. The
-[MIT license](LICENSE) covers this repository's code, not external datasets or
+[MIT license](LICENSE) covers this repository's original code, documentation and manuscript content, not external datasets or
 commercial solver rights.
+
+Original project-generated metadata, tables and figures are also offered under
+MIT within the authors' rights. The [licensing policy](LICENSE_POLICY.md) and
+[data notice](data/LICENSE.md) define the exclusions and export requirements.
+Historical receipts and running-job inputs must not be rewritten to add tags.
 
 ## Literature and software references
 

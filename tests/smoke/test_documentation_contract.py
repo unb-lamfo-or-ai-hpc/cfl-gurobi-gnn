@@ -5,6 +5,18 @@ import re
 
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_mit_scope_preserves_external_rights():
+    assert (ROOT / "LICENSE").read_text().startswith("MIT License")
+    assert 'license = {file = "LICENSE"}' in (ROOT / "pyproject.toml").read_text()
+    policy = (ROOT / "LICENSE_POLICY.md").read_text()
+    assert "SPDX-License-Identifier: MIT" in policy
+    assert "does not relicense MILPBench" in policy
+    data = (ROOT / "data/LICENSE.md").read_text()
+    assert "SPDX-License-Identifier: MIT" in data
+    assert "not relicensed" in data
+
 DATA_URLS = (
     "https://github.com/thuiar/MILPBench",
     "https://drive.google.com/file/d/1z6oNG1ja6CwlsRYViXIzBj0j8Ch6sxdt/view?usp=sharing",
@@ -78,4 +90,3 @@ def test_translated_legacy_launchers_remain_lf_only():
         payload = (ROOT / "scripts/slurm/dasci" / name).read_bytes()
         assert payload.startswith(b"#!/bin/bash\n")
         assert b"\r" not in payload
-
