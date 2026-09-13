@@ -219,3 +219,39 @@ medium parents. It is evidence for the next targeted intervention.
   followed by the Quarto Manuscript draft using the maintainer's future template.
   The full-90 execution and extended scientific results remain postponed until
   after that draft. No TRL or generalization claim follows from unit-test counts.
+
+## Read-only triage of the 39/42 source receipt
+
+The reported campaign `27273b1baf3f46e27b229055cfdb1ca41ea2018ac40a7952e0f780dda9da0f7a`
+admits 30 easy and 9 medium parents. The outstanding parents are
+`CFL_medium_instance_3` (training), `CFL_medium_instance_5` and
+`CFL_medium_instance_6` (validation). The admitted split is 23/8/8, not the
+precommitted 24/10/8. Neither training nor merge readiness follows from this receipt.
+
+The original aggregate omits rejection details when a source report exists but
+does not admit a label. Consequently, the receipt alone cannot distinguish an
+excessive gap from instrumentation or independent mathematical validation errors.
+Do not rerun optimization, relax the gap ceiling, or remove these parents based
+only on this aggregate.
+
+After confirming source array 3262 and audit 3263 have stopped, update the PR50
+branch and run the diagnostic reader from the repository root with `tfm_env`:
+
+```bash
+python3 -m cfl_gnn.cli.audit_confirmation_sources \
+  --campaign_dir "$CONFIRMATION_EXECUTION_DIR"
+```
+
+The reader writes JSON to standard output only. It validates the original plan,
+aggregate/index consistency, accepted solution/report hashes, and the available
+repair report identities and artifact hashes. It exposes finite gap and timing
+measurements, censoring, known collector checks and sanitised source reasons for
+unadmitted parents. It never deserializes solution vectors, imports a solver to
+execute it, changes historical artifacts, admits labels, or submits retries.
+Unknown or missing evidence remains explicitly unresolved. This is diagnostic
+evidence, not a new feasibility audit or a replacement admission gate.
+
+Keep the contract-bound source executor and validator unchanged while inspecting
+this campaign. Review both precommitted budgets (3600 and 14400 seconds) before
+deciding whether a targeted re-audit, repair, or methodological decision is needed.
+PR51 and PR52 are frozen until the maintainer resumes them.
