@@ -1,0 +1,292 @@
+---
+title: "Graph Neural Prediction for Capacitated Facility Location: An Audited Original-Instance Study"
+author:
+  - name: Victor Rafael Rezende Celestino
+    orcid: 0000-0001-5913-2997
+    email: vrcelestino@unb.br
+    institute: 1
+    affiliations:
+      - id: unb
+        name: University of Brasilia
+  - name: Víctor Alejandro Vargas-Pérez
+    orcid: 0000-0001-6803-3608
+    email: victorvp@go.ugr.es
+    institute: 2
+    affiliations:
+      - id: ugr
+        name: Data Science and Computer Intelligence Institute, University of Granada
+  - name: Óscar Cordón García
+    orcid: 0000-0001-5112-5629
+    email: ocordon@decsai.ugr.es
+    institute: 2
+    affiliations:
+      - ref: ugr
+  - name: Pedro González García
+    orcid: 0000-0002-6733-3868
+    email: pglez@ujaen.es
+    institute: 3
+    affiliations:
+      - id: uja
+        name: Data Science and Computer Intelligence Institute, University of Jaén
+sbc-affiliations:
+  - text: University of Brasilia
+    email: vrcelestino@unb.br
+  - text: "Data Science and Computer Intelligence Institute, University of Granada"
+    email: "victorvp@go.ugr.es, ocordon@decsai.ugr.es"
+  - text: "Data Science and Computer Intelligence Institute, University of Jaén"
+    email: pglez@ujaen.es
+abstract: |
+  Learning-assisted mixed-integer optimization requires separating mathematical instances, solution labels, and solver interventions. We present an audited graph-learning pipeline and an original-instance study of capacitated facility location. Gurobi provides a common interpretation of the formulation and real root-relaxation features, while a versioned Gasse-inspired graph neural network predicts binary solution values. Label-quality screening retained 39 of 42 development instances: 30 easy and nine medium. Three medium instances remained above a 10 percent terminal MIP gap after independent 14,400-second repair runs. Training used 23 parents for 100 epochs with seed 42; eight validation parents selected the checkpoint and threshold, and eight distinct parents were held out for evaluation. Pooled test F1 was 0.5825 and average precision was 0.6098 across 3,222,800 binary targets with 0.1171 percent positive prevalence. Although ranking improved over constant-zero and root-relaxation diagnostics, the Brier score was worse than both baselines, precluding a probability-calibration claim. We report graph statistics, structural projection, training and validation losses, and parent-level evaluation alongside exclusions and computational costs. The results establish an executable, traceable research pipeline and conditional predictive performance, not improved solver performance. Augmentation comparisons, native solver guidance, multiple-seed replication, and evaluation on hard instances remain future work.
+---
+
+# Introduction
+
+Mixed-integer linear programming (MILP) combines expressive mathematical models with general-purpose optimization algorithms. Repeatedly solving related instances creates an opportunity to learn useful regularities without replacing the solver's feasibility checks or optimality certificates. Graph neural networks (GNNs) are a natural candidate because variable-constraint incidence exposes the structure of a MILP independently of a fixed matrix size [@cappart2021]. Whether this representation yields useful solver guidance, however, is an empirical question rather than a consequence of accurate variable classification.
+
+We study this question for capacitated facility location (CFL) instances obtained from [MILPBench](https://github.com/thuiar/MILPBench). The research artifact separates five operations: original-instance solution and trajectory collection, mathematical augmentation, graph construction, supervised learning, and held-out solver guidance. This separation is intended to prevent incumbent vectors from being mistaken for new optimization instances and to prevent solver-specific label provenance from changing graph semantics.
+
+The contribution is a reproducible implementation and a completed original-instance prediction study, rather than a new claim of state-of-the-art solver performance. We ask whether a parent-partitioned, quality-screened cohort supports learnable binary supervision, how its graph structure varies, and whether held-out ranking and probability quality agree. The implementation also supports independently labelled local-branching augmentation, but its effect on learning and downstream optimization is not estimated in this experiment. This distinction separates demonstrated prediction results from the broader objective of accelerating optimization.
+
+# Related work and methodological position
+
+## Learning to Optimize and the role of the solver
+
+Learning to Optimize (L2O) uses experience across optimization problems to learn parts of a solution method. @chen2022primer organize this perspective around learned algorithms, architectures, and training procedures, with particular attention to continuous optimization and distribution-dependent generalization. A method that exploits a recurring problem family need not transfer to arbitrary instances. In the present study, the easy/medium confirmation cohort therefore cannot support a claim about unseen hard CFL instances or other MILP families.
+
+@chen2024tutorial distinguish accelerating optimization algorithms, estimating solutions, and adapting optimization models to application objectives. Their treatment of mixed-integer optimization motivates combining a predictor with conventional solver components rather than treating a raw network output as a feasible, certified solution. The broader objective is algorithm acceleration through solution-informed guidance: offline supervision predicts binary assignments, while the online solver interprets hints or candidate starts, checks feasibility, and maintains bounds. We do not learn the economic CFL objective, replace branch-and-bound, or differentiate through an optimization layer. Nor is the Adam optimizer used to train the GNN itself a learned optimizer.
+
+The distinction matters beyond linear models. @tang2024l2o study direct solution generation for parametric mixed-integer nonlinear programs, with integer-correction layers and a feasibility-restoration mechanism. That work supplies a contrasting L2O design, not evidence that unconstrained assignment predictions in our CFL pipeline satisfy MILP constraints. Its problem setting and guarantees are not transferred to our model. Here, a feasible point and a solver-derived bound are separate audited artifacts; a low prediction loss alone certifies neither feasibility nor optimality.
+
+This positioning also narrows the broader research agenda. Learned configuration, cut selection, attention-based architectures, and explanation methods are possible extensions, not implemented contributions of this manuscript. Training and validation curves test the predictor; held-out gap and time measurements test its usefulness inside optimization. Graph projections remain descriptive and are not, by themselves, explanations of solver behaviour.
+
+## Graph learning for distinct MILP decisions
+
+@gasse2019 introduce a variable-constraint bipartite graph convolutional architecture for learning branching decisions through imitation of strong branching. We retain that paper as the principal architectural reference. Our supervised targets are binary solution values, not expert branching actions; consequently, neither the training task nor the downstream intervention is a replication of their experiments.
+
+Other graph-learning tasks operate on different decisions and information. @labassi2022 learn a pairwise branch-and-bound node comparator using a siamese GNN; this ranks search nodes rather than predicting the values of original-model variables. @scavuzzo2024 learn optimal objective values using dynamic information. Such predictions address a different target from binary supervision and do not replace the solver's primal-dual certificate in our protocol. These distinctions prevent the shared use of a bipartite graph from being mistaken for an identical learning problem.
+
+Representation capacity also requires qualification. @chen2024branching identify limitations of message-passing GNNs for representing strong-branching scores and study a higher-order alternative. @chen2024quadratic analyse graph expressivity for continuous and mixed-integer quadratic programs, distinguishing their representable classes. Neither result establishes that our Gasse-inspired network can represent every optimal CFL assignment. We use these studies to motivate explicit architecture, symmetry, and distributional limitations, not to claim a new universality theorem or to add an untested quadratic-programming capability.
+
+## Primal prediction and neighbourhood guidance
+
+Solution prediction has also been used to guide primal search. @ding2020 combine predicted binary values with a local-branching-type intervention. @khalil2022 predict variable biases from near-optimal solutions and use them to guide solver components. The present protocol uses a named, independently checked solution as the label for each mathematical instance; it does not identify that target with the solution-distribution biases of MIP-GNN. @canturk2024 provide a further closely related study of GNN-based primal heuristics. These works motivate separating prediction quality from the quality of solutions ultimately produced by a solver.
+
+Neural Diving generates partial assignments and delegates the remaining optimization to a solver [@nair2020]. It must not be conflated with nonbinding variable hints. The planned primary intervention leaves the original feasible region unchanged. Restrictive interventions are exploratory and require subsequent full-model recovery. Local branching [@fischetti2003] supplies a mathematical neighbourhood operator, used here both as a source of synthetic training instances and, separately, as a possible search intervention. These two uses have different provenance and evaluation requirements.
+
+# Mathematical instances, labels, and augmentation
+
+## Authoritative formulation and objective convention
+
+For parent instance $p$, write the file-defined MILP as
+
+$$
+\begin{aligned}
+z_p^\star &= \min_x \; c_p^\top x+c_{p,0},\\
+A_p x &\;\mathrel{\bowtie_p}\; b_p,\\
+\ell_p \leq x &\leq u_p,\qquad x_j\in\mathbb{Z}\quad(j\in I_p).
+\end{aligned}
+$$
+
+Here $\bowtie_p$ records each row's original sense, $I_p$ denotes integral variables, and $B_p\subseteq I_p$ denotes canonical binary variables. The benchmark file, not a newly written textbook CFL formulation, defines the coefficients, objective constant, variable domains, and constraint identities. This avoids asserting an unverified correspondence between benchmark columns and a simplified facility-assignment model.
+
+The study applies an explicit MINIMIZE override to every CFL input, following the project's correction of the original MAXIMIZE headers. The original file is preserved, and both objective senses and its hash are recorded. This is a disclosed study convention, not an independently established assertion about every future MILPBench release. All labels, root features, and evaluation runs must refer to the corrected formulation.
+
+## Independent label admission
+
+A solution label is admitted only after checking variable-name coverage, finite values, bounds, integrality, every linear row, and the reconstructed objective including its constant. Its parent-model identity must match the source receipt. A finite terminal solver-relative gap at most $0.10$ is necessary but not sufficient. Sensitivity analyses retain thresholds $0.01$, $0.05$, $0.06$, and $0.10$ while preserving every exclusion. The development cohort was revised after source-quality screening; this outcome-dependent selection is explicitly reported rather than interpreted as a complete-cohort success.
+
+Terminal gap, gap at incumbent discovery, total solve time, and incumbent discovery time have distinct meanings. A later dual-bound improvement can reduce the terminal gap without producing a new incumbent. Historical Unix timestamps cannot be reported as elapsed optimization time. Native gap definitions and a separately specified common comparison gap are retained; they must not be silently interchanged across solvers. A timeout with a feasible, admissible label is different from a failed computation or an optimality certificate.
+
+## Synthetic instances from feasible incumbents
+
+Given a feasible binary centre $\bar{x}$ and integer radius $k$, the local-branching constraint is
+
+$$
+\Delta_p(x,\bar{x})=
+\sum_{j\in B_p:\bar{x}_j=0}x_j+
+\sum_{j\in B_p:\bar{x}_j=1}(1-x_j)\leq k.
+$$
+
+The synthetic feasible set is $X_{p,k}=X_p\cap\{x:\Delta_p(x,\bar{x})\leq k\}$. The selected fractions are $0.001$, $0.005$, and $0.01$ of the binary support; the materialized integer radius and constraint hash are recorded. At most three distinct radii are retained per parent and solver. The same operator is applied to Gurobi and SCIP centres, although the centres and resulting inequalities need not coincide.
+
+Each derived MILP receives an independent solve without supplying its centre as a warm start. Its label must satisfy the derived formulation and the local-branching inequality. The centre is used to define the neighbourhood, not to fabricate the derived label. Graphs are constructed for the parents and these explicitly modified models, never for every incumbent in a trajectory. A distinct formulation need not have a distinct optimum or label; augmentation diversity therefore requires its own audit. Derived instances are correlated descendants, not independent experimental replicates.
+
+# Graph construction and supervised learning
+
+## Gurobi-authoritative bipartite representation
+
+Each graph contains variable and constraint nodes, with one coefficient-bearing edge per nonzero matrix entry. The variable features encode the objective coefficient, lower and upper bounds, variable type, and a real Gurobi root-node LP-relaxation value. Constraint features encode the right-hand side and row sense; edge features encode coefficients. The implementation records feature order, scaling, clipping, and raw-domain checks, rather than claiming the encoded representation is universally lossless.
+
+Gurobi is the graph authority for both label sources. In particular, a SCIP-labelled graph does not use a separate SCIP feature extractor. The root vector is captured at a valid root MIPNODE observation and aligned by variable identity. It is a solver-state observation, not an incumbent label, and is not replaced by zeros when capture fails. Root preprocessing time is an additional computational cost that must be reported before making an end-to-end acceleration claim.
+
+Graph statistics include parent counts, variable and constraint counts, nonzeros, degree summaries, domain features, and binary-target prevalence. Structural projections and clustering use outcome-free graph descriptors. They are descriptive summaries, not learned GNN embeddings, and must not select folds, labels, or guidance settings using the test set. Degenerate rank or clustering is reported explicitly rather than rendered as apparent class separation.
+
+## Versioned Gasse-inspired predictor
+
+The legacy Gasse implementation is preserved by source identity. Confirmation uses the separately versioned alternating-prenorm correction: variable-side normalization is fitted using updated constraint messages. Streaming normalization statistics use training graphs only. Numerical verification includes the original toy bipartite fixture, finite gradients, overfitting on a toy example, checkpoint replay, and permutation/disjoint-union behaviour. Passing these checks does not establish predictive usefulness on the CFL cohort.
+
+For binary label $y_j$ and logit $s_j$, training uses positive-class-weighted binary cross-entropy,
+
+$$
+\ell_j=-w_+y_j\log\sigma(s_j)-(1-y_j)\log(1-\sigma(s_j)).
+$$
+
+The positive weight is estimated from training targets. General integer or fractional values are not coerced into binary labels. Weighted scores are not assumed to be calibrated probabilities. The confirmation configuration specifies two message-passing layers, hidden dimension 32, Adam with learning rate $10^{-3}$, gradient clipping at norm 1, seed 42, and 100 full epochs. The checkpoint minimizes validation weighted BCE; a decision threshold maximizes validation F1. Neither choice uses held-out test labels.
+
+In the implemented four-arm design, original-only and augmented arms receive equal parent-level sampling mass and equal optimizer-step budgets. Multiple descendants do not increase their parent's total weight. The completed experiment reported here uses Gurobi-labelled originals only, with four draws per training parent per epoch; the four-arm learning comparison remains future work.
+
+# Experimental design
+
+## Populations and leakage controls
+
+The frozen development confirmation cohort comprises 30 easy and 12 medium parents, with no hard instances. Rotation 0 originally assigns 24 parents to training, 10 to validation, and eight to test. The strict 42-parent campaign remains incomplete. A separately recorded 39-parent revision retained 30 easy and nine medium parents, with 23 training, eight validation and eight test parents. Existing roles are preserved; no parent is reassigned and no easy-only substitution is made. This outcome-dependent revision does not turn the original campaign into a successful 42-parent experiment. Original evidence and exclusions remain preserved. The later 90-parent campaign is outside the current execution scope.
+
+For the paired experiment, the four training arms are Gurobi original-only, Gurobi augmented, SCIP original-only, and SCIP augmented. Their common eligible parent intersection is reported explicitly, including exclusions and censoring. All descendants inherit the parent fold and remain training-only. Validation and test contain originals only, with a shared evaluation-reference policy. Solver-specific labels can disagree; this is not automatically a model defect, especially when multiple optima exist. Accordingly, assignment agreement and optimization feasibility/objective quality answer different questions.
+
+## Precommitted future guidance comparison
+
+The planned primary comparison is Gurobi variable hints against unguided Gurobi on the same held-out original instance. Native hint values and priorities guide search without imposing bounds; partial MIP starts instead provide candidate solution information [@gurobi2026]. SCIP is a matched comparison solver through PySCIPOpt, not an alternative graph authority, and is not assigned a fictitious equivalent of Gurobi's hint attributes. These interventions were not evaluated with the trained model reported here.
+
+Precommitted exploratory methods include partial starts, confidence-based partial fixing, and local-branching trust regions. Binding methods allocate 20 percent of the optimization budget to the restricted phase and then execute fresh original-model recovery with the remaining optimization time. Only primal information can be transferred; a restricted-model dual bound is not a certificate for the full model. Coverage fractions are 1, 5, and 10 percent. Solver budgets are 3,600 or 14,400 seconds, with one thread per run and seed 42. Each budget is analysed separately; selecting a budget after observing test performance would change the experiment.
+
+## Outcomes and figures
+
+The primary outcomes are terminal full-model MIP gap and wall time inside optimization. Total wall time, data reading, model construction, and optimization are recorded as distinct regions; unallocated overhead is retained when reconciling the total. Inference and graph-preparation costs must also be disclosed for any end-to-end comparison. Solver-native runtime and externally timed optimization are not interchangeable measurements.
+
+Timeouts are retained as right-censored time-to-completion observations, not counted as completed solves at the time limit. Terminal gap remains an observed outcome at that budget. Pairing is by parent and target solver; descendants and individual binary variables do not inflate the number of independent test units. The current single-seed development study supports descriptive inspection, not a universal superiority claim or a stable estimate of training-seed variability.
+
+The completed prediction analysis reports pooled and parent-macro classification measures, average precision, ROC area, unweighted BCE, Brier score and ten-bin calibration error. Constant-zero and clipped root-relaxation scores provide diagnostic baselines. Accuracy alone is insufficient for sparse positive targets. Weighted-BCE scores are not assumed to be calibrated, and a validation-selected classification threshold does not perform probability calibration. High assignment agreement can coexist with infeasible rounded solutions; conversely, distinct assignments can achieve the same optimal objective.
+
+# Results
+
+## Source admission and retained unsuccessful attempts
+
+The original cohort contained 42 parents: 30 easy and 12 medium, with no hard instances. Quality screening retained 39 (92.9 percent), comprising all 30 easy parents and nine medium parents. The strict 42-parent objective was therefore not achieved. The revised cohort preserved the existing partition assignments and all eight held-out test identities (@tbl-cohort; @fig-cohort).
+
+| Partition | Original cohort | Excluded | Revised cohort |
+|:--|--:|--:|--:|
+| Training | 24 | 1 | 23 |
+| Validation | 10 | 2 | 8 |
+| Test | 8 | 0 | 8 |
+| Total | 42 | 3 | 39 |
+
+: Parent-level cohort revision based on source-label admissibility. {#tbl-cohort}
+
+![Original and admitted parent inventories. Exclusions affected medium instances in training and validation; test identities were unchanged.](figures/figure_cohort_admission.png){#fig-cohort width=100% fig-pos="H"}
+
+The excluded parents were medium instances 3, 5 and 6. Each received independent 3,600-second and 14,400-second repair attempts. All six runs reached the time limit; the longer attempts reduced terminal gaps but none satisfied the 10 percent ceiling (@tbl-rejections; @fig-source-gap). These are label-quality failures, not evidence that the original models were infeasible. The repair receipts report valid solution and variable-order hashes. The revised population is consequently conditional on solver attainability under the screening procedure.
+
+| Medium instance | Role | Gap at 3,600 s (%) | Gap at 14,400 s (%) |
+|:--|:--|--:|--:|
+| 3 | Training | 17.2685 | 12.8804 |
+| 5 | Validation | 15.3026 | 13.5790 |
+| 6 | Validation | 18.4423 | 13.7285 |
+
+: Terminal gaps for unsuccessful source-repair attempts. Every run was right-censored for time to optimality. {#tbl-rejections}
+
+![Terminal gaps under two independent repair budgets. The dashed line is the label-admission ceiling.](figures/figure_source_gap.png){#fig-source-gap width=100% fig-pos="H"}
+
+Optimization dominated the cost of these repair attempts (@fig-source-times). Total wall time included reading, model construction, optimization and residual overhead. Small limit overruns were retained. These measurements describe source-label acquisition, not neural-guided optimization, and are not used to infer solver speedup.
+
+![Four wall-time regions for six source-repair attempts. Panels use separate vertical scales; M3, M5 and M6 identify medium parents.](figures/figure_source_time_regions.png){#fig-source-times width=100% fig-pos="H"}
+
+## Graph structure and descriptive projection
+
+The graph ledger contained 39 original-instance graphs with Gurobi-authoritative features. Graph receipts recorded real root-relaxation acquisition and variable-aligned labels. Structural statistics and their descriptor projection were internally consistent with the graph manifest. These checks validate the returned receipts and analysis files; the raw graph tensors and root vectors were not retransferred for the independent delivery audit.
+
+@fig-graph-structure summarizes graph sizes and the projection of 17 encoded structural descriptors. Population z-score standardization mapped zero-variance descriptors to zero, followed by deterministic singular-value-decomposition PCA. Effective rank was 10; the first two components explained 85.78 and 7.74 percent of descriptor variance, respectively (93.52 percent combined). Deterministic k-means produced three descriptive clusters. Neither label prevalence, terminal gap nor execution time was used as a projection input. The projection covers all 39 parents for descriptive reporting only; it did not determine partitions, checkpoint selection or policy. It is not an embedding learned by the GNN, a measure of predictive generalization, or proof of meaningful cluster structure.
+
+![Graph size by difficulty and PCA of outcome-free structural descriptors. Marker shapes denote the three descriptive clusters. Overlapping observations are retained without jitter.](figures/figure_graph_structure.png){#fig-graph-structure width=100% fig-pos="H"}
+
+The retained source statistics reported a median terminal gap of zero for easy parents and 5.979 percent for medium parents. Maximum medium gap was 8.293 percent. Source execution times were heterogeneous, with medium records extending to approximately 14,401 seconds. Censoring status was unavailable in all 39 graph-statistics rows; it was not reconstructed from runtime or silently treated as false. Consequently, those times are provenance descriptors, not a controlled solver comparison or a time-to-optimality analysis.
+
+## Learning dynamics and model selection
+
+The original-instance GNN completed 100 epochs using 23 training and eight validation parents. Four draws per training parent yielded 92 graph-level optimizer steps per epoch. The positive-class weight was 802.7736, estimated from 41,976 positive and 33,697,224 negative training targets. Streaming prenormalization used training graphs only. The graph-averaged training and validation weighted BCE curves are shown on the same axes in @fig-training. They are unsmoothed measurements; training loss aggregates online updates, whereas validation evaluates the post-epoch model.
+
+Training loss decreased from 1.5398 in epoch 1 to 0.0739 in epoch 100. Validation loss decreased from 1.4394 to a minimum of 0.0985 at epoch 91 and was 0.1880 at epoch 100. Thus, the final epoch was not the selected checkpoint. The late validation increase illustrates why reporting only terminal training loss would be insufficient. The eight-parent validation set selected a classification threshold of 0.993316 after reloading the minimum-validation-loss checkpoint.
+
+![Training and validation weighted BCE over all 100 epochs on shared axes. The dashed vertical line identifies the validation-selected checkpoint at epoch 91.](figures/figure_training_curves.png){#fig-training width=100% fig-pos="H"}
+
+No test graphs were loaded during training. Epoch-history classification metrics used the fixed 0.5 threshold and are not directly comparable with the subsequently threshold-selected test scores. Training/validation weighted BCE is also distinct from the unweighted per-variable BCE reported below.
+
+## Held-out assignment prediction
+
+Evaluation used eight original parents: six easy and two medium. Their 3,222,800 binary targets included 3,773 positives, a prevalence of 0.1171 percent. At the validation-selected threshold, the pooled confusion counts were 2,398 true positives, 2,063 false positives, 1,375 false negatives and 3,216,964 true negatives. Pooled F1 was 0.5825 and parent-macro F1 was 0.5849 (@tbl-classification). The medium group contains only two parents and cannot support a stable difficulty-specific generalization claim.
+
+| Summary | Parents | Precision | Recall | F1 |
+|:--|--:|--:|--:|--:|
+| Pooled | 8 | 0.5375 | 0.6356 | 0.5825 |
+| Parent macro | 8 | 0.5401 | 0.6604 | 0.5849 |
+| Easy pooled | 6 | 0.5038 | 0.7019 | 0.5866 |
+| Medium pooled | 2 | 0.6190 | 0.5361 | 0.5746 |
+
+: Held-out classification at the validation-selected threshold. Macro metrics assign equal weight to each parent; pooled metrics weight variables equally. {#tbl-classification}
+
+Average precision was 0.6098, compared with 0.0393 for clipped root-LP values and 0.00117 for constant-zero scores (@tbl-scores). ROC AUC was 0.9991; under this extreme imbalance it is less informative in isolation than precision-recall measures. Trapezoidal precision-recall AUC was 0.6097 and is not identified with average precision. These ranking results demonstrate association with the chosen solution labels, not feasibility of thresholded assignments.
+
+| Score source | Average precision | Unweighted BCE | Brier score | ECE (10 bins) |
+|:--|--:|--:|--:|--:|
+| GNN | 0.60975 | 0.02247 | 0.00610 | 0.00821 |
+| Clipped root LP | 0.03934 | 0.06699 | 0.00189 | 0.00189 |
+| Constant zero | 0.00117 | 0.04220 | 0.00117 | 0.00117 |
+
+: Pooled score diagnostics. BCE for the constant-zero baseline uses finite numerical clipping. The baselines are probability/ranking diagnostics, not alternative trained models. {#tbl-scores}
+
+The GNN's Brier score was worse than both diagnostic baselines, despite better average precision and BCE. Weighted training and threshold selection therefore did not establish calibrated probabilities. Most targets occupy the lowest score bin; the reliability plot and logarithmic bin counts in @fig-quality make this imbalance explicit. ECE alone can obscure poor behaviour in small high-score groups. No post-hoc calibration was fitted to the held-out set.
+
+![Per-parent test F1, ten-bin reliability, and score-bin counts. E and M denote easy and medium parent identifiers. The diagonal indicates perfect calibration; it is not a fitted model.](figures/figure_prediction_quality.png){#fig-quality width=100% fig-pos="H"}
+
+## Evidence scope and unexecuted comparisons
+
+The delivery archive contained 62 manifest-listed files whose packaged hashes were verified. Cohort and contract links, 100 finite epoch records, confusion totals, parent-macro classification, graph-analysis receipts and their associated table/figure hashes were checked. Raw graph tensors, root vectors, solution labels, checkpoint binaries and prediction vectors were not included in that audit package. Full ROC and precision-recall CSV files were withheld by its size limit. The reported area measures originate from the evaluation receipt; they were not recomputed from raw predictions by the independent delivery audit, and no reconstructed ROC or precision-recall curve is presented here.
+
+No matched four-arm learning comparison or native solver-guidance benchmark was executed for this completed cohort. Earlier engineering experiments with different populations and feature policies are not pooled with these results. Consequently, no winning augmentation strategy, solver speedup, reduced optimization gap, calibrated predictor or achieved technology-readiness level is claimed.
+
+# Discussion and future work
+
+The experiment demonstrates that a versioned bipartite predictor can learn sparse binary supervision under parent-level separation, with stronger held-out ranking than two score diagnostics. The successful elements are traceable source admission, real root-relaxation features, 100-epoch learning with validation-based selection, and held-out parent-level reporting. The unsuccessful elements are equally substantive: the complete 42-parent source objective was not achieved, three medium parents remained inadmissible after four-hour repairs, and probability calibration was not supported by the Brier comparison.
+
+Several threats limit interpretation. The 39-parent cohort was selected using observed solver quality; one training and two validation parents were excluded, altering both learning and selection populations. There are no hard parents and only one training seed. Eight test parents, rather than millions of correlated variable targets, define the experimental replication scale. Multiple optimal or near-optimal assignments also make single-label classification an incomplete measure of optimization quality. The root-relaxation feature carries computational cost and solver dependence, while the MINIMIZE convention must be matched in any external comparison.
+
+Future work will first evaluate Gurobi-labelled original-only and augmented populations against their SCIP-labelled counterparts using matched parent inventories, common graph semantics and controlled training budgets. Native Gurobi hints and partial starts will then be compared with unguided optimization on held-out originals, retaining all four time regions, full-model terminal gaps and censored runs. Binding neighbourhood methods require explicit full-model recovery. Calibration requires validation-only fitting and independent assessment; it cannot be inferred from the present classification threshold. Multiple seeds, the deferred 90-parent population including hard cases, complete environment capture and redistribution of permissible raw artifacts are required for broader claims.
+
+The research MVP is therefore a completed implementation and a bounded empirical study with documented failures. Its predictive results motivate subsequent optimization experiments but do not substitute for them.
+
+# Reproducibility and availability
+
+## Computational environment
+
+Experiments are conducted on the UJA DGX-DaSCI infrastructure, an NVIDIA DGX-1 system used by the DaSCI institute at the [Higher Polytechnic School of Jaén (EPSJ), University of Jaén](https://eps.ujaen.es/), Spain. The institutional location is listed among the [DaSCI sites](https://dasci.es/sedes/). @tbl-computational-environment records the reported hardware inventory, with component terminology checked against the [NVIDIA DGX-1 user guide](https://images.nvidia.com/content/technologies/deep-learning/pdf/DGX-1-UserGuide.pdf) and [DGX-1 specifications](https://www.nvidia.com/en-in/data-center/dgx-1/). This is an infrastructure description, not a runtime hardware probe.
+
+| Component | Reported system configuration |
+|:--|:--|
+| CPUs | Two x86 processors, each with 20 cores at 2.2 GHz (40 physical cores in total) |
+| Host memory | 512 GB DDR4 RAM at 2,133 MHz |
+| Accelerators | Eight NVIDIA Tesla V100 GPUs, each with 32 GB device memory, 5,120 CUDA cores and 640 Tensor Cores |
+| GPU interconnect | NVLink; nominal aggregate bandwidth of 300 GB/s per GPU |
+| Network | Dual 10 GbE and four InfiniBand EDR interfaces |
+| Operating-system storage | One 480 GB SATA 3.0 SSD; 6 Gb/s interface |
+| Data storage | Four 1.92 TB SSDs configured as RAID 0 |
+
+: Reported DGX-DaSCI system capacity, distinct from resources allocated to an individual experiment. Interface bandwidths are nominal specifications, not measured application throughput. {#tbl-computational-environment}
+
+Slurm scheduled the experiments. The presence of eight GPUs does not establish that a training run uses all eight. The completed run used serial CUDA execution and requested 64 GB host memory; the Python step reported peak resident memory of 4,164,816 KiB. Combined training and evaluation occupied 9 h 28 min 54 s of scheduler wall time. This is not an isolated training-time measurement. Exact allocated GPU identity and complete software/driver versions were unavailable in the final evidence package; missing values will remain explicitly unavailable rather than inferred from the machine inventory. The four source-solve timing regions are reported separately from this aggregate job duration.
+
+## Code, data and manuscript availability
+
+The implementation is maintained in the public [CFL-Gurobi-GNN repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn). The root README preserves the MILPBench instance-download links. Raw models, solver licences, host paths, checkpoints, and full solution trajectories are not bundled into this manuscript website. Public access to source code does not imply redistribution rights for benchmark data.
+
+The project's original code, documentation and manuscript are released under the **MIT License**. Original project-generated metadata, tables and figures use MIT within the authors' rights. MILPBench data, solver software and third-party materials retain their own terms; the MIT notice does not relicense source instances or guarantee redistribution rights for their derivatives. Licensing notices accompany reviewed exports without changing immutable experimental receipts.
+
+The manuscript uses a pinned [quarto-sbc template](https://github.com/cvictorr2508/quarto-sbc) with upstream and third-party notices retained. Static Quarto builds produce HTML and PDF without executing optimization or training. Machine-readable epoch, graph, calibration and parent-metric tables accompany the article, together with a hash ledger linking the reviewed extract to the supplied evidence archive. Source integrity and rendering tests check consistency, not independent scientific replication.
+
+# Conclusion
+
+This original-instance study connects Gurobi-authoritative graph construction, a versioned Gasse-inspired predictor and parent-partitioned evaluation in an auditable CFL pipeline. On 39 admitted development parents, 100-epoch training yielded held-out F1 of 0.5825 and average precision of 0.6098. The three source-label exclusions and unfavourable Brier comparison delimit those results. The completed experiment supports conditional assignment ranking, while augmentation benefits, calibrated probabilities and faster full-model optimization remain open empirical questions.
+
+# Declaration of generative AI and AI-assisted technologies in the manuscript preparation process {.unnumbered}
+
+During the preparation of this work, the authors used Gurobot, Gemini 3.1 Pro, and ChatGPT Codex with models 5.6 Sol and 6.0 Astra, to assist with the codebase implementation and to support the preparation, structuring, language refinement, and data visualization of this manuscript. After using these tools/services, the authors reviewed and edited the content as needed and took full responsibility for the content of the published article.
+
+# References

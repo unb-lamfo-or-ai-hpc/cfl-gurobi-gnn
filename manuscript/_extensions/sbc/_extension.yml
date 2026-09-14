@@ -1,0 +1,22 @@
+title: SBC
+author: Victor Rafael Celestino
+version: 0.2.0
+contributes:
+  format:
+    common:
+      toc: false
+    pdf:
+      documentclass: article
+      fontsize: 12pt
+      papersize: a4
+      pdf-engine: pdflatex
+      template: template.tex
+      keep-tex: true
+      cite-method: natbib
+      biblio-style: apalike
+      format-resources:
+        - sbc-template.sty
+    html:
+      theme: cosmo
+      toc: true
+      number-sections: true

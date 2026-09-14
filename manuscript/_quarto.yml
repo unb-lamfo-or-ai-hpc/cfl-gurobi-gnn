@@ -1,0 +1,35 @@
+project:
+  type: manuscript
+  output-dir: _manuscript
+  render:
+    - index.qmd
+  resources:
+    - LICENSE
+    - evidence-status.json
+    - results/**
+    - figures/**
+    - tables/**
+
+manuscript:
+  article: index.qmd
+  notebooks: []
+  code-links: false
+  meca-bundle: false
+
+execute:
+  enabled: false
+  freeze: true
+
+lang: en
+license: MIT
+bibliography: references.bib
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+  sbc-pdf: default
+
+website:
+  site-url: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/
+  description: An audited original-instance graph-learning study of capacitated facility location, with completed training, held-out results and explicit limitations.

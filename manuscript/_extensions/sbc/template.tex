@@ -1,0 +1,105 @@
+\documentclass[12pt]{article}
+
+% Quarto/Pandoc adapter for the SBC LaTeX style.
+% Source of truth for layout: sbc-template.sty supplied with the SBC template.
+\usepackage{sbc-template}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+% Keep reviewed result figures beside their evidence paragraph in this draft.
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+% Pandoc 3.10 emits proportional table widths using calc's \real expression.
+\usepackage{calc}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+$if(natbib)$
+\usepackage{natbib}
+% The supplied sbc.bst is a copy of apalike whose documented SBC-specific
+% difference is the removal of the comma before the year in citation labels.
+% Keep apalike as the executable bibliography formatter and reproduce that
+% punctuation explicitly in natbib while the original sbc.bst remains tracked
+% by provenance hash.
+\setcitestyle{authoryear,round,aysep={ }}
+$endif$
+\usepackage{hyperref}
+% The maintained package supplies the clickable ORCID icon, not a printed ID.
+\usepackage{orcidlink}
+% SBC uses address rather than institution; this semantic wrapper preserves
+% the requested institution markup without replacing the vendored style.
+\providecommand{\institution}[1]{#1}
+% Keep hyperlinks printable; supply useful PDF metadata for this draft.
+\hypersetup{hidelinks,pdftitle={$title$}}
+$if(natbib)$
+% sbc-template.sty installs a historical hyperref-specific \@lbibitem hook at
+% the end of the preamble. That hook predates natbib and overwrites natbib's
+% author-year label parser. Save the natbib+hyperref definition now; it is
+% restored immediately after \begin{document}, once all end-preamble hooks have
+% completed, keeping the vendored SBC style untouched.
+\makeatletter
+\let\quartosbcnatbiblbibitem\@lbibitem
+\makeatother
+$endif$
+
+\sloppy
+
+$if(title)$
+\title{$title$}
+$endif$
+
+$if(by-author)$
+\author{$for(by-author)$$by-author.name.literal$$if(by-author.orcid)$\,\orcidlink{$by-author.orcid$}$endif$$if(by-author.metadata.institute)$\inst{$by-author.metadata.institute$}$endif$$sep$\\
+$endfor$}
+$else$
+$if(author)$
+\author{$for(author)$$author$$sep$, $endfor$}
+$endif$
+$endif$
+
+$if(sbc-affiliations)$
+\address{$for(sbc-affiliations)$\institution{\parbox[t]{0.90\textwidth}{\centering $sbc-affiliations.text$}}$if(sbc-affiliations.email)$\email{$sbc-affiliations.email$}$endif$$sep$
+\nextinstitute
+$endfor$}
+$else$
+\address{}
+$endif$
+
+\begin{document}
+$if(natbib)$
+\makeatletter
+\let\@lbibitem\quartosbcnatbiblbibitem
+\makeatother
+$endif$
+
+$if(sbc-affiliations)$
+\maketitle
+$else$
+% The upstream style prints institution 1 even for an empty address.
+% Suppress only that marker when editorial affiliation metadata is absent.
+{\renewcommand{\inst}[1]{}\maketitle}
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(resumo)$
+\begin{resumo}
+$resumo$
+\end{resumo}
+$endif$
+
+$body$
+
+$if(bibliography)$
+$if(natbib)$
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$apalike$endif$}
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$endif$
+$endif$
+
+\end{document}

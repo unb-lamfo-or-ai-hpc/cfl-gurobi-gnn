@@ -1,1 +1,10 @@
 *.sbs text eol=lf
+
+
+# Preserve byte-stable manuscript sources across Windows and Linux checkouts.
+manuscript/** text eol=lf
+# Evidence CSV hashes bind their original bytes, including record terminators.
+manuscript/results/*.csv -text
+scripts/manuscript/** text eol=lf
+tests/manuscript/** text eol=lf
+.github/workflows/manuscript.yml text eol=lf

@@ -1,0 +1,56 @@
+{
+  "eligibility": {
+    "descriptive_analysis_complete": true,
+    "inferential_cluster_claims_allowed": false
+  },
+  "gate_status": "passed",
+  "graph_manifest_sha256": "1813c0866d2bf92060d10aa776f0ff35e83ca2e18d55664ec6bf99c49acb83e6",
+  "methodology": {
+    "clustering": "deterministic_kmeans_maximum_three_clusters",
+    "features": [
+      "density",
+      "discrete_fraction",
+      "constraint_variable_ratio",
+      "objective_log_mean",
+      "objective_log_std",
+      "rhs_log_mean",
+      "rhs_log_std",
+      "coefficient_log_mean",
+      "coefficient_log_std",
+      "lower_bound_log_mean",
+      "upper_bound_log_mean",
+      "fixed_domain_fraction",
+      "variable_degree_std",
+      "constraint_degree_std",
+      "root_lp_mean",
+      "root_lp_std",
+      "binary_lp_fractionality"
+    ],
+    "infinite_bounds": "not_reconstructible_from_clipped_encoded_features",
+    "outcomes_used_as_projection_inputs": false,
+    "projection": "deterministic_numpy_svd_pca_encoded_macro_descriptors",
+    "random_seed_required": false,
+    "standardization": "population_z_score_zero_variance_to_zero",
+    "umap_status": "not_requested"
+  },
+  "outputs": {
+    "graph_clustering.csv": {
+      "sha256": "ac8445d520706c9622af35421991d89a7f01ba8ea4ccfec527cb5f161ecf958d"
+    },
+    "graph_clustering.svg": {
+      "sha256": "6ba1691d1deb5d3a12c6116c5ca1c6143366007dd7ca7c529cefdeedb60bd68f"
+    }
+  },
+  "schema_version": 1,
+  "summary": {
+    "clusters": 3,
+    "effective_rank": 10,
+    "graphs": 39,
+    "pca_explained_variance_ratio": [
+      0.8577583892158896,
+      0.07740679771254814
+    ],
+    "projection_status": "descriptive",
+    "requested_clusters": 3
+  }
+}

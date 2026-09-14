@@ -1,0 +1,15 @@
+/.quarto/
+/_manuscript/
+/index.tex
+/index.pdf
+/index_files/
+/*.aux
+/*.bbl
+/*.blg
+/*.log
+/*.out
+/sbc-template.sty
+
+**/*.quarto_ipynb
+/figures/
+/tables/
