@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_90_pilot
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH --output=slurm_cfl_90_pilot_%A_%a.out
+
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+: "${DATA_ROOT:?Set DATA_ROOT}"
+: "${EXPANSION_PLAN_DIR:?Set EXPANSION_PLAN_DIR to a directory}"
+: "${EXPANSION_RUN_ROOT:?Set EXPANSION_RUN_ROOT}"
+: "${SLURM_ARRAY_TASK_ID:?Submit with --array=0-1%1}"
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV:-tfm_env}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+if [[ ! -s "${GRB_LICENSE_FILE}" ]]; then
+    echo "[ERROR] Gurobi license file is missing" >&2
+    exit 2
+fi
+python3 -c 'import gurobipy, pyarrow, numpy, scipy'
+echo "[INFO] Gurobi only; MINIMIZE; seed=42; optimize budget=28800s; task=${SLURM_ARRAY_TASK_ID}"
+srun python3 -m cfl_gnn.cli.gurobi_expansion task \
+    --data_root "${DATA_ROOT}" \
+    --campaign_dir "${EXPANSION_PLAN_DIR}" \
+    --run_root "${EXPANSION_RUN_ROOT}" \
+    --task_index "${SLURM_ARRAY_TASK_ID}"
