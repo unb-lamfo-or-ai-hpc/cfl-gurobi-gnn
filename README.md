@@ -4,440 +4,210 @@
 University of Brasília (UnB), the University of Jaén (UJA), and the DaSCI Institute
 (Andalusian Research Institute in Data Science and Computational Intelligence).**
 
-This repository provides an end-to-end framework to solve
-**Capacitated Facility Location (CFL)** problem instances from the
-[MILPBench](https://github.com/MILPBench/MILPBench) benchmark.
-The pipeline generates diverse solution trajectories using Gurobi, trains a
-**Graph Neural Network (GNN)** to perform *Neural Diving*, and injects the GNN
-predictions into Gurobi as **Variable Hints (`.hnt`)** to accelerate
-Branch-and-Bound convergence.
+This repository provides a research framework for learning-guided optimization
+of **Capacitated Facility Location (CFL)** instances from
+[MILPBench](https://github.com/thuiar/MILPBench). It connects solver trajectories,
+variable–constraint bipartite graphs, Gasse-style graph neural networks (GNNs),
+and controlled optimization experiments. Whether learned guidance improves
+solution quality or computational performance is an empirical question, not an
+assumed property of the software.
 
-> Full technical documentation, CLI references, feature layout tables, and
-> Slurm deployment scripts are in [`docs/pipeline.md`](docs/pipeline.md).
+## Research status
 
----
+The delivered **development-only research MVP** completed original-parent
+training and held-out evaluation. The initial cohort comprised **42 original
+parents: 30 easy, 12 medium, and no hard instances**. Three medium parents
+remained above the 10% label-gap ceiling after four-hour solves. A separately
+recorded revision retained **39 parents: 30 easy and nine medium**, with
+**23 training, eight validation and eight test parents**. The original
+42-parent gate remains incomplete; exclusion conditions the results on solver
+label admissibility.
 
-## Pipeline Architecture
+The versioned Gasse model completed **100 epochs**, seed **42**, using real
+Gurobi root-relaxation features. The minimum validation weighted BCE occurred at
+epoch 91; the validation-selected classification threshold was 0.9933161.
+Held-out aggregate F1 was **0.582463** and parent-macro F1 was **0.584889**.
+Reported average precision was **0.609753**. The Brier score (**0.00609632**)
+was worse than the constant-zero baseline (**0.00117072**), so calibrated
+probabilities are not claimed. The [final evidence summary](docs/results/pr50-confirmation/README.md)
+documents the source exclusions, graph analyses, audit scope and numerical results.
 
-The pipeline is structured into four functional pillars:
+This was a Gurobi-labelled original-parent experiment, not a completed matched
+four-arm comparison or a demonstration of neural solver acceleration. No hard
+instances, multi-seed estimates or current-cohort native hint/control benchmark
+are included. These analyses and calibration remain future work.
 
-1. **Generation and Adaptive Solving** — Captures diverse incumbent solutions
-   using an adaptive presolve strategy that classifies each instance as *easy*
-   or *hard* before the main solve.
-2. **ETL (Extract, Transform, Load)** — Converts MILP instances into stratified
-   `HeteroData` bipartite graph objects with complexity metadata propagated into
-   every graph.
-3. **Training** — Distributed (DDP) and serial training of a Gasse-style GNN
-   with data-driven loss calibration and DDP-safe early stopping.
-4. **Inference and Benchmarking** — Generates `.hnt` files to warm-start Gurobi
-   and assesses GNN-guided performance against a no-hint baseline.
+The intended population remains 90 parents (30 per difficulty). Full-population
+execution is deferred until the development outputs, reproducibility review,
+and initial manuscript are complete. Software tests, a successful Slurm exit,
+and an engineering gate do not establish scientific validity or TRL 6.
 
-### Dependency Flow
+Start with the [documentation index](docs/README.md),
+[reproducibility guide](docs/reproducibility.md), and
+[current architecture](docs/architecture.md). The
+[legacy technical reference](docs/pipeline.md) is retained for historical
+interpretation, not as the current confirmation runbook.
 
+## Methodological contract
+
+- **Mathematical model:** all CFL MILPBench LP files are treated as having an
+  erroneous original `MAXIMIZE` declaration. Record that declaration and force
+  the effective sense to `MINIMIZE`. Preserve the original files and their hashes.
+- **Solver roles:** Gurobi is the priority solver and sole graph-construction
+  authority. SCIP, accessed directly through PySCIPOpt, is a matched comparison
+  solver. Both may provide independently audited labels. Pyomo is excluded.
+- **Sample identity:** build a graph for an original MIP or an accepted synthetic
+  MIP, not for each incumbent vector. An incumbent may define the center of a
+  Local Branching neighborhood; the resulting modified MIP requires an independent
+  solve and a new graph. Such descendants are not independent benchmark parents.
+- **Partitioning:** canonical parent folds determine all roles. Descendants
+  inherit the parent fold and are train-only. Validation and test use originals
+  only; test outcomes cannot select checkpoints, thresholds, or guidance policies.
+- **Graph features:** use the objective, domains, constraint matrix, and real
+  Gurobi root-`MIPNODE` relaxation. The strict route has no zero-vector fallback.
+  Keep graph features separate from labels, MIP gaps, and execution-time metadata.
+- **Learning:** preserve the legacy Gasse implementation and explicitly version
+  the corrected alternating-message prenormalization. The confirmation protocol
+  fixes seed 42 and 100 epochs; training and validation losses share one figure.
+- **Guidance:** native Gurobi variable hints are the primary nonbinding
+  intervention. Hints are not MIP starts or `LB = UB` fixings. Restrictive
+  exploratory methods require recovery on the original full model.
+- **Evidence:** report terminal MIP gap and optimization wall time, plus total,
+  data-read, and model-build wall times. Retain failures and right-censored runs.
+  Do not infer speedup from incomparable budgets or omit preprocessing costs
+  from an end-to-end claim.
+
+The [confirmation protocol](docs/research/pr49-confirmation-validation.md) and
+[guidance policy](docs/research/literature-backed-neural-guidance-policy.md)
+define the applicable controls.
+
+## Pipeline and experimental arms
+
+```text
+Original parent MIPs -> independent solver labels and trajectories -> source audit
+          |                               |
+          |                     train-parent incumbent centers
+          |                               |
+          |                   synthetic Local Branching MIPs
+          |                               |
+          |                     independent derived labels
+          +-------------------------------+
+                          |
+            Gurobi-authoritative graph construction
+                          |
+            graph statistics and descriptive projections
+                          |
+         parent-aware training -> validation -> held-out evaluation
+                          |
+         native guidance/control runs -> paired descriptive outputs
 ```
-Raw MILPBench .lp.gz files
-        |
-        | Step 1 — collect_incumbents
-        v
-per-instance/  [original_features.pickle.gz, incumbents.parquet, metadata.json]
-        |
-        +-----> Step 2 — audit_collection  (Phase 1 EDA & Data Validation)
-        |
-        | Step 3 — build_dataset
-        v
-pyg_dataset/  [data_0.pt ... data_N.pt]
-        |
-        | Step 4 — audit_dataset / graph diagnostics
-        |
-        | Step 5 — train_serial  (smoke test)
-        | Step 6 — train_distributed  (full DGX run)
-        v
-best_model.pt
-        |
-        | Step 7 — generate_hints
-        v
-hints/  [instance_gnn_hint.hnt]
-        |
-        +-----> Step 8 — benchmark_gurobi  (baseline + GNN-guided)
-        |
-        +-----> Step 9 — evaluate  (thesis evaluation figures)
-```
 
----
+| Experimental arm | Label solver | Training samples | Graph authority |
+|---|---|---|---|
+| Gurobi original | Gurobi | Original parents | Gurobi |
+| Gurobi augmented | Gurobi | Originals and accepted synthetic descendants | Gurobi |
+| SCIP original | SCIP | Original parents | Gurobi |
+| SCIP augmented | SCIP | Originals and accepted synthetic descendants | Gurobi |
 
-## Repository Structure
+The four-arm experiment uses its **common eligible parent intersection**, equal
+parent mass, and equal optimizer-step budgets. It is distinct from the broader
+Gurobi-only revised 39-parent confirmation. Missing paired coverage must be reported,
+not silently replaced with unmatched samples.
 
-```
-.
-├── docs/                       # Architecture, decisions, and pipeline reference
-├── src/cfl_gnn/
-│   ├── cli/                    # Stable command-line entrypoints
-│   ├── artifacts/              # Dependency-free persisted-data schemas
-│   ├── pipelines/              # Solver + sampling-strategy composition
-│   ├── solvers/gurobi/         # Gurobi collection, hints, and benchmarks
-│   ├── graph/                  # MILP-to-PyG transformation and dataset access
-│   ├── models/                 # Gasse and Liang architectures
-│   ├── training/               # Serial and distributed training
-│   ├── evaluation/             # Academic model evaluation
-│   └── analysis/               # Collection and graph diagnostics
-├── scripts/slurm/dasci/        # Reproducible HPC launchers
-├── tests/                      # Dependency-free structural smoke tests
-├── notebooks/                  # Research notebooks
-├── data/                       # Existing experiment artifacts (unchanged)
-└── pyproject.toml              # Python package metadata
-```
+## Repository navigation
 
----
+| Directory | Purpose |
+|---|---|
+| [src/cfl_gnn](src/cfl_gnn/README.md) | Implementation layers and stable CLI adapters |
+| [configs](configs/README.md) | Versioned folds, budgets, eligibility, and learning protocols |
+| [scripts](scripts/README.md) | Execution helpers and site-specific Slurm launchers |
+| [tests](tests/README.md) | Contract, numerical, integration, and licensed solver checks |
+| [sandbox](sandbox/README.md) | Preserved toy bipartite compatibility experiment |
+| [docs](docs/README.md) | Current guides, decisions, historical protocols, and evidence |
+| [data](data/README.md) | Artifact lifecycle and storage policy; not a bundled dataset |
+| [notebooks](notebooks/README.md) | Exploratory notebooks, not the acceptance authority |
+| [tools](tools/README.md) | Read-only diagnostics and maintenance utilities |
 
-## Full Pipeline Execution Sequence
+## Environment and first checks
 
-Follow this dependency-ordered sequence for reproducible results.
+Python 3.10 is the reference interpreter used in the supplied DGX receipts.
+A working Gurobi license is required for independent mathematical validation
+and authoritative graph construction. PyTorch/PyG must match the selected
+CPU/CUDA environment; PySCIPOpt is needed for SCIP comparisons.
 
-### Instance-level baseline folds
-
-The planned baseline contains 30 easy, 30 medium, and 30 hard parent
-instances. Its canonical five-fold assignment is versioned at
-`configs/splits/cfl_90_seed42_folds.csv`. Generate it and, when collected
-artifacts are available, audit the current partial inventory without changing
-any existing fold assignment:
+In an **already provisioned and validated** environment, install the package
+without replacing its solver or GPU dependencies:
 
 ```bash
-python3 -m cfl_gnn.cli.plan_instance_folds \
-    --inventory_root /raid/.../intermediate_lps \
-    --available_output /raid/.../available_rotation_0.csv \
-    --rotation 0
+python3 -m pip install -e . --no-deps
+PYTHONPATH=src python3 -m pytest tests/smoke -q
 ```
 
-Partial inventories are suitable for pipeline development only. Final academic
-evaluation uses all five rotations and requires the complete planned population
-or a separately reviewed missing-data protocol. The derived CSV records this as
-`population_status=development_partial`; use `--strict_inventory` as the final
-completeness gate. See
-[`ADR 0002`](docs/decisions/0002-instance-level-cross-validation.md).
+Some numerical and solver tests require optional libraries or a valid license.
+A skipped test is not a passed native validation. See [tests](tests/README.md)
+for mandatory-license checks and the toy regression.
 
-Build one graph for every currently eligible parent instance in a separate
-output root. The builder selects the minimum-objective valid solution across
-the final solution pool and true branch-and-bound incumbents:
-
-```bash
-python3 -m cfl_gnn.cli.build_instance_dataset \
-    --manifest configs/splits/cfl_90_seed42_folds.csv \
-    --base_source_dir /raid/.../raw/MILPBench/CFL \
-    --base_intermediate_dir /raid/.../intermediate_lps \
-    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline
-```
-
-Graph structure comes from `original_features.pickle.gz`, extracted from the
-raw MILPBench `.lp.gz`; solutions and incumbents supply only the supervised
-variable target. The optional root-LP-relaxation context comes separately from
-`node_relaxations.parquet`, with a documented zero fallback. Every graph has a
-`.provenance.json` sidecar containing paths and SHA-256 hashes for the raw,
-structural, collection-metadata, context, label, and graph artifacts, with
-their roles recorded separately. Each result exposes `label_source` explicitly;
-label provenance also records normalized time and a per-artifact candidate
-audit, avoiding confusion between the supervised target and graph structure.
-`--base_raw_dir` remains a compatibility alias for `--base_intermediate_dir`.
-
-For a targeted DaSCI smoke run, add
-`--instances CFL_easy_instance_0` (using an available instance identifier).
-Use `--strict_inventory` only for the final complete-population gate. Until
-then, generated graphs and `instance_dataset_summary.json` are development
-artifacts. See
-[`ADR 0003`](docs/decisions/0003-parent-instance-label-selection.md).
-The sanitized DaSCI evidence is recorded in
-[`docs/validation`](docs/validation/2026-08-30-instance-baseline-smoke.md).
-
-Before training, audit one canonical rotation without loading PyTorch graphs:
-
-```bash
-python3 -m cfl_gnn.cli.audit_instance_training_split \
-    --manifest configs/splits/cfl_90_seed42_folds.csv \
-    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline \
-    --rotation 0 \
-    --label_policy optimal_only
-```
-
-The default `optimal_only` policy is the scientific baseline. Use
-`--label_policy all_available` only for an explicitly identified development
-smoke; non-optimal labels remain flagged in the JSON report. Graph hashes are
-verified by default, and stale or mismatched sidecars fail closed. The loader
-never uses `random_split`; roles come only from the canonical manifest. See
-[`ADR 0004`](docs/decisions/0004-parent-instance-training-eligibility.md).
-If an audit reports schema-v1 sidecars from an earlier development run, rerun
-`build_instance_dataset` for the available inventory. Its reuse guard rejects
-the stale schema and regenerates the graphs without rerunning the Gurobi solve.
-
-Construct the exact serial-training plan before starting a GPU process:
-
-```bash
-python3 -m cfl_gnn.cli.train_instance_serial \
-    --manifest configs/splits/cfl_90_seed42_folds.csv \
-    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline \
-    --rotation 0 \
-    --label_policy optimal_only \
-    --development_only \
-    --dry_run
-```
-
-For the current 42-graph inventory, the strict-label development plan contains
-18 training, 6 validation, and 6 held-out test parents, all from the easy
-category. Remove `--dry_run` to execute the serial Gasse training. The test
-partition is recorded in the run contract but is never instantiated during
-training. `--development_only` is required while the inventory is incomplete;
-such outputs are explicitly ineligible for scientific reporting. The existing
-`train_serial` entrypoint remains the incumbent-conditioned legacy trainer.
-See [`ADR 0005`](docs/decisions/0005-parent-instance-serial-training.md).
-
-Evaluate the resulting checkpoint only after rebuilding and matching its saved
-contract. The decision threshold is fixed at probability 0.5 and is never
-calibrated on the test fold:
-
-```bash
-python3 -m cfl_gnn.cli.evaluate_instance \
-    --checkpoint /raid/.../models/instance_baseline/<run>/best_model.pt \
-    --base_pyg_dir /raid/.../bipartite_graphs/instance_baseline \
-    --manifest configs/splits/cfl_90_seed42_folds.csv \
-    --dry_run
-```
-
-Remove `--dry_run` only after the contract SHA-256, checkpoint SHA-256, and
-held-out membership pass. The evaluator deserializes test graphs exclusively
-and emits path-sanitized aggregate, per-difficulty, and per-instance metrics.
-See [`ADR 0006`](docs/decisions/0006-parent-instance-held-out-evaluation.md).
-
-Audit Gurobi's ability to expose a structurally distinct branch-and-bound node
-model with the isolated, research-only probe:
-
-```bash
-python3 -m cfl_gnn.cli.audit_gurobi_node_subproblems \
-    --instance /raid/.../CFL_easy_instance_0.lp.gz \
-    --output_dir /raid/.../analysis/gurobi_node_feasibility/easy_0 \
-    --time_limit 60 \
-    --node_limit 100 \
-    --max_samples 20 \
-    --dry_run
-```
-
-The real run passively observes `MIPNODE`; it never turns a relaxation or
-incumbent into a purported new instance. Its sanitized capability report
-distinguishes runtime observations from fields that the documented Gurobi API
-does not expose. Existing incumbent artifacts and collectors are untouched.
-See [`ADR 0007`](docs/decisions/0007-gurobi-node-subproblem-feasibility.md).
-
-The follow-up PySCIPOpt prototype is intentionally isolated from datasets and
-training. Install its optional dependency only in the environment used for the
-probe, then validate the controlled toy tree before any CFL instance:
-
-```bash
-python3 -m pip install -e '.[scip]'
-
-python3 -m cfl_gnn.cli.audit_pyscipopt_node_subproblems \
-    --toy \
-    --output_dir /raid/.../analysis/pyscipopt_node_prototype/toy \
-    --time_limit 60 \
-    --node_limit 100 \
-    --max_samples 4 \
-    --presolve off \
-    --dry_run
-```
-
-The real run identifies bounded samples at `NODEFOCUSED`, recaptures their
-post-processing state, and attempts serialization only at the later
-`LPSOLVED` event. `writeMIP()` is the node-MIP candidate;
-`writeProblem(trans=True)` is retained only as a transformed-problem control.
-Fresh Python/SCIP processes must verify every ancestral branching bound as well
-as local bounds and constraints. A run fails closed if no `writeMIP` candidate
-passes these mechanical checks, and every candidate remains
-`dataset_eligible=false` pending independent review. Pyomo is not used. See
-[`ADR 0008`](docs/decisions/0008-pyscipopt-only-node-subproblem-prototype.md)
-and the [prototype protocol](docs/research/pyscipopt-node-subproblem-prototype.md).
-
-**STEP 1 — Data Generation**
-```bash
-python3 -m cfl_gnn.cli.collect_incumbents \
-    --categories           CFL_easy_instance CFL_medium_instance CFL_hard_instance \
-    --input_dir            /path/to/milpbench_lp_files \
-    --output_dir           /path/to/intemediate_lps \
-    --time_limit           3600 \
-    --probe_time           30 \
-    --complexity_threshold 500 \
-    --pool_size            20 \
-    --pool_gap             0.10 \
-    --threads              8
-```
-
-**STEP 2 — Phase 1 EDA & Data Validation** *(requires Step 1 complete)*
-```bash
-python3 -m cfl_gnn.cli.audit_collection
-```
-
-**STEP 3 — PyG ETL** *(requires Step 1 complete)*
-```bash
-python3 -m cfl_gnn.cli.build_dataset \
-    --categories    CFL_easy_instance CFL_medium_instance CFL_hard_instance \
-    --gaps          0.10 0.85 0.90 \
-    --base_raw_dir  /raid/.../raw_instances \
-    --base_pyg_dir  /raid/.../pyg_dataset
-```
-
-**STEP 4 — Dataset Validation** *(requires Step 3 complete)*
-```bash
-python3 -m cfl_gnn.cli.audit_dataset \
-    --categories CFL_easy_instance CFL_medium_instance CFL_hard_instance
-
-python3 -m cfl_gnn.cli.graph_statistics
-
-python3 -m cfl_gnn.cli.graph_clustering
-```
-
-**STEP 5 — Incumbent-conditioned Serial Training: Legacy Smoke Test** *(requires Step 4 validated)*
-```bash
-python3 -m cfl_gnn.cli.train_serial \
-    --easy_split 10 2 2 --medium_split 5 1 1 --hard_split 5 1 1 \
-    --epochs 10 --hidden_dim 32
-```
-
-**STEP 6 — Parallel Training: Full DGX Run** *(requires Step 5 passed)*
-```bash
-torchrun --nproc_per_node=8 -m cfl_gnn.cli.train_distributed \
-    --easy_split    300 50 50 \
-    --medium_split  200 30 30 \
-    --hard_split    100 15 15 \
-    --epochs 200 --hidden_dim 64 --patience 20
-```
-
-**STEP 7 — Generate Variable Hints** *(requires Step 6 complete)*
-```bash
-python3 -m cfl_gnn.cli.generate_hints \
-    --model_path /raid/.../best_model.pt \
-    --lp_file    /raid/.../CFL_easy_instance_0.lp.gz \
-    --output_dir /raid/.../hints \
-    --hidden_dim 64
-```
-
-**STEP 8 — Gurobi Warm-Start Benchmark** *(requires Steps 1 and 7 complete)*
-```bash
-# Baseline run — control group
-python3 -m cfl_gnn.cli.benchmark_gurobi \
-    --input_dir  /path/to/milpbench_lp_files \
-    --output_dir /raid/.../benchmark_baseline \
-    --time_limit 300 --threads 8
-
-# GNN-guided run — with variable hints
-python3 -m cfl_gnn.cli.benchmark_gurobi \
-    --input_dir  /path/to/milpbench_lp_files \
-    --output_dir /raid/.../benchmark_with_hints \
-    --hint_dir   /raid/.../hints \
-    --time_limit 300 --threads 8
-```
-
-**STEP 9 — Academic Evaluation** *(requires Steps 3 and 6 complete)*
-```bash
-python3 -m cfl_gnn.cli.evaluate \
-    --model_path      /raid/.../best_model.pt \
-    --base_root       /raid/.../pyg_dataset \
-    --experiment_name parallel_v4 \
-    --easy_split      300 50 50 \
-    --medium_split    200 30 30 \
-    --hard_split      100 15 15
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-* Python 3.10+
-* Gurobi Optimizer with a valid license
-* PyTorch and PyTorch Geometric (for the GNN)
-
-### Python Environment
-
-```bash
-conda create -n neural_diving python=3.10
-conda activate neural_diving
-
-pip install gurobipy pandas pyarrow numpy scipy
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
-pip install torch-geometric
-pip install umap-learn seaborn scikit-learn matplotlib tqdm
-```
-
-### Gurobi License
-
-A valid **Gurobi 13.0** license is required.
-For WLS (Web License Service), export the following variables before running any
-script:
-
-```bash
-export WLSACCESSID="your-access-id"
-export WLSSECRET="your-secret"
-export LICENSEID="your-license-id"
-```
-
-All scripts read these variables through `gp.Env(empty=True)`.
-
-> This pipeline uses `v.PoolNX` and `model.Params.SolutionNumber` as the canonical
-> Gurobi 13.0 solution pool API.  The deprecated `v.Xn` attribute is not used.
-
-### Installation
-Clone the repository:
-```bash
-git clone https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn.git
-cd cfl-gurobi-gnn
-```
-
-Install the required dependencies:
-```bash
-pip install -r requirements.txt
-pip install -e . --no-deps
-```
----
+The existing [pyproject.toml](pyproject.toml) declares package metadata and the
+SCIP extra; it is **not yet a complete runtime dependency specification**.
+[requirements.txt](requirements.txt) contains historical CUDA-specific pins.
+Do not blindly reinstall them into a working HPC environment. Environment
+consolidation and clean-install qualification remain explicit release work;
+see the [reproducibility guide](docs/reproducibility.md).
 
 ### Data Download
 Due to the very large size of the dataset, the raw data can be downloaded directly from [MILPBench](https://github.com/thuiar/MILPBench), specifically using the following links:
+
 * **CFL_easy**: https://drive.google.com/file/d/1z6oNG1ja6CwlsRYViXIzBj0j8Ch6sxdt/view?usp=sharing
 * **CFL_medium**: https://drive.google.com/file/d/181Evo5Q6otZRq6EBeQXFcCYlC4kM8zaH/view?usp=sharing
 * **CFL_hard**: https://drive.google.com/file/d/13NS9YTTyNsiV6Dth3qsQ7lWWNQs4Pek0/view?usp=sharing
 
-After downloading, please extract and place the raw `.lp.gz` files into the `data/raw/MILPBench/CFL/` directory. It is also necessary to add the `.pickle.gz` files to the directory, which should contain folders for each instance `CFL_easy_instance_0` ... `CFL_hard_instance_29`.
 
----
+Extract the original `.lp.gz` files under `data/raw/MILPBench/CFL/`, following
+the category/LP layout described in [data/README.md](data/README.md). Historical
+`.pickle.gz` artifacts are optional migration inputs, not substitutes for the
+original mathematical model. Download availability and third-party data terms
+are governed by their providers; this repository does not redistribute them
+through this documentation change.
 
-## Repository Policy: Code vs. Data
+## Reproducibility and interpretation
 
-| Artefact | Location | Synced to GitHub |
-| :--- | :--- | :---: |
-| All Python source files | `./` | Yes |
-| Raw MILPBench `.lp.gz` files | GitHub Release (attached archive) | Via Release |
-| Generated raw instance data | `/raid/.../raw_instances/` | No |
-| Generated PyG `.pt` graphs | `/raid/.../pyg_dataset/` | No |
-| Trained model weights | `/raid/.../best_model.pt` | No |
-| Generated `.hnt` hint files | `/raid/.../hints/` | No |
-| Evaluation figures and CSVs | `data/analysis/<experiment>/` | No |
+Every accepted result should be traceable to its code revision, configuration,
+parent/MIP identity, label provenance, graph hash, checkpoint, and evaluation
+partition. A successful hash check establishes byte identity, not mathematical
+correctness. Inspect both the gate and its eligibility fields.
 
-The final dataset and trained model should be distributed through
-[Zenodo](https://zenodo.org) (DOI-citable, recommended for thesis reproducibility)
-or [Hugging Face Datasets](https://huggingface.co/datasets).
+Report original-parent counts separately from graphs, synthetic descendants,
+and incumbent observations. Distinguish weighted training loss, validation loss,
+held-out classification quality, and downstream solver outcomes. Descriptive
+PCA/clustering uses outcome-free graph descriptors; it is not a learned GNN
+embedding or a basis for selecting folds.
 
----
+Keep raw instances, solution vectors, graphs, checkpoints, and historical
+evidence outside routine Git commits. Publish only reviewed, sanitized outputs;
+never commit solver licenses or credential-bearing logs. The
+[MIT license](LICENSE) covers this repository's original code, documentation and manuscript content, not external datasets or
+commercial solver rights.
 
-## References
+Original project-generated metadata, tables and figures are also offered under
+MIT within the authors' rights. The [licensing policy](LICENSE_POLICY.md) and
+[data notice](data/LICENSE.md) define the exclusions and export requirements.
+Historical receipts and running-job inputs must not be rewritten to add tags.
+
+## Literature and software references
 
 - Gasse, M., Chételat, D., Ferroni, N., Charlin, L., and Lodi, A. (2019).
-  *Exact Combinatorial Optimization with Graph Convolutional Networks.*
-  Advances in Neural Information Processing Systems 32 (NeurIPS 2019).
-  [arXiv:1906.01629](https://arxiv.org/abs/1906.01629)
-
-- Nair, V., Bartunov, S., Gimeno, F., von Glehn, I., Lichocki, P., Lobov, I.,
-  O'Donoghue, B., Sonnerat, N., Tjandraatmadja, C., Wang, P., et al. (2020).
+  *Exact Combinatorial Optimization with Graph Convolutional Neural Networks.*
+  NeurIPS 2019. [arXiv:1906.01629](https://arxiv.org/abs/1906.01629).
+  This is a branching-policy study; the present assignment-prediction pipeline
+  is not a claim to reproduce its learning task.
+- Nair, V., et al. (2020; revised 2021).
   *Solving Mixed Integer Programs Using Neural Networks.*
-  [arXiv:2012.13349](https://arxiv.org/abs/2012.13349)
+  [arXiv:2012.13349](https://arxiv.org/abs/2012.13349).
+- [MILPBench repository](https://github.com/thuiar/MILPBench), source of the
+  benchmark download links preserved above.
+- [Gurobi variable attributes](https://docs.gurobi.com/projects/optimizer/en/current/reference/attributes/variable.html),
+  including `VarHintVal`, `VarHintPri`, and `Start`. Record the exact installed
+  solver version in each experiment.
 
-- Han, Q., et al. (2023).
-  *MILPBench: A Large-Scale Benchmark for Mixed-Integer Linear Programming.*
-  [GitHub](https://github.com/MILPBench/MILPBench)
-
-- Gurobi Optimization, LLC. (2024).
-  *Gurobi Optimizer Reference Manual, Version 13.0.*
-  [gurobi.com/documentation/13.0](https://www.gurobi.com/documentation/13.0/)
+The manuscript will use a user-supplied Quarto Manuscript template. No manuscript
+template, final scientific result, or dataset DOI is implied by this README.

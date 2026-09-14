@@ -1,5 +1,13 @@
 # Scalable four-arm Gasse training and held-out evaluation
 
+> Historical cohort note: the 30-easy diagnostic and proposed 45-graph route
+> below record earlier development decisions. The current frozen confirmation
+> is 42 original parents (30 easy, 12 medium), with no hard parents; missing or
+> inadmissible medium labels may not be silently excluded. Use the
+> [PR49 confirmation protocol](pr49-confirmation-validation.md) and the
+> [PR50 execution work](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/50).
+> A paired four-arm intersection remains a separately reported population.
+
 ## Scope
 
 This development gate reconnects the four solver/data arms to the preserved

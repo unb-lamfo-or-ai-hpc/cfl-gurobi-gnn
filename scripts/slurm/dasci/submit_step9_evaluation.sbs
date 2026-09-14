@@ -3,29 +3,29 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --gres=gpu:1       # 1 GPU es perfecto y rapidísimo para inferencia
+#SBATCH --gres=gpu:1       # Allocate one GPU for inference
 #SBATCH --time=00:30:00
 #SBATCH --output=slurm_evaluation_%j.out
 
-echo "=== Iniciando Evaluación Académica (Neural Diving) ==="
+echo "=== Starting held-out model diagnostics (legacy route) ==="
 EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
 cd "$EXEC_DIR"
 export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
-# Activar entorno
+# Activate the environment.
 eval "$(conda shell.bash hook)"
 conda activate tfm_env 
 
-# --- PANEL DE CONTROL DE EVALUACIÓN ---
-# Apuntamos al modelo resultante de nuestro entrenamiento definitivo DDP
+# Evaluation configuration
+# Select the checkpoint from the corresponding DDP training run.
 MODELO_PATH="/home/vrcelestino/discodatos/cfl-gurobi-gnn/data/models/run_02_partial_dataset_ddp/best_model.pt"
 EXPERIMENT_NAME="run_02_partial_dataset_ddp"
 # --------------------------------------
 
-echo "Evaluando modelo: $MODELO_PATH"
-echo "Guardando resultados en: data/analysis/$EXPERIMENT_NAME"
+echo "Evaluating checkpoint: $MODELO_PATH"
+echo "Saving results to: data/analysis/$EXPERIMENT_NAME"
 
-# Ejecutamos la v3 en modo serial (limpiará el DDP state_dict automáticamente)
+# Run the legacy serial evaluator with DDP checkpoint-key handling.
 srun python3 -m cfl_gnn.cli.evaluate \
     --model_path $MODELO_PATH \
     --experiment_name $EXPERIMENT_NAME \
@@ -39,4 +39,5 @@ srun python3 -m cfl_gnn.cli.evaluate \
 #    --medium_split 15 10 5 \
 #    --hard_split 0 0 0   
 
-echo "=== Job Finalizado ==="
+echo "=== Job finished ==="
+
