@@ -37,7 +37,7 @@ def test_readme_preserves_milpbench_download_presentation():
 def test_readme_distinguishes_confirmation_from_historical_routes():
     text = (ROOT / "README.md").read_text(encoding="utf-8")
     for required in (
-        "42 original parents: 30 easy, 12 medium",
+        "39 parents: 30 easy and nine medium",
         "MINIMIZE",
         "zero-vector fallback",
         "100 epochs",
@@ -45,6 +45,8 @@ def test_readme_distinguishes_confirmation_from_historical_routes():
         "not yet a complete runtime dependency specification",
     ):
         assert required in text
+    assert "0.582463" in text and "0.00117072" in text
+    assert "42-parent gate remains incomplete" in text
     legacy = (ROOT / "docs/pipeline.md").read_text(encoding="utf-8")
     assert "Historical scope" in legacy
     assert "All scripts are production-ready" not in legacy

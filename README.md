@@ -14,14 +14,28 @@ assumed property of the software.
 
 ## Research status
 
-The current work is a **development-only research MVP**, not a production
-deployment or a completed population-level study. The frozen confirmation cohort
-contains **42 original parents: 30 easy, 12 medium, and no hard instances**.
-Finding a graph file does not establish that its label is admissible. The latest
-pre-recovery inventory admitted 30 labels under the 10% MIP-gap ceiling;
-independent source recovery and subsequent 42-parent validation are tracked in
-[PR #50](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/50).
-Do not interpret a planned 100-epoch run as an observed result.
+The delivered **development-only research MVP** completed original-parent
+training and held-out evaluation. The initial cohort comprised **42 original
+parents: 30 easy, 12 medium, and no hard instances**. Three medium parents
+remained above the 10% label-gap ceiling after four-hour solves. A separately
+recorded revision retained **39 parents: 30 easy and nine medium**, with
+**23 training, eight validation and eight test parents**. The original
+42-parent gate remains incomplete; exclusion conditions the results on solver
+label admissibility.
+
+The versioned Gasse model completed **100 epochs**, seed **42**, using real
+Gurobi root-relaxation features. The minimum validation weighted BCE occurred at
+epoch 91; the validation-selected classification threshold was 0.9933161.
+Held-out aggregate F1 was **0.582463** and parent-macro F1 was **0.584889**.
+Reported average precision was **0.609753**. The Brier score (**0.00609632**)
+was worse than the constant-zero baseline (**0.00117072**), so calibrated
+probabilities are not claimed. The [final evidence summary](docs/results/pr50-confirmation/README.md)
+documents the source exclusions, graph analyses, audit scope and numerical results.
+
+This was a Gurobi-labelled original-parent experiment, not a completed matched
+four-arm comparison or a demonstration of neural solver acceleration. No hard
+instances, multi-seed estimates or current-cohort native hint/control benchmark
+are included. These analyses and calibration remain future work.
 
 The intended population remains 90 parents (30 per difficulty). Full-population
 execution is deferred until the development outputs, reproducibility review,
@@ -97,7 +111,7 @@ Original parent MIPs -> independent solver labels and trajectories -> source aud
 
 The four-arm experiment uses its **common eligible parent intersection**, equal
 parent mass, and equal optimizer-step budgets. It is distinct from the broader
-Gurobi-only 42-parent confirmation. Missing paired coverage must be reported,
+Gurobi-only revised 39-parent confirmation. Missing paired coverage must be reported,
 not silently replaced with unmatched samples.
 
 ## Repository navigation

@@ -67,17 +67,20 @@ preflight failures; an unguarded `exit` can close the user's shell. Do not submi
 a dependent job when its input gate failed. Never switch branches or pull into
 the shared checkout while its array or dependent audit is still active.
 
-The frozen 42-parent run and its live receipts belong to
-[PR #50](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/50).
-This documentation branch neither submits nor restarts that campaign.
+The [completed confirmation summary](results/pr50-confirmation/README.md)
+and its evidence audit distinguish the original 42-parent protocol from the
+39-parent revision. The final job completed training and evaluation; no
+additional run was required for the documentation reconciliation.
 
 ## Experimental acceptance
 
-- Confirmation: 30 easy and 12 medium parents, no hard parents; canonical
-  rotation 0 has 24 train, 10 validation, and 8 test parents.
+- Initial confirmation: 30 easy and 12 medium parents; canonical rotation 0
+  had 24 train, 10 validation and eight test parents. The separate final revision
+  retained 30 easy and nine medium parents (23/8/8), with no hard parents.
 - Labels: at most 10% relative MIP gap plus independent feasibility/provenance
-  checks. Preserve inadmissible and censored records; do not remove medium
-  instances or increase the ceiling to obtain a passing report.
+  checks. Preserve inadmissible and censored records. The three exclusions
+  (medium3/5/6) and selection bias are recorded explicitly; the strict42gate
+  was not converted to success and the ceiling was not increased.
 - Features: Gurobi-authoritative real root relaxation, no zero fallback.
 - Learning: seed 42, 100 full epochs, training-only normalization and class
   weighting, checkpoint/threshold selection using validation only.
@@ -93,6 +96,15 @@ insufficient with rare positive targets; interpret precision, recall, F1, averag
 precision, Brier/ECE, and constant-zero/root-LP diagnostics together. Descriptive
 graph projections must not select folds or models.
 
+The final evidence package contains 62 hash-checked files, 100 epoch rows,
+39 graph receipts and eight-parent evaluation tables. Graph tensors, original
+labels, root vectors, checkpoint and predictions were not transferred for this
+review. Full ROC/PR tables were withheld for size. Their receipt hashes and
+reported AUC/AP values are not independent raw-artifact verification.
+Graph statistics recorded unknown censoring for all 39 rows; their heterogeneous
+source runtimes are descriptive, not a solver speed comparison. Epoch losses
+are graph-averaged weighted BCE; held-out BCE is unweighted per target.
+
 ## Publication and archiving
 
 Keep raw data, graph tensors, labels, checkpoints, and raw solver logs out of
@@ -105,4 +117,3 @@ Verify output ledgers against actual files; inspect figures visually as well as
 checking syntax/hashes. Label development-only results explicitly and report
 coverage and censoring. The initial manuscript uses a supplied Quarto template.
 The full 90-parent experiment and subsequent manuscript extension remain deferred.
-

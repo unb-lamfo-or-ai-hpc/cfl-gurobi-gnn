@@ -16,10 +16,10 @@ PR numbers identify development history; they are not scientific acceptance leve
    100 epochs, and held-out evaluation.
 7. [Native guidance policy](research/literature-backed-neural-guidance-policy.md).
 
-The source-recovery and confirmation execution extension is developed in
-[PR #50](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/50).
-Follow its runbook only at its recorded revision; its runtime validation remains
-separate from this documentation branch.
+The [final original-parent results](results/pr50-confirmation/README.md) report
+the completed 39-parent revision, 100 training epochs and eight-parent held-out
+evaluation. The initial 42-parent target remained incomplete. Matched four-arm
+and native solver benchmarking remain future work for this confirmation cohort.
 
 ## Evidence and historical interpretation
 
@@ -34,4 +34,3 @@ separate from this documentation branch.
 
 Do not copy historical absolute paths, model versions, or permissive label gaps
 into a current run. Resolve the exact upstream artifact contract first.
-
