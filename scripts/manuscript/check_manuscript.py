@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import re
@@ -54,8 +55,8 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("executable_or_unreviewed_included_content")
     if any(setting not in config for setting in ("enabled: false", "code-links: false", "meca-bundle: false")):
         failures.append("static_publication_boundary_missing")
-    if "empirical confirmation pending" not in article:
-        failures.append("visible_pending_status_missing")
+    if "An Audited Original-Instance Study" not in article or "No matched four-arm learning comparison" not in article:
+        failures.append("completed_study_scope_missing")
     environment_boundaries = (
         "## Computational environment",
         "{#tbl-computational-environment}",
@@ -66,17 +67,20 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     )
     if any(text not in article for text in environment_boundaries):
         failures.append("computational_environment_scope_missing")
-    if evidence.get("schema_version") != 2:
+    if evidence.get("schema_version") != 3:
         failures.append("unsupported_evidence_schema")
     if evidence.get("development_only") is not True:
         failures.append("development_boundary_missing")
     if evidence.get("scientific_reporting_eligible") is not False:
         failures.append("scientific_claim_without_review")
     assets = evidence.get("empirical_assets", [])
-    if evidence.get("empirical_results_included") is not True or len(assets) != 1:
+    allowed_assets = {"source_evidence.json", "confirmation_final.json", "graph_clustering_report.json",
+                      "training_epoch_metrics.csv", "per_parent_metrics.csv", "per_difficulty_metrics.csv",
+                      "calibration_curve.csv", "graph_statistics.csv", "graph_clustering.csv"}
+    if evidence.get("empirical_results_included") is not True or {a.get("relative_path") for a in assets} != {"results/" + name for name in allowed_assets}:
         failures.append("unreviewed_empirical_asset_scope")
     for asset in assets:
-        if asset.get("relative_path") != "results/source_evidence.json":
+        if asset.get("relative_path") not in {"results/" + name for name in allowed_assets}:
             failures.append("unreviewed_empirical_asset_scope")
             continue
         path = root / asset["relative_path"]
@@ -106,15 +110,14 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if any(protocol.get(key) != value for key, value in expected.items()):
         failures.append("confirmation_protocol_drift")
     acceptance = evidence.get("acceptance", {})
-    required_pending = ("held_out_confirmation_evaluation", "paired_four_arm_comparison")
-    if any(acceptance.get(key) != "pending" for key in required_pending):
+    if acceptance.get("held_out_confirmation_evaluation") != "completed_receipt_and_classification_consistency_verified" or acceptance.get("paired_four_arm_comparison") != "not_executed_future_work":
         failures.append("acceptance_claim_requires_evidence_update")
     if acceptance.get("full_90_parent_campaign") != "deferred":
         failures.append("full_population_scope_changed")
     boundary = {"complete_source_label_bundle": "incomplete_39_of_42_admitted",
                 "strict_42_graph_bundle": "not_achieved",
-                "revised_39_graph_bundle": "slurm_completed_artifact_review_pending",
-                "confirmation_training_100_epochs": "running_no_final_artifacts"}
+                "revised_39_graph_bundle": "receipt_audited_raw_artifacts_not_transferred",
+                "confirmation_training_100_epochs": "completed_100_epochs_receipt_and_history_verified"}
     if any(acceptance.get(k) != v for k, v in boundary.items()):
         failures.append("unsupported_completion_claim")
     revision = evidence.get("revised_confirmation_protocol", {})
@@ -127,7 +130,23 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if source.get("campaign_contract_sha256") != protocol.get("execution_contract_sha256"):
         failures.append("source_campaign_mismatch")
     if source.get("training", {}).get("epochs_completed") is not None or source.get("training", {}).get("test_metrics") is not None:
-        failures.append("training_results_not_yet_supplied")
+        failures.append("historical_source_extract_changed")
+    final = json.loads((root / "results/confirmation_final.json").read_text())
+    with (root / "results/training_epoch_metrics.csv").open(newline="", encoding="utf-8") as stream:
+        epochs = list(csv.DictReader(stream))
+    if final.get("gate_status") != "passed" or final["training"]["epochs"] != 100 or [int(r["epoch"]) for r in epochs] != list(range(1, 101)):
+        failures.append("final_training_evidence_inconsistent")
+    if final["cohort"] != {"parents": 39, "easy": 30, "medium": 9, "hard": 0, "train": 23, "validation": 8, "test": 8}:
+        failures.append("final_cohort_inconsistent")
+    with (root / "results/per_parent_metrics.csv").open(newline="", encoding="utf-8") as stream:
+        parents = list(csv.DictReader(stream))
+    aggregate = final["evaluation"]["aggregate_metrics"]
+    if len(parents) != 8 or any(sum(int(r[k]) for r in parents) != aggregate[k] for k in ("tp", "tn", "fp", "fn", "n_targets", "n_positive")):
+        failures.append("final_classification_totals_inconsistent")
+    if abs(2 * aggregate["tp"] / (2 * aggregate["tp"] + aggregate["fp"] + aggregate["fn"]) - aggregate["f1_score"]) > 1e-12:
+        failures.append("final_f1_inconsistent")
+    if final["evaluation"]["score_diagnostics"]["probability_calibration_claimed"] is not False:
+        failures.append("unsupported_calibration_claim")
     for parent in source.get("rejected", []):
         for run in parent["repairs"]:
             expected_gap = abs(run["solution_objective"] - run["best_bound"]) / abs(run["solution_objective"])
@@ -136,9 +155,9 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
             if run["right_censored"] is not True or run["solve_status"] != "timelimit":
                 failures.append("rejection_censoring_missing")
     private_pattern = re.compile(r"/raid/|/home/|(?<![\w{])[A-Za-z]:[\\/]|WLSSecret|LicenseID|gurobi\.lic")
-    for name in ("index.qmd", "references.bib", "evidence-status.json", "_quarto.yml", "results/source_evidence.json"):
+    for name in ("index.qmd", "references.bib", "evidence-status.json", "_quarto.yml", *("results/" + name for name in allowed_assets)):
         payload = (root / name).read_bytes()
-        if b"\r" in payload:
+        if b"\r" in payload and not name.endswith(".csv"):
             failures.append(f"non_lf_source:{name}")
         if private_pattern.search(payload.decode("utf-8")):
             failures.append(f"private_content:{name}")
@@ -161,7 +180,7 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
     if not html.is_file() or not pdf.is_file():
         return ["html_or_pdf_missing"]
     content = html.read_text(encoding="utf-8")
-    if "empirical confirmation pending" not in content:
+    if "An Audited Original-Instance Study" not in content:
         failures.append("rendered_status_missing")
     for _, orcid, email in AUTHORS:
         if orcid not in content or email not in content:
@@ -176,7 +195,8 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
     else:
         receipt = json.loads(receipt_path.read_text())
         source_hash = hashlib.sha256((root / "results/source_evidence.json").read_bytes()).hexdigest()
-        if receipt.get("source_sha256") != source_hash or len(receipt.get("outputs", [])) != 7:
+        final_hash = hashlib.sha256((root / "results/confirmation_final.json").read_bytes()).hexdigest()
+        if receipt.get("source_sha256") != source_hash or receipt.get("final_evidence_sha256") != final_hash or len(receipt.get("outputs", [])) != 13:
             failures.append("rendered_asset_source_or_count_mismatch")
         for asset in receipt.get("outputs", []):
             path = output / asset["relative_path"]
@@ -201,7 +221,7 @@ def check_pdf_text(path: Path) -> list[str]:
     """Inspect extracted text as a supplement to mandatory visual page review."""
     text = path.read_text(encoding="utf-8")
     failures = []
-    for expected in ("Graph Neural Guidance", "empirical confirmation pending",
+    for expected in ("Graph Neural Prediction", "0.5825",
                      "Gasse", "Fischetti", "Nair", "References"):
         if expected not in text:
             failures.append(f"pdf_text_missing:{expected}")

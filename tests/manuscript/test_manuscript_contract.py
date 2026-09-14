@@ -43,7 +43,7 @@ class ManuscriptContractTests(unittest.TestCase):
         path.write_text(path.read_text() + "\n")
         self.assertIn("source_evidence_hash_mismatch", CHECK.check_source(self.root))
 
-    def test_running_training_cannot_be_claimed_complete(self):
+    def test_completion_cannot_drop_evidence_scope(self):
         path = self.root / "evidence-status.json"
         data = json.loads(path.read_text())
         data["acceptance"]["confirmation_training_100_epochs"] = "passed"
@@ -57,14 +57,28 @@ class ManuscriptContractTests(unittest.TestCase):
         path.write_text(json.dumps(data))
         self.assertIn("revised_cohort_drift", CHECK.check_source(self.root))
 
-    def test_mit_declaration_and_pending_panels_exist(self):
+    def test_mit_declaration_and_completed_results_exist(self):
         text = (self.root / "index.qmd").read_text(encoding="utf-8")
         self.assertIn("MIT License", text)
-        self.assertIn("Reserved training-results panel", text)
-        self.assertIn("Reserved prediction-results panel", text)
-        self.assertIn("Reserved graph-results panel", text)
-        self.assertIn("Reserved optimization-results panel", text)
-        self.assertIn("training and validation weighted BCE on the same axes", text)
+        self.assertNotIn("Reserved", text)
+        self.assertIn("100 epochs", text)
+        self.assertIn("0.5825", text)
+        self.assertIn("Brier score was worse", text)
+        self.assertIn("No matched four-arm learning comparison", text)
+        self.assertIn("training and validation weighted BCE curves are shown on the same axes", text)
+
+    def test_final_confusion_totals_are_recomputed(self):
+        path = self.root / "results/confirmation_final.json"
+        data = json.loads(path.read_text())
+        data["evaluation"]["aggregate_metrics"]["tp"] += 1
+        path.write_text(json.dumps(data))
+        self.assertIn("final_classification_totals_inconsistent", CHECK.check_source(self.root))
+
+    def test_final_epoch_budget_is_verified(self):
+        path = self.root / "results/training_epoch_metrics.csv"
+        lines = path.read_text().splitlines()
+        path.write_text("\n".join(lines[:-1]) + "\n")
+        self.assertIn("final_training_evidence_inconsistent", CHECK.check_source(self.root))
 
     def test_unknown_citation_fails(self):
         with (self.root / "index.qmd").open("a", encoding="utf-8") as stream:

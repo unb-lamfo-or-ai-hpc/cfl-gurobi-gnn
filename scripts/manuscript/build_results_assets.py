@@ -1,4 +1,4 @@
-"""Render only the reviewed source-diagnostic extract; never execute research jobs.
+"""Render reviewed source and final confirmation evidence without research execution.
 
 SPDX-License-Identifier: MIT
 """
@@ -95,10 +95,63 @@ def build(root: Path = ROOT) -> None:
         ax.set_xticks(range(6), labels, rotation=35, ha="right", fontsize=8)
         ax.ticklabel_format(axis="y", style="plain", useOffset=False)
     save(fig, "figure_source_time_regions")
+    def read_csv(name):
+        with (root / "results" / name).open(newline="", encoding="utf-8") as stream:
+            return list(csv.DictReader(stream))
+
+    epochs = read_csv("training_epoch_metrics.csv")
+    assert [int(r["epoch"]) for r in epochs] == list(range(1, 101))
+    fig, ax = plt.subplots(figsize=(8, 3.1), layout="constrained")
+    for key, label, color in [("train_loss", "Training (online)", "#176b87"),
+                              ("validation_loss", "Validation (post-epoch)", "#bd572e")]:
+        ax.plot([int(r["epoch"]) for r in epochs], [float(r[key]) for r in epochs],
+                label=label, color=color, lw=1.4)
+    best = min(epochs, key=lambda r: float(r["validation_loss"]))
+    ax.axvline(int(best["epoch"]), ls="--", color="#555555", lw=1,
+               label=f"Selected epoch {best['epoch']}")
+    ax.set(xlabel="Epoch", ylabel="Graph-averaged weighted BCE", xlim=(1, 100), ylim=(0, None))
+    ax.legend(frameon=False, fontsize=8)
+    save(fig, "figure_training_curves")
+
+    stats, clusters = read_csv("graph_statistics.csv"), read_csv("graph_clustering.csv")
+    fig, axes = plt.subplots(1, 2, figsize=(8, 3.1), layout="constrained")
+    for difficulty, color in [("easy", "#176b87"), ("medium", "#bd572e")]:
+        group = [r for r in stats if r["difficulty"] == difficulty]
+        axes[0].scatter([float(r["variables"])/1e6 for r in group],
+                        [float(r["nonzeros"])/1e6 for r in group],
+                        color=color, label=difficulty.capitalize(), alpha=.6)
+        for cluster, marker in [(0, "o"), (1, "s"), (2, "^")]:
+            group = [r for r in clusters if r["difficulty"] == difficulty and int(r["cluster_id"]) == cluster]
+            if group:
+                axes[1].scatter([float(r["pca_component_1"]) for r in group],
+                                [float(r["pca_component_2"]) for r in group],
+                                color=color, marker=marker, alpha=.8,
+                                label=f"{difficulty.capitalize()}, C{cluster+1}")
+    axes[0].set(xlabel="Variables (millions)", ylabel="Nonzeros (millions)")
+    axes[0].legend(frameon=False, fontsize=8)
+    axes[1].set(xlabel="PC1 (85.78% variance)", ylabel="PC2 (7.74% variance)")
+    axes[1].legend(frameon=False, fontsize=7)
+    save(fig, "figure_graph_structure")
+
+    parents, bins = read_csv("per_parent_metrics.csv"), read_csv("calibration_curve.csv")
+    fig, axes = plt.subplots(1, 3, figsize=(9, 3), layout="constrained")
+    labels = [("E" if "easy" in r["parent_instance_id"] else "M") + r["parent_instance_id"].rsplit("_", 1)[1] for r in parents]
+    axes[0].bar(range(len(parents)), [float(r["f1_score"]) for r in parents], color="#176b87")
+    axes[0].set_xticks(range(len(parents)), labels, rotation=45)
+    axes[0].set(ylabel="F1", xlabel="Held-out parent", ylim=(0, 1))
+    occupied = [r for r in bins if int(r["count"]) > 0]
+    axes[1].plot([0, 1], [0, 1], "--", color="#888888", lw=1)
+    axes[1].plot([float(r["mean_probability"]) for r in occupied],
+                 [float(r["positive_fraction"]) for r in occupied], "o-", color="#bd572e")
+    axes[1].set(xlabel="Mean predicted score", ylabel="Observed positive fraction", xlim=(0, 1), ylim=(0, 1))
+    axes[2].bar([int(r["bin_index"]) for r in bins], [int(r["count"]) for r in bins], color="#176b87")
+    axes[2].set(xlabel="Score bin (0–9)", ylabel="Targets (log scale)", yscale="log")
+    save(fig, "figure_prediction_quality")
     outputs = [*sorted(figures.glob("figure_*.png")), *sorted(figures.glob("figure_*.svg")),
                tables / "table_source_rejection_outcomes.csv"]
     receipt = {"schema_version": 1, "license": "MIT",
                "source_sha256": hashlib.sha256((root / "results/source_evidence.json").read_bytes()).hexdigest(),
+               "final_evidence_sha256": hashlib.sha256((root / "results/confirmation_final.json").read_bytes()).hexdigest(),
                "scope": "supplied_diagnostic_visualization_not_research_certification",
                "scientific_reporting_eligible": False,
                "outputs": [{"relative_path": p.relative_to(root).as_posix(),

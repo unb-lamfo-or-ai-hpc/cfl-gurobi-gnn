@@ -32,4 +32,4 @@ format:
 
 website:
   site-url: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/
-  description: Development-stage research manuscript with source-admission evidence; training confirmation is pending.
+  description: An audited original-instance graph-learning study of capacitated facility location, with completed training, held-out results and explicit limitations.

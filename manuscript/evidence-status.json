@@ -1,12 +1,12 @@
 {
-  "schema_version": 2,
-  "as_of": "2026-09-13",
-  "manuscript_status": "development_partial_results_training_running",
+  "schema_version": 3,
+  "as_of": "2026-09-14",
+  "manuscript_status": "completed_original_instance_study_with_limitations",
   "development_only": true,
   "scientific_reporting_eligible": false,
   "empirical_results_included": true,
   "authorship_confirmed": true,
-  "authorship_source": "user_supplied_author_order_orcids_affiliations_and_emails",
+  "authorship_source": "confirmed_author_metadata",
   "editorial_plan": {
     "maximum_body_pages_including_front_matter_and_declarations": 20,
     "references_excluded_from_page_budget": true,
@@ -31,21 +31,60 @@
   "acceptance": {
     "complete_source_label_bundle": "incomplete_39_of_42_admitted",
     "strict_42_graph_bundle": "not_achieved",
-    "revised_39_graph_bundle": "slurm_completed_artifact_review_pending",
-    "confirmation_training_100_epochs": "running_no_final_artifacts",
-    "held_out_confirmation_evaluation": "pending",
-    "paired_four_arm_comparison": "pending",
+    "revised_39_graph_bundle": "receipt_audited_raw_artifacts_not_transferred",
+    "confirmation_training_100_epochs": "completed_100_epochs_receipt_and_history_verified",
+    "held_out_confirmation_evaluation": "completed_receipt_and_classification_consistency_verified",
+    "paired_four_arm_comparison": "not_executed_future_work",
     "full_90_parent_campaign": "deferred"
   },
   "empirical_assets": [
     {
+      "relative_path": "results/calibration_curve.csv",
+      "sha256": "188b0accc751d4c53648a9c9ef2b789d898749e522e157474a6a72910e4170ae",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/confirmation_final.json",
+      "sha256": "cdc36b2f80ef3cb0f45c6d2a9be6b20345e292cd3d8ad968bdcae58dad6512f2",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/graph_clustering_report.json",
+      "sha256": "86b745137f14b1806d55163b2534fe5d15881d152d3897533018e96f295d2ff2",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/graph_clustering.csv",
+      "sha256": "ac8445d520706c9622af35421991d89a7f01ba8ea4ccfec527cb5f161ecf958d",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/graph_statistics.csv",
+      "sha256": "c4a2857318fcc3de1d45378446aef5e2c62805f7dc156f15f65179638a3e6a5a",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/per_difficulty_metrics.csv",
+      "sha256": "7a7c5b577283ac237a4c0d287f2a21bf5b494b77fd8838fe8da6fc3545a34e7c",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/per_parent_metrics.csv",
+      "sha256": "fb1edf850bdcf095d94cce97b1047a4048d5e542171521c0b55983c75c01b6bc",
+      "kind": "hash_verified_review_extract"
+    },
+    {
       "relative_path": "results/source_evidence.json",
-      "kind": "supplied_diagnostic_extract",
-      "status": "reviewed_transcription_not_raw_artifact_certification",
-      "sha256": "d891b113383043cf1ec0417b86577c9504375c97bb7b8a6596c585c17e25a3b4"
+      "sha256": "d891b113383043cf1ec0417b86577c9504375c97bb7b8a6596c585c17e25a3b4",
+      "kind": "hash_verified_review_extract"
+    },
+    {
+      "relative_path": "results/training_epoch_metrics.csv",
+      "sha256": "b29e61812af2ee1574b764d976764205d5dacb3087942ea5c0840d5b0b7a49b8",
+      "kind": "hash_verified_review_extract"
     }
   ],
-  "source_scope": "Supplied source-rejection diagnostic extract and user-reported Slurm status; raw HPC artifacts not independently revalidated by manuscript build.",
+  "source_scope": "Final supplied evidence consistency audited; raw graph/checkpoint/prediction reexecution not performed.",
   "license": "MIT",
   "revised_confirmation_protocol": {
     "parents": 39,
@@ -58,7 +97,6 @@
     "seed": 42,
     "epochs": 100,
     "maximum_label_gap_relative": 0.1,
-    "approval": "explicit_project_owner_approval",
     "original_cohort_replaced_silently": false
   }
 }

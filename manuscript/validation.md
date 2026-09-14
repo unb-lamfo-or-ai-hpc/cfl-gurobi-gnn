@@ -1,85 +1,9 @@
-# Manuscript build validation
+# Manuscript validation
 
-## Interim-results and licensing revision, 13 September 2026
+Validation covers source provenance, final evidence hashes, exact citation coverage, author order and ORCID icons, the unchanged AI declaration, static rendering, and the 20-page body limit. The empirical controls recompute pooled confusion totals and F1 from parent records, verify the 100-epoch history, and retain the non-calibration boundary.
 
-- Twenty standard-library manuscript tests pass. The source/rendered/PDF-text
-  integrity gate passes, including the seven generated-asset hashes.
-- A hash-bound, sanitized extract of the supplied rejection diagnostic supports
-  three figures (cohort, rejected-parent gaps, four timing regions) and one CSV.
-  This is not an independent revalidation of the underlying remote artifacts.
-- Quarto rendered HTML and a 14-page A4 PDF. References begins on page13;
-  the body remains below the 20-page ceiling. All pages were visually checked;
-  unchanged pages1-7 also match the preceding render pixel-for-pixel.
-- Four actual ORCID icons and their URI annotations remain present. The fifteen
-  references, accented names and exact AI declaration are preserved.
-- The adapter imports float for in-place result figures; original SBC style and
-  all third-party licensing notices remain unchanged. Provenance hash updated.
-- MIT is explicit for original manuscript/project content and original output
-  metadata within the authors' rights. External data and resources are excluded.
-- Job3307 remains RUNNING at the last supplied observation, 08:12:14. No accepted
-  final training/evaluation metrics, invented curves, solver improvement or
-  scientific eligibility is claimed. All remaining output families are reserved
-  in the article and results register.
-- No DGX job, research source, active input or immutable receipt was changed.
-  PDF text was extracted with pdfplumber locally; CI uses Poppler pdftotext.
+The final study includes 39 parents (23 training, eight validation and eight test), 100 epochs and seed 42. Three excluded medium parents and their unsuccessful source-repair attempts remain reported. No four-arm performance advantage or solver speedup is asserted.
 
-The record below describes the previous version, not the current page count.
+Source/rendering tests are software consistency checks, not independent reexecution of the HPC experiment. See the empirical asset ledger for reviewed inputs and the final evidence audit for omitted raw artifacts.
 
-## Local evidence, 12 September 2026
-
-- Quarto 1.10.18 and Pandoc 3.10.0 rendered both HTML and SBC PDF with research
-  execution disabled.
-- Sixteen standard-library manuscript regression tests passed after the L2O,
-  ORCID-icon and bibliography update.
-- Source, citation, template-hash, evidence-boundary, rendered-artifact, and
-  extracted-PDF-text checks passed.
-- All ten A4 PDF pages were visually inspected after the final render.
-  Equations, the planned-output table, accented author names, and fifteen
-  bibliography entries are readable, without clipped content.
-- The four authors appear in the approved order, with accented names, three
-  institution mappings, four emails and four clickable ORCID icons, rendered by
-  the maintained orcidlink package v1.1.1. PDF link annotations were checked in
-  addition to visual inspection; the identifiers are not printed as text.
-- The AI declaration is verbatim and immediately precedes References. The
-  manuscript is ten pages including references; References starts on
-  page9, within the conservative 20-page body ceiling.
-- The upstream SBC style remains byte-identical. Documented adapter changes
-  support Pandoc table widths and presentation metadata; they do not replace
-  the supplied template.
-
-The local Windows render used a workspace-local TeX runtime through a temporary
-drive alias and a writable Quarto cache. Those runtime files are not publication
-sources and are not committed. CI uses Ubuntu and TinyTeX instead.
-On Windows, the maintained orcidlink package was installed in that local TeX
-runtime from its upstream distribution; no substitute text macro is used.
-
-The six-page project extract and seven new Zotero items were reviewed. Related
-work now situates the study in L2O, distinguishes the learning targets, and
-does not transfer continuous/QP/MINLP guarantees to the CFL predictor. The
-fifteen bibliography entries exactly match the cited keys. Primary sources
-resolve the tutorial identifier, author-order discrepancies, and revision dates.
-
-The repository owner reports public visibility and Pages configured for GitHub
-Actions. These are document-integrity checks, not scientific validation. Final
-campaign receipts, empirical figures, the updated GitHub Actions result and a
-successful live-site deployment are not certified by this local record.
-No research job was submitted or modified for this manuscript build.
-
-## Latest validation: DGX-DaSCI environment (13 September 2026)
-
-This record supersedes the earlier page and test counts above. The current
-manuscript includes the interim source-admission results and the investigator's
-DGX-1 inventory under Reproducibility and availability. Host RAM, GPU device
-memory, nominal interconnect bandwidth and SATA interface rate are distinguished.
-EPSJ/DaSCI institutional links and NVIDIA documentation accompany the table.
-The inventory is not presented as a runtime hardware probe or a per-job allocation;
-missing software versions and resource receipts remain pending reconciliation.
-
-- All 22 manuscript regression tests pass, including allocation-boundary and
-  SATA bit/byte checks. Source, rendered-artifact and PDF-text gates pass.
-- Quarto rendered HTML and a 15-page PDF. References begins on page 14, within
-  the 20-page body ceiling. The changed pages 12-15 were visually inspected;
-  the hardware table, section transitions and references are readable.
-- The MIT scope, four ORCID icons, bibliography and verbatim AI declaration are
-  preserved. No final training metrics or scientific certification were added.
-- No HPC job, pipeline input, PR50 code or PR51 branch was modified.
+Final local verification: 24 manuscript regression tests passed; HTML/PDF rendering and extracted-text/source/asset checks passed. All 16 A4 pages were visually inspected; References starts on page 15, within the 20-page body limit. Six measured figures and five in-article tables are included. Evidence CSV line endings are preserved byte-for-byte through Git attributes to retain their source hashes.
