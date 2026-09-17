@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "protocol_id": "easy_medium_partial_start_v1",
-  "status": "precommitted_design_execution_not_implemented",
+  "status": "pilot_implemented_pending_licensed_qualification",
   "seed": 42,
   "solver": "gurobi",
   "objective_sense": "MINIMIZE",

@@ -9,9 +9,9 @@ def design():
     return json.loads((PROJECT_ROOT / "configs/experiments/easy_medium_partial_start_v1.json").read_text())
 
 
-def test_explicit_design_only_no_scientific_or_execution_certificate():
+def test_pilot_implementation_is_not_a_scientific_certificate():
     value = design()
-    assert value["status"] == "precommitted_design_execution_not_implemented"
+    assert value["status"] == "pilot_implemented_pending_licensed_qualification"
     assert value["development_only"] is True
     assert value["scientific_reporting_eligible"] is False
     assert value["expansion_requires_pilot_review"] is True
