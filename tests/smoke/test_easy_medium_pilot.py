@@ -241,3 +241,36 @@ def test_omitted_method_hash_cannot_pass(completed_pilot, tmp_path):
     p.write_json(folder / "pair_receipt.json", receipt)
     report = p.audit(*completed_pilot, tmp_path / "audit")
     assert report["gate_status"] == "failed" and report["summary"]["valid_method_runs"] == 3
+
+
+def test_absent_root_callback_still_fails_closed(tmp_path, monkeypatch):
+    """Negative control: no event must never become a fabricated root vector."""
+    import sys
+    from types import SimpleNamespace
+    from cfl_gnn.graph.gurobi_graph_artifact import capture_root_relaxation, GurobiGraphError
+
+    class NoRootEventModel:
+        ModelSense = -1
+        Params = SimpleNamespace()
+        disposed = False
+
+        def update(self):
+            pass
+
+        def getVars(self):
+            return [SimpleNamespace(VarName="x")]
+
+        def optimize(self, observer):
+            pass
+
+        def dispose(self):
+            self.disposed = True
+
+    model = NoRootEventModel()
+    fake = SimpleNamespace(read=lambda _: model, GRB=SimpleNamespace(MINIMIZE=1))
+    monkeypatch.setitem(sys.modules, "gurobipy", fake)
+    path = tmp_path / "no_root.lp"
+    path.write_bytes(b"fixture")
+    with pytest.raises(GurobiGraphError, match="no optimal root MIPNODE"):
+        capture_root_relaxation(path, expected_mip_sha256=p.sha256_file(path))
+    assert model.disposed

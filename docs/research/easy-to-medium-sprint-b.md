@@ -124,7 +124,12 @@ python3 -m cfl_gnn.cli.run_easy_medium_pilot plan \
 
 Do not submit the pilot unless both commands pass, including all four licensed
 tests without skips. The numerical tests use tiny models and CPU inference;
-the scheduled pilot uses one GPU for label-free preparation/inference, then
+the fractional-root fixture disables heuristics and cuts only on its temporary
+test model, so early closure cannot bypass the event being tested. It still
+requires a real optimal root MIPNODE observation and checks its fractional
+vector and known LP objective. This test isolation does not change production root-capture
+parameters, introduce a fallback, or alter either benchmark method.
+The scheduled pilot uses one GPU for label-free preparation/inference, then
 one Gurobi thread per solve. No GPU acceleration of Gurobi is implied. The
 initial reservation remains 64 GiB host memory, four allocated CPUs, one GPU
 and three hours per two-method task. The array is bounded to `0-1%1`.

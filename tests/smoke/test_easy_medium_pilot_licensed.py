@@ -58,7 +58,7 @@ def test_source_hash_mismatch_rejected_before_solve(mip):
         solve(mip, "0"*64, [], "unguided_control", 5, True)
 
 
-def test_real_root_label_free_encoder_and_checkpoint_inference(tmp_path):
+def test_real_root_label_free_encoder_and_checkpoint_inference(tmp_path, monkeypatch):
     if os.environ.get("CFL_REQUIRE_SOLVER_TESTS") == "1":
         import torch
         import torch_geometric
@@ -68,13 +68,32 @@ def test_real_root_label_free_encoder_and_checkpoint_inference(tmp_path):
     from cfl_gnn.graph.gurobi_graph_artifact import capture_root_relaxation, canonical_sha256
     from cfl_gnn.graph.label_free_gurobi import build_features, predict
     from cfl_gnn.models.versioning import model_class
-    # Unequal costs keep the fractional root bound below the rounded integer
-    # optimum, avoiding premature objective-integrality closure of this fixture.
-    # No target solution is read.
+    # Fractionality alone does not guarantee a MIPNODE observation: a tiny MIP
+    # can close before the requested callback with default heuristics/cuts.
+    # Control only this fixture's real solver, not the production capture API,
+    # pilot parameters, callback values, or trained checkpoint.
     path = tmp_path / "fractional.lp"
     path.write_text("Maximize\n obj: 1.1 x + 1.3 y + 1.7 z\nSubject To\n a: x + y >= 1\n b: y + z >= 1\n c: x + z >= 1\nBinary\n x y z\nEnd\n")
     digest = sha256_file(path)
-    root = capture_root_relaxation(path, expected_mip_sha256=digest, time_limit_seconds=10)
+    native_read = gp.read
+
+    def read_fractional_fixture(*args, **kwargs):
+        model = native_read(*args, **kwargs)
+        model.Params.OutputFlag = 0
+        model.Params.Heuristics = 0
+        model.Params.Cuts = 0
+        return model
+
+    with monkeypatch.context() as fixture_scope:
+        fixture_scope.setattr(gp, "read", read_fractional_fixture)
+        root = capture_root_relaxation(path, expected_mip_sha256=digest, time_limit_seconds=10)
+    assert gp.read is native_read
+    assert root["capture_method"] == "first_optimal_root_gurobi_mipnode"
+    assert root["node_count"] == 0
+    assert root["relaxation_vector"] == pytest.approx([.5, .5, .5])
+    # MIPNODE_OBJBND is a global bound, not necessarily the unrounded LP
+    # objective. Verify the known relaxation objective from the actual vector.
+    assert sum(c*x for c, x in zip((1.1, 1.3, 1.7), root["relaxation_vector"])) == pytest.approx(2.05)
     graph, order, audit = build_features(path, digest, root)
     assert "y" not in graph["variable"] and "mip_gap" not in graph
     assert audit["root_lp_feature_exactly_encoded"] and not audit["target_labels_loaded"]
