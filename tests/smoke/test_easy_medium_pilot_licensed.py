@@ -68,9 +68,11 @@ def test_real_root_label_free_encoder_and_checkpoint_inference(tmp_path):
     from cfl_gnn.graph.gurobi_graph_artifact import capture_root_relaxation, canonical_sha256
     from cfl_gnn.graph.label_free_gurobi import build_features, predict
     from cfl_gnn.models.versioning import model_class
-    # Odd-cycle cover has a fractional root relaxation; no target solution read.
+    # Unequal costs keep the fractional root bound below the rounded integer
+    # optimum, avoiding premature objective-integrality closure of this fixture.
+    # No target solution is read.
     path = tmp_path / "fractional.lp"
-    path.write_text("Maximize\n obj: x + y + z\nSubject To\n a: x + y >= 1\n b: y + z >= 1\n c: x + z >= 1\nBinary\n x y z\nEnd\n")
+    path.write_text("Maximize\n obj: 1.1 x + 1.3 y + 1.7 z\nSubject To\n a: x + y >= 1\n b: y + z >= 1\n c: x + z >= 1\nBinary\n x y z\nEnd\n")
     digest = sha256_file(path)
     root = capture_root_relaxation(path, expected_mip_sha256=digest, time_limit_seconds=10)
     graph, order, audit = build_features(path, digest, root)
