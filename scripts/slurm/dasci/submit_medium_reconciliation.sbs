@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_reconcile
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=8G
+#SBATCH --time=00:30:00
+#SBATCH --output=slurm_cfl_reconcile_%j.out
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "${EXEC_DIR}"
+test -f pyproject.toml
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+srun python3 -m cfl_gnn.cli.reconcile_medium_sources \
+    --data_root "${DATA_ROOT:?}" \
+    --campaign_dir "${CAMPAIGN_PLAN_DIR:?}" \
+    --run_root "${CAMPAIGN_RUN_ROOT:?}" \
+    --pr56_audit_dir "${MEDIUM_AUDIT_DIR:?}" \
+    --pr56_run_root "${MEDIUM_RUN_ROOT:?}" \
+    --output_dir "${RECONCILIATION_DIR:?}"
