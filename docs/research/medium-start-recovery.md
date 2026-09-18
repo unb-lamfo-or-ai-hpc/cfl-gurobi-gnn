@@ -98,6 +98,51 @@ Review counts, hashes, sanitization, raw-score diagnostics and recorded solver
 capabilities before preparing medium submission commands. Do not recompute
 historical experiments using a changed implementation contract.
 
+## Reconciliation evidence and first continuation
+
+The operator-reported DGX job3365 completed successfully. The inventory contains
+42 admitted parents (30 easy,12 medium),15 unstarted medium originals and three
+medium quality-rescue reviews. Both eligible PR56 unguided labels are already
+admitted: they do not increase the population. The three rescue cases are
+medium5,6,9, with terminal gaps12.1671%,10.5629%,11.5974%, respectively.
+No rescue or additional hard run is included in the continuation.
+
+The historical prediction audit found zero selected high-score assignments to
+zero on both PR56 targets. All selected assignments were zero, but originated
+from low raw scores. Consequently, the decision/confidence inconsistency cannot
+be attributed as the direct cause of these selected starts or their negative
+outcomes. Correcting it is methodologically necessary, not an established remedy.
+The recorded Gurobi version is13.0.1; runtime completion-budget qualification and
+empirical calibration remain pending. Class imbalance, assignment coverage and
+completion effort require investigation without selecting on exposed test data.
+
+The next five originals are medium10,11,12,13,14. Their PR54 task indices are
+5,6,7,8,9 and the original campaign audit batch is1 (not0). Preserve seed42,
+MINIMIZE,one thread,28800seconds per solve,64GiB per task,12hours Slurm wall time
+and concurrencyone. These are independent original solves, not guided runs.
+No incumbent import, parameter tuning or label replacement is introduced.
+
+`prepare_medium_continuation` rechecks source/output hashes, declared-text
+sanitization, the immutable PR54 implementation, admitted-label identity and live
+unstarted task state. It emits `medium_continuation_preflight.json` only; it does
+not submit or solve. The opt-in Bash helper
+`scripts/slurm/dasci/submit_reviewed_medium_continuation.sh` invokes that gate,
+checks the source commit and tracked working tree, prevents duplicate helper
+submissions, tests scheduler acceptance and submits exactly one sequential batch
+plus an afterany audit. Run it with bash, not source. Job identifiers are persisted
+immediately, including when the dependent audit submission fails. Do not rerun
+the array in that case. Retain the source checkout while jobs are queued/running.
+
+The submission record contains operational paths and is not a publication
+artifact. Sanitization here covers the seven reconciliation text files, not raw
+solver logs or binary payloads. The execution and audit reuse the frozen PR54
+implementation and run root; completed receipts remain immutable. The original
+campaign report still counts40 preserved labels, with all later admissions in
+its cumulative new-label count. The PR57 preflight independently preserves42.
+Review each batch before another submission; regenerate reconciliation after
+live task state changes. The three remaining quality rescues require a separate
+budget decision. PR57 remains draft pending collection and calibration gates.
+
 ## Primary methodological references
 
 - Gasse et al.(2019), [Exact Combinatorial Optimization with Graph Convolutional
