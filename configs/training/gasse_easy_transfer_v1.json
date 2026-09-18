@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "protocol_id": "gasse_easy_only_medium_transfer_v1",
+  "architecture": {
+    "model_version": "gasse_v2_alternating_prenorm",
+    "hidden_dim": 32,
+    "num_layers": 2,
+    "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b"
+  },
+  "optimization": {"epochs": 100, "patience": 100, "learning_rate": 0.001, "gradient_clip_norm": 1.0, "seed": 42},
+  "sampling": {"method": "deterministic_parent_balanced_cycle_v1", "draws_per_parent_per_epoch": 4, "maximum_label_mip_gap_relative": 0.1},
+  "checkpoint_selection": {"metric": "validation_weighted_bce", "mode": "minimum", "test_partition_access": "held_out_evaluation_only"},
+  "threshold_selection": {"method": "maximum_validation_f1", "fallback_for_partial_smoke": 0.5},
+  "evaluation": {"calibration_bins": 10, "report_per_parent": true, "report_per_difficulty": true}
+}

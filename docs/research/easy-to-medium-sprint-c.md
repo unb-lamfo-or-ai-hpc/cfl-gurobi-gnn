@@ -1,4 +1,10 @@
-# Sprint C: scientific evidence consolidation
+# Historical consolidation specification (deferred)
+
+The roadmap approved on 18 September 2026 supersedes the immediate delivery
+scope below. PR57 now starts medium-source reconciliation and assignment-policy
+qualification; see [the revised roadmap](medium-start-recovery.md). These output
+requirements remain retained for the final evidence sprint. No English summary
+report is generated for the mixed/negative PR56 pilot.
 
 ## Initial scope
 
