@@ -16,7 +16,9 @@ historical score policy remain immutable.
    selection, abstention, and completion effort. Continue unstarted originals in
    controlled eight-hour batches only after inventory review; failed-quality
    attempts require a separately versioned rescue decision. Diagnose hard cases
-   separately; the previous hard1 run had 81.4751% gap at sixteen hours.
+   separately; the previous hard1 run had 81.4751% gap at sixteen hours. Following
+   the18September scope revision, no further hard collection is scheduled in
+   Sprint1. Hard instances are reserved for a frozen Sprint3 demonstration.
 2. Train on the training folds of easy plus medium originals for at least100
    epochs, and test controlled augmentation from Gurobi and SCIP incumbents.
    Keep Gurobi graph authority and independent Gurobi labels fixed to isolate
@@ -140,9 +142,12 @@ solver logs or binary payloads. The execution and audit reuse the frozen PR54
 implementation and run root; completed receipts remain immutable. The original
 campaign report still counts40 preserved labels, with all later admissions in
 its cumulative new-label count. The PR57 preflight independently preserves42.
-Review each batch before another submission; regenerate reconciliation after
-live task state changes. The three remaining quality rescues require a separate
-budget decision. PR57 remains draft pending collection and calibration gates.
+The original single-batch path requires review before another submission and a
+fresh reconciliation after live state changes. The subsequently approved
+[two-batch queue](medium-queue-and-training-handoff.md) instead schedules both
+remaining arrays behind verified predecessor audits, without altering active
+jobs. The three quality rescues still require a separate budget decision. PR57
+remains draft pending collection and assignment-qualification gates.
 
 ### Launcher preflight diagnostics
 

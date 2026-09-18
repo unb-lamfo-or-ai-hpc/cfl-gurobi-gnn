@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_medium8h
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH --output=slurm_cfl_medium_queue_%A_%a.out
+set -Eeuo pipefail
+trap 'code=$?; echo "[ERROR] queued medium task stopped at line $LINENO (exit $code)" >&2; exit "$code"' ERR
+cd "${EXEC_DIR:?Set pinned worktree root}"
+test "$(git rev-parse HEAD)" = "${PR57_QUEUE_COMMIT:?Set queue commit}"
+test -z "$(git status --porcelain --untracked-files=no)"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV:-tfm_env}"
+export PYTHONPATH="${EXEC_DIR}/src"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+test -s "${GRB_LICENSE_FILE:?Set original license path}"
+srun python3 -m cfl_gnn.cli.remaining_medium_queue task \
+    --data_root "${DATA_ROOT:?}" --queue_dir "${MEDIUM_QUEUE_DIR:?}" \
+    --task_index "${SLURM_ARRAY_TASK_ID:?}"
