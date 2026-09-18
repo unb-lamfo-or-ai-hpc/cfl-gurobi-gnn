@@ -1,6 +1,8 @@
 #!/bin/bash
 # Run with bash, never source: failure must not terminate an interactive shell.
-set -euo pipefail
+set -Eeuo pipefail
+# Report the location, not BASH_COMMAND: commands may contain private values.
+trap 'code=$?; printf "[ERROR] continuation stopped at line %s (exit %s); inspect prior messages and any submission record before retrying.\n" "$LINENO" "$code" >&2; exit "$code"' ERR
 : "${EXEC_DIR:?Set EXEC_DIR to the repository root}"
 : "${DATA_ROOT:?Set DATA_ROOT}"
 : "${CAMPAIGN_PLAN_DIR:?Set the existing PR54 plan directory}"
@@ -8,13 +10,38 @@ set -euo pipefail
 : "${RECONCILIATION_DIR:?Set the passed PR57 reconciliation directory}"
 : "${PR57_EXPECTED_COMMIT:?Set the reviewed source commit}"
 cd "${EXEC_DIR}"
-test "$(git rev-parse HEAD)" = "${PR57_EXPECTED_COMMIT}"
-test -z "$(git status --porcelain --untracked-files=no)"
-for command in flock sbatch squeue jq conda; do command -v "${command}" >/dev/null; done
-test -d "${CAMPAIGN_RUN_ROOT}"
+ACTUAL_COMMIT=$(git rev-parse HEAD)
+if [[ "${ACTUAL_COMMIT}" != "${PR57_EXPECTED_COMMIT}" ]]; then
+    echo "[ERROR] SOURCE_COMMIT_MISMATCH: expected=${PR57_EXPECTED_COMMIT} actual=${ACTUAL_COMMIT}" >&2
+    exit 2
+fi
+# This one manuscript-only file is not an input to the collection contract.
+# Preserve the operator's edit; all other tracked changes remain blocking.
+DIRTY=$(git status --porcelain --untracked-files=no -- . ':(exclude)manuscript/.gitignore')
+if [[ -n "${DIRTY}" ]]; then
+    printf '[ERROR] DIRTY_TRACKED_FILES: review these changes; nothing was reverted.\n%s\n' "${DIRTY}" >&2
+    exit 2
+fi
+if [[ -n "$(git status --porcelain --untracked-files=no -- manuscript/.gitignore)" ]]; then
+    echo "[WARNING] preserved unrelated manuscript/.gitignore modification; collection source remains protected."
+fi
+echo "[INFO] PR57_CHECKOUT_OK | commit=${ACTUAL_COMMIT}"
+for command in flock sbatch squeue jq conda; do
+    if ! command -v "${command}" >/dev/null; then
+        echo "[ERROR] REQUIRED_COMMAND_MISSING: ${command}" >&2
+        exit 2
+    fi
+done
+if [[ ! -d "${CAMPAIGN_RUN_ROOT}" ]]; then
+    echo "[ERROR] CAMPAIGN_RUN_ROOT is missing or is not a directory" >&2
+    exit 2
+fi
 # Serialize this submission path; the receipt prevents a duplicate invocation.
 exec 9>"${CAMPAIGN_RUN_ROOT}/.pr57-medium-submission.lock"
-flock -n 9
+if ! flock -n 9; then
+    echo "[ERROR] SUBMISSION_LOCK_UNAVAILABLE: another submission may be active" >&2
+    exit 2
+fi
 CONTINUATION_BATCH="${CONTINUATION_BATCH:-0}"
 [[ "${CONTINUATION_BATCH}" =~ ^[0-2]$ ]]
 SUBMISSION_DIR="${RECONCILIATION_DIR}/submission_batch_${CONTINUATION_BATCH}"
@@ -32,7 +59,10 @@ conda activate "${CONDA_ENV:-tfm_env}"
 export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
-test -s "${GRB_LICENSE_FILE}"
+if [[ ! -s "${GRB_LICENSE_FILE}" ]]; then
+    echo "[ERROR] GUROBI_LICENSE_FILE_MISSING_OR_EMPTY: check GRB_LICENSE_FILE" >&2
+    exit 2
+fi
 python3 -c 'import gurobipy, pyarrow, scipy, numpy'
 STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 PREFLIGHT_DIR="${DATA_ROOT}/analysis/medium_continuation/pr57_batch${CONTINUATION_BATCH}_${STAMP}"

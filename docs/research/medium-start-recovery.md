@@ -127,7 +127,8 @@ sanitization, the immutable PR54 implementation, admitted-label identity and liv
 unstarted task state. It emits `medium_continuation_preflight.json` only; it does
 not submit or solve. The opt-in Bash helper
 `scripts/slurm/dasci/submit_reviewed_medium_continuation.sh` invokes that gate,
-checks the source commit and tracked working tree, prevents duplicate helper
+checks the source commit and tracked working tree (preserving an unrelated local
+edit to `manuscript/.gitignore` only), prevents duplicate helper
 submissions, tests scheduler acceptance and submits exactly one sequential batch
 plus an afterany audit. Run it with bash, not source. Job identifiers are persisted
 immediately, including when the dependent audit submission fails. Do not rerun
@@ -142,6 +143,18 @@ its cumulative new-label count. The PR57 preflight independently preserves42.
 Review each batch before another submission; regenerate reconciliation after
 live task state changes. The three remaining quality rescues require a separate
 budget decision. PR57 remains draft pending collection and calibration gates.
+
+### Launcher preflight diagnostics
+
+A dirty `manuscript/.gitignore` is not a collection-source modification. It is
+preserved with a warning; no stash, reset or restore is performed. Every other
+tracked edit remains blocking, including staged changes. Source-commit mismatch,
+missing commands, unavailable submission locks and missing license files produce
+explicit errors. Unexpected failures report the script line and exit status,
+without printing command expansions or credentials. The 18 September DGX attempt
+passed579tests but stopped at the former global clean-tree check, before the
+reconciliation preflight or any scheduler submission. This is a launcher issue,
+not a failed optimization or a failed mathematical validation.
 
 ## Primary methodological references
 
