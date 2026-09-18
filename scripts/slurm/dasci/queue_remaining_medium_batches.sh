@@ -13,8 +13,17 @@ trap 'code=$?; echo "[ERROR] queue stopped at line $LINENO (exit $code); inspect
 : "${MEDIUM_QUEUE_DIR:?Set a new queue directory}"
 : "${GRB_LICENSE_FILE:?Set original checkout license path}"
 cd "${EXEC_DIR}"
-test "$(git rev-parse HEAD)" = "${PR57_QUEUE_COMMIT}"
-test -z "$(git status --porcelain --untracked-files=no)"
+ACTUAL_COMMIT=$(git rev-parse HEAD)
+if [[ "${ACTUAL_COMMIT}" != "${PR57_QUEUE_COMMIT}" ]]; then
+    echo "[ERROR] SOURCE_COMMIT_MISMATCH: expected=${PR57_QUEUE_COMMIT} actual=${ACTUAL_COMMIT}" >&2
+    exit 2
+fi
+DIRTY=$(git status --porcelain --untracked-files=no)
+if [[ -n "${DIRTY}" ]]; then
+    printf '[ERROR] DIRTY_TRACKED_FILES: no files were reverted; no new jobs submitted.\n%s\n' "${DIRTY}" >&2
+    exit 2
+fi
+echo "[INFO] PR57_QUEUE_CHECKOUT_OK | commit=${ACTUAL_COMMIT}"
 for command in flock sbatch scontrol jq conda; do command -v "${command}" >/dev/null; done
 test -s "${GRB_LICENSE_FILE}"
 [[ "${PREDECESSOR_AUDIT_JOB}" =~ ^[0-9]+$ ]]

@@ -20,6 +20,22 @@ Fetching a commit and adding a worktree do not require changing the active
 checkout used by3368/3369. Keep both source directories intact and pinned until
 their jobs finish. Use an absolute license path from the original checkout.
 
+### Checkout-integrity correction
+
+The first queue attempt passed597 HPC smoke tests but stopped before submission
+at its tracked-cleanliness gate. The historical `manuscript/.gitignore` Git blob
+contained mixed CRLF/LF endings despite `manuscript/** text eol=lf`; a fresh Git
+worktree can therefore appear modified without an operator edit. The correction
+normalizes that blob to LF without changing any ignore rule. Both queue and worker
+now print the exact tracked paths on failure; all tracked edits remain blocking.
+Regression tests reproduce the old mixed-blob failure and verify a clean detached
+worktree from the normalized commit. No reset, restore or forced cleanup is used.
+
+Recover in a new worktree at the corrected commit. Do not alter the active3368/3369
+checkout. A line17 failure occurred before plan creation, reservation or sbatch,
+so this attempt has no new job IDs or submission receipt to resume. If a later
+attempt fails after submission begins, inspect its receipt before retrying.
+
 The new queue preparer validates the accepted first-batch preflight and source
 hashes, preserves its42-label baseline, and requires all ten future target
 directories to be absent. It deliberately does not inspect partial directories
