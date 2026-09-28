@@ -1,0 +1,306 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr57_taudit
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --time=00:20:00
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+
+PR57_TRAINING_DIR="${PR57_TRAINING_DIR:?PR57_TRAINING_DIR is required}"
+EXPECTED_TRAINING_PLAN_SHA="${EXPECTED_TRAINING_PLAN_SHA:?EXPECTED_TRAINING_PLAN_SHA is required}"
+
+python3 - "$PR57_TRAINING_DIR" "$EXPECTED_TRAINING_PLAN_SHA" <<'PY'
+from __future__ import annotations
+
+import csv
+import gzip
+import json
+import math
+import sys
+from collections import Counter
+from pathlib import Path
+
+from cfl_gnn.graph.instance_provenance import sha256_file
+from cfl_gnn.training.gasse_reconnected import (
+    TRAINING_PLAN_NAME,
+    TRAINING_REPORT_NAME,
+    TRAINING_HISTORY_NAME,
+    validate_training_plan,
+)
+from cfl_gnn.evaluation.gasse_reconnected import (
+    EVALUATION_REPORT_NAME,
+    validate_evaluation_plan,
+)
+
+root = Path(sys.argv[1]).resolve()
+expected_plan_sha = sys.argv[2]
+
+checks = {}
+details = {}
+failures = []
+
+def check(name, condition, detail=None):
+    ok = bool(condition)
+    checks[name] = ok
+    if detail is not None:
+        details[name] = detail
+    if not ok:
+        failures.append(name)
+
+plan_path = root / TRAINING_PLAN_NAME
+report_path = root / TRAINING_REPORT_NAME
+history_path = root / TRAINING_HISTORY_NAME
+checkpoint_path = root / "best_model.pt"
+eval_dir = root / "evaluation"
+eval_plan_path = eval_dir / "gasse_evaluation_plan.json"
+eval_report_path = eval_dir / EVALUATION_REPORT_NAME
+
+for name, path in (
+    ("training_plan_exists", plan_path),
+    ("training_report_exists", report_path),
+    ("history_exists", history_path),
+    ("checkpoint_exists", checkpoint_path),
+    ("evaluation_plan_exists", eval_plan_path),
+    ("evaluation_report_exists", eval_report_path),
+):
+    check(name, path.is_file(), str(path))
+
+if failures:
+    audit = {
+        "gate_status": "failed",
+        "checks": checks,
+        "details": details,
+        "failures": failures,
+    }
+    print(json.dumps(audit, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
+plan = json.loads(plan_path.read_text())
+report = json.loads(report_path.read_text())
+eval_plan = json.loads(eval_plan_path.read_text())
+eval_report = json.loads(eval_report_path.read_text())
+
+try:
+    validate_training_plan(plan)
+    training_plan_valid = True
+except Exception as exc:
+    training_plan_valid = False
+    details["training_plan_validation_error"] = repr(exc)
+
+try:
+    validate_evaluation_plan(eval_plan)
+    evaluation_plan_valid = True
+except Exception as exc:
+    evaluation_plan_valid = False
+    details["evaluation_plan_validation_error"] = repr(exc)
+
+check("training_plan_contract_valid", training_plan_valid)
+check("evaluation_plan_contract_valid", evaluation_plan_valid)
+
+check(
+    "training_plan_sha_frozen",
+    plan.get("contract_sha256") == expected_plan_sha,
+    plan.get("contract_sha256"),
+)
+
+records = list(plan.get("records", []))
+roles = Counter(r.get("role") for r in records)
+difficulties = Counter(r.get("difficulty") for r in records)
+
+check("training_plan_records_54", len(records) == 54, len(records))
+check(
+    "training_plan_roles_34_10_10",
+    roles == Counter({"train": 34, "validation": 10, "test": 10}),
+    dict(roles),
+)
+check(
+    "training_plan_difficulty_30_24",
+    difficulties == Counter({"easy": 30, "medium": 24}),
+    dict(difficulties),
+)
+
+check(
+    "training_gate_passed",
+    report.get("gate_status") == "passed",
+    report.get("gate_status"),
+)
+check(
+    "training_contract_matches_plan",
+    report.get("training_contract_sha256") == plan.get("contract_sha256"),
+)
+check(
+    "epochs_completed_100",
+    report.get("epochs_completed") == 100,
+    report.get("epochs_completed"),
+)
+check(
+    "training_loaded_zero_test_graphs",
+    report.get("test_graphs_loaded") == 0,
+    report.get("test_graphs_loaded"),
+)
+check(
+    "checkpoint_selected_on_validation",
+    report.get("checkpoint_selection") == "minimum_validation_weighted_bce",
+    report.get("checkpoint_selection"),
+)
+check(
+    "threshold_selected_on_validation",
+    report.get("threshold_source") == "maximum_validation_f1",
+    report.get("threshold_source"),
+)
+check(
+    "prenorm_train_only",
+    report.get("prenorm_audit", {}).get("validation_or_test_used") is False,
+    report.get("prenorm_audit"),
+)
+
+checkpoint_descriptor = report.get("outputs", {}).get("checkpoint", {})
+check(
+    "checkpoint_sha_matches",
+    checkpoint_path.is_file()
+    and sha256_file(checkpoint_path) == checkpoint_descriptor.get("sha256"),
+    checkpoint_descriptor.get("sha256"),
+)
+
+history_descriptor = report.get("outputs", {}).get(TRAINING_HISTORY_NAME, {})
+check(
+    "history_sha_matches",
+    history_path.is_file()
+    and sha256_file(history_path) == history_descriptor.get("sha256"),
+    history_descriptor.get("sha256"),
+)
+
+with history_path.open(encoding="utf-8", newline="") as stream:
+    history = list(csv.DictReader(stream))
+
+history_epochs = [int(row["epoch"]) for row in history]
+finite_history = all(
+    math.isfinite(float(row[key])) and float(row[key]) >= 0.0
+    for row in history
+    for key in ("train_loss", "validation_loss")
+)
+
+check("history_has_100_rows", len(history) == 100, len(history))
+check("history_epochs_1_to_100", history_epochs == list(range(1, 101)))
+check("history_losses_finite", finite_history)
+
+check(
+    "evaluation_gate_passed",
+    eval_report.get("gate_status") == "passed",
+    eval_report.get("gate_status"),
+)
+check(
+    "evaluation_contract_matches_plan",
+    eval_report.get("contract_sha256") == eval_plan.get("contract_sha256"),
+)
+check(
+    "evaluation_test_graphs_10",
+    eval_report.get("test_graphs_loaded") == 10,
+    eval_report.get("test_graphs_loaded"),
+)
+check(
+    "evaluation_held_out_only",
+    eval_report.get("test_partition_usage") == "held_out_evaluation_only",
+    eval_report.get("test_partition_usage"),
+)
+check(
+    "evaluation_threshold_from_validation",
+    eval_report.get("threshold_source") == "maximum_validation_f1",
+    eval_report.get("threshold_source"),
+)
+
+test_records = list(eval_plan.get("test_records", []))
+expected_test = {
+    str(record["parent_instance_id"])
+    for record in test_records
+}
+
+prediction_outputs = {
+    key: value
+    for key, value in eval_report.get("outputs", {}).items()
+    if key.startswith("predictions/") and key.endswith(".json.gz")
+}
+
+actual_test = {
+    Path(key).name.removesuffix(".json.gz")
+    for key in prediction_outputs
+}
+
+check("evaluation_plan_has_10_test_records", len(test_records) == 10, len(test_records))
+check("prediction_outputs_10", len(prediction_outputs) == 10, len(prediction_outputs))
+check("prediction_parent_set_exact", actual_test == expected_test)
+
+prediction_failures = []
+
+for relative, descriptor in sorted(prediction_outputs.items()):
+    path = eval_dir / relative
+    if not path.is_file():
+        prediction_failures.append((relative, "missing"))
+        continue
+
+    if sha256_file(path) != descriptor.get("sha256"):
+        prediction_failures.append((relative, "sha"))
+        continue
+
+    with gzip.open(path, "rt", encoding="utf-8") as stream:
+        payload = json.load(stream)
+
+    parent = Path(relative).name.removesuffix(".json.gz")
+    expected_record = next(
+        item for item in test_records
+        if item["parent_instance_id"] == parent
+    )
+
+    if (
+        payload.get("role") != "test"
+        or payload.get("source_instance_id") != parent
+        or payload.get("mip_sha256") != expected_record["mip_sha256"]
+        or payload.get("checkpoint_sha256") != checkpoint_descriptor.get("sha256")
+        or payload.get("evaluation_contract_sha256") != eval_plan.get("contract_sha256")
+    ):
+        prediction_failures.append((relative, "payload_contract"))
+
+check(
+    "prediction_payload_contracts",
+    not prediction_failures,
+    prediction_failures,
+)
+
+audit = {
+    "schema_version": 1,
+    "gate_status": "passed" if not failures else "failed",
+    "checks": checks,
+    "details": details,
+    "failures": failures,
+    "summary": {
+        "training_contract_sha256": plan.get("contract_sha256"),
+        "checkpoint_sha256": checkpoint_descriptor.get("sha256"),
+        "selected_probability_threshold": report.get("selected_probability_threshold"),
+        "threshold_source": report.get("threshold_source"),
+        "epochs_completed": report.get("epochs_completed"),
+        "training_test_graphs_loaded": report.get("test_graphs_loaded"),
+        "held_out_test_graphs_loaded": eval_report.get("test_graphs_loaded"),
+        "held_out_test_parents": sorted(expected_test),
+    },
+}
+
+audit_path = root / "pr57_54_training_audit.json"
+audit_path.write_text(
+    json.dumps(audit, indent=2, sort_keys=True, allow_nan=False) + "\n",
+    encoding="utf-8",
+)
+
+print(json.dumps(audit, indent=2, sort_keys=True, allow_nan=False))
+
+if failures:
+    raise SystemExit(1)
+
+print("PR57_54_TRAINING_AND_EVALUATION_GATE=PASSED")
+PY
