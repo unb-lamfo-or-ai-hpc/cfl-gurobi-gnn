@@ -154,22 +154,56 @@ def confusion_counts(
 def binary_curve_rows(
     targets: Sequence[float], probabilities: Sequence[float]
 ) -> tuple[list[dict[str, float]], list[dict[str, float]], float | None, float | None]:
-    """Return exact ROC and PR points plus trapezoidal AUC values."""
+    """Return exact ROC and PR points plus trapezoidal AUC values.
+
+    The implementation groups equal scores after one stable descending sort.
+    This is equivalent to evaluating ``scores >= threshold`` at every distinct
+    score, but avoids rescanning the full prediction vector for every
+    threshold.  The complexity is therefore O(n log n), rather than O(n*u)
+    for ``u`` distinct scores.  The explicit positive- and negative-infinity
+    endpoints preserve the historical serialization and AUC semantics.
+    """
     import numpy as np
 
     truth = np.asarray(targets, dtype=np.float64) >= 0.5
     scores = np.asarray(probabilities, dtype=np.float64)
     if truth.size == 0 or truth.shape != scores.shape:
         raise GasseEvaluationError("empty or malformed prediction vectors")
-    thresholds = np.concatenate(([np.inf], np.unique(scores)[::-1], [-np.inf]))
+    if not np.isfinite(scores).all():
+        raise GasseEvaluationError("prediction probabilities must be finite")
+
     positives = int(truth.sum())
     negatives = int((~truth).sum())
+
+    order = np.argsort(-scores, kind="stable")
+    sorted_scores = scores[order]
+    sorted_truth = truth[order].astype(np.int64, copy=False)
+    cumulative_tp = np.cumsum(sorted_truth, dtype=np.int64)
+    cumulative_fp = np.cumsum(1 - sorted_truth, dtype=np.int64)
+
+    # Each boundary is the last observation in one tied-score group.  Counts
+    # at that location exactly match the historical ``scores >= threshold``
+    # classification rule for the corresponding score.
+    group_ends = np.flatnonzero(
+        np.r_[sorted_scores[1:] != sorted_scores[:-1], True]
+    )
+    thresholds = np.concatenate(
+        ([np.inf], sorted_scores[group_ends], [-np.inf])
+    )
+    true_positives = np.concatenate(
+        ([0], cumulative_tp[group_ends], [positives])
+    )
+    false_positives = np.concatenate(
+        ([0], cumulative_fp[group_ends], [negatives])
+    )
+
     roc_rows: list[dict[str, float]] = []
     pr_rows: list[dict[str, float]] = []
-    for threshold in thresholds:
-        predicted = scores >= threshold
-        tp = int((predicted & truth).sum())
-        fp = int((predicted & ~truth).sum())
+    for threshold, tp_value, fp_value in zip(
+        thresholds, true_positives, false_positives
+    ):
+        tp = int(tp_value)
+        fp = int(fp_value)
         recall = tp / positives if positives else 0.0
         false_positive_rate = fp / negatives if negatives else 0.0
         precision = tp / (tp + fp) if tp + fp else 1.0

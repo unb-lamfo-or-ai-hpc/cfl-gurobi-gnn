@@ -6,6 +6,9 @@ from cfl_gnn.pipelines import pr57_training as p
 from cfl_gnn.training.gasse_reconnected import load_protocol
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
 def test_pr57_frozen_population_contract():
     assert p.EXPECTED_COUNTS == {"train": 34, "validation": 10, "test": 10}
     assert p.EXPECTED_DIFFICULTY == {"easy": 30, "medium": 24}
@@ -313,3 +316,41 @@ def test_pr57_pr54_nested_task_receipt_rejects_wrong_mip_lineage(tmp_path):
     import pytest
     with pytest.raises(ValueError, match="task_mip_sha256"):
         p._validate_index_row(tmp_path, row)
+
+
+def test_pr57_evaluation_recovery_is_evaluation_only_and_lf_clean():
+    launcher = (
+        PROJECT_ROOT
+        / "scripts"
+        / "slurm"
+        / "dasci"
+        / "launch_pr57_54_evaluation_recovery.sh"
+    )
+    worker = (
+        PROJECT_ROOT
+        / "scripts"
+        / "slurm"
+        / "dasci"
+        / "submit_pr57_54_evaluation_recovery.sbs"
+    )
+    audit = (
+        PROJECT_ROOT
+        / "scripts"
+        / "slurm"
+        / "dasci"
+        / "submit_pr57_54_training_audit.sbs"
+    )
+
+    for path in (launcher, worker, audit):
+        assert b"\r" not in path.read_bytes()
+
+    launcher_text = launcher.read_text(encoding="utf-8")
+    worker_text = worker.read_text(encoding="utf-8")
+    audit_text = audit.read_text(encoding="utf-8")
+
+    assert "afterok:${EVALUATION_JOB}" in launcher_text
+    assert "evaluation_recovery" in launcher_text
+    assert "evaluate_gasse_reconnected" in worker_text
+    assert "run_pr57_training train" not in worker_text
+    assert "recovery_scope=evaluation_only_no_retraining" in worker_text
+    assert "PR57_EVALUATION_DIR" in audit_text

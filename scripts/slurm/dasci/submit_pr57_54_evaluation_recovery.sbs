@@ -1,0 +1,37 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr57_eval
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+#SBATCH --time=02:00:00
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+
+DATA_ROOT="${DATA_ROOT:?DATA_ROOT is required}"
+PR57_TRAINING_DIR="${PR57_TRAINING_DIR:?PR57_TRAINING_DIR is required}"
+PR57_EVALUATION_DIR="${PR57_EVALUATION_DIR:?PR57_EVALUATION_DIR is required}"
+
+test -s "${PR57_TRAINING_DIR}/gasse_training_plan.json"
+test -s "${PR57_TRAINING_DIR}/gasse_training_report.json"
+test -s "${PR57_TRAINING_DIR}/best_model.pt"
+
+printf '[INFO] commit=%s\n' "$(git rev-parse HEAD)"
+printf '[INFO] training=%s\n' "$PR57_TRAINING_DIR"
+printf '[INFO] recovery_evaluation=%s\n' "$PR57_EVALUATION_DIR"
+printf '[INFO] recovery_scope=evaluation_only_no_retraining\n'
+
+srun python3 -m cfl_gnn.cli.evaluate_gasse_reconnected \
+    --training_plan "${PR57_TRAINING_DIR}/gasse_training_plan.json" \
+    --training_report "${PR57_TRAINING_DIR}/gasse_training_report.json" \
+    --checkpoint "${PR57_TRAINING_DIR}/best_model.pt" \
+    --graph_dataset_dir "${DATA_ROOT}/bipartite_graphs" \
+    --parent_collection_run_root "$DATA_ROOT" \
+    --output_dir "$PR57_EVALUATION_DIR" \
+    --device cuda

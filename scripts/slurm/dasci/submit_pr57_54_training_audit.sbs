@@ -14,9 +14,10 @@ test -f pyproject.toml
 export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
 
 PR57_TRAINING_DIR="${PR57_TRAINING_DIR:?PR57_TRAINING_DIR is required}"
+PR57_EVALUATION_DIR="${PR57_EVALUATION_DIR:-${PR57_TRAINING_DIR}/evaluation}"
 EXPECTED_TRAINING_PLAN_SHA="${EXPECTED_TRAINING_PLAN_SHA:?EXPECTED_TRAINING_PLAN_SHA is required}"
 
-python3 - "$PR57_TRAINING_DIR" "$EXPECTED_TRAINING_PLAN_SHA" <<'PY'
+python3 - "$PR57_TRAINING_DIR" "$EXPECTED_TRAINING_PLAN_SHA" "$PR57_EVALUATION_DIR" <<'PY'
 from __future__ import annotations
 
 import csv
@@ -41,6 +42,7 @@ from cfl_gnn.evaluation.gasse_reconnected import (
 
 root = Path(sys.argv[1]).resolve()
 expected_plan_sha = sys.argv[2]
+eval_dir = Path(sys.argv[3]).resolve()
 
 checks = {}
 details = {}
@@ -58,7 +60,6 @@ plan_path = root / TRAINING_PLAN_NAME
 report_path = root / TRAINING_REPORT_NAME
 history_path = root / TRAINING_HISTORY_NAME
 checkpoint_path = root / "best_model.pt"
-eval_dir = root / "evaluation"
 eval_plan_path = eval_dir / "gasse_evaluation_plan.json"
 eval_report_path = eval_dir / EVALUATION_REPORT_NAME
 
