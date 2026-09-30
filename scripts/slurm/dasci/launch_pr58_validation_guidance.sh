@@ -8,13 +8,20 @@ test -f pyproject.toml
 DATA_ROOT="${DATA_ROOT:-/raid/vrcelestino/data/cfl-gurobi-gnn/data}"
 PR57_TRAINING_DIR="${PR57_TRAINING_DIR:-${DATA_ROOT}/models/pr57_54/pr57_54_20260928T203822Z}"
 BASE_SOURCE_DIR="${BASE_SOURCE_DIR:-${DATA_ROOT}/raw/MILPBench/CFL}"
+CANONICAL_GRB_LICENSE_FILE="/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic"
 
 test -s "${PR57_TRAINING_DIR}/pr57_54_training_audit.json"
 test -s "${PR57_TRAINING_DIR}/evaluation_recovery/gasse_evaluation_report.json"
 test -s "${PR57_TRAINING_DIR}/best_model.pt"
 test -d "$BASE_SOURCE_DIR"
+if [[ ! -s "${CANONICAL_GRB_LICENSE_FILE}" ]]; then
+    printf '[ERROR] canonical Gurobi license is unreadable: %s\n' \
+        "${CANONICAL_GRB_LICENSE_FILE}" >&2
+    false
+fi
 
-export EXEC_DIR DATA_ROOT PR57_TRAINING_DIR BASE_SOURCE_DIR
+export GRB_LICENSE_FILE="${CANONICAL_GRB_LICENSE_FILE}"
+export EXEC_DIR DATA_ROOT PR57_TRAINING_DIR BASE_SOURCE_DIR GRB_LICENSE_FILE
 export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
 
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"

@@ -126,6 +126,11 @@ def test_pr58_launchers_are_lf_only_and_never_train_or_execute_test_targets():
     assert "run_pr57_training train" not in combined
     assert "gasse_reconnected" not in combined
     assert "--array=0-5%2" in worker.read_text()
+    canonical_license = "/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic"
+    assert canonical_license in launcher.read_text()
+    assert canonical_license in worker.read_text()
+    assert "${EXEC_DIR}/secrets/gurobi.lic" not in combined
+    assert "GRB_LICENSE_FILE:-" not in combined
 
 
 def test_pr58_pipeline_source_never_loads_target_labels_or_test_outcomes():

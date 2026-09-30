@@ -14,8 +14,12 @@ cd "$EXEC_DIR"
 test -f pyproject.toml
 
 export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
-export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
-test -s "$GRB_LICENSE_FILE"
+export GRB_LICENSE_FILE="/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic"
+if [[ ! -s "${GRB_LICENSE_FILE}" ]]; then
+    printf '[ERROR] canonical Gurobi license is unreadable: %s\n' \
+        "${GRB_LICENSE_FILE}" >&2
+    false
+fi
 
 export OMP_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
