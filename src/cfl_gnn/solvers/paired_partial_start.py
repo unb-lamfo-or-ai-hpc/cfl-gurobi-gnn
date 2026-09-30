@@ -81,7 +81,6 @@ def solve(
             raise ValueError("fresh model contains prior solution or start")
         if not backend.binary:
             raise ValueError("binary support required")
-        rows = [] if method == METHODS[0] else rank_predictions(predictions)
         if preselected_assignments is not None:
             if method != METHODS[1] or predictions:
                 raise ValueError("preselected assignments require an empty partial-start prediction input")
@@ -102,6 +101,7 @@ def solve(
                 "recovery_required": False,
             }
         else:
+            rows = [] if method == METHODS[0] else rank_predictions(predictions)
             if method == METHODS[1] and {r["variable_name"] for r in rows} != backend.binary:
                 raise ValueError("predictions must cover exactly the original binary support")
             directive = guidance_directives(rows, method=method, fraction=.1)
