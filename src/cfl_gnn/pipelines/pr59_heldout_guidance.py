@@ -29,6 +29,7 @@ from cfl_gnn.pipelines.confirmation_execution import (
     safe_path,
 )
 from cfl_gnn.pipelines.pr58_validation_guidance import (
+    TRAINING_FILES,
     _load_assignments,
     _split_sets,
     _validate_training,
@@ -244,6 +245,10 @@ def build_plan(
         "checkpoint_sha256": training_report["outputs"]["checkpoint"]["sha256"],
         "probability_threshold": training_report["selected_probability_threshold"],
         "architecture": training_plan["protocol"]["architecture"],
+        "training_inputs": {
+            name: descriptor(training_root, training_root / name)
+            for name in TRAINING_FILES
+        },
         "validation_authorization_contract_sha256": validation_report[
             "contract_sha256"
         ],
@@ -278,6 +283,7 @@ def validate_plan(plan: dict) -> None:
         or plan.get("implementation_sha256") != implementation_hashes()
         or plan.get("validation_authorization_contract_sha256")
         != EXPECTED_VALIDATION_CONTRACT
+        or set(plan.get("training_inputs", {})) != set(TRAINING_FILES)
         or identities != EXPECTED_TEST_PARENTS
         or len(plan.get("targets", [])) != 6
         or any(target.get("role") != "test" for target in plan.get("targets", []))

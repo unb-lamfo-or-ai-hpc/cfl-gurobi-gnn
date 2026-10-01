@@ -139,6 +139,8 @@ def test_pr59_allows_unlabelled_test_parents_but_rejects_training_roles():
     assert 'trained_record is not None and trained_record.get("role") != "test"' in source
     assert '"was_present_in_training_plan": trained_record is not None' in source
     assert 'None if trained_record is None else trained_record["role"]' in source
+    assert '"training_inputs"' in source
+    assert "for name in TRAINING_FILES" in source
 
 
 def test_pr59_verifier_checks_hashes_and_sanitization():
