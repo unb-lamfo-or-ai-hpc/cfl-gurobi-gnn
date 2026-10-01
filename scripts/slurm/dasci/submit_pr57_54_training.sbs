@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr57_train
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --gres=gpu:1
+#SBATCH --time=24:00:00
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+
+export OMP_NUM_THREADS=4
+export OPENBLAS_NUM_THREADS=4
+export MKL_NUM_THREADS=4
+
+DATA_ROOT="${DATA_ROOT:?DATA_ROOT is required}"
+EVIDENCE_PACKAGE="${EVIDENCE_PACKAGE:?EVIDENCE_PACKAGE is required}"
+OLD_GRAPH_ROOT="${OLD_GRAPH_ROOT:?OLD_GRAPH_ROOT is required}"
+PR57_DATASET_DIR="${PR57_DATASET_DIR:?PR57_DATASET_DIR is required}"
+PR57_TRAINING_DIR="${PR57_TRAINING_DIR:?PR57_TRAINING_DIR is required}"
+
+if [[ -e "$PR57_TRAINING_DIR" ]]; then
+    echo "[ERROR] training output already exists: $PR57_TRAINING_DIR" >&2
+    exit 2
+fi
+
+printf '[INFO] commit=%s\n' "$(git rev-parse HEAD)"
+printf '[INFO] python=%s\n' "$(command -v python3)"
+printf '[INFO] dataset=%s\n' "$PR57_DATASET_DIR"
+printf '[INFO] training=%s\n' "$PR57_TRAINING_DIR"
+printf '[INFO] protocol=100_epochs seed=42 cuda held_out_test_after_training\n'
+
+srun python3 -m cfl_gnn.cli.run_pr57_training train \
+    --data_root "$DATA_ROOT" \
+    --evidence_package "$EVIDENCE_PACKAGE" \
+    --old_graph_root "$OLD_GRAPH_ROOT" \
+    --dataset_dir "$PR57_DATASET_DIR" \
+    --output_dir "$PR57_TRAINING_DIR" \
+    --device cuda

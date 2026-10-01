@@ -53,6 +53,31 @@ def test_unknown_prediction_support_rejected(mip):
         solve(mip, sha256_file(mip), prediction_rows(["z"], [.9], .5), "partial_mip_start", 5, True)
 
 
+def test_preselected_class_aware_start_preserves_model_and_method_identity(mip):
+    assignments = [{
+        "variable_name": "y",
+        "value": 1,
+        "confidence": .99,
+        "priority": 99,
+        "selection_source": "gnn_threshold_positive",
+    }]
+    report = solve(
+        mip,
+        sha256_file(mip),
+        [],
+        "partial_mip_start",
+        5,
+        True,
+        preselected_assignments=assignments,
+        reported_method="gnn_class_aware_partial_start",
+    )
+    assert report["gate_status"] == "passed"
+    assert report["method"] == "gnn_class_aware_partial_start"
+    assert report["mathematical_model_unchanged"]
+    assert report["start"]["submitted_assignments"] == 1
+    assert report["start"]["positive_assignments"] == 1
+
+
 def test_source_hash_mismatch_rejected_before_solve(mip):
     with pytest.raises(ValueError, match="changed"):
         solve(mip, "0"*64, [], "unguided_control", 5, True)

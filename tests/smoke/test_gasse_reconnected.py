@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import gzip
+import inspect
 import json
 from pathlib import Path
 
 import pytest
 
 from cfl_gnn.evaluation.gasse_reconnected import (
+    GasseEvaluationError,
     build_evaluation_plan,
     binary_curve_rows,
     calibration_rows,
@@ -219,6 +221,69 @@ def test_validation_threshold_and_diagnostics_are_deterministic() -> None:
     assert roc_auc == pytest.approx(1.0)
     assert pr_auc is not None and 0.0 <= pr_auc <= 1.0
     assert sum(row["count"] for row in calibration) == 4
+
+
+@pytest.mark.parametrize(
+    ("targets", "probabilities"),
+    [
+        ([0.0, 0.0, 1.0, 1.0], [0.1, 0.4, 0.6, 0.9]),
+        ([1.0, 0.0, 1.0, 0.0, 1.0], [0.8, 0.8, 0.5, 0.5, 0.1]),
+        ([1.0, 1.0, 1.0], [0.9, 0.5, 0.5]),
+        ([0.0, 0.0, 0.0], [0.9, 0.5, 0.5]),
+    ],
+)
+def test_binary_curves_match_exhaustive_threshold_reference(
+    targets, probabilities
+) -> None:
+    import numpy as np
+
+    truth = np.asarray(targets, dtype=np.float64) >= 0.5
+    scores = np.asarray(probabilities, dtype=np.float64)
+    thresholds = np.concatenate(([np.inf], np.unique(scores)[::-1], [-np.inf]))
+    positives = int(truth.sum())
+    negatives = int((~truth).sum())
+    expected_roc = []
+    expected_pr = []
+    for threshold in thresholds:
+        predicted = scores >= threshold
+        tp = int((predicted & truth).sum())
+        fp = int((predicted & ~truth).sum())
+        serialized = float(threshold) if np.isfinite(threshold) else (
+            1.0 if threshold > 0 else 0.0
+        )
+        recall = tp / positives if positives else 0.0
+        expected_roc.append(
+            {
+                "threshold": serialized,
+                "false_positive_rate": fp / negatives if negatives else 0.0,
+                "true_positive_rate": recall,
+            }
+        )
+        expected_pr.append(
+            {
+                "threshold": serialized,
+                "recall": recall,
+                "precision": tp / (tp + fp) if tp + fp else 1.0,
+            }
+        )
+
+    actual_roc, actual_pr, _, _ = binary_curve_rows(targets, probabilities)
+
+    assert actual_roc == expected_roc
+    assert actual_pr == expected_pr
+
+
+def test_binary_curve_implementation_uses_sort_and_cumulative_counts() -> None:
+    source = inspect.getsource(binary_curve_rows)
+
+    assert "np.argsort" in source
+    assert "np.cumsum" in source
+    assert "predicted = scores >= threshold" not in source
+
+
+def test_binary_curves_reject_nonfinite_probabilities() -> None:
+    with pytest.raises(GasseEvaluationError, match="must be finite"):
+        binary_curve_rows([0.0, 1.0], [0.2, float("nan")])
 
 
 def test_ddp_adapter_uses_disjoint_parent_balanced_rank_slices() -> None:

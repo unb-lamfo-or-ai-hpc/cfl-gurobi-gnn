@@ -48,7 +48,17 @@ def start_evidence(messages, submitted):
     return {"status": "submitted_outcome_unknown", "accepted": None, "completed": None}
 
 
-def solve(mip_path, expected_hash, predictions, method, budget=3600, engineering_smoke=False, solution_path=None):
+def solve(
+    mip_path,
+    expected_hash,
+    predictions,
+    method,
+    budget=3600,
+    engineering_smoke=False,
+    solution_path=None,
+    preselected_assignments=None,
+    reported_method=None,
+):
     import gurobipy as gp
     from gurobipy import GRB
     if method not in METHODS or (budget != 3600 and not (engineering_smoke and 0 < budget <= 30)):
@@ -71,10 +81,30 @@ def solve(mip_path, expected_hash, predictions, method, budget=3600, engineering
             raise ValueError("fresh model contains prior solution or start")
         if not backend.binary:
             raise ValueError("binary support required")
-        rows = [] if method == METHODS[0] else rank_predictions(predictions)
-        if method == METHODS[1] and {r["variable_name"] for r in rows} != backend.binary:
-            raise ValueError("predictions must cover exactly the original binary support")
-        directive = guidance_directives(rows, method=method, fraction=.1)
+        if preselected_assignments is not None:
+            if method != METHODS[1] or predictions:
+                raise ValueError("preselected assignments require an empty partial-start prediction input")
+            assignments = [dict(item) for item in preselected_assignments]
+            names = [item.get("variable_name") for item in assignments]
+            if (
+                not assignments
+                or len(names) != len(set(names))
+                or not set(names).issubset(backend.binary)
+                or any(item.get("value") not in (0, 1) for item in assignments)
+            ):
+                raise ValueError("invalid preselected partial-start support")
+            directive = {
+                "method": METHODS[1],
+                "assignments": assignments,
+                "assignment_sha256": canonical_sha256(assignments),
+                "binding_during_restricted_phase": False,
+                "recovery_required": False,
+            }
+        else:
+            rows = [] if method == METHODS[0] else rank_predictions(predictions)
+            if method == METHODS[1] and {r["variable_name"] for r in rows} != backend.binary:
+                raise ValueError("predictions must cover exactly the original binary support")
+            directive = guidance_directives(rows, method=method, fraction=.1)
         backend.apply(directive)
         m.update()
         assignments = directive["assignments"]
@@ -175,7 +205,7 @@ def solve(mip_path, expected_hash, predictions, method, budget=3600, engineering
     export_seconds = perf_counter()-t
     total = perf_counter()-start
     valid = status in (2, 3, 8, 9, 10, 16, 17) and not callback_errors and (values is None or audit["valid"])
-    return dict(schema_version=1, gate_status="passed" if valid else "failed", method=method,
+    return dict(schema_version=1, gate_status="passed" if valid else "failed", method=reported_method or method,
         mip_sha256=expected_hash, model_fingerprint=model_fingerprint, mathematical_signature_sha256=before,
         solution_artifact=solution_artifact, effective_objective_sense="MINIMIZE",
         original_objective_sense=original_sense, fresh_model=True, mathematical_model_unchanged=True,
