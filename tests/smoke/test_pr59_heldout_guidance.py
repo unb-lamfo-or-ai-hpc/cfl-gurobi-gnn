@@ -134,6 +134,13 @@ def test_pr59_source_uses_integrity_not_favorable_outcomes_as_completion_gate():
     assert '"policy_change_authorized_by_test_outcomes": False' in source
 
 
+def test_pr59_allows_unlabelled_test_parents_but_rejects_training_roles():
+    source = inspect.getsource(pipeline.build_plan)
+    assert 'trained_record is not None and trained_record.get("role") != "test"' in source
+    assert '"was_present_in_training_plan": trained_record is not None' in source
+    assert 'None if trained_record is None else trained_record["role"]' in source
+
+
 def test_pr59_verifier_checks_hashes_and_sanitization():
     source = inspect.getsource(pipeline.verify_audit)
     assert "checked(output_dir, declared[name])" in source

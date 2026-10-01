@@ -211,14 +211,19 @@ def build_plan(
         if not mip.is_file():
             raise ValueError(f"missing held-out test MIP: {identity}")
         trained_record = records.get(identity)
-        if trained_record is None or trained_record.get("role") != "test":
-            raise ValueError(f"training plan does not freeze test membership: {identity}")
+        if trained_record is not None and trained_record.get("role") != "test":
+            raise ValueError(
+                f"training plan assigns a non-test role to held-out parent: {identity}"
+            )
         targets.append(
             {
                 "task_index": task_index,
                 "source_instance_id": identity,
                 "role": "test",
-                "was_present_in_training_plan": True,
+                "was_present_in_training_plan": trained_record is not None,
+                "training_plan_role": (
+                    None if trained_record is None else trained_record["role"]
+                ),
                 "was_used_for_gradient_updates": False,
                 "was_used_for_policy_qualification": False,
                 "method_order": [
@@ -276,6 +281,12 @@ def validate_plan(plan: dict) -> None:
         or identities != EXPECTED_TEST_PARENTS
         or len(plan.get("targets", [])) != 6
         or any(target.get("role") != "test" for target in plan.get("targets", []))
+        or any(
+            target.get("training_plan_role") not in (None, "test")
+            or target.get("was_present_in_training_plan")
+            != (target.get("training_plan_role") == "test")
+            for target in plan.get("targets", [])
+        )
         or plan.get("policy_locked_before_test_execution") is not True
         or plan.get("test_outcomes_used_for_policy_selection") is not False
     ):
