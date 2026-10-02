@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "protocol_id": "pr59_frozen_heldout_class_aware_partial_start_v1",
+  "objective_sense": "MINIMIZE",
+  "seed": 42,
+  "solver": "gurobi",
+  "threads_per_run": 1,
+  "optimization_time_limit_seconds": 3600,
+  "root_capture_time_limit_seconds": 600,
+  "methods": [
+    "unguided_control",
+    "root_lp_matched_partial_start",
+    "gnn_class_aware_partial_start"
+  ],
+  "coverage_fraction": 0.1,
+  "absolute_support_cap": 20000,
+  "gnn_support_policy": "all_threshold_positive_first_then_assigned_value_confident_zero",
+  "root_lp_baseline_policy": "matched_support_size_and_positive_count",
+  "stable_tie_break": "variable_name_ascending",
+  "abstain_without_gnn_positive": true,
+  "benchmark_partition": "test",
+  "benchmark_difficulty": "medium",
+  "benchmark_parent_ids": [
+    "CFL_medium_instance_0",
+    "CFL_medium_instance_4",
+    "CFL_medium_instance_7",
+    "CFL_medium_instance_9",
+    "CFL_medium_instance_12",
+    "CFL_medium_instance_20"
+  ],
+  "qualification_parent_ids": [
+    "CFL_medium_instance_5",
+    "CFL_medium_instance_6",
+    "CFL_medium_instance_11",
+    "CFL_medium_instance_14",
+    "CFL_medium_instance_17",
+    "CFL_medium_instance_19"
+  ],
+  "policy_locked_before_test_execution": true,
+  "test_outcomes_may_select_or_modify_policy": false,
+  "target_labels_or_incumbents_allowed_as_guidance_input": false,
+  "fresh_model_per_method": true,
+  "paired_parameters_identical_except_partial_start": true,
+  "analysis_policy": {
+    "completion_gate_depends_only_on_execution_integrity": true,
+    "paired_effects_are_descriptive": true,
+    "favorable_outcome_required_for_completion": false,
+    "policy_reselection_after_test": false,
+    "multiplicity_adjusted_confirmatory_inference": false
+  },
+  "censoring_policy": "retain_and_flag_no_naive_inference",
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}

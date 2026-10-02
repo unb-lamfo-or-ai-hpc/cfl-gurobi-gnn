@@ -297,7 +297,7 @@ def prepare_parent(plan: dict, target: dict, training_dir: Path, mip_root: Path,
         "schema_version": 1,
         "contract_sha256": plan["contract_sha256"],
         "source_instance_id": target["source_instance_id"],
-        "role": "validation",
+        "role": target["role"],
         "target_labels_loaded": False,
         "test_outcomes_loaded": False,
         "checkpoint_sha256": plan["checkpoint_sha256"],
@@ -328,7 +328,7 @@ def prepare_parent(plan: dict, target: dict, training_dir: Path, mip_root: Path,
         "reason_code": gnn["reason_code"],
         "contract_sha256": plan["contract_sha256"],
         "source_instance_id": target["source_instance_id"],
-        "role": "validation",
+        "role": target["role"],
         "feature_audit": feature_audit,
         "gnn_selection": {key: value for key, value in gnn.items() if key != "assignments"},
         "root_lp_selection": {key: value for key, value in baseline.items() if key != "assignments"},
@@ -392,7 +392,7 @@ def worker(plan_dir: Path, mip_root: Path, run_root: Path, task_index: int, meth
         result.update(
             contract_sha256=plan["contract_sha256"],
             source_instance_id=target["source_instance_id"],
-            role="validation",
+            role=target["role"],
         )
     except Exception as error:
         result = {
@@ -402,7 +402,7 @@ def worker(plan_dir: Path, mip_root: Path, run_root: Path, task_index: int, meth
             "reason_detail": error_reason(error),
             "contract_sha256": plan["contract_sha256"],
             "source_instance_id": target["source_instance_id"],
-            "role": "validation",
+            "role": target["role"],
             "method": method,
         }
     write_json(destination, result)
