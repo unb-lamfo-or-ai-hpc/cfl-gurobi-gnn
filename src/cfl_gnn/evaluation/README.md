@@ -15,3 +15,9 @@ classification score is not evidence of improved MIP convergence. Earlier
 [model.py](model.py), [instance.py](instance.py), and
 [mvp_four_arm.py](mvp_four_arm.py) retain their specific historical contracts.
 
+The current PR #57 held-out report covers 10 parents and 5,536,400 targets. Its
+F1 (0.699257) and PR-AUC (0.774668) establish predictive development evidence.
+Solver impact is evaluated separately by PR #58 validation selection and PR #59
+frozen testing; those paired results cannot be inferred from classification
+metrics alone.
+

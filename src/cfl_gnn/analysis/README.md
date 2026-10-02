@@ -20,3 +20,8 @@ versioned parent collection audit.
 All publication summaries require reviewed cohort counts, units, missingness,
 censoring, and sanitization, in addition to hash checks.
 
+[pr60_scientific_evidence.py](pr60_scientific_evidence.py) is the current
+publication-output adapter. It verifies PR #57-#59 source contracts and produces
+six CSV tables and five SVG figures, including right-censoring and held-out
+influence analyses. It performs no new training or solver execution.
+

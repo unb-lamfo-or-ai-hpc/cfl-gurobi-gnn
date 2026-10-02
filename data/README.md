@@ -29,6 +29,11 @@ objective declaration.
 | `models/` | Training plans, histories, checkpoints, and held-out predictions |
 | `analysis/` | Coverage, graph diagnostics, solver comparisons, and publication outputs |
 
+Current external run families include `models/pr57_54/`,
+`analysis/pr58_validation_guidance/`, `intermediate/pr59_heldout_guidance/`, and
+`analysis/pr60_scientific_evidence/`. Their exact locations are inputs to plans,
+not portable documentation defaults.
+
 The plan and receipt, not a directory name, determine eligibility. Labels and
 root features are different artifacts. A source incumbent's gap/time must not
 be substituted for a derived label's gap/time.

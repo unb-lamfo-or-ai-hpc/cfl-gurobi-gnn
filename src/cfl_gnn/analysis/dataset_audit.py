@@ -26,19 +26,19 @@ def audit_dataset(dataset, category_name):
     3. Graph topology integrity
     """
     print(f"\n--- X-Ray: First graph of {category_name} ---")
-    grafo = dataset[0]
+    graph = dataset[0]
     
     # Metadata Propagation Audit
-    print(f" -> Complexity Class : {getattr(grafo, 'complexity_class', 'N/A')}")
-    print(f" -> Probe Node Count : {getattr(grafo, 'probe_node_count', -1)}")
+    print(f" -> Complexity Class : {getattr(graph, 'complexity_class', 'N/A')}")
+    print(f" -> Probe Node Count : {getattr(graph, 'probe_node_count', -1)}")
     
     # LP Vector Validation
     # Column 2 is log-scaled UB. We must reverse the transformation before comparison.
-    ub_vector_log_scaled = grafo['variable'].x[:, 2]
+    ub_vector_log_scaled = graph['variable'].x[:, 2]
     ub_vector_raw = inverse_log_scale(ub_vector_log_scaled)
     
     # Column 6 is the unscaled LP relaxation vector.
-    lp_vector = grafo['variable'].x[:, 6]
+    lp_vector = graph['variable'].x[:, 6]
     
     # Correct bound validation: LP vector must be <= UB (with a small epsilon for floating point errors)
     violations = (lp_vector > ub_vector_raw + 1e-4).sum().item()
@@ -50,8 +50,8 @@ def audit_dataset(dataset, category_name):
         print(" [OK] LP vector is strictly within variable bounds.")
     
     # Audit Topology
-    num_vars = grafo['variable'].x.shape[0]
-    num_cons = grafo['constraint'].x.shape[0]
+    num_vars = graph['variable'].x.shape[0]
+    num_cons = graph['constraint'].x.shape[0]
     print(f" -> Topology: {num_vars} variables, {num_cons} constraints.")
 
 def main():

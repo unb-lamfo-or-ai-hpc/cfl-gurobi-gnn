@@ -10,6 +10,11 @@ Current route families include `plan_parent_collection`,
 `build_scalable_gurobi_dataset`, `train_gasse_reconnected`,
 `evaluate_gasse_reconnected`, and `run_native_neural_guidance`.
 
+The current evidence-chain adapters are `run_pr57_training`,
+`run_pr58_validation_guidance`, `run_pr59_heldout_guidance`, and
+`build_pr60_scientific_evidence`. The first three own separate plan/run/audit
+contracts. The PR #60 adapter is synthesis-only and must report zero solver runs.
+
 `collect_incumbents`, `build_dataset`, `train_serial`,
 `train_distributed`, and `evaluate` also preserve earlier interfaces.
 Do not infer a compatible artifact schema solely from a similar command name.

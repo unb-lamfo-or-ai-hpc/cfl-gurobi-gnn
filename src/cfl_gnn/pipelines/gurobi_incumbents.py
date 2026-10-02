@@ -598,7 +598,7 @@ def process_single_instance(
     lp_file_path: str,
     output_dir: str,
     args: argparse.Namespace,
-    env: gp.Env,  # ← Added this parameter
+    env: gp.Env,  # Explicit environment keeps license and parameter scope local.
     logger: logging.Logger
 ) -> Dict[str, Any]:
     """

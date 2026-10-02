@@ -22,3 +22,13 @@ The package uses a `src` layout. Install it before invoking
 Legacy entry points remain for reproducibility. Their presence does not make
 them defaults for the current confirmation protocol.
 
+The current development evidence route is:
+
+1. `pipelines.pr57_training`: bind the 54-parent graph inventory and training;
+2. `pipelines.pr58_validation_guidance`: select guidance using validation only;
+3. `pipelines.pr59_heldout_guidance`: execute the frozen held-out benchmark;
+4. `analysis.pr60_scientific_evidence`: synthesize reviewed tables and figures.
+
+These modules preserve `development_only` and eligibility fields. Consumers
+must inspect them rather than infer scientific validity from a file name.
+

@@ -12,3 +12,8 @@ Keep seed, parent population, coverage/radius sensitivity, and model-selection
 rules fixed before inspecting held-out outcomes. A change requires a new
 identified protocol, not an edited old report.
 
+[pr58_guidance.py](pr58_guidance.py) defines the three-method validation policy
+used by the current route: unguided control, root-LP partial start, and GNN
+partial start. Its qualification result freezes the subsequent PR #59 test;
+held-out outcomes cannot be used to retune the policy.
+

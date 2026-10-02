@@ -1,6 +1,11 @@
 # CFL graph-learning manuscript
 
-The article reports a completed 39-parent original-instance study: 100 training epochs, seed 42 and eight held-out parents. It reports exclusions, graph structure, validation-selected classification and probability diagnostics. Augmentation comparisons and native solver-guidance outcomes remain future work.
+The manuscript source predates the final PR #57-#60 evidence reconciliation.
+Its next editorial revision must replace the earlier 39-parent narrative with
+the 54-parent training contract, validation-only guidance selection, frozen
+six-parent held-out benchmark, censoring, and influence analysis. PR #61 updates
+repository documentation but deliberately does not rewrite the article body;
+that scientific revision remains a separately reviewed change.
 
 Build the reviewed figures and static publication from the repository root:
 
