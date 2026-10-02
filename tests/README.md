@@ -28,6 +28,8 @@ do not establish CUDA or DDP parity. Record warnings, skips, software versions,
 and the exact commit.
 
 The documentation checks protect download URLs, internal README links, and
-methodological distinctions. Editorial-only changes do not authorize rewriting
-artifact hashes or claiming fresh native solver validation.
+methodological distinctions. They also verify the canonical dependency list,
+MIT/citation metadata, the current 54-parent result statement, and the absence
+of the known non-English code identifier. Editorial-only changes do not
+authorize rewriting artifact hashes or claiming fresh native solver validation.
 

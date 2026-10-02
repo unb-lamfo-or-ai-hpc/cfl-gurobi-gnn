@@ -10,6 +10,9 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_mit_scope_preserves_external_rights():
     assert (ROOT / "LICENSE").read_text().startswith("MIT License")
     assert 'license = {file = "LICENSE"}' in (ROOT / "pyproject.toml").read_text()
+    citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    assert "license: MIT" in citation
+    assert "0000-0001-5913-2997" in citation
     policy = (ROOT / "LICENSE_POLICY.md").read_text()
     assert "SPDX-License-Identifier: MIT" in policy
     assert "does not relicense MILPBench" in policy
@@ -34,22 +37,56 @@ def test_readme_preserves_milpbench_download_presentation():
         assert f"* **{label}**:" in download
 
 
-def test_readme_distinguishes_confirmation_from_historical_routes():
+def test_readme_describes_current_development_evidence():
     text = (ROOT / "README.md").read_text(encoding="utf-8")
     for required in (
-        "39 parents: 30 easy and nine medium",
+        "54 original-parent graphs",
+        "34 training",
+        "10 validation",
+        "10 held-out test",
         "MINIMIZE",
         "zero-vector fallback",
         "100 epochs",
-        "common eligible parent intersection",
-        "not yet a complete runtime dependency specification",
+        "5 of 6 test parents",
+        "scientific_reporting_eligible=false",
+        "canonical dependency specification",
     ):
         assert required in text
-    assert "0.582463" in text and "0.00117072" in text
-    assert "42-parent gate remains incomplete" in text
+    assert "0.699257" in text and "0.774668" in text
+    assert "right-censored" in text
     legacy = (ROOT / "docs/pipeline.md").read_text(encoding="utf-8")
     assert "Historical scope" in legacy
     assert "All scripts are production-ready" not in legacy
+
+
+def test_pyproject_declares_runtime_and_optional_dependencies():
+    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    for requirement in (
+        "gurobipy>=10",
+        "matplotlib>=3.7",
+        "numpy>=1.23",
+        "pandas>=1.5",
+        "pyarrow>=10",
+        "scikit-learn>=1.2",
+        "scipy>=1.9",
+        "seaborn>=0.12",
+        "torch>=2.0",
+        "torch-geometric>=2.2",
+        "tqdm>=4.64",
+        "pyscipopt>=6.1,<7",
+        "umap-learn>=0.5",
+        "pytest>=7",
+    ):
+        assert requirement in text
+    requirements = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    assert "-e .[test,projection]" in requirements
+
+
+def test_known_non_english_code_identifier_is_removed():
+    source = (ROOT / "src/cfl_gnn/analysis/dataset_audit.py").read_text(
+        encoding="utf-8"
+    )
+    assert "grafo" not in source.casefold()
 
 
 def test_readme_and_current_guide_relative_links_resolve():
@@ -61,6 +98,7 @@ def test_readme_and_current_guide_relative_links_resolve():
         ROOT / "docs/architecture.md",
         ROOT / "docs/reproducibility.md",
         ROOT / "docs/documentation-review.md",
+        ROOT / "docs/output-inventory.md",
     ]
     checked = 0
     for path in documents:

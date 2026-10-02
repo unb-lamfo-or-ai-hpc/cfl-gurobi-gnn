@@ -11,6 +11,11 @@ threshold; held-out test graphs are not loaded during training.
 [figures.py](figures.py) presents training and validation losses together, while
 distinguishing their measurement contexts.
 
+The PR #57 adapter binds 54 parents (34 training, 10 validation, 10 test) and
+retains the full 100-epoch history. Its checkpoint and report hashes are inputs
+to every later evaluation; a timed-out audit can be recovered from the completed
+checkpoint only when the recovery verifies the original training contract.
+
 [serial.py](serial.py) supplies reusable helpers and preserves its earlier CLI.
 Its historical random-split main routine is not the confirmation route.
 [distributed.py](distributed.py) likewise preserves the older DDP entry point.

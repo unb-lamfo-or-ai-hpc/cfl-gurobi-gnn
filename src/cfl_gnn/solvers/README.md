@@ -9,6 +9,11 @@ partial starts, and exploratory restrictive methods. Restricted phases cannot
 supply full-model dual certificates; recovery uses the original model.
 [gurobi](gurobi) preserves hint and benchmark compatibility utilities.
 
+[paired_partial_start.py](paired_partial_start.py) implements the current
+control/root-LP/GNN paired experiment. A partial MIP start does not restrict the
+feasible region. Its preparation, acceptance status, inference cost, solver
+budget, and right-censoring are recorded independently.
+
 Record the actual solver version, seed, threads, status, objective, bound, gap,
 timing regions, and censoring. Never expose license credentials in publication
 artifacts. A callback observation is not an exact serialization of a search node.

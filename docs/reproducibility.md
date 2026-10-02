@@ -1,119 +1,155 @@
 # Reproducibility guide
 
-## What a reproducible run requires
+## Reproducible unit of evidence
 
-Retain the code revision, configuration hashes, frozen parent manifest, original
-MIP hashes, named labels and their provenance, graph receipts, model version,
-checkpoint, and evaluation ledger. Record Python, solver, Torch/PyG, CUDA/driver,
-hardware, seed, threads, solver parameters, and scheduler resources. A portable
-summary may omit private paths, but its artifact identities must remain traceable.
+A reproducible result is a chain of immutable identities, not merely a command
+that exits successfully. Retain:
 
-A content hash is not an independent feasibility test. Admission also requires
-consistent variable identity, finite values, domains, integrality, linear-row
-feasibility, objective sense and objective reconstruction, and admissible gap
-provenance. Do not reuse a different pool member's gap as the selected label's
-certificate.
+1. the Git commit and experiment configuration hashes;
+2. parent identity, partition role, source MIP hash, and effective objective
+   sense;
+3. label solver, feasibility audit, terminal gap, budget, and censoring state;
+4. graph receipt, feature policy, variable ordering, and graph hash;
+5. model version, seed, training-only statistics, selected checkpoint, and
+   threshold or support policy;
+6. per-method solver receipts and the final artifact manifest.
 
-## Environment qualification
+A SHA-256 match establishes byte identity. It does not replace mathematical
+validation, partition checks, or scientific interpretation.
 
-The reference DGX interpreter is Python 3.10. The repository currently has
-package metadata in [pyproject.toml](../pyproject.toml), an optional
-`pyscipopt>=6.1,<7` extra, and a historical
-[requirements file](../requirements.txt) with CUDA-specific pins. These files
-do not yet constitute a fully qualified, portable environment lock.
+## Environment
 
-Relevant runtime components include Gurobi, NumPy, pandas, PyArrow, SciPy,
-Torch, PyG, scikit-learn, Matplotlib, seaborn, and tqdm. SCIP comparisons require
-PySCIPOpt; optional UMAP projections require umap-learn; tests require pytest.
-This list explains component roles and is not a replacement lockfile. Solver
-licenses and compatible CUDA wheels must be provisioned separately.
+Python 3.10 is the reference interpreter for the recorded DGX runs. The
+canonical requirements are declared in [pyproject.toml](../pyproject.toml):
 
-For an already qualified environment:
+- core numerical and data packages: NumPy, pandas, PyArrow, SciPy,
+  scikit-learn, Matplotlib, seaborn, and tqdm;
+- learning packages: PyTorch and PyTorch Geometric;
+- priority solver API: gurobipy;
+- optional extras: `scip` for PySCIPOpt, `projection` for UMAP, and `test` for
+  pytest.
+
+The compatibility [requirements.txt](../requirements.txt) delegates to the
+project metadata. GPU hosts must install a PyTorch build compatible with the
+local CUDA driver. Solver licenses, CUDA drivers, and scheduler modules are
+external system dependencies and cannot be expressed as Python packages.
+
+For a new CPU-oriented environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install -e '.[test,projection]'
+PYTHONPATH=src python3 -m pytest tests/smoke -q -rs
+```
+
+For an already qualified HPC environment:
 
 ```bash
 python3 -m pip install -e . --no-deps
 PYTHONPATH=src python3 -m pytest tests/smoke -q -rs
 ```
 
-Do not upgrade or reinstall packages in an environment used by active jobs.
-Future dependency consolidation must reconcile imports, extras, GPU installation
-instructions, and a clean-install test before claiming one-command reproduction.
+Record at least `python --version`, `pip freeze`, Torch/PyG versions, CUDA and
+driver versions, solver versions, hostname, GPU model, CPU allocation, memory,
+seed, thread count, and Slurm resource request. Do not upgrade packages while
+active jobs depend on the environment.
 
-Configure `GRB_LICENSE_FILE` using a readable local license file. Some launchers
-accept `GUROBI_LICENSE_FILE` and export the native variable internally; inspect
-the selected launcher. Never print license contents, use `set -x` around
-credentials, or commit a license. WLS credentials are not scientific artifacts.
+## Solver and license setup
 
-## Route selection and preflight
+The DaSCI execution contract uses the readable local file
+`/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic`. Configure the
+native variable without printing the file:
 
-Use the [current protocol index](README.md), not the numbered legacy sequence.
-Work from the repository root in the intended host and environment.
-Use `python3 -m cfl_gnn.cli.<entrypoint>`, not `python3 -m src.cfl_gnn...`.
+```bash
+export GRB_LICENSE_FILE=/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic
+test -s "${GRB_LICENSE_FILE}" && echo GUROBI_LICENSE_PRESENT
+```
 
-Before submitting a job:
+Never commit the license, credential-bearing logs, WLS secrets, or shell traces
+that expose credentials. A Gurobi license does not fall under the repository's
+MIT grant.
 
-1. Resolve upstream directories from accepted reports, not from guessed job IDs.
-2. A variable ending in `_DIR` must identify a directory, not its JSON report.
-   Remove accidental leading spaces and confirm the hostname.
-3. Verify the upstream gate, required eligibility flags, expected parent
-   population, and hashes. Missing data is not a successful empty audit.
-4. Run the selected CLI's documented dry-run where supported. An inventory-only
-   gate does not authorize training.
-5. Check Slurm scripts for LF endings, allocation limits, and explicit working
-   directory resolution. A spooled script path is not the repository root.
+## Data layout
 
-Use shell functions with `return`, or explicit conditionals, for interactive
-preflight failures; an unguarded `exit` can close the user's shell. Do not submit
-a dependent job when its input gate failed. Never switch branches or pull into
-the shared checkout while its array or dependent audit is still active.
+The raw hierarchy is:
 
-The [completed confirmation summary](results/pr50-confirmation/README.md)
-and its evidence audit distinguish the original 42-parent protocol from the
-39-parent revision. The final job completed training and evaluation; no
-additional run was required for the documentation reconciliation.
+```text
+data/raw/MILPBench/CFL/
+  CFL_easy_instance/LP/CFL_easy_instance_<id>.lp.gz
+  CFL_medium_instance/LP/CFL_medium_instance_<id>.lp.gz
+  CFL_hard_instance/LP/CFL_hard_instance_<id>.lp.gz
+```
 
-## Experimental acceptance
+Large generated artifacts remain outside Git. The authoritative lifecycle is:
 
-- Initial confirmation: 30 easy and 12 medium parents; canonical rotation 0
-  had 24 train, 10 validation and eight test parents. The separate final revision
-  retained 30 easy and nine medium parents (23/8/8), with no hard parents.
-- Labels: at most 10% relative MIP gap plus independent feasibility/provenance
-  checks. Preserve inadmissible and censored records. The three exclusions
-  (medium3/5/6) and selection bias are recorded explicitly; the strict42gate
-  was not converted to success and the ceiling was not increased.
-- Features: Gurobi-authoritative real root relaxation, no zero fallback.
-- Learning: seed 42, 100 full epochs, training-only normalization and class
-  weighting, checkpoint/threshold selection using validation only.
-- Outputs: joint train/validation loss plot, held-out per-parent quality,
-  graph statistics and projections, and solver gap/time comparisons.
-- Paired arms: common parent intersection, train-only descendants, equal parent
-  mass and optimizer-step budgets. A Gurobi-only confirmation is not four-arm evidence.
-- Native benchmarking: equal precommitted optimization budgets, fresh independent
-  processes as specified, retained censoring, and explicit inference/preprocessing costs.
+```text
+raw -> intermediate parent/derived solves -> bipartite_graphs
+    -> models -> analysis/publication outputs
+```
 
-Weighted BCE scores are not automatically calibrated probabilities. Accuracy is
-insufficient with rare positive targets; interpret precision, recall, F1, average
-precision, Brier/ECE, and constant-zero/root-LP diagnostics together. Descriptive
-graph projections must not select folds or models.
+Resolve upstream directories from accepted reports and manifests, not guessed
+timestamps. A shell variable ending in `_DIR` must contain a directory rather
+than the path of a JSON report.
 
-The final evidence package contains 62 hash-checked files, 100 epoch rows,
-39 graph receipts and eight-parent evaluation tables. Graph tensors, original
-labels, root vectors, checkpoint and predictions were not transferred for this
-review. Full ROC/PR tables were withheld for size. Their receipt hashes and
-reported AUC/AP values are not independent raw-artifact verification.
-Graph statistics recorded unknown censoring for all 39 rows; their heterogeneous
-source runtimes are descriptive, not a solver speed comparison. Epoch losses
-are graph-averaged weighted BCE; held-out BCE is unweighted per target.
+## Preflight and execution
 
-## Publication and archiving
+Before submitting work:
 
-Keep raw data, graph tensors, labels, checkpoints, and raw solver logs out of
-routine documentation commits. Compressed files can still contain private paths
-or credentials; inspect contents, not just names. Preserve historical evidence
-before proposing quarantine, and never archive inputs still referenced by a
-current manifest merely to reduce directory size.
+1. update or create an isolated checkout from the intended remote commit;
+2. confirm a clean worktree without deleting unrelated user data;
+3. run the relevant smoke tests and dry-run plan;
+4. verify upstream gates, hashes, parent counts, role assignments, and
+   `development_only`/`scientific_reporting_eligible` fields;
+5. verify LF line endings in Slurm scripts and inspect requested CPU, memory,
+   GPU, wall time, array concurrency, and dependency type;
+6. submit the computation and audit as separate jobs, with the audit depending
+   on successful completion of the full array;
+7. archive `sacct`, plans, reports, hash checks, and sanitization results.
 
-Verify output ledgers against actual files; inspect figures visually as well as
-checking syntax/hashes. Label development-only results explicitly and report
-coverage and censoring. The initial manuscript uses a supplied Quarto template.
-The full 90-parent experiment and subsequent manuscript extension remain deferred.
+Use shell functions with `return` for interactive checks. An unguarded `exit`
+can close the user's terminal. Do not change a shared checkout or environment
+while jobs are running from it.
+
+## Current accepted development chain
+
+| Stage | Population and purpose | Acceptance boundary |
+|---|---|---|
+| PR #57 | 54 parents: 34 train, 10 validation, 10 test; 100 epochs | predictive development result only |
+| PR #58 | six validation parents; control, root-LP start, GNN start | method selected without test outcomes |
+| PR #59 | six frozen test parents; same three methods and one-hour budget | held-out paired development benchmark |
+| PR #60 | tables, figures, censoring and influence analysis | synthesis only; no new solver runs |
+
+The held-out prediction report contains 5,536,400 targets and 5,265 positives,
+with F1 0.699257 and PR-AUC 0.774668. The frozen solver benchmark reports 5/6
+terminal-gap wins, but four guided runs and every control are right-censored.
+All current reports therefore remain development-only and are not a
+confirmatory claim.
+
+See the [output inventory](output-inventory.md) for exact artifact names and the
+[PR #60 summary](results/pr60-scientific-evidence/README.md) for numerical
+interpretation.
+
+## Sanitization and sharing
+
+Shareable JSON, JSONL, CSV, Markdown, and SVG artifacts must not contain private
+absolute paths, license locations, credentials, or usernames. Internal plans
+may require absolute paths for replay; classify them as protected rather than
+rewriting them after execution. Inspect compressed archives internally before
+sharing.
+
+Verify every output declared in a manifest against its SHA-256 value. Also
+inspect figures visually; valid XML is not a scientific figure review. Preserve
+failed and censored records. Never convert missing artifacts or an incomplete
+population into a passed scientific gate.
+
+## Publication and archival boundary
+
+Git contains source, configuration, tests, documentation, and sanitized small
+evidence. LP files, graph tensors, checkpoints, full predictions, and solver
+logs require an external research archive with a manifest, source terms, and
+checksums. A future Zenodo release should assign separate records or clearly
+version intermediate MIPs, graph datasets, embeddings, model artifacts, and
+result tables. MIT applies only within the authors' rights and does not override
+MILPBench or solver terms.

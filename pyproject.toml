@@ -5,13 +5,51 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cfl-gurobi-gnn"
 version = "0.1.0"
-description = "Neural Diving for MILPBench capacitated facility location instances"
+description = "Auditable GNN guidance for MILPBench capacitated facility location instances"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
+authors = [
+  {name = "Victor Rafael Rezende Celestino", email = "vrcelestino@unb.br"},
+  {name = "Víctor Alejandro Vargas-Pérez", email = "victorvp@go.ugr.es"},
+  {name = "Óscar Cordón García", email = "ocordon@decsai.ugr.es"},
+  {name = "Pedro González García", email = "pglez@ujaen.es"},
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "gurobipy>=10",
+  "matplotlib>=3.7",
+  "numpy>=1.23",
+  "pandas>=1.5",
+  "pyarrow>=10",
+  "scikit-learn>=1.2",
+  "scipy>=1.9",
+  "seaborn>=0.12",
+  "torch>=2.0",
+  "torch-geometric>=2.2",
+  "tqdm>=4.64",
+]
+
+[project.urls]
+Repository = "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn"
+Documentation = "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/develop/docs"
+Issues = "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/issues"
 
 [project.optional-dependencies]
 scip = ["pyscipopt>=6.1,<7"]
+projection = ["umap-learn>=0.5"]
+test = ["pytest>=7"]
+dev = [
+  "pytest>=7",
+  "umap-learn>=0.5",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

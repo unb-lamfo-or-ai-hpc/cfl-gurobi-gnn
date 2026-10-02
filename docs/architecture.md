@@ -17,6 +17,12 @@ experiment contracts specify which route is admissible.
 | Solver benchmark | Compare native guidance with controls at precommitted budgets | Full-model feasibility, gap semantics, and censoring remain explicit |
 | Descriptive outputs | Summarize coverage, graph structure, learning, and solver outcomes | No population-level claims from engineering runs |
 
+The current end-to-end development route is implemented by
+`pr57_training.py`, `pr58_validation_guidance.py`,
+`pr59_heldout_guidance.py`, and `pr60_scientific_evidence.py`. PR #58 is the
+only method-selection stage. PR #59 consumes its frozen decision and does not
+reopen method, support, or budget selection.
+
 Gurobi and SCIP labels can be separate views of the same graph. An augmented
 training arm adds independently labelled synthetic MIPs without creating new
 independent parent units. Validation/test remain original-only; descendants
@@ -54,4 +60,5 @@ and generate new contracts when code changes.
 
 See [ADR 0013](decisions/0013-gurobi-first-legacy-recovery.md) and
 [ADR 0014](decisions/0014-neural-guidance-policy.md) for the governing decisions.
+The [output inventory](output-inventory.md) maps these layers to persisted files.
 

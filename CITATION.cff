@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the repository and the associated article when available."
+title: "cfl-gurobi-gnn: Auditable GNN guidance for capacitated facility location"
+type: software
+version: 0.1.0
+date-released: 2026-10-02
+license: MIT
+repository-code: "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn"
+authors:
+  - family-names: Celestino
+    given-names: Victor Rafael Rezende
+    orcid: "https://orcid.org/0000-0001-5913-2997"
+    affiliation: University of Brasilia
+  - family-names: Vargas-Pérez
+    given-names: Víctor Alejandro
+    orcid: "https://orcid.org/0000-0001-6803-3608"
+    affiliation: Data Science and Computer Intelligence Institute, University of Granada
+  - family-names: Cordón García
+    given-names: Óscar
+    orcid: "https://orcid.org/0000-0001-5112-5629"
+    affiliation: Data Science and Computer Intelligence Institute, University of Granada
+  - family-names: González García
+    given-names: Pedro
+    orcid: "https://orcid.org/0000-0002-6733-3868"
+    affiliation: Data Science and Computer Intelligence Institute, University of Jaen
+preferred-citation:
+  type: software
+  title: "cfl-gurobi-gnn: Auditable GNN guidance for capacitated facility location"
+  year: 2026
+  authors:
+    - family-names: Celestino
+      given-names: Victor Rafael Rezende
+    - family-names: Vargas-Pérez
+      given-names: Víctor Alejandro
+    - family-names: Cordón García
+      given-names: Óscar
+    - family-names: González García
+      given-names: Pedro
