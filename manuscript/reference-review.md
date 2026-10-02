@@ -1,5 +1,29 @@
 # Reference selection and Zotero collection
 
+## Current article update, 2 October 2026
+
+The sections below preserve the historical selection and collection receipts.
+They are not a claim of a new Zotero synchronization. The current COR article
+retains the mandatory Gasse et al. (2019), arXiv version 3, and integrates four
+additional works selected for specific methodological comparisons:
+
+| Citation key | Publication | Role in the current article |
+|:--|:--|:--|
+| bengio2021 | EJOR 290(2), 405-421; DOI `10.1016/j.ejor.2020.07.063` | Distributional learning for combinatorial optimization and evaluation boundaries |
+| qu2026 | COR 185, 107290; DOI `10.1016/j.cor.2025.107290` | Learned constraints contrasted with nonbinding partial starts |
+| goerigk2025 | COR 174, 106886; DOI `10.1016/j.cor.2024.106886` | Learned robust-scenario initialization contrasted with assignment prediction |
+| zhang2026 | ESWA 298, Part D, 129924; DOI `10.1016/j.eswa.2025.129924` | Learned cut selection contrasted with primal guidance |
+
+Publisher metadata and publicly accessible abstracts/section previews informed
+these comparisons; complete paywalled articles were not claimed as read.
+The citation checker requires every bibliography entry to be cited and every
+citation to resolve. No result from another paper is presented as a result
+of this project. Local Zotero profile access was unavailable during this update;
+the four additions are therefore manuscript-local bibliography changes, not
+verified changes to the library collection.
+
+## Historical selection and collection receipts
+
 Review date: 12 September 2026. The user supplied 41 bibliography entries exported
 from Zotero. Selection below is based on relevance to the actual study, supplied
 metadata, and public primary publication/author pages for cited works. This was

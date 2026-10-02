@@ -20,7 +20,7 @@ From the repository root, with Python and Matplotlib installed:
 python scripts/manuscript/check_manuscript.py
 python -m unittest discover -s tests/manuscript -v
 python scripts/manuscript/build_results_assets.py
-quarto render manuscript --no-execute
+quarto render manuscript --no-execute -M latex-auto-install:true
 pdftotext -layout manuscript/_manuscript/index.pdf manuscript-pdf-text.txt
 python scripts/manuscript/check_manuscript.py --rendered --pdf-text manuscript-pdf-text.txt
 python scripts/manuscript/package_latex_project.py --output cfl-cor-latex-project.zip
