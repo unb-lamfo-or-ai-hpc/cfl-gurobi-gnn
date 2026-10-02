@@ -28,9 +28,11 @@ python scripts/manuscript/package_latex_project.py --output cfl-cor-latex-projec
 
 Quarto 1.10.18 and Matplotlib 3.10.9 are selected in the publication workflow.
 The PDF requires an existing TeX distribution with the packages used by the
-adapter, including `orcidlink`. GitHub Actions provides TinyTeX for rendering.
+adapter, including `orcidlink` and `lmodern`. Missing packages may be installed
+into that distribution. GitHub Actions provides TinyTeX for rendering.
 The workflow runs no research code and publishes only `manuscript/_manuscript`
 from `develop`; pull requests produce previews without deploying Pages.
+The workflow also packages `cfl-cor-latex-project.zip` alongside the preview.
 
 The PDF uses the unmodified Elsevier `elsarticle` class and Harvard
 author-year style. Provenance and LPPL rights are in `template-provenance/`.

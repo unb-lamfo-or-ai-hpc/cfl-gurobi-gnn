@@ -150,6 +150,15 @@ class ManuscriptContractTests(unittest.TestCase):
         path.write_text("References [?]")
         self.assertIn("unresolved_pdf_reference", CHECK.check_pdf_text(path))
 
+    def test_references_heading_is_not_suppressed_in_the_adapter(self):
+        adapter = (ROOT / "manuscript/_extensions/elsevier/template.tex").read_text()
+        self.assertNotIn(r"\renewcommand{\bibsection}{}", adapter)
+
+    def test_pdf_uses_vector_fonts_and_unicode_text_mapping(self):
+        adapter = (ROOT / "manuscript/_extensions/elsevier/template.tex").read_text()
+        self.assertIn(r"\usepackage{lmodern}", adapter)
+        self.assertIn(r"\pdfgentounicode=1", adapter)
+
     def test_workflow_does_not_deploy_pull_requests_or_execute_research(self):
         workflow = (ROOT / ".github/workflows/manuscript.yml").read_text()
         self.assertIn("github.event_name != 'pull_request'", workflow)

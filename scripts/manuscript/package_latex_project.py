@@ -14,17 +14,28 @@ from check_manuscript import MANUSCRIPT, check_source
 from import_pr60_evidence import UNSAFE
 
 
+def generated_tex(root: Path) -> Path:
+    """Prefer Quarto Manuscript's retained export over an older root-level file."""
+    for candidate in (root / "_manuscript/_tex/index.tex", root / "index.tex"):
+        if candidate.is_symlink():
+            raise ValueError("generated LaTeX source must not be a symlink")
+        if candidate.is_file():
+            return candidate
+    raise ValueError("generated LaTeX source missing; render the manuscript first")
+
+
 def package(output: Path, root: Path = MANUSCRIPT) -> None:
     failures = check_source(root)
     if failures:
         raise ValueError("source checks failed: " + str(failures))
-    names = ["index.tex", "references.bib", "elsarticle.cls", "elsarticle-harv.bst",
+    names = ["references.bib", "elsarticle.cls", "elsarticle-harv.bst",
              "LICENSE", "highlights.txt", "template-provenance/elsevier.json",
              "template-provenance/ELSEVIER-NOTICE.md"]
     names += ["figures/" + name + ".pdf" for name in (
         "figure_pipeline", "figure_training_validation_loss",
         "figure_validation_test_gap_effects", "figure_time_to_ten_percent_gap")]
     payload = {name: (root / name).read_bytes() for name in names}
+    payload["index.tex"] = generated_tex(root).read_bytes()
     if UNSAFE.search(payload["index.tex"].decode("utf-8")):
         raise ValueError("private content in generated article source")
     instructions = (
@@ -34,7 +45,7 @@ def package(output: Path, root: Path = MANUSCRIPT) -> None:
         "    bibtex index\n"
         "    pdflatex -halt-on-error index.tex\n"
         "    pdflatex -halt-on-error index.tex\n\n"
-        "Required packages include orcidlink, amsmath, amssymb, graphicx, booktabs, "
+        "Required packages include orcidlink, lmodern, amsmath, amssymb, graphicx, booktabs, "
         "longtable, array, calc, hyperref, and natbib. The class loads natbib.\n\n"
         "Original article material uses MIT. Unmodified Elsevier class and style "
         "retain LPPL rights. Inspect the PDF before author approval or submission. "

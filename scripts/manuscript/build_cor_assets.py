@@ -72,7 +72,7 @@ def build(root: Path = ROOT) -> None:
         for index, label in enumerate(texts):
             x = .1 + index * 3.35
             ax.add_patch(FancyBboxPatch((x, y), 2.9, .88, boxstyle="round,pad=.06", facecolor="#edf5f7", edgecolor="#526779"))
-            ax.text(x+1.45, y+.44, label, ha="center", va="center", fontsize=9)
+            ax.text(x+1.45, y+.44, label, ha="center", va="center", fontsize=8)
             if index < 2:
                 ax.annotate("", xy=(x+3.28, y+.44), xytext=(x+2.98, y+.44), arrowprops={"arrowstyle": "->", "color": "#526779"})
     ax.annotate("", xy=(4.9, 1.9), xytext=(8.1, 2.94), arrowprops={"arrowstyle": "->", "connectionstyle": "arc3,rad=-.12", "color": "#526779"})
