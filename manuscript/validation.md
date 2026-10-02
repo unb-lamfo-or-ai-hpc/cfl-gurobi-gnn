@@ -23,18 +23,29 @@ source/output hash receipt. CSV line endings are preserved intentionally.
 
 ## Source and render checks
 
-Source checks and 28 manuscript regression tests passed locally. Checks
+Source checks and 33 manuscript regression tests passed locally. Checks
 cover evidence drift, the 100-epoch history, six-parent benchmark membership,
 four additional journal references, author identities, declarations,
 template provenance, missing outputs, and invalid publication claims.
-The combined documentation/manuscript test run passed 35 tests. This is not
+The combined documentation/manuscript test run passed 40 tests. This is not
 a claim that the complete host-dependent research suite was rerun locally.
 
-The initial current PDF attempt stopped because `orcidlink.sty` was absent
-from the existing TeX installation. HTML and figure generation succeeded.
-The rendering workflow permits installation of missing TeX packages; the
-PDF, extracted text, page budget, and complete visual review remain pending
-until a successful render. No previous PDF is accepted as current evidence.
+The initial PDF attempt stopped because `orcidlink.sty` was absent from the
+existing TeX installation. After dependency resolution, retained-source
+packaging and PDF typography were corrected. The final HTML/PDF build,
+extracted-text checks, asset/source hashes, and ZIP manifest checks passed.
+All 18 pages of the current PDF were visually inspected; References starts
+on page 15, within the internal 20-page body budget. Figures and tables are
+readable and ORCID icons are retained. These checks concern the current
+Elsevier article, not a previous PDF or the historical 39-parent manuscript.
+
+Final PDF SHA256:
+`66c317b7e15ad60811d36b876088d3b2ab57f4dfa3ff0667a6292d715fb8b54c`.
+Final editable LaTeX ZIP SHA256:
+`e31e7e20bdc1ddc97270c9db60af4552337bfabee0dd772b661756b07141dfb1`.
+The archive has 14 files; each payload hash matches its manifest.
+Two nonfatal BibTeX warnings indicate missing page ranges for the cited
+NeurIPS papers; page ranges have not been invented. All citations resolve.
 
 The current asset generator produces four measured/vector figure sets
 (PDF, SVG, PNG) and four in-article tables. It executes no solver or training.
