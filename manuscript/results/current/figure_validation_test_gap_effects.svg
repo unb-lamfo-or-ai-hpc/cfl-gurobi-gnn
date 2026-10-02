@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="100%" height="100%" fill="white"/>
+<text x="60" y="55" font-family="Arial" font-size="26" font-weight="bold">Learned-start terminal-gap effects</text>
+<text x="60" y="84" font-family="Arial" font-size="15" fill="#4B5563">Negative values favor the GNN start; validation and held-out test effects are both shown.</text>
+<line x1="600" y1="120" x2="600" y2="625" stroke="#111827" stroke-width="2"/>
+<text x="55" y="150" font-family="Arial" font-size="12">validation:m5</text>
+<line x1="600" y1="145" x2="568.20" y2="145" stroke="#0D9488" stroke-width="7"/>
+<circle cx="568.20" cy="145" r="5" fill="#0D9488"/>
+<text x="55" y="188" font-family="Arial" font-size="12">validation:m6</text>
+<line x1="600" y1="183" x2="575.16" y2="183" stroke="#0D9488" stroke-width="7"/>
+<circle cx="575.16" cy="183" r="5" fill="#0D9488"/>
+<text x="55" y="226" font-family="Arial" font-size="12">validation:m11</text>
+<line x1="600" y1="221" x2="626.75" y2="221" stroke="#DC2626" stroke-width="7"/>
+<circle cx="626.75" cy="221" r="5" fill="#DC2626"/>
+<text x="55" y="264" font-family="Arial" font-size="12">validation:m14</text>
+<line x1="600" y1="259" x2="596.70" y2="259" stroke="#0D9488" stroke-width="7"/>
+<circle cx="596.70" cy="259" r="5" fill="#0D9488"/>
+<text x="55" y="302" font-family="Arial" font-size="12">validation:m17</text>
+<line x1="600" y1="297" x2="608.45" y2="297" stroke="#DC2626" stroke-width="7"/>
+<circle cx="608.45" cy="297" r="5" fill="#DC2626"/>
+<text x="55" y="340" font-family="Arial" font-size="12">validation:m19</text>
+<line x1="600" y1="335" x2="484.31" y2="335" stroke="#0D9488" stroke-width="7"/>
+<circle cx="484.31" cy="335" r="5" fill="#0D9488"/>
+<text x="55" y="378" font-family="Arial" font-size="12">test:m0</text>
+<line x1="600" y1="373" x2="601.98" y2="373" stroke="#DC2626" stroke-width="7"/>
+<circle cx="601.98" cy="373" r="5" fill="#DC2626"/>
+<text x="55" y="416" font-family="Arial" font-size="12">test:m4</text>
+<line x1="600" y1="411" x2="599.24" y2="411" stroke="#0D9488" stroke-width="7"/>
+<circle cx="599.24" cy="411" r="5" fill="#0D9488"/>
+<text x="55" y="454" font-family="Arial" font-size="12">test:m7</text>
+<line x1="600" y1="449" x2="575.68" y2="449" stroke="#0D9488" stroke-width="7"/>
+<circle cx="575.68" cy="449" r="5" fill="#0D9488"/>
+<text x="55" y="492" font-family="Arial" font-size="12">test:m9</text>
+<line x1="600" y1="487" x2="597.55" y2="487" stroke="#0D9488" stroke-width="7"/>
+<circle cx="597.55" cy="487" r="5" fill="#0D9488"/>
+<text x="55" y="530" font-family="Arial" font-size="12">test:m12</text>
+<line x1="600" y1="525" x2="530.18" y2="525" stroke="#0D9488" stroke-width="7"/>
+<circle cx="530.18" cy="525" r="5" fill="#0D9488"/>
+<text x="55" y="568" font-family="Arial" font-size="12">test:m20</text>
+<line x1="600" y1="563" x2="198.57" y2="563" stroke="#0D9488" stroke-width="7"/>
+<circle cx="198.57" cy="563" r="5" fill="#0D9488"/>
+<text x="60" y="700" font-family="Arial" font-size="13" fill="#991B1B">Development-only descriptive evidence; no confirmatory significance claim.</text>
+</svg>

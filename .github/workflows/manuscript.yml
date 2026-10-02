@@ -43,7 +43,7 @@ jobs:
         run: |
           python -m pip install matplotlib==3.10.9
           python scripts/manuscript/build_results_assets.py
-      - name: Render the supplied SBC manuscript template
+      - name: Render the Elsevier author-year manuscript
         # Quarto locates its private TinyTeX runtime; tlmgr is not on runner PATH.
         run: quarto render manuscript --no-execute -M latex-auto-install:true
       - name: Validate publication outputs

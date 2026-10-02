@@ -6,6 +6,11 @@
 manuscript/** text eol=lf
 # Evidence CSV hashes bind their original bytes, including record terminators.
 manuscript/results/*.csv -text
+# Current publication receipts bind exact bytes for every imported asset.
+manuscript/results/current/** -text -whitespace
+manuscript/elsarticle.cls -text -whitespace
+manuscript/elsarticle-harv.bst -text -whitespace
+.gitattributes text eol=lf
 scripts/manuscript/** text eol=lf
 tests/manuscript/** text eol=lf
 .github/workflows/manuscript.yml text eol=lf

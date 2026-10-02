@@ -1,0 +1,7 @@
+partition,method,runs,right_censored_runs,gap_le_0.1_observed_runs
+validation,unguided_control,6,6,2
+validation,root_lp_matched_partial_start,6,6,1
+validation,gnn_class_aware_partial_start,6,5,2
+test,unguided_control,6,6,3
+test,root_lp_matched_partial_start,6,6,3
+test,gnn_class_aware_partial_start,6,4,4

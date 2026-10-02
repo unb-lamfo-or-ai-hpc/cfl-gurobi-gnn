@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="100%" height="100%" fill="white"/>
+<text x="60" y="55" font-family="Arial" font-size="26" font-weight="bold">CFL-GNN evidence pipeline</text>
+<text x="60" y="84" font-family="Arial" font-size="15" fill="#4B5563">The held-out test outcomes cannot alter the frozen checkpoint or guidance policy.</text>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#111827"/></marker></defs>
+<rect x="60" y="245" width="170" height="115" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+<text x="145" y="292" text-anchor="middle" font-family="Arial" font-size="15">Gurobi-authoritative</text>
+<text x="145" y="316" text-anchor="middle" font-family="Arial" font-size="15">bipartite graphs</text>
+<line x1="230" y1="302" x2="290" y2="302" stroke="#111827" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="300" y="245" width="170" height="115" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+<text x="385" y="292" text-anchor="middle" font-family="Arial" font-size="15">Offline GNN training</text>
+<text x="385" y="316" text-anchor="middle" font-family="Arial" font-size="15">34 train / 10 validation</text>
+<line x1="470" y1="302" x2="530" y2="302" stroke="#111827" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="540" y="245" width="170" height="115" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+<text x="625" y="292" text-anchor="middle" font-family="Arial" font-size="15">Frozen checkpoint</text>
+<text x="625" y="316" text-anchor="middle" font-family="Arial" font-size="15">and class-aware selector</text>
+<line x1="710" y1="302" x2="770" y2="302" stroke="#111827" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="780" y="245" width="170" height="115" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+<text x="865" y="292" text-anchor="middle" font-family="Arial" font-size="15">Fresh Gurobi models</text>
+<text x="865" y="316" text-anchor="middle" font-family="Arial" font-size="15">3 paired methods</text>
+<line x1="950" y1="302" x2="1010" y2="302" stroke="#111827" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1020" y="245" width="170" height="115" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+<text x="1105" y="292" text-anchor="middle" font-family="Arial" font-size="15">Held-out outcomes</text>
+<text x="1105" y="316" text-anchor="middle" font-family="Arial" font-size="15">gap, time, censoring</text>
+<text x="300" y="205" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#0F766E">OFFLINE</text>
+<text x="900" y="205" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#7C3AED">ONLINE SOLVER APPLICATION</text>
+<line x1="660" y1="155" x2="660" y2="475" stroke="#9CA3AF" stroke-dasharray="7 5"/>
+<text x="60" y="700" font-family="Arial" font-size="13" fill="#991B1B">Development-only descriptive evidence; no confirmatory significance claim.</text>
+</svg>

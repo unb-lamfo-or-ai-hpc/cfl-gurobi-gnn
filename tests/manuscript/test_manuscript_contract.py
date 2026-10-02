@@ -1,5 +1,4 @@
-"""Standard-library regression tests for the isolated manuscript boundary."""
-
+"""Regression tests for current evidence, static rendering, and editorial bounds."""
 import importlib.util
 import json
 import shutil
@@ -15,144 +14,144 @@ SPEC.loader.exec_module(CHECK)
 
 class ManuscriptContractTests(unittest.TestCase):
     def setUp(self):
-        self.temporary = tempfile.TemporaryDirectory()
-        self.addCleanup(self.temporary.cleanup)
-        self.root = Path(self.temporary.name) / "manuscript"
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name) / "manuscript"
         shutil.copytree(ROOT / "manuscript", self.root,
-                        ignore=shutil.ignore_patterns("_manuscript", ".quarto", "*.tex", "*.pdf"))
-        # The extension TeX adapter is source, not a generated article.
-        shutil.copy2(ROOT / "manuscript/_extensions/sbc/template.tex", self.root / "_extensions/sbc/template.tex")
+                        ignore=shutil.ignore_patterns("_manuscript", ".quarto", "figures", "tables", "index.tex"))
 
-    def test_source_passes(self):
+    def change(self, name, old, new):
+        path = self.root / name
+        text = path.read_text(encoding="utf-8")
+        self.assertIn(old, text)
+        path.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
+
+    def test_sources_pass_without_generated_assets(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
-    def test_hardware_inventory_is_not_run_allocation(self):
-        path = self.root / "index.qmd"
-        text = path.read_text(encoding="utf-8")
-        path.write_text(text.replace("not a runtime hardware probe", "verified run allocation"), encoding="utf-8")
-        self.assertIn("computational_environment_scope_missing", CHECK.check_source(self.root))
+    def test_changed_source_csv_fails(self):
+        path = self.root / "results/current/table_predictive_metrics.csv"
+        path.write_bytes(path.read_bytes() + b"\n")
+        self.assertTrue(any(x.startswith("source_evidence_invalid:") for x in CHECK.check_source(self.root)))
 
-    def test_sata_interface_uses_bits_not_bytes(self):
-        path = self.root / "index.qmd"
-        text = path.read_text(encoding="utf-8")
-        path.write_text(text.replace("6 Gb/s interface", "6 GB/s interface"), encoding="utf-8")
-        self.assertIn("computational_environment_scope_missing", CHECK.check_source(self.root))
+    def test_changed_report_fails_even_with_same_contract(self):
+        path = self.root / "results/current/pr60_scientific_evidence_report.json"
+        path.write_bytes(path.read_bytes() + b"\n")
+        self.assertTrue(any(x.startswith("source_evidence_invalid:") for x in CHECK.check_source(self.root)))
 
-    def test_changed_source_evidence_is_rejected(self):
-        path = self.root / "results/source_evidence.json"
-        path.write_text(path.read_text() + "\n")
-        self.assertIn("source_evidence_hash_mismatch", CHECK.check_source(self.root))
+    def test_changed_manifest_fails(self):
+        path = self.root / "results/current/pr60_scientific_evidence_manifest.json"
+        path.write_bytes(path.read_bytes() + b"\n")
+        self.assertTrue(any(x.startswith("source_evidence_invalid:") for x in CHECK.check_source(self.root)))
 
-    def test_completion_cannot_drop_evidence_scope(self):
-        path = self.root / "evidence-status.json"
+    def test_wrong_archive_receipt_fails(self):
+        path = self.root / "results/current/import_receipt.json"
         data = json.loads(path.read_text())
-        data["acceptance"]["confirmation_training_100_epochs"] = "passed"
+        data["archive_sha256"] = "0" * 64
         path.write_text(json.dumps(data))
-        self.assertIn("unsupported_completion_claim", CHECK.check_source(self.root))
-
-    def test_revision_cannot_silently_restore_forty_two(self):
-        path = self.root / "evidence-status.json"
-        data = json.loads(path.read_text())
-        data["revised_confirmation_protocol"]["parents"] = 42
-        path.write_text(json.dumps(data))
-        self.assertIn("revised_cohort_drift", CHECK.check_source(self.root))
-
-    def test_mit_declaration_and_completed_results_exist(self):
-        text = (self.root / "index.qmd").read_text(encoding="utf-8")
-        self.assertIn("MIT License", text)
-        self.assertNotIn("Reserved", text)
-        self.assertIn("100 epochs", text)
-        self.assertIn("0.5825", text)
-        self.assertIn("Brier score was worse", text)
-        self.assertIn("No matched four-arm learning comparison", text)
-        self.assertIn("training and validation weighted BCE curves are shown on the same axes", text)
-
-    def test_final_confusion_totals_are_recomputed(self):
-        path = self.root / "results/confirmation_final.json"
-        data = json.loads(path.read_text())
-        data["evaluation"]["aggregate_metrics"]["tp"] += 1
-        path.write_text(json.dumps(data))
-        self.assertIn("final_classification_totals_inconsistent", CHECK.check_source(self.root))
+        self.assertIn("import_receipt_mismatch", CHECK.check_source(self.root))
 
     def test_final_epoch_budget_is_verified(self):
-        path = self.root / "results/training_epoch_metrics.csv"
-        lines = path.read_text().splitlines()
-        path.write_text("\n".join(lines[:-1]) + "\n")
+        path = self.root / "results/current/table_training_epoch_metrics.csv"
+        path.write_text("\n".join(path.read_text().splitlines()[:-1]) + "\n")
         self.assertIn("final_training_evidence_inconsistent", CHECK.check_source(self.root))
 
-    def test_unknown_citation_fails(self):
-        with (self.root / "index.qmd").open("a", encoding="utf-8") as stream:
-            stream.write("\n@invented2026\n")
-        self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
-
-    def test_author_order_and_orcid_are_frozen(self):
-        path = self.root / "index.qmd"
-        path.write_text(path.read_text(encoding="utf-8").replace("0000-0001-5913-2997", "0000-0000-0000-0000"), encoding="utf-8")
-        self.assertIn("confirmed_authorship_mismatch", CHECK.check_source(self.root))
-
-    def test_text_orcid_fallback_is_rejected(self):
-        path = self.root / "_extensions/sbc/template.tex"
-        path.write_text(path.read_text(encoding="utf-8").replace(r"\usepackage{orcidlink}", ""), encoding="utf-8")
-        self.assertIn("orcid_icon_package_missing_or_replaced", CHECK.check_source(self.root))
-
-    def test_pdf_does_not_print_orcid_identifiers(self):
-        path = self.root / "text.txt"
-        path.write_text("ORCID: 0000-0001-5913-2997", encoding="utf-8")
-        self.assertIn("orcid_identifier_printed_instead_of_icon", CHECK.check_pdf_text(path))
-
-    def test_l2o_context_is_required(self):
-        path = self.root / "index.qmd"
-        path.write_text(path.read_text(encoding="utf-8").replace("## Learning to Optimize", "## Other topic"), encoding="utf-8")
-        self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
-
-    def test_declaration_is_exact_and_immediately_before_references(self):
-        path = self.root / "index.qmd"
-        path.write_text(path.read_text(encoding="utf-8").replace("# References", "# Additional section\n\n# References"), encoding="utf-8")
-        self.assertIn("ai_declaration_missing_changed_or_not_before_references", CHECK.check_source(self.root))
-
-    def test_twenty_page_body_limit(self):
-        path = self.root / "text.txt"
-        path.write_text(("Body\f" * 20) + "References\n", encoding="utf-8")
-        self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
-
-    def test_empirical_claim_fails(self):
+    def test_historical_cohort_cannot_replace_current(self):
         path = self.root / "evidence-status.json"
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text())
+        data["current_protocol"]["parents"] = 39
+        path.write_text(json.dumps(data))
+        self.assertIn("current_cohort_drift", CHECK.check_source(self.root))
+
+    def test_scientific_certification_is_not_inferred(self):
+        path = self.root / "evidence-status.json"
+        data = json.loads(path.read_text())
         data["scientific_reporting_eligible"] = True
-        path.write_text(json.dumps(data), encoding="utf-8")
+        path.write_text(json.dumps(data))
         self.assertIn("scientific_claim_without_review", CHECK.check_source(self.root))
 
-    def test_executable_chunk_fails(self):
-        with (self.root / "index.qmd").open("a", encoding="utf-8") as stream:
-            stream.write("\n```{python}\nprint(42)\n```\n")
+    def test_author_order_and_orcid_are_frozen(self):
+        self.change("index.qmd", "0000-0001-5913-2997", "0000-0000-0000-0000")
+        self.assertIn("confirmed_authorship_mismatch", CHECK.check_source(self.root))
+
+    def test_orcid_icons_required(self):
+        self.change("_extensions/elsevier/template.tex", r"\usepackage{orcidlink}", "")
+        self.assertIn("orcid_icon_package_missing_or_replaced", CHECK.check_source(self.root))
+
+    def test_author_year_journal_class_required(self):
+        self.change("_extensions/elsevier/template.tex", "{elsarticle}", "{article}")
+        self.assertIn("elsevier_author_year_layout_missing", CHECK.check_source(self.root))
+
+    def test_four_new_references_are_required(self):
+        self.change("index.qmd", "@qu2026", "Qu et al.")
+        self.assertIn("required_references_missing", CHECK.check_source(self.root))
+
+    def test_unknown_citation_fails(self):
+        self.change("index.qmd", "# Introduction", "# Introduction\n\n@invented2026")
+        self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
+
+    def test_l2o_context_required(self):
+        self.change("index.qmd", "## Learning to Optimize", "## Other topic")
+        self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
+
+    def test_unapproved_include_fails(self):
+        self.change("index.qmd", "tables/current_predictive.qmd", "../../private.qmd")
         self.assertIn("executable_or_unreviewed_included_content", CHECK.check_source(self.root))
 
-    def test_template_edit_requires_provenance(self):
-        with (self.root / "_extensions/sbc/template.tex").open("a", encoding="utf-8") as stream:
-            stream.write("% changed\n")
-        self.assertTrue(any(x.startswith("template_hash_mismatch:") for x in CHECK.check_source(self.root)))
+    def test_executable_chunk_fails(self):
+        self.change("index.qmd", "# Introduction", "# Introduction\n```{python}\nprint(42)\n```\n")
+        self.assertIn("executable_or_unreviewed_included_content", CHECK.check_source(self.root))
+
+    def test_declaration_is_exact_and_before_references(self):
+        self.change("index.qmd", "# References", "# Other section\n\n# References")
+        self.assertIn("ai_declaration_missing_changed_or_not_before_references", CHECK.check_source(self.root))
+
+    def test_highlights_length_is_bounded(self):
+        (self.root / "highlights.txt").write_text("A" * 86 + "\n")
+        self.assertIn("highlight_budget_invalid", CHECK.check_source(self.root))
+
+    def test_upstream_class_is_hash_bound_not_relicensed(self):
+        path = self.root / "elsarticle.cls"
+        path.write_bytes(path.read_bytes() + b"% changed\n")
+        self.assertIn("template_hash_mismatch:elsarticle.cls", CHECK.check_source(self.root))
+
+    def test_hardware_inventory_is_not_allocation(self):
+        self.change("index.qmd", "not a runtime hardware probe", "verified allocation")
+        self.assertIn("computational_environment_scope_missing", CHECK.check_source(self.root))
+
+    def test_sata_interface_is_bits_not_bytes(self):
+        self.change("index.qmd", "6 Gb/s interface", "6 GB/s interface")
+        self.assertIn("computational_environment_scope_missing", CHECK.check_source(self.root))
+
+    def test_private_path_fails_but_https_passes(self):
+        self.assertEqual(CHECK.check_source(self.root), [])
+        self.change("index.qmd", "# Introduction", "# Introduction\n\n/raid/private/output")
+        self.assertIn("private_content:index.qmd", CHECK.check_source(self.root))
+
+    def test_windows_private_path_fails(self):
+        self.change("index.qmd", "# Introduction", "# Introduction\n\nC:\\Users\\private")
+        self.assertIn("private_content:index.qmd", CHECK.check_source(self.root))
 
     def test_missing_render_is_not_success(self):
         self.assertEqual(CHECK.check_rendered(self.root), ["html_or_pdf_missing"])
 
-    def test_private_path_fails(self):
-        with (self.root / "index.qmd").open("a", encoding="utf-8") as stream:
-            stream.write("\n/raid/private/results\n")
-        self.assertIn("private_content:index.qmd", CHECK.check_source(self.root))
-
-    def test_windows_path_fails_without_rejecting_https_or_math(self):
-        self.assertEqual(CHECK.check_source(self.root), [])
-        with (self.root / "index.qmd").open("a", encoding="utf-8") as stream:
-            stream.write("\nC:\\Users\\private\\results\n")
-        self.assertIn("private_content:index.qmd", CHECK.check_source(self.root))
-
-    def test_unresolved_pdf_citation_fails(self):
+    def test_pdf_twenty_page_limit(self):
         path = self.root / "text.txt"
-        path.write_text("Graph Neural Guidance empirical confirmation pending Gasse Fischetti Nair References [?]", encoding="utf-8")
+        path.write_text("Body\f" * 20 + "References\n")
+        self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
+
+    def test_pdf_orcid_identifier_not_printed(self):
+        path = self.root / "text.txt"
+        path.write_text("ORCID: 0000-0001-5913-2997")
+        self.assertIn("orcid_identifier_printed_instead_of_icon", CHECK.check_pdf_text(path))
+
+    def test_pdf_unresolved_citation_fails(self):
+        path = self.root / "text.txt"
+        path.write_text("References [?]")
         self.assertIn("unresolved_pdf_reference", CHECK.check_pdf_text(path))
 
-    def test_publication_is_scoped_and_not_a_pull_request_deploy(self):
-        workflow = (ROOT / ".github/workflows/manuscript.yml").read_text(encoding="utf-8")
+    def test_workflow_does_not_deploy_pull_requests_or_execute_research(self):
+        workflow = (ROOT / ".github/workflows/manuscript.yml").read_text()
         self.assertIn("github.event_name != 'pull_request'", workflow)
         self.assertIn("github.ref == 'refs/heads/develop'", workflow)
         self.assertIn("path: manuscript/_manuscript", workflow)

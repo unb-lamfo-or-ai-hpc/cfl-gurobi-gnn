@@ -1,0 +1,4 @@
+analysis,excluded_parent_ids,included_parents,gnn_gap_wins,mean_gap_difference_guided_minus_control,median_gap_difference_guided_minus_control
+all_heldout,,6,5,-0.07200052280763546,-0.011642362992830002
+exclude_CFL_medium_instance_20,CFL_medium_instance_20,5,4,-0.01658677124024794,-0.0021345422570641648
+exclude_CFL_medium_instance_12_and_CFL_medium_instance_20,CFL_medium_instance_12;CFL_medium_instance_20,4,3,-0.005554994368037046,-0.0013965014229737963
