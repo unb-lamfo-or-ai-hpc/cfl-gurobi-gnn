@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr60_evidence
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --time=00:30:00
+#SBATCH --output=slurm_cfl_pr60_evidence_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="${SLURM_SUBMIT_DIR:?}"
+cd "${EXEC_DIR}"
+
+PLAN_DIR="${PR60_PLAN_DIR:?}"
+OUTPUT_DIR="${PR60_OUTPUT_DIR:?}"
+
+srun python3 -m cfl_gnn.cli.build_pr60_scientific_evidence plan \
+    --training_dir "${PR57_TRAINING_DIR:?}" \
+    --validation_dir "${PR58_AUDIT_DIR:?}" \
+    --heldout_dir "${PR59_AUDIT_DIR:?}" \
+    --plan_dir "${PLAN_DIR}"
+
+srun python3 -m cfl_gnn.cli.build_pr60_scientific_evidence build \
+    --training_dir "${PR57_TRAINING_DIR}" \
+    --validation_dir "${PR58_AUDIT_DIR}" \
+    --heldout_dir "${PR59_AUDIT_DIR}" \
+    --plan_dir "${PLAN_DIR}" \
+    --output_dir "${OUTPUT_DIR}"
+
+srun python3 -m cfl_gnn.cli.build_pr60_scientific_evidence verify \
+    --output_dir "${OUTPUT_DIR}"

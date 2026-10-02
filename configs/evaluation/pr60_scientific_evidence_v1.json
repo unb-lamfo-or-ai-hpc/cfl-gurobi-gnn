@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "protocol_id": "pr60_pr57_pr59_scientific_evidence_v1",
+  "seed": 42,
+  "objective_sense": "MINIMIZE",
+  "training_contract_sha256": "432a42dab9f49f01a31d7b28f658bd14f7c50450ac2d83d1ae3102bcc12f0d40",
+  "validation_contract_sha256": "6b37643a6364e9d25c272b04b96575de9ee29a17c54d55e14153e376e1cd7758",
+  "heldout_contract_sha256": "94abd94ba3eb5d4023b95fc3009330073aad02f9232d018149af2498cf62a670",
+  "optimization_methods": [
+    "unguided_control",
+    "root_lp_matched_partial_start",
+    "gnn_class_aware_partial_start"
+  ],
+  "influence_exclusions": [
+    [],
+    ["CFL_medium_instance_20"],
+    ["CFL_medium_instance_12", "CFL_medium_instance_20"]
+  ],
+  "censoring_policy": "retain_and_flag_no_naive_inference",
+  "confirmatory_significance_claim_allowed": false,
+  "policy_reselection_after_test": false,
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}
