@@ -88,6 +88,8 @@ Let $B_p\subseteq I_p$ be the binary support. A feasible incumbent supplies $y_{
 
 Each variable and constraint becomes a node, with coefficient-bearing edges for nonzeros of $A_p$. Variable features comprise objective coefficient, bounds, type, and an actual Gurobi root MIPNODE relaxation value. Row features encode right-hand side and sense. Feature order, clipping, and normalization are versioned. Root values are aligned by identity; capture failure is not replaced by zeros. Gurobi is the common graph authority, including for future comparisons using SCIP-derived supervision.
 
+The seven variable channels are transformed objective coefficient, lower bound, upper bound, three type indicators, and root value. The five row channels are transformed right-hand side, three sense indicators, and a constant. A single edge channel encodes the coefficient. Numerical coefficients and bounds use signed $\log(1+|t|)$ after clipping to $[-60000,60000]$; infinite bounds use the corresponding endpoint. Root values are clipped without logarithmic scaling. These numerical encodings affect learning inputs, not the original solver model; clipping counts are audited.
+
 The Gasse-inspired predictor uses two message-passing layers and hidden dimension 32. A versioned alternating-prenorm correction fits variable-side normalization to updated constraint messages, using training graphs only. Toy overfitting, finite-gradient, replay, and permutation tests check implementation rather than validate generalization. Training minimizes positive-class-weighted binary cross-entropy (BCE),
 
 $$\ell_{pj}=-w_+y_{pj}\log\sigma(s_{pj})-(1-y_{pj})\log(1-\sigma(s_{pj})),$$
@@ -128,7 +130,7 @@ The pipeline materializes and independently labels such descendants, with Gurobi
 
 The 54-parent cohort supersedes the historical 39-parent experiment without rewriting its exclusions or results. The split manifest fixes parent roles, shared by all representations. Optimization-test parents are medium 0, 4, 7, 9, 12, and 20. The first, second, third, and fifth appear in the labelled graph-test inventory. Medium 9 and 20 are absent from it but retain their frozen test role; absence is not permission to use them for fitting or selection. Label-free inference permits their solver evaluation without importing labels.
 
-Guidance validation uses medium 5, 6, 11, 14, 17, and 19. Its precommitted rule requires six valid, nonabstained learned starts, at least four gap wins, a nonpositive median paired difference, and at most one regression above 0.01 relative-gap units. This is development selection, not an independent confirmatory test. Optimization-test outcomes cannot reselect checkpoint, threshold, coverage, or ordering.
+Guidance validation uses medium 5, 6, 11, 14, 17, and 19. Medium 5 and 6 lack admitted graph-validation labels but retain their validation role for label-free optimization. Its precommitted rule requires six valid, nonabstained learned starts, at least four gap wins, a nonpositive median paired difference, and at most one regression above 0.01 relative-gap units. This is development selection, not an independent confirmatory test. Optimization-test outcomes cannot reselect checkpoint, threshold, coverage, or ordering.
 
 ## Comparisons and time measurements
 

@@ -62,7 +62,7 @@ def build(root: Path = ROOT) -> None:
             generated.append(path)
         plt.close(fig)
 
-    fig, ax = plt.subplots(figsize=(9, 4.1))
+    fig, ax = plt.subplots(figsize=(6.4, 3.4))
     ax.set(xlim=(0, 10), ylim=(0, 4.6))
     ax.axis("off")
     box_rows = ((3.0, "OFFLINE", ("Original CFL models\nMINIMIZE + checked labels", "Bipartite graphs\nreal root-LP features", "GNN: 34 train / 10 val\n100 epochs; freeze model")),
@@ -76,7 +76,8 @@ def build(root: Path = ROOT) -> None:
             if index < 2:
                 ax.annotate("", xy=(x+3.28, y+.44), xytext=(x+2.98, y+.44), arrowprops={"arrowstyle": "->", "color": "#526779"})
     ax.annotate("", xy=(4.9, 1.9), xytext=(8.1, 2.94), arrowprops={"arrowstyle": "->", "connectionstyle": "arc3,rad=-.12", "color": "#526779"})
-    ax.text(5.1, 2.27, "Frozen checkpoint and validation-qualified policy", fontsize=8)
+    ax.text(6.5, 2.3, "Frozen checkpoint\nand validation-qualified policy", ha="center", va="center",
+            fontsize=8, bbox={"facecolor": "white", "edgecolor": "none", "pad": 2})
     ax.text(.1, .25, "Test outcomes do not select model, threshold, support, or ordering.", fontsize=9)
     save(fig, "figure_pipeline")
 
