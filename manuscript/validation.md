@@ -72,7 +72,13 @@ the editable ZIP SHA256 is
 `5171710449926dbb02b217534072ba0b9589c15a2b8354966ab22c48dce82bec`.
 All 23 pages were visually inspected. The body occupies 19 pages and References
 starts on page 20. ZIP CRC checks pass; it contains 14 files. Forty-one manuscript
-and seven documentation tests pass. The only remaining composition adjustment is
-shortening the predictive-table header from Aggregation to Level. Its new render
-must be checked separately before delivering the final corrected preview.
+and seven documentation tests pass. The predictive-table header was shortened
+from Aggregation to Level and the corrected PDF was rendered and reviewed again
+on all 23 pages, including a full-size inspection of Table 2. Its PDF SHA256 is
+`b31860a77986cd8594c7ec839d1eb2873be4165027940d27bc7e18af6101ec4d`;
+the corrected editable ZIP SHA256 is
+`720ceb73470284e1d3ac88cc9807d9176dd95b9d55f247d8d8f55465cf47bde8`.
+All thirteen ZIP payload hashes and archive CRC checks pass. No readiness
+transition or merge was performed. The prepared archival metadata are not a
+claim that a Zenodo draft, reserved DOI or published deposit exists.
 This revision performs no research execution or new library synchronization.
