@@ -106,6 +106,19 @@ outputs and logs reside in a fresh directory below
 `/raid/vrcelestino/data/cfl-mvp2-evidence`, never directly in the home directory.
 These initial reservations are safety budgets, not measured resource needs.
 
+The first HPC preflight stopped in the deliberate Git ownership regression,
+before either diagnostic was submitted. Older security-patched Git releases
+do not recognize command-line `safe.directory`; see the official
+[Git 2.35.5 configuration documentation](https://git-scm.com/docs/git-config/2.35.5.html).
+The installed HPC Git version still needs to be recorded, so compatibility
+is an explanation to qualify, not a confirmed version identification.
+The binary evidence reader now supplies a subprocess-local temporary global
+configuration containing only the exact resolved checkout. It clears inherited
+trust, does not edit persistent global/system configuration, and removes the
+temporary file on success or failure. Ownership tests remain enabled, including
+linked-checkout isolation and the older command-line scope behavior. This is
+locally qualified; the repaired HPC preflight is still pending.
+
 Retain `LEDGER_JOB`, `CLASS_JOB`, `OUTPUT` and `EXEC` printed in the receipt. Do
 not rerun the launcher to recover a forgotten path: read the existing receipt.
 After both jobs terminate, inspect their status/error logs and the two reports.
