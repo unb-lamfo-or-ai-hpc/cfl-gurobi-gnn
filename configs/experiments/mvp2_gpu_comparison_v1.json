@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mvp2_serial_ddp_comparison_v1",
+  "status": "planned_not_execution_authorized",
+  "pull_request_base": "develop",
+  "arms": [
+    {"execution": "serial", "gpus": 1},
+    {"execution": "ddp", "gpus": 1},
+    {"execution": "ddp", "gpus": 2},
+    {"execution": "ddp", "gpus": 4},
+    {"execution": "ddp", "gpus": 8}
+  ],
+  "datasets": ["easy_only_parent_disjoint", "easy_medium_parent_disjoint"],
+  "minimum_epochs": 100,
+  "scaling_controls": [
+    "same_parent_membership_and_roles", "same_initial_state_per_seed",
+    "same_architecture_and_feature_transform", "same_effective_global_batch",
+    "same_optimizer_updates_and_learning_rate_schedule",
+    "same_loss_reduction_and_parent_sampling_mass",
+    "same_validation_only_checkpoint_and_threshold_selection"
+  ],
+  "qualification_required": [
+    "serial_vs_ddp_one_gpu_update_equivalence",
+    "two_gpu_synchronized_step_and_parent_membership",
+    "padding_and_duplicate_samples_accounted_for",
+    "training_only_normalization_statistics_synchronized",
+    "variable_size_graph_and_loss_denominator_checks",
+    "validation_aggregation_without_double_counting",
+    "resume_checkpoint_optimizer_and_sampler_state",
+    "four_then_eight_gpu_resource_and_numerical_preflight"
+  ],
+  "runtime_parameters_to_freeze_before_execution": [
+    "torch_cuda_nccl_versions", "effective_global_batch_and_accumulation",
+    "seed_list_and_initial_checkpoint_hashes", "cpus_and_memory_per_rank",
+    "data_loader_workers_and_io_configuration", "numerical_equivalence_tolerances",
+    "parent_sampling_schedule_and_rank_partition"
+  ],
+  "outcomes": [
+    "epoch_and_end_to_end_training_seconds", "optimizer_updates_and_processed_parent_mass",
+    "cpu_seconds_gpu_hours_and_utilization", "host_and_device_peak_memory",
+    "communication_and_data_loading_seconds", "parent_macro_and_pooled_ap_f1_brier_ece",
+    "downstream_fixed_policy_solver_gap_and_time_to_target"
+  ],
+  "quality_tuning_separate_from_hardware_scaling": true,
+  "more_gpus_guarantee_higher_quality": false,
+  "test_outcomes_select_configuration": false,
+  "solver_runs_executed": 0,
+  "training_runs_executed": 0
+}

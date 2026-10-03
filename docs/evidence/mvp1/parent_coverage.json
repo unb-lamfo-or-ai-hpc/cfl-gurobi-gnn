@@ -1,0 +1,729 @@
+{
+  "label_admission_not_reconstructed_from_footer_counts": true,
+  "parents": [
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 4,
+      "parent_id": "CFL_easy_instance_0",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 2,
+      "parent_id": "CFL_easy_instance_1",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 12,
+      "parent_id": "CFL_easy_instance_2",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_3",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_4",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_5",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_6",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_7",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_8",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_9",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_10",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_11",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_12",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 8,
+      "parent_id": "CFL_easy_instance_13",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_14",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_15",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_16",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_17",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_18",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_19",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_20",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_21",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_22",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_23",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_24",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_25",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_26",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_27",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_28",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "easy",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_easy_instance_29",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 3,
+      "parent_id": "CFL_medium_instance_0",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_1",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 6,
+      "parent_id": "CFL_medium_instance_2",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 3,
+      "parent_id": "CFL_medium_instance_3",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_4",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 6,
+      "parent_id": "CFL_medium_instance_5",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 3,
+      "parent_id": "CFL_medium_instance_6",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_7",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_8",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_9",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_10",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_11",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_12",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_13",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_14",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 2,
+      "parent_id": "CFL_medium_instance_15",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_16",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 2,
+      "parent_id": "CFL_medium_instance_17",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_18",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 2,
+      "parent_id": "CFL_medium_instance_19",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_20",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_21",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_22",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_23",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_24",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_25",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_26",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_27",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_28",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "medium",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": true,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_medium_instance_29",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_hard_instance_0",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 1,
+      "parent_id": "CFL_hard_instance_1",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_2",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_3",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_4",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_5",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_6",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_7",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_8",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_9",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_10",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_11",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_12",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_13",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_14",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_15",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_16",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_17",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_18",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_19",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_20",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_21",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_22",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_23",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_24",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_25",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_26",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_27",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_28",
+      "unique_feasible_incumbents": null
+    },
+    {
+      "difficulty": "hard",
+      "fit_validation_test_role": "not_recovered_in_this_receipt",
+      "in_frozen_learning_cohort": false,
+      "observed_incumbent_tables": 0,
+      "parent_id": "CFL_hard_instance_29",
+      "unique_feasible_incumbents": null
+    }
+  ],
+  "schema_version": 1,
+  "scope": "original_parent_inventory_not_run_ledger",
+  "source_receipts_sha256": "f5cc52a20f69ebae0af8aecff5ac7c2981de85118d09a4d5406c3877a4cef156",
+  "zero_tables_means_no_table_observed_not_no_incumbents": true
+}
