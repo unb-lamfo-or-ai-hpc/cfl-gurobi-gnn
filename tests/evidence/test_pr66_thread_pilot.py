@@ -158,6 +158,7 @@ class PilotTests(unittest.TestCase):
         self.assertEqual(pilot.termination(9, None, 0, 0.1), "no_incumbent")
         self.assertEqual(pilot.termination(9, 0.5, 1, 0.1), "time_limit")
         self.assertEqual(pilot.termination(17, 0.5, 1, 0.1), "memory_limit")
+        self.assertEqual(pilot.termination(17, None, 0, 0.1), "memory_limit")
 
     def test_configuration_is_small_and_dasci_only(self):
         config = pilot.strict_json(pilot.BASE_CONFIG)
@@ -168,7 +169,62 @@ class PilotTests(unittest.TestCase):
         self.assertEqual(config["time_limit_seconds"], 300)
         self.assertEqual(config["mip_gap_relative"], 0.1)
         self.assertEqual(config["seed"], 42)
-        self.assertEqual(config["fixed_parameters"]["ConcurrentMIP"], 1)
+        self.assertNotIn("fixed_parameters", config)
+        self.assertIn("defaults_v2", config["protocol_id"])
+
+    def test_reset_removes_inherited_barrier_without_setting_any_algorithm(self):
+        class Model:
+            def __init__(self):
+                self.values = {"Method": 2, "Crossover": 0}
+                self.calls = []
+
+            def resetParams(self):
+                self.values = {}
+
+            def getParamInfo(self, name):
+                default = (
+                    -1
+                    if name in {"Method", "NodeMethod", "Crossover", "Presolve", "Cuts"}
+                    else 1
+                )
+                return (name, float, self.values.get(name, default), 0, 100, default)
+
+            def setParam(self, name, value):
+                self.calls.append(name)
+                self.values[name] = value
+
+        config = pilot.strict_json(pilot.BASE_CONFIG)
+        model = Model()
+        parameters, defaults = pilot.configure_model(model, config, 8)
+        self.assertEqual(parameters["Threads"], 8)
+        self.assertEqual(defaults["Method"]["effective"], -1)
+        self.assertEqual(defaults["Crossover"]["effective"], -1)
+        self.assertFalse(
+            set(config["default_parameters_observed"]).intersection(model.calls)
+        )
+        self.assertEqual(
+            set(model.calls), set(parameters) | {"OutputFlag", "LogToConsole"}
+        )
+
+    def test_default_mismatch_blocks_parameter_setup(self):
+        model = SimpleNamespace(
+            resetParams=lambda: None,
+            getParamInfo=lambda name: (name, int, 2, -1, 5, -1),
+        )
+        with self.assertRaisesRegex(ValueError, "not_default"):
+            pilot.configure_model(model, pilot.strict_json(pilot.BASE_CONFIG), 1)
+
+    def test_other_license_refused_before_gurobi_import(self):
+        with (
+            patch.dict(pilot.os.environ, {"GRB_LICENSE_FILE": "/other/license"}),
+            self.assertRaisesRegex(ValueError, "canonical_license"),
+        ):
+            pilot.licensed_runtime(pilot.strict_json(pilot.BASE_CONFIG))
+
+    def test_preflight_contains_no_optimization(self):
+        import inspect
+
+        self.assertNotIn(".optimize(", inspect.getsource(pilot.preflight))
 
     def test_scheduler_has_no_exclusive_or_gpu_and_no_conflicting_binding(self):
         root = pilot.BASE_CONFIG.parents[2]

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_id": "pr66_dasci_shared_thread_screen_v1",
+  "protocol_id": "pr66_dasci_shared_thread_screen_defaults_v2",
   "cluster": "dgx-dasci",
   "seed": 42,
   "thread_caps": [1, 2, 4, 8, 16],
@@ -11,20 +11,12 @@
   "soft_memory_limit_decimal_gb": 48,
   "scheduler_memory_gib": 64,
   "gurobi_version": [13, 0, 1],
-  "fixed_parameters": {
-    "Method": 2,
-    "NodeMethod": 1,
-    "Crossover": 0,
-    "ConcurrentMIP": 1,
-    "MIPGapAbs": 0,
-    "FeasibilityTol": 1e-6,
-    "IntFeasTol": 1e-5,
-    "OptimalityTol": 1e-6,
-    "Presolve": -1,
-    "Cuts": -1,
-    "Heuristics": 0.05,
-    "NodeLimit": 1e100
-  },
+  "algorithm_policy": "reset_all_model_parameters_to_version_defaults_before_controls",
+  "default_parameters_observed": [
+    "Method", "NodeMethod", "Crossover", "ConcurrentMIP", "MIPFocus",
+    "MIPGapAbs", "FeasibilityTol", "IntFeasTol", "OptimalityTol",
+    "Presolve", "Cuts", "Heuristics", "NodeLimit"
+  ],
   "effective_objective_sense": "MINIMIZE",
   "frozen_optimization_test_parent_ids": [
     "CFL_medium_instance_0", "CFL_medium_instance_4",

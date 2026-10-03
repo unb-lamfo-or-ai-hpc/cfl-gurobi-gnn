@@ -4,9 +4,8 @@
 
 The author confirms PR65 merged into `develop` at
 `929f10e1102e398ecc33a58908f8788c9367e909`. PR66 targets `develop`, never `main`.
-The local implementation was provisionally prepared from feature head `39e3baf`
-while the connector was unavailable. Fetch and verify the actual merged base
-before publishing. No remote PR number is assumed reserved.
+PR66 is an existing draft at https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/66.
+Its base is `develop`; preserve its existing remote history when updating it.
 
 This protocol supersedes the six-parent/three-seed pilot and the subsequently
 suggested exclusive NPAD allocation. CFL execution is only on shared
@@ -71,11 +70,18 @@ Use `--cpu-bind=verbose` with the hint and qualify actual plugin/topology suppor
 | 8 | same easy | same medium | 300 s | 10% |
 | 16 | same easy | same medium | 300 s | 10% |
 
-Only thread cap varies. Seed 42, Gurobi 13.0.1, effective MINIMIZE and the fixed
-parameter map are recorded. Method=2, NodeMethod=1 and Crossover=0 define a new
-fixed barrier-root profile, not proof that it is best or that historical barrier
-use caused deterioration. ConcurrentMIP=1 excludes portfolio search. Environment
-ThreadLimit=16 precedes startup. The
+Only thread cap varies between arms. The approved defaults-v2 amendment replaces
+the unexecuted barrier-root draft. Before each solve, `Model.resetParams()` restores
+all model parameters to Gurobi 13.0.1 defaults. Method, NodeMethod, Crossover,
+Presolve, Cuts, Heuristics and other observed algorithm parameters are checked
+against the defaults returned by `getParamInfo`, not explicitly set. The automatic
+algorithm remains free to select its root method, presolve, heuristics and crossover;
+this does not mean every algorithm runs simultaneously.
+
+Seed=42, TimeLimit=300, MIPGap=0.1 and SoftMemLimit=48 are common experimental/safety
+controls. Threads is the compared intervention. Logging controls are operational.
+The original objective must already be MINIMIZE: reject another sense rather than
+silently reformulating it. Environment ThreadLimit=16 precedes startup. The
 [Gurobi parameter reference](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html)
 describes Threads as a cap, not guaranteed simultaneous utilization.
 
@@ -90,7 +96,9 @@ Retain terminal primal, dual, gap, status, nodes, read/setup and optimize wall
 times, process CPU and peak RSS, load averages, hashes and physical-core affinity.
 Process CPU excludes import and input hashing; scheduler TotalCPU is separate.
 Root/search phase telemetry and complete primal trajectories are not claimed by
-this first implementation. Subprocess logs are private, not public artifacts.
+this first implementation. Gurobi algorithm/presolve/crossover logs are retained
+privately for interpretation; public artifacts contain terminal metrics and the
+verified default-parameter observations. No log or raw LP enters the public package.
 
 Ten runs have at most 3,000 optimize seconds: 50 minutes plus setup and audit.
 A child process ceiling of 480 seconds and a 90-minute scheduler ceiling cover
@@ -128,3 +136,14 @@ Before submission, qualify runtime, commit, license, role-plan path/hash and
 scheduler support. The launcher requires `PR66_SCREEN_AUTHORIZED=yes` and a clean
 checkout. Output stays below `/raid/vrcelestino/data/cfl-mvp2-evidence/pr66`.
 No NPAD, main, Pages, Zenodo or GNN-training operation is included.
+
+## Operator hand-off
+
+See [the dgx-dasci runbook](pr66-dasci-runbook.md). Installation creates a pinned
+detached worktree without switching the primary checkout. `--preflight` checks
+the qualified PR57 role-plan hash, license, version, both LP reads and defaults,
+without optimization or submission. `--submit` repeats those checks and requires
+explicit CLI authorization. Every invocation freezes a fresh receipt; it never
+resumes or overwrites an earlier solve matrix. Inspect `squeue` before any retry
+after an ambiguous sbatch response. The collector verifies every available report,
+marks partial matrices explicitly, and packages only allowlisted text artifacts.

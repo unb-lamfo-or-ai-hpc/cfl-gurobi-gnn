@@ -11,6 +11,10 @@
 
 set -euo pipefail
 cd "${PR66_EXEC_DIR:?}"
+test "$(hostname -s)" = dgx-dasci
+test "${PR66_SOURCE_COMMIT:?}" = "$(git -c "safe.directory=${PR66_EXEC_DIR}" rev-parse HEAD)"
+test -z "$(git -c "safe.directory=${PR66_EXEC_DIR}" status --porcelain)"
+test ! -e gurobi.env
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
 # No exclusive flag, GPU reservation or concurrent solver workers.

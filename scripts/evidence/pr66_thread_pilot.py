@@ -23,6 +23,11 @@ CAPS = [1, 2, 4, 8, 16]
 BASE_CONFIG = Path(__file__).resolve().parents[2] / (
     "configs/experiments/pr66_thread_screen_v1.json"
 )
+DEPENDENCIES = (
+    "collect_class_statistics.py",
+    "collect_computational_ledger.py",
+    "publish_mvp2_baseline.py",
+)
 
 
 def strict_json(path):
@@ -117,6 +122,9 @@ def freeze(raw_root, role_plan, expected_role_sha, output):
         "python_version": sys.version.split()[0],
         "models": models,
         "worker_sha256": digest(Path(__file__)),
+        "dependency_sha256": {
+            name: digest(Path(__file__).parent / name) for name in DEPENDENCIES
+        },
         "optimization_runs": 0,
         "scientific_reporting_eligible": False,
     }
@@ -179,6 +187,8 @@ def verified_plan(directory, expected_sha):
         plan["config"] != strict_json(BASE_CONFIG)
         or plan["config_sha256"] != digest(BASE_CONFIG)
         or plan["worker_sha256"] != digest(Path(__file__))
+        or plan["dependency_sha256"]
+        != {name: digest(Path(__file__).parent / name) for name in DEPENDENCIES}
     ):
         raise ValueError("configuration_or_worker_changed_after_freeze")
     pools, selected = draw_pair(
@@ -197,6 +207,8 @@ def verified_plan(directory, expected_sha):
 
 
 def termination(status, gap, sol_count, target):
+    if status == 17:
+        return "memory_limit"
     if not sol_count:
         return "no_incumbent"
     if status == 2 and gap == 0:
@@ -210,12 +222,8 @@ def finite(value):
     return float(value) if math.isfinite(value) else None
 
 
-def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
-    """One fresh process, model and environment; no checkpoint or warm start."""
-    plan = verified_plan(plan_dir, expected_sha)
-    if threads not in CAPS or difficulty not in {"easy", "medium"}:
-        raise ValueError("attempt_not_in_frozen_matrix")
-    affinity = qualify_affinity()
+def licensed_runtime(config):
+    """Validate the sole authorized license before importing the licensed API."""
     if (
         os.environ.get("GRB_LICENSE_FILE", LICENSE) != LICENSE
         or not Path(LICENSE).is_file()
@@ -226,31 +234,89 @@ def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
     ):
         raise ValueError("external_license_credentials_refused")
     os.environ["GRB_LICENSE_FILE"] = LICENSE
-    import resource
-
     import gurobipy as gp
 
-    config = plan["config"]
     if list(gp.gurobi.version()) != config["gurobi_version"]:
         raise ValueError("gurobi_version_changed")
-    row = next(m for m in plan["models"] if m["difficulty"] == difficulty)
-    path, status = original_model(
-        Path(raw_root).resolve(strict=True),
-        difficulty,
-        int(row["source_instance_id"].rsplit("_", 1)[1]),
-    )
-    if status != "source_discovered" or digest(path) != row["original_lp_sha256"]:
-        raise ValueError("frozen_original_model_changed")
-    output = Path(plan_dir) / f"{difficulty}-threads{threads}"
-    output.mkdir(exist_ok=False)
+    return gp
+
+
+def configure_model(model, config, threads, log_path=None):
+    """Remove inherited profiles; never set presolve/search/LP algorithm overrides."""
+    model.resetParams()
+    observed = {}
+    for name in config["default_parameters_observed"]:
+        info = model.getParamInfo(name)
+        if info is None or info[2] != info[5]:
+            raise ValueError("algorithm_parameter_not_default")
+        observed[name] = {"effective": info[2], "version_default": info[5]}
     parameters = {
-        **config["fixed_parameters"],
         "Threads": threads,
-        "Seed": 42,
-        "TimeLimit": 300,
-        "MIPGap": 0.1,
+        "Seed": config["seed"],
+        "TimeLimit": config["time_limit_seconds"],
+        "MIPGap": config["mip_gap_relative"],
         "SoftMemLimit": config["soft_memory_limit_decimal_gb"],
     }
+    for key, value in parameters.items():
+        model.setParam(key, value)
+    if any(model.getParamInfo(k)[2] != v for k, v in parameters.items()):
+        raise ValueError("effective_parameter_mismatch")
+    # Logging is operational telemetry, not an algorithmic intervention.
+    model.setParam("LogToConsole", 0)
+    model.setParam("OutputFlag", 1 if log_path else 0)
+    if log_path:
+        model.setParam("LogFile", str(log_path))
+    return parameters, observed
+
+
+def frozen_source(raw_root, row):
+    path, status = original_model(
+        Path(raw_root).resolve(strict=True),
+        row["difficulty"],
+        int(row["source_instance_id"].rsplit("_", 1)[1]),
+    )
+    if (
+        status != "source_discovered"
+        or digest(path) != row["original_lp_sha256"]
+        or path.relative_to(Path(raw_root).resolve()).as_posix() != row["relative_path"]
+    ):
+        raise ValueError("frozen_original_model_changed")
+    return path
+
+
+def preflight(plan_dir, expected_sha, raw_root):
+    """Read both originals and qualify the runtime; never call optimize."""
+    plan = verified_plan(plan_dir, expected_sha)
+    gp = licensed_runtime(plan["config"])
+    for row in plan["models"]:
+        path = frozen_source(raw_root, row)
+        with gp.Env(empty=True) as env:
+            env.setParam("OutputFlag", 0)
+            env.setParam("ThreadLimit", 16)
+            env.start()
+            with gp.read(str(path), env=env) as model:
+                configure_model(model, plan["config"], 1)
+                if model.ModelSense != gp.GRB.MINIMIZE or model.NumIntVars == 0:
+                    raise ValueError("original_minimization_mip_required")
+        if digest(path) != row["original_lp_sha256"]:
+            raise ValueError("source_changed_during_preflight")
+    print("PR66_LICENSE_VERSION_DEFAULTS_AND_MODELS_OK_NO_OPTIMIZATION", flush=True)
+
+
+def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
+    """One fresh process, model and environment; no checkpoint or warm start."""
+    plan = verified_plan(plan_dir, expected_sha)
+    if threads not in CAPS or difficulty not in {"easy", "medium"}:
+        raise ValueError("attempt_not_in_frozen_matrix")
+    affinity = qualify_affinity()
+    import resource
+
+    config = plan["config"]
+    gp = licensed_runtime(config)
+    row = next(m for m in plan["models"] if m["difficulty"] == difficulty)
+    path = frozen_source(raw_root, row)
+    output = Path(plan_dir) / f"{difficulty}-threads{threads}"
+    output.mkdir(exist_ok=False)
     started = time.perf_counter()
     before_cpu = time.process_time()
     with gp.Env(empty=True) as env:
@@ -259,12 +325,13 @@ def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
         env.start()
         with gp.read(str(path), env=env) as model:
             source_sense = model.ModelSense
-            model.ModelSense = gp.GRB.MINIMIZE
-            model.update()
-            for key, value in parameters.items():
-                model.setParam(key, value)
-            if any(model.getParamInfo(k)[2] != v for k, v in parameters.items()):
-                raise ValueError("effective_parameter_mismatch")
+            if source_sense != gp.GRB.MINIMIZE:
+                raise ValueError(
+                    "original_minimization_required_no_silent_reformulation"
+                )
+            parameters, defaults = configure_model(
+                model, config, threads, output / "gurobi.private.log"
+            )
             read_setup = time.perf_counter() - started
             load_before = list(os.getloadavg())
             optimize_start = time.perf_counter()
@@ -276,6 +343,7 @@ def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
                 **row,
                 "plan_sha256": expected_sha,
                 "parameters": parameters,
+                "algorithm_defaults": defaults,
                 "parameters_sha256": hashlib.sha256(
                     canonical(parameters).encode()
                 ).hexdigest(),
@@ -382,7 +450,7 @@ def run(plan_dir, expected_sha, raw_root):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("freeze", "run", "attempt"))
+    parser.add_argument("action", choices=("freeze", "preflight", "run", "attempt"))
     parser.add_argument("--raw-root", type=Path, required=True)
     parser.add_argument("--plan-dir", type=Path, required=True)
     parser.add_argument("--role-plan", type=Path)
@@ -396,6 +464,8 @@ if __name__ == "__main__":
             parser.error("freeze requires --role-plan and --expected-role-sha")
         freeze(args.raw_root, args.role_plan, args.expected_role_sha, args.plan_dir)
         print("PR66_PAIR_AND_PROFILE_FROZEN_NO_OPTIMIZATION")
+    elif args.action == "preflight":
+        preflight(args.plan_dir, args.expected_plan_sha, args.raw_root)
     elif args.action == "run":
         run(args.plan_dir, args.expected_plan_sha, args.raw_root)
     else:
