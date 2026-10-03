@@ -1,0 +1,49 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_aug_pair
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=12:30:00
+#SBATCH --output=slurm_cfl_aug_pair_%A_%a.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${AUGMENTATION_PLAN_DIR:?Set AUGMENTATION_PLAN_DIR}"
+: "${PARENT_COLLECTION_RUN_ROOT:?Set PARENT_COLLECTION_RUN_ROOT}"
+: "${BASE_SOURCE_DIR:?Set BASE_SOURCE_DIR}"
+: "${AUGMENTATION_RUN_ROOT:?Set AUGMENTATION_RUN_ROOT}"
+: "${SLURM_ARRAY_TASK_ID:?Submit this script as an array}"
+
+TASK_MANIFEST="${AUGMENTATION_PLAN_DIR}/scalable_augmentation_tasks.jsonl"
+TASK_SOLVER=$(sed -n "$((SLURM_ARRAY_TASK_ID + 1))p" "${TASK_MANIFEST}" |
+    python3 -c 'import json,sys; print(json.load(sys.stdin)["solver"])')
+if [[ "${TASK_SOLVER}" == "gurobi" ]]; then
+    GUROBI_LICENSE_FILE="${GUROBI_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+    if [[ ! -s "${GUROBI_LICENSE_FILE}" ]]; then
+        echo "[ERROR] Gurobi license is missing; set GUROBI_LICENSE_FILE" >&2
+        exit 2
+    fi
+    export GRB_LICENSE_FILE="${GUROBI_LICENSE_FILE}"
+fi
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+
+srun python3 -m cfl_gnn.cli.scalable_augmentation run-task \
+    --plan_dir "${AUGMENTATION_PLAN_DIR}" \
+    --task_index "${SLURM_ARRAY_TASK_ID}" \
+    --parent_collection_run_root "${PARENT_COLLECTION_RUN_ROOT}" \
+    --base_source_dir "${BASE_SOURCE_DIR}" \
+    --run_root "${AUGMENTATION_RUN_ROOT}" \
+    --experiment_config "${EXPERIMENT_CONFIG:-configs/experiments/mvp_partial_v1.json}" \
+    --resume

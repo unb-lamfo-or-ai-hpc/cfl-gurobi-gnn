@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "protocol_id": "literature_backed_neural_guidance_policy_v1",
+  "priority_solver": "gurobi",
+  "comparison_solver": "scip",
+  "graph_authority": "gurobi",
+  "seed": 42,
+  "threads_per_run": 1,
+  "time_limits_seconds": [3600, 14400],
+  "primary_outcomes": [
+    "terminal_mip_gap_relative",
+    "model_optimize_wall_time_seconds"
+  ],
+  "time_regions": [
+    "total_wall_time_seconds",
+    "data_read_wall_time_seconds",
+    "model_build_wall_time_seconds",
+    "model_optimize_wall_time_seconds"
+  ],
+  "method_tiers": {
+    "primary": [
+      "unguided_control",
+      "gurobi_variable_hints"
+    ],
+    "matched_comparison": [
+      "partial_mip_start"
+    ],
+    "exploratory_recovery": [
+      "confidence_partial_fixing_with_recovery",
+      "local_branching_trust_region_with_recovery"
+    ]
+  },
+  "methods": {
+    "unguided_control": {
+      "target_solvers": ["gurobi", "scip"],
+      "changes_feasible_region": false,
+      "coverage_policy": "none"
+    },
+    "gurobi_variable_hints": {
+      "target_solvers": ["gurobi"],
+      "changes_feasible_region": false,
+      "coverage_policy": "all_discrete_with_confidence_priority",
+      "native_attributes": ["VarHintVal", "VarHintPri"]
+    },
+    "partial_mip_start": {
+      "target_solvers": ["gurobi", "scip"],
+      "changes_feasible_region": false,
+      "coverage_fractions": [0.01, 0.05, 0.1],
+      "default_coverage_fraction": 0.1
+    },
+    "confidence_partial_fixing_with_recovery": {
+      "target_solvers": ["gurobi", "scip"],
+      "changes_feasible_region": true,
+      "coverage_fractions": [0.01, 0.05, 0.1],
+      "restricted_phase_budget_fraction": 0.2,
+      "recovery_restores_original_domains": true,
+      "recovery_phase_always_executed": true
+    },
+    "local_branching_trust_region_with_recovery": {
+      "target_solvers": ["gurobi", "scip"],
+      "changes_feasible_region": true,
+      "radius_fractions": [0.001, 0.005, 0.01],
+      "restricted_phase_budget_fraction": 0.2,
+      "recovery_restores_original_model": true,
+      "recovery_phase_always_executed": true
+    }
+  },
+  "selection_controls": {
+    "prediction_ranking": [
+      "priority_descending",
+      "confidence_descending",
+      "variable_name_ascending"
+    ],
+    "coverage_and_radius_precommitted": true,
+    "validation_may_select_checkpoint_and_probability_threshold": true,
+    "test_may_select_method_coverage_or_radius": false
+  },
+  "censoring_policy": "retain_and_flag_no_naive_inference",
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}
+

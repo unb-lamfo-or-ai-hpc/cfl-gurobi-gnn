@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_label_repair
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=05:20:00
+#SBATCH --output=slurm_cfl_label_repair_%A_%a.out
+
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from the repository root}}"
+cd "${EXEC_DIR}"
+test -f pyproject.toml
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+test -s "${GRB_LICENSE_FILE}"
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+srun python3 -m cfl_gnn.cli.run_confirmation_repair \
+    --campaign_dir "${CONFIRMATION_DIR:?set the audited confirmation directory}" \
+    --source_dir "${DATA_ROOT}/raw/MILPBench/CFL" \
+    --run_root "${REPAIR_RUN_ROOT:?set an isolated repair output directory}" \
+    --task_index "${SLURM_ARRAY_TASK_ID:?submit an array sized to the repair manifest}"

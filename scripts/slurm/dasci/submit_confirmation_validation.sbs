@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_confirmation
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=16G
+#SBATCH --time=00:30:00
+#SBATCH --output=slurm_cfl_confirmation_%j.out
+
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from the repository root}}"
+cd "${EXEC_DIR}"
+test -f pyproject.toml
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+test -s "${GRB_LICENSE_FILE}"
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export CFL_REQUIRE_SOLVER_TESTS=1
+export OMP_NUM_THREADS=1
+python3 -c 'import torch, torch_geometric, gurobipy, pyscipopt'
+python3 -m pytest tests/smoke -q
+OUTPUT_DIR="${OUTPUT_DIR:-${DATA_ROOT}/analysis/confirmation/pr49_${SLURM_JOB_ID}}"
+srun python3 -m cfl_gnn.cli.audit_confirmation_campaign \
+    --graph_dir "${DATA_ROOT}/bipartite_graphs/instance_baseline_smoke" \
+    --source_dir "${DATA_ROOT}/raw/MILPBench/CFL" \
+    --output_dir "${OUTPUT_DIR}" \
+    --descriptive_outputs --prepare_repair_plans
+printf '[INFO] Confirmation inventory: %s/confirmation_inventory.json\n' "${OUTPUT_DIR}"

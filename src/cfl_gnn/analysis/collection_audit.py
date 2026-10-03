@@ -1,5 +1,5 @@
 """
-Phase 1 Exploratory Data Analysis (EDA) & Audit - PRODUCTION FINAL
+Legacy Phase 1 exploratory analysis and artifact audit
 ==================================================================
 Validates the raw outputs from Phase 1, extracts topological metadata,
 and generates JSON, CSV, and Plot reports STRICTLY isolated by category.
@@ -28,7 +28,7 @@ from cfl_gnn.artifacts.schemas import (
 
 def process_category(cat, base_dir, analysis_dir):
     """
-    Procesa una única categoría y genera su JSON, CSV y Plots correspondientes.
+    Summarize one legacy category in JSON, CSV, and descriptive figures.
     """
     print(f"\n{'#'*70}")
     print(f"PROCESSING CATEGORY: {cat}")
@@ -46,7 +46,7 @@ def process_category(cat, base_dir, analysis_dir):
     report = []
     failed_instances = []
     
-    # 1. EXTRACCIÓN DE DATOS
+    # 1. Extract recorded data.
     for inst_dir in sorted(instance_dirs):
         inst_name = os.path.basename(inst_dir)
         meta_path = os.path.join(inst_dir, "metadata.json")
@@ -58,11 +58,11 @@ def process_category(cat, base_dir, analysis_dir):
             continue
             
         try:
-            # Metadata base
+            # Read the source metadata.
             with open(meta_path) as f:
                 meta = json.load(f)
             
-            # Incumbents y Gap
+            # Summarize recorded incumbent observations and gaps.
             df_inc = pd.read_parquet(inc_path)
             if len(df_inc) == 0:
                 failed_instances.append((inst_name, "Empty incumbents.parquet"))
@@ -75,7 +75,7 @@ def process_category(cat, base_dir, analysis_dir):
             best_mip_gap = df_inc['mip_gap'].min() * 100.0 if 'mip_gap' in df_inc else np.nan
             median_mip_gap = df_inc['mip_gap'].median() * 100.0 if 'mip_gap' in df_inc else np.nan
             
-            # Topología
+            # Extract formulation dimensions.
             num_constrs, nnz, num_binary, num_integer = np.nan, np.nan, np.nan, np.nan
             if os.path.exists(feat_path):
                 with gzip.open(feat_path, 'rb') as f:
@@ -85,7 +85,7 @@ def process_category(cat, base_dir, analysis_dir):
                 num_integer = orig['model_features'].num_integer
                 nnz         = len(orig['edge_features'])
 
-            # Enriquecer JSON metadata
+            # Add descriptive fields to the in-memory metadata.
             meta['topological_features'] = {
                 'num_vars': int(len(sol_0)),
                 'num_constrs': int(num_constrs) if not np.isnan(num_constrs) else None,
@@ -99,7 +99,7 @@ def process_category(cat, base_dir, analysis_dir):
             }
             cat_metadata_list.append(meta)
 
-            # Enriquecer reporte CSV
+            # Assemble the descriptive table record.
             report.append({
                 'category': cat,
                 'instance': inst_name,
@@ -122,7 +122,7 @@ def process_category(cat, base_dir, analysis_dir):
 
     df_report = pd.DataFrame(report)
 
-    # 2. GUARDAR JSON
+    # 2. Write the JSON summary.
     summary_path = os.path.join(analysis_dir, f"generation_summary_{cat}.json")
     category_stats = {
         'total_instances_processed': len(cat_metadata_list),
@@ -140,12 +140,12 @@ def process_category(cat, base_dir, analysis_dir):
         }, f, indent=2)
     print(f"  [+] JSON Summary saved   -> {summary_path}")
 
-    # 3. GUARDAR CSV
+    # 3. Write the CSV table.
     csv_path = os.path.join(analysis_dir, f"phase1_audit_report_{cat}.csv")
     df_report.to_csv(csv_path, index=False)
     print(f"  [+] CSV Report saved     -> {csv_path}")
 
-    # 4. GENERAR PLOTS LIMPIOS
+    # 4. Generate category-level descriptive figures.
     generate_category_plots(df_report, cat, analysis_dir)
     
     if failed_instances:
@@ -266,3 +266,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

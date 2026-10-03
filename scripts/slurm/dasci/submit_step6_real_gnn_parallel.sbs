@@ -7,7 +7,7 @@
 #SBATCH --time=08:00:00
 #SBATCH --output=slurm_real_gnn_%j.out
 
-echo "=== Entrenamiento GNN con Dataset Real (Neural Diving con hasta 8 GPUs DDP) ==="
+echo "=== Legacy GNN training with a real dataset (DDP) ==="
 EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
 cd "$EXEC_DIR"
 export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
@@ -17,12 +17,12 @@ conda activate tfm_env
 
 MODULE_NAME="cfl_gnn.cli.train_distributed"
 
-# Lanzador DDP: Le indicamos que use 1 nodo y hasta 8 procesos por nodo
-# Ajuste --gres=gpu:X y --nproc_per_node=X, con el mismo número de GPUs
+# DDP launcher: configure processes for the allocated single node.
+# Match --nproc_per_node to the number of allocated GPUs.
 
-# Opción A: El escenario teste
-# Ejecución DDP: Sin srun, usando directamente torchrun.
-# Asegúrate de que --nproc_per_node coincida con --gres=gpu:X
+# Option A: Small diagnostic configuration
+# Launch DDP directly with torchrun, without an additional srun.
+# Ensure --nproc_per_node matches --gres=gpu:X.
 #torchrun --nproc_per_node=4 -m $MODULE_NAME \
 #    --experiment_name run_01_ddp \
 #    --easy_split 30 0 0 \
@@ -34,8 +34,8 @@ MODULE_NAME="cfl_gnn.cli.train_distributed"
 #    --epochs 100 \
 #    --patience 15
 
-# Opción B: Escenario con full EASY y MEDIUM parcial
-# Ejecución DDP: Sin srun, usando torchrun en las 4 GPUs
+# Option B: Full easy and partial medium legacy graph inventory
+# Launch torchrun on the four allocated GPUs.
 torchrun --nproc_per_node=4 -m $MODULE_NAME \
     --experiment_name run_02_partial_dataset_ddp \
     --easy_split 4605 986 988 \
@@ -47,4 +47,5 @@ torchrun --nproc_per_node=4 -m $MODULE_NAME \
     --epochs 150 \
     --patience 20
 
-echo "=== Job Finalizado ==="
+echo "=== Job finished ==="
+

@@ -1,0 +1,101 @@
+#!/bin/bash
+#SBATCH --job-name=mvp_parents
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=01:15:00
+#SBATCH --array=0-11%4
+#SBATCH --output=slurm_mvp_parents_%A_%a.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${VERTICAL_SLICE_DIR:?Set VERTICAL_SLICE_DIR to the passing preflight directory}"
+: "${BASE_SOURCE_DIR:?Set BASE_SOURCE_DIR to data/raw/MILPBench/CFL}"
+
+TASKS_FILE="${VERTICAL_SLICE_DIR}/parent_solve_tasks.jsonl"
+PLAN_FILE="${VERTICAL_SLICE_DIR}/mvp_vertical_slice_plan.json"
+GUROBI_LICENSE_FILE="${GUROBI_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+
+test -s "${TASKS_FILE}" && test -s "${PLAN_FILE}" || {
+    echo "[ERROR] missing vertical-slice plan artifacts" >&2
+    exit 2
+}
+
+TASK=$(sed -n "$((SLURM_ARRAY_TASK_ID + 1))p" "${TASKS_FILE}")
+if [[ -z "${TASK}" ]]; then
+    echo "[ERROR] no task for array index ${SLURM_ARRAY_TASK_ID}" >&2
+    exit 2
+fi
+
+SLICE_ID=$(jq -r '.slice_id' "${PLAN_FILE}")
+PARENT_RUN_ROOT="${PARENT_RUN_ROOT:-${DATA_ROOT}/intermediate/mvp_vertical_slice_parent_solutions/${SLICE_ID}}"
+
+SOLVER=$(jq -r '.solver' <<<"${TASK}")
+PARENT_INSTANCE_ID=$(jq -r '.source_instance_id' <<<"${TASK}")
+CATEGORY=$(jq -r '.category' <<<"${TASK}")
+DIFFICULTY=$(jq -r '.difficulty' <<<"${TASK}")
+FOLD=$(jq -r '.fold' <<<"${TASK}")
+ROLE=$(jq -r '.role' <<<"${TASK}")
+PARENT_RELATIVE=$(jq -r '.parent_mip_relative_path' <<<"${TASK}")
+RUN_RELATIVE=$(jq -r '.run_dir_relative_path' <<<"${TASK}")
+
+PARENT_MIP="${BASE_SOURCE_DIR}/${PARENT_RELATIVE}"
+OUTPUT_DIR="${PARENT_RUN_ROOT}/${RUN_RELATIVE}"
+CONFIG="${EXEC_DIR}/configs/experiments/mvp_partial_v1.json"
+TIME_LIMIT=$(jq -r '.solve_budget.time_limit_seconds' "${PLAN_FILE}")
+NODE_LIMIT=$(jq -r '.solve_budget.node_limit' "${PLAN_FILE}")
+THREADS=$(jq -r '.solve_budget.threads' "${PLAN_FILE}")
+SEED=$(jq -r '.solve_budget.seed' "${PLAN_FILE}")
+
+test -s "${PARENT_MIP}" || {
+    echo "[ERROR] missing parent MIP: ${PARENT_RELATIVE}" >&2
+    exit 2
+}
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+
+if [[ "${SOLVER}" == "gurobi" ]]; then
+    export GRB_LICENSE_FILE="${GUROBI_LICENSE_FILE}"
+    python3 -c 'import gurobipy, pyarrow'
+    MODULE="cfl_gnn.cli.collect_gurobi_parent_solution"
+elif [[ "${SOLVER}" == "scip" ]]; then
+    python3 -c 'import pyarrow, pyscipopt'
+    MODULE="cfl_gnn.cli.collect_scip_parent_solution"
+else
+    echo "[ERROR] unsupported solver in task: ${SOLVER}" >&2
+    exit 2
+fi
+
+echo "[INFO] task=${SLURM_ARRAY_TASK_ID} | solver=${SOLVER} | parent=${PARENT_INSTANCE_ID} | role=${ROLE}"
+echo "[INFO] output=${OUTPUT_DIR}"
+
+OVERWRITE_ARGS=()
+if [[ "${OVERWRITE:-0}" == "1" ]]; then
+    OVERWRITE_ARGS=(--overwrite)
+fi
+
+srun python3 -m "${MODULE}" \
+    --parent_mip "${PARENT_MIP}" \
+    --parent_instance_id "${PARENT_INSTANCE_ID}" \
+    --category "${CATEGORY}" \
+    --difficulty "${DIFFICULTY}" \
+    --fold "${FOLD}" \
+    --config "${CONFIG}" \
+    --output_dir "${OUTPUT_DIR}" \
+    --time_limit "${TIME_LIMIT}" \
+    --node_limit "${NODE_LIMIT}" \
+    --threads "${THREADS}" \
+    --seed "${SEED}" \
+    "${OVERWRITE_ARGS[@]}"

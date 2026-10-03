@@ -1,0 +1,12 @@
+{
+  "draws_per_parent_per_epoch": 4,
+  "gap_threshold_relative": 0.1,
+  "policy_id": "mvp_parent_balanced_loader_v1",
+  "sampler": "deterministic_parent_balanced_cycle_v1",
+  "schema_version": 1,
+  "seed": 42,
+  "test_access_policy": "held_out_not_loaded_during_training",
+  "training_parent_set": "intersection_across_all_four_arms",
+  "validation_reference": "best_known_across_valid_gurobi_and_scip_artifacts"
+}
+

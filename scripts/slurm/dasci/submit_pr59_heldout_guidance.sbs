@@ -1,0 +1,35 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr59_test
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=64G
+#SBATCH --gres=gpu:1
+#SBATCH --time=04:30:00
+#SBATCH --array=0-5%2
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export GRB_LICENSE_FILE="/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic"
+if [[ ! -s "${GRB_LICENSE_FILE}" ]]; then
+    printf '[ERROR] canonical Gurobi license is unreadable: %s\n' \
+        "${GRB_LICENSE_FILE}" >&2
+    false
+fi
+
+export OMP_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+
+srun python3 -m cfl_gnn.cli.run_pr59_heldout_guidance parent \
+    --plan_dir "${PR59_PLAN_DIR:?}" \
+    --training_dir "${PR57_TRAINING_DIR:?}" \
+    --validation_audit_dir "${PR58_VALIDATION_AUDIT_DIR:?}" \
+    --mip_root "${BASE_SOURCE_DIR:?}" \
+    --run_root "${PR59_RUN_ROOT:?}" \
+    --task_index "${SLURM_ARRAY_TASK_ID:?}" \
+    --device cuda

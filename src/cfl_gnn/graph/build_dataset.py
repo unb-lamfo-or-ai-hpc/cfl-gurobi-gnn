@@ -47,10 +47,22 @@ def build_heterodata(
     model_features: ModelFeatures, variable_features: VariableFeatures, constr_features: ConstraintFeatures,
     edge_indices: np.ndarray, edge_features: np.ndarray, sol_vector: np.ndarray,
     lp_vector_root: np.ndarray, mip_gap: float, exec_time: float, is_optimal: bool,
-    incumbent_node: int, instance_name: str, metadata: dict
+    incumbent_node: int, instance_name: str, metadata: dict,
+    *, strict: bool = False, edge_layout: str = "auto"
 ) -> Optional[HeteroData]:
     try:
         graph_data = HeteroData()
+        if strict:
+            arrays = {"objective": variable_features.obj_coeffs,
+                      "lower_bounds": variable_features.lower_bounds, "upper_bounds": variable_features.upper_bounds,
+                      "rhs": constr_features.rhs_values, "coefficients": edge_features}
+            if any(np.isnan(np.asarray(value)).any() for value in arrays.values()):
+                raise ValueError("strict graph inputs contain NaN")
+            graph_data.numeric_encoding_audit = {
+                name: {"infinite_entries": int(np.isinf(value).sum()),
+                       "finite_clipped_entries": int((np.isfinite(value) & (np.abs(value) > 60000)).sum())}
+                for name, value in arrays.items()}
+            graph_data.edge_layout_contract = edge_layout
 
         # 1. Variable Features
         obj_tensor = sanitize_array(variable_features.obj_coeffs, apply_log_scale=True)
@@ -60,6 +72,9 @@ def build_heterodata(
         is_bin  = torch.FloatTensor((variable_features.types == 'B').astype(float)).unsqueeze(-1)
         is_int  = torch.FloatTensor((variable_features.types == 'I').astype(float)).unsqueeze(-1)
 
+        if strict and (len(lp_vector_root) != model_features.num_vars
+                       or not np.isfinite(lp_vector_root).all()):
+            raise ValueError("strict graphs require a finite, aligned real root vector")
         if len(lp_vector_root) != model_features.num_vars:
             lp_vector_root = np.zeros(model_features.num_vars)
         lp_tensor = sanitize_array(lp_vector_root, apply_log_scale=False)
@@ -80,7 +95,17 @@ def build_heterodata(
         idx_b = torch.LongTensor(edge_indices[1])
         edge_weight = sanitize_array(edge_features, apply_log_scale=True)
 
-        if idx_a.max() < model_features.num_constrs and idx_b.max() < model_features.num_vars:
+        if edge_layout not in ("auto", "constraint_variable", "variable_constraint"):
+            raise ValueError("unknown edge layout")
+        if strict and edge_layout == "auto":
+            raise ValueError("strict graphs require an explicit edge layout")
+        if edge_layout == "constraint_variable":
+            cons_idx, var_idx = idx_a, idx_b
+        elif edge_layout == "variable_constraint":
+            var_idx, cons_idx = idx_a, idx_b
+        elif idx_a.numel() == 0:
+            cons_idx, var_idx = idx_a, idx_b
+        elif idx_a.max() < model_features.num_constrs and idx_b.max() < model_features.num_vars:
             cons_idx = idx_a
             var_idx  = idx_b
         elif idx_b.max() < model_features.num_constrs and idx_a.max() < model_features.num_vars:
@@ -90,7 +115,11 @@ def build_heterodata(
             cons_idx = idx_a
             var_idx  = idx_b
 
-        edge_index_v2c = torch.stack([var_idx, cons_idx], dim=0)  
+        if strict and (len(var_idx) != len(edge_features) or (len(var_idx) and (
+                var_idx.min() < 0 or var_idx.max() >= model_features.num_vars
+                or cons_idx.min() < 0 or cons_idx.max() >= model_features.num_constrs))):
+            raise ValueError("edge indices violate the mathematical matrix shape")
+        edge_index_v2c = torch.stack([var_idx, cons_idx], dim=0)
         edge_index_c2v = torch.stack([cons_idx, var_idx], dim=0)  
 
         graph_data['variable', 'rev_coef', 'constraint'].edge_index = edge_index_v2c

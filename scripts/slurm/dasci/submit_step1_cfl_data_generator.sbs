@@ -7,12 +7,12 @@
 #SBATCH --time=08:00:00
 #SBATCH --output=slurm_cfl_data_%j.out
 
-echo "=== Inicializando Construcción de Dataset GNN (V2 DGX) ==="
+echo "=== Initializing the legacy GNN dataset workflow ==="
 EXEC_DIR="/raid/vrcelestino/data/cfl-gurobi-gnn"
 cd "$EXEC_DIR"
 export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
 
-# Carga de credenciales de Gurobi
+# Configure the local Gurobi credentials.
 export GRB_LICENSE_FILE="/raid/vrcelestino/data/gurobi.lic"
 export WLSACCESSID=$(grep WLSACCESSID $GRB_LICENSE_FILE | cut -d '=' -f 2)
 export WLSSECRET=$(grep WLSSECRET $GRB_LICENSE_FILE | cut -d '=' -f 2)
@@ -21,16 +21,17 @@ export LICENSEID=$(grep LICENSEID $GRB_LICENSE_FILE | cut -d '=' -f 2 | tr -d '"
 eval "$(conda shell.bash hook)"
 conda activate tfm_env 
 
-echo "=== Ejecutando Extracción Avanzada de Gurobi ==="
+echo "=== Running Gurobi collection ==="
 
 CATEGORIA="CFL_medium_instance"
 INICIO=7
 FIN=15
 TIEMPO_GUROBI=3600
 
-echo "Lanzando lote controlado para: ${CATEGORIA} del índice ${INICIO} al ${FIN}"
+echo "Launching category ${CATEGORIA}, indices ${INICIO} to ${FIN}"
 
-# Ejecución en una sola línea (A prueba de fallos)
+# Invoke the legacy collection entry point.
 srun python3 -m cfl_gnn.cli.collect_incumbents --categories $CATEGORIA --start_idx $INICIO --end_idx $FIN --time_limit $TIEMPO_GUROBI
 
-echo "=== Job Finalizado ==="
+echo "=== Job finished ==="
+

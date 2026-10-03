@@ -1,0 +1,23 @@
+{
+  "allowed_time_limit_seconds": [
+    3600,
+    14400
+  ],
+  "campaign_id": "cfl_original_parent_collection_v1",
+  "objective_sense": "MINIMIZE",
+  "planned_parent_population": 90,
+  "priority_solver": "gurobi",
+  "schema_version": 1,
+  "scip_role": "matched_comparison_only",
+  "solve_budget": {
+    "node_limit": 1000000,
+    "seed": 42,
+    "solver_profile": "default",
+    "threads": 1,
+    "time_limit_seconds": 3600
+  },
+  "solver_order": [
+    "gurobi",
+    "scip"
+  ]
+}

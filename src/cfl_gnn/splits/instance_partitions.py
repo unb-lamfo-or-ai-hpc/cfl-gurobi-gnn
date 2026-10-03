@@ -28,7 +28,7 @@ from cfl_gnn.splits.instance_folds import (
 
 
 ROLES = ("train", "validation", "test")
-LABEL_POLICIES = ("optimal_only", "all_available")
+LABEL_POLICIES = ("optimal_only", "gap_le_10pct", "all_available")
 KNOWN_GAP_BANDS = (
     "optimal_tolerance",
     "gap_le_10pct",
@@ -145,7 +145,7 @@ class InstanceDatasetAudit:
             )
         if self.label_policy == "all_available" and self.excluded:
             warnings.append("unknown_gap_labels_excluded")
-        if self.label_policy == "all_available" and any(
+        if self.label_policy != "optimal_only" and any(
             item.mip_gap_band != "optimal_tolerance" for item in self.eligible
         ):
             warnings.append("non_optimal_labels_development_only")
@@ -292,6 +292,8 @@ def _read_graph_contract(
 def _policy_accepts(mip_gap_quality: str, label_policy: str) -> bool:
     if label_policy == "optimal_only":
         return mip_gap_quality == "optimal_tolerance"
+    if label_policy == "gap_le_10pct":
+        return mip_gap_quality in ("optimal_tolerance", "gap_le_10pct")
     return mip_gap_quality in KNOWN_GAP_BANDS
 
 

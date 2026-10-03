@@ -1,0 +1,43 @@
+{
+  "development_only": true,
+  "common_reference_selection_order": [
+    "minimum_objective",
+    "minimum_mip_gap",
+    "minimum_execution_time",
+    "solver_name"
+  ],
+  "fallback_evidence": {
+    "execution_integrity_passed": 3,
+    "labels_admissible": 1,
+    "labels_inadmissible": 2,
+    "rescue_gate_status": "inconclusive",
+    "tasks_failed": 0,
+    "tasks_planned": 3
+  },
+  "maximum_admissible_relative_gap": 0.1,
+  "parents": [
+    {
+      "difficulty": "easy",
+      "role": "test",
+      "source_instance_id": "CFL_easy_instance_0"
+    },
+    {
+      "difficulty": "easy",
+      "role": "validation",
+      "source_instance_id": "CFL_easy_instance_1"
+    },
+    {
+      "difficulty": "easy",
+      "role": "train",
+      "source_instance_id": "CFL_easy_instance_2"
+    }
+  ],
+  "schema_version": 1,
+  "selection_policy": "precommitted_easy_stratum_fallback_after_medium_label_incompleteness_v1",
+  "slice_id": "mvp_easy_only_vertical_slice_v1",
+  "solvers": [
+    "gurobi",
+    "scip"
+  ],
+  "source_slice_id": "mvp_vertical_slice_easy_medium_v1"
+}

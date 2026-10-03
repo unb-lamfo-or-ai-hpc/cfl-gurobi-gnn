@@ -239,6 +239,8 @@ def main():
 
         # Load original model
         model_gp = gp.read(args.lp_file, env=env)
+        model_gp.ModelSense = GRB.MINIMIZE
+        model_gp.update()
 
         # Solve continuous relaxation
         relaxed = model_gp.relax()

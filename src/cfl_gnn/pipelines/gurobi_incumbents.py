@@ -598,7 +598,7 @@ def process_single_instance(
     lp_file_path: str,
     output_dir: str,
     args: argparse.Namespace,
-    env: gp.Env,  # ← Added this parameter
+    env: gp.Env,  # Explicit environment keeps license and parameter scope local.
     logger: logging.Logger
 ) -> Dict[str, Any]:
     """
@@ -788,6 +788,19 @@ def process_single_instance(
     
     #finally:
     #    env.dispose()
+
+
+def solve_parent_mip(request: Dict[str, Any]) -> Dict[str, Any]:
+    """Run the canonical named-parent Gurobi solve contract.
+
+    The production batch collector remains preserved in this module. The
+    parent-population orchestrator uses this small adapter so both entry points
+    retain one Gurobi backend namespace while the new artifact contract is
+    validated independently.
+    """
+    from cfl_gnn.solvers.gurobi_solution import solve_named_mip
+
+    return solve_named_mip(request)
 
 
 # ============================================================

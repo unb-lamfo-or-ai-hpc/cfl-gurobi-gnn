@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mvp_pipeline_reproducibility_v1",
+  "expected_stages": [
+    "dataset",
+    "training",
+    "evaluation",
+    "benchmark",
+    "comparison"
+  ],
+  "expected_arms": [
+    "gurobi_original",
+    "gurobi_incumbent_augmented",
+    "scip_original",
+    "scip_incumbent_augmented"
+  ],
+  "required_gate_status": "passed",
+  "artifact_policy": "sha256_path_sanitized_ledger",
+  "contract_policy": "fail_closed_end_to_end_chain",
+  "arm_selection_performed": false,
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}

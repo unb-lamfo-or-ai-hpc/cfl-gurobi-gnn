@@ -1,0 +1,37 @@
+% Original MIT-licensed Quarto glue for the unmodified Elsevier class.
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx,booktabs,longtable,array,calc}
+\usepackage{orcidlink}
+\usepackage{hyperref}
+\hypersetup{hidelinks,pdftitle={$title$}}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\setcitestyle{authoryear,round}
+\journal{Computers \& Operations Research}
+\begin{document}
+\begin{frontmatter}
+\title{$title$}
+$for(by-author)$
+\author[$for(by-author.affiliations)$$by-author.affiliations.id$$sep$,$endfor$]{$by-author.name.literal$$if(by-author.orcid)$\,\orcidlink{$by-author.orcid$}$endif$}
+$if(by-author.email)$\ead{$by-author.email$}$endif$
+$endfor$
+$for(by-affiliation)$
+\address[$by-affiliation.id$]{$by-affiliation.name$}
+$endfor$
+\begin{abstract}
+$abstract$
+\end{abstract}
+\begin{keyword}
+$for(keywords)$$keywords$$sep$\sep $endfor$
+\end{keyword}
+\end{frontmatter}
+$body$
+\bibliographystyle{elsarticle-harv}
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+\end{document}

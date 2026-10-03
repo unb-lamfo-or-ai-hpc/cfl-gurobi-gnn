@@ -1,0 +1,63 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_parents
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=04:30:00
+#SBATCH --output=slurm_cfl_parents_%A_%a.out
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from the repository root or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${PARENT_COLLECTION_PLAN_DIR:?Set PARENT_COLLECTION_PLAN_DIR}"
+: "${PARENT_COLLECTION_RUN_ROOT:?Set PARENT_COLLECTION_RUN_ROOT}"
+: "${BASE_SOURCE_DIR:?Set BASE_SOURCE_DIR to data/raw/MILPBench/CFL}"
+: "${SOLVER:?Set SOLVER to gurobi or scip}"
+: "${SLURM_ARRAY_TASK_ID:?Submit this script with --array}"
+
+if [[ "${SOLVER}" != "gurobi" && "${SOLVER}" != "scip" ]]; then
+    echo "[ERROR] SOLVER must be gurobi or scip" >&2
+    exit 2
+fi
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+
+if [[ "${SOLVER}" == "gurobi" ]]; then
+    GUROBI_LICENSE_FILE="${GUROBI_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+    if [[ ! -s "${GUROBI_LICENSE_FILE}" ]]; then
+        echo "[ERROR] Gurobi license is missing; set GUROBI_LICENSE_FILE" >&2
+        exit 2
+    fi
+    export GRB_LICENSE_FILE="${GUROBI_LICENSE_FILE}"
+    python3 -c 'import gurobipy, pyarrow'
+else
+    python3 -c 'import pyarrow, pyscipopt'
+fi
+
+ARGS=(--resume)
+if [[ "${OVERWRITE:-0}" == "1" ]]; then
+    ARGS+=(--overwrite)
+fi
+
+echo "[INFO] solver=${SOLVER} | task=${SLURM_ARRAY_TASK_ID}"
+echo "[INFO] Gurobi is the priority phase; submit SCIP with afterok on the Gurobi array"
+
+srun python3 -m cfl_gnn.cli.run_parent_collection_task \
+    --plan_dir "${PARENT_COLLECTION_PLAN_DIR}" \
+    --solver "${SOLVER}" \
+    --task_index "${SLURM_ARRAY_TASK_ID}" \
+    --base_source_dir "${BASE_SOURCE_DIR}" \
+    --run_root "${PARENT_COLLECTION_RUN_ROOT}" \
+    --experiment_config "${EXEC_DIR}/configs/experiments/mvp_partial_v1.json" \
+    "${ARGS[@]}"

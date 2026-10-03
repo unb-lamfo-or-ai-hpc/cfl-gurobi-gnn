@@ -1,12 +1,4 @@
-# PyTorch CUDA 11.8 build — needed for the +cu118 wheels pinned below.
---extra-index-url https://download.pytorch.org/whl/cu118
-
-gurobipy
-pandas
-pyarrow
-tqdm
-matplotlib==3.9.0
-numpy==1.23.3
-scikit-learn==1.2.2
-torch==2.0.0+cu118
-torch-geometric==2.2.0
+# Compatibility entry point for tools that still expect requirements.txt.
+# Runtime requirements are declared canonically in pyproject.toml.
+# Install a CUDA-compatible PyTorch build before this file on GPU hosts.
+-e .[test,projection]

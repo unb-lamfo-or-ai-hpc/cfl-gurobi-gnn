@@ -1,7 +1,9 @@
 """
 Neural Diving — Serial Training Script (Single-GPU) v5
 ======================================================
-Multi-graph paradigm: each incumbent solution is an independent training graph.
+Historical incumbent-conditioned graph interface; observations from one parent
+are not independent experimental units. Current confirmation uses parent-aware
+manifests through gasse_reconnected, not this module's random-split CLI.
 
 V5 Updates:
   - F1, Precision, Recall and Accuracy tracked comprehensively.
@@ -26,6 +28,7 @@ from torch_geometric.loader import DataLoader
 
 from cfl_gnn.graph.dataset import NeuralDivingDataset
 from cfl_gnn.models.gasse import GasseGNN
+from cfl_gnn.training.binary_contract import binary_targets
 from cfl_gnn.paths import PROJECT_ROOT
 
 project_root = str(PROJECT_ROOT)
@@ -48,8 +51,7 @@ set_global_seed(42)
 def compute_pos_weight(loader: DataLoader, device: torch.device) -> torch.Tensor:
     total_pos, total_neg = 0, 0
     for batch in loader:
-        mask    = batch['variable'].is_discrete.bool()
-        labels  = batch['variable'].y[mask]
+        mask, labels = binary_targets(batch)
         total_pos += (labels > 0.5).sum().item()
         total_neg += (labels <= 0.5).sum().item()
 
@@ -85,7 +87,7 @@ def train_loop(model, loader, optimizer, loss_fn, device, args):
             edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
             binary_mask=target_mask, edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
-        targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
+        target_mask, targets = binary_targets(batch)
         
         loss = loss_fn(preds, targets)
         loss.backward()
@@ -118,7 +120,7 @@ def eval_loop(model, loader, loss_fn, device, args):
             edge_v2c=batch['variable', 'rev_coef', 'constraint'].edge_index,
             binary_mask=target_mask, edge_attr=batch['variable', 'rev_coef', 'constraint'].edge_attr
         )
-        targets = torch.clamp(batch['variable'].y[target_mask], min=0.0, max=1.0)
+        target_mask, targets = binary_targets(batch)
         
         loss = loss_fn(preds, targets)
         preds_bin = (preds > 0).float()
@@ -206,14 +208,14 @@ def main():
             break
 
     # ==========================================
-    # WARM-START (Reinitiate from checkpoint)
+    # Reload model weights (optimizer state is not restored).
     # ==========================================
     model_checkpoint = os.path.join(output_dir, "best_model.pt")
     if os.path.exists(model_checkpoint):
-        logger.info(f"Checkpoint encontrado en {model_checkpoint}. Cargando pesos para reanudar...")
+        logger.info(f"Checkpoint found at {model_checkpoint}. Loading model weights...")
         model.load_state_dict(torch.load(model_checkpoint, map_location=device, weights_only=True))
     else:
-        logger.info("No se encontró checkpoint previo. Iniciando entrenamiento desde cero.")
+        logger.info("No previous checkpoint found. Initializing a new training run.")
     # ==========================================
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -246,7 +248,7 @@ def main():
             
             acc, prec, rec, f1 = calc_metrics(tp, tn, fp, fn)
             
-            # Almacenar métricas
+            # Retain epoch-level metrics.
             hist_train_loss.append(train_loss)
             hist_val_loss.append(val_loss if val_loader else train_loss)
             hist_acc.append(acc)
@@ -276,7 +278,7 @@ def main():
             log_file.write(f"{epoch+1},{train_loss},{val_loss},{acc},{f1},{prec},{rec}\n")
             log_file.flush()
 
-            # --- GENERACIÓN DEL DASHBOARD VISUAL (2x2) ---
+            # Generate the four-panel learning diagnostic.
             fig, axes = plt.subplots(2, 2, figsize=(14, 10))
             epochs_range = range(1, len(hist_train_loss) + 1)
             
@@ -319,7 +321,7 @@ def main():
                 logger.info(f"[Early Stopping] Triggered at epoch {epoch+1}")
                 break
 
-    # --- GENERACIÓN DEL JSON DE RESUMEN ---
+    # Write the experiment summary.
     summary = {
         "experiment_name": args.experiment_name,
         "hyperparameters": {
@@ -332,8 +334,9 @@ def main():
     with open(os.path.join(output_dir, "experiment_summary.json"), 'w') as f:
         json.dump(summary, f, indent=4)
         
-    logger.info(f"Dashboard y JSON de resumen guardados en: {output_dir}")
+    logger.info(f"Dashboard and JSON summary saved to: {output_dir}")
     logger.info("Serial training complete.")
 
 if __name__ == "__main__":
     main()
+

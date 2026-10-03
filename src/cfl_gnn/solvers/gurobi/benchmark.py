@@ -380,6 +380,8 @@ def process_single_instance(lp_file_path: str,
         # ------------------------------------------------------------------
         print("  [1/6] Reading model...")
         model = gp.read(lp_file_path, env=env)
+        model.ModelSense = GRB.MINIMIZE
+        model.update()
 
         # ------------------------------------------------------------------
         # Step 2: Extract and save original model features

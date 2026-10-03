@@ -1,0 +1,59 @@
+#!/bin/bash
+#SBATCH --job-name=mvp_lb_generate
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=00:30:00
+#SBATCH --output=slurm_mvp_local_branching_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
+DATA_ROOT="/raid/vrcelestino/data/cfl-gurobi-gnn/data"
+
+: "${SOLVER:?Set SOLVER to gurobi or scip}"
+: "${PARENT_MIP:?Set PARENT_MIP to the original parent LP/MPS}"
+: "${INCUMBENT_ARTIFACT:?Set INCUMBENT_ARTIFACT}"
+: "${INCUMBENT_FORMAT:?Set INCUMBENT_FORMAT}"
+: "${PARENT_INSTANCE_ID:?Set PARENT_INSTANCE_ID}"
+: "${CATEGORY:?Set CATEGORY}"
+: "${DIFFICULTY:?Set DIFFICULTY}"
+: "${FOLD:?Set FOLD}"
+
+EXPERIMENT_NAME="${EXPERIMENT_NAME:-mvp_lb_${SOLVER}_${SLURM_JOB_ID}}"
+OUTPUT_DIR="${DATA_ROOT}/intermediate/local_branching_variants/${EXPERIMENT_NAME}"
+CONFIG="${CONFIG:-${EXEC_DIR}/configs/experiments/mvp_partial_v1.json}"
+
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env
+
+if [[ "$SOLVER" == "gurobi" ]]; then
+    export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+    python3 -c 'import gurobipy'
+elif [[ "$SOLVER" == "scip" ]]; then
+    python3 -c 'import pyscipopt'
+else
+    echo "SOLVER must be gurobi or scip" >&2
+    exit 2
+fi
+
+INDEX_ARGS=()
+if [[ -n "${INCUMBENT_INDEX:-}" ]]; then
+    INDEX_ARGS=(--incumbent_index "$INCUMBENT_INDEX")
+fi
+
+srun python3 -m cfl_gnn.cli.generate_local_branching_variants \
+    --solver "$SOLVER" \
+    --parent_mip "$PARENT_MIP" \
+    --incumbent_artifact "$INCUMBENT_ARTIFACT" \
+    --incumbent_format "$INCUMBENT_FORMAT" \
+    "${INDEX_ARGS[@]}" \
+    --parent_instance_id "$PARENT_INSTANCE_ID" \
+    --category "$CATEGORY" \
+    --difficulty "$DIFFICULTY" \
+    --fold "$FOLD" \
+    --config "$CONFIG" \
+    --output_dir "$OUTPUT_DIR"

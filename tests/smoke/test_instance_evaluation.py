@@ -28,12 +28,12 @@ def _record(source_instance_id: str, *, role: str, fold: int) -> InstanceGraphRe
     )
 
 
-def _training_plan() -> InstanceTrainingPlan:
+def _training_plan(*, label_policy: str = "optimal_only") -> InstanceTrainingPlan:
     audit = InstanceDatasetAudit(
         dataset_root=Path("/private/root"),
         manifest_size=90,
         rotation=0,
-        label_policy="optimal_only",
+        label_policy=label_policy,
         graph_hashes_verified=True,
         discovered_graphs=3,
         eligible=(
@@ -60,7 +60,7 @@ def _write_contract_files(tmp_path: Path, plan: InstanceTrainingPlan):
         "contract_sha256": plan.contract_sha256,
         "checkpoint_sha256": sha256_file(checkpoint_path),
         "rotation": 0,
-        "label_policy": "optimal_only",
+        "label_policy": plan.audit.label_policy,
         "development_only": True,
         "test_partition_usage": "held_out_not_loaded_during_training",
         "hyperparameters": {
@@ -101,6 +101,30 @@ def test_evaluation_plan_binds_saved_and_current_contracts(
     assert summary["threshold_source"] == "fixed_precommitted_not_test_calibrated"
     assert summary["test_partition_usage"] == "held_out_evaluation_only"
     assert "/private/root" not in json.dumps(summary)
+
+
+def test_evaluation_accepts_quality_controlled_gap_policy(
+    tmp_path: Path, monkeypatch
+) -> None:
+    training_plan = _training_plan(label_policy="gap_le_10pct")
+    plan_path, experiment_path, checkpoint_path = _write_contract_files(
+        tmp_path, training_plan
+    )
+    monkeypatch.setattr(
+        evaluation,
+        "build_instance_training_plan",
+        lambda *args, **kwargs: training_plan,
+    )
+
+    plan = evaluation.build_instance_evaluation_plan(
+        tmp_path / "graphs",
+        tmp_path / "manifest.csv",
+        plan_path,
+        experiment_path,
+        checkpoint_path,
+    )
+
+    assert plan.training_plan.audit.label_policy == "gap_le_10pct"
 
 
 def test_evaluation_rejects_contract_mismatch(tmp_path: Path, monkeypatch) -> None:

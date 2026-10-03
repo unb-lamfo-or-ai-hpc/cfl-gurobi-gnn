@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "license": "MIT",
+  "evidence_kind": "user_supplied_diagnostic_extract_not_independent_raw_artifact_revalidation",
+  "as_of": "2026-09-13",
+  "campaign_contract_sha256": "27273b1baf3f46e27b229055cfdb1ca41ea2018ac40a7952e0f780dda9da0f7a",
+  "source_aggregate": {
+    "relative_path": "confirmation_execution_report.json",
+    "sha256": "79ac71d1554b97e307a1a08ad9cb6a9ddf08af452d56e3b59fec0bcf901b9c62"
+  },
+  "label_index": {
+    "relative_path": "confirmation_label_index.jsonl",
+    "sha256": "70c296d96847a11aac9302bd47f47a95d59b658048e8eee6da5a8bbc69fd87e5"
+  },
+  "accepted_artifact_hashes_valid_reported": true,
+  "cohort": {
+    "planned": 42,
+    "planned_easy": 30,
+    "planned_medium": 12,
+    "planned_hard": 0,
+    "admitted": 39,
+    "admitted_easy": 30,
+    "admitted_medium": 9,
+    "admitted_hard": 0,
+    "initial_roles": {
+      "train": 24,
+      "validation": 10,
+      "test": 8
+    },
+    "revised_roles": {
+      "test": 8,
+      "train": 23,
+      "validation": 8
+    }
+  },
+  "rejected": [
+    {
+      "source_instance_id": "CFL_medium_instance_3",
+      "role": "train",
+      "repairs": [
+        {
+          "artifact_hashes": {
+            "incumbents": true,
+            "solution": true,
+            "variable_order": true
+          },
+          "best_bound": 4.750326291582291,
+          "budget_seconds": 3600,
+          "execution_time_seconds": 3600.0907061100006,
+          "failed_checks": [],
+          "mip_gap_relative": 0.17268458802449638,
+          "missing_checks": [],
+          "recorded_report_hash_match": true,
+          "report": {
+            "relative_path": "repair_runs/budget_3600s/gurobi/CFL_medium_instance/CFL_medium_instance_3/gurobi_parent_solve_report.json",
+            "sha256": "93e44a8f07a37a2afc6115abfb62932315b545d9f4e538abd611fee0f26fbaf7"
+          },
+          "reported_label_eligible": false,
+          "right_censored": true,
+          "solution_objective": 5.741856398201543,
+          "solve_status": "timelimit",
+          "status": "gap_above_policy_or_invalid",
+          "time_regions": {
+            "data_read_wall_time_seconds": 0.07663979288190603,
+            "model_build_wall_time_seconds": 7.226885218638927,
+            "model_optimize_wall_time_seconds": 3600.0909808729775,
+            "total_wall_time_seconds": 3622.7518261163495
+          }
+        },
+        {
+          "artifact_hashes": {
+            "incumbents": true,
+            "solution": true,
+            "variable_order": true
+          },
+          "best_bound": 4.978942405502692,
+          "budget_seconds": 14400,
+          "execution_time_seconds": 14400.127872943878,
+          "failed_checks": [],
+          "mip_gap_relative": 0.12880374128904942,
+          "missing_checks": [],
+          "recorded_report_hash_match": true,
+          "report": {
+            "relative_path": "repair_runs/budget_14400s/gurobi/CFL_medium_instance/CFL_medium_instance_3/gurobi_parent_solve_report.json",
+            "sha256": "b320f32610e77e2c6ccc820b82f1a0e4f40b9ebb8b08179307cce33b07b2cd99"
+          },
+          "reported_label_eligible": false,
+          "right_censored": true,
+          "solution_objective": 5.715064034904938,
+          "solve_status": "timelimit",
+          "status": "gap_above_policy_or_invalid",
+          "time_regions": {
+            "data_read_wall_time_seconds": 0.07693641167134047,
+            "model_build_wall_time_seconds": 7.137548537924886,
+            "model_optimize_wall_time_seconds": 14400.128191350028,
+            "total_wall_time_seconds": 14422.833339326084
+          }
+        }
+      ]
+    },
+    {
+      "source_instance_id": "CFL_medium_instance_5",
+      "role": "validation",
+      "repairs": [
+        {
+          "artifact_hashes": {
+            "incumbents": true,
+            "solution": true,
+            "variable_order": true
+          },
+          "best_bound": 4.498078205952322,
+          "budget_seconds": 3600,
+          "execution_time_seconds": 3600.0887110233307,
+          "failed_checks": [],
+          "mip_gap_relative": 0.1530256815136934,
+          "missing_checks": [],
+          "recorded_report_hash_match": true,
+          "report": {
+            "relative_path": "repair_runs/budget_3600s/gurobi/CFL_medium_instance/CFL_medium_instance_5/gurobi_parent_solve_report.json",
+            "sha256": "cce1f54ba45fa961ab11cb4284bcc8e06479c714c5b9ded58206532791fd0a6e"
+          },
+          "reported_label_eligible": false,
+          "right_censored": true,
+          "solution_objective": 5.310761032272131,
+          "solve_status": "timelimit",
+          "status": "gap_above_policy_or_invalid",
+          "time_regions": {
+            "data_read_wall_time_seconds": 0.0776728680357337,
+            "model_build_wall_time_seconds": 7.3320676372386515,
+            "model_optimize_wall_time_seconds": 3600.0889809993096,
+            "total_wall_time_seconds": 3622.5767939891666
+          }
+        },
+        {
+          "artifact_hashes": {
+            "incumbents": true,
+            "solution": true,
+            "variable_order": true
+          },
+          "best_bound": 4.541308042672579,
+          "budget_seconds": 14400,
+          "execution_time_seconds": 14400.131628990173,
+          "failed_checks": [],
+          "mip_gap_relative": 0.1357897259079335,
+          "missing_checks": [],
+          "recorded_report_hash_match": true,
+          "report": {
+            "relative_path": "repair_runs/budget_14400s/gurobi/CFL_medium_instance/CFL_medium_instance_5/gurobi_parent_solve_report.json",
+            "sha256": "cb5c8c8457c9c3fdca0eb05fe37ee7fd8cd99cfcc3b20c9d49a11b222d4fd220"
+          },
+          "reported_label_eligible": false,
+          "right_censored": true,
+          "solution_objective": 5.254864676821445,
+          "solve_status": "timelimit",
+          "status": "gap_above_policy_or_invalid",
+          "time_regions": {
+            "data_read_wall_time_seconds": 0.07765978807583451,
+            "model_build_wall_time_seconds": 7.166191000957042,
+            "model_optimize_wall_time_seconds": 14400.131890862249,
+            "total_wall_time_seconds": 14422.704401796218
+          }
+        }
+      ]
+    },
+    {
+      "source_instance_id": "CFL_medium_instance_6",
+      "role": "validation",
+      "repairs": [
+        {
+          "artifact_hashes": {
+            "incumbents": true,
+            "solution": true,
+            "variable_order": true
+          },
+          "best_bound": 4.63485947373469,
+          "budget_seconds": 3600,
+          "execution_time_seconds": 3600.499522924423,
+          "failed_checks": [],
+          "mip_gap_relative": 0.18442310686232968,
+          "missing_checks": [],
+          "recorded_report_hash_match": true,
+          "report": {
+            "relative_path": "repair_runs/budget_3600s/gurobi/CFL_medium_instance/CFL_medium_instance_6/gurobi_parent_solve_report.json",
+            "sha256": "217bef351dba5a292def1d6fbf181c2b7e2452645e22b21e99fe07e7ae56e14a"
+          },
+          "reported_label_eligible": false,
+          "right_censored": true,
+          "solution_objective": 5.682921515718225,
+          "solve_status": "timelimit",
+          "status": "gap_above_policy_or_invalid",
+          "time_regions": {
+            "data_read_wall_time_seconds": 0.07690324960276484,
+            "model_build_wall_time_seconds": 7.101535222958773,
+            "model_optimize_wall_time_seconds": 3600.4997695889324,
+            "total_wall_time_seconds": 3622.7844426170923
+          }
+        },
+        {
+          "artifact_hashes": {
+            "incumbents": true,
+            "solution": true,
+            "variable_order": true
+          },
+          "best_bound": 4.749860767417998,
+          "budget_seconds": 14400,
+          "execution_time_seconds": 14400.104592084885,
+          "failed_checks": [],
+          "mip_gap_relative": 0.1372853082318982,
+          "missing_checks": [],
+          "recorded_report_hash_match": true,
+          "report": {
+            "relative_path": "repair_runs/budget_14400s/gurobi/CFL_medium_instance/CFL_medium_instance_6/gurobi_parent_solve_report.json",
+            "sha256": "33bbc5fbc81ec72d8199753d334ebd6c39bd21d2f3f37e00dad52b748ef244d9"
+          },
+          "reported_label_eligible": false,
+          "right_censored": true,
+          "solution_objective": 5.505714476339024,
+          "solve_status": "timelimit",
+          "status": "gap_above_policy_or_invalid",
+          "time_regions": {
+            "data_read_wall_time_seconds": 0.07574780099093914,
+            "model_build_wall_time_seconds": 7.006057691760361,
+            "model_optimize_wall_time_seconds": 14400.10485601984,
+            "total_wall_time_seconds": 14422.072371802293
+          }
+        }
+      ]
+    }
+  ],
+  "training": {
+    "job_id": 3307,
+    "status": "running_at_last_user_observation",
+    "elapsed_at_observation": "08:12:14",
+    "epochs_completed": null,
+    "test_metrics": null
+  },
+  "scientific_reporting_eligible": false
+}

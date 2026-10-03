@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr59_audit
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --time=00:20:00
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export OMP_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+
+srun python3 -m cfl_gnn.cli.run_pr59_heldout_guidance audit \
+    --plan_dir "${PR59_PLAN_DIR:?}" \
+    --run_root "${PR59_RUN_ROOT:?}" \
+    --output_dir "${PR59_AUDIT_DIR:?}"

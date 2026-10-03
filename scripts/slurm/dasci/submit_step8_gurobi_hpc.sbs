@@ -36,7 +36,7 @@ MIPFOCUS=0        # 0: Auto, 1: Feasibility, 2: Optimality, 3: Bound
 PROBE_TIME=30               # Probe solve time limit (seconds)
 COMPLEXITY_THRESHOLD=500    # Node count threshold: easy vs. hard
 
-# Warm-start configuration (v2: directory-based lookup)
+# Variable-hint configuration (directory-based lookup; not a MIP start)
 # Leave empty "" to run without hints (baseline benchmark)
 HINT_DIR="data/hints"       # Directory containing *.hnt files
                              # Runner auto-matches by instance name

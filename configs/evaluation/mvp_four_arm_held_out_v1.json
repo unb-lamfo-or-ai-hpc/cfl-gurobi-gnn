@@ -1,0 +1,28 @@
+{
+  "arm_selection_policy": "all_four_arms_forwarded_without_test_selection",
+  "development_only": true,
+  "experiment_stage": "engineering_held_out_evaluation",
+  "hint_policy": {
+    "include_all_discrete_variables": true,
+    "maximum_priority": 100,
+    "priority_formula": "floor_absolute_probability_distance_from_half_times_200",
+    "solver_neutral": true
+  },
+  "metrics": {
+    "secondary_gnn_diagnostics": [
+      "unweighted_bce_per_variable",
+      "f1_score",
+      "precision",
+      "recall"
+    ],
+    "research_primary_outcomes_reserved_for_solver_gate": [
+      "mip_gap_relative",
+      "execution_time_seconds"
+    ]
+  },
+  "probability_threshold": 0.5,
+  "protocol_id": "mvp_four_arm_held_out_v1",
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "threshold_source": "fixed_precommitted_not_test_calibrated"
+}

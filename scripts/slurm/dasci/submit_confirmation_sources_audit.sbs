@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_42_audit
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=8G
+#SBATCH --time=00:20:00
+#SBATCH --output=slurm_cfl_42_audit_%j.out
+
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "${EXEC_DIR}"
+test -f pyproject.toml
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+srun python3 -m cfl_gnn.cli.run_confirmation_cohort aggregate \
+    --campaign_dir "${CONFIRMATION_EXECUTION_DIR:?set campaign directory}"

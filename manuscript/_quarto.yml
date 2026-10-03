@@ -1,0 +1,38 @@
+project:
+  type: manuscript
+  output-dir: _manuscript
+  render: [index.qmd]
+  resources:
+    - LICENSE
+    - evidence-status.json
+    - results/current/**
+    - figures/**
+    - tables/**
+    - highlights.txt
+manuscript:
+  article: index.qmd
+  notebooks: []
+  code-links: false
+  meca-bundle: false
+execute:
+  enabled: false
+  freeze: true
+lang: en
+license: MIT
+bibliography: references.bib
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+  pdf:
+    template: _extensions/elsevier/template.tex
+    cite-method: natbib
+    biblio-style: elsarticle-harv
+    pdf-engine: pdflatex
+    keep-tex: true
+    number-sections: true
+    fig-pos: htbp
+website:
+  site-url: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/
+  description: Class-aware graph neural partial starts with controlled descriptive optimization evidence.

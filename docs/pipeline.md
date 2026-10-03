@@ -1,17 +1,26 @@
-# Neural Diving GNN Pipeline — Technical Reference
+# Legacy Neural Diving GNN Pipeline — Historical Reference
+
+> Historical scope: this document describes the earlier incumbent-conditioned
+> workflow. It is not the runbook for the recovered Gurobi-authoritative
+> confirmation pipeline. In particular, historical gaps, graph counts, random
+> splits, and root-feature fallback rules must not be adopted as current defaults.
+> Start with the [documentation index](README.md) and
+> [current architecture](architecture.md).
+
 ## Data Transformation, Graph Construction, and GNN Training on MILPBench CFL Instances
 
-This document is the complete technical specification for the `cfl-gurobi-gnn`
-pipeline.  It is intended for developers, PhD supervisors, and reproducibility
+This document records the earlier technical specification for the `cfl-gurobi-gnn`
+pipeline. It is intended for developers, supervisors, and reproducibility
 reviewers who need full details on every CLI argument, generated artifact, feature
 layout, and deployment configuration.
 
 For a project overview and quick-start guide, see the root
 [`README.md`](../README.md).
 
-> All code targets **Gurobi 13.0** and **PyTorch Geometric**.
-> All scripts are production-ready and have been validated on a DGX cluster
-> with 8 x A100 GPUs.
+> The historical route uses Gurobi and PyTorch Geometric.
+> Consult individual receipts for the actual solver version, accelerator,
+> population, and validation scope. No blanket production-readiness or
+> hardware-parity claim is made here.
 
 ---
 

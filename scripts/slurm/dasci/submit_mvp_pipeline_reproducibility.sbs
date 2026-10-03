@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=mvp_repro
+#SBATCH --output=slurm_mvp_repro_%j.out
+#SBATCH --partition=batch
+#SBATCH --account=pdi
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
+#SBATCH --time=00:15:00
+
+set -euo pipefail
+
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:-}}"
+if [[ -z "${EXEC_DIR}" || ! -f "${EXEC_DIR}/pyproject.toml" ]]; then
+    echo "[ERROR] repository root is unavailable; submit from it or set EXEC_DIR" >&2
+    exit 2
+fi
+EXEC_DIR=$(cd "${EXEC_DIR}" && pwd)
+CONDA_ENV="${CONDA_ENV:-tfm_env}"
+
+: "${MVP_DATASET_DIR:?set MVP_DATASET_DIR}"
+: "${MVP_TRAINING_DIR:?set MVP_TRAINING_DIR}"
+: "${MVP_EVALUATION_DIR:?set MVP_EVALUATION_DIR}"
+: "${MVP_BENCHMARK_DIR:?set MVP_BENCHMARK_DIR}"
+: "${MVP_COMPARISON_DIR:?set MVP_COMPARISON_DIR}"
+: "${EXPERIMENT_NAME:?set EXPERIMENT_NAME}"
+
+DATA_ROOT="${DATA_ROOT:-${EXEC_DIR}/data}"
+OUTPUT_DIR="${DATA_ROOT}/analysis/mvp_reproducibility/${EXPERIMENT_NAME}"
+
+cd "${EXEC_DIR}"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+eval "$(conda shell.bash hook)"
+conda activate "${CONDA_ENV}"
+
+ARGS=(
+    --dataset_dir "${MVP_DATASET_DIR}"
+    --training_dir "${MVP_TRAINING_DIR}"
+    --evaluation_dir "${MVP_EVALUATION_DIR}"
+    --benchmark_dir "${MVP_BENCHMARK_DIR}"
+    --comparison_dir "${MVP_COMPARISON_DIR}"
+    --output_dir "${OUTPUT_DIR}"
+)
+if [[ -n "${CONFIG_PATH:-}" ]]; then
+    ARGS+=(--config "${CONFIG_PATH}")
+fi
+if [[ "${DRY_RUN:-0}" == "1" ]]; then
+    ARGS+=(--dry_run)
+fi
+if [[ "${OVERWRITE:-1}" == "1" ]]; then
+    ARGS+=(--overwrite)
+fi
+
+srun python3 -m cfl_gnn.cli.audit_mvp_pipeline_reproducibility "${ARGS[@]}"

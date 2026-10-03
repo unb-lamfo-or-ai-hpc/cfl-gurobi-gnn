@@ -1,0 +1,59 @@
+#!/bin/bash
+#SBATCH --job-name=mvp_derived_solve
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=3
+#SBATCH --mem=96G
+#SBATCH --time=01:15:00
+#SBATCH --output=slurm_mvp_derived_solve_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
+DATA_ROOT="/raid/vrcelestino/data/cfl-gurobi-gnn/data"
+
+: "${SOLVER:?Set SOLVER to gurobi or scip}"
+: "${CANDIDATE_DIR:?Set CANDIDATE_DIR to one PR 25 variant directory}"
+
+EXPERIMENT_NAME="${EXPERIMENT_NAME:-mvp_derived_${SOLVER}_${SLURM_JOB_ID}}"
+OUTPUT_DIR="${DATA_ROOT}/intermediate/derived_mip_solutions/${EXPERIMENT_NAME}"
+CONFIG="${CONFIG:-${EXEC_DIR}/configs/experiments/mvp_partial_v1.json}"
+TIME_LIMIT="${TIME_LIMIT:-3600}"
+NODE_LIMIT="${NODE_LIMIT:-1000000}"
+MAX_PARALLEL="${MAX_PARALLEL:-3}"
+SEED="${SEED:-42}"
+
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env
+python3 -c 'import pyarrow'
+
+if [[ "$SOLVER" == "gurobi" ]]; then
+    export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+    python3 -c 'import gurobipy'
+elif [[ "$SOLVER" == "scip" ]]; then
+    python3 -c 'import pyscipopt'
+else
+    echo "SOLVER must be gurobi or scip" >&2
+    exit 2
+fi
+
+RESUME_ARGS=()
+if [[ "${RESUME:-0}" == "1" ]]; then
+    RESUME_ARGS=(--resume)
+fi
+
+srun python3 -m cfl_gnn.cli.solve_derived_mips \
+    --solver "$SOLVER" \
+    --candidate_dir "$CANDIDATE_DIR" \
+    --output_dir "$OUTPUT_DIR" \
+    --config "$CONFIG" \
+    --time_limit "$TIME_LIMIT" \
+    --node_limit "$NODE_LIMIT" \
+    --threads_per_candidate 1 \
+    --max_parallel "$MAX_PARALLEL" \
+    --seed "$SEED" \
+    "${RESUME_ARGS[@]}"
+
+

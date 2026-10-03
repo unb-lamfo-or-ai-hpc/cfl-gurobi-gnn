@@ -1,0 +1,46 @@
+{
+  "contract_sha256": "1a22c76da1f5bc6be978ac6eb7ea340c10b067c5beae1f71aecb617ac09d6b96",
+  "decision": {
+    "next_gate": "repository_documentation_and_manuscript_revision"
+  },
+  "eligibility": {
+    "development_only": true,
+    "publication_artifacts_ready_for_development_review": true,
+    "scientific_reporting_eligible": false
+  },
+  "gate_status": "passed",
+  "interpretation": {
+    "confirmatory_significance_claim_allowed": false,
+    "heldout_generalization_evidence": "favorable_descriptive",
+    "mean_effect_influence_sensitive": true,
+    "policy_reselection_after_test": false,
+    "right_censoring_retained": true
+  },
+  "outputs": {
+    "pr60_scientific_evidence_manifest.json": {
+      "relative_path": "pr60_scientific_evidence_manifest.json",
+      "sha256": "e6ae03cedb9338f1a06083e55ab5a502f5da77d95c43327fba39d94e35cf0a9e",
+      "size_bytes": 2510
+    }
+  },
+  "schema_version": 1,
+  "source_contracts": {
+    "heldout": "94abd94ba3eb5d4023b95fc3009330073aad02f9232d018149af2498cf62a670",
+    "training": "432a42dab9f49f01a31d7b28f658bd14f7c50450ac2d83d1ae3102bcc12f0d40",
+    "validation": "6b37643a6364e9d25c272b04b96575de9ee29a17c54d55e14153e376e1cd7758"
+  },
+  "summary": {
+    "graph_test_parents": 10,
+    "heldout_gnn_gap_wins_vs_control": 5,
+    "heldout_gnn_mean_gap_difference_guided_minus_control": -0.07200052280763546,
+    "heldout_gnn_median_gap_difference_guided_minus_control": -0.011642362992830002,
+    "predictive_average_precision": 0.7745011931323506,
+    "predictive_roc_auc": 0.9996937189453252,
+    "solver_method_runs": 36,
+    "solver_test_parents": 6,
+    "solver_validation_parents": 6,
+    "training_epochs": 100,
+    "training_parents": 34,
+    "validation_parents": 10
+  }
+}

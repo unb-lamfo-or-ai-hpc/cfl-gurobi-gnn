@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "scope": "supplied_evidence_consistency_not_raw_artifact_reexecution",
+  "archive_sha256": "8b517e30f8943420027e4c351cffb22b6ec53e30f38bd64193f7d8896b399935",
+  "gate_status": "passed",
+  "failures": [],
+  "packaged_files_hash_verified": 62,
+  "withheld": [
+    "training/evaluation/roc_curve.csv",
+    "training/evaluation/precision_recall_curve.csv"
+  ],
+  "unverified_raw_artifacts": [
+    "graphs",
+    "root_vectors",
+    "labels",
+    "checkpoint",
+    "predictions",
+    "full_roc_pr_curves"
+  ],
+  "cohort": {
+    "parents": 39,
+    "easy": 30,
+    "medium": 9,
+    "hard": 0,
+    "train": 23,
+    "validation": 8,
+    "test": 8
+  },
+  "training": {
+    "epochs": 100,
+    "best_validation_epoch_from_history": 91,
+    "best_validation_loss": 0.09849639446474612,
+    "first_epoch": {
+      "epoch": "1",
+      "train_loss": "1.5397951052240704",
+      "validation_loss": "1.4394093751907349",
+      "accuracy": "0.7364650903689032",
+      "precision": "0.0031763631696588163",
+      "recall": "0.7175006619009796",
+      "f1_score": "0.006324726881489554"
+    },
+    "last_epoch": {
+      "epoch": "100",
+      "train_loss": "0.07385456051839434",
+      "validation_loss": "0.18802240793593228",
+      "accuracy": "0.9921604976479327",
+      "precision": "0.12845618147969384",
+      "recall": "0.9864972200158856",
+      "f1_score": "0.22731293658298507"
+    },
+    "checkpoint_sha256": "7de62c2ccd374509179c5caf29d8ad0842c7b5e2fd74175078ef0ac685875cf3",
+    "probability_threshold": 0.993316113948822,
+    "protocol": {
+      "architecture": {
+        "hidden_dim": 32,
+        "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+        "model_version": "gasse_v2_alternating_prenorm",
+        "num_layers": 2
+      },
+      "checkpoint_selection": {
+        "metric": "validation_weighted_bce",
+        "mode": "minimum",
+        "test_partition_access": "held_out_evaluation_only"
+      },
+      "evaluation": {
+        "calibration_bins": 10,
+        "report_per_difficulty": true,
+        "report_per_parent": true
+      },
+      "optimization": {
+        "epochs": 100,
+        "gradient_clip_norm": 1.0,
+        "learning_rate": 0.001,
+        "patience": 100,
+        "seed": 42
+      },
+      "protocol_id": "gasse_39_parent_development_v1",
+      "sampling": {
+        "draws_per_parent_per_epoch": 4,
+        "maximum_label_mip_gap_relative": 0.1,
+        "method": "deterministic_parent_balanced_cycle_v1"
+      },
+      "schema_version": 1,
+      "threshold_selection": {
+        "fallback_for_partial_smoke": 0.5,
+        "method": "maximum_validation_f1"
+      }
+    }
+  },
+  "evaluation": {
+    "aggregate_metrics": {
+      "accuracy": 0.9989332257664143,
+      "bce_per_target": 0.022470376775920783,
+      "f1_score": 0.5824629584649016,
+      "fn": 1375,
+      "fp": 2063,
+      "n_positive": 3773,
+      "n_targets": 3222800,
+      "precision": 0.5375476350594037,
+      "recall": 0.6355685131195336,
+      "scope": "aggregate",
+      "tn": 3216964,
+      "tp": 2398
+    },
+    "parent_macro_classification": {
+      "accuracy": 0.9979687755172386,
+      "f1_score": 0.5848891107533508,
+      "precision": 0.5401420957105,
+      "recall": 0.6604133436376949
+    },
+    "score_diagnostics": {
+      "average_precision": 0.6097527605861729,
+      "binary_cross_entropy": 0.022470380949955186,
+      "brier_score": 0.006096321855350111,
+      "calibration_bins": 10,
+      "expected_calibration_error": 0.008207070348845134,
+      "positive_prevalence": 0.0011707211120764553,
+      "probability_calibration_claimed": false
+    },
+    "baseline_diagnostics": {
+      "constant_zero": {
+        "average_precision": 0.0011707211120764553,
+        "binary_cross_entropy": 0.04219706597900611,
+        "brier_score": 0.0011707211120764553,
+        "calibration_bins": 10,
+        "expected_calibration_error": 0.0011707211120764553,
+        "positive_prevalence": 0.0011707211120764553,
+        "probability_calibration_claimed": false
+      },
+      "root_lp_clipped_to_binary_domain": {
+        "average_precision": 0.039335388233068196,
+        "binary_cross_entropy": 0.06699179197304342,
+        "brier_score": 0.001888152227928498,
+        "calibration_bins": 10,
+        "expected_calibration_error": 0.0018874782979137503,
+        "positive_prevalence": 0.0011707211120764553,
+        "probability_calibration_claimed": false
+      }
+    },
+    "roc_auc": 0.9991152278766752,
+    "precision_recall_auc": 0.6097251863486223
+  },
+  "limitations": [
+    "solver_admissibility_selection",
+    "three_medium_parents_excluded",
+    "one_seed",
+    "no_hard_parents",
+    "no_current_cohort_four_arm_comparison",
+    "no_current_cohort_native_solver_benchmark",
+    "uncalibrated_scores",
+    "graph_statistics_censoring_unknown",
+    "raw_artifacts_not_packaged"
+  ],
+  "development_only": true,
+  "scientific_reporting_eligible": false
+}

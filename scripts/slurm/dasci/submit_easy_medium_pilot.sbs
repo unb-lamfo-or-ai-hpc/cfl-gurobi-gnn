@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_medium_pair
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=64G
+#SBATCH --gres=gpu:1
+#SBATCH --time=03:00:00
+#SBATCH --array=0-1%1
+#SBATCH --output=slurm_cfl_medium_pair_%A_%a.out
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export GRB_LICENSE_FILE="${GRB_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+test -s "$GRB_LICENSE_FILE"
+test -s "${MEDIUM_PLAN_DIR:?}/easy_medium_pilot_plan.json"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+srun python3 -m cfl_gnn.cli.run_easy_medium_pilot pair \
+    --plan_dir "$MEDIUM_PLAN_DIR" --training_dir "${EASY_TRAINING_DIR:?}" \
+    --mip_root "${BASE_SOURCE_DIR:?}" --run_root "${MEDIUM_RUN_ROOT:?}" \
+    --task_index "${SLURM_ARRAY_TASK_ID:?}" --device cuda

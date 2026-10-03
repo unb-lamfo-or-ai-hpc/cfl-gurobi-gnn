@@ -1,0 +1,46 @@
+{
+  "comparison_design": {
+    "arm_routing": "all_four_gnn_arms_crossed_with_both_target_solvers",
+    "include_unguided_control_per_solver": true,
+    "primary_comparisons": [
+      "guided_vs_unguided_within_target_solver",
+      "augmented_vs_original_training_within_source_solver_and_target_solver",
+      "same_gnn_hint_across_target_solvers"
+    ]
+  },
+  "development_only": true,
+  "experiment_stage": "engineering_equal_budget_neural_diving",
+  "neural_diving_operator": {
+    "fixing_fraction": 0.1,
+    "operator_id": "top_confidence_domain_fixing_v1",
+    "selection_order": [
+      "priority_descending",
+      "confidence_descending",
+      "variable_name_ascending"
+    ],
+    "solver_native_advisory_hints": false,
+    "value_source": "precommitted_probability_threshold_prediction"
+  },
+  "objective_sense_required": "MINIMIZE",
+  "primary_outcomes": [
+    "terminal_mip_gap_relative",
+    "model_optimize_wall_time_seconds"
+  ],
+  "protocol_id": "mvp_neural_diving_equal_budget_v1",
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "seed": 42,
+  "threads_per_run": 1,
+  "time_budget": {
+    "default_seconds": 3600,
+    "maximum_seconds": 14400,
+    "minimum_seconds": 3600,
+    "same_within_experiment": true
+  },
+  "time_regions": {
+    "data_read_wall_time_seconds": "input_hashing_and_hint_deserialization",
+    "model_build_wall_time_seconds": "solver_import_model_parse_configuration_and_fixings",
+    "model_optimize_wall_time_seconds": "wall_time_around_model_optimize_only",
+    "total_wall_time_seconds": "data_read_through_solver_teardown_and_outcome_extraction"
+  }
+}

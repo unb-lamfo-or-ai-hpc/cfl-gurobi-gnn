@@ -1,0 +1,47 @@
+#!/bin/bash
+#SBATCH --job-name=gurobi_parent
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=32G
+#SBATCH --time=01:15:00
+#SBATCH --output=slurm_mvp_gurobi_parent_%j.out
+
+set -euo pipefail
+
+EXEC_DIR="/home/vrcelestino/discodatos/cfl-gurobi-gnn"
+DATA_ROOT="/raid/vrcelestino/data/cfl-gurobi-gnn/data"
+
+: "${PARENT_MIP:?Set PARENT_MIP to the original parent LP/MPS}"
+: "${PARENT_INSTANCE_ID:?Set PARENT_INSTANCE_ID}"
+: "${CATEGORY:?Set CATEGORY}"
+: "${DIFFICULTY:?Set DIFFICULTY}"
+: "${FOLD:?Set FOLD}"
+
+EXPERIMENT_NAME="${EXPERIMENT_NAME:-gurobi_parent_${PARENT_INSTANCE_ID}_${SLURM_JOB_ID}}"
+OUTPUT_DIR="${DATA_ROOT}/intermediate/gurobi_parent_solutions/${EXPERIMENT_NAME}"
+CONFIG="${CONFIG:-${EXEC_DIR}/configs/experiments/mvp_partial_v1.json}"
+TIME_LIMIT="${TIME_LIMIT:-3600}"
+NODE_LIMIT="${NODE_LIMIT:-1000000}"
+SEED="${SEED:-42}"
+GUROBI_LICENSE_FILE="${GUROBI_LICENSE_FILE:-${EXEC_DIR}/secrets/gurobi.lic}"
+
+cd "$EXEC_DIR"
+export PYTHONPATH="${EXEC_DIR}/src:${PYTHONPATH:-}"
+export GRB_LICENSE_FILE="$GUROBI_LICENSE_FILE"
+
+eval "$(conda shell.bash hook)"
+conda activate tfm_env
+python3 -c 'import gurobipy, pyarrow'
+
+srun python3 -m cfl_gnn.cli.collect_gurobi_parent_solution \
+    --parent_mip "$PARENT_MIP" \
+    --parent_instance_id "$PARENT_INSTANCE_ID" \
+    --category "$CATEGORY" \
+    --difficulty "$DIFFICULTY" \
+    --fold "$FOLD" \
+    --config "$CONFIG" \
+    --output_dir "$OUTPUT_DIR" \
+    --time_limit "$TIME_LIMIT" \
+    --node_limit "$NODE_LIMIT" \
+    --threads 1 \
+    --seed "$SEED"

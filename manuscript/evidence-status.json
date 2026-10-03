@@ -1,0 +1,40 @@
+{
+  "schema_version": 4,
+  "as_of": "2026-10-02",
+  "manuscript_status": "controlled_development_study_for_author_review",
+  "development_only": true,
+  "scientific_reporting_eligible": false,
+  "authorship_confirmed": true,
+  "license": "MIT",
+  "source_contract_sha256": "1a22c76da1f5bc6be978ac6eb7ea340c10b067c5beae1f71aecb617ac09d6b96",
+  "current_protocol": {
+    "parents": 54,
+    "train": 34,
+    "validation": 10,
+    "predictive_test": 10,
+    "optimization_validation": 6,
+    "optimization_test": 6,
+    "epochs": 100,
+    "seed": 42,
+    "maximum_label_gap_relative": 0.1
+  },
+  "editorial_plan": {
+    "journal": "Computers & Operations Research",
+    "maximum_body_pages_including_front_matter_and_declarations": 20,
+    "references_excluded_from_page_budget": true,
+    "layout": "elsarticle_author_year_preprint",
+    "submission_authorized": false
+  },
+  "evidence_boundaries": {
+    "archive_sha256": "792e35ddd0e01e2e0ffc393b308d3580a0dcf0e862aa7ec532be1e54b5ba4927",
+    "current_publication_files": 13,
+    "historical_39_parent_results": "retained_separately_not_current_training_history",
+    "raw_graphs_and_checkpoints_transferred": false,
+    "detailed_online_preparation_times_transferred": false,
+    "confirmed_general_speedup": false,
+    "confirmatory_significance_claim_allowed": false,
+    "matched_synthetic_augmentation_benefit_demonstrated": false,
+    "full_90_parent_experiment_completed": false,
+    "published_zenodo_doi_verified": false
+  }
+}

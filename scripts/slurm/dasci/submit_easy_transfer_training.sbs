@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_easy_train
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --gres=gpu:1
+#SBATCH --time=24:00:00
+#SBATCH --output=slurm_cfl_easy_train_%j.out
+set -euo pipefail
+EXEC_DIR="${EXEC_DIR:-${SLURM_SUBMIT_DIR:?submit from repository root}}"
+cd "$EXEC_DIR"
+test -f pyproject.toml
+export PYTHONPATH="${EXEC_DIR}/src${PYTHONPATH:+:${PYTHONPATH}}"
+export OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4
+srun python3 -m cfl_gnn.cli.run_easy_transfer_training train \
+    --source_training_plan "${SOURCE_TRAINING_PLAN:?}" \
+    --graph_root "${SOURCE_GRAPH_ROOT:?}" \
+    --label_root "${SOURCE_LABEL_ROOT:?}" \
+    --output_dir "${EASY_TRAINING_DIR:?}" \
+    --expected_contract "${EASY_EXPECTED_CONTRACT:?}" --device cuda
