@@ -123,7 +123,7 @@ def build(root: Path = ROOT) -> None:
         ax.set_xlabel("First observed crossing (s)")
     save(fig, "figure_time_to_ten_percent_gap")
 
-    table(tables / "current_predictive.qmd", ["Aggregation", "Precision", "Recall", "F1", "AP", "Brier", "ECE"],
+    table(tables / "current_predictive.qmd", ["Level", "Precision", "Recall", "F1", "AP", "Brier", "ECE"],
           [["Variable-pooled" if r["scope"].startswith("micro") else "Parent-macro", *[f"{float(r[k]):.4f}" for k in ("precision", "recall", "f1_score", "average_precision", "brier_score", "expected_calibration_error")]] for r in predictive],
           "Predictive performance on held-out graphs.", "tbl-predictive",
           "AP: average precision; ECE: expected calibration error. Parent-macro gives each instance equal weight. Lower Brier and ECE values indicate smaller score error and binwise calibration discrepancy. Source: fixed predictive-test evidence.")

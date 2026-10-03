@@ -64,6 +64,15 @@ results and influence diagnostics remain visible; thirteen imported source
 files remain byte-identical. Editorial regression tests have been added.
 
 The preceding PDF/ZIP hashes and 18-page inspection above apply only to the
-preceding draft. Native rendering and all-page inspection of the editorial
-revision are pending and must not be inferred from that successful earlier build.
+preceding draft. The editorial revision at commit `259c559` rendered successfully
+on the author's local machine and was pushed to the existing draft PR #62.
+Its PDF SHA256 is
+`7e5b95ae543113d10c9815a3525d31e37fd4b67a82ae2a2a9bb3137734388b70`;
+the editable ZIP SHA256 is
+`5171710449926dbb02b217534072ba0b9589c15a2b8354966ab22c48dce82bec`.
+All 23 pages were visually inspected. The body occupies 19 pages and References
+starts on page 20. ZIP CRC checks pass; it contains 14 files. Forty-one manuscript
+and seven documentation tests pass. The only remaining composition adjustment is
+shortening the predictive-table header from Aggregation to Level. Its new render
+must be checked separately before delivering the final corrected preview.
 This revision performs no research execution or new library synchronization.
