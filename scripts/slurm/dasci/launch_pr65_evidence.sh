@@ -4,12 +4,15 @@
 set -euo pipefail
 export PR65_EXEC_DIR="$(pwd -P)"
 export PR65_DATA_ROOT=/raid/vrcelestino/data/cfl-gurobi-gnn/data
+unset PR65_ORIGINAL_OUTPUT
 ROOT=/raid/vrcelestino/data/cfl-mvp2-evidence
 test -f "${PR65_EXEC_DIR}/scripts/evidence/collect_computational_ledger.py"
 test -d "${PR65_DATA_ROOT}/raw/MILPBench/CFL"
 test -f /home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic
 python3 -c 'import gurobipy, pyarrow.parquet; print("PR65_RUNTIME_IMPORTS_OK")'
 python3 -m unittest discover -s tests/evidence
+python3 scripts/evidence/collect_class_statistics.py preflight \
+  --raw-root "${PR65_DATA_ROOT}/raw/MILPBench/CFL"
 test -z "$(git status --porcelain --untracked-files=no)"
 mkdir -p "${ROOT}"
 export PR65_OUTPUT

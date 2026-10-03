@@ -13,3 +13,7 @@ unset GRB_WLSACCESSID GRB_WLSSECRET GRB_LICENSEID
 srun python3 scripts/evidence/collect_class_statistics.py collect \
   --raw-root "${PR65_DATA_ROOT:?}/raw/MILPBench/CFL" \
   --output "${PR65_OUTPUT:?}/classes"
+if [ -n "${PR65_ORIGINAL_OUTPUT:-}" ]; then
+  bash scripts/slurm/dasci/package_pr65_evidence.sh \
+    "${PR65_ORIGINAL_OUTPUT}" "${PR65_OUTPUT}"
+fi

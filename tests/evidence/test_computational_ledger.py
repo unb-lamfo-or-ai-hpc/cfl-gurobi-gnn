@@ -1,11 +1,14 @@
 """Synthetic reconciliation checks; no licensed runtime or cluster required."""
 
+import gzip
 import hashlib
 import json
+import runpy
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts/evidence"))
@@ -227,6 +230,116 @@ class FakeModel:
 
 
 class ClassTests(unittest.TestCase):
+    def test_cli_incomplete_collection_retains_report_but_exits_nonzero(self):
+        fake_env = SimpleNamespace(
+            setParam=lambda *_: None, start=lambda: None, dispose=lambda: None
+        )
+        fake_gp = SimpleNamespace(
+            Env=lambda **_: fake_env,
+            gurobi=SimpleNamespace(version=lambda: (13, 0, 1)),
+            read=lambda *_args, **_kwargs: self.fail("No source should be read"),
+        )
+        original_is_file = Path.is_file
+        with tempfile.TemporaryDirectory() as directory:
+            raw, output = Path(directory) / "raw", Path(directory) / "output"
+            raw.mkdir()
+            with (
+                patch.dict("os.environ", {}, clear=True),
+                patch.dict(sys.modules, {"gurobipy": fake_gp}),
+                patch.object(
+                    Path,
+                    "is_file",
+                    lambda path: (
+                        True
+                        if path.as_posix() == classes.LICENSE
+                        else original_is_file(path)
+                    ),
+                ),
+                patch.object(
+                    sys,
+                    "argv",
+                    [
+                        classes.__file__,
+                        "collect",
+                        "--raw-root",
+                        str(raw),
+                        "--output",
+                        str(output),
+                    ],
+                ),
+                self.assertRaisesRegex(SystemExit, "PR65_CLASS_STATISTICS_INCOMPLETE"),
+            ):
+                runpy.run_path(classes.__file__, run_name="__main__")
+            report = json.loads((output / "class_statistics_report.json").read_text())
+            self.assertEqual(report["observed_parents"], 0)
+            classes.verify(output)
+
+    def test_gzip_source_passed_directly_and_stored_bytes_hash_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "raw"
+            path = raw / "CFL_medium_instance/LP/CFL_medium_instance_0.lp.gz"
+            path.parent.mkdir(parents=True)
+            payload = gzip.compress(b"synthetic LP", mtime=0)
+            path.write_bytes(payload)
+            with patch.object(classes, "ModelReader") as licensed:
+                rows = classes.collect(
+                    raw,
+                    root / "out",
+                    reader=lambda selected: (
+                        classes.model_statistics(FakeModel())
+                        if selected == path
+                        else self.fail("Unexpected model source")
+                    ),
+                )
+                licensed.assert_not_called()
+            row = rows[30]
+            self.assertEqual(row["status"], "model_attributes_observed")
+            self.assertEqual(row["source_file_format"], "lp.gz")
+            self.assertEqual(
+                row["original_lp_sha256"], hashlib.sha256(payload).hexdigest()
+            )
+            self.assertEqual(path.read_bytes(), payload)
+
+    def test_two_stored_formats_are_ambiguous_not_silently_selected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            raw = Path(directory)
+            path = raw / "CFL_easy_instance/LP/CFL_easy_instance_0.lp"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(b"plain")
+            Path(str(path) + ".gz").write_bytes(b"compressed")
+            self.assertEqual(
+                classes.original_model(raw, "easy", 0), (None, "ambiguous_lp_sources")
+            )
+
+    def test_directory_named_like_lp_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            raw = Path(directory)
+            (raw / "CFL_easy_instance/LP/CFL_easy_instance_0.lp.gz").mkdir(parents=True)
+            self.assertEqual(
+                classes.original_model(raw, "easy", 0), (None, "unsafe_lp_source")
+            )
+
+    def test_discovery_preflight_requires_all_ninety_without_reader(self):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(classes, "ModelReader") as licensed,
+        ):
+            raw = Path(directory)
+            with self.assertRaisesRegex(ValueError, "missing_lp=90"):
+                classes.preflight(raw)
+            for difficulty in ("easy", "medium", "hard"):
+                for index in range(30):
+                    suffix = ".lp.gz" if index % 2 else ".lp"
+                    path = (
+                        raw
+                        / f"CFL_{difficulty}_instance/LP/CFL_{difficulty}_instance_{index}{suffix}"
+                    )
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b"fixture")
+            self.assertEqual(classes.preflight(raw), 90)
+            licensed.assert_not_called()
+
     def test_other_license_or_external_credentials_refused_before_import(self):
         for environment in (
             {"GRB_LICENSE_FILE": "/some/other/license"},

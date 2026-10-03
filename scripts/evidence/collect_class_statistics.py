@@ -167,6 +167,38 @@ def summarize(rows):
     return summaries
 
 
+def original_model(raw_root, difficulty, index):
+    """Select one canonical stored LP; never guess between duplicate sources."""
+    stem = raw_root / f"CFL_{difficulty}_instance/LP/CFL_{difficulty}_instance_{index}"
+    candidates = [Path(str(stem) + suffix) for suffix in (".lp", ".lp.gz")]
+    present = [path for path in candidates if path.exists() or path.is_symlink()]
+    if not present:
+        return None, "missing_lp"
+    if len(present) != 1:
+        return None, "ambiguous_lp_sources"
+    if not regular(present[0], raw_root):
+        return None, "unsafe_lp_source"
+    return present[0], "source_discovered"
+
+
+def preflight(raw_root):
+    """Require 90 unambiguous originals before submitting a model-reading job."""
+    raw_root = Path(raw_root).resolve(strict=True)
+    statuses = Counter(
+        original_model(raw_root, difficulty, index)[1]
+        for difficulty in ("easy", "medium", "hard")
+        for index in range(30)
+    )
+    if statuses["source_discovered"] != 90:
+        raise ValueError(
+            "original_model_discovery_incomplete: "
+            + ", ".join(
+                f"{status}={count}" for status, count in sorted(statuses.items())
+            )
+        )
+    return statuses["source_discovered"]
+
+
 def collect(raw_root, output, reader=None):
     raw_root, output = Path(raw_root).resolve(), Path(output).resolve()
     if (
@@ -186,19 +218,23 @@ def collect(raw_root, output, reader=None):
         for difficulty in ("easy", "medium", "hard"):
             for i in range(30):
                 name = f"CFL_{difficulty}_instance_{i}"
-                path = raw_root / f"CFL_{difficulty}_instance/LP/{name}.lp"
+                path, source_status = original_model(raw_root, difficulty, i)
                 row = {
                     "source_instance_id": name,
                     "difficulty": difficulty,
                     "original_lp_sha256": None,
-                    "status": "missing_lp",
+                    "source_file_format": None,
+                    "status": source_status,
                     "error_type": None,
                     "model_read_wall_seconds": None,
                     "source_objective_sense": None,
                     "effective_objective_sense": None,
                     **dict.fromkeys(FIELDS),
                 }
-                if regular(path, raw_root):
+                if path is not None:
+                    row["source_file_format"] = (
+                        "lp.gz" if path.suffix == ".gz" else "lp"
+                    )
                     print(f"PR65_READING_MODEL={name}", flush=True)
                     started = time.perf_counter()
                     try:
@@ -228,6 +264,13 @@ def collect(raw_root, output, reader=None):
             "expected_parents": 90,
             "observed_parents": good,
             "missing_or_failed_parents": 90 - good,
+            "source_status_counts": dict(Counter(r["status"] for r in rows)),
+            "source_format_counts": dict(
+                Counter(
+                    r["source_file_format"] for r in rows if r["source_file_format"]
+                )
+            ),
+            "source_hash_semantics": "original_stored_file_bytes_including_compression",
             "gate_status": "complete_model_read"
             if good == 90
             else "incomplete_model_read",
@@ -269,15 +312,29 @@ def verify(output, create=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("collect", "verify"))
+    parser.add_argument("action", choices=("collect", "verify", "preflight"))
     parser.add_argument("--raw-root", type=Path)
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.action == "preflight":
+        if args.raw_root is None:
+            parser.error("--raw-root required for preflight")
+        count = preflight(args.raw_root)
+        print(f"PR65_ORIGINAL_MODEL_DISCOVERY_OK | parents={count} | solver_runs=0")
+        raise SystemExit(0)
+    if args.output is None:
+        parser.error("--output required for collect or verify")
     if args.action == "collect":
         if args.raw_root is None:
             parser.error("--raw-root required for collection")
-        collect(args.raw_root, args.output)
+        rows = collect(args.raw_root, args.output)
     else:
         verify(args.output)
     print("PR65_CLASS_STATISTICS_HASHES_OK")
     print("PR65_CLASS_STATISTICS_DECLARED_TEXT_SANITIZATION_OK")
+    if args.action == "collect" and any(
+        row["status"] != "model_attributes_observed" for row in rows
+    ):
+        raise SystemExit(
+            "PR65_CLASS_STATISTICS_INCOMPLETE: preserve diagnostic outputs"
+        )

@@ -44,11 +44,22 @@ zero. User-account jobs are not yet attributed to CFL attempts: these rows must
 not be summed into a CFL research-cost claim.
 
 `scripts/evidence/collect_class_statistics.py` separately reads the canonical
-90 original LP paths. It uses only the authorized local Gurobi license, reads
+90 original LP paths, accepting either `.lp` or `.lp.gz` per identity. It uses
+only the authorized local Gurobi license, reads
 one model at a time, records the input SHA256 and obtains original linear model
 attributes without optimization or presolve. Objective sense is recorded and
 set to MINIMIZE in memory only; source LPs are neither changed nor packaged.
 Models with quadratic, SOS or general constraints are explicitly unsupported.
+Compressed LPs are passed directly to the reader; no decompressed copy is saved.
+Input hashes identify the original stored bytes, including compression. Two
+stored formats for the same identity are ambiguous and require reconciliation;
+the collector does not silently choose one. Missing/unsafe/ambiguous sources are
+distinct from model-read errors. The launcher requires all 90 unambiguous inputs
+before submission. A collection with any missing/failed models retains its
+diagnostic artifacts but exits nonzero.
+
+Compressed I/O is documented in the official
+[Gurobi file-format reference](https://docs.gurobi.com/projects/optimizer/en/current/reference/fileformats.html).
 
 The per-parent table includes variable types, constraint senses, nonzeros,
 matrix density, coefficient/objective/RHS ranges and mean bipartite degrees.
@@ -117,7 +128,34 @@ configuration containing only the exact resolved checkout. It clears inherited
 trust, does not edit persistent global/system configuration, and removes the
 temporary file on success or failure. Ownership tests remain enabled, including
 linked-checkout isolation and the older command-line scope behavior. This is
-locally qualified; the repaired HPC preflight is still pending.
+locally qualified and the author-confirmed repaired HPC preflight passed all
+54 tests. Diagnostic jobs 3463 and 3464 subsequently completed.
+
+The first package was independently verified against SHA256
+`9028296e9574593d2a62be6e20f8ac976dd9519458b8401a87085270a1ded07c`,
+including all 13 members, two manifests and both collector source hashes.
+Its coverage receipt is `docs/evidence/pr65/first_collection_verification.json`.
+The original class collector recognized only `.lp`, whereas existing pipeline
+contracts use `.lp.gz`: all 90 records were `missing_lp`, not read/license errors.
+The compressed-path correction remains pending qualification on real inputs.
+The ledger's one issue has the exact path-identity hash of the previously
+archived invalid `models/run_01/experiment_summary.json`; historical bytes are
+preserved, not repaired to conceal this record.
+
+To retry only class reading after publishing the correction, from the same
+isolated checkout run:
+
+```bash
+bash scripts/slurm/dasci/retry_pr65_classes.sh "/exact/original/OUTPUT"
+```
+
+This verifies the previous manifests and discovery, creates a fresh
+`classes-recovery-*` directory, and submits one model-reading job. On complete
+reading it automatically packages the unchanged original ledger with the new
+class artifacts. The original files/package remain intact. A public
+`recovery_receipt.json` records separate ledger/class source commits and the
+reused/superseded report hashes. The new package path and digest appear in the
+recovery job's log; do not replace the original local package when downloading it.
 
 Retain `LEDGER_JOB`, `CLASS_JOB`, `OUTPUT` and `EXEC` printed in the receipt. Do
 not rerun the launcher to recover a forgotten path: read the existing receipt.
