@@ -2,6 +2,12 @@
 
 ## Status and release boundary
 
+The CPU execution matrix below is a retained initial proposal, superseded by
+the author's lean shared-DaSCI amendment in the
+[PR66 protocol](pr66-reconciliation-thread-pilot.md). Do not submit the original
+six-parent/three-seed matrix or request an exclusive NPAD node. The historical
+reconciliation fronts remain applicable.
+
 This is a prospective MVP 2.0 protocol, not an executed experiment or a
 submission authorization. Feature PRs target `develop`. Main, Pages, the private
 MVP 1.0 archive and Zenodo draft 23113003 remain unchanged. PR65 closes a
