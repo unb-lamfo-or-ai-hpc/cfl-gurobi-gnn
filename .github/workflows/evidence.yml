@@ -1,0 +1,44 @@
+name: Public evidence integrity
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'docs/evidence/**'
+      - 'docs/research/pr64-evidence-hpc-baseline.md'
+      - 'scripts/evidence/**'
+      - 'tests/evidence/**'
+      - 'configs/experiments/mvp2_gpu_comparison_v1.json'
+      - 'configs/quality/pr64-ruff.toml'
+      - '.github/workflows/evidence.yml'
+      - '.gitattributes'
+  push:
+    branches: [develop]
+    paths:
+      - 'docs/evidence/**'
+      - 'scripts/evidence/**'
+      - 'tests/evidence/**'
+      - 'configs/experiments/mvp2_gpu_comparison_v1.json'
+      - 'configs/quality/pr64-ruff.toml'
+      - '.github/workflows/evidence.yml'
+      - '.gitattributes'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install ruff==0.16.8
+      - run: python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
+      - run: python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
+      - run: python -m unittest discover -s tests/evidence -v
