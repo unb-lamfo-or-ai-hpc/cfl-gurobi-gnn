@@ -50,8 +50,6 @@ The study contributes a reproducible procedure connecting graph-based assignment
 
 ![Offline learning and online solver guidance.](figures/figure_pipeline.pdf){#fig-pipeline width=100%}
 
-Source: implemented learning and guidance procedure.
-
 The upper row follows the preparation of checked solution labels, the construction of bipartite graphs, and network training. Validation then determines the checkpoint, decision threshold, and guidance policy. The lower row follows a new instance: a graph is constructed without its solution label, the frozen network predicts binary values, and selected values are submitted to a fresh Gurobi solve. The link between the rows represents the trained model and fixed selection policy, rather than access to the new instance's solution. Solver outcomes are evaluated only after this policy has been fixed.
 
 # Related work
@@ -89,6 +87,12 @@ $$
 Here, $A_p$ and $b_p$ define the linear constraints, $c_p$ and $c_{p,0}$ the objective, and $I_p$ the integer variables. The symbol $\bowtie_p$ denotes each row's inequality or equality sense. The original identities, coefficients, bounds, row senses, and objective constant are preserved. All experiments explicitly set the objective sense to MINIMIZE, overriding the MAXIMIZE headers in the supplied files. Input hashes and both objective senses are recorded, so that this study's minimization convention can be reproduced. Variable predictions are aligned with the original column identities rather than an assumed naming convention.
 
 Let $B_p\subseteq I_p$ contain the binary variables. A feasible incumbent, meaning the best feasible solution retained by the solver, supplies target values $y_{pj}\in\{0,1\}$. Before admitting a label, we check variable coverage, bounds, integrality, every linear constraint, and reconstruction of the objective value. We also require a finite terminal relative MIP gap no greater than 0.10. Thus, admitted labels are feasible solutions within the specified quality threshold; they may be approximate rather than optimal.
+
+## Instance classes and descriptive characterization
+
+MILPBench groups the 90 original CFL instances into 30 easy, 30 medium, and 30 hard instances. These are benchmark difficulty categories, distinct from the binary target classes used in class-aware prediction. Our learning cohort contains all 30 easy instances and the 24 medium instances whose labels satisfy the admission threshold. The optimization experiments retain the original instance identities and evaluate medium instances separately from the pooled predictive assessment.
+
+<!-- MVP 2.0 reserved extension: compare all 90 parents by variable and constraint counts, binary-variable fraction, matrix nonzeros and density, coefficient scales, and variable/constraint degree distributions. Insert verified class-level descriptive tables and introduce/interpret PCA and UMAP projections fitted without test-label information. Evaluate the proposed network-based visual methodology separately; do not imply that it has already been implemented or validated. -->
 
 ## Offline graph learning
 
@@ -172,8 +176,6 @@ The predictive-test graphs contain 5,536,400 binary targets, of which 5,265 take
 
 ![Training and validation loss over 100 epochs.](figures/figure_training_validation_loss.pdf){#fig-loss width=95%}
 
-Source: fixed 100-epoch training and validation history.
-
 The solid curve represents training loss and the dashed curve validation loss; the vertical marker identifies epoch 34. Training BCE falls from 1.5877 to 0.0275. Validation BCE reaches a minimum of 0.0510 at the selected epoch and is 0.1124 at epoch 100. The minimum-validation rule therefore selects an earlier checkpoint rather than the final network state. @tbl-predictive reports performance of this selected checkpoint on the held-out predictive graphs.
 
 {{< include tables/current_predictive.qmd >}}
@@ -194,13 +196,9 @@ Learned starts reduce terminal gap on five of six test instances, with a median 
 
 ![Paired terminal-gap differences by instance.](figures/figure_validation_test_gap_effects.pdf){#fig-effects width=95%}
 
-Source: fixed validation and optimization-test paired effects.
-
 Each bar compares the learned and unguided run for one medium instance. Bars left of zero indicate a smaller terminal gap with the GNN start; bars right of zero indicate a larger gap. Numeric labels give the difference in percentage points. Panel scales differ to keep smaller effects readable. The validation panel shows four improvements; the test panel shows five, with the pronounced medium-20 effect visible rather than absorbed into an average. @fig-target-time then examines the first observed time to the 10% target for each of the three methods.
 
 ![First observed time to a 10% relative gap.](figures/figure_time_to_ten_percent_gap.pdf){#fig-target-time width=95%}
-
-Source: fixed optimization-test worker outcomes.
 
 Shorter observed bars indicate earlier attainment of the target. Hatched bars mark censored observations at the 3,600-second budget boundary, indicated by dotted lines, rather than measured attainment times. The GNN run crosses 10% on four instances, compared with three for each comparator. On medium 20, the learned run crosses while both comparators remain above the target; on medium 12 and 20, its observed crossing times are approximately 672 and 1,168 seconds. All times in this figure concern optimization, with preparation and inference accounted for separately.
 

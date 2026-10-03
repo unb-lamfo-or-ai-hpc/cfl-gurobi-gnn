@@ -82,3 +82,23 @@ All thirteen ZIP payload hashes and archive CRC checks pass. No readiness
 transition or merge was performed. The prepared archival metadata are not a
 claim that a Zenodo draft, reserved DOI or published deposit exists.
 This revision performs no research execution or new library synchronization.
+
+## Experimental MVP 1.0 freeze revision - 3 October 2026
+
+All repetitive Source sentences were removed from the article displays and
+table generator. Abbreviation, censoring and timing notes remain. A concise
+subsection distinguishes benchmark difficulty categories from binary target
+classes; a source comment reserves the later structural/PCA/UMAP extension.
+No imported CSV, checkpoint, solver outcome or guidance policy was changed.
+
+Forty-two manuscript tests, twenty archive/inventory tests and seven
+documentation tests pass locally (69 total). Pages deployment is restricted
+to `main`; `develop` retains preview generation. The newest native PDF/TEX
+render and all-page visual inspection are still pending. Earlier PDF hashes
+above are historical and do not identify this new revision.
+
+Repository promotion and the full private HPC evidence archive are separate
+closure gates. The failed archive job 3460 is not certified; the corrected
+collector and its synthetic tests do not establish HPC archive completion.
+Zenodo draft 23113003 is author-confirmed and unpublished. Its DOI has not been
+supplied or independently verified. No data upload occurs in this revision.

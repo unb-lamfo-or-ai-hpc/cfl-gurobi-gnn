@@ -19,7 +19,7 @@ presentation, not changes to frozen experimental observations or policy.
 12. Introduce and interpret every table; explain right censoring before Results.
 13. Use grayscale, distinguishable styles, clear units, and per-instance gap labels.
 14. Start every section with narrative text rather than a display.
-15. Keep captions short; provide abbreviations, sources, and timing scope in notes.
+15. Keep captions short; provide abbreviations and timing scope in notes. Do not add repetitive "Source" sentences after figures or tables; provenance remains in citations, methods, and hash manifests.
 16. Discuss findings relative to the literature and the research question; avoid
     repeating limitations throughout Discussion.
 17. End with Final considerations, limitations and future work: objective and

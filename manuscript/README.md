@@ -31,7 +31,7 @@ The PDF requires an existing TeX distribution with the packages used by the
 adapter, including `orcidlink` and `lmodern`. Missing packages may be installed
 into that distribution. GitHub Actions provides TinyTeX for rendering.
 The workflow runs no research code and publishes only `manuscript/_manuscript`
-from `develop`; pull requests produce previews without deploying Pages.
+from `main`; `develop` and pull requests produce previews without deploying Pages.
 The workflow also packages `cfl-cor-latex-project.zip` alongside the preview.
 
 The PDF uses the unmodified Elsevier `elsarticle` class and Harvard

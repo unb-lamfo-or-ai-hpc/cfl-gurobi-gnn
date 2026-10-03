@@ -200,10 +200,16 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_workflow_does_not_deploy_pull_requests_or_execute_research(self):
         workflow = (ROOT / ".github/workflows/manuscript.yml").read_text()
         self.assertIn("github.event_name != 'pull_request'", workflow)
-        self.assertIn("github.ref == 'refs/heads/develop'", workflow)
+        self.assertIn("github.ref == 'refs/heads/main'", workflow)
+        self.assertNotIn("github.ref == 'refs/heads/develop'", workflow)
         self.assertIn("path: manuscript/_manuscript", workflow)
         self.assertIn("quarto render manuscript --no-execute", workflow)
         self.assertNotIn("pull_request_target", workflow)
+
+    def test_article_displays_have_no_repetitive_source_sentences(self):
+        self.assertNotIn("Source:", (self.root / "index.qmd").read_text(encoding="utf-8"))
+        generator = (ROOT / "scripts/manuscript/build_cor_assets.py").read_text(encoding="utf-8")
+        self.assertNotIn("Source:", generator)
 
 
 if __name__ == "__main__":

@@ -126,7 +126,7 @@ def build(root: Path = ROOT) -> None:
     table(tables / "current_predictive.qmd", ["Level", "Precision", "Recall", "F1", "AP", "Brier", "ECE"],
           [["Variable-pooled" if r["scope"].startswith("micro") else "Parent-macro", *[f"{float(r[k]):.4f}" for k in ("precision", "recall", "f1_score", "average_precision", "brier_score", "expected_calibration_error")]] for r in predictive],
           "Predictive performance on held-out graphs.", "tbl-predictive",
-          "AP: average precision; ECE: expected calibration error. Parent-macro gives each instance equal weight. Lower Brier and ECE values indicate smaller score error and binwise calibration discrepancy. Source: fixed predictive-test evidence.")
+          "AP: average precision; ECE: expected calibration error. Parent-macro gives each instance equal weight. Lower Brier and ECE values indicate smaller score error and binwise calibration discrepancy.")
     effect_by_parent = {r["source_instance_id"]: r for r in effects if r["partition"] == "test" and r["method"] == METHODS[2]}
     values = []
     for parent in parents:
@@ -135,11 +135,11 @@ def build(root: Path = ROOT) -> None:
         values.append([parent.rsplit("_", 1)[1], f"{100*float(pair[METHODS[0]]['terminal_mip_gap_relative']):.3f}", f"{100*float(pair[METHODS[2]]['terminal_mip_gap_relative']):.3f}", f"{100*float(effect_by_parent[parent]['terminal_gap_difference_guided_minus_control']):+.3f}", *crossing])
     table(tables / "current_heldout.qmd", ["Medium", "Control gap (%)", "GNN gap (%)", "Difference (points)", "Control crossing (s)", "GNN crossing (s)"], values,
           "Terminal gaps and observed 10% crossings.", "tbl-heldout",
-          "Difference is GNN minus control in percentage points. Crossing is the first observed optimization time to gap at most 10%. Censored means no crossing was observed within 3,600 seconds. Source: fixed optimization-test evidence.")
+          "Difference is GNN minus control in percentage points. Crossing is the first observed optimization time to gap at most 10%. Censored means no crossing was observed within 3,600 seconds.")
     table(tables / "current_influence.qmd", ["Excluded parents", "Included", "Wins", "Mean (points)", "Median (points)"],
           [[r["excluded_parent_ids"].replace("CFL_medium_instance_", "M").replace(";", ", ") or "None", r["included_parents"], r["gnn_gap_wins"], f"{100*float(r['mean_gap_difference_guided_minus_control']):.3f}", f"{100*float(r['median_gap_difference_guided_minus_control']):.3f}"] for r in influence],
           "Sensitivity of paired gap effects to individual instances.", "tbl-influence",
-          "M denotes a medium instance. Differences are GNN minus control in percentage points; wins count smaller GNN gaps. Exclusions are post-analysis diagnostics, not alternative selected test cohorts. Source: the same six fixed test pairs.")
+          "M denotes a medium instance. Differences are GNN minus control in percentage points; wins count smaller GNN gaps. Exclusions are post-analysis diagnostics, not alternative selected test cohorts.")
     values = []
     for parent in parents:
         pair = {r["method"]: r for r in tests if r["source_instance_id"] == parent}
@@ -147,7 +147,7 @@ def build(root: Path = ROOT) -> None:
                        f"{float(pair[METHODS[2]]['total_wall_time_seconds']):.1f}"])
     table(tables / "current_timing.qmd", ["Medium", "Control optimize (s)", "Root-LP optimize (s)", "GNN optimize (s)", "GNN worker total (s)"], values,
           "Optimization and worker elapsed times.", "tbl-times",
-          "All values are seconds. Worker total includes verification, model construction, optimization, and solution auditing, but excludes feature preparation, inference, and orchestration. Reading/build/preparation components are recorded upstream, not individually tabulated here. Source: fixed optimization-test worker receipts.")
+          "All values are seconds. Worker total includes verification, model construction, optimization, and solution auditing, but excludes feature preparation, inference, and orchestration. Reading/build/preparation components are recorded upstream, not individually tabulated here.")
     for path in sorted(tables.glob("current_*.qmd")):
         generated.append(path)
     receipt = {"schema_version": 1, "source_contract_sha256": json.loads((current / REPORT).read_text())["contract_sha256"],
