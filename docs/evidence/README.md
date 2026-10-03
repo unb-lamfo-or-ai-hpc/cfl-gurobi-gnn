@@ -15,3 +15,8 @@ The [MVP 1.0 baseline](mvp1/README.md) summarizes the completed private freeze.
 Subsequent experiment PRs should include bounded summaries after evidence gates
 close. New work enters feature branches with PR base `develop`; main and public
 Pages remain the experimental MVP 1.0 baseline until a later promotion decision.
+
+The [PR65 diagnostic contract](../research/pr65-computational-ledger.md) defines
+the next read-only collection and its bounded shareable outputs. No real HPC
+outcomes from that increment are recorded here until its collection receipts
+and hashes are reviewed.

@@ -5,7 +5,10 @@ SPDX-License-Identifier: MIT
 
 import argparse
 import hashlib
+import json
+import os
 import subprocess
+import tempfile
 from pathlib import Path
 
 from verify_mvp1_closure_receipts import checksum_lines
@@ -22,8 +25,9 @@ SUMMARIES = {
 def git_reader(repository):
     """Pin one commit, read its binary blobs without shell/text conversion."""
     repository = Path(repository).resolve(strict=True)
-    # Trust only the explicitly selected task checkout for these read-only calls.
-    # Windows sandbox and desktop users can have different ownership SIDs.
+    # Trust only the selected checkout, including on security-patched Git releases
+    # that accept safe.directory in global config but not command-line config.
+    # A subprocess-local temporary config never changes the user's global file.
     command = [
         "git",
         "-c",
@@ -31,14 +35,27 @@ def git_reader(repository):
         "-C",
         str(repository),
     ]
-    commit = (
-        subprocess.check_output(command + ["rev-parse", "--verify", "HEAD"])
-        .decode()
-        .strip()
-    )
-    return lambda name: subprocess.check_output(
-        command + ["show", commit + ":" + PREFIX + name]
-    )
+
+    def read_git(arguments):
+        with tempfile.TemporaryDirectory(prefix="cfl-git-read-") as directory:
+            configuration = Path(directory) / "config"
+            configuration.write_text(
+                "[safe]\n\tdirectory =\n\tdirectory = "
+                + json.dumps(repository.as_posix(), ensure_ascii=False)
+                + "\n",
+                encoding="utf-8",
+            )
+            environment = os.environ.copy()
+            environment.update(
+                GIT_CONFIG_GLOBAL=str(configuration),
+                GIT_CONFIG_NOSYSTEM="1",
+                GIT_CONFIG_COUNT="0",
+                GIT_CONFIG_PARAMETERS="",
+            )
+            return subprocess.check_output(command + arguments, env=environment)
+
+    commit = read_git(["rev-parse", "--verify", "HEAD"]).decode().strip()
+    return lambda name: read_git(["show", commit + ":" + PREFIX + name])
 
 
 def verify_checkout(repository, repair=False, committed_reader=None):
