@@ -29,9 +29,14 @@ Deliverables: `parent_solver_ledger.csv`, `incumbent_inventory.json`, `augmentat
 
 ## Sprint B: CPU parallelism and root-relaxation resource pilot
 
+Implementation details and proposed budget gates are specified in the
+[computational reconciliation and thread-pilot protocol](computational-reconciliation-and-thread-pilot.md).
+Select within-class parents by varying structural composition rather than
+dimensions, which the recovered PR65 collection found constant within each class.
+
 Estimated effort: 3-5 working days plus controlled cluster execution.
 
-Precommit an easy/medium pilot subset selected by class and structural size, not by observed improvement. Test `Threads` in {1,2,4,8,16}. Set Slurm CPU allocation and solver thread limits explicitly, record BLAS/OpenMP settings and constrain aggregate memory/concurrency. Keep seeds, solve budgets, tolerances and source models matched. Preserve the existing 64 GiB reservation initially; increase only after measured resource qualification. Log out-of-memory and allocation failures, rather than dropping them.
+Precommit an easy/medium pilot subset selected by class and label-free structural composition, not by observed improvement. Test `Threads` in {1,2,4,8,16}. Set Slurm CPU allocation and solver thread limits explicitly, record BLAS/OpenMP settings and constrain aggregate memory/concurrency. Keep seeds, solve budgets, tolerances and source models matched. Preserve the existing 64 GiB reservation initially; increase only after measured resource qualification in a newly versioned profile. Log out-of-memory and allocation failures, rather than dropping them.
 
 Separate (a) parallelizing one solve, (b) independent-instance array throughput and (c) concurrent MIP portfolio search. Record wall-time speedup, parallel efficiency, aggregate CPU-seconds and peak memory: sixteen cores for half the time is not automatically cheaper. Where memory or root capture is problematic, compare automatic, dual-simplex and barrier root strategies on the pilot, checking root-feature semantics and mathematical equivalence. Do not select these settings using the final test results.
 

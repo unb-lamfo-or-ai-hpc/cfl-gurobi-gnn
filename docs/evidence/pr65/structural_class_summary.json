@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "scope": "descriptive_original_model_structure_not_empirical_difficulty_or_solver_scaling",
+  "source_csv_sha256": "5da9fe2a80c60b56447522557f65401b01e6b220812069b73b697d5d68028032",
+  "source_summary_csv_sha256": "2b7978b85a888f83fa36ade0348ee74049b5f5fde1c3388e5876d648e0fc5f0f",
+  "within_class_dimensions_constant": true,
+  "classes": {
+    "easy": {
+      "parents": 30,
+      "variables": 160400,
+      "constraints": 800,
+      "nonzeros": 320400,
+      "binary_variables": {"minimum": 142400, "median": 146600, "maximum": 150400},
+      "continuous_variables": {"minimum": 10000, "median": 13800, "maximum": 18000},
+      "density": 0.0024968827930174566,
+      "mean_variable_degree": 1.9975062344139651,
+      "mean_constraint_degree": 400.5
+    },
+    "medium": {
+      "parents": 30,
+      "variables": 1281600,
+      "constraints": 2400,
+      "nonzeros": 2561600,
+      "binary_variables": {"minimum": 1136000, "median": 1166400, "maximum": 1193600},
+      "continuous_variables": {"minimum": 88000, "median": 115200, "maximum": 145600},
+      "density": 0.0008328131502288806,
+      "mean_variable_degree": 1.9987515605493134,
+      "mean_constraint_degree": 1067.3333333333333
+    },
+    "hard": {
+      "parents": 30,
+      "variables": 5123200,
+      "constraints": 4800,
+      "nonzeros": 10243200,
+      "binary_variables": {"minimum": 4614400, "median": 4664000, "maximum": 4704000},
+      "continuous_variables": {"minimum": 419200, "median": 459200, "maximum": 508800},
+      "density": 0.0004165365396627108,
+      "mean_variable_degree": 1.9993753903810119,
+      "mean_constraint_degree": 2134.0
+    }
+  },
+  "raw_lp_files_redistributed": false,
+  "positive_solution_label_prevalence_measured": false,
+  "empirical_thread_speedup_measured": false,
+  "scientific_reporting_eligible": false
+}

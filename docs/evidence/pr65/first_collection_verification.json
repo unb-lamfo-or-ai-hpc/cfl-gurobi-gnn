@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scope": "package_integrity_and_diagnostic_coverage_not_scientific_certification",
+  "package_sha256": "9028296e9574593d2a62be6e20f8ac976dd9519458b8401a87085270a1ded07c",
+  "source_commit": "2c7896208ccd3f62fbea923646aec0b3b22bcaee",
+  "members_verified": 13,
+  "declared_artifacts_verified": 10,
+  "package_and_member_hashes_verified": true,
+  "public_text_marker_scan_passed": true,
+  "collector_hashes_matched_received_source": true,
+  "jobs_author_reported": [
+    {"job_id": "3463", "purpose": "ledger", "state": "COMPLETED", "exit_code": "0:0", "elapsed_seconds": 14},
+    {"job_id": "3464", "purpose": "classes", "state": "COMPLETED", "exit_code": "0:0", "elapsed_seconds": 2}
+  ],
+  "ledger": {
+    "supported_attempt_reports": 87,
+    "supported_parents": 36,
+    "parquet_tables_observed": 77,
+    "training_membership_rows": 158,
+    "lineage_stage_reports": 10,
+    "issues": 1,
+    "issue_matches_previously_archived_invalid_summary": true,
+    "complete_unique_feasible_incumbents": null,
+    "historical_compute_cost_complete": false
+  },
+  "classes": {
+    "expected_parents": 90,
+    "observed_parents": 0,
+    "missing_lp_records": 90,
+    "gate_status": "incomplete_model_read",
+    "model_read_errors_observed": 0,
+    "reader_version": [13, 0, 1],
+    "collector_only_supported_uncompressed_lp": true,
+    "compressed_source_recovery_pending": true
+  },
+  "optimization_runs": 0,
+  "training_runs": 0,
+  "scientific_reporting_eligible": false
+}

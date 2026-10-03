@@ -83,16 +83,17 @@ class CheckoutTests(unittest.TestCase):
 
 
 class GitReaderTests(unittest.TestCase):
+    ISOLATED = {
+        "GIT_CONFIG_COUNT": "0",
+        "GIT_CONFIG_PARAMETERS": "",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_TEST_ASSUME_DIFFERENT_OWNER": "1",
+    }
+
     def test_real_git_ownership_guard_with_no_global_trust(self):
         repository = SCRIPTS.parents[1]
-        isolated = {
-            "GIT_CONFIG_COUNT": "0",
-            "GIT_CONFIG_PARAMETERS": "",
-            "GIT_CONFIG_GLOBAL": os.devnull,
-            "GIT_CONFIG_NOSYSTEM": "1",
-            "GIT_TEST_ASSUME_DIFFERENT_OWNER": "1",
-        }
-        with patch.dict(os.environ, isolated):
+        with patch.dict(os.environ, self.ISOLATED):
             untrusted = subprocess.run(
                 ["git", "-C", str(repository), "rev-parse", "--verify", "HEAD"],
                 capture_output=True,
@@ -103,12 +104,30 @@ class GitReaderTests(unittest.TestCase):
             self.assertEqual(CHECKOUT.verify_checkout(repository), 0)
 
     def test_every_git_call_trusts_only_the_exact_resolved_checkout(self):
+        configurations = []
+
+        def read_command(command, *, env):
+            configuration = Path(env["GIT_CONFIG_GLOBAL"])
+            configurations.append(configuration)
+            expected = (
+                "[safe]\n\tdirectory =\n\tdirectory = "
+                + CHECKOUT.json.dumps(
+                    repository.resolve().as_posix(), ensure_ascii=False
+                )
+                + "\n"
+            )
+            self.assertEqual(configuration.read_text(encoding="utf-8"), expected)
+            self.assertEqual(env["GIT_CONFIG_NOSYSTEM"], "1")
+            self.assertEqual(env["GIT_CONFIG_COUNT"], "0")
+            self.assertEqual(env["GIT_CONFIG_PARAMETERS"], "")
+            return b"1234567890\n" if len(configurations) == 1 else b"\x00\xffraw\r\n"
+
         with (
             tempfile.TemporaryDirectory() as directory,
             patch.object(
                 CHECKOUT.subprocess,
                 "check_output",
-                side_effect=[b"1234567890\n", b"\x00\xffraw\r\n"],
+                side_effect=read_command,
             ) as read,
         ):
             repository = Path(directory)
@@ -129,6 +148,111 @@ class GitReaderTests(unittest.TestCase):
                 read.call_args_list[1].args[0][5:],
                 ["show", "1234567890:" + CHECKOUT.PREFIX + "closure_verification.json"],
             )
+            self.assertTrue(all(not path.exists() for path in configurations))
+
+    def test_legacy_command_line_trust_ignored_still_verifies_real_blobs(self):
+        original = subprocess.check_output
+
+        def ignore_command_line_trust(command, **kwargs):
+            # Emulate older Git's safe.directory scope, not its ownership check.
+            self.assertEqual(command[1], "-c")
+            return original([command[0]] + command[3:], **kwargs)
+
+        with (
+            patch.dict(os.environ, self.ISOLATED),
+            patch.object(
+                CHECKOUT.subprocess, "check_output", ignore_command_line_trust
+            ),
+        ):
+            self.assertEqual(CHECKOUT.verify_checkout(SCRIPTS.parents[1]), 0)
+
+    def test_temporary_config_cleanup_on_git_failure(self):
+        configurations = []
+
+        def fail(command, *, env):
+            configurations.append(Path(env["GIT_CONFIG_GLOBAL"]))
+            raise subprocess.CalledProcessError(128, command)
+
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(CHECKOUT.subprocess, "check_output", side_effect=fail),
+            self.assertRaises(subprocess.CalledProcessError),
+        ):
+            CHECKOUT.git_reader(Path(directory))
+        self.assertEqual(len(configurations), 1)
+        self.assertFalse(configurations[0].parent.exists())
+
+    def test_subprocess_trust_does_not_change_caller_environment(self):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.dict(os.environ, self.ISOLATED),
+            patch.object(
+                CHECKOUT.subprocess, "check_output", return_value=b"1234567890\n"
+            ),
+        ):
+            before = dict(os.environ)
+            CHECKOUT.git_reader(Path(directory))
+            self.assertEqual(dict(os.environ), before)
+
+    def test_linked_checkout_trust_does_not_authorize_common_repository(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            primary = root / "primary"
+            linked = root / "linked checkout"
+            with patch.dict(os.environ, {"GIT_TEST_ASSUME_DIFFERENT_OWNER": "0"}):
+                subprocess.run(
+                    ["git", "init", str(primary)], check=True, capture_output=True
+                )
+                subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        str(primary),
+                        "-c",
+                        "user.name=Fixture",
+                        "-c",
+                        "user.email=fixture@example.invalid",
+                        "commit",
+                        "--allow-empty",
+                        "-m",
+                        "fixture",
+                    ],
+                    check=True,
+                    capture_output=True,
+                )
+                subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        str(primary),
+                        "worktree",
+                        "add",
+                        "--detach",
+                        str(linked),
+                    ],
+                    check=True,
+                    capture_output=True,
+                )
+            original = subprocess.check_output
+
+            def verify_scope(command, *, env):
+                result = subprocess.run(
+                    ["git", "-C", str(primary), "rev-parse", "HEAD"],
+                    env=env,
+                    capture_output=True,
+                    check=False,
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(b"dubious ownership", result.stderr)
+                return original([command[0]] + command[3:], env=env)
+
+            with (
+                patch.dict(os.environ, self.ISOLATED),
+                patch.object(
+                    CHECKOUT.subprocess, "check_output", side_effect=verify_scope
+                ),
+            ):
+                CHECKOUT.git_reader(linked)
 
     def test_nonexistent_checkout_is_not_silently_trusted(self):
         with (

@@ -6,6 +6,10 @@ on:
     paths:
       - 'docs/evidence/**'
       - 'docs/research/pr64-evidence-hpc-baseline.md'
+      - 'docs/research/pr65-computational-ledger.md'
+      - 'docs/research/computational-reconciliation-and-thread-pilot.md'
+      - 'docs/research/mvp2-hpc-roadmap.md'
+      - 'scripts/slurm/dasci/*pr65*'
       - 'scripts/evidence/**'
       - 'tests/evidence/**'
       - 'configs/experiments/mvp2_gpu_comparison_v1.json'
@@ -17,6 +21,10 @@ on:
     paths:
       - 'docs/evidence/**'
       - 'scripts/evidence/**'
+      - 'scripts/slurm/dasci/*pr65*'
+      - 'docs/research/pr65-computational-ledger.md'
+      - 'docs/research/computational-reconciliation-and-thread-pilot.md'
+      - 'docs/research/mvp2-hpc-roadmap.md'
       - 'tests/evidence/**'
       - 'configs/experiments/mvp2_gpu_comparison_v1.json'
       - 'configs/quality/pr64-ruff.toml'
