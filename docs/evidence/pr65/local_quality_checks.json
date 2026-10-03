@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scope": "local_engineering_checks_not_hpc_or_scientific_results",
+  "evidence_tests_passed": 50,
+  "focused_pytest_tests_passed": 119,
+  "focused_pytest_scope": ["evidence", "archive", "manuscript", "documentation_contract"],
+  "ruff_version": "0.16.8",
+  "ruff_scoped_python_files": 8,
+  "ruff_lint_passed": true,
+  "ruff_format_passed": true,
+  "bash_scripts_syntax_checked": 4,
+  "inherited_outside_evidence_lint_findings_from_pr64": 607,
+  "full_repository_lint_certified": false,
+  "full_repository_tests_certified": false,
+  "real_gurobi_model_read_qualified": false,
+  "optimization_runs": 0,
+  "training_runs": 0,
+  "hpc_jobs_submitted": 0,
+  "manuscript_modified": false,
+  "scientific_reporting_eligible": false
+}

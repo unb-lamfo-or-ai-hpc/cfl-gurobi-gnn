@@ -21,3 +21,4 @@ scripts/evidence/** text eol=lf
 tests/evidence/** text eol=lf
 configs/quality/pr64-ruff.toml text eol=lf
 .github/workflows/evidence.yml text eol=lf
+scripts/slurm/dasci/*pr65* text eol=lf

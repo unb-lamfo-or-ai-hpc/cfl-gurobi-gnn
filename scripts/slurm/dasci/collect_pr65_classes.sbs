@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr65_classes
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --time=02:00:00
+# SPDX-License-Identifier: MIT
+set -euo pipefail
+cd "${PR65_EXEC_DIR:?}"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export GRB_LICENSE_FILE=/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic
+unset GRB_WLSACCESSID GRB_WLSSECRET GRB_LICENSEID
+srun python3 scripts/evidence/collect_class_statistics.py collect \
+  --raw-root "${PR65_DATA_ROOT:?}/raw/MILPBench/CFL" \
+  --output "${PR65_OUTPUT:?}/classes"
