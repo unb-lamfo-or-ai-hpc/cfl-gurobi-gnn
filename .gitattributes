@@ -14,3 +14,6 @@ manuscript/elsarticle-harv.bst -text -whitespace
 scripts/manuscript/** text eol=lf
 tests/manuscript/** text eol=lf
 .github/workflows/manuscript.yml text eol=lf
+# Public evidence manifests bind exact bytes on Windows and Linux.
+docs/evidence/mvp1/*.json -text
+docs/evidence/mvp1/SHA256SUMS.txt text eol=lf

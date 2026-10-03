@@ -107,9 +107,9 @@ def publish(package, output):
     output.mkdir(parents=True)
     for name, payload in payloads.items():
         (output / name).write_bytes(payload)
-    (output / 'SHA256SUMS.txt').write_text(''.join(
+    (output / 'SHA256SUMS.txt').write_bytes(''.join(
         hashlib.sha256(payload).hexdigest() + '  ' + name + '\n'
-        for name, payload in sorted(payloads.items())), encoding='utf-8')
+        for name, payload in sorted(payloads.items())).encode('utf-8'))
     print('MVP2_BASELINE_SUMMARIES_OK | files=4 | research_runs=0 | zenodo_upload=false')
 
 

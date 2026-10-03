@@ -72,6 +72,12 @@ class IntegrityTests(unittest.TestCase):
             self.assertLess(len(payload), 100_000)
             self.assertIsNone(PUBLISHER.PRIVATE.search(payload.decode('utf-8')))
 
+    def test_hash_bound_evidence_preserves_bytes_across_checkouts(self):
+        attributes = (ROOT / '.gitattributes').read_text()
+        self.assertIn('docs/evidence/mvp1/*.json -text', attributes)
+        self.assertIn('docs/evidence/mvp1/SHA256SUMS.txt text eol=lf', attributes)
+        self.assertNotIn(b'\r', (EVIDENCE / 'SHA256SUMS.txt').read_bytes())
+
     def test_archive_receipts_are_not_scientific_or_publication_certification(self):
         summary = read('closure_verification.json')
         self.assertEqual(summary['closure_package_sha256'], VERIFIER.EXPECTED)
