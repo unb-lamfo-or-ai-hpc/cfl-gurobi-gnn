@@ -1,0 +1,5 @@
+Class-aware GNN predictions become nonbinding partial MIP starts for CFL.
+A matched root-LP comparator separates assignment content from support size.
+Learned starts improve terminal gap on five of six held-out medium instances.
+The median gap effect favors guidance, but two instances dominate the mean.
+Censoring and online overhead prevent a general solver-speedup claim.

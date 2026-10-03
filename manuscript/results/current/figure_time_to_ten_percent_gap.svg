@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="100%" height="100%" fill="white"/>
+<text x="60" y="55" font-family="Arial" font-size="26" font-weight="bold">First observed time to relative MIP gap &lt;= 10%</text>
+<text x="60" y="84" font-family="Arial" font-size="15" fill="#4B5563">Bars reaching 3,600 s in gray are right-censored, not observed hitting times.</text>
+<text x="55" y="129" font-family="Arial" font-size="11">m0 Control</text>
+<rect x="210" y="115" width="588.05" height="14" fill="#2563EB"/>
+<text x="1070" y="129" font-family="Arial" font-size="11">2491 s</text>
+<text x="55" y="158" font-family="Arial" font-size="11">m0 Root-LP</text>
+<rect x="210" y="144" width="521.80" height="14" fill="#2563EB"/>
+<text x="1070" y="158" font-family="Arial" font-size="11">2210 s</text>
+<text x="55" y="187" font-family="Arial" font-size="11">m0 GNN</text>
+<rect x="210" y="173" width="273.39" height="14" fill="#0D9488"/>
+<text x="1070" y="187" font-family="Arial" font-size="11">1158 s</text>
+<text x="55" y="216" font-family="Arial" font-size="11">m4 Control</text>
+<rect x="210" y="202" width="540.03" height="14" fill="#2563EB"/>
+<text x="1070" y="216" font-family="Arial" font-size="11">2287 s</text>
+<text x="55" y="245" font-family="Arial" font-size="11">m4 Root-LP</text>
+<rect x="210" y="231" width="724.89" height="14" fill="#2563EB"/>
+<text x="1070" y="245" font-family="Arial" font-size="11">3070 s</text>
+<text x="55" y="274" font-family="Arial" font-size="11">m4 GNN</text>
+<rect x="210" y="260" width="758.80" height="14" fill="#0D9488"/>
+<text x="1070" y="274" font-family="Arial" font-size="11">3214 s</text>
+<text x="55" y="303" font-family="Arial" font-size="11">m7 Control</text>
+<rect x="210" y="289" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="303" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="332" font-family="Arial" font-size="11">m7 Root-LP</text>
+<rect x="210" y="318" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="332" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="361" font-family="Arial" font-size="11">m7 GNN</text>
+<rect x="210" y="347" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="361" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="390" font-family="Arial" font-size="11">m9 Control</text>
+<rect x="210" y="376" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="390" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="419" font-family="Arial" font-size="11">m9 Root-LP</text>
+<rect x="210" y="405" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="419" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="448" font-family="Arial" font-size="11">m9 GNN</text>
+<rect x="210" y="434" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="448" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="477" font-family="Arial" font-size="11">m12 Control</text>
+<rect x="210" y="463" width="472.77" height="14" fill="#2563EB"/>
+<text x="1070" y="477" font-family="Arial" font-size="11">2002 s</text>
+<text x="55" y="506" font-family="Arial" font-size="11">m12 Root-LP</text>
+<rect x="210" y="492" width="473.08" height="14" fill="#2563EB"/>
+<text x="1070" y="506" font-family="Arial" font-size="11">2004 s</text>
+<text x="55" y="535" font-family="Arial" font-size="11">m12 GNN</text>
+<rect x="210" y="521" width="158.56" height="14" fill="#0D9488"/>
+<text x="1070" y="535" font-family="Arial" font-size="11">672 s</text>
+<text x="55" y="564" font-family="Arial" font-size="11">m20 Control</text>
+<rect x="210" y="550" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="564" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="593" font-family="Arial" font-size="11">m20 Root-LP</text>
+<rect x="210" y="579" width="850.00" height="14" fill="#9CA3AF"/>
+<text x="1070" y="593" font-family="Arial" font-size="11">censored</text>
+<text x="55" y="622" font-family="Arial" font-size="11">m20 GNN</text>
+<rect x="210" y="608" width="275.71" height="14" fill="#0D9488"/>
+<text x="1070" y="622" font-family="Arial" font-size="11">1168 s</text>
+<text x="60" y="700" font-family="Arial" font-size="13" fill="#991B1B">Development-only descriptive evidence; no confirmatory significance claim.</text>
+</svg>

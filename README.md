@@ -13,7 +13,7 @@ instance.
 
 ## Current research result
 
-The current `develop` baseline is a **development-only research MVP**:
+The MVP 1.0 baseline is a development-only research MVP:
 
 - 54 original-parent graphs were admitted to the learning cohort: 34 training,
   10 validation, and 10 held-out test parents;
@@ -41,6 +41,13 @@ The [scientific evidence summary](docs/results/pr60-scientific-evidence/README.m
 reports the exact scope, outputs, sensitivity analysis, and limitations. The
 [reproducibility guide](docs/reproducibility.md) explains how to reconstruct
 contracts without rewriting historical receipts.
+
+The [experimental freeze gates](docs/releases/mvp-1.0.md) distinguish source
+promotion, publication rendering and private evidence verification. Public
+Pages is deployed from `main`; MVP 2.0 feature work targets `develop` under the
+[computational research roadmap](docs/research/mvp2-hpc-roadmap.md). Zenodo
+upload remains deferred. The [incumbent evidence status](docs/research/incumbent-augmentation-status.md)
+separates implemented augmentation mechanisms from population-scale results.
 
 ## Methodological contract
 

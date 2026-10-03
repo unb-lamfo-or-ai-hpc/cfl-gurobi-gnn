@@ -1,5 +1,64 @@
 # Reference selection and Zotero collection
 
+## Current article update, 2 October 2026
+
+The sections below preserve the historical selection and collection receipts.
+They are not a claim of a new Zotero synchronization. The current COR article
+retains the mandatory Gasse et al. (2019), arXiv version 3, and integrates four
+additional works selected for specific methodological comparisons:
+
+| Citation key | Publication | Role in the current article |
+|:--|:--|:--|
+| bengio2021 | EJOR 290(2), 405-421; DOI `10.1016/j.ejor.2020.07.063` | Distributional learning for combinatorial optimization and evaluation boundaries |
+| qu2026 | COR 185, 107290; DOI `10.1016/j.cor.2025.107290` | Learned constraints contrasted with nonbinding partial starts |
+| goerigk2025 | COR 174, 106886; DOI `10.1016/j.cor.2024.106886` | Learned robust-scenario initialization contrasted with assignment prediction |
+| zhang2026 | ESWA 298, Part D, 129924; DOI `10.1016/j.eswa.2025.129924` | Learned cut selection contrasted with primal guidance |
+
+Publisher metadata and publicly accessible abstracts/section previews informed
+these comparisons; complete paywalled articles were not claimed as read.
+The citation checker requires every bibliography entry to be cited and every
+citation to resolve. No result from another paper is presented as a result
+of this project. Local Zotero profile access was unavailable during this update;
+the four additions are therefore manuscript-local bibliography changes, not
+verified changes to the library collection.
+
+## Author-review revision: metric definitions and writing examples
+
+Six claim-specific references were checked on 2 October 2026:
+
+- [MILPBench](https://github.com/thuiar/MILPBench) provides dataset provenance.
+  No supplied scholarly citation block was found. The repository is cited without
+  inventing paper authors, a publication year, or a DOI; access date is explicit.
+- [Gneiting and Raftery (2007)](https://doi.org/10.1198/016214506000001437)
+  provides scoring-rule background. Weighted training loss is distinguished
+  from an unweighted proper probability score.
+- [Saito and Rehmsmeier (2015)](https://doi.org/10.1371/journal.pone.0118432)
+  motivates precision-recall assessment under imbalance.
+- [Brier (1950)](https://journals.ametsoc.org/doi/abs/10.1175/1520-0493%281950%29078%3C0001%3AVOFEIT%3E2.0.CO%3B2)
+  provides probability-score background; the article states the computed
+  binary mean-squared-error convention.
+- [Guo et al. (2017)](https://proceedings.mlr.press/v70/guo17a.html)
+  provides calibration context. Our ten-bin positive-score ECE is explicitly
+  distinguished from their multiclass top-label ECE.
+- The [scikit-learn AP definition](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)
+  identifies the noninterpolated convention used by the project's tie-aware
+  implementation, not a claim that the documentation version was installed.
+
+The [public author preprint of Goerigk and Kurtz](https://optimization-online.org/wp-content/uploads/2023/01/main-2.pdf)
+was consulted as an accessible writing example associated with the selected COR
+article. Its introduction explains the optimization decision before the learned
+component; the experiment section specifies setup and baselines before interpreting
+displays. These are narrative principles, not copied text or a claim that the
+preprint is identical to the published version. Qu et al. remains a comparison
+based on accessible publisher metadata/abstract; the full publisher text was
+inaccessible during this revision. Previously selected EJOR and ESWA references
+retain their claim-specific roles.
+
+No current Zotero synchronization is claimed: profile access is blocked in this
+session. These are verified manuscript-local bibliography additions.
+
+## Historical selection and collection receipts
+
 Review date: 12 September 2026. The user supplied 41 bibliography entries exported
 from Zotero. Selection below is based on relevance to the actual study, supplied
 metadata, and public primary publication/author pages for cited works. This was

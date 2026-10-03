@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "retrieved_on": "2026-10-02",
+  "distribution": "TeX Live elsarticle package from CTAN",
+  "upstream_url": "https://mirrors.ctan.org/systems/texlive/tlnet/archive/elsarticle.tar.xz",
+  "archive_sha256": "f03c00d5353b77ebcb5dd0a6cf680074d80148f0546cea66617a62512ea04d78",
+  "class_version": "3.5",
+  "class_date": "2026-01-09",
+  "license": "LPPL-1.3-or-later",
+  "upstream_files_modified": false,
+  "adapter_license": "MIT",
+  "files": [
+    {
+      "local_path": "elsarticle.cls",
+      "sha256": "40af0200a8ad6777126f93bf7be6ab3046fa7c3ef1073307f0809703602e59da"
+    },
+    {
+      "local_path": "elsarticle-harv.bst",
+      "sha256": "d85a928515628a9526d1d02f076f723a4da25387286a4f656d8943600880a436"
+    }
+  ]
+}

@@ -20,6 +20,10 @@ ROOT = Path(__file__).resolve().parents[2] / "manuscript"
 
 
 def build(root: Path = ROOT) -> None:
+    if json.loads((root / "evidence-status.json").read_text())["schema_version"] == 4:
+        from build_cor_assets import build as build_current
+        build_current(root)
+        return
     evidence = json.loads((root / "results/source_evidence.json").read_text())
     figures = root / "figures"
     tables = root / "tables"
