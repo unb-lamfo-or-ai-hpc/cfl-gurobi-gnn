@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "scope": "local_pr64_evidence_code_qualification_not_scientific_certification",
+  "ruff_version": "0.16.8",
+  "ruff_profile": "configs/quality/pr64-ruff.toml",
+  "ruff_paths": ["scripts/evidence", "tests/evidence"],
+  "scoped_ruff_check_passed": true,
+  "scoped_ruff_format_check_passed": true,
+  "focused_pytest_tests_passed": 99,
+  "focused_pytest_scope": [
+    "tests/evidence",
+    "tests/archive",
+    "tests/manuscript",
+    "tests/smoke/test_documentation_contract.py"
+  ],
+  "evidence_tests_passed": 30,
+  "real_git_ownership_guard_test_passed": true,
+  "global_git_trust_configuration_changed": false,
+  "source_evidence_hashes_changed": false,
+  "full_repository_ruff_clean": false,
+  "inherited_policy_ruff_findings_outside_evidence_paths": 607,
+  "full_repository_pytest_certified": false,
+  "scientific_reporting_eligible": false,
+  "hpc_jobs_submitted": 0,
+  "zenodo_upload_performed": false
+}

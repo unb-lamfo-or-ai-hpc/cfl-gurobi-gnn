@@ -8,6 +8,27 @@ accounting without assuming that larger hardware allocations improve results.
 This increment versions sanitized freeze summaries and a reproducible converter,
 and specifies a serial/DDP comparison. It schedules no training or solver jobs.
 
+## Local code qualification
+
+Run the scoped checks with Ruff 0.16.8:
+
+```bash
+python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
+python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
+python -m unittest discover -s tests/evidence -v
+```
+
+CI repeats these checks on Windows and Linux with Python 3.10 and 3.12.
+The local focused regression run includes evidence, private-archive utilities,
+unchanged manuscript contracts and documentation checks; it is not a full-suite
+certification. The wider inherited-policy Ruff audit still reports 607 findings
+outside the evidence paths. These are retained in a local diagnostic report,
+not silently fixed or represented as a clean repository-wide lint result.
+
+Git reads use a command-scoped `safe.directory` for the exact resolved task
+checkout. No global trust exception or wildcard is added. Regression checks
+include a real Git ownership rejection followed by scoped successful reading.
+
 ## Serial and DDP comparison
 
 Use serial on one GPU and DDP on one, two, four and eight GPUs. One-GPU DDP

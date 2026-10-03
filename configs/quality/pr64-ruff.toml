@@ -1,0 +1,9 @@
+# Scoped evidence checks; does not reconfigure or rewrite the legacy codebase.
+target-version = "py310"
+line-length = 88
+
+[lint]
+select = ["E4", "E7", "E9", "F", "I", "PLW1510", "SIM117"]
+
+[format]
+line-ending = "lf"

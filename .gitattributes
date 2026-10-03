@@ -17,3 +17,7 @@ tests/manuscript/** text eol=lf
 # Public evidence manifests bind exact bytes on Windows and Linux.
 docs/evidence/mvp1/*.json -text
 docs/evidence/mvp1/SHA256SUMS.txt text eol=lf
+scripts/evidence/** text eol=lf
+tests/evidence/** text eol=lf
+configs/quality/pr64-ruff.toml text eol=lf
+.github/workflows/evidence.yml text eol=lf
