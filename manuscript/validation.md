@@ -93,12 +93,21 @@ No imported CSV, checkpoint, solver outcome or guidance policy was changed.
 
 Forty-two manuscript tests, twenty archive/inventory tests and seven
 documentation tests pass locally (69 total). Pages deployment is restricted
-to `main`; `develop` retains preview generation. The newest native PDF/TEX
-render and all-page visual inspection are still pending. Earlier PDF hashes
-above are historical and do not identify this new revision.
+to `main`; `develop` retains preview generation. The author completed the native
+PDF/TEX render, and all 23 pages were visually inspected on 3 October. Body text
+ends on page 19, where References begins; references continue through page 23.
+No Source sentences remain. PDF-text and rendered-evidence checks pass. ZIP CRC
+and all thirteen payload hashes pass, and its TEX equals the standalone export.
+PDF SHA256: `77b120c2c26e84e47a5fd5383f597d17286d32e8596a65d4fc5490b884ebcb43`.
+TEX SHA256: `a3c1f0b416012e4518e1858e426cd494e000a53776f5d4caa09feafa6434d27f`.
+ZIP SHA256: `7afe6ed1d2e7a5f777b5034e9bf43de0e6b71b2f3b17a0c88600cc2d90153c01`.
+Earlier PDF hashes above identify historical revisions only.
 
 Repository promotion and the full private HPC evidence archive are separate
 closure gates. The failed archive job 3460 is not certified; the corrected
 collector and its synthetic tests do not establish HPC archive completion.
+The corrected private archive was submitted as job 3462. The latest author
+observation is RUNNING at 00:00:52; real archive coverage and hash verification
+remain pending. No raw benchmark inputs are included and no upload is performed.
 Zenodo draft 23113003 is author-confirmed and unpublished. Its DOI has not been
 supplied or independently verified. No data upload occurs in this revision.
