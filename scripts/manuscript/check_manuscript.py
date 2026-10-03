@@ -54,7 +54,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     config = (root / "_quarto.yml").read_text(encoding="utf-8")
     adapter = (root / "_extensions/elsevier/template.tex").read_text(encoding="utf-8")
     keys = {k for k in re.findall(r"(?<!\w)@([a-z][a-z0-9_-]+)", article)
-            if not k.startswith(("fig-", "tbl-"))}
+            if not k.startswith(("fig-", "tbl-", "sec-", "eq-"))}
     entries = re.findall(r"^@\w+\{([^,]+),", bibliography, re.MULTILINE)
     if keys != set(entries) or len(entries) != len(set(entries)):
         failures.append("bibliography_not_exactly_cited_or_duplicate_keys")
@@ -80,6 +80,27 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     abstract = front.split("abstract: |", 1)[1]
     if len(abstract.split()) > 250:
         failures.append("abstract_exceeds_250_words")
+    if "class-aware" not in abstract.lower() or "value 1" not in abstract:
+        failures.append("class_aware_abstract_explanation_missing")
+    if "**" in article or re.search(r"(?<!\w)__[^\n]+__", article):
+        failures.append("bold_article_emphasis_not_permitted")
+    if "# Final considerations, limitations and future work" not in article or "# Discussion and limitations" in article:
+        failures.append("editorial_final_section_missing")
+    before_results = article.split("# Results", 1)[0]
+    if not {"milpbench", "gneiting2007", "saito2015", "sklearnap", "brier1950", "guo2017"}.issubset(keys):
+        failures.append("metric_or_dataset_references_missing")
+    if any(term not in before_results for term in ("binary cross-entropy", "Average precision (AP)", "Brier score", "Expected calibration error (ECE)", "right-censored", "parent-macro")):
+        failures.append("metrics_not_defined_before_results")
+    for identity in ("fig-pipeline", "fig-loss", "fig-effects", "fig-target-time"):
+        figure_match = re.search(r"!\[[^\n]+\]\([^\n]+\)\{#" + re.escape(identity) + r"\b[^\n]*\}", article)
+        if not figure_match or "@" + identity not in article[:figure_match.start()]:
+            failures.append("figure_not_introduced:" + identity)
+    for name, identity in (("predictive", "tbl-predictive"), ("heldout", "tbl-heldout"), ("influence", "tbl-influence"), ("timing", "tbl-times")):
+        marker = "{{< include tables/current_" + name + ".qmd >}}"
+        if marker not in article or "@" + identity not in article.split(marker, 1)[0]:
+            failures.append("table_not_introduced:" + identity)
+    if re.search(r"(?m)^#{1,3} [^\n]+\n\n(?:!\[|\| |\{\{< include)", article):
+        failures.append("section_starts_with_display")
     keyword_count = front.split("keywords:", 1)[1].split("abstract:", 1)[0].count("  - ")
     if not 1 <= keyword_count <= 7:
         failures.append("keyword_budget_invalid")
@@ -148,8 +169,15 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
             failures.append("rendered_author_identity_missing")
     if AI_HEADING not in content or "Class-aware graph neural warm starts" not in content:
         failures.append("rendered_scope_or_declaration_missing")
+    if re.search(r"(?:Figure|Table|Section)\s*<a[^>]*class=\"quarto-xref\"[^>]*>(?:Figure|Table|Section)", content):
+        failures.append("duplicated_crossreference_prefix")
     if not pdf.read_bytes().startswith(b"%PDF-"):
         failures.append("invalid_pdf_header")
+    # An HTML-only refresh must not accidentally qualify a preceding draft PDF.
+    newest_source = max((root / name).stat().st_mtime_ns for name in
+                        ("index.qmd", "references.bib", "_extensions/elsevier/template.tex"))
+    if pdf.stat().st_mtime_ns < newest_source:
+        failures.append("pdf_predates_current_article_sources")
     receipt_path = output / "tables/rendered_assets.json"
     if not receipt_path.is_file():
         failures.append("rendered_asset_receipt_missing")

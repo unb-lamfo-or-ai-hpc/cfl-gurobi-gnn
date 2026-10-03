@@ -1,6 +1,7 @@
 """Regression tests for current evidence, static rendering, and editorial bounds."""
 import importlib.util
 import json
+import os
 import shutil
 import tempfile
 import unittest
@@ -90,6 +91,34 @@ class ManuscriptContractTests(unittest.TestCase):
         self.change("index.qmd", "# Introduction", "# Introduction\n\n@invented2026")
         self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
 
+    def test_class_aware_abstract_must_explain_positive_values(self):
+        self.change("index.qmd", "value 1, which are rare", "the rare class")
+        self.assertIn("class_aware_abstract_explanation_missing", CHECK.check_source(self.root))
+
+    def test_article_has_no_bold_emphasis(self):
+        self.change("index.qmd", "# Introduction", "# Introduction\n\n**Emphasis**")
+        self.assertIn("bold_article_emphasis_not_permitted", CHECK.check_source(self.root))
+
+    def test_metrics_are_defined_before_results(self):
+        self.change("index.qmd", "Expected calibration error (ECE)", "ECE")
+        self.assertIn("metrics_not_defined_before_results", CHECK.check_source(self.root))
+
+    def test_final_section_uses_reviewed_structure(self):
+        self.change("index.qmd", "# Final considerations, limitations and future work", "# Conclusions")
+        self.assertIn("editorial_final_section_missing", CHECK.check_source(self.root))
+
+    def test_pipeline_is_announced_before_its_display(self):
+        self.change("index.qmd", "@fig-pipeline summarizes", "The pipeline summarizes")
+        self.assertIn("figure_not_introduced:fig-pipeline", CHECK.check_source(self.root))
+
+    def test_predictive_table_is_announced_before_its_display(self):
+        self.change("index.qmd", "@tbl-predictive reports", "The table reports")
+        self.assertIn("table_not_introduced:tbl-predictive", CHECK.check_source(self.root))
+
+    def test_sections_cannot_start_with_a_table(self):
+        self.change("index.qmd", "{{< include tables/current_influence.qmd >}}", "## Empty lead\n\n{{< include tables/current_influence.qmd >}}")
+        self.assertIn("section_starts_with_display", CHECK.check_source(self.root))
+
     def test_l2o_context_required(self):
         self.change("index.qmd", "## Learning to Optimize", "## Other topic")
         self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
@@ -134,6 +163,15 @@ class ManuscriptContractTests(unittest.TestCase):
 
     def test_missing_render_is_not_success(self):
         self.assertEqual(CHECK.check_rendered(self.root), ["html_or_pdf_missing"])
+
+    def test_html_refresh_cannot_qualify_a_stale_pdf(self):
+        output = self.root / "_manuscript"
+        output.mkdir()
+        (output / "index.html").write_text("<html></html>")
+        pdf = output / "index.pdf"
+        pdf.write_bytes(b"%PDF-1.4\n")
+        os.utime(pdf, (1, 1))
+        self.assertIn("pdf_predates_current_article_sources", CHECK.check_rendered(self.root))
 
     def test_pdf_twenty_page_limit(self):
         path = self.root / "text.txt"

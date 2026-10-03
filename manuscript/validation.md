@@ -21,7 +21,7 @@ The publication contract is
 Thirteen imported files remain byte-identical; derived assets have a separate
 source/output hash receipt. CSV line endings are preserved intentionally.
 
-## Source and render checks
+## Source and render checks for the preceding draft
 
 Source checks and 33 manuscript regression tests passed locally. Checks
 cover evidence drift, the 100-epoch history, six-parent benchmark membership,
@@ -53,3 +53,17 @@ Negative pilot outcomes, regressions, right censoring, influence sensitivity,
 and unavailable preparation timings remain explicit in the article.
 Five of six favorable terminal-gap effects do not establish statistical
 significance or a general end-to-end speedup.
+
+## Author-review editorial revision
+
+The 2 October author review is implemented in `editorial-requirements.md`:
+readable definitions, formal dataset and metric citations, introduction and
+interpretation of every display, concise captions with notes, grayscale figures,
+literature-based Discussion, and a consolidated final section. Complete paired
+results and influence diagnostics remain visible; thirteen imported source
+files remain byte-identical. Editorial regression tests have been added.
+
+The preceding PDF/ZIP hashes and 18-page inspection above apply only to the
+preceding draft. Native rendering and all-page inspection of the editorial
+revision are pending and must not be inferred from that successful earlier build.
+This revision performs no research execution or new library synchronization.
