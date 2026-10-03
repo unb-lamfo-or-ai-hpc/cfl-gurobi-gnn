@@ -11,6 +11,9 @@ The local PowerShell publisher updates the existing draft PR66 into `develop`.
 It checks each changed remote file against the original local baseline, allowing
 only CRLF/LF equivalence. Conflicting remote changes abort before publication.
 It creates one fast-forward GitHub commit; no force-push, merge or main update.
+Later revisions use the previous verified publication receipt as the local/remote
+baseline. If the remote head differs from that receipt, stop for review rather
+than silently overwrite it or reuse the original preparation baseline.
 Git inspection uses a temporary child-process configuration trusting only the
 resolved checkout. It does not add global safe-directory exceptions or trust the
 common repository. PowerShell 5.1 and 7 regression tests exercise the real Git
@@ -41,9 +44,14 @@ bash scripts/slurm/dasci/launch_pr66_thread_screen.sh --preflight
 The primary dirty checkout is not switched, cleaned or pulled. All new files stay
 under `/raid`. The only permitted license is the existing
 `/home/vrcelestino/discodatos/cfl-gurobi-gnn/secrets/gurobi.lic`; do not copy it.
-The role plan defaults to PR57's training directory and must match its previously
-qualified SHA256. If the plan was relocated, set `PR66_ROLE_PLAN` to its exact
-location; the expected hash cannot be replaced from an unqualified new plan.
+The role plan defaults to PR57's training directory. Its expected identifier
+`432a42...` is the canonical contract hash, not the digest of formatted JSON
+bytes. The worker recomputes that contract using the original PR57 exclusion
+rules, matches the declared and expected hashes, requires true readiness gates,
+and verifies 54 unique parents (30 easy,24 medium;34 train,10 validation,10 test).
+It then records a separate stored-file SHA256 and checks for concurrent changes.
+If the plan was relocated, set `PR66_ROLE_PLAN` to its exact location; never
+replace the expected canonical contract with a newly observed file hash.
 
 ## Submit only when authorized
 

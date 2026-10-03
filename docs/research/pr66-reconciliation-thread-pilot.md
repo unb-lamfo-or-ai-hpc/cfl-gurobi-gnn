@@ -44,6 +44,10 @@ New experiments do not reconstruct missing historical telemetry.
 ## Frozen first-stage design
 
 Use the verified PR57 training plan and its previously qualified SHA256.
+The qualified `432a42...` identifier is PR57's canonical contract hash. Recompute
+it with the historical metadata exclusions and validate cohort/roles/readiness;
+store the JSON file byte hash separately. Pretty-printing does not alter the
+contract; changed roles cannot be legitimized by updating a file digest.
 Uniformly draw one easy and one medium from sorted `train` parent pools with
 Python `random.Random(42)`, easy then medium. Exclude validation, predictive-test
 roles and the six frozen optimization-test parents. Freeze pools, roles, sampling

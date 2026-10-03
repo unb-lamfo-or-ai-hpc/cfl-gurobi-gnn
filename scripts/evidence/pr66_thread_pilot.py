@@ -14,6 +14,7 @@ import random
 import subprocess
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 
 from collect_class_statistics import LICENSE, original_model
@@ -86,14 +87,65 @@ def draw_pair(roles, exclusions):
     return pools, selected
 
 
-def freeze(raw_root, role_plan, expected_role_sha, output):
+def qualify_role_contract(value, expected_contract):
+    """Use PR57's canonical contract definition, not the stored JSON byte digest."""
+    ignored = {
+        "contract_sha256",
+        "contract_valid",
+        "training_ready",
+        "engineering_smoke_ready",
+        "held_out_evaluation_ready",
+        "warnings",
+        "next_gate",
+    }
+    payload = {key: item for key, item in value.items() if key not in ignored}
+    computed = hashlib.sha256(canonical(payload).encode("utf-8")).hexdigest()
+    if (
+        value.get("contract_sha256") != expected_contract
+        or computed != expected_contract
+    ):
+        raise ValueError("role_plan_contract_hash_mismatch")
+    if (
+        value.get("schema_version") != 1
+        or value.get("dataset_variant") != "pr57_54_parent_development_v1"
+        or value.get("graph_authority") != "gurobi"
+        or value.get("label_solver") != "gurobi"
+        or value.get("development_only") is not True
+        or value.get("scientific_reporting_eligible") is not False
+        or any(
+            value.get(key) is not True
+            for key in ignored - {"contract_sha256", "warnings", "next_gate"}
+        )
+    ):
+        raise ValueError("unqualified_pr57_role_contract")
+    roles = roles_from_plan(value)
+    expected_counts = {"train": 34, "validation": 10, "test": 10}
+    if (
+        len(value["records"]) != 54
+        or len(roles) != 54
+        or dict(Counter(roles.values())) != expected_counts
+        or value.get("partition_counts") != expected_counts
+        or sum(parent.startswith("CFL_easy_") for parent in roles) != 30
+        or sum(parent.startswith("CFL_medium_") for parent in roles) != 24
+    ):
+        raise ValueError("pr57_role_cohort_changed")
+    return computed
+
+
+def freeze(raw_root, role_plan, expected_role_sha, output, expected_role_contract=None):
     raw_root = Path(raw_root).resolve(strict=True)
     role_plan = Path(role_plan)
-    if digest(role_plan) != expected_role_sha:
+    stored_sha = digest(role_plan)
+    if expected_role_sha is not None and stored_sha != expected_role_sha:
         raise ValueError("role_plan_hash_mismatch")
+    value = strict_json(role_plan)
+    if expected_role_contract is not None:
+        qualify_role_contract(value, expected_role_contract)
+    elif expected_role_sha is None:
+        raise ValueError("role_plan_requires_qualified_contract_or_file_pin")
     config = strict_json(BASE_CONFIG)
-    roles = roles_from_plan(strict_json(role_plan))
-    if digest(role_plan) != expected_role_sha:
+    roles = roles_from_plan(value)
+    if digest(role_plan) != stored_sha:
         raise ValueError("role_plan_changed")
     pools, selected = draw_pair(roles, config["frozen_optimization_test_parent_ids"])
     models = []
@@ -116,7 +168,9 @@ def freeze(raw_root, role_plan, expected_role_sha, output):
         "schema_version": 1,
         "config": config,
         "config_sha256": digest(BASE_CONFIG),
-        "role_plan_sha256": expected_role_sha,
+        "role_plan_sha256": stored_sha,
+        "role_plan_sha256_semantics": "original_stored_json_bytes",
+        "role_plan_contract_sha256": expected_role_contract,
         "eligible_pools": pools,
         "sampling": "python_random_Random42_choice_sorted_train_pools_easy_then_medium",
         "python_version": sys.version.split()[0],
@@ -455,14 +509,31 @@ if __name__ == "__main__":
     parser.add_argument("--plan-dir", type=Path, required=True)
     parser.add_argument("--role-plan", type=Path)
     parser.add_argument("--expected-role-sha")
+    parser.add_argument("--expected-role-contract")
     parser.add_argument("--expected-plan-sha")
     parser.add_argument("--threads", type=int)
     parser.add_argument("--difficulty", choices=("easy", "medium"))
     args = parser.parse_args()
     if args.action == "freeze":
-        if not args.role_plan or not args.expected_role_sha:
-            parser.error("freeze requires --role-plan and --expected-role-sha")
-        freeze(args.raw_root, args.role_plan, args.expected_role_sha, args.plan_dir)
+        if not args.role_plan or not (
+            args.expected_role_sha or args.expected_role_contract
+        ):
+            parser.error(
+                "freeze requires --role-plan and a qualified contract or file pin"
+            )
+        receipt = freeze(
+            args.raw_root,
+            args.role_plan,
+            args.expected_role_sha,
+            args.plan_dir,
+            args.expected_role_contract,
+        )
+        print(f"ROLE_PLAN_FILE_SHA256={receipt['role_plan_sha256']}")
+        print(f"ROLE_PLAN_CONTRACT_SHA256={receipt['role_plan_contract_sha256']}")
+        for model in receipt["models"]:
+            print(
+                f"SELECTED_{model['difficulty'].upper()}={model['source_instance_id']}"
+            )
         print("PR66_PAIR_AND_PROFILE_FROZEN_NO_OPTIMIZATION")
     elif args.action == "preflight":
         preflight(args.plan_dir, args.expected_plan_sha, args.raw_root)

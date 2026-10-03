@@ -55,6 +55,20 @@ if ($Pr.state -ne 'open' -or !$Pr.draft -or $Pr.base.ref -ne 'develop' -or $Pr.h
     throw 'Existing PR66 must be an open canonical draft into develop'
 }
 $Head = $Pr.head.sha
+$PreviousReceiptPath = Join-Path $ReceiptRoot 'publication_receipt.json'
+if (Test-Path -LiteralPath $PreviousReceiptPath) {
+    $Previous = Get-Content -LiteralPath $PreviousReceiptPath -Raw | ConvertFrom-Json
+    if ($Previous.pull_request -ne "https://github.com/$Repository/pull/66" -or $Previous.base -ne 'develop' -or !$Previous.draft -or
+        $Previous.source_commit -notmatch '^[0-9a-f]{40}$' -or $Previous.local_candidate -notmatch '^[0-9a-f]{40}$') {
+        throw 'Invalid previous publication receipt; preserve it for review'
+    }
+    if ($Previous.source_commit -ne $Head) {
+        throw 'Remote differs from the last verified publication; inspect before retrying'
+    }
+    $Baseline = Git-Text @('rev-parse', $Previous.local_candidate)
+    if ($Baseline -ne $Previous.local_candidate) { throw 'Previous local candidate unavailable' }
+    Write-Output "PR66_INCREMENTAL_BASELINE=$Baseline"
+}
 $Tree = Api "repos/$Repository/git/trees/${Head}?recursive=1"
 if ($Tree.truncated) { throw 'Truncated tree inventory' }
 $Remote = @{}
@@ -117,10 +131,14 @@ runbook. Historical reconciliation remains qualification foundations, not comple
 incumbent totals or historical cost certification. The earlier barrier draft is
 superseded and was not executed.
 
-Local evidence tests: 116 passed on Python 3.10 and 3.13. Scoped Ruff check/format,
+Local evidence tests: 124 passed on Python 3.10 and 3.13. Scoped Ruff check/format,
 Bash/PowerShell syntax and diff checks passed. Real licensed execution and physical
 affinity qualification remain pending on DaSCI. Preserve draft into develop.
 No merge, main/Pages update, training, HPC submission or Zenodo upload is included.
+
+The PR57 role-plan pin is its recomputed canonical contract, not the JSON file
+digest. Verify the declared/recomputed/expected contract and the 54-parent roles
+before freezing; bind stored JSON bytes separately. Retain the failed preflight.
 $EndMarker
 "@
 $Body = [string]$Final.body
