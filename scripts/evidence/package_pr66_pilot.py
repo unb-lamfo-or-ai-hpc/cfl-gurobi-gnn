@@ -61,7 +61,8 @@ def verify(directory, expected_sha):
             != hashlib.sha256(canonical(parameters).encode()).hexdigest()
             or any(report[k] != v for k, v in model.items())
             or report["effective_objective_sense"] != "MINIMIZE"
-            or report["source_objective_sense"] != "MINIMIZE"
+            or report["source_objective_sense"] != config["source_objective_sense"]
+            or report.get("objective_sense_override_applied") is not True
             or report["gurobi_version"] != config["gurobi_version"]
             or not report["model_unchanged_after_execution"]
             or report["scientific_reporting_eligible"]
@@ -99,6 +100,11 @@ def verify(directory, expected_sha):
                 "source_instance_id": report["source_instance_id"],
                 "difficulty": difficulty,
                 "threads": int(cap),
+                "source_objective_sense": report["source_objective_sense"],
+                "effective_objective_sense": report["effective_objective_sense"],
+                "objective_sense_override_applied": report[
+                    "objective_sense_override_applied"
+                ],
                 "solver_status": report["solver_status"],
                 "mip_gap_relative": gap,
                 "termination": report["termination"],

@@ -338,6 +338,47 @@ def frozen_source(raw_root, row):
     return path
 
 
+def prepare_original_model(model, config):
+    """Apply the established CFL sense convention, never rewrite a stored LP.
+
+    PR65 observed MAXIMIZE in all 90 stored originals. The MVP solves their
+    cost objective as MINIMIZE. This model attribute is not an algorithmic
+    parameter; resetting parameters must not remove this explicit convention.
+    """
+    if (
+        config.get("objective_sense_policy")
+        != "historical_cfl_minimization_in_memory_only"
+        or config.get("source_objective_sense") != "MAXIMIZE"
+        or config.get("effective_objective_sense") != "MINIMIZE"
+    ):
+        raise ValueError("unqualified_objective_sense_policy")
+    source_sense = model.ModelSense
+    if source_sense != -1:
+        raise ValueError("source_objective_sense_differs_from_pr65_inventory")
+    if model.NumIntVars <= 0:
+        raise ValueError("original_discrete_variables_required")
+    if model.NumObj != 1 or any(
+        getattr(model, key) != 0
+        for key in ("NumQNZs", "NumQConstrs", "NumGenConstrs", "NumSOS")
+    ):
+        raise ValueError("original_single_objective_linear_mip_required")
+    structure = (model.NumVars, model.NumConstrs, model.DNumNZs, model.ObjCon)
+    model.ModelSense = 1
+    model.update()
+    if model.ModelSense != 1 or structure != (
+        model.NumVars,
+        model.NumConstrs,
+        model.DNumNZs,
+        model.ObjCon,
+    ):
+        raise ValueError("objective_normalization_failed")
+    return {
+        "source_objective_sense": "MAXIMIZE",
+        "effective_objective_sense": "MINIMIZE",
+        "objective_sense_override_applied": True,
+    }
+
+
 def preflight(plan_dir, expected_sha, raw_root):
     """Read both originals and qualify the runtime; never call optimize."""
     plan = verified_plan(plan_dir, expected_sha)
@@ -349,9 +390,15 @@ def preflight(plan_dir, expected_sha, raw_root):
             env.setParam("ThreadLimit", 16)
             env.start()
             with gp.read(str(path), env=env) as model:
+                senses = prepare_original_model(model, plan["config"])
                 configure_model(model, plan["config"], 1)
-                if model.ModelSense != gp.GRB.MINIMIZE or model.NumIntVars == 0:
-                    raise ValueError("original_minimization_mip_required")
+                print(
+                    "PR66_MODEL_QUALIFIED="
+                    + canonical(
+                        {"source_instance_id": row["source_instance_id"], **senses}
+                    ),
+                    flush=True,
+                )
         if digest(path) != row["original_lp_sha256"]:
             raise ValueError("source_changed_during_preflight")
     print("PR66_LICENSE_VERSION_DEFAULTS_AND_MODELS_OK_NO_OPTIMIZATION", flush=True)
@@ -378,11 +425,7 @@ def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
         env.setParam("ThreadLimit", 16)
         env.start()
         with gp.read(str(path), env=env) as model:
-            source_sense = model.ModelSense
-            if source_sense != gp.GRB.MINIMIZE:
-                raise ValueError(
-                    "original_minimization_required_no_silent_reformulation"
-                )
+            senses = prepare_original_model(model, config)
             parameters, defaults = configure_model(
                 model, config, threads, output / "gurobi.private.log"
             )
@@ -402,10 +445,7 @@ def attempt(plan_dir, expected_sha, raw_root, threads, difficulty):
                     canonical(parameters).encode()
                 ).hexdigest(),
                 "affinity": affinity,
-                "source_objective_sense": "MINIMIZE"
-                if source_sense == 1
-                else "MAXIMIZE",
-                "effective_objective_sense": "MINIMIZE",
+                **senses,
                 "solver_status": model.Status,
                 "solution_count": count,
                 "primal": finite(model.ObjVal) if count else None,

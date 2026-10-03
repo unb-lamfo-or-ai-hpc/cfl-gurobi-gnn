@@ -45,8 +45,9 @@ class PackageTests(unittest.TestCase):
                         k: {"effective": -1, "version_default": -1}
                         for k in plan["config"]["default_parameters_observed"]
                     },
-                    "source_objective_sense": "MINIMIZE",
+                    "source_objective_sense": "MAXIMIZE",
                     "effective_objective_sense": "MINIMIZE",
+                    "objective_sense_override_applied": True,
                     "gurobi_version": [13, 0, 1],
                     "model_unchanged_after_execution": True,
                     "scientific_reporting_eligible": False,
@@ -118,6 +119,29 @@ class PackageTests(unittest.TestCase):
             directory, _ = self.fixture(Path(tmp))
             with self.assertRaisesRegex(ValueError, "plan_hash_mismatch"):
                 packaging.verify(directory, "0" * 64)
+
+    def test_objective_normalization_claim_is_checked_even_after_rehashing(self):
+        for field, value in (
+            ("source_objective_sense", "MINIMIZE"),
+            ("effective_objective_sense", "MAXIMIZE"),
+            ("objective_sense_override_applied", False),
+            ("objective_sense_override_applied", 1),
+        ):
+            with (
+                self.subTest(field=field, value=value),
+                tempfile.TemporaryDirectory() as tmp,
+            ):
+                directory, sha = self.fixture(Path(tmp))
+                path = directory / "easy-threads1/attempt_report.json"
+                report = pilot.strict_json(path)
+                report[field] = value
+                write_json(path, report)
+                execution_path = directory / "pilot_execution_report.json"
+                execution = pilot.strict_json(execution_path)
+                execution["executions"][0]["report_sha256"] = digest(path)
+                write_json(execution_path, execution)
+                with self.assertRaisesRegex(ValueError, "contract_mismatch"):
+                    packaging.verify(directory, sha)
 
 
 if __name__ == "__main__":

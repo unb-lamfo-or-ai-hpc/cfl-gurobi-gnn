@@ -18,6 +18,8 @@
     "Presolve", "Cuts", "Heuristics", "NodeLimit"
   ],
   "effective_objective_sense": "MINIMIZE",
+  "source_objective_sense": "MAXIMIZE",
+  "objective_sense_policy": "historical_cfl_minimization_in_memory_only",
   "frozen_optimization_test_parent_ids": [
     "CFL_medium_instance_0", "CFL_medium_instance_4",
     "CFL_medium_instance_7", "CFL_medium_instance_9",

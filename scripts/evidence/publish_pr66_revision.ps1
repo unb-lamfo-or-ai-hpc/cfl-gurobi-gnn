@@ -131,7 +131,7 @@ runbook. Historical reconciliation remains qualification foundations, not comple
 incumbent totals or historical cost certification. The earlier barrier draft is
 superseded and was not executed.
 
-Local evidence tests: 124 passed on Python 3.10 and 3.13. Scoped Ruff check/format,
+Local evidence tests: 133 passed on Python 3.10 and 3.13. Scoped Ruff check/format,
 Bash/PowerShell syntax and diff checks passed. Real licensed execution and physical
 affinity qualification remain pending on DaSCI. Preserve draft into develop.
 No merge, main/Pages update, training, HPC submission or Zenodo upload is included.
@@ -139,6 +139,14 @@ No merge, main/Pages update, training, HPC submission or Zenodo upload is includ
 The PR57 role-plan pin is its recomputed canonical contract, not the JSON file
 digest. Verify the declared/recomputed/expected contract and the 54-parent roles
 before freezing; bind stored JSON bytes separately. Retain the failed preflight.
+
+Restore the existing CFL objective convention: PR65 observed MAXIMIZE in all 90
+stored LPs, while the MVP solves the cost objective as MINIMIZE. Preflight and
+each attempt normalize only ModelSense in memory, with source/effective senses
+and an explicit override flag recorded and checked by packaging. Unexpected
+source senses and non-linear, multi-objective or continuous-only models fail
+before optimization. Stored LP bytes, coefficients and constraints are preserved.
+Gurobi algorithmic defaults and the frozen easy_17 / medium_1 draw stay unchanged.
 $EndMarker
 "@
 $Body = [string]$Final.body

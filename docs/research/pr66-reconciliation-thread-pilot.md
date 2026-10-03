@@ -84,8 +84,22 @@ this does not mean every algorithm runs simultaneously.
 
 Seed=42, TimeLimit=300, MIPGap=0.1 and SoftMemLimit=48 are common experimental/safety
 controls. Threads is the compared intervention. Logging controls are operational.
-The original objective must already be MINIMIZE: reject another sense rather than
-silently reformulating it. Environment ThreadLimit=16 precedes startup. The
+Objective sense follows the existing CFL research convention, not the stored
+LP declaration. PR65's recovered inventory records MAXIMIZE in all 90 originals;
+the MVP cost problem uses effective MINIMIZE. Both preflight and every fresh
+attempt require that expected source declaration, a single linear objective
+and discrete variables, then set only ModelSense=1 in memory and call update.
+Objective coefficients, the objective constant and the feasible region are not
+replaced, negated or otherwise reformulated; stored LP bytes are never rewritten.
+An unexpected source sense or model type is a separate explicit error, not a
+generic minimization failure. Receipts and the outcome CSV retain source MAXIMIZE,
+effective MINIMIZE and objective_sense_override_applied=true. The package verifier
+checks all three fields. This corrects the earlier unexecuted PR66 requirement
+that the raw declaration already be MINIMIZE, which contradicted the MVP/PR65
+convention. All ten arms use the same normalization before optimization.
+ModelSense is a model attribute, not an algorithmic parameter; this correction
+does not reinstate Barrier or change the default-algorithm comparison.
+Environment ThreadLimit=16 precedes startup. The
 [Gurobi parameter reference](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html)
 describes Threads as a cap, not guaranteed simultaneous utilization.
 

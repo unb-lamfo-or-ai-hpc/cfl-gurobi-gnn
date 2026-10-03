@@ -53,6 +53,17 @@ It then records a separate stored-file SHA256 and checks for concurrent changes.
 If the plan was relocated, set `PR66_ROLE_PLAN` to its exact location; never
 replace the expected canonical contract with a newly observed file hash.
 
+The stored originals declare MAXIMIZE, as verified for all 90 models in PR65.
+The existing CFL research convention uses MINIMIZE for their cost objective.
+Preflight and every attempt apply that convention in memory only, with unchanged
+coefficients, objective constant and constraints. Look for two
+`PR66_MODEL_QUALIFIED` lines recording both source and effective senses and the
+explicit override flag. Unexpected source senses, continuous-only models and
+nonlinear/multi-objective models are rejected before optimization. The original
+LP files and their hashes remain intact. This is not a solver-algorithm override.
+Retain earlier failed preflight directories; install the corrected published
+commit in a new worktree and freeze a fresh plan rather than modifying old pins.
+
 ## Submit only when authorized
 
 After reviewing the preflight output, explicitly authorize the initial screen:
