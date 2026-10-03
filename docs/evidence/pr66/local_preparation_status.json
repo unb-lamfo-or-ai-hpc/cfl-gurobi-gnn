@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "scope": "offline_implementation_checks_not_hpc_execution",
+  "confirmed_pr65_merge_from_author_receipt": "929f10e1102e398ecc33a58908f8788c9367e909",
+  "provisional_local_base": "39e3baf8e67b869368d9c7e149925111254106fb",
+  "merged_develop_base_verified_locally": true,
+  "fetched_develop_commit": "929f10e1102e398ecc33a58908f8788c9367e909",
+  "feature_branch_rebased_on_merged_develop": false,
+  "ruff_check": "passed",
+  "ruff_format_check": "passed",
+  "python_3_10_evidence_tests": 104,
+  "python_3_13_evidence_tests": 104,
+  "scheduler_script_syntax_checks": "passed",
+  "new_optimization_runs": 0,
+  "new_training_runs": 0,
+  "remote_pull_request_created": false,
+  "scientific_reporting_eligible": false
+}
