@@ -2,6 +2,12 @@
 
 ## Research objective and release boundary
 
+The active first CPU experiment is now the
+[PR66 lean shared-DaSCI screen](pr66-reconciliation-thread-pilot.md): seed 42,
+one randomly drawn fitting parent per easy/medium class, five thread caps,
+300 seconds and 10% target, one shared sixteen-core job. Earlier broader CPU
+matrices below are expansion ideas, not approved initial execution budgets.
+
 The next study will assess whether learned partial starts improve solution quality and time-to-target across CFL difficulty classes, and whether those gains remain useful after accounting for CPU, memory, GPU and preparation costs. Favorable effects are hypotheses, not acceptance requirements. An informative negative experiment is retained.
 
 MVP 1.0 is an experimental development release, not a submission-ready scientific certification. Freeze its source, 54-parent model, prediction policy and original outcomes separately from MVP 2.0. Development occurs on feature branches targeting `develop`; public Pages deploys only `main`. No new standalone hard-instance label campaign is planned. Zenodo draft 23113003 remains unpublished; its numeric record identifier is not a verified DOI.
