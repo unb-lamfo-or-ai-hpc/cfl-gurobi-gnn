@@ -275,26 +275,44 @@ class ClassTests(unittest.TestCase):
             classes.verify(output)
 
     def test_gzip_source_passed_directly_and_stored_bytes_hash_bound(self):
+        self.check_gzip_source(canonical_alias=False)
+
+    def test_gzip_source_resolved_alias_keeps_file_identity_and_stored_hash(self):
+        self.check_gzip_source(canonical_alias=True)
+
+    def check_gzip_source(self, canonical_alias):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             raw = root / "raw"
+            if canonical_alias:
+                # Exercise path normalization on every OS without symlink privileges.
+                # Windows runner temp paths may also resolve from short-name aliases.
+                (root / "alias").mkdir()
+                raw = root / "alias" / ".." / "raw"
             path = raw / "CFL_medium_instance/LP/CFL_medium_instance_0.lp.gz"
             path.parent.mkdir(parents=True)
             payload = gzip.compress(b"synthetic LP", mtime=0)
             path.write_bytes(payload)
+            seen = []
+
+            def reader(selected):
+                seen.append(selected)
+                return classes.model_statistics(FakeModel())
+
             with patch.object(classes, "ModelReader") as licensed:
-                rows = classes.collect(
-                    raw,
-                    root / "out",
-                    reader=lambda selected: (
-                        classes.model_statistics(FakeModel())
-                        if selected == path
-                        else self.fail("Unexpected model source")
-                    ),
-                )
+                rows = classes.collect(raw, root / "out", reader=reader)
                 licensed.assert_not_called()
+            # Assert outside collect's read-error handler so fixture failures surface.
+            self.assertEqual(seen, [path.resolve()])
+            self.assertTrue(seen[0].samefile(path))
+            self.assertEqual(seen[0].suffix, ".gz")
+            self.assertFalse(path.with_suffix("").exists())
+            if canonical_alias:
+                self.assertNotEqual(path, seen[0])
             row = rows[30]
-            self.assertEqual(row["status"], "model_attributes_observed")
+            self.assertEqual(
+                row["status"], "model_attributes_observed", row["error_type"]
+            )
             self.assertEqual(row["source_file_format"], "lp.gz")
             self.assertEqual(
                 row["original_lp_sha256"], hashlib.sha256(payload).hexdigest()

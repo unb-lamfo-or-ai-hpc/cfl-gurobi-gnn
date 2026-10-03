@@ -221,6 +221,18 @@ prevalence of positive solution labels.
 
 ## Closure and next experimental gate
 
+The Windows CI failure on commit `4d74b4155152568841783a8755cbe23a95bfb6fa`
+occurred in the synthetic compressed-source test, not in the recovered HPC
+collection. Its fake reader compared an unresolved fixture path with the
+collector's canonical path; its assertion was caught as a model-read failure.
+An equivalent parent-segment alias reproduces this deterministically. The test
+now checks canonical path and actual file identity outside the read-error
+handler, retains stored-byte hash checks, and verifies no decompressed copy is
+created. A portable alias regression remains enabled on every CI platform.
+Windows temporary short-name resolution is a possible runner-specific trigger;
+the provided logs do not expose the runner's actual temporary path.
+Neither production collector nor any expected historical artifact hash changes.
+
 Close PR65 as a verified read-only engineering diagnostic after the final
 published commit passes CI and review on `develop`. Structural collection and
 recovery are complete; full computational reconciliation is not. The unchanged
@@ -245,3 +257,9 @@ remains separate, with matched effective global batch and data membership before
 claims about speed or predictive quality. This diagnostic does not imply
 incumbent, scaling or warm-start improvements. Main/Pages and Zenodo remain
 unchanged.
+
+The detailed [reconciliation and thread-pilot protocol](computational-reconciliation-and-thread-pilot.md)
+defines registry identities, evidence joins, cost attribution, vector/lineage
+audits, deterministic development-cohort selection, memory qualification,
+paired seeds, proposed resource ceilings and censoring rules. It is a plan only;
+it does not submit jobs or qualify a historical cost/performance claim.
