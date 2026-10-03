@@ -24,6 +24,12 @@ are operational tools/bootstrap/queue paths. One invalid historical JSON remains
 preserved and flagged in the private archive. The freeze contains 8,790 files in
 26 parts with 26,481,802,784 compressed bytes and no transformed source bytes.
 
+If replaying older commits on Windows introduces CRLF-only checkout drift, run
+`python scripts/evidence/verify_public_checkout.py --repair-line-endings`.
+The verifier compares the five allowlisted public files with committed bytes
+and the existing hashes before repair. It refuses changes beyond line endings;
+it does not rewrite research contents or replace the expected checksums.
+
 ## Interpretation
 
 The cohort contains 30 easy and 24 medium parents. Slurm records allocate one
