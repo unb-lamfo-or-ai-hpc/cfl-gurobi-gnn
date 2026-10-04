@@ -51,7 +51,8 @@ class OriginalModel:
         self.params = {}
 
     def getParamInfo(self, name):
-        return (name, float, self.params.get(name, 1), 0, 100, 1)
+        default = float("inf") if name == "NodeLimit" else 1
+        return (name, float, self.params.get(name, default), 0, 100, default)
 
     def setParam(self, key, value):
         self.params[key] = value
@@ -199,6 +200,38 @@ class ObjectivePolicyTests(unittest.TestCase):
             self.assertIs(report["model_unchanged_after_execution"], True)
             self.assertEqual(report["parameters"]["Threads"], 1)
             self.assertNotIn("Method", report["parameters"])
+
+    def test_unbounded_version_default_survives_strict_json_roundtrip(self):
+        model = OriginalModel()
+        parameters, observed = pilot.configure_model(model, self.config(), threads=1)
+        self.assertEqual(parameters["Threads"], 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "defaults.json"
+            pilot.write_json(path, observed)
+            receipt = pilot.strict_json(path)
+        self.assertEqual(
+            receipt["NodeLimit"],
+            {"effective": "positive_infinity", "version_default": "positive_infinity"},
+        )
+
+    def test_unbounded_default_does_not_hide_a_changed_effective_limit(self):
+        model = OriginalModel()
+        original = model.getParamInfo
+
+        def altered(name):
+            if name == "NodeLimit":
+                return (name, float, 1000, 0, float("inf"), float("inf"))
+            return original(name)
+
+        model.getParamInfo = altered
+        with self.assertRaisesRegex(ValueError, "algorithm_parameter_not_default"):
+            pilot.configure_model(model, self.config(), threads=1)
+        self.assertEqual(model.params, {})
+
+    def test_nan_default_and_invalid_parameter_types_are_refused(self):
+        for value in (float("nan"), None, True, "inf"):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                pilot.parameter_receipt_value(value)
 
 
 if __name__ == "__main__":

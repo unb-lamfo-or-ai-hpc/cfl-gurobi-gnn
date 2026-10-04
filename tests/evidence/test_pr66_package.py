@@ -42,7 +42,14 @@ class PackageTests(unittest.TestCase):
                         pilot.canonical(params).encode()
                     ).hexdigest(),
                     "algorithm_defaults": {
-                        k: {"effective": -1, "version_default": -1}
+                        k: {
+                            "effective": "positive_infinity"
+                            if k == "NodeLimit"
+                            else -1,
+                            "version_default": (
+                                "positive_infinity" if k == "NodeLimit" else -1
+                            ),
+                        }
                         for k in plan["config"]["default_parameters_observed"]
                     },
                     "source_objective_sense": "MAXIMIZE",
@@ -119,6 +126,33 @@ class PackageTests(unittest.TestCase):
             directory, _ = self.fixture(Path(tmp))
             with self.assertRaisesRegex(ValueError, "plan_hash_mismatch"):
                 packaging.verify(directory, "0" * 64)
+
+    def test_unknown_defaults_cannot_pass_by_equality_even_with_updated_hash(self):
+        for name, value in (
+            ("NodeLimit", None),
+            ("NodeLimit", "negative_infinity"),
+            ("NodeLimit", "inf"),
+            ("Method", "positive_infinity"),
+            ("Method", True),
+        ):
+            with (
+                self.subTest(name=name, value=value),
+                tempfile.TemporaryDirectory() as tmp,
+            ):
+                directory, sha = self.fixture(Path(tmp))
+                path = directory / "easy-threads1/attempt_report.json"
+                report = pilot.strict_json(path)
+                report["algorithm_defaults"][name] = {
+                    "effective": value,
+                    "version_default": value,
+                }
+                write_json(path, report)
+                execution_path = directory / "pilot_execution_report.json"
+                execution = pilot.strict_json(execution_path)
+                execution["executions"][0]["report_sha256"] = digest(path)
+                write_json(execution_path, execution)
+                with self.assertRaisesRegex(ValueError, "invalid_algorithm_default"):
+                    packaging.verify(directory, sha)
 
     def test_objective_normalization_claim_is_checked_even_after_rehashing(self):
         for field, value in (

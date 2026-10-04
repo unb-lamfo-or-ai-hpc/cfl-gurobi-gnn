@@ -7,6 +7,28 @@ The historical v1 configuration filename is retained for compatibility; its
 
 ## Publish first, without execution
 
+### Job 3466 receipt recovery
+
+The author-supplied diagnostic transcript establishes that job 3466 qualified
+sixteen physical cores and started only `easy-threads1`. The child returned from
+`optimize()` and failed while writing strict JSON: the observed default NodeLimit
+is positive infinity. Status, terminal gap and optimize time remain unreported;
+recover them from the retained private Gurobi log before asserting outcomes.
+The parent supervisor retained a failed execution receipt and stopped the matrix.
+
+Infinite parameter defaults now use the explicit JSON string `positive_infinity`
+instead of a JSON number or a missing-value null. The equality check against the
+installed Gurobi default precedes encoding. The collector accepts this encoding
+for NodeLimit and rejects null or unsupported default representations. Preflight
+also serializes the parameter receipt without optimization. Regression tests
+exercise the real attempt writer and evidence packaging with an infinite default.
+
+Keep the old plan, worktree, logs and failed allocation as immutable evidence.
+Install the recovery in a new worktree, verify its published revision and CI,
+and run a fresh preflight. Its worker hash changes the plan digest; retain the
+same role contract, original LP hashes, easy17/medium1 pair, controls and budget.
+Do not apply transferred files directly to the worktree used by job 3466.
+
 The local PowerShell publisher updates the existing draft PR66 into `develop`.
 It checks each changed remote file against the original local baseline, allowing
 only CRLF/LF equivalence. Conflicting remote changes abort before publication.

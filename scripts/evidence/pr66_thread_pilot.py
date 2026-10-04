@@ -276,6 +276,17 @@ def finite(value):
     return float(value) if math.isfinite(value) else None
 
 
+def parameter_receipt_value(value):
+    """Preserve numeric defaults, including an unbounded limit, in strict JSON."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError("invalid_algorithm_parameter_value")
+    if math.isfinite(value):
+        return value
+    if math.isinf(value):
+        return "positive_infinity" if value > 0 else "negative_infinity"
+    raise ValueError("nan_algorithm_parameter_value")
+
+
 def licensed_runtime(config):
     """Validate the sole authorized license before importing the licensed API."""
     if (
@@ -303,7 +314,10 @@ def configure_model(model, config, threads, log_path=None):
         info = model.getParamInfo(name)
         if info is None or info[2] != info[5]:
             raise ValueError("algorithm_parameter_not_default")
-        observed[name] = {"effective": info[2], "version_default": info[5]}
+        observed[name] = {
+            "effective": parameter_receipt_value(info[2]),
+            "version_default": parameter_receipt_value(info[5]),
+        }
     parameters = {
         "Threads": threads,
         "Seed": config["seed"],
@@ -391,7 +405,9 @@ def preflight(plan_dir, expected_sha, raw_root):
             env.start()
             with gp.read(str(path), env=env) as model:
                 senses = prepare_original_model(model, plan["config"])
-                configure_model(model, plan["config"], 1)
+                parameters, defaults = configure_model(model, plan["config"], 1)
+                # Check the receipt representation before any licensed solve.
+                canonical({"parameters": parameters, "algorithm_defaults": defaults})
                 print(
                     "PR66_MODEL_QUALIFIED="
                     + canonical(

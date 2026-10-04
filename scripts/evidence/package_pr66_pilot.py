@@ -74,6 +74,16 @@ def verify(directory, expected_sha):
             v["effective"] != v["version_default"] for v in defaults.values()
         ):
             raise ValueError("algorithm_defaults_mismatch")
+        for parameter_name, observation in defaults.items():
+            value = observation["effective"]
+            if parameter_name == "NodeLimit" and value == "positive_infinity":
+                continue
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+            ):
+                raise ValueError("invalid_algorithm_default_receipt")
         for key in (
             "optimize_wall_seconds",
             "process_cpu_seconds",
