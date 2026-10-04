@@ -1,0 +1,10 @@
+{
+  "attempt_reports_verified": 10,
+  "complete_matrix": true,
+  "plan_sha256": "7cfd6bf270e04f96c0745ebf61ae427a949d24a85b571879d9c746af1f75b152",
+  "private_logs_included": false,
+  "raw_inputs_included": false,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "scope": "pilot_receipt_integrity_not_general_scaling_evidence"
+}
