@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "protocol_id": "pr66_dasci_shared_thread_screen_defaults_v2",
+  "cluster": "dgx-dasci",
+  "seed": 42,
+  "thread_caps": [1, 2, 4, 8, 16],
+  "requested_physical_cores": 16,
+  "exclusive": false,
+  "time_limit_seconds": 300,
+  "mip_gap_relative": 0.1,
+  "soft_memory_limit_decimal_gb": 48,
+  "scheduler_memory_gib": 64,
+  "gurobi_version": [13, 0, 1],
+  "algorithm_policy": "reset_all_model_parameters_to_version_defaults_before_controls",
+  "default_parameters_observed": [
+    "Method", "NodeMethod", "Crossover", "ConcurrentMIP", "MIPFocus",
+    "MIPGapAbs", "FeasibilityTol", "IntFeasTol", "OptimalityTol",
+    "Presolve", "Cuts", "Heuristics", "NodeLimit"
+  ],
+  "effective_objective_sense": "MINIMIZE",
+  "source_objective_sense": "MAXIMIZE",
+  "objective_sense_policy": "historical_cfl_minimization_in_memory_only",
+  "frozen_optimization_test_parent_ids": [
+    "CFL_medium_instance_0", "CFL_medium_instance_4",
+    "CFL_medium_instance_7", "CFL_medium_instance_9",
+    "CFL_medium_instance_12", "CFL_medium_instance_20"
+  ],
+  "extension_enabled": false,
+  "maximum_future_time_limit_seconds": 3600,
+  "scientific_reporting_eligible": false
+}

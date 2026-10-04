@@ -2,6 +2,14 @@
 
 ## Research objective and release boundary
 
+The active first CPU experiment is now the
+[PR66 lean shared-DaSCI screen](pr66-reconciliation-thread-pilot.md): seed 42,
+one randomly drawn fitting parent per easy/medium class, five thread caps,
+300 seconds and 10% target, one shared sixteen-core job. Earlier broader CPU
+matrices below are expansion ideas, not approved initial execution budgets.
+The first screen uses Gurobi algorithmic defaults, not a forced Barrier profile.
+Only Threads differs between arms; seed, limits and memory guard are common controls.
+
 The next study will assess whether learned partial starts improve solution quality and time-to-target across CFL difficulty classes, and whether those gains remain useful after accounting for CPU, memory, GPU and preparation costs. Favorable effects are hypotheses, not acceptance requirements. An informative negative experiment is retained.
 
 MVP 1.0 is an experimental development release, not a submission-ready scientific certification. Freeze its source, 54-parent model, prediction policy and original outcomes separately from MVP 2.0. Development occurs on feature branches targeting `develop`; public Pages deploys only `main`. No new standalone hard-instance label campaign is planned. Zenodo draft 23113003 remains unpublished; its numeric record identifier is not a verified DOI.
@@ -38,7 +46,7 @@ Estimated effort: 3-5 working days plus controlled cluster execution.
 
 Precommit an easy/medium pilot subset selected by class and label-free structural composition, not by observed improvement. Test `Threads` in {1,2,4,8,16}. Set Slurm CPU allocation and solver thread limits explicitly, record BLAS/OpenMP settings and constrain aggregate memory/concurrency. Keep seeds, solve budgets, tolerances and source models matched. Preserve the existing 64 GiB reservation initially; increase only after measured resource qualification in a newly versioned profile. Log out-of-memory and allocation failures, rather than dropping them.
 
-Separate (a) parallelizing one solve, (b) independent-instance array throughput and (c) concurrent MIP portfolio search. Record wall-time speedup, parallel efficiency, aggregate CPU-seconds and peak memory: sixteen cores for half the time is not automatically cheaper. Where memory or root capture is problematic, compare automatic, dual-simplex and barrier root strategies on the pilot, checking root-feature semantics and mathematical equivalence. Do not select these settings using the final test results.
+Separate (a) parallelizing one solve, (b) independent-instance array throughput and (c) concurrent MIP portfolio search. Record wall-time speedup, parallel efficiency, aggregate CPU-seconds and peak memory: sixteen cores for half the time is not automatically cheaper. The approved first screen leaves all algorithmic choices at version defaults. A later comparison of root methods requires a separately approved contract; it is not included in PR66. Do not select settings using final test results.
 
 Consider concurrent MIP as a secondary portfolio experiment with the same total CPU allocation and separate nondeterminism accounting. A Benders or other decomposition requires verifying exploitable structure and an exact reconstruction/certificate contract; it is not an immediate assumption that these binary models decompose into independent subproblems. Distributed Gurobi requires compatible licenses/runtime and is distinct from threads on one DGX host.
 
