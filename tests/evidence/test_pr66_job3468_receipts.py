@@ -11,8 +11,8 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts/evidence"))
-import package_pr66_pilot as packaging
-import pr66_thread_pilot as pilot
+import package_pr66_pilot as packaging  # noqa: E402
+import pr66_thread_pilot as pilot  # noqa: E402
 
 EVIDENCE = ROOT / "docs/evidence/pr66/job3468"
 PLAN_SHA = "7cfd6bf270e04f96c0745ebf61ae427a949d24a85b571879d9c746af1f75b152"
