@@ -133,6 +133,7 @@ class WorkflowTests(unittest.TestCase):
             calls.append(args)
             if args[0] == "sbatch":
                 self.assertIn("--hold", args)
+                self.assertIn("--no-requeue", args)
                 self.assertNotIn("--wait", args)
                 self.assertNotIn("SBATCH_GPUS", kwargs["env"])
                 self.assertNotIn("SBATCH_EXCLUSIVE", kwargs["env"])
@@ -440,6 +441,7 @@ class WorkflowTests(unittest.TestCase):
     def test_batch_no_loop_gpu_exclusive_or_wait(self):
         text = (ROOT / flow.BATCH).read_text()
         self.assertIn("--time=00:10:00", text)
+        self.assertIn("#SBATCH --no-requeue", text)
         self.assertIn("--hint=nomultithread", text)
         self.assertIn("--cpu-bind=verbose", text)
         self.assertNotIn("--cpu-bind=cores", text)
