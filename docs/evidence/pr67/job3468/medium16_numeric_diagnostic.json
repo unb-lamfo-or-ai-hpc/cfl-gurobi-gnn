@@ -1,0 +1,22 @@
+{
+  "attempt": "medium-threads16",
+  "attempt_report_sha256": "c43880861b2e4bb2cf23468d7cbcf87f54441adde14e037db452d801e506864b",
+  "checks": {
+    "dual": {"absolute_delta": 2.9309887850104133e-13, "absolute_tolerance": 1e-10, "display": 2.456209846529, "pass": true, "receipt": 2.456209846529293, "relative_tolerance": 1e-10},
+    "node_count": {"display": 1, "pass": true, "receipt": 1.0},
+    "primal": {"absolute_delta": 3.6983749396313215e-12, "absolute_tolerance": 1e-10, "display": 25.89141802888, "pass": true, "receipt": 25.891418028876302, "relative_tolerance": 1e-10},
+    "relative_gap": {"absolute_delta_fraction": 2.0918893195442934e-07, "absolute_tolerance_fraction": 1e-06, "display_percent": 90.5134, "pass": true, "receipt_fraction": 0.905134209188932},
+    "runtime": {"absolute_delta_seconds": 0.10282006263730636, "absolute_tolerance_seconds": 0.051, "display_seconds": 300.1, "pass": false, "receipt_seconds": 300.20282006263733},
+    "runtime_nonnegative": {"display": 300.1, "minimum": 0, "pass": true}
+  },
+  "collector_sha256": "21ccf71fa0890d2ba21614c5cf5355b9a8f3e7a95f64d7e103911929d08b1325",
+  "failed_checks": ["runtime"],
+  "job_id": "3468",
+  "log_sha256": "9d8f9b46a712f13fcdb4a7eb8218decc0e7c4d8237a8ff7fea349825b728c8f4",
+  "optimization_runs": 0,
+  "phase_observations_remain_unqualified": true,
+  "private_log_text_included": false,
+  "qualification_changed": false,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false
+}
