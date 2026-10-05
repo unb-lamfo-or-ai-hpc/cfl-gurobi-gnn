@@ -6,8 +6,9 @@ PR74 was merged into `develop` at
 `ba5bf12a5bffe8b5465926494542655a6ee74220`, following explicit user approval of
 head `f8f895d10d495bc9335e8dc351f10d6507674828` and four passing evidence CI arms.
 This delivery implements the longer-budget executor; it does **not** execute
-the comparison or close Sprint B. The installed synthetic fault receipt is
-still required before PR75 closure. No new licensed optimization, scheduler
+the comparison or close Sprint B. The returned installed synthetic fault receipt
+has passed independent byte/hash/contract review (see the closure below).
+No new licensed optimization, scheduler
 submission, training or scientific promotion is authorized by this PR.
 
 The PR69 compiler, PR70 preflight, PR71 single-attempt worker and PR72 workflow
@@ -112,7 +113,7 @@ operator wrapper must independently enforce the two-submission/no-requeue
 budget, held-job ID persistence, exact batch profile and one-shot accounting.
 Do not reuse the PR72 single-attempt submission wrapper for this matrix.
 
-Immediate permitted step on dgx-dasci: use the reviewed pinned source, run
+The completed no-solver handoff on dgx-dasci used the reviewed pinned source to run
 `paired_matrix_no_solver_probe.py --output <fresh-RAID-directory>`, then
 `paired_matrix_executor.py prepare --directory <fresh-flow>`. The probe uses
 synthetic Gurobi APIs, small real POSIX child processes and injected counters;
@@ -122,8 +123,8 @@ tests must pass with **zero skips**. Preserve any failure receipt; do not rerun
 to replace it. Return only `no_solver_fault_probe.json`, its manifest, printed
 SHA and the prepared plan SHA. Never send mock/private log text.
 
-After returned-receipt review, archive exact bytes, run final CI and mark PR75
-ready before requesting merge. Then finish the nonblocking operator wrapper and
+The returned receipt is archived exactly; final CI and ready-for-review status
+must precede the merge request. Next, finish the nonblocking operator wrapper and
 present the exact prospective budget for separate approval. Under that approved
 workflow, launch easy once; query status once when desired; collect after
 terminal state, review the guard/result/accounting package, and only then allow
@@ -135,8 +136,41 @@ launches medium merely because Slurm reports COMPLETED.
 The installed callback observation and historical/current resource-scope audit
 are complete (PR73/74). This PR delivers isolated longer-budget execution,
 memory-stop rules and offline fault/export validation. Remaining gates are the
-installed no-solver fault check, nonblocking bounded operator wrapper, exact
+nonblocking bounded operator wrapper, exact
 separate budget, actual allocation memory gate, authorized same-pair matrix,
 independent accounting/log review, and paired target/censoring/cost analysis.
 Two parents and one seed remain a development comparison, not population-wide
 scaling evidence. No GNN training is started by these steps.
+
+## Installed fault qualification closure
+
+The operator returned the sanitized receipt from source
+`c845ccd6b2242022c05ac16cbf2f666c023b8e82` and its checksum manifest.
+The installed suite passed **25 tests, zero failures, errors or skips**, including
+the real POSIX process-group cases. Optimization calls and submissions added
+are both zero. These are synthetic Gurobi APIs and injected memory counters;
+no actual high-memory pressure or allocation kernel limit has been qualified.
+
+Archived originals (not regenerated receipts):
+[receipt](pr75/fault-probe-c845ccd6b224/no_solver_fault_probe.json) (2037 bytes,
+SHA256 `ca2381d4a1396f3d40b76b653bd7f81f591b830b5f38df8d77dfc12ecc1f1602`) and
+[manifest](pr75/fault-probe-c845ccd6b224/SHA256SUMS.txt) (93 bytes,
+SHA256 `570206ea313d508d7320b8640ac138134a19d9234cbeb8cb3e5c41cd08889279`).
+All 14 referenced source/test dependencies match the reviewed repository bytes.
+The import is protected against checkout line-ending conversion by `.gitattributes`.
+New offline receipt tests enforce hashes, member set, canonical JSON, source pins,
+zero execution and all remaining false qualification/approval flags.
+
+The plan SHA printed in the operator's preparation output is
+`c7070710417661afe838326fafc36d2c0bc0cc5af70618593f909388e9ec78ea`.
+Independent deterministic recomputation from the unchanged dependencies and
+original public evidence matches it. This is a review of the reported plan,
+not an independently downloaded plan file. Its resource approval remains false.
+
+Closure changes only archival evidence, documentation, checkout attributes and
+new receipt tests; the three executor/guard/probe scripts and the two test files
+bound by the installed receipt stay byte-unchanged. The receipt attests its
+historical source, not a new installed run at the closure head. Preserve the
+existing HPC flow: do not rerun the probe/preparation, rewrite its source, approve
+it or submit jobs. A future bounded operator workflow must prepare and review
+its own exact source/plan/approval binding. Merge does not satisfy that gate.
