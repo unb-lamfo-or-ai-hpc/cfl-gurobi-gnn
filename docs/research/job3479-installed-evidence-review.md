@@ -49,6 +49,32 @@ head before operator execution. Do not run a local draft or modify the retained
 PR72 source. Once the sanitized receipt returns, compare it independently to
 the public package and review any warnings before qualifying a dimension.
 
+## Read-only audit result (2026-10-05)
+
+The operator ran the pinned script from PR73 head
+`d72fb81ffa9c393e1c3ede2e9f9743af12cbdea4` without another optimization
+or Slurm submission. The allowlisted JSON receipt has SHA256
+`0c26533eb90b27b4e1115500997682af3d95713edd6197bc0f8d0a4eeb432eee`.
+Its manifest verified on the HPC and after download. A separate Windows check
+compared the downloaded receipt with the PR72 public package, including the
+source, plan, approval, job identity, callback counts, log hashes and memory
+fields. These all agreed. The private raw log was not copied or reparsed on
+Windows; the pinned, tested HPC script checked its closed-writer hash and
+numeric display against the API receipt.
+
+The result was `receipt_consistent_observations`, with no warnings. The
+terminal display agreed under the existing parser tolerances, and the worker
+recorded 1,098 MIP and 62 MIPSOL callbacks. Thus the bounded installed
+callback **observation** is supported. The displayed presolve, root relaxation
+and total solver times were 1.38, 0.29 and 60.02 seconds, respectively; these
+are not disjoint CPU-phase costs. The 10% crossing remains a sampled
+observation, not an exact first crossing. The receipt still sets
+`scientific_reporting_eligible=false`, `root_tree_phase_costs_qualified=false`,
+`true_first_crossings_qualified=false` and `memory_metrics_reconciled=false`.
+The Slurm step `MaxRSS=200152K` and worker `ru_maxrss=270479360` bytes remain
+different, unreconciled observation scopes. No private text entered the
+public receipt.
+
 ## Interpretation and remaining gates
 
 `terminal_numeric_parity_supported=true` means this log display agrees with
