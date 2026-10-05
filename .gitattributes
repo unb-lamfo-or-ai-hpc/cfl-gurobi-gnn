@@ -27,3 +27,6 @@ configs/experiments/pr66_thread_screen_v1.json text eol=lf
 docs/evidence/pr66/job3468/** -text
 # Preserve the returned phase exports and derived review exactly as reviewed.
 docs/evidence/pr67/job3468/** -text
+# Imported audit receipts and derived resource reviews bind exact bytes.
+docs/evidence/pr73/job3479/** -text
+docs/evidence/pr74/job3479/** -text
