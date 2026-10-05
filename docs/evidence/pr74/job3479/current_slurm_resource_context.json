@@ -1,0 +1,31 @@
+{
+  "allowlisted_configuration": {
+    "JobAcctGatherFrequency": {
+      "task": 30
+    },
+    "JobAcctGatherParams": [],
+    "JobAcctGatherType": "jobacct_gather/cgroup",
+    "ProctrackType": [
+      "proctrack/cgroup"
+    ],
+    "TaskPlugin": null
+  },
+  "collector_source_commit": "0cc3195282bf33659660f5a9a2f2975500ba4bcd",
+  "comparison_submission_ready": false,
+  "configuration_query_succeeded": true,
+  "higher_budget_memory_safety_qualified": false,
+  "historical_job3479_configuration_verified": false,
+  "historical_memory_metrics_reconciled": false,
+  "maximum_scheduler_queries": 2,
+  "observed_at_utc": "2026-10-05T22:25:14.353152+00:00",
+  "optimization_runs_added": 0,
+  "protocol_id": "current_slurm_resource_context_v1",
+  "raw_configuration_included": false,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "slurm_version": "22.05.2",
+  "submissions_added": 0,
+  "unavailable_or_redacted_fields": [
+    "TaskPlugin"
+  ]
+}
