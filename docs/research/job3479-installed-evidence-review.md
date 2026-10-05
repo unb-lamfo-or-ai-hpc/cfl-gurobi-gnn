@@ -55,6 +55,8 @@ The operator ran the pinned script from PR73 head
 `d72fb81ffa9c393e1c3ede2e9f9743af12cbdea4` without another optimization
 or Slurm submission. The allowlisted JSON receipt has SHA256
 `0c26533eb90b27b4e1115500997682af3d95713edd6197bc0f8d0a4eeb432eee`.
+The exact sanitized receipt and its manifest are archived at
+`docs/evidence/pr73/job3479/`.
 Its manifest verified on the HPC and after download. A separate Windows check
 compared the downloaded receipt with the PR72 public package, including the
 source, plan, approval, job identity, callback counts, log hashes and memory
