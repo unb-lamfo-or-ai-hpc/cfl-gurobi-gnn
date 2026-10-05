@@ -68,6 +68,49 @@ Return the printed package hash and the allowlisted package for independent
 review. Missing/unsupported evidence is a valid outcome; do not rerun the solver
 to fill it or upload private logs. A collector failure does not authorize cleanup.
 
+## Reviewed collection and stopping decision
+
+The returned 3,058-byte package has SHA256
+`389ff4a14e65d5e199668d2569a5157731c85a36f6d2eaec0fa9d16a2073e6ff`.
+Its three original exports are preserved byte-for-byte under
+[`docs/evidence/pr67/job3468`](../evidence/pr67/job3468/).
+Independent offline review checked outer/internal hashes, member allowlisting,
+all ten original attempt identities and exact JSON-to-CSV projection.
+The outer compressed package remains in operator/local evidence; the public
+manifest authenticates its two exported payloads, not a rebuilt archive.
+
+Nine logs passed the existing consistency gate. For the qualified medium
+attempts (caps 1, 2, 4 and 8), displayed presolve spans 13.67–14.45 seconds and
+the initial root LP completed in 2.46–3.41 seconds. Thus those four attempts did
+not time out before that initial LP finished. This does not identify the cause
+of later time consumption or measure complete root-node or tree-search work.
+The two-instance, one-seed, ordered shared-node screen is not a general scaling
+study or a basis for selecting a thread cap by observed best runtime.
+
+`medium-threads16` remains **unqualified**, with all displayed phases null.
+A hash-checked, read-only numeric diagnostic returned by the operator isolates
+the failed check: node count, objective, bound and gap agree with the receipt;
+displayed runtime is 300.10 seconds versus API Runtime 300.20282006263733 seconds.
+The absolute difference, 0.10282006263730636 seconds, exceeds the unchanged
+0.051-second gate. The diagnostic JSON is a recorded operator return, not an
+independent replay of the raw log or a cryptographically signed attestation.
+
+Gurobi defines Runtime as elapsed optimization wall time; its TimeLimit
+documentation allows additional termination computations after the limit.
+These facts do **not** establish why this footer and API attribute differ.
+Neither simple rounding nor a particular cleanup routine is asserted as the
+cause. Runtime remains authoritative in the original attempt receipt. No
+display phase is promoted, no threshold is widened to fit this observation,
+and no solver result, source log, original package or collector is changed.
+
+This is the collection's complete bounded outcome: **nine consistent logs and
+one explicitly unqualified log**, not ten successful phase recoveries. Missing
+phase evidence is an accepted stopping outcome, not a reason to resubmit 3468.
+The review closes this read-only collection question while leaving historical
+incumbent/lineage certification and scientific eligibility open. A future
+logging protocol can bind logs during execution and distinguish observation
+times; it is not retroactively applied to this run.
+
 ## Next gates toward MVP 2.0
 
 1. Review this collection and continue explicit historical attempt/job joins and
@@ -83,3 +126,8 @@ Reference: [Gurobi MIP logging](https://docs.gurobi.com/projects/optimizer/en/cu
 The documented distinction between root relaxation and root-node cuts/heuristics
 motivates the conservative separation above; this follow-up makes no causal
 claim about why the five medium attempts timed out.
+
+Timing references: [Runtime](https://docs.gurobi.com/projects/optimizer/en/current/reference/attributes/model.html#runtime)
+and [TimeLimit](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#timelimit).
+These document metric/termination semantics, not the cause of the recorded
+0.10282006263730636-second footer discrepancy.

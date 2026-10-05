@@ -25,3 +25,5 @@ scripts/slurm/dasci/*pr65* text eol=lf
 configs/experiments/pr66_thread_screen_v1.json text eol=lf
 # These imported pilot receipts bind the original bytes, including final LF.
 docs/evidence/pr66/job3468/** -text
+# Preserve the returned phase exports and derived review exactly as reviewed.
+docs/evidence/pr67/job3468/** -text
