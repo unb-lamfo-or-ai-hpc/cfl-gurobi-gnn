@@ -184,7 +184,9 @@ class MatrixTests(unittest.TestCase):
 
     def test_parent_claim_replay_and_different_directory_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            # Windows CI may expose TEMP through an 8.3 alias. Production
+            # intentionally rejects aliases; use a canonical synthetic root.
+            root = Path(tmp).resolve()
             flow = root / "flow"
             flow.mkdir()
             with patch.object(matrix.adapter, "EVIDENCE_ROOT", root):
@@ -305,9 +307,10 @@ class MatrixTests(unittest.TestCase):
 
     def test_medium_requires_completed_easy_and_no_global_stop(self):
         with tempfile.TemporaryDirectory() as tmp:
-            flow = Path(tmp) / "flow"
+            evidence = Path(tmp).resolve()
+            flow = evidence / "flow"
             flow.mkdir()
-            with patch.object(matrix.adapter, "EVIDENCE_ROOT", Path(tmp)):
+            with patch.object(matrix.adapter, "EVIDENCE_ROOT", evidence):
                 root = matrix.claim_root(flow, self.plan, self.sha, "easy", "99")
                 with (
                     patch.object(
