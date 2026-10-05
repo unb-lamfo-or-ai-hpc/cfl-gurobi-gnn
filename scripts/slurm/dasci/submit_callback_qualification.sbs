@@ -8,6 +8,7 @@
 #SBATCH --hint=nomultithread
 #SBATCH --mem=64G
 #SBATCH --time=00:10:00
+#SBATCH --no-requeue
 
 set -euo pipefail
 umask 077
