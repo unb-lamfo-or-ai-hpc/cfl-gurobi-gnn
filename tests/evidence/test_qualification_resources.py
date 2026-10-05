@@ -15,6 +15,67 @@ import review_qualification_resources as review  # noqa: E402
 
 
 class ResourceReviewTests(unittest.TestCase):
+    def test_returned_site_receipt_bytes_and_conservative_decision(self):
+        path = ROOT / "docs/evidence/pr74/job3479"
+        raw = (path / "current_slurm_resource_context.json").read_bytes()
+        expected = "1f0cdb91c6abe628335265fa1a22059530d845789b84c4fd6ff6a3c9876f699f"
+        self.assertEqual(review.digest(raw), expected)
+        self.assertEqual(
+            (path / "current_slurm_resource_context.SHA256SUMS.txt").read_bytes(),
+            (expected + "  current_slurm_resource_context.json\n").encode(),
+        )
+        value = json.loads(raw)
+        self.assertEqual(raw, review.encoded(value))
+        self.assertEqual(
+            set(value),
+            {
+                "schema_version",
+                "protocol_id",
+                "collector_source_commit",
+                "observed_at_utc",
+                "slurm_version",
+                "configuration_query_succeeded",
+                "allowlisted_configuration",
+                "unavailable_or_redacted_fields",
+                "historical_job3479_configuration_verified",
+                "historical_memory_metrics_reconciled",
+                "higher_budget_memory_safety_qualified",
+                "comparison_submission_ready",
+                "scientific_reporting_eligible",
+                "raw_configuration_included",
+                "optimization_runs_added",
+                "submissions_added",
+                "maximum_scheduler_queries",
+            },
+        )
+        self.assertEqual(value["schema_version"], 1)
+        self.assertEqual(value["protocol_id"], "current_slurm_resource_context_v1")
+        self.assertEqual(
+            value["collector_source_commit"], "0cc3195282bf33659660f5a9a2f2975500ba4bcd"
+        )
+        self.assertTrue(value["configuration_query_succeeded"])
+        self.assertEqual(value["slurm_version"], "22.05.2")
+        config = value["allowlisted_configuration"]
+        self.assertEqual(set(config), set(review.CONFIG_FIELDS))
+        self.assertEqual(config["JobAcctGatherType"], "jobacct_gather/cgroup")
+        self.assertEqual(config["JobAcctGatherFrequency"], {"task": 30})
+        self.assertEqual(config["JobAcctGatherParams"], [])
+        self.assertEqual(config["ProctrackType"], ["proctrack/cgroup"])
+        self.assertIsNone(config["TaskPlugin"])
+        self.assertEqual(value["unavailable_or_redacted_fields"], ["TaskPlugin"])
+        for name in (
+            "historical_job3479_configuration_verified",
+            "historical_memory_metrics_reconciled",
+            "higher_budget_memory_safety_qualified",
+            "comparison_submission_ready",
+            "scientific_reporting_eligible",
+            "raw_configuration_included",
+        ):
+            self.assertIs(value[name], False)
+        self.assertEqual(value["optimization_runs_added"], 0)
+        self.assertEqual(value["submissions_added"], 0)
+        self.assertEqual(value["maximum_scheduler_queries"], 2)
+
     def test_archived_resource_review_hash_and_cost_scope(self):
         path = ROOT / "docs/evidence/pr74/job3479"
         raw = (path / "job3479_resource_review.json").read_bytes()
