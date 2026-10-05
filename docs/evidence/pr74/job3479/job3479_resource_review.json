@@ -1,0 +1,67 @@
+{
+  "allocation_cost": {
+    "allocated_physical_core_hours_qualified": false,
+    "allocation_elapsed_seconds": 63,
+    "logical_allocation_cpu_hours": 0.56,
+    "reported_alloc_cpus": 32,
+    "reported_total_cpu_hours": 0.01702388888888889,
+    "reported_total_cpu_seconds": 61.286,
+    "step_rows_added_to_allocation": false
+  },
+  "approval_sha256": "8a987c7f4d00ac91abd71c3769c4a81e7fb40e3ebeca21655dbf83a1d8b4b2f2",
+  "callback_instrumentation": {
+    "counterfactual_slowdown_qualified": false,
+    "cpu_fraction_of_child_process_cpu": 0.00023373739654297828,
+    "current_process_cpu_seconds": 0.014213189000034765,
+    "external_wall_fraction_of_solver_runtime": 0.0003259725417507026,
+    "external_wall_seconds": 0.019564898684620857,
+    "mip_calls": 1098,
+    "mipsol_calls": 62,
+    "overhead_subtracted": false
+  },
+  "clocks": {
+    "child_current_process_cpu_seconds": 60.808365329,
+    "child_phases": [
+      {
+        "call_failed": false,
+        "external_wall_seconds": 1.6289547393098474,
+        "phase": "read_setup",
+        "process_cpu_seconds": 0.870790725
+      },
+      {
+        "call_failed": false,
+        "external_wall_seconds": 60.02060096524656,
+        "phase": "optimization",
+        "process_cpu_seconds": 59.822701248
+      },
+      {
+        "call_failed": false,
+        "external_wall_seconds": 0.012045923620462418,
+        "phase": "cleanup",
+        "process_cpu_seconds": 0.0029798900000059803
+      }
+    ],
+    "phase_clocks_cover_entire_child_lifecycle": false,
+    "root_tree_phase_costs_qualified": false,
+    "solver_runtime_seconds": 60.020081996917725,
+    "supervisor_wall_seconds": 61.87657443434
+  },
+  "comparison_submission_ready": false,
+  "installed_callback_observation_supported": true,
+  "job_id": "3479",
+  "memory_observations": {
+    "higher_budget_memory_safety_qualified": false,
+    "metrics_reconciled": false,
+    "slurm_step_max_rss": "200152K",
+    "worker_ru_maxrss_bytes": 270479360
+  },
+  "optimization_runs_added": 0,
+  "package_sha256": "fc4b00066a53868e61f07540d8db2d1377ea2da65fc0f405ab592c444b45fc22",
+  "plan_sha256": "f4c4887c6fff64dfcd40d414fbdd34a76a45061eec8984c5ecdb5ee4a3b1ae84",
+  "private_review_sha256": "0c26533eb90b27b4e1115500997682af3d95713edd6197bc0f8d0a4eeb432eee",
+  "protocol_id": "job3479_resource_scope_review_v1",
+  "raw_logs_included": false,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "source_commit": "d7ecfe5272c8b4b997a2bb078287b6fc99db02e1"
+}
