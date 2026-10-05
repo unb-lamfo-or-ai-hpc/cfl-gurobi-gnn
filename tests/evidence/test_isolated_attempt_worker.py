@@ -612,7 +612,8 @@ class SupervisorTests(unittest.TestCase):
     def test_authorization_claim_is_global_persistent_and_no_overwrite(self):
         with (
             tempfile.TemporaryDirectory() as tmp,
-            patch.object(worker.adapter, "EVIDENCE_ROOT", Path(tmp)),
+            # Windows runners may expose TEMP through a drive junction.
+            patch.object(worker.adapter, "EVIDENCE_ROOT", Path(tmp).resolve()),
         ):
             req = request()
             out = Path(tmp) / "attempt"
