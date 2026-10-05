@@ -86,15 +86,57 @@ Slurm documents [MaxRSS and step accounting](https://slurm.schedmd.com/sacct.htm
 [accounting plugins and sampling](https://slurm.schedmd.com/slurm.conf.html), and
 the [cgroup v2 memory metrics](https://slurm.schedmd.com/cgroup_v2.html).
 These sources explain why procfs high-water marks and scheduler/cgroup sampling
-cannot be reconciled solely by converting units. The collector's live result
-must determine which explanation is relevant; no site plugin is guessed here.
+cannot be reconciled solely by converting units. Current Slurm documentation
+must not be used to assume cgroup v2 behaviour for the reported older site
+version: the cgroup implementation and historical job settings remain unknown.
+
+## Returned configuration and independent review
+
+The collector receipt was returned from
+`pr74/site-context-20261005T222514Z-1604764` and observed at
+`2026-10-05T22:25:14.353152+00:00`. The downloaded 960-byte JSON has SHA256
+`1f0cdb91c6abe628335265fa1a22059530d845789b84c4fd6ff6a3c9876f699f`;
+the original 102-byte manifest has SHA256
+`f44f2f346663ecbab243f80eac8c2d6284f986c0d5b27aba0e60a3989c7b5a74`.
+Both downloaded hashes and the canonical allowlisted JSON contract were checked
+independently on Windows. The exact [JSON bytes](../evidence/pr74/job3479/current_slurm_resource_context.json)
+and [manifest bytes](../evidence/pr74/job3479/current_slurm_resource_context.SHA256SUMS.txt)
+are archived here; the manifest is renamed only to preserve the separate,
+existing resource-review manifest. Its contents are unchanged.
+
+The observed collector source is `0cc3195282bf33659660f5a9a2f2975500ba4bcd`.
+The query succeeded and reported Slurm **22.05.2**, current
+`JobAcctGatherType=jobacct_gather/cgroup`, task accounting frequency **30 s**,
+an empty allowlisted `JobAcctGatherParams` list, and `proctrack/cgroup`.
+`TaskPlugin=null` is retained as unavailable/redacted. This does **not** establish
+that the plugin is absent, that affinity/cgroup binding is disabled, or why its
+value was not retained: raw configuration was deliberately not exported. Do not
+widen the parser, substitute a guessed default, or repeat the HPC query to make
+that field look complete.
+
+**Resource-safety decision:** accept this receipt as a successful, bounded
+current-site observation only. Historical memory reconciliation and safety for
+longer/larger runs remain **unqualified**. A 30 s current sampling setting and a
+cgroup accounting plugin do not prove the cause of the job3479 RSS difference;
+there is no retained historical configuration, per-job sampling override, cgroup
+version or memory-enforcement policy here. No allocation or solver control was
+changed. `comparison_submission_ready=false` and
+`scientific_reporting_eligible=false` remain unchanged, with zero added
+optimizations and submissions. This closes the narrow PR74 evidence-review
+scope, not the higher-budget execution gate.
+
+Ten PR74 offline tests now include the returned receipt's exact bytes, schema,
+collector source, current configuration, missing `TaskPlugin` and all conservative
+decision flags. Require the full four-arm CI at the closure head before making
+the PR ready for review; merge still requires separate explicit authorization.
 
 ## Where Sprint B goes next
 
-1. Return and independently review the sanitized current configuration receipt.
-   Record its exact bytes, limitations and the resulting resource-safety decision
-   in this PR before making it ready for review. A missing/unsupported field is
-   not interpreted as a default or a qualified memory measurement.
+1. **PR74 narrow review completed:** the sanitized current configuration receipt
+   and explicit non-qualification decision are recorded above. Longer-budget
+   memory enforcement/stop handling still require a reviewed prospective safety
+   policy; numerical equality between old RSS metrics is not a prerequisite and
+   must not be manufactured. Missing fields remain unknown.
 2. Finish the longer-budget comparison executor: the current isolated worker is
    still a short-qualification worker. Preserve fresh models/processes, serial
    attempts, one-shot submission/collection, callback/log binding, fail-closed
