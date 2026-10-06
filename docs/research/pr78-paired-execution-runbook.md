@@ -1,5 +1,10 @@
 # PR78 paired execution runbook — 2026-10-06
 
+> Historical instructions: the budget was subsequently approved and job 3481
+> was submitted, held, and reported cancelled by the operator. Do not rerun the
+> starters below. The [current diagnosis and revised interaction contract](pr78-job3481-recovery.md)
+> supersede the false-approval checkpoint and interactive confirmation below.
+
 ## Verified checkpoint and authority
 
 PR77 is merged into develop at `eaeb9aed1ca24680c8e2f0fab1b0cdabae58f7e8`.
