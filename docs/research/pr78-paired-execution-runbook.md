@@ -21,6 +21,31 @@ The production source remains `ad4800505bae78032e8fdbaa449a7afd2f12a080`.
 - Installed PR76 receipt: `0249a1de5cb6d06422932d7ffa5568a2077ceb0c6f51099a5675a6f33fdeca14`.
 - Installed PR77 receipt: `bdbb0f75358d6c15523a05bec9c97d72fb49c90c1ab08c4f72d2b275ce501286`.
 
+## Prompt failure and bounded continuation
+
+The first transferred helper (SHA256
+`6b2077bcb8cea56a1d4bcf28e9af8fa62a7d53047a8c4f8f71835e31037a58e7`)
+failed opening `/dev/tty` in Python `r+` mode with
+`io.UnsupportedOperation: File or stream is not seekable`.
+The reported traceback occurred before the confirmation read, authorization
+generation, budget-stage creation, recording or submission. The original
+seekable StringIO mock did not reproduce the terminal property.
+
+The v2 handoff opens output in `w` and input in `r`, separately. Six offline
+tests now cover the original nonseekable failure, refusal leaving false gates,
+explicit recording of exact approval hashes using nonseekable streams, replay,
+prior-budget-stage refusal, and bounded single-easy submission structure.
+They are synthetic wrapper tests, not additional HPC qualification or solver runs.
+Before asking for confirmation, the v2 helper rechecks the original false
+approvals, clean pinned source, absence of submission state and budget stage.
+Unexpected state stops for review; it does not remove claims or resume jobs.
+
+Retain the original helper on HPC. Transfer v2 to a new
+`pr78/install-prompt-fix-v2` directory; this is correction of a pre-submission
+CLI failure, not an optimization retry. No resource approval is inferred from
+the error report. Status, collection, return validation and medium review gates
+below remain unchanged. No merge is authorized.
+
 ## Resource envelope and stopping policy
 
 Two distinct sequential parent jobs, at most five fresh-process attempts each:
@@ -49,18 +74,18 @@ print or export it. Only the named public receipts are transferred.
 ## 1. dgx-dasci Bash: explicit budget confirmation and easy submission once
 
 The byte-preserving local helper has SHA256
-`6b2077bcb8cea56a1d4bcf28e9af8fa62a7d53047a8c4f8f71835e31037a58e7`.
-For the prepared workstation copy, execute `outputs/send_pr78_easy.ps1` in local
+`170f41a9ff6afab644e0064269393131fc54742ea24c60cbc5689531733ad521`.
+For the prepared workstation copy, execute `outputs/send_pr78_easy_v2.ps1` in local
 Windows PowerShell. It verifies that hash, creates a fresh physical RAID
-`pr78/install-47b697476f84` directory, then transfers only `start_pr78_easy.sh`.
+`pr78/install-prompt-fix-v2` directory, then transfers only `start_pr78_easy_v2.sh`.
 It does not log in to GitHub, alter any approval, or submit a job. A pre-existing
 installation directory or failed transfer stops without an automatic overwrite.
-The wrapper's embedded Python and refusal/recording/replay behaviour passed four
+The wrapper's embedded Python and refusal/recording/replay behaviour passed six
 temporary synthetic local tests, and both PowerShell files parsed. Local MSYS
 Bash syntax checking was unavailable due to Windows sandbox restrictions; run
 `bash -n` on the received helper before invoking it on dgx-dasci.
 
-Activate `tfm_env` first. Save the following as `start_pr78_easy.sh` on the
+Activate `tfm_env` first. Save the following as `start_pr78_easy_v2.sh` on the
 local workstation if using SCP, or execute its contents in Bash on dgx-dasci.
 It does not assume the general permission to advance PR78 approved resources.
 The terminal asks for the separate exact-budget confirmation; an empty/different
@@ -71,7 +96,7 @@ implementation. There is no automatic recovery after a partially recorded budget
 
 ```bash
 #!/usr/bin/env bash
-# Execute once on dgx-dasci, after conda activate tfm_env.
+# Corrected CLI prompt; original failed before approval. Execute once on dgx-dasci.
 set -euo pipefail
 umask 077
 PR78_FLOW=/raid/vrcelestino/data/cfl-mvp2-evidence/pr76/operator-ad4800505bae/flow
@@ -103,6 +128,10 @@ import paired_budget_authorization as budget
 
 os.umask(0o077)
 directory, plan, execution = budget.frozen_flow(directory)
+stage = budget.flow.matrix.adapter.EVIDENCE_ROOT / "pr78/budget-ad4800505bae"
+if stage.exists() or stage.is_symlink():
+    raise SystemExit("PR78_STOP_PRIOR_BUDGET_STAGE_PRESERVE_FOR_REVIEW")
+print("PR78_ORIGINAL_FALSE_APPROVALS_AND_NO_SUBMISSION_STATE_VERIFIED")
 print("Frozen budget: <=2 sequential jobs, <=10 optimize calls, <=36000 solver seconds.")
 print("Each job: batch, 16 physical cores, 64 GiB, <=19800 seconds; CPU only/shared node.")
 print("Easy gap=1%; medium gap=10%; seed=42; original parents and thread order unchanged.")
@@ -111,10 +140,11 @@ print("No requeue, retry, extension, raw-log export or scientific promotion.")
 print("Medium requires a separate independent review of the easy return.")
 print("This explicit confirmation records the resource budget AND permits one easy submission.")
 phrase = "APPROVE PR78 FROZEN BUDGET AND SUBMIT EASY ONCE"
-with open("/dev/tty", "r+", encoding="utf-8") as terminal:
-    terminal.write("Type exactly: " + phrase + "\n> ")
-    terminal.flush()
-    answer = terminal.readline().rstrip("\n")
+with open("/dev/tty", "w", encoding="utf-8") as tty_output:
+    tty_output.write("Type exactly: " + phrase + "\n> ")
+    tty_output.flush()
+with open("/dev/tty", "r", encoding="utf-8") as tty_input:
+    answer = tty_input.readline().rstrip("\n")
 if answer != phrase:
     raise SystemExit("PR78_BUDGET_NOT_APPROVED_NO_SUBMISSION")
 authorization = budget.template(directory)
@@ -124,7 +154,6 @@ for name in (
     "installed_no_solver_probes_reviewed",
 ):
     authorization[name] = True
-stage = budget.flow.matrix.adapter.EVIDENCE_ROOT / "pr78/budget-ad4800505bae"
 if stage.resolve() != stage:
     raise SystemExit("PR78_STOP_NONPHYSICAL_STAGE")
 stage.parent.mkdir(mode=0o700, exist_ok=True)
