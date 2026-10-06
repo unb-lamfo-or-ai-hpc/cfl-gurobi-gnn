@@ -48,6 +48,18 @@ print or export it. Only the named public receipts are transferred.
 
 ## 1. dgx-dasci Bash: explicit budget confirmation and easy submission once
 
+The byte-preserving local helper has SHA256
+`6b2077bcb8cea56a1d4bcf28e9af8fa62a7d53047a8c4f8f71835e31037a58e7`.
+For the prepared workstation copy, execute `outputs/send_pr78_easy.ps1` in local
+Windows PowerShell. It verifies that hash, creates a fresh physical RAID
+`pr78/install-47b697476f84` directory, then transfers only `start_pr78_easy.sh`.
+It does not log in to GitHub, alter any approval, or submit a job. A pre-existing
+installation directory or failed transfer stops without an automatic overwrite.
+The wrapper's embedded Python and refusal/recording/replay behaviour passed four
+temporary synthetic local tests, and both PowerShell files parsed. Local MSYS
+Bash syntax checking was unavailable due to Windows sandbox restrictions; run
+`bash -n` on the received helper before invoking it on dgx-dasci.
+
 Activate `tfm_env` first. Save the following as `start_pr78_easy.sh` on the
 local workstation if using SCP, or execute its contents in Bash on dgx-dasci.
 It does not assume the general permission to advance PR78 approved resources.
@@ -282,4 +294,3 @@ selection. Two fitting parents and one seed support descriptive conclusions only
 Do not pool 1%/10% target times or claim continuous first crossings, historical
 memory reconciliation, root/tree CPU phase qualification or GNN gains from this
 CPU-only pilot. Scientific promotion requires its own evidence-backed review.
-
