@@ -1,5 +1,84 @@
 # PR78: job 3481 diagnosis and revised operator flow
 
+## Installed diagnostic and implemented recovery
+
+The operator returned diagnostic SHA256
+`c82585b53037d2c68262a3d0a0d630038c7e0487ba05c5e4b20f699b3ec0ef49`
+from `pr78/site-job3481-GgvTR0mZ/site-job3481.json`. It reports one Slurm node,
+two sockets, 20 physical cores per socket, two hardware threads per core:
+**40 physical cores and 80 logical CPUs**. Partition batch uses
+`select/cons_tres`, `CR_CORE_MEMORY` and `OverSubscribe=NO`; jobs can receive
+disjoint cores on the same node without oversubscribing those cores.
+
+Accounting contains only 3481, CANCELLED, Start=None, elapsed zero, NNodes=1.
+The saved submission exists; held-profile, release and batch-start markers do not.
+This locates the stop after job-ID persistence and before release. The expired
+scontrol job record prevents identifying the exact failed field retrospectively.
+The earlier squeue display of two nodes is retained as an unresolved observation,
+not treated as evidence of an actual two-node allocation.
+
+Source review found a concrete parser incompatibility: Slurm 22.05's
+[_sprint_range and pending-job formatting](https://github.com/SchedMD/slurm/blob/slurm-22-05-2-1/src/api/job_info.c)
+can represent a fixed count as `1-1`, while v1 requires `1`. The successor accepts
+only equal-endpoint ranges, retains their original display values, and still
+rejects real multiple-node or variable-range requests. Its sharing check also
+uses the site's consumable-core configuration and bounded CPU count, rather than
+requiring the single text value OK. See [Slurm resource sharing](https://slurm.schedmd.com/cons_tres_share.html).
+
+Implemented files:
+
+- [paired_matrix_workflow_v2.py](../../scripts/evidence/paired_matrix_workflow_v2.py):
+  explicit successor protocol, site preflight before sbatch, singleton-range
+  parsing, structured submission failure with stage/job/field, durable ID,
+  unchanged one-shot status/collection and independent easy review before medium.
+- [recover_pr78_job3481.py](../../scripts/evidence/recover_pr78_job3481.py):
+  noninteractive, one-time recovery. Before writing its claim it verifies CI at
+  the installed source SHA, the old clean source and approval bytes, diagnostic
+  and submission hashes, absent execution/release state and fresh cancelled
+  accounting with no start or steps. It preserves the old STOP and creates
+  `pr78/recovery-job3481-v2/flow` with a linked recovery receipt.
+- [submit_paired_matrix_v2.sbs](../../scripts/slurm/dasci/submit_paired_matrix_v2.sbs):
+  one node, one task, 16 physical cores, 64 GiB, 330 minutes, no requeue.
+
+The v1 files remain frozen because published receipts and the original flow bind
+their exact bytes. V2 is a separate protocol snapshot; its future changes need
+not alter the historical implementation. The matrix executor, worker, callback,
+model semantics and memory watchdog are reused without modification.
+
+The cancelled submission is counted: historical ceiling three submissions,
+comprising 3481 and at most two successor parents. The execution ceiling remains
+ten optimize calls and 36,000 solver seconds. No automatic retry is added.
+The user's instruction to continue the revised plan supplies the recovery
+authorization; the CLI reuses the existing resource approval without a prompt.
+
+Operator sequence, using the reviewed successor source (concrete SHA in handoff):
+
+```bash
+python3 -B "$PR78_SOURCE/scripts/evidence/recover_pr78_job3481.py" prepare
+python3 -B "$PR78_SOURCE/scripts/evidence/recover_pr78_job3481.py" submit-easy
+# Run separately whenever desired; no wait loop:
+python3 -B "$PR78_SOURCE/scripts/evidence/recover_pr78_job3481.py" status
+# Run after terminal=true, including failed or cancelled outcomes:
+python3 -B "$PR78_SOURCE/scripts/evidence/recover_pr78_job3481.py" collect
+```
+
+Preparation or submission failure retains its claim/state and returns a report;
+do not rerun those actions. Status and collection are separate from preparation.
+The one-time recovery claim prevents changing the source SHA to obtain another
+automatic attempt. The actual kernel-memory/affinity gates still run before
+license or model access. A successful local/CI test is not an installed result.
+
+The preceding implementation has eleven targeted regression tests, including
+complete sealed-return validation and preserved independent medium admission.
+The complete local evidence suite ran 405 tests successfully (four platform
+skips). Local Ruff 0.16.7 check and format validation passed; exact-head CI
+with the repository's pinned Ruff 0.16.8 remains required before preparation.
+The local receiver must use v2; the original v1 receiver is not suitable for
+the new protocol. PR78 remains draft until the actual returns are reviewed.
+
+The following sections retain the earlier planning context; statements that the
+site diagnostic or runtime implementation were pending are superseded above.
+
 ## Current disposition
 
 The operator explicitly approved the resource envelope. The helper recorded it,
