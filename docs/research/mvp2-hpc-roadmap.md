@@ -2,13 +2,28 @@
 
 ## Research objective and release boundary
 
-The active first CPU experiment is now the
-[PR66 lean shared-DaSCI screen](pr66-reconciliation-thread-pilot.md): seed 42,
-one randomly drawn fitting parent per easy/medium class, five thread caps,
-300 seconds and 10% target, one shared sixteen-core job. Earlier broader CPU
-matrices below are expansion ideas, not approved initial execution budgets.
-The first screen uses Gurobi algorithmic defaults, not a forced Barrier profile.
-Only Threads differs between arms; seed, limits and memory guard are common controls.
+The current delivery sequence is the
+[MVP 2.0 completion plan dated 2026-10-06](mvp2-delivery-plan-20261006.md).
+It supersedes stale scheduling/status statements here, while retaining the
+research objectives and experimental boundaries below. Estimated working-day
+figures below are historical estimates, not a current delivery commitment.
+
+The [PR66 screen](pr66-reconciliation-thread-pilot.md) completed in job 3468:
+ten attempts on the selected fitting parents at 300 seconds and a 10% gap
+target. All five easy attempts reached the target; no medium attempt did.
+These are development observations, not a population scaling result.
+The callback qualification and installed no-solver execution/operator checks
+have also completed. PR77 head `30f80577fa7302348ed3807551e3b2c660779faf`
+passed four-arm CI and its 18-test installed preview. Its ready/merge operation
+is explicitly authorized but remains pending at this planning checkpoint.
+
+The next experiment is the existing PR75/PR76 same-pair, seed-42 matrix:
+five thread caps, up to 3,600 seconds per attempt, easy gap target 1% and
+medium target 10%, with separate easy and medium jobs and independent easy
+review between them. Its resource budget is still unapproved. The original
+installed source and plan hashes remain frozen. Earlier six-parent/three-seed
+matrices are superseded proposals, not an executable default. Root methods,
+portfolios, GPU training and new parent selection are outside this CPU matrix.
 
 The next study will assess whether learned partial starts improve solution quality and time-to-target across CFL difficulty classes, and whether those gains remain useful after accounting for CPU, memory, GPU and preparation costs. Favorable effects are hypotheses, not acceptance requirements. An informative negative experiment is retained.
 
