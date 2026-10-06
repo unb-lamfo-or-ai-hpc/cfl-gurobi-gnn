@@ -84,13 +84,18 @@ def environment():
     return result
 
 
+def require(value):
+    if not value:
+        raise ValueError("diagnostic_gate_failed")
+
+
 def fingerprint_check():
-    assert sys.platform == "linux"
-    assert socket.gethostname().split(".")[0] == "dgx-dasci"
-    assert os.environ.get("CONDA_DEFAULT_ENV") == "tfm_env"
-    assert SOURCE.resolve(strict=True) == SOURCE
+    require(sys.platform == "linux")
+    require(socket.gethostname().split(".")[0] == "dgx-dasci")
+    require(os.environ.get("CONDA_DEFAULT_ENV") == "tfm_env")
+    require(SOURCE.resolve(strict=True) == SOURCE)
     for name, sha in PINS.items():
-        assert (
+        require(
             hashlib.sha256(
                 (SOURCE / "scripts/evidence" / name).read_bytes()
             ).hexdigest()
@@ -104,8 +109,8 @@ def gates(executor, allocated):
     def plan_gate():
         nonlocal plan
         plan = executor.load_flow(FLOW, APPROVAL)
-        assert plan["source_commit"] == HEAD
-        assert executor.workflow.source_head() == HEAD
+        require(plan["source_commit"] == HEAD)
+        require(executor.workflow.source_head() == HEAD)
         executor.reviewed_evidence()
 
     results = [stage("frozen_plan_approval_source_and_evidence", plan_gate)]
