@@ -32,3 +32,5 @@ docs/evidence/pr73/job3479/** -text
 docs/evidence/pr74/job3479/** -text
 # Installed PR75 fault qualification is preserved byte-identically.
 docs/evidence/pr75/fault-probe-c845ccd6b224/** -text
+# Installed PR76 operator receipt preserves its independently reviewed bytes.
+docs/evidence/pr76/operator-ad4800505bae/** -text
