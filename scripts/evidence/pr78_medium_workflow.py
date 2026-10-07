@@ -21,6 +21,8 @@ old, contract, require = proposal.old, proposal.contract, proposal.require
 site = previous.site
 PROTOCOL = "pr78_full_medium_nonblocking_v1"
 BATCH = "scripts/slurm/dasci/submit_pr78_medium.sbs"
+HISTORICAL_CLI_SOURCE = "80cf7d5b90202ba57c7cb62c5e0d670875cc02ac"
+HISTORICAL_CLI_SHA = "a50476ed9a7905bf7bf7335c59ca4a9707f519aaa2550a3dab50fee427cb2ff8"
 load, write, digest = previous.load, previous.write, previous.digest
 
 
@@ -52,8 +54,18 @@ def plan_for(head, directory):
     return value
 
 
-def validate_plan(value, directory):
+def validate_plan(value, directory, *, historical_read_only=False):
     expected = plan_for(value["source_commit"], directory)
+    # Only the offline public reader admits the exact pre-CLI-fix workflow.
+    # All other dependency bytes, proposal, approvals and fields remain checked.
+    # Execution/approval paths retain current-source validation, without this flag.
+    if historical_read_only and value["source_commit"] == HISTORICAL_CLI_SOURCE:
+        require(
+            value["dependency_sha256"]["pr78_medium_workflow.py"] == HISTORICAL_CLI_SHA
+        )
+        expected["dependency_sha256"]["pr78_medium_workflow.py"] = HISTORICAL_CLI_SHA
+        del expected["plan_sha256"]
+        expected["plan_sha256"] = contract.sha(contract.encoded(expected))
     require(contract.encoded(value) == contract.encoded(expected))
     return value
 
@@ -384,7 +396,7 @@ def validate_public(value, directory):
     require(
         old.integer(value["schema_version"]) == 1 and value["protocol_id"] == PROTOCOL
     )
-    plan = validate_plan(value["plan"], directory)
+    plan = validate_plan(value["plan"], directory, historical_read_only=True)
     approval, record = value["approval"], value["submission"]
     sha = contract.sha(contract.encoded(approval))
     validate_approval(plan, approval, sha)
@@ -596,8 +608,9 @@ def main():
         result = globals()[args.action](args.directory)
     else:
         old.hexadecimal(args.expected_sha)
-        require(digest(args.return_file) == args.expected_sha)
-        result = validate_public(load(args.return_file), args.directory)
+        return_file = Path(args.return_file)
+        require(digest(return_file) == args.expected_sha)
+        result = validate_public(load(return_file), args.directory)
     print(contract.encoded(result).decode(), end="")
 
 
@@ -607,6 +620,15 @@ if __name__ == "__main__":
     except previous.SubmissionError as exc:
         print(contract.encoded(exc.report).decode(), end="")
         raise SystemExit(2) from None
-    except Exception:
-        print("PR78_MEDIUM_STOPPED_PRESERVE_STATE_NO_RETRY", file=sys.stderr)
+    except Exception as exc:
+        # Distinguish a local reader failure from an HPC stop. Never print paths,
+        # arbitrary exception messages, or private log text in public diagnostics.
+        if len(sys.argv) > 1 and sys.argv[1] == "validate-return":
+            print(
+                "PR79_LOCAL_RETURN_VALIDATION_FAILED_NO_HPC_ACTION "
+                + type(exc).__name__,
+                file=sys.stderr,
+            )
+        else:
+            print("PR78_MEDIUM_STOPPED_PRESERVE_STATE_NO_RETRY", file=sys.stderr)
         raise SystemExit(2) from None
