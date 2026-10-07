@@ -300,7 +300,6 @@ class OperatorWorkflowTests(unittest.TestCase):
             "approval.json",
             "operator_plan.json",
             "operator_approval.json",
-            "recovery.json",
         ):
             (other / name).write_bytes((self.directory / name).read_bytes())
         with self.assertRaises(FileExistsError):
