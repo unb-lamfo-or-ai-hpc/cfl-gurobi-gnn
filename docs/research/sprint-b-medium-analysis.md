@@ -1,5 +1,37 @@
 # Sprint B — medium continuation and CPU-profile decision
 
+## Current checkpoint: job3494 reviewed; do not submit again
+
+The medium continuation ran as job3494 and its public return is preserved in
+`docs/evidence/pr79-job3494-return.zip`. The original JSON SHA256 is
+`5141dd4568cf83116d9d8d0d313a0cc4f63f573c60304ea5e578e10a08210e0a`.
+All five medium attempts and the five preserved easy3489 attempts pass nested
+validation. The previous local CLI failure was a string-versus-Path bug before
+content validation, not an optimization failure. The fixed CLI has real
+subprocess tests; historical read-only admission pins the exact original
+workflow bytes without admitting them to new execution/approval paths.
+
+The [reproducible review](../evidence/pr79-sprint-b-review.md) and
+[full values](../evidence/pr79-sprint-b-review.json) retain three censored medium
+arms, all three allocation costs (including interrupted3490), and separate
+memory scopes. Choose one thread as the conservative development default for
+these two fitting parents; easy also has a two-thread latency/cost trade-off.
+This is not a population-wide or held-out scientific conclusion.
+
+From this PR checkout, reproduce without network, solver, license or scheduler:
+
+```bash
+python -B scripts/evidence/review_pr79_sprint_b.py
+python -B -m unittest discover -s tests/evidence -p test_pr79_sprint_b_review.py
+```
+
+Use `--output-directory NEW_DIRECTORY` to generate tables and JSON afresh.
+No new download, HPC command, retry or budget is needed for this review.
+Technical Sprint B acceptance is supported; final closure awaits exact-head CI,
+ready-for-review and separately authorized merge. The earlier checklist and
+execution instructions below are preserved as historical planning, not an
+instruction to start again.
+
 ## Scope and acceptance
 
 PR78 closes B1 as a partial technical delivery, with easy job3489 complete and
