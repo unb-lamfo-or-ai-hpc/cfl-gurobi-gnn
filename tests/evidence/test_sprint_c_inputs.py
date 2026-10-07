@@ -62,6 +62,37 @@ def fixture():
 
 
 class PlanAuditTests(unittest.TestCase):
+    def test_report_backed_variants_do_not_require_legacy_fields(self):
+        for variant in audit.REPORT_VARIANTS:
+            plan = fixture()
+            plan["dataset_variant"] = variant
+            plan.pop("parent_ids_by_role")
+            plan.pop("graph_manifest_sha256")
+            plan["graph_report_sha256"] = "a" * 64
+            result = audit.plan_summary(seal(plan))
+            self.assertTrue(result["metadata_consistent"], result["issues"])
+            self.assertEqual(result["reference_kind"], "graph_report")
+
+    def test_report_backed_does_not_ignore_present_role_mismatch(self):
+        plan = fixture()
+        plan["dataset_variant"] = "easy_only_medium_transfer_v1"
+        plan["graph_report_sha256"] = "a" * 64
+        plan["parent_ids_by_role"] = {}
+        self.assertIn(
+            "declared_parent_roles_mismatch", audit.plan_summary(seal(plan))["issues"]
+        )
+
+    def test_report_hash_required_and_unknown_variant_not_admitted(self):
+        plan = fixture()
+        plan["dataset_variant"] = "pr57_54_parent_development_v1"
+        self.assertIn(
+            "invalid_graph_report_hash", audit.plan_summary(seal(plan))["issues"]
+        )
+        plan["dataset_variant"] = "SENSITIVE_SENTINEL"
+        result = audit.plan_summary(seal(plan))
+        self.assertIn("unsupported_dataset_variant", result["issues"])
+        self.assertNotIn("SENSITIVE_SENTINEL", json.dumps(result))
+
     def test_valid_metadata_is_not_feasibility(self):
         result = audit.plan_summary(fixture())
         self.assertTrue(result["metadata_consistent"])
