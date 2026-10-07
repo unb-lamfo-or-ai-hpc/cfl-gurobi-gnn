@@ -1,0 +1,118 @@
+{
+  "candidate_integrated_into_executor": false,
+  "candidate_memory_receipt": {
+    "ancestor_limits_rechecked_each_sample": true,
+    "cgroup_version_observed": "v1",
+    "current_max_job_scoped_usage_bytes": 21258240,
+    "hierarchy_rechecked_each_sample": true,
+    "historical_rss_reconciled": false,
+    "job_anchor_depth_from_leaf": 2,
+    "job_anchor_ram_limit_bytes": 68719476736,
+    "job_scoped_min_ram_limit_bytes": 68719476736,
+    "leaf_ram_limit_bytes": 9223372036854771712,
+    "membership_and_mounts_verified": true,
+    "memory_gate_protocol": "job_scoped_hierarchical_ram_v1",
+    "swap_limit_qualified": false,
+    "usage_scope": "maximum_leaf_through_job_anchor_including_siblings",
+    "validated_group_count": 3
+  },
+  "candidate_qualified_in_this_allocation": true,
+  "controller_observations": {
+    "job_scoped_memory_observations": [
+      {
+        "depth_from_leaf": 0,
+        "job_anchor": false,
+        "limit_bytes": 9223372036854771712,
+        "usage_bytes": 12230656,
+        "v1_use_hierarchy": 1
+      },
+      {
+        "depth_from_leaf": 1,
+        "job_anchor": false,
+        "limit_bytes": 68719476736,
+        "usage_bytes": 14102528,
+        "v1_use_hierarchy": 1
+      },
+      {
+        "depth_from_leaf": 2,
+        "job_anchor": true,
+        "limit_bytes": 68719476736,
+        "usage_bytes": 21393408,
+        "v1_use_hierarchy": 1
+      }
+    ],
+    "membership_sha256": "650535e51ae195f1c3587aaf0a63ef148deac32b1e8b7117d376c1ab0e30d6a5",
+    "mountinfo_sha256": "23639fdcc746b9ec8f12e6bea6dd008ca5f1e7dcce337d1f63f6b5381fdaf622",
+    "old_candidate_count": 2,
+    "paths_included": false,
+    "selected_controller_version": "v1",
+    "unified_memberships": 1,
+    "v1_memory_memberships": 1
+  },
+  "environment": {
+    "SLURM_CPUS_PER_TASK": "16",
+    "SLURM_JOB_GPUS_present": false,
+    "SLURM_JOB_ID": "3485",
+    "SLURM_JOB_NUM_NODES": "1",
+    "SLURM_MEM_PER_NODE": "65536",
+    "SLURM_RESTART_COUNT": null,
+    "SLURM_STEP_GPUS_present": false
+  },
+  "historical_probe_job_id": "3484",
+  "matrix_claims_added": 0,
+  "mode": "allocated",
+  "optimization_runs_added": 0,
+  "protocol_id": "pr78_hierarchical_memory_qualification_v1",
+  "raw_logs_included": false,
+  "reproduces_current_environment_not_historical_proof": true,
+  "scheduler_queries": 0,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "stages": [
+    {
+      "passed": true,
+      "stage": "frozen_host_and_dependencies"
+    },
+    {
+      "passed": true,
+      "stage": "frozen_plan_approval_source_and_evidence"
+    },
+    {
+      "passed": true,
+      "stage": "execution_host"
+    },
+    {
+      "exception_text_included": false,
+      "exception_type": "ValueError",
+      "passed": false,
+      "source_frames": [
+        {
+          "file": "paired_memory_guard.py",
+          "line": 91
+        },
+        {
+          "file": "paired_memory_guard.py",
+          "line": 57
+        },
+        {
+          "file": "paired_memory_guard.py",
+          "line": 30
+        }
+      ],
+      "stage": "kernel_memory_gate"
+    },
+    {
+      "passed": true,
+      "stage": "physical_affinity_gate"
+    },
+    {
+      "passed": true,
+      "stage": "controller_inventory"
+    },
+    {
+      "passed": true,
+      "stage": "candidate_memory_gate"
+    }
+  ],
+  "static_checks_passed": null
+}
