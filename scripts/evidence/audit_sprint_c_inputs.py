@@ -13,7 +13,13 @@ import sys
 import time
 from pathlib import Path
 
-PROTOCOL = "sprint_c_input_metadata_audit_v1"
+PROTOCOL = "sprint_c_input_metadata_audit_v2"
+REPORT_VARIANTS = {
+    "easy_only_medium_transfer_v1",
+    "pr57_54_parent_development_v1",
+    "approved_39_parent_development_v1",
+    "independently_admitted_confirmation_v1",
+}
 GROUPS = ("analysis", "models", "bipartite_graphs", "intermediate")
 NAMES = {"gasse_training_plan.json", "gurobi_graph_manifest.jsonl"}
 EXCLUDED = {"secrets", ".git", "__pycache__", "bootstrap", "tools"}
@@ -68,6 +74,15 @@ def plan_summary(plan):
     if not isinstance(plan, dict) or plan.get("schema_version") != 1:
         raise ValueError("unsupported_plan")
     issues = set()
+    variant = plan.get(
+        "dataset_variant", "gurobi_authoritative_graph_solver_label_view_v1"
+    )
+    report_backed = variant in REPORT_VARIANTS
+    if (
+        not report_backed
+        and variant != "gurobi_authoritative_graph_solver_label_view_v1"
+    ):
+        issues.add("unsupported_dataset_variant")
     payload = {k: v for k, v in plan.items() if k not in IGNORED}
     if digest(canonical(payload)) != plan.get("contract_sha256"):
         issues.add("contract_hash_mismatch")
@@ -145,13 +160,28 @@ def plan_summary(plan):
         issues.add("missing_role")
     if plan.get("partition_counts") != counts:
         issues.add("declared_partition_count_mismatch")
-    if plan.get("parent_ids_by_role") != {r: sorted(parents[r]) for r in ROLES}:
+    if (not report_backed or "parent_ids_by_role" in plan) and plan.get(
+        "parent_ids_by_role"
+    ) != {r: sorted(parents[r]) for r in ROLES}:
         issues.add("declared_parent_roles_mismatch")
     manifest = plan.get("graph_manifest_sha256")
-    if not isinstance(manifest, str) or not HASH.fullmatch(manifest):
+    report = plan.get("graph_report_sha256")
+    if report_backed:
+        manifest = None
+    if report_backed and (not isinstance(report, str) or not HASH.fullmatch(report)):
+        issues.add("invalid_graph_report_hash")
+        report = None
+    if not report_backed and (
+        not isinstance(manifest, str) or not HASH.fullmatch(manifest)
+    ):
         issues.add("invalid_graph_manifest_hash")
         manifest = None
     return {
+        "dataset_variant": variant
+        if report_backed or variant == "gurobi_authoritative_graph_solver_label_view_v1"
+        else "unsupported",
+        "reference_kind": "graph_report" if report_backed else "graph_manifest",
+        "graph_report_sha256": report if report_backed else None,
         "record_count": len(records),
         "partition_counts": counts,
         "parent_ids_by_role": {r: sorted(parents[r]) for r in ROLES},
