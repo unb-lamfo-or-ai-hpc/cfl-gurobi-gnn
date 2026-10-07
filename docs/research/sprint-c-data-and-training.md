@@ -30,6 +30,61 @@ planning document. Freeze each execution budget before its CLI handoff.
 
 ## C1 implemented entry audit
 
+### Installed return reviewed: 2026-10-07
+
+The original v1 receipt SHA256 is
+`1183e69f817a62ae249e2d41a110de941084b19cfbfa4c641d03248a3796781e`.
+Its exact bytes are preserved in `docs/evidence/pr80-inputs-receipt.zip`.
+Independent local hashing matched the operator's receipt. It reports 9,391
+entries, 330,824 metadata bytes, 17 plan files, 13 distinct plan digests, no
+unreadable metadata and no symlinks. This is metadata coverage, not a count of
+training executions or eligible datasets.
+
+Selected candidates (pinned by original bytes, not by file modification date):
+
+| Cohort | Plan SHA256 | Distinct parents | Train / validation / test |
+| --- | --- | --- | --- |
+| Easy-only | `cbf0fe92b07aa79de97b9ac616a64178534156b58224fd43ae8494b9d54839ae` | 30 easy; two identical plan copies | 18 / 6 / 6 |
+| Mixed | `07c3377c20ef49c0ad3ae33a6b57d9dd70f92fc48a32f5f80c25b5cb32aa5da4` | 30 easy + 24 medium | 34 / 10 / 10 |
+
+**Collector correction, not data repair:** v1 incorrectly required the legacy
+`parent_ids_by_role` and `graph_manifest_sha256` fields for every plan variant.
+The actual builders in `easy_transfer_training.py`, `pr57_training.py` and
+`confirmation_training.py` deliberately use `graph_report_sha256` and derive
+roles from records. The two corresponding v1 issue codes therefore do not
+prove damaged labels, split leakage or missing graph artifacts. v2 recognizes
+those explicit variants, still validates the canonical contract and checks any
+present role declaration. It requires the proper graph-report hash and never
+silently admits unknown variants. Original receipts and plans are unchanged.
+Historical smoke/augmentation plans remain unsuitable for the complete
+original-only comparison; that does not invalidate their original smoke use.
+
+### Next installed step: selected artifact bytes and canonical split
+
+`verify_sprint_c_artifacts.py` uses the two reviewed plan digests above. It
+deduplicates exact plan copies, resolves the referenced graph report by digest,
+checks its manifest bytes and exact selected rows, and verifies each selected
+graph/root/label SHA256. It also checks parent identity, fold and role against
+the repository's canonical split. It does not infer paths from a guessed run
+name; missing or ambiguous references stop that cohort with a public reason.
+
+Bounds: 20,000 directory entries, 8 MiB per metadata file, 2 GiB per referenced
+artifact, 8 GiB total reads and a 180-second cooperative deadline. Hashing is
+streamed in 1 MiB blocks; there is no binary deserialization, network query,
+solver import, training or Slurm submission. Cache hits check file identity and
+size/mtime; private paths and raw exception text are not exported. Each cohort
+has its own outcome, so success for easy cannot hide an unresolved mixed cohort.
+The focused tests exercise both report-backed variants, byte tampering,
+duplicate copies, ambiguous reports, canonical splits, unsafe paths, limits,
+cache mutation and real CLI no-overwrite/hash behavior.
+
+**Still not training admission:** this verifies declared artifact identities,
+not current mathematical feasibility, variable-order agreement, numerical
+features, normalization or historical training consumption. Those checks and
+the representation decision remain C1 work in this same PR. Do not repeat the
+first inventory or any Sprint B solve. Run the new exact-head handoff once,
+return its one sanitized JSON, and preserve any incomplete result.
+
 `scripts/evidence/audit_sprint_c_inputs.py` uses only the Python standard library.
 It discovers `gasse_training_plan.json` and `gurobi_graph_manifest.jsonl` under
 analysis/models/bipartite_graphs/intermediate. It skips symlinks and secret/tool
