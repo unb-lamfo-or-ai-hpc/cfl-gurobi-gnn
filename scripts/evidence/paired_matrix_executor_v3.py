@@ -435,7 +435,8 @@ def internal_child(output, request_sha):
     run_child(request, output, job)
 
 
-def execute_attempt(request, output, job):
+def execute_attempt(request, output, job, *, child_module="paired_matrix_executor_v3"):
+    require(child_module in {"paired_matrix_executor_v3", "pr78_medium_workflow"})
     gate = memory.MemoryGate(job)
     initial_gate = gate.public()
     output.mkdir(mode=0o700, exist_ok=False)
@@ -444,7 +445,9 @@ def execute_attempt(request, output, job):
         sys.executable,
         "-B",
         "-c",
-        "import sys;sys.path.insert(0,sys.argv[1]);import paired_matrix_executor_v3 as m;m.internal_child(*sys.argv[2:])",
+        "import sys;sys.path.insert(0,sys.argv[1]);import "
+        + child_module
+        + " as m;m.internal_child(*sys.argv[2:])",
         str(Path(__file__).parent),
         str(output),
         contract.sha(contract.encoded(request)),
