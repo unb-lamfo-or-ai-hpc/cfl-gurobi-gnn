@@ -26,7 +26,7 @@ import qualification_workflow as workflow
 contract = old.contract
 adapter = old.adapter
 require = old.require
-PROTOCOL = "paired_matrix_isolated_executor_v2"
+PROTOCOL = "paired_matrix_isolated_executor_v3"
 PARENTS = ("easy", "medium")
 AUDIT_SHA = "0c26533eb90b27b4e1115500997682af3d95713edd6197bc0f8d0a4eeb432eee"
 SITE_SHA = "1f0cdb91c6abe628335265fa1a22059530d845789b84c4fd6ff6a3c9876f699f"

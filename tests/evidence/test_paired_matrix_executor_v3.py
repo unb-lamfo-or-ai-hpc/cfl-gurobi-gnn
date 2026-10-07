@@ -67,6 +67,11 @@ class MatrixTests(unittest.TestCase):
         return request, child, events, model
 
     def test_frozen_order_budget_and_old_protocol_remain(self):
+        import paired_matrix_executor_v2 as predecessor
+
+        self.assertEqual(matrix.PROTOCOL, "paired_matrix_isolated_executor_v3")
+        self.assertEqual(predecessor.PROTOCOL, "paired_matrix_isolated_executor_v2")
+        self.assertNotEqual(matrix.PROTOCOL, predecessor.PROTOCOL)
         proposal = matrix.contract.compile_proposal()
         self.assertEqual(self.plan["attempts"], proposal["attempts"])
         self.assertEqual(self.plan["maximum_optimization_calls"], 10)
@@ -81,6 +86,7 @@ class MatrixTests(unittest.TestCase):
 
     def test_every_plan_mutation_rejected(self):
         for field, value in (
+            ("protocol_id", "paired_matrix_isolated_executor_v2"),
             ("maximum_optimization_calls", 11),
             ("child_deadline_seconds", 4000),
             ("resource_budget_approved", True),

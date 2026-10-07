@@ -62,6 +62,11 @@ infer zero calls or relabel this as a completed scientific result.
 
 ## Next gate: explicit bounded continuation accounting
 
+The read-only continuation compiler and both scope/budget options are now
+documented in [continuation-plan.md](continuation-plan.md). It verifies the two
+downloaded nested returns without enabling execution. The corrected V3 executor
+protocol label is distinct from historical V2; installed source is unchanged.
+
 ### Verification of this integration
 
 Local full evidence suite: 540 tests, no failures/errors, four platform skips,
