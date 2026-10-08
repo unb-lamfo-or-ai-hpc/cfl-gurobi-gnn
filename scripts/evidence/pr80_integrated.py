@@ -409,7 +409,7 @@ def infer(data_root, output):
     return result
 
 
-def run(data_root, output):
+def run(data_root, output, *, prior_return=None):
     output.mkdir()
     observed = runtime.observe()
     write(output / "runtime.json", observed)
@@ -436,7 +436,13 @@ def run(data_root, output):
     stage = "numerical_audit"
     try:
         numeric.SECONDS = 1800
-        audit = numeric.collect(data_root, output / "numeric")
+        audit = numeric.collect(
+            data_root, output / "numeric", prior_return=prior_return
+        )
+        result["prior_return_sha256"] = audit.get("prior_return_sha256")
+        result["reused_numerical_parents"] = len(
+            audit.get("reused_parent_observations", [])
+        )
         result["sample"] = descriptive(audit, output)
         stage = "inference"
         if all(v["numeric_checks_passed"] for v in audit["cohorts"].values()):
@@ -527,15 +533,31 @@ def package(stage):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("run", "infer", "package"))
+    parser.add_argument("action", choices=("run", "infer", "package", "verify-prior"))
     parser.add_argument("--data-root", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--reuse-return", type=Path)
     args = parser.parse_args()
-    if args.action == "package":
+    if args.action == "verify-prior":
+        reused = numeric.reuse_job3501(args.reuse_return)
+        print(
+            json.dumps(
+                {
+                    "prior_job": "3501",
+                    "reused_parents": len(reused),
+                    "prior_return_sha256": numeric.JOB3501_RETURN_SHA,
+                    "submissions_added": 0,
+                    "optimization_runs_added": 0,
+                }
+            )
+        )
+    elif args.action == "package":
         package(args.output)
     elif args.action == "infer":
         raise SystemExit(
             0 if infer(args.data_root, args.output)["state"] == "complete" else 2
         )
     else:
-        raise SystemExit(run(args.data_root, args.output))
+        raise SystemExit(
+            run(args.data_root, args.output, prior_return=args.reuse_return)
+        )

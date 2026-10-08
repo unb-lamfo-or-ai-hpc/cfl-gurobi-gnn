@@ -23,6 +23,9 @@ PROTOCOL = "sprint_c_numeric_readonly_v1"
 SECONDS = 900
 CHILD_SECONDS = 90
 ADDRESS_SPACE = 16 * 1024**3
+EXPANDED_JSON_BYTES = 512 * 1024**2
+JOB3501_RETURN_SHA = "be0b445bc170c947338304a193c7cedfb693ba5f1b6d905a176cbb8d0179b685"
+JOB3501_NUMERIC_SHA = "3b1a806067c18a5302dd5212b2211dfd54d4a443f393e2311f84f72e8cdb18b1"
 
 
 def require(condition, code):
@@ -76,11 +79,57 @@ def split_for(parent):
     return fold, "test" if fold == 0 else "validation" if fold == 1 else "train"
 
 
-def bounded_json_gzip(path):
+def bounded_json_gzip(path, *, maximum=None, observations=None, kind=None):
+    limit = EXPANDED_JSON_BYTES if maximum is None else maximum
+    require(type(limit) is int and limit > 0, "invalid_expanded_json_limit")
     with gzip.open(path, "rb") as stream:
-        raw = stream.read(32 * 1024**2 + 1)
-    require(len(raw) <= 32 * 1024**2, "expanded_json_limit")
+        raw = stream.read(limit + 1)
+    if observations is not None:
+        observations[kind] = {
+            "expanded_bytes_observed": len(raw),
+            "complete": len(raw) <= limit,
+            "limit_bytes": limit,
+        }
+    require(len(raw) <= limit, "expanded_json_limit")
     return metadata.strict_json(raw)
+
+
+def reuse_job3501(path):
+    """Accept only the immutable reviewed return; retain its 30 passed rows."""
+    require(Path(path).stat().st_size < 2 * 1024**2, "prior_return_size")
+    raw = Path(path).read_bytes()
+    require(metadata.digest(raw) == JOB3501_RETURN_SHA, "prior_return_hash")
+    package = metadata.strict_json(raw)
+    require(package["job_id"] == "3501", "prior_job_identity")
+    for item in package["members"].values():
+        require(
+            metadata.digest(item["text"].encode()) == item["sha256"],
+            "prior_member_hash",
+        )
+    member = package["members"]["numeric/numeric.json"]
+    require(member["sha256"] == JOB3501_NUMERIC_SHA, "prior_numeric_hash")
+    report = metadata.strict_json(member["text"])
+    require(
+        report["source_artifact_receipt_sha256"] == RECEIPT_SHA,
+        "prior_artifact_selection",
+    )
+    parents = selected_parents(source_receipt())
+    reused = {}
+    for parent, row in report["parents"].items():
+        if row["state"] != "numeric_checks_passed":
+            continue
+        require(parent.startswith("CFL_easy_") and parent in parents, "prior_parent")
+        require(
+            row["parent"] == parent
+            and row["role"] == parents[parent]["role"]
+            and row["model_sha256"] == parents[parent]["mip_sha256_declared"]
+            and row["feasibility"]["valid"] is True
+            and row["optimization_runs_added"] == 0,
+            "prior_parent_contract",
+        )
+        reused[parent] = row
+    require(len(reused) == 30, "prior_passed_count")
+    return reused
 
 
 def align_vectors(names, root, label, record):
@@ -295,6 +344,7 @@ def load_graph(path, expected_sha256):
 def worker(data_root, parent):
     """One parent per isolated process, no optimization API call."""
     stage = "resource_limits"
+    metadata_sizes = {}
     try:
         import resource
 
@@ -331,7 +381,10 @@ def worker(data_root, parent):
         stage = "trusted_graph_load"
         graph, torch_version = load_graph(paths["graph"], record["graph"]["sha256"])
         stage = "compressed_metadata"
-        root, label = (bounded_json_gzip(paths[k]) for k in ("root", "label"))
+        root, label = (
+            bounded_json_gzip(paths[k], observations=metadata_sizes, kind=k)
+            for k in ("root", "label")
+        )
         stage = "read_model_no_optimization"
         from collect_class_statistics import ModelReader
 
@@ -397,6 +450,7 @@ def worker(data_root, parent):
             "label_gap_declared_not_resolved": record["label_gap_declared"],
             "model_sha256": record["mip_sha256_declared"],
             "bytes_hashed": reader.bytes_read,
+            "metadata_sizes": metadata_sizes,
             "optimization_runs_added": 0,
         }
     except Exception as error:
@@ -407,6 +461,7 @@ def worker(data_root, parent):
             "state": "unqualified",
             "package_versions": versions(),
             "stage": stage,
+            "metadata_sizes": metadata_sizes,
             "reason": str(error)
             if isinstance(error, AuditStop)
             else "dependency_or_data_check_failed",
@@ -416,7 +471,7 @@ def worker(data_root, parent):
         }
 
 
-def collect(data_root, output):
+def collect(data_root, output, *, prior_return=None):
     require(sys.platform == "linux", "linux_operator_required")
     data_root, output = Path(data_root).resolve(strict=True), Path(output).resolve()
     require(
@@ -427,7 +482,8 @@ def collect(data_root, output):
     parents = selected_parents(receipt)
     output.mkdir()
     started = time.monotonic()
-    results = {}
+    results = reuse_job3501(prior_return) if prior_return is not None else {}
+    reused_parents = sorted(results)
     environment = dict(
         os.environ,
         OMP_NUM_THREADS="1",
@@ -438,6 +494,8 @@ def collect(data_root, output):
         PYTHONDONTWRITEBYTECODE="1",
     )
     for parent in sorted(parents):
+        if parent in results:
+            continue
         remaining = SECONDS - (time.monotonic() - started)
         if remaining <= 1:
             break
@@ -519,6 +577,14 @@ def collect(data_root, output):
             )
         },
         "parents": results,
+        "reused_parent_observations": reused_parents,
+        "prior_return_sha256": JOB3501_RETURN_SHA if reused_parents else None,
+        "prior_numeric_sha256": JOB3501_NUMERIC_SHA if reused_parents else None,
+        "new_parent_attempts": sum(
+            r["state"] != "not_attempted_after_stop"
+            for p, r in results.items()
+            if p not in reused_parents
+        ),
         "cohorts": {
             name: {
                 "numeric_checks_passed": all(
@@ -535,6 +601,7 @@ def collect(data_root, output):
             "child_seconds": CHILD_SECONDS,
             "child_address_space_bytes": ADDRESS_SPACE,
             "cpu_affinity_count": 1,
+            "maximum_expanded_json_bytes_per_file": EXPANDED_JSON_BYTES,
         },
         "training_admitted": False,
         "scientific_reporting_eligible": False,
