@@ -1,5 +1,54 @@
 # PR80: two useful outputs, one existing environment, one allocation
 
+## Job3501 return and current continuation
+
+**Do not repeat the initial submit block.** Job3501 finished FAILED/2:0 after
+322 seconds because the application reported an incomplete audit.
+The reviewed [public return](../evidence/pr80-job3501-return.json) has SHA256
+`be0b445bc170c947338304a193c7cedfb693ba5f1b6d905a176cbb8d0179b685`.
+The pasted Windows attachment differed only in outer CRLF line endings;
+normalizing those to LF reproduces this exact original hash. All five nested
+member hashes were independently verified. `.gitattributes` preserves the bytes.
+
+- All 30 easy originals passed feasibility, label and numerical graph checks.
+  Each has 160,400 variables, 800 constraints and 320,400 matrix nonzeros.
+  The easy sample and descriptive tables are useful completed evidence.
+- All 24 medium originals stopped at `compressed_metadata/expanded_json_limit`:
+  the auditor's **32 MiB decompressed JSON cap**, not a mathematical failure.
+  Their graph loading had already succeeded; medium model/label checks did not
+  complete. This does not establish that all medium numerical inputs are valid.
+- Inference was not attempted. No training or optimization occurred; GPU
+  inference functionality has not yet been established by this job.
+
+The correction raises only the bounded metadata-reader capacity to **512 MiB
+per expanded JSON file**, inside the unchanged 16 GiB child address-space and
+32 GiB job limits. This is an engineering ceiling, not a measured medium file
+size or a change to acceptance tolerances. The reader records bytes observed,
+whether the entire file was read, and the active cap, including on limit failure.
+Duplicate keys, invalid numbers, data identities and mathematical tolerances
+remain checked. Actual expanded sizes will be available from the continuation.
+
+Use **`submit-remaining` in a fresh pinned directory**, not `submit` in the
+job3501 directory. Before any submission, the operator verifies the original
+public return against the hash above. The batch verifies it again, reuses its
+30 easy observations unchanged, and attempts only the 24 incomplete medium
+audits. The new receipt identifies prior job evidence and reused parents;
+these are historical observations, not 30 new measurements. The original
+directory is never modified. Inference still rechecks the graph/checkpoint
+bytes it consumes and runs only after complete combined numerical admission.
+
+If all remaining checks pass, the same allocation performs the four planned
+validation forwards. Otherwise it preserves a partial return. This is one
+operator-launched continuation of incomplete work, not an automatic retry.
+The resource envelope below is unchanged; no package update, new training,
+solver optimization or replay of valid easy audits is authorized by the script.
+
+Regression coverage includes a real gzip JSON larger than 32 MiB, exact-limit
+acceptance, over-limit rejection/diagnostics, changed-prior rejection, and a
+mocked collector demonstrating exactly 24 medium child launches and preservation
+of all 30 easy result objects. These are offline tests, not HPC inference
+evidence. Use the latest exact-head CI-approved command in the PR.
+
 ## What changed and why
 
 Operator decision, 2026-10-08: retain **only `tfm_env`**, with no package update.
@@ -92,7 +141,7 @@ and activate `tfm_env`. No directory is reused or deleted.
 
 ```bash
 # STAGE is the fresh pinned directory established by the execution handoff.
-bash "$STAGE/source/scripts/evidence/operate_pr80_integrated.sh" submit
+bash "$STAGE/source/scripts/evidence/operate_pr80_integrated.sh" submit-remaining
 # Returns immediately. Run status when convenient; no polling loop.
 bash "$STAGE/source/scripts/evidence/operate_pr80_integrated.sh" status
 # Only after a terminal scheduler state (also collect failures):

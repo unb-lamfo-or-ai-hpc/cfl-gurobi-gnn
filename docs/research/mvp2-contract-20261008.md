@@ -14,6 +14,13 @@ validation forwards on F1/M11. No new training, normalization fitting or solver
 optimization is included. This bounded forward evaluation precedes E0 solves;
 it does not remove the later CPU/GPU experimental comparison.
 
+**Job3501 update:** 30 easy parents passed numerical checks; 24 medium parents
+were blocked only by the reader's 32 MiB expanded-JSON ceiling. No inference
+was attempted. The current runbook raises that bounded reading capacity and
+uses a hash-bound continuation of only the 24 unfinished audits, retaining the
+30 completed rows unchanged. Neither these 24 blocked rows nor the valid easy
+rows are to be mislabeled as mathematical failures. No package upgrade is needed.
+
 ## 1. What, how and why
 
 **Question:** when does a learned partial start improve CFL optimization on
