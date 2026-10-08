@@ -272,21 +272,22 @@ def check_graph_arrays(graph, arrays, root):
     }
 
 
-def load_graph(path):
-    """Only the known PyG data containers; never fall back to unsafe pickle."""
+def load_graph(path, expected_sha256):
+    """Load only hash-bound internal historical artifacts; not a pickle sandbox."""
+    import hashlib
+
     import torch
-
-    version = tuple(int(x) for x in torch.__version__.split(".")[:2])
-    require(version >= (2, 10), "restricted_loader_requires_torch_2_10")
     from torch_geometric.data import HeteroData
-    from torch_geometric.data.feature_store import TensorAttr
-    from torch_geometric.data.graph_store import EdgeAttr
-    from torch_geometric.data.storage import BaseStorage, EdgeStorage, NodeStorage
 
+    require(metadata.HASH.fullmatch(expected_sha256) is not None, "graph_hash_required")
     torch.set_num_threads(1)
-    allowed = [HeteroData, TensorAttr, EdgeAttr, BaseStorage, EdgeStorage, NodeStorage]
-    with torch.serialization.safe_globals(allowed):
-        graph = torch.load(path, map_location="cpu", weights_only=True)
+    with Path(path).open("rb") as stream:
+        digest = hashlib.sha256()
+        for block in iter(lambda: stream.read(1024**2), b""):
+            digest.update(block)
+        require(digest.hexdigest() == expected_sha256, "graph_hash_before_load")
+        stream.seek(0)
+        graph = torch.load(stream, map_location="cpu", weights_only=False)
     require(type(graph) is HeteroData, "unexpected_graph_type")
     return graph, str(torch.__version__)
 
@@ -327,8 +328,8 @@ def worker(data_root, parent):
         )
         require(model_status == "source_discovered", "model_missing_or_ambiguous")
         reader.verify(model_path, record["mip_sha256_declared"])
-        stage = "restricted_graph_load"
-        graph, torch_version = load_graph(paths["graph"])
+        stage = "trusted_graph_load"
+        graph, torch_version = load_graph(paths["graph"], record["graph"]["sha256"])
         stage = "compressed_metadata"
         root, label = (bounded_json_gzip(paths[k]) for k in ("root", "label"))
         stage = "read_model_no_optimization"
@@ -362,6 +363,20 @@ def worker(data_root, parent):
                 )
                 stage = "numerical_representation"
                 features = check_graph_arrays(graph, arrays, vector)
+                import numpy as np
+
+                discrete = arrays["types"] != "C"
+                features.update(
+                    binary_variables=int(np.count_nonzero(arrays["types"] == "B")),
+                    integer_variables=int(np.count_nonzero(arrays["types"] == "I")),
+                    continuous_variables=int(np.count_nonzero(arrays["types"] == "C")),
+                    discrete_targets=int(discrete.sum()),
+                    positive_discrete_targets=int(
+                        np.count_nonzero(arrays["values"][discrete] > 0.5)
+                    ),
+                    density=features["nonzeros"]
+                    / max(1, features["variables"] * features["constraints"]),
+                )
                 source_sense = int(model.ModelSense)
         finally:
             reader_model.close()
@@ -474,6 +489,7 @@ def collect(data_root, output):
             in {
                 "resource_limits",
                 "restricted_graph_load",
+                "trusted_graph_load",
                 "read_model_no_optimization",
             }
             and row["state"] != "numeric_checks_passed"
@@ -486,6 +502,8 @@ def collect(data_root, output):
     report = {
         "schema_version": 1,
         "protocol_id": PROTOCOL,
+        "graph_loading_policy": "hash_bound_internal_artifacts_historical_pickle",
+        "minimum_torch_version_gate": False,
         "source_artifact_receipt_sha256": RECEIPT_SHA,
         "implementation_sha256": metadata.digest(Path(__file__).read_bytes()),
         "dependency_sha256": {
