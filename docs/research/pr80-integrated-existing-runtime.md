@@ -1,6 +1,39 @@
 # PR80: two useful outputs, one existing environment, one allocation
 
-## Job3501 return and current continuation
+## Job3502: current continuation (supersedes the Job3501 instructions below)
+
+Job3502 ended FAILED/2:0 after 492 seconds. The application returned partial
+evidence, not an infrastructure or GPU failure. Its immutable
+[public return](../evidence/pr80-job3502-return.json) has SHA256
+`83366f115e15fbbf6a548cf404abf27f4b05d6ecff04fa5cc43d673c1fbef2c4`.
+All five nested hashes were verified; all 30 reused easy rows equal Job3501.
+Nine additional medium parents passed: M0, M1, M2, M4, M15, M16, M17, M18, M19.
+The remaining 15 stop at `variable_identity_and_label/label_objective_sense`.
+All expanded metadata files were read within the new cap. No inference,
+training or optimization occurred. There are now 39 qualified observations,
+not 39 new observations in Job3502, and 15 unqualified ones.
+
+**What and why:** `src/cfl_gnn/solvers/gurobi_solution.py` writes lowercase
+`minimize`; confirmation labels write uppercase `MINIMIZE`. The existing PR57
+loader already normalizes case. The new auditor mistakenly required uppercase
+for both schemas. Accept exactly these two minimization spellings, not missing
+values, maximization or an inferred default. This is a demonstrated code/schema
+incompatibility. The Job3502 receipt did not export the rejected field values;
+confirmation for each pending installed label remains the continuation's job.
+Record each newly accepted label's original spelling. Do not mutate labels,
+graphs, model sense, thresholds, features or mathematical tolerances.
+
+**How:** `submit-remaining` now verifies Job3502's exact return before submission,
+reuses its 39 passed rows without alteration, and checks only the 15 pending
+medium parents. The batch repeats receipt verification. If all 54 qualify,
+execute the same four frozen-model validation forwards. Otherwise preserve the
+partial return without automatic retry. No package changes or new training.
+One fresh directory; unchanged ceiling: 1 GPU, 4 CPUs, 32 GiB, 45 minutes.
+Never submit again from the Job3501 or Job3502 directories. Use the exact-head
+CI-approved continuation block in PR80. Regression tests cover both label
+spellings, rejection of invalid senses, immutable reuse and exactly 15 launches.
+
+## Job3501 return and historical continuation
 
 **Do not repeat the initial submit block.** Job3501 finished FAILED/2:0 after
 322 seconds because the application reported an incomplete audit.

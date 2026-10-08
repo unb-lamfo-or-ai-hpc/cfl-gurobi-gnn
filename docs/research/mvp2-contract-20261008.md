@@ -407,3 +407,15 @@ new findings. Do not promise completed GPU/hard campaigns by that date.
 F runs in parallel for table templates and editorial review. Final release
 requires coauthor review, rights/privacy checks and a verified actual deposit.
 No journal acceptance, 200 GB quota or public DOI is presumed.
+
+## Job3502 amendment: preserve 39 observations; finish 15 pending audits
+
+The integrated return SHA256 is
+`83366f115e15fbbf6a548cf404abf27f4b05d6ecff04fa5cc43d673c1fbef2c4`.
+Thirty easy observations were reused and nine medium observations newly passed.
+Fifteen medium labels stopped at the objective-sense string check. The auditor
+now accepts the two historical minimization spellings, without changing the
+mathematical contract. Continue only these 15 audits, then the four already
+planned validation forwards if all qualify. No training, optimization, package
+upgrade or automatic retry. See [current execution details](pr80-integrated-existing-runtime.md).
+
