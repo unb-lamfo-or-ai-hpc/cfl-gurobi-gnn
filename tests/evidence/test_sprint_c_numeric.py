@@ -4,7 +4,6 @@ import ast
 import copy
 import gzip
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -247,7 +246,7 @@ class NumericTests(unittest.TestCase):
         with self.assertRaisesRegex(audit.AuditStop, "pwl_objective"):
             audit.numeric_arrays(model, {}, 0.0)
 
-    def test_no_optimization_or_unsafe_loader_call(self):
+    def test_no_optimization_and_explicit_historical_loader(self):
         tree = ast.parse(Path(audit.__file__).read_text())
         calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call)]
         self.assertFalse(
@@ -266,7 +265,7 @@ class NumericTests(unittest.TestCase):
             and n.func.attr == "load"
         ]
         self.assertEqual(len(loads), 1)
-        self.assertTrue(
+        self.assertFalse(
             next(k.value.value for k in loads[0].keywords if k.arg == "weights_only")
         )
 
@@ -341,108 +340,12 @@ class NumericTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertIn("collect", result.stdout)
 
-    def test_operator_spool_and_bounded_submission_contract(self):
+    def test_old_operator_is_withdrawn_without_installation(self):
         script = (SCRIPTS / "operate_pr80_numeric.sh").read_text()
-        self.assertIn("SOURCE=${PR80_SOURCE:?missing frozen source}", script)
-        self.assertIn("export PR80_PYTHON PR80_SOURCE", script)
-        self.assertEqual(script.count("sbatch --parsable"), 1)
-        for option in (
-            "--nodes=1-1",
-            "--ntasks=1",
-            "--cpus-per-task=1",
-            "--mem=16G",
-            "--time=00:16:00",
-            "--no-requeue",
-        ):
-            self.assertIn(option, script)
-        self.assertLess(
-            script.index('mkdir "$STAGE/submission.started"'),
-            script.index("sbatch --parsable"),
-        )
-        self.assertNotIn("sleep ", script)
-        self.assertNotIn("while ", script)
-        self.assertNotRegex(script, r"(?m)^\s*rm\s")
-
-    @unittest.skipUnless(sys.platform == "linux", "Linux shell operator fixture")
-    def test_shell_submit_spool_status_collect_without_scheduler(self):
-        with tempfile.TemporaryDirectory() as directory:
-            base = Path(directory).resolve()
-            stage = base / "numeric-fixture"
-            source = stage / "source"
-            evidence = source / "scripts/evidence"
-            evidence.mkdir(parents=True)
-            script = (
-                (SCRIPTS / "operate_pr80_numeric.sh")
-                .read_text()
-                .replace(
-                    "/raid/vrcelestino/data/cfl-mvp2-evidence/pr80/", str(base) + "/"
-                )
-            )
-            operator = evidence / "operate_pr80_numeric.sh"
-            operator.write_text(script)
-            mocks = base / "bin"
-            mocks.mkdir()
-            commands = {
-                "hostname": "#!/bin/sh\necho dgx-dasci\n",
-                "sbatch": '#!/bin/sh\nprintf \'%s\\n\' "$@" > "$PR80_SOURCE/../submitted.args"\necho 12345\n',
-                "sacct": "#!/bin/sh\necho '12345|COMPLETED|0:0'\n",
-            }
-            for name, text in commands.items():
-                path = mocks / name
-                path.write_text(text)
-                path.chmod(0o700)
-            environment = dict(
-                os.environ, PATH=str(mocks) + os.pathsep + os.environ["PATH"]
-            )
-
-            def run(action, path=operator, env=environment):
-                return subprocess.run(
-                    ["bash", str(path), action],
-                    env=env,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
-
-            interpreter = stage / "venv/bin/python3"
-            interpreter.parent.mkdir(parents=True)
-            interpreter.symlink_to(sys.executable)
-            (evidence / "sprint_c_runtime.py").write_text("raise SystemExit(2)\n")
-            self.assertNotEqual(run("submit").returncode, 0)
-            self.assertFalse((stage / "submission.started").exists())
-            self.assertFalse((stage / "submitted.args").exists())
-            (evidence / "sprint_c_runtime.py").write_text(
-                "import pathlib,sys\nif '--output' in sys.argv:\n p=pathlib.Path(sys.argv[sys.argv.index('--output')+1]); p.write_text('{}')\n"
-            )
-            first = run("submit")
-            self.assertEqual(first.returncode, 0, first.stderr)
-            self.assertEqual((stage / "job_id.txt").read_text().strip(), "12345")
-            self.assertNotEqual(run("submit").returncode, 0)
-            self.assertIn("--nodes=1-1", (stage / "submitted.args").read_text())
-            # Slurm executes this copy outside SOURCE; PR80_SOURCE must survive.
-            spool = base / "slurm_script"
-            spool.write_text(script)
-            (evidence / "audit_sprint_c_numeric.py").write_text(
-                "import pathlib,sys\np=pathlib.Path(sys.argv[sys.argv.index('--output')+1]); p.mkdir(); (p/'numeric.json').write_text('{}')\n"
-            )
-            batch_env = dict(
-                environment,
-                PR80_SOURCE=str(source),
-                PR80_PYTHON=str(interpreter),
-                SLURM_JOB_NUM_NODES="1",
-                SLURM_CPUS_PER_TASK="1",
-                SLURM_MEM_PER_NODE="16384",
-                SLURM_RESTART_COUNT="0",
-                SLURM_JOB_GPUS="",
-                SLURM_STEP_GPUS="",
-            )
-            result = run("batch", spool, batch_env)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertNotEqual(run("batch", spool, batch_env).returncode, 0)
-            self.assertEqual(run("status").returncode, 0)
-            collected = run("collect")
-            self.assertEqual(collected.returncode, 0, collected.stderr)
-            self.assertIn("JOB_STATE=COMPLETED", collected.stdout)
+        self.assertIn("PR80_OLD_OPERATOR_WITHDRAWN", script)
+        self.assertNotIn("pip ", script)
+        self.assertNotIn("sbatch", script)
+        self.assertNotIn("venv", script)
 
 
 if __name__ == "__main__":
