@@ -2,6 +2,16 @@
 
 ## Decision and current status (2026-10-08)
 
+**Latest inventory received:** the operator has now reported eight
+Tesla V100-SXM2-32GB devices, driver 550.90.07, NVML 550.90, driver-reported
+CUDA 12.4, Slurm `batch` with `gpu:8`, and a passing `pip check` outside a job.
+See the [dated platform record](dasci-platform-20261008.md) and repository README.
+Do not repeat the inventory commands below: they document the completed
+diagnostic steps. No allocated GPU execution test or environment upgrade has
+yet been established by these observations. The in-place package selection and
+operator adaptation remain pending; this update does not authorize replaying
+the withdrawn CPU-only procedure.
+
 The operator explicitly chose to update **the existing `tfm_env` in place**.
 No clone, new Conda environment, or audit venv is to be created. The previous
 [CPU-only handoff](pr80-cpu-runtime-continuation.md) and its PR comment

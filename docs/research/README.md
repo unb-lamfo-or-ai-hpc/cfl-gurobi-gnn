@@ -6,6 +6,9 @@ instructions to replay every preceding campaign.
 
 ## Current routes
 
+- [DaSCI platform inventory and manuscript guidance](dasci-platform-20261008.md):
+  eight V100-SXM2-32GB GPUs, driver/runtime distinctions, dated provenance and
+  per-experiment resource reporting; not an allocated execution test.
 - [PR80 single tfm_env update](pr80-tfm-env-upgrade.md):
   preserve GPU capability; inspect driver and package builds before in-place update.
   The earlier isolated CPU procedure is withdrawn and must not be executed.
