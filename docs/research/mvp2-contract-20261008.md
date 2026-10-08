@@ -18,8 +18,11 @@ editorial decoration. Early evaluation does not remove these later experiments.
 
 **Current state:** Sprint B closed in PR79. PR80 metadata and selected artifact
 hashes/roles have been reviewed. Installed numerical admission is still pending.
-No real numerical return has been received at this checkpoint. Local unit-test
-receipts are synthetic fixtures and must never be reported as HPC evidence.
+Job 3500 returned a runtime-blocked numerical receipt: the first parent failed
+the PyTorch minimum-version gate and the other 53 were not attempted. See the
+[diagnosis and current inventory CLI](pr80-job3500-runtime-diagnosis.md).
+Do not repeat the historical section 7A submission. Local unit-test receipts
+are synthetic fixtures and must never be reported as HPC evidence.
 PR80 stays draft; training and E0 solver execution are not admitted yet.
 
 ## 2. Population, sample and information boundaries

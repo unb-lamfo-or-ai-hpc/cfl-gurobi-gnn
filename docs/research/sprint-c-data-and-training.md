@@ -6,10 +6,12 @@ The [current MVP2 contract](mvp2-contract-20261008.md) is the reading entry poin
 It advances E0 evaluation of existing frozen models before new training while
 retaining mandatory CPU/GPU variation and reproducible effective parameters.
 It records exact sample IDs, methods, descriptive-analysis requirements and
-the complete pinned numerical-audit handoff. No installed numerical return has
-been received at that checkpoint. PR80 remains draft, E0 is not released.
-The exact tested runtime stays at `13bcc3ef50f894c117af2565eec8b4e071aa3144`;
-fetch that commit, not the moving branch head, for this existing handoff.
+the pinned numerical-audit handoff. Job 3500 has now returned: its runtime
+failed the minimum PyTorch version gate before numerical admission. Follow the
+[job 3500 diagnosis and inventory CLI](pr80-job3500-runtime-diagnosis.md), not
+another submission of the historical handoff. PR80 remains draft and E0 is
+not released. The preserved job source is
+`13bcc3ef50f894c117af2565eec8b4e071aa3144`.
 
 ## Entry checkpoint and operator decision
 
