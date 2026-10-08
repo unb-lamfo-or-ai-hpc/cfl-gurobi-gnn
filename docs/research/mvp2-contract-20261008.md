@@ -5,6 +5,15 @@ point for PR80 and Sprints C-F. It supersedes the scheduling priority of older
 roadmaps, not their immutable experimental records or their execution budgets.
 Code/data identifiers remain unchanged. F0-F29 and M0-M29 are display aliases.
 
+**Current execution amendment:** retain `tfm_env` and its installed versions;
+remove the auditor's artificial minimum-PyTorch gate. The
+[integrated PR80 runbook](pr80-integrated-existing-runtime.md) replaces earlier
+numeric-only, environment-upgrade and CPU-venv commands. One allocation produces
+the 54-parent numerical/descriptive audit and, conditionally, four frozen-model
+validation forwards on F1/M11. No new training, normalization fitting or solver
+optimization is included. This bounded forward evaluation precedes E0 solves;
+it does not remove the later CPU/GPU experimental comparison.
+
 ## 1. What, how and why
 
 **Question:** when does a learned partial start improve CFL optimization on

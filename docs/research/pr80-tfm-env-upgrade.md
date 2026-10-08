@@ -1,5 +1,12 @@
 # PR80: one environment, tfm_env, with GPU support retained
 
+> **SUPERSEDED, 2026-10-08:** the operator explicitly rejected package upgrades
+> and removed the auditor's PyTorch >=2.10 policy. Keep the existing `tfm_env`.
+> The current implementation and commands are in
+> [the integrated execution runbook](pr80-integrated-existing-runtime.md).
+> All upgrade proposals and imperative instructions below are historical,
+> withdrawn alternatives; do not execute them. No package change is required.
+
 ## Decision and current status (2026-10-08)
 
 **Latest inventory received:** the operator has now reported eight

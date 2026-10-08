@@ -6,12 +6,16 @@ instructions to replay every preceding campaign.
 
 ## Current routes
 
+- [PR80 integrated execution in the existing tfm_env](pr80-integrated-existing-runtime.md):
+  current commands; numerical/descriptive audit plus frozen-model inference,
+  no package upgrades, new training or solver optimization.
+
 - [DaSCI platform inventory and manuscript guidance](dasci-platform-20261008.md):
   eight V100-SXM2-32GB GPUs, driver/runtime distinctions, dated provenance and
   per-experiment resource reporting; not an allocated execution test.
-- [PR80 single tfm_env update](pr80-tfm-env-upgrade.md):
-  preserve GPU capability; inspect driver and package builds before in-place update.
-  The earlier isolated CPU procedure is withdrawn and must not be executed.
+- [Withdrawn PR80 environment update proposal](pr80-tfm-env-upgrade.md):
+  retained only as decision history. Neither an upgrade nor an isolated CPU
+  environment is required by the current procedure.
 - [PR80 job 3500 runtime diagnosis and immediate CLI](pr80-job3500-runtime-diagnosis.md):
   numerical audit blocked by the installed PyTorch version; no resubmission.
 - [MVP2 current contract, sample, methods and next CLI](mvp2-contract-20261008.md):
