@@ -145,6 +145,18 @@ class NumericTests(unittest.TestCase):
                 with self.assertRaises(audit.AuditStop):
                     audit.align_vectors(self.names, root, label, self.record)
 
+    def test_historical_lowercase_minimization_is_semantically_identical(self):
+        expected = audit.align_vectors(self.names, self.root, self.label, self.record)
+        self.label["effective_objective_sense"] = "minimize"
+        self.assertEqual(
+            audit.align_vectors(self.names, self.root, self.label, self.record),
+            expected,
+        )
+        for invalid in ("maximize", "MAXIMIZE", None, "", 1, "unknown"):
+            self.label["effective_objective_sense"] = invalid
+            with self.assertRaisesRegex(audit.AuditStop, "label_objective_sense"):
+                audit.align_vectors(self.names, self.root, self.label, self.record)
+
     def test_all_features_and_edges(self):
         result = audit.check_graph_arrays(self.graph, self.arrays, [0.5, 0.25])
         self.assertEqual(result["feature_dimensions"], [7, 5, 1])
@@ -319,7 +331,24 @@ class NumericTests(unittest.TestCase):
 
     def test_continuation_runs_only_24_medium_parents(self):
         prior = audit.REPO / "docs/evidence/pr80-job3501-return.json"
-        original = audit.reuse_job3501(prior)
+        self.check_continuation(prior, 24, 30)
+
+    def test_job3502_continuation_runs_only_15_unqualified_parents(self):
+        prior = audit.REPO / "docs/evidence/pr80-job3502-return.json"
+        reused = audit.reuse_reviewed_return(prior)
+        self.assertEqual(sum("_medium_" in p for p in reused), 9)
+        old = audit.reuse_job3501(audit.REPO / "docs/evidence/pr80-job3501-return.json")
+        for parent, row in old.items():
+            self.assertEqual(reused[parent], row)
+        with tempfile.TemporaryDirectory() as folder:
+            changed = Path(folder) / "changed.json"
+            changed.write_bytes(prior.read_bytes() + b"\n")
+            with self.assertRaisesRegex(audit.AuditStop, "prior_return_hash"):
+                audit.reuse_reviewed_return(changed)
+        self.check_continuation(prior, 15, 39)
+
+    def check_continuation(self, prior, attempts, reused_count):
+        original = audit.reuse_reviewed_return(prior)
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)
             data = base / "data"
@@ -347,10 +376,20 @@ class NumericTests(unittest.TestCase):
                 patch.object(audit.subprocess, "run", child),
             ):
                 result = audit.collect(data, base / "numeric", prior_return=prior)
-            self.assertEqual(len(calls), 24)
+            self.assertEqual(len(calls), attempts)
+            self.assertFalse(set(calls) & set(original))
             self.assertTrue(all(p.startswith("CFL_medium_") for p in calls))
-            self.assertEqual(result["new_parent_attempts"], 24)
-            self.assertEqual(len(result["reused_parent_observations"]), 30)
+            self.assertEqual(result["new_parent_attempts"], attempts)
+            self.assertEqual(len(result["reused_parent_observations"]), reused_count)
+            self.assertEqual(
+                result["prior_return_sha256"], audit.metadata.digest(prior.read_bytes())
+            )
+            self.assertEqual(
+                result["prior_numeric_sha256"],
+                json.loads(prior.read_bytes())["members"]["numeric/numeric.json"][
+                    "sha256"
+                ],
+            )
             for parent, row in original.items():
                 self.assertEqual(result["parents"][parent], row)
 
