@@ -275,13 +275,14 @@ def check_graph_arrays(graph, arrays, root):
 def load_graph(path):
     """Only the known PyG data containers; never fall back to unsafe pickle."""
     import torch
+
+    version = tuple(int(x) for x in torch.__version__.split(".")[:2])
+    require(version >= (2, 10), "restricted_loader_requires_torch_2_10")
     from torch_geometric.data import HeteroData
     from torch_geometric.data.feature_store import TensorAttr
     from torch_geometric.data.graph_store import EdgeAttr
     from torch_geometric.data.storage import BaseStorage, EdgeStorage, NodeStorage
 
-    version = tuple(int(x) for x in torch.__version__.split(".")[:2])
-    require(version >= (2, 6), "restricted_loader_requires_torch_2_6")
     torch.set_num_threads(1)
     allowed = [HeteroData, TensorAttr, EdgeAttr, BaseStorage, EdgeStorage, NodeStorage]
     with torch.serialization.safe_globals(allowed):
@@ -384,9 +385,12 @@ def worker(data_root, parent):
             "optimization_runs_added": 0,
         }
     except Exception as error:
+        from sprint_c_runtime import versions
+
         return {
             "parent": parent,
             "state": "unqualified",
+            "package_versions": versions(),
             "stage": stage,
             "reason": str(error)
             if isinstance(error, AuditStop)
