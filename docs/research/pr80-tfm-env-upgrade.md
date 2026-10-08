@@ -59,6 +59,49 @@ a CUDA build. This is the only information currently requested from the operator
 
 ## In-place implementation sequence after that inventory
 
+### Inventory return: GPU visibility unresolved
+
+The operator returned `No devices were found`. The selected Conda inventory
+shows pip-managed torch/torchaudio 2.1.2+cu121 and torchvision 0.16.2+cu121,
+alongside CUDA 13 toolkit/runtime packages. This coexistence alone does not
+prove an import conflict. Installed toolkit package versions do not establish
+the host driver version or actual GPU architecture. No package is to be removed
+on that basis, and CUDA 13 is not selected merely because those packages exist.
+
+`nvidia-smi` uses NVIDIA's management library, not PyTorch. Slurm device cgroups
+can affect visibility; neither this cause nor a driver/device failure is proven
+by the message. Historical GPU batch scripts request `--gres=gpu:1`, but that
+does not attest current site availability. The next block gathers current
+read-only context without GPU allocation or bypassing device restrictions:
+
+```bash
+conda activate tfm_env
+hostname -s
+command -v nvidia-smi
+timeout 10s nvidia-smi --version
+timeout 10s sinfo -N -h -o '%N|%P|%t|%G'
+printf 'SLURM_JOB_ID=%s\n' "${SLURM_JOB_ID:-none}"
+if test -r /proc/driver/nvidia/version; then
+  head -n 1 /proc/driver/nvidia/version
+fi
+for INFO in /proc/driver/nvidia/gpus/*/information; do
+  if test -r "$INFO"; then
+    awk '/^Model:/ {print}' "$INFO"
+  fi
+done
+timeout 30s python3 -m pip check
+```
+
+Only GPU model lines are exported from procfs, not UUIDs or serial numbers.
+Return the output, including failures. If driver/model remain unavailable,
+the next decision is a separately described short allocated visibility probe
+when site GRES supports it, or administrator diagnosis if devices are unavailable
+there too. Do not silently substitute a CPU build, upgrade the host driver,
+submit training or repeat the numerical audit. The installation sequence below
+remains pending compatible driver/model evidence.
+
+### Planned update
+
 1. Confirm no running work relies on `tfm_env`. Record its package/build
    inventory and dependency specifications under the PR80 evidence directory.
    Prepare a restoration procedure for changed packages; an exported inventory
