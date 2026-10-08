@@ -278,6 +278,82 @@ class NumericTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 audit.bounded_json_gzip(path)
 
+    def test_historical_32_mib_limit_is_not_reimposed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "metadata.json.gz"
+            raw = b'{"payload":"' + b"x" * (32 * 1024**2) + b'"}'
+            path.write_bytes(gzip.compress(raw))
+            sizes = {}
+            value = audit.bounded_json_gzip(path, observations=sizes, kind="root")
+            self.assertEqual(len(value["payload"]), 32 * 1024**2)
+            self.assertEqual(sizes["root"]["expanded_bytes_observed"], len(raw))
+            self.assertTrue(sizes["root"]["complete"])
+            self.assertEqual(sizes["root"]["limit_bytes"], 512 * 1024**2)
+
+    def test_expansion_cap_still_fails_closed_and_reports_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "metadata.json.gz"
+            raw = b'{"x":"1234567890"}'
+            path.write_bytes(gzip.compress(raw))
+            self.assertEqual(
+                audit.bounded_json_gzip(path, maximum=len(raw)), {"x": "1234567890"}
+            )
+            sizes = {}
+            with self.assertRaisesRegex(audit.AuditStop, "expanded_json_limit"):
+                audit.bounded_json_gzip(
+                    path, maximum=10, observations=sizes, kind="label"
+                )
+            self.assertEqual(sizes["label"]["expanded_bytes_observed"], 11)
+            self.assertFalse(sizes["label"]["complete"])
+
+    def test_reviewed_job3501_reuse_and_mutation_rejection(self):
+        path = audit.REPO / "docs/evidence/pr80-job3501-return.json"
+        reused = audit.reuse_job3501(path)
+        self.assertEqual(len(reused), 30)
+        self.assertTrue(all(p.startswith("CFL_easy_") for p in reused))
+        with tempfile.TemporaryDirectory() as folder:
+            tampered = Path(folder) / "return.json"
+            tampered.write_bytes(path.read_bytes() + b"\n")
+            with self.assertRaisesRegex(audit.AuditStop, "prior_return_hash"):
+                audit.reuse_job3501(tampered)
+
+    def test_continuation_runs_only_24_medium_parents(self):
+        prior = audit.REPO / "docs/evidence/pr80-job3501-return.json"
+        original = audit.reuse_job3501(prior)
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            data = base / "data"
+            data.mkdir()
+            calls = []
+
+            def child(command, **kwargs):
+                parent = command[-1]
+                calls.append(parent)
+                target = Path(command[command.index("--output") + 1])
+                target.write_text(
+                    json.dumps(
+                        {
+                            "parent": parent,
+                            "state": "unqualified",
+                            "stage": "numerical_representation",
+                            "optimization_runs_added": 0,
+                        }
+                    )
+                )
+                return SimpleNamespace(returncode=0)
+
+            with (
+                patch.object(audit.sys, "platform", "linux"),
+                patch.object(audit.subprocess, "run", child),
+            ):
+                result = audit.collect(data, base / "numeric", prior_return=prior)
+            self.assertEqual(len(calls), 24)
+            self.assertTrue(all(p.startswith("CFL_medium_") for p in calls))
+            self.assertEqual(result["new_parent_attempts"], 24)
+            self.assertEqual(len(result["reused_parent_observations"]), 30)
+            for parent, row in original.items():
+                self.assertEqual(result["parents"][parent], row)
+
     def test_operator_preserves_partial_and_never_retries(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory).resolve()
