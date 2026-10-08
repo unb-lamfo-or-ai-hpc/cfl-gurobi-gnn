@@ -539,13 +539,15 @@ if __name__ == "__main__":
     parser.add_argument("--reuse-return", type=Path)
     args = parser.parse_args()
     if args.action == "verify-prior":
-        reused = numeric.reuse_job3501(args.reuse_return)
+        reused = numeric.reuse_reviewed_return(args.reuse_return)
+        prior_raw = args.reuse_return.read_bytes()
+        prior = meta.strict_json(prior_raw)
         print(
             json.dumps(
                 {
-                    "prior_job": "3501",
+                    "prior_job": prior["job_id"],
                     "reused_parents": len(reused),
-                    "prior_return_sha256": numeric.JOB3501_RETURN_SHA,
+                    "prior_return_sha256": meta.digest(prior_raw),
                     "submissions_added": 0,
                     "optimization_runs_added": 0,
                 }

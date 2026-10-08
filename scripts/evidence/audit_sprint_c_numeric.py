@@ -26,6 +26,8 @@ ADDRESS_SPACE = 16 * 1024**3
 EXPANDED_JSON_BYTES = 512 * 1024**2
 JOB3501_RETURN_SHA = "be0b445bc170c947338304a193c7cedfb693ba5f1b6d905a176cbb8d0179b685"
 JOB3501_NUMERIC_SHA = "3b1a806067c18a5302dd5212b2211dfd54d4a443f393e2311f84f72e8cdb18b1"
+JOB3502_RETURN_SHA = "83366f115e15fbbf6a548cf404abf27f4b05d6ecff04fa5cc43d673c1fbef2c4"
+JOB3502_NUMERIC_SHA = "ad2f6a16a3cc93ab89d855c3e1b492d9ddcbab8e073a48433c00fc95047f5ed6"
 
 
 def require(condition, code):
@@ -96,18 +98,32 @@ def bounded_json_gzip(path, *, maximum=None, observations=None, kind=None):
 
 def reuse_job3501(path):
     """Accept only the immutable reviewed return; retain its 30 passed rows."""
+    require(
+        metadata.digest(Path(path).read_bytes()) == JOB3501_RETURN_SHA,
+        "prior_return_hash",
+    )
+    return reuse_reviewed_return(path)
+
+
+def reuse_reviewed_return(path):
+    """Reuse only hash-pinned, independently reviewed successful observations."""
     require(Path(path).stat().st_size < 2 * 1024**2, "prior_return_size")
     raw = Path(path).read_bytes()
-    require(metadata.digest(raw) == JOB3501_RETURN_SHA, "prior_return_hash")
+    approved = {
+        JOB3501_RETURN_SHA: ("3501", JOB3501_NUMERIC_SHA, 30),
+        JOB3502_RETURN_SHA: ("3502", JOB3502_NUMERIC_SHA, 39),
+    }
+    require(metadata.digest(raw) in approved, "prior_return_hash")
+    job_id, numeric_sha, count = approved[metadata.digest(raw)]
     package = metadata.strict_json(raw)
-    require(package["job_id"] == "3501", "prior_job_identity")
+    require(package["job_id"] == job_id, "prior_job_identity")
     for item in package["members"].values():
         require(
             metadata.digest(item["text"].encode()) == item["sha256"],
             "prior_member_hash",
         )
     member = package["members"]["numeric/numeric.json"]
-    require(member["sha256"] == JOB3501_NUMERIC_SHA, "prior_numeric_hash")
+    require(member["sha256"] == numeric_sha, "prior_numeric_hash")
     report = metadata.strict_json(member["text"])
     require(
         report["source_artifact_receipt_sha256"] == RECEIPT_SHA,
@@ -118,7 +134,7 @@ def reuse_job3501(path):
     for parent, row in report["parents"].items():
         if row["state"] != "numeric_checks_passed":
             continue
-        require(parent.startswith("CFL_easy_") and parent in parents, "prior_parent")
+        require(parent in parents, "prior_parent")
         require(
             row["parent"] == parent
             and row["role"] == parents[parent]["role"]
@@ -128,7 +144,7 @@ def reuse_job3501(path):
             "prior_parent_contract",
         )
         reused[parent] = row
-    require(len(reused) == 30, "prior_passed_count")
+    require(len(reused) == count, "prior_passed_count")
     return reused
 
 
@@ -158,7 +174,8 @@ def align_vectors(names, root, label, record):
         "root_policy",
     )
     require(
-        label.get("effective_objective_sense") == "MINIMIZE", "label_objective_sense"
+        label.get("effective_objective_sense") in ("MINIMIZE", "minimize"),
+        "label_objective_sense",
     )
     require(
         label.get("solution_source")
@@ -445,6 +462,7 @@ def worker(data_root, parent):
             "representation": features,
             "source_objective_sense": source_sense,
             "effective_objective_sense": "MINIMIZE",
+            "label_objective_sense_observed": label["effective_objective_sense"],
             "torch_version": torch_version,
             "gurobi_version": reader_model.version,
             "label_gap_declared_not_resolved": record["label_gap_declared"],
@@ -482,7 +500,7 @@ def collect(data_root, output, *, prior_return=None):
     parents = selected_parents(receipt)
     output.mkdir()
     started = time.monotonic()
-    results = reuse_job3501(prior_return) if prior_return is not None else {}
+    results = reuse_reviewed_return(prior_return) if prior_return is not None else {}
     reused_parents = sorted(results)
     environment = dict(
         os.environ,
@@ -578,8 +596,14 @@ def collect(data_root, output, *, prior_return=None):
         },
         "parents": results,
         "reused_parent_observations": reused_parents,
-        "prior_return_sha256": JOB3501_RETURN_SHA if reused_parents else None,
-        "prior_numeric_sha256": JOB3501_NUMERIC_SHA if reused_parents else None,
+        "prior_return_sha256": metadata.digest(Path(prior_return).read_bytes())
+        if reused_parents
+        else None,
+        "prior_numeric_sha256": metadata.strict_json(Path(prior_return).read_bytes())[
+            "members"
+        ]["numeric/numeric.json"]["sha256"]
+        if reused_parents
+        else None,
         "new_parent_attempts": sum(
             r["state"] != "not_attempted_after_stop"
             for p, r in results.items()

@@ -23,7 +23,7 @@ case "${1:-}" in
   PR80_COMMIT=$(git -C "$SOURCE" rev-parse HEAD)
   PR80_REUSE_RETURN=
   if [[ "$1" == submit-remaining ]]; then
-    PR80_REUSE_RETURN=/raid/vrcelestino/data/cfl-mvp2-evidence/pr80/integrated-e80a7d97f729/public_return.json
+    PR80_REUSE_RETURN=/raid/vrcelestino/data/cfl-mvp2-evidence/pr80/integrated-a3b2984521c2/public_return.json
     "$PR80_PYTHON" -B "$SOURCE/scripts/evidence/pr80_integrated.py" verify-prior \
       --reuse-return "$PR80_REUSE_RETURN" --output "$STAGE"
   fi
