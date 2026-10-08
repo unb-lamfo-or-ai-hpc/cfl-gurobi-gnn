@@ -33,7 +33,8 @@ class ArtifactTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.base = Path(self.temp.name)
+        # Match Reader's canonical root, including Windows short-name TEMP aliases.
+        self.base = Path(self.temp.name).resolve()
         self.root = self.base / "data"
         self.graph_root = self.root / "bipartite_graphs" / "old"
         self.graph_root.mkdir(parents=True)
