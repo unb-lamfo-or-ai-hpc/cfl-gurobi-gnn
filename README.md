@@ -148,8 +148,10 @@ advertised eight GPUs; the cause and allocated GPU functionality remain unproven
 
 The [dated platform record and manuscript guidance](docs/research/dasci-platform-20261008.md)
 preserve the observation, CUDA distinctions, earlier CPU provenance and
-per-experiment reporting requirements. The [PR80 environment plan](docs/research/pr80-tfm-env-upgrade.md)
-keeps only `tfm_env`; no upgrade is implied by this inventory. Hardware capacity
+per-experiment reporting requirements. The [PR80 integrated execution](docs/research/pr80-integrated-existing-runtime.md)
+keeps the existing `tfm_env` without upgrading packages or imposing a minimum
+PyTorch version. It combines numerical/descriptive auditing with frozen-model
+validation inference. Hardware capacity
 must be distinguished from allocated CPUs/GPUs, physical affinity, Gurobi thread
 limits, measured memory and effective training hyperparameters in each result.
 
