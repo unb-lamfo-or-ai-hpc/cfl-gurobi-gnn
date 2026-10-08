@@ -6,8 +6,9 @@ instructions to replay every preceding campaign.
 
 ## Current routes
 
-- [PR80 isolated CPU audit continuation](pr80-cpu-runtime-continuation.md):
-  installed inventory received; preserve tfm_env, preflight before submission.
+- [PR80 single tfm_env update](pr80-tfm-env-upgrade.md):
+  preserve GPU capability; inspect driver and package builds before in-place update.
+  The earlier isolated CPU procedure is withdrawn and must not be executed.
 - [PR80 job 3500 runtime diagnosis and immediate CLI](pr80-job3500-runtime-diagnosis.md):
   numerical audit blocked by the installed PyTorch version; no resubmission.
 - [MVP2 current contract, sample, methods and next CLI](mvp2-contract-20261008.md):

@@ -1,5 +1,11 @@
 # PR80: isolated CPU runtime after job 3500
 
+> **SUPERSEDED on 2026-10-08 — do not execute the commands below.**
+> The operator explicitly rejected a separate environment. The current route is
+> [an in-place, GPU-preserving update of `tfm_env`](pr80-tfm-env-upgrade.md).
+> This file and the CPU-only implementation are retained as development history,
+> not as the approved execution procedure. No HPC installation is asserted.
+
 ## What, how and why
 
 The operator's metadata inventory reports Python 3.10.20, x86_64, glibc 2.35,

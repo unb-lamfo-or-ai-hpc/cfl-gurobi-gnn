@@ -1,5 +1,8 @@
 # PR80 job 3500: runtime blocked before numerical admission
 
+> Update 2026-10-08: the diagnosis below remains valid; the separate-environment
+> remedy is superseded. Follow the [single `tfm_env` plan](pr80-tfm-env-upgrade.md).
+
 ## What happened and what it means
 
 The operator reports job **3500**, `COMPLETED`, exit `0:0`, elapsed
