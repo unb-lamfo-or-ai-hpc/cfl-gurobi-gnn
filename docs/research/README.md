@@ -6,6 +6,9 @@ instructions to replay every preceding campaign.
 
 ## Current routes
 
+- [MVP2 current contract, sample, methods and next CLI](mvp2-contract-20261008.md):
+  approved October 8 revision; mandatory CPU/GPU study, early E0 and PR80 gates.
+  Start here before using older campaign instructions.
 - [Scalable paired parent collection](scalable-paired-parent-collection.md):
   population planning, Gurobi-first execution, budget isolation, and rescue.
 - [Gurobi graph contract](gurobi-root-graph-pipeline.md):

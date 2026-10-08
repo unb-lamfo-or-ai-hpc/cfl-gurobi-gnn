@@ -1,5 +1,16 @@
 # Sprint C: data, representation, and matched training
 
+## October 8 priority revision
+
+The [current MVP2 contract](mvp2-contract-20261008.md) is the reading entry point.
+It advances E0 evaluation of existing frozen models before new training while
+retaining mandatory CPU/GPU variation and reproducible effective parameters.
+It records exact sample IDs, methods, descriptive-analysis requirements and
+the complete pinned numerical-audit handoff. No installed numerical return has
+been received at that checkpoint. PR80 remains draft, E0 is not released.
+The exact tested runtime stays at `13bcc3ef50f894c117af2565eec8b4e071aa3144`;
+fetch that commit, not the moving branch head, for this existing handoff.
+
 ## Entry checkpoint and operator decision
 
 PR79 was merged into develop at `461f72580f9bae4d5c2daadcf22e0490594e4188`.
@@ -193,6 +204,8 @@ Fetch the exact reviewed PR head into a fresh directory under
 `/raid/vrcelestino/data/cfl-mvp2-evidence/`. Run the audit against
 `/raid/vrcelestino/data/cfl-gurobi-gnn/data`; write the receipt outside that tree.
 The handoff supplies the exact commit, collection and single-file SCP return.
-There is no Slurm submission, polling loop, approval phrase or retry. Preserve
-the original metadata and this receipt. Review the return locally before
+The earlier metadata/artifact collectors do not submit jobs. The numerical
+operator submits one bounded technical job as described above; there is no
+polling loop, approval phrase or automatic retry. Preserve original artifacts
+and receipts. Review the return locally before
 changing admission or preparing a training command. Merge requires the operator.
