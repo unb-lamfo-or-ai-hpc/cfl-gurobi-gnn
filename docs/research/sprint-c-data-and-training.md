@@ -106,18 +106,67 @@ the bounded collection completed; inspect `failures`, `issues` and coverage.
 `training_admitted=false` remains unconditional: matching metadata hashes does
 not establish feasibility, graph feature validity or actual training usage.
 
-### Remaining work in this same PR after the installed receipt
+### Selected artifact return and numerical handoff
 
-1. Select exact easy-only and mixed graph/label roots from observed contracts.
-   The historical 30 easy (18/6/6) and 54 mixed (34/10/10) are candidate cohorts,
-   not admission inferred from an aggregate count.
-2. Reuse existing strict graph/label auditors to bind original model hashes,
-   named variable order, independent feasible labels and label gap to roles.
-   Hash/check only the selected artifacts under a bounded audited operation.
-   Missing labels stay excluded; do not automatically generate new labels.
-3. Freeze the baseline 7-variable-feature / 5-constraint-feature / 1-edge-feature
-   bipartite representation. Audit feature finiteness/scaling, graph identity,
-   label-independent structure and train-only fitting of learned transforms.
+The next installed receipt, SHA256
+`e0b51fce0ad3e207c1f0a72b1b5678c89974f8fe856a1918a7b189b0ae981681`,
+is preserved byte-for-byte in `docs/evidence/pr80-artifacts-receipt.zip`.
+Both selected cohorts passed graph/root/label hashing and canonical role checks.
+The collector read 4,015,070,716 bytes. The 30 easy parents are shared between
+cohorts with matching roles and model/graph/root/label hashes: audit their
+numerical content once, not twice. There are 54 unique parents, not 84 independent
+observations. This is not training admission or evidence of statistical benefit.
+
+`audit_sprint_c_numeric.py` implements the next combined read-only audit:
+
+- Resolve the exact previously hashed artifact IDs and original canonical LPs;
+  recheck hashes before use. Preserve every original artifact.
+- Read Gurobi model attributes using the existing authorized local license;
+  never call optimize, presolve, relax, generate labels or recapture roots.
+- Reuse `validation.mathematical.validate_linear_solution`: named variable
+  alignment, bounds, integrality, rows and objective; absolute feasibility
+  tolerance 1e-6 and integrality tolerance 1e-5 in original model units.
+- Load only hash-pinned PyG graphs with `weights_only=True`, a fixed allowlist
+  of PyG container classes and PyTorch >=2.6. Never fall back to unrestricted
+  pickle or install dependencies automatically. Installed compatibility remains
+  to be verified by this handoff, not inferred from workstation tests.
+- Compare all 7 variable, 5 constraint and 1 edge features, both edge directions,
+  discrete masks and float32 labels against original model/root/label values.
+  Match sparse edge identity independently of storage order; require exact
+  float32 root encoding. Other encoded values use rtol=atol=1e-6.
+- Freeze the existing deterministic encoding: clip to +/-60000 and signed
+  log1p for costs/bounds/RHS/coefficients; unlogged root, type/sense indicators
+  and constant constraint feature. Report clipping counts. No fitted transform
+  is introduced. Future learned prenormalization must fit training parents only.
+
+One technical Slurm allocation is offered to the operator: batch, one node,
+one CPU, 16 GiB, 16 minutes, no GPU/exclusivity/requeue. The auditor has a
+900-second overall processing budget and one child at a time, <=90 seconds
+and <=16 GiB address space per child, bound to one available CPU. These are
+technical audit resources, not a new solver matrix. The shell submits once
+and returns immediately; status and collect are one-shot commands. The auditor's
+`submissions_added=0` describes the Python auditor, whereas the shell operator
+submits one technical job. A submission claim is preserved on ambiguous errors.
+No automatic retry. Every unattempted or failed parent remains explicitly
+unqualified; a dependency failure stops the remaining children.
+
+The historical reported gap is checked against the pinned label, not recomputed
+by a new solve. Root optimality, historical training use, learned normalization
+and scientific generalization are not newly certified. All outputs still set
+`training_admitted=false` pending independent review and C1 closure. Numerical
+unit tests use synthetic arrays and the real mathematical checker; the CI now
+installs pinned NumPy to run those checks on all four platforms/interpreters.
+
+### Remaining C1 closure work
+
+1. Review the installed numerical return against the already verified 30 easy
+   (18/6/6) and 54 mixed (34/10/10) candidate cohorts. Do not infer admission
+   from an aggregate count, successful process exit or a matching file hash.
+2. Resolve or explicitly exclude any numerical/identity failure. Missing labels
+   stay excluded; do not automatically generate new labels or new root solves.
+3. Complete the baseline 7-variable-feature / 5-constraint-feature / 1-edge-feature
+   representation decision using the numerical return. The existing deterministic
+   encoding is specified above; learned transforms still require training-only fit.
 4. Specify dimensionality reduction as an ablation, not a silent baseline
    replacement. Separate exploratory plots from input transformations;
    transformations require an out-of-sample rule and fitting-parent-only fit.
