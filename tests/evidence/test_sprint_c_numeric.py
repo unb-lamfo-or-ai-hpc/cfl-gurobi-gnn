@@ -404,6 +404,16 @@ class NumericTests(unittest.TestCase):
                     check=False,
                 )
 
+            interpreter = stage / "venv/bin/python3"
+            interpreter.parent.mkdir(parents=True)
+            interpreter.symlink_to(sys.executable)
+            (evidence / "sprint_c_runtime.py").write_text("raise SystemExit(2)\n")
+            self.assertNotEqual(run("submit").returncode, 0)
+            self.assertFalse((stage / "submission.started").exists())
+            self.assertFalse((stage / "submitted.args").exists())
+            (evidence / "sprint_c_runtime.py").write_text(
+                "import pathlib,sys\nif '--output' in sys.argv:\n p=pathlib.Path(sys.argv[sys.argv.index('--output')+1]); p.write_text('{}')\n"
+            )
             first = run("submit")
             self.assertEqual(first.returncode, 0, first.stderr)
             self.assertEqual((stage / "job_id.txt").read_text().strip(), "12345")
@@ -418,7 +428,7 @@ class NumericTests(unittest.TestCase):
             batch_env = dict(
                 environment,
                 PR80_SOURCE=str(source),
-                PR80_PYTHON=sys.executable,
+                PR80_PYTHON=str(interpreter),
                 SLURM_JOB_NUM_NODES="1",
                 SLURM_CPUS_PER_TASK="1",
                 SLURM_MEM_PER_NODE="16384",
