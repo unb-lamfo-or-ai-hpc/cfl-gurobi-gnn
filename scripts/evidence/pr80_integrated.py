@@ -187,7 +187,17 @@ def discover_model(reader, cohort):
     )
 
 
-def infer(data_root, output):
+def infer(
+    data_root,
+    output,
+    *,
+    cases=CASES,
+    role="validation",
+    protocol=PROTOCOL,
+    expected_models=None,
+    original_root_values=False,
+    reader_seconds=590,
+):
     sys.path.insert(0, str(REPO / "src"))
     import torch
 
@@ -215,7 +225,9 @@ def infer(data_root, output):
     torch.backends.cudnn.deterministic = True
     torch.backends.cuda.matmul.allow_tf32 = False
     device = torch.device("cuda:0")
-    reader = Reader(data_root, seconds=590, max_bytes=8 * 1024**3)
+    numeric.require(role in ("validation", "test"), "evaluation_role")
+    numeric.require(len(cases) == len(set(cases)), "duplicate_case")
+    reader = Reader(data_root, seconds=reader_seconds, max_bytes=8 * 1024**3)
     reader.scan()
     paths = {
         meta.digest(p.relative_to(reader.root).as_posix().encode()): p
@@ -224,7 +236,7 @@ def infer(data_root, output):
     selected = numeric.selected_parents(numeric.source_receipt())
     result = {
         "state": "complete",
-        "protocol_id": PROTOCOL,
+        "protocol_id": protocol,
         "scientific_reporting_eligible": False,
         "cases": [],
         "models": {},
@@ -249,6 +261,10 @@ def infer(data_root, output):
         stage = "bind_frozen_model"
         try:
             plan, checkpoint, training, binding = discover_model(reader, cohort)
+            if expected_models is not None:
+                numeric.require(
+                    binding == expected_models[cohort], "frozen_pr80_model_changed"
+                )
             result["models"][cohort] = binding
             stage = "load_checkpoint"
             # Existing project's weights-only state-dict route. No checkpoint conversion.
@@ -276,12 +292,12 @@ def infer(data_root, output):
                 strict=True,
             )
             model.to(device).eval()
-            for parent in CASES:
-                stage = "validation_case_" + parent
+            for parent in cases:
+                stage = role + "_case_" + parent
                 record = selected[parent]
                 numeric.require(
-                    numeric.split_for(parent)[1] == record["role"] == "validation",
-                    "validation_role",
+                    numeric.split_for(parent)[1] == record["role"] == role,
+                    "evaluation_role",
                 )
                 numeric.require(
                     parent
@@ -298,7 +314,8 @@ def infer(data_root, output):
                 )
                 root_path = paths[record["root"]["artifact_id"]]
                 reader.verify(root_path, record["root"]["sha256"])
-                names = numeric.bounded_json_gzip(root_path)["variable_names"]
+                root_artifact = numeric.bounded_json_gzip(root_path)
+                names = root_artifact["variable_names"]
                 numeric.require(
                     len(names) == len(graph["variable"].x), "variable_names"
                 )
@@ -339,13 +356,15 @@ def infer(data_root, output):
                 )
                 lp = matched_root_lp_assignments(
                     [names[i] for i in indices],
-                    graph["variable"].x[mask, 6].cpu().tolist(),
+                    [root_artifact["relaxation_vector"][i] for i in indices]
+                    if original_root_values
+                    else graph["variable"].x[mask, 6].cpu().tolist(),
                     support=gnn["selected_support"],
                     positive_assignments=gnn["positive_assignments"],
                 )
                 payload = {
                     "parent": parent,
-                    "role": "validation",
+                    "role": role,
                     "cohort": cohort,
                     "checkpoint_sha256": binding["checkpoint_sha256"],
                     "threshold": binding["threshold"],
@@ -358,14 +377,14 @@ def infer(data_root, output):
                 artifact_name = f"{cohort}-{parent}.json"
                 artifact_hash = write(output / "predictions" / artifact_name, payload)
                 metrics = _metric_row(
-                    "validation_parent", parent, truth, scores, binding["threshold"]
+                    role + "_parent", parent, truth, scores, binding["threshold"]
                 )
                 _, _, roc, pr = binary_curve_rows(truth, scores)
                 result["cases"].append(
                     {
                         "cohort": cohort,
                         "parent": parent,
-                        "role": "validation",
+                        "role": role,
                         "metrics": metrics,
                         "roc_auc": roc,
                         "pr_auc": pr,
@@ -379,6 +398,11 @@ def infer(data_root, output):
                         "abstained": gnn["abstained"],
                         "root_precomputation_included": False,
                         "start_feasibility_or_acceptance_claimed": False,
+                        "graph_sha256": record["graph"]["sha256"],
+                        "root_sha256": record["root"]["sha256"],
+                        "lp_start_source": "original_root_json_values"
+                        if original_root_values
+                        else "graph_float32_feature",
                     }
                 )
                 del (
@@ -390,6 +414,13 @@ def infer(data_root, output):
                     probabilities,
                     predictions,
                     payload,
+                    root_artifact,
+                    gnn,
+                    lp,
+                    truth,
+                    scores,
+                    indices,
+                    names,
                 )
             del model, state
             torch.cuda.empty_cache()
