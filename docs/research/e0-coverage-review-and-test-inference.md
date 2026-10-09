@@ -1,5 +1,9 @@
 # E0 installed coverage review and frozen-model test inference
 
+**Current operator note:** job3504 failed before producing inference members.
+Use the [startup-path correction and recovery](e0-job3504-startup-fix.md), not the
+old `25a6d2f` submit command. The scientific plan below is unchanged.
+
 ## What the installed return establishes
 
 The immutable [coverage receipt](../evidence/e0/coverage.json) has SHA256
