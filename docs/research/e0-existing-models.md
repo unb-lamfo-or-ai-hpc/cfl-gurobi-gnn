@@ -1,5 +1,8 @@
 # E0: evaluate existing models before new training
 
+Current continuation: [installed coverage review and twenty frozen-model test forwards](e0-coverage-review-and-test-inference.md).
+The original metadata collection below is complete; do not repeat it.
+
 9 October 2026. Base: PR80 merged into `develop` at
 `15e6d3494f6fedc6d61e6dbc14eaddc895b5e4e2`.
 
