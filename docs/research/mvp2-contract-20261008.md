@@ -1,5 +1,11 @@
 # MVP 2.0: sample, methods, computational contract and next actions
 
+**Current checkpoint, 9 October:** all 54 parents and four validation forwards
+have been reviewed from Job3503. Read the [closure](pr80-closure-job3503.md) and
+[accepted results-first plan](mvp2-results-plan-20261009.md). Pending-runtime
+statuses and submission blocks below are retained history, not current actions.
+E0 execution remains a separate admitted-manifest decision; no automatic run.
+
 Approved planning direction: 8 October 2026. This is the current reading entry
 point for PR80 and Sprints C-F. It supersedes the scheduling priority of older
 roadmaps, not their immutable experimental records or their execution budgets.

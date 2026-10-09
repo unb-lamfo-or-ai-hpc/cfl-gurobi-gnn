@@ -6,8 +6,13 @@ instructions to replay every preceding campaign.
 
 ## Current routes
 
+- [PR80 closure: all 54 parents and four validation forwards](pr80-closure-job3503.md):
+  current result, tables/figures, limitations and E0 handoff. Do not resubmit.
+- [Accepted results-first plan, C through article review](mvp2-results-plan-20261009.md):
+  six planned successor deliveries, mandatory CPU/GPU evaluation and visual outputs.
+
 - [PR80 integrated execution in the existing tfm_env](pr80-integrated-existing-runtime.md):
-  current commands; numerical/descriptive audit plus frozen-model inference,
+  historical commands; numerical/descriptive audit plus frozen-model inference,
   no package upgrades, new training or solver optimization.
 
 - [DaSCI platform inventory and manuscript guidance](dasci-platform-20261008.md):

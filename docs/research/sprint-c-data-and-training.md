@@ -1,5 +1,11 @@
 # Sprint C: data, representation, and matched training
 
+**Current checkpoint, 9 October:** PR80 has reviewed all 54 parents and four
+frozen-model forwards. See [closure](pr80-closure-job3503.md) and
+[current C–F plan](mvp2-results-plan-20261009.md). The older minimum-PyTorch and
+unexecuted-audit descriptions below are historical, superseded by the retained
+`tfm_env` execution. Do not follow earlier submission blocks again.
+
 ## October 8 priority revision
 
 The [current MVP2 contract](mvp2-contract-20261008.md) is the reading entry point.

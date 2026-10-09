@@ -1,5 +1,9 @@
 # PR80: two useful outputs, one existing environment, one allocation
 
+**9 October: Job3503 is complete and independently reviewed, with all 54 parents
+and four forwards. See [closure and visual outputs](pr80-closure-job3503.md).
+The execution blocks below are historical. Do not submit again.**
+
 ## Job3502: current continuation (supersedes the Job3501 instructions below)
 
 Job3502 ended FAILED/2:0 after 492 seconds. The application returned partial
