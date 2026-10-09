@@ -13,6 +13,18 @@ instance.
 
 ## Current research result
 
+### MVP 2.0 / PR80: installed input review and first frozen-model forwards
+
+Job3503 completed the **54-original-parent numerical review** (30 easy, 24 medium)
+and four validation forwards on one V100, using the existing `tfm_env` without
+package updates, new training or optimization. See the
+[review, sample tables and CPU/GPU observation figures](docs/research/pr80-closure-job3503.md)
+and [accepted C–F results-first plan](docs/research/mvp2-results-plan-20261009.md).
+These validation observations do not establish solver improvement or GPU scaling.
+The older integrated submission commands must not be repeated.
+
+### Frozen MVP 1.0 baseline
+
 The MVP 1.0 baseline is a development-only research MVP:
 
 - 54 original-parent graphs were admitted to the learning cohort: 34 training,
