@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS = Path(__file__).resolve().parents[2] / "scripts/evidence"
 sys.path.insert(0, str(SCRIPTS))
@@ -14,6 +15,8 @@ import review_pr80_job3503 as review  # noqa: E402
 
 
 class ReviewTests(unittest.TestCase):
+    maxDiff = None
+
     def setUp(self):
         self.path = review.ROOT / "docs/evidence/pr80-job3503-return.json"
         self.package = review.read_package(self.path)
@@ -90,6 +93,24 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(review.quantile([1, 2, 3, 4], 0.25), 1.75)
         self.assertEqual(review.alias("CFL_medium_instance_11"), "M11")
         self.assertEqual(review.ordered_mean([1e16, 1.0, -1e16]), 0.0)
+
+    def test_public_sprint_b_document_line_endings(self):
+        read_bytes = Path.read_bytes
+        expected = json.loads(
+            (review.ROOT / "docs/evidence/pr80-results/review.json").read_bytes()
+        )
+        for ending in (b"\n", b"\r\n"):
+
+            def public_document_bytes(path):
+                raw = read_bytes(path)
+                if path.name == "pr79-sprint-b-review.json":
+                    return raw.replace(b"\r\n", b"\n").replace(b"\n", ending)
+                return raw
+
+            with tempfile.TemporaryDirectory() as directory:
+                with mock.patch.object(Path, "read_bytes", public_document_bytes):
+                    report, _, _, _ = review.produce(Path(directory) / "new")
+                self.assertEqual(report, expected)
 
     def test_published_tables_regenerate_and_figures_match_manifest(self):
         source = review.ROOT / "docs/evidence/pr80-results"
