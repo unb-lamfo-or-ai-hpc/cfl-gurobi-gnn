@@ -176,6 +176,27 @@ class InspectionTests(unittest.TestCase):
                 all(not f["private_text_included"] for f in value["failures"])
             )
 
+    def test_rehash_content_before_decoding(self):
+        with (
+            tempfile.TemporaryDirectory() as folder,
+            ExitStack() as stack,
+            redirect_stdout(io.StringIO()),
+        ):
+            root, stage, output = self.setup_files(folder, stack)
+            real_read = module.Reader.read
+
+            def changed_read(reader, path, *, content=False):
+                data = real_read(reader, path, content=content)
+                return data + b" " if content and path.name == "record0.json" else data
+
+            stack.enter_context(patch.object(module.Reader, "read", changed_read))
+            value = module.collect(root, stage, output)
+            self.assertEqual(value["state"], "partial")
+            self.assertEqual(len(value["failures"]), 2)
+            self.assertEqual(
+                sum(p["origin"] == "pinned_inventory" for p in value["profiles"]), 6
+            )
+
     def test_actual_installed_receipt_and_no_solver_calls(self):
         data = (module.ROOT / "docs/evidence/e0/medium-inventory.json").read_bytes()
         value = module.inventory.validate(data, module.SHA)
