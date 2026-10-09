@@ -4,6 +4,9 @@ import ast
 import copy
 import io
 import json
+import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -199,6 +202,83 @@ class E0FrozenTests(unittest.TestCase):
         )
         for forbidden in ("while ", "sleep ", "pip install", "conda create"):
             self.assertNotIn(forbidden, text)
+
+    @unittest.skipIf(os.name == "nt", "POSIX shell regression runs on Linux CI")
+    def test_slurm_spool_copy_uses_exported_source(self):
+        bash = shutil.which("bash")
+        self.assertIsNotNone(bash)
+        operator = Path(flow.__file__).parent / "operate_e0_inference.sh"
+        text = operator.read_text()
+        # Execute the actual source-resolution block from a fake Slurm spool.
+        # No scheduler, solver, project-path gate or inference is executed.
+        prefix = text.split('STAGE=$(dirname "$SOURCE")', 1)[0]
+        self.assertIn("export E0_PYTHON E0_SOURCE", text)
+        self.assertIn("--export=ALL", text)
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            source = root / "checkout/source"
+            original = source / "scripts/evidence/operate.sh"
+            original.parent.mkdir(parents=True)
+            spool = root / "slurm/spool/job3504/slurm_script"
+            spool.parent.mkdir(parents=True)
+            for path in (original, spool):
+                path.write_text(prefix + 'printf "%s\\n" "$SOURCE"\n')
+            env = dict(os.environ, E0_SOURCE=str(source))
+            copied = subprocess.run(
+                [bash, str(spool), "batch"],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(copied.returncode, 0, copied.stderr)
+            self.assertEqual(copied.stdout.strip(), str(source))
+            env.pop("E0_SOURCE")
+            missing = subprocess.run(
+                [bash, str(spool), "batch"],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(missing.returncode, 0)
+            direct = subprocess.run(
+                [bash, str(original), "status"],
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(direct.returncode, 0, direct.stderr)
+            self.assertEqual(direct.stdout.strip(), str(source))
+
+    def test_job3504_failure_receipt_preserved_and_classified(self):
+        data = (flow.c1.ROOT / "docs/evidence/e0/job3504-return.json").read_bytes()
+        sha = "13089cf7db93175c6abd09fc6b52d5f204ea6b024cf4a6809be6459562df5deb"
+        self.assertEqual(flow.meta.digest(data), sha)
+        with self.assertRaisesRegex(flow.IncompleteReturn, "missing_members"):
+            flow.validate_return(data, sha)
+        with (
+            tempfile.TemporaryDirectory() as folder,
+            redirect_stdout(io.StringIO()) as out,
+            patch.object(
+                sys,
+                "argv",
+                [
+                    "e0",
+                    "review",
+                    "--receipt",
+                    str(flow.c1.ROOT / "docs/evidence/e0/job3504-return.json"),
+                    "--expected-sha256",
+                    sha,
+                    "--output",
+                    str(Path(folder) / "review"),
+                ],
+            ),
+        ):
+            self.assertEqual(flow.main(), 3)
+            self.assertFalse(json.loads(out.getvalue())["ready_for_independent_review"])
+            self.assertFalse((Path(folder) / "review").exists())
 
     def test_no_solver_training_calls(self):
         for module in (flow, flow.legacy):
