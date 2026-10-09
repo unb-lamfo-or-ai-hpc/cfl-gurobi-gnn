@@ -58,6 +58,9 @@ def solve(
     solution_path=None,
     preselected_assignments=None,
     reported_method=None,
+    soft_mem_limit_gb=None,
+    private_log_path=None,
+    before_optimize=None,
 ):
     import gurobipy as gp
     from gurobipy import GRB
@@ -73,6 +76,10 @@ def solve(
     values = None
     try:
         m = backend.model
+        if soft_mem_limit_gb is not None:
+            if soft_mem_limit_gb != 48:
+                raise ValueError("unsupported E0 soft memory bound")
+            m.Params.SoftMemLimit = soft_mem_limit_gb
         if m.NumQNZs or m.NumQConstrs or m.NumGenConstrs or m.NumSOS:
             raise ValueError("linear model required")
         before = mathematical_signature(m)
@@ -125,9 +132,15 @@ def solve(
         m.Params.OutputFlag = 1
         m.Params.LogToConsole = 0
         m.Params.MIPGap = 1e-4
+        if private_log_path is not None:
+            if private_log_path.exists():
+                raise ValueError("preserve existing private log")
+            m.Params.LogFile = str(private_log_path)
         params = {k: getattr(m.Params, k) for k in (
             "Threads", "Seed", "TimeLimit", "MIPGap", "MIPGapAbs", "Presolve", "Heuristics",
             "Cuts", "MIPFocus", "Method", "StartNodeLimit", "SubMIPNodes", "FeasibilityTol", "IntFeasTol")}
+        if soft_mem_limit_gb is not None:
+            params["SoftMemLimit"] = m.Params.SoftMemLimit
         build_seconds = perf_counter()-t
         messages, trajectory, observed, callback_errors = [], [], {}, []
         first_feasible = None
@@ -168,6 +181,8 @@ def solve(
                 if len(callback_errors) < 10:
                     callback_errors.append(type(error).__name__)
 
+        if before_optimize is not None:
+            before_optimize()
         m.optimize(callback)
         optimize_seconds = perf_counter()-optimize_start
         primal = _finite(m.ObjVal) if m.SolCount else None
