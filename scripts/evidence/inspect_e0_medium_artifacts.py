@@ -246,6 +246,7 @@ def collect(data_root, inventory_directory, output):
             )
             return
         raw = reader.read(path, content=True)
+        require(meta.digest(raw) == sha, "artifact_changed_before_decode")
         if path.name.endswith(".gz"):
             with gzip.GzipFile(fileobj=io.BytesIO(raw)) as zipped:
                 raw = zipped.read(64 * 1024**2 + 1)
