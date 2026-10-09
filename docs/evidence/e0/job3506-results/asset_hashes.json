@@ -1,0 +1,20 @@
+{
+  "files": {
+    "accounting.csv": "cd6ec1ca52fb9f214109088424f9397635d2153ea4ec5582ca329bad8e661dd2",
+    "computational_cost.pdf": "c1ba5aa04a5ea81f6c02fc0249d058e8613f3a02de22af6e05b633920b8b81dd",
+    "computational_cost.png": "ad9388a2fc079a3d3abe6af263db7a82085b52b71fc2e84c991cbbbca1a0ab4a",
+    "computational_cost.svg": "f64e9d8feb0a438203cf307dff7881cdc1f982f3b6db59e12b3a22f59b3512cc",
+    "gap_trajectories.pdf": "769252b37aad5c562a9ae61758ca3d1043634f13b20ba399bd8c2ef210b977df",
+    "gap_trajectories.png": "ae98e9a051c25f550e6256848f67ed05183b480d4e3c39a9585a451086b47f59",
+    "gap_trajectories.svg": "19535aad559bfdd1073f602556100478554882a70627fe182392adcb54b7f9ca",
+    "paired_effects.csv": "0b8fe33072215cd4faec33e5d29e7497b9feea607cae31871d70a40f203fa241",
+    "per_method.csv": "edc98ba496812ed47a31f5982ca9f746ebd449a3d7490cd988597138489d1987",
+    "review.json": "88e3d92cbe1ac589399a0c304f71776365df85cb5cbb4d9680f4d8bc75b0d028",
+    "solver_comparison.pdf": "5e7b9a504549085c4d7deaea5f40303cff6064133d6b1b5cd093dfed3826d978",
+    "solver_comparison.png": "ca7d950a18bc894f5a80c4aa01a01c3cc1c6e943d048d11a01f920c1a32fa9df",
+    "solver_comparison.svg": "74969d7b2411412c09d41672de38e79e9d22065871e3450bc69f8a74eb4127a8",
+    "summary.csv": "3b24df22587cde5b55181ab0daa85d01ac3332b1139a055b19886438154be622",
+    "trajectory.csv": "261a0f7446e7d6b9456810fd582ae8d008fa3ca506861ae570ae2345a2154375"
+  },
+  "source_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce"
+}

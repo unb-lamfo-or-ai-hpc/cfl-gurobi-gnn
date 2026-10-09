@@ -1,0 +1,62 @@
+{
+  "accepted_starts_recorded": 12,
+  "affinity_measured_in_return": false,
+  "all_recomputed_gaps_within_target": true,
+  "completed_solves": 18,
+  "elapsed_seconds": 1886,
+  "end_to_end_speedup_qualified": false,
+  "first_crossings_exact": false,
+  "job_id": "3506",
+  "max_sampled_cgroup_gib": 0.4961738586425781,
+  "max_wall_minus_runtime_seconds": 1.2505917372182012,
+  "optimization_runs_added": 0,
+  "private_log_text_reviewed_locally": false,
+  "private_solution_audits_recorded_passed": 18,
+  "private_solution_reaudit_performed_locally": false,
+  "root_precomputation_seconds": null,
+  "scheduler_alloc_cpus": 2,
+  "scientific_reporting_eligible": false,
+  "source_commit": "15da78c928403a27201b831cb1b701cf4e145e8d",
+  "source_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce",
+  "statistical_significance_claimed": false,
+  "sum_solver_seconds": 1711.8243448734283,
+  "summary": [
+    {
+      "faster_than_control_count": null,
+      "geometric_mean_runtime_ratio": null,
+      "max_sampled_cgroup_gib": 0.49181365966796875,
+      "mean_solver_seconds": 81.37922966480255,
+      "median_runtime_ratio": null,
+      "median_solver_seconds": 80.63774299621582,
+      "method": "unguided_control",
+      "parents": 6,
+      "source_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce",
+      "sum_solver_seconds": 488.2753779888153
+    },
+    {
+      "faster_than_control_count": 1,
+      "geometric_mean_runtime_ratio": 1.0192344560752598,
+      "max_sampled_cgroup_gib": 0.4961738586425781,
+      "mean_solver_seconds": 82.92810416221619,
+      "median_runtime_ratio": 1.0259170486367344,
+      "median_solver_seconds": 77.76048302650452,
+      "method": "root_lp_matched_partial_start",
+      "parents": 6,
+      "source_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce",
+      "sum_solver_seconds": 497.5686249732971
+    },
+    {
+      "faster_than_control_count": 3,
+      "geometric_mean_runtime_ratio": 1.1801593261388303,
+      "max_sampled_cgroup_gib": 0.4940338134765625,
+      "mean_solver_seconds": 120.99672365188599,
+      "median_runtime_ratio": 1.2055379468404464,
+      "median_solver_seconds": 90.56981337070465,
+      "method": "gnn_class_aware_partial_start",
+      "parents": 6,
+      "source_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce",
+      "sum_solver_seconds": 725.9803419113159
+    }
+  ],
+  "threads_parameter_recorded": 1
+}
