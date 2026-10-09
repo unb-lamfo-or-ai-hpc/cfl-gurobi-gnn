@@ -89,6 +89,7 @@ class ReviewTests(unittest.TestCase):
     def test_quantiles_and_alias(self):
         self.assertEqual(review.quantile([1, 2, 3, 4], 0.25), 1.75)
         self.assertEqual(review.alias("CFL_medium_instance_11"), "M11")
+        self.assertEqual(review.ordered_mean([1e16, 1.0, -1e16]), 0.0)
 
     def test_published_tables_regenerate_and_figures_match_manifest(self):
         source = review.ROOT / "docs/evidence/pr80-results"
