@@ -1,0 +1,36 @@
+{
+  "automatic_retry": false,
+  "cohort": "mixed",
+  "effective_objective_sense": "MINIMIZE",
+  "inference_return_sha256": "8f8f0b3c9dc350422f7a36bdb6c46d338186274ebf629d14acb88ea0ecbf9c40",
+  "maximum_main_solver_seconds": 64800,
+  "maximum_main_solves": 18,
+  "methods": [
+    "unguided_control",
+    "root_lp_matched_partial_start",
+    "gnn_class_aware_partial_start"
+  ],
+  "model_choice_reason": "complete_historical_mixed_protocol_not_test_winner_selection",
+  "new_root_solves": 0,
+  "parents": [
+    "CFL_easy_instance_0",
+    "CFL_easy_instance_3",
+    "CFL_easy_instance_6",
+    "CFL_easy_instance_14",
+    "CFL_easy_instance_27",
+    "CFL_easy_instance_29"
+  ],
+  "protocol_id": "e0_six_easy_missing_coverage_proposal_v1",
+  "remaining_label_excluded_parents": [
+    "CFL_medium_instance_13",
+    "CFL_medium_instance_26"
+  ],
+  "resource_budget_approved": false,
+  "root_precomputation_cost_available": false,
+  "seed": 42,
+  "solver_execution_admitted": false,
+  "source_objective_sense_must_be_recorded": true,
+  "threads": 1,
+  "time_limit_per_main_solve_seconds": 3600,
+  "training_runs_added": 0
+}
