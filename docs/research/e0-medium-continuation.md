@@ -1,5 +1,56 @@
 # E0: continuación focalizada para M13/M26
 
+## Estado actual: inventario instalado revisado
+
+El retorno [`medium-inventory.json`](../evidence/e0/medium-inventory.json), SHA256
+`9e73c05c776b12dc2b8132c8904cc462b9ce90735e4ebea74101d15537ad08b9`, coincide
+con los bytes descargados. Colector `0f60a0776bb1`, siete pruebas instaladas
+aprobadas, 9391 entradas observadas, 65 302 364 bytes leídos, sin advertencias,
+sin solver, inferencia, entrenamiento o consultas al planificador.
+
+| Padre | Original LP | JSON candidatos | Estado semántico |
+| --- | ---: | ---: | --- |
+| M13 | 29 742 026 bytes | 4 | Pendiente de inspección del contenido |
+| M26 | 29 730 887 bytes | 4 | Pendiente de inspección del contenido |
+
+Son diez **archivos candidatos**, no diez ejecuciones, grafos o soluciones
+válidas. Los ocho JSON suman 5 829 451 bytes. El inventario prueba lectura y
+hashes dentro de su alcance, no compatibilidad para inferencia ni inexistencia
+de otros artefactos.
+
+Se identificó una limitación del filtro anterior: al excluir nombres con
+`label`, también omite `label_free_graph.pt`. Por ello no se deduce que falten
+grafos a partir de esa lista. Se conserva el colector histórico y su recibo;
+la continuación inspecciona explícitamente ese nombre, `root_features.json.gz`,
+`predictions.json.gz` y `preparation.json` en las carpetas de los ocho JSON.
+No se repite la exploración completa del dataset.
+
+`inspect_e0_medium_artifacts.py` verifica los diez hashes y el índice privado,
+lee los ocho JSON fijados y los vecinos conocidos presentes, y genera dos
+salidas: perfiles públicos saneados y un índice privado para la preparación.
+Solo salen escalares permitidos, hashes, cantidades y resultados booleanos;
+no nombres de variables, etiquetas, asignaciones, rutas ni textos libres.
+Los grafos se identifican por bytes sin deserialización. Si un JSON contiene
+resultados históricos, se inspecciona su estructura, pero sus valores de
+etiqueta no se usan para seleccionar inicios ni entrenar modelos.
+
+Para una raíz existente se verifican origen MILP, método MIPNODE, minimización,
+nodo cero, longitudes, valores finitos y hashes de nombres/vector. Esto establece
+un **candidato autoconsistente**, no sustituye la comparación del orden de
+variables con el modelo ni admite inferencia. No se recalcula una raíz ausente.
+Los costes históricos desconocidos continúan ausentes, no se convierten en cero.
+
+Límites de esta continuación: 64 artefactos, 256 MiB leídos, JSON comprimido
+de hasta 8 MiB, 64 MiB descomprimidos por JSON y 128 MiB acumulados; 180 segundos
+comprobados entre operaciones de E/S. Fallos de formato se conservan como
+resultado parcial. Cambios en bytes fijados detienen la inspección antes de
+producir un resultado nuevo. No hay retry, consulta Slurm ni nueva optimización.
+
+La siguiente CLI usa un snapshot nuevo pero el **mismo inventario instalado**.
+No vuelva a ejecutar el colector del bloque histórico al final de esta página.
+Después del retorno se decide la preparación mínima reutilizable; no se cambia
+el checkpoint, la normalización ni el umbral por resultados de M13/M26.
+
 ## Qué, cómo y por qué
 
 PR82 está integrada en `develop` mediante `91630762bf0b86ec153e2882c42dc83161eebe4a`.
