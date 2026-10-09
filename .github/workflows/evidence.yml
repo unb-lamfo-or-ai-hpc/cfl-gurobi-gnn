@@ -72,4 +72,5 @@ jobs:
           bash -n scripts/slurm/dasci/submit_pr78_medium.sbs
           bash -n scripts/evidence/operate_pr80_numeric.sh
           bash -n scripts/evidence/operate_pr80_integrated.sh
+          bash -n scripts/evidence/operate_e0_inference.sh
       - run: python -m unittest discover -s tests/evidence -v
