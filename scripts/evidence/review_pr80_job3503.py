@@ -66,6 +66,14 @@ def quantile(values, q):
     return values[low] + (values[high] - values[low]) * (position - low)
 
 
+def ordered_mean(values):
+    """Preserve original left-to-right rounding across Python sum versions."""
+    total = 0.0
+    for value in values:
+        total += value
+    return total / len(values)
+
+
 def read_package(path):
     raw = Path(path).read_bytes()
     require(hashlib.sha256(raw).hexdigest() == RETURN_SHA, "return hash")
@@ -244,7 +252,7 @@ def validate(package):
                     "median": quantile(values, 0.5),
                     "q3": quantile(values, 0.75),
                     "maximum": max(values),
-                    "mean": sum(values) / len(values),
+                    "mean": ordered_mean(values),
                 }
             )
     cases = inference["cases"]
