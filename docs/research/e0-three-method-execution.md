@@ -1,5 +1,11 @@
 # E0: ejecución de los tres métodos con insumos existentes
 
+**Estado posterior:** job3506 completó las 18 resoluciones. Véase la
+[revisión, tablas y figuras](e0-job3506-review.md). Los comandos de esta página
+describen el protocolo ejecutado; no autorizan repetirlo. PR81 ya está merged
+en develop (`183ce3e`); PR82 fue redirigida a develop sin cambiar el snapshot HPC.
+Los párrafos siguientes conservan el contrato previo a ejecución.
+
 ## Qué, cómo y por qué
 
 El manifiesto instalado SHA256
