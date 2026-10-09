@@ -423,9 +423,12 @@ def produce(destination):
             r["published_records"] == 0 for r in coverage
         ),
         "e0_hpc_coverage_complete": False,
+        "sprint_b_review_hash_scope": "public_document_utf8_with_crlf_normalized_to_lf",
         "source_hashes": {
             "sprint_b_review": audit.metadata.digest(
-                (ROOT / "docs/evidence/pr79-sprint-b-review.json").read_bytes()
+                (ROOT / "docs/evidence/pr79-sprint-b-review.json")
+                .read_bytes()
+                .replace(b"\r\n", b"\n")
             ),
             "historical_solver_table": audit.metadata.digest(
                 historical_path.read_bytes()
