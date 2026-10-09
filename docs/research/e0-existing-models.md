@@ -1,6 +1,7 @@
 # E0: evaluate existing models before new training
 
-Current continuation: [installed coverage review and twenty frozen-model test forwards](e0-coverage-review-and-test-inference.md).
+Current continuation: [job3505 results, figures and existing-start binding](e0-job3505-review.md).
+The twenty frozen-model test forwards completed successfully; do not repeat them.
 The original metadata collection below is complete; do not repeat it.
 
 9 October 2026. Base: PR80 merged into `develop` at
@@ -132,7 +133,7 @@ automatically. There is no solver submission or resource-approval phrase.
 
 - [x] Implement read-only candidate collection, local table generation and one-transfer receiver.
 - [x] Add offline tests for coverage, sanitization, deduplication, role conflicts and preservation.
-- [ ] Four exact-head CI checks and installed collection receipt.
+- [x] Installed coverage and inference receipts independently reconciled; exact-head CI required at every publication.
 - [ ] Independently review compatibility and freeze minimal missing runs.
 - [ ] Execute only admitted missing coverage, then produce comparison figures/tables.
 - [ ] Ready for review, followed by separate human merge authorization.
