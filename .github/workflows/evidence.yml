@@ -62,7 +62,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: python -m pip install ruff==0.16.8
+      - run: python -m pip install ruff==0.16.8 numpy==1.26.4
       - run: python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
       - run: python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
       - name: Check medium operator shell syntax without execution
@@ -70,4 +70,6 @@ jobs:
         run: |
           bash -n scripts/evidence/operate_pr78_medium.sh
           bash -n scripts/slurm/dasci/submit_pr78_medium.sbs
+          bash -n scripts/evidence/operate_pr80_numeric.sh
+          bash -n scripts/evidence/operate_pr80_integrated.sh
       - run: python -m unittest discover -s tests/evidence -v

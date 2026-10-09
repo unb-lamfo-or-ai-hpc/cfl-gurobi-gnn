@@ -38,3 +38,8 @@ docs/evidence/pr77/installed-budget-30f80577fa73/** -text
 # Installed hierarchical-memory qualification binds the original HPC bytes.
 docs/evidence/pr78/job3485/qualification.json -text
 docs/evidence/pr78/job3491/** -text
+# Job3501 return SHA binds original bytes, including nested CSV record terminators.
+docs/evidence/pr80-job3501-return.json -text
+docs/evidence/pr80-job3502-return.json -text
+docs/evidence/pr80-job3503-return.json -text
+docs/evidence/pr80-results/* -text

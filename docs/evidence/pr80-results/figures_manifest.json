@@ -1,0 +1,18 @@
+{
+  "figure_hashes": {
+    "figure_cpu.pdf": "035e28ff9b0da05cf090cdf94705c6884badf2f8ea386ae8d02e58e92b56858a",
+    "figure_cpu.png": "43b596613286a1ca24f9b7441aa462355c46d1dde5b2b368e40273e6876478a7",
+    "figure_cpu.svg": "973772d6920504f4253ee463a760de935fef35d8964ac335350c81240696037d",
+    "figure_inference_cost.pdf": "6be0d86f48c87173080117ae885325b8d5dd3a4556fec6bce22fe27fce6008cd",
+    "figure_inference_cost.png": "4220010dd4aea04dd9d92cfdd798756cc45034b1af72f2ab9af2c3fbb7da9c94",
+    "figure_inference_cost.svg": "711b2d09ecbf6acf1fa5a000e19b7e961b3d6fb933d75c175f66ed56d6c741b0",
+    "figure_predictive.pdf": "919116b2d698625050e5677d8f0ea09d869dfe623ac95e5e93cb61def1cba359",
+    "figure_predictive.png": "84324a003f9caed5b075d3e917ae9db6adcc9e22891beda9b17a1321c9eb8aba",
+    "figure_predictive.svg": "4440b0d2772e2d161a96d7c2a4a7ae03240cd26a4c87c6b217a6cb57ebf01b7c",
+    "figure_sample.pdf": "761a192c2078f6a0efc5bb7fbddd4a36937adb9678663ef6739336f2486f7991",
+    "figure_sample.png": "104baf099a95c5d8563a7dd5628b196c56a75aba72ce121dd2d34d7649120cb4",
+    "figure_sample.svg": "9fd7e38a7930218aafbd03577d74de8f01d76d504e816d42746136afa3b10cd2"
+  },
+  "matplotlib": "3.9.2",
+  "source_return_sha256": "20ed978d7e6a9c0ccc6a284f15cf54c9df6940a0bc5985c1b836db5f69362f60"
+}
