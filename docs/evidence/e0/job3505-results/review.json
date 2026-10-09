@@ -1,0 +1,14 @@
+{
+  "auc_private_rescoring_performed": false,
+  "causal_training_cohort_effect_claimed": false,
+  "confusion_metrics_independently_recomputed": true,
+  "forwards": 20,
+  "fresh_holdout_claimed": false,
+  "gpu_scaling_claimed": false,
+  "job_id": "3505",
+  "mixed_f1_wins": 10,
+  "mixed_pr_auc_wins": 10,
+  "optimization_runs_added": 0,
+  "solver_acceptance_qualified": false,
+  "source_return_sha256": "8f8f0b3c9dc350422f7a36bdb6c46d338186274ebf629d14acb88ea0ecbf9c40"
+}

@@ -1,0 +1,13 @@
+{
+  "accounting": "JobID|State|ElapsedRaw|ExitCode|TotalCPU|AllocCPUS|ReqMem|MaxRSS\n3504|FAILED|0|2:0|00:00.007|8|32G|\n3504.batch|FAILED|0|2:0|00:00.005|8||0\n3504.extern|COMPLETED|0|0:0|00:00.001|8||0\n",
+  "complete_members": false,
+  "job_id": "3504",
+  "members": {},
+  "optimization_runs_added": 0,
+  "protocol_id": "e0_frozen_test_inference_v1",
+  "raw_logs_included": false,
+  "raw_predictions_exported": false,
+  "scientific_reporting_eligible": false,
+  "source_commit": "25a6d2fba64a9a959122fdcc3c26bbb13b993058",
+  "training_runs_added": 0
+}
