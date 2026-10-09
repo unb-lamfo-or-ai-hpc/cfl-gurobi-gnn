@@ -43,3 +43,4 @@ docs/evidence/pr80-job3501-return.json -text
 docs/evidence/pr80-job3502-return.json -text
 docs/evidence/pr80-job3503-return.json -text
 docs/evidence/pr80-results/* -text
+docs/evidence/e0/** -text
