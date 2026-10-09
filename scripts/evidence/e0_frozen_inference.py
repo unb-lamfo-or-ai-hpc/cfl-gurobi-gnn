@@ -22,6 +22,10 @@ CASES = tuple(f"CFL_easy_instance_{i}" for i in (0, 3, 6, 14, 27, 29)) + tuple(
 MEMBERS = {"plan.json", "runtime.json", "inference.json"}
 
 
+class IncompleteReturn(ValueError):
+    """A downloaded, hash-verified failure receipt, not an admitted experiment."""
+
+
 def plan():
     package = c1.read_package(c1.ROOT / "docs/evidence/pr80-job3503-return.json")
     c1.validate(package)
@@ -129,7 +133,12 @@ def validate_return(data, expected_sha):
     c1.require(meta.digest(data) == expected_sha, "outer_sha")
     value = meta.strict_json(data)
     c1.require(value["protocol_id"] == PROTOCOL, "protocol")
-    c1.require(set(value["members"]) == MEMBERS, "members")
+    c1.require(isinstance(value["members"], dict), "members_type")
+    c1.require(set(value["members"]) <= MEMBERS, "unexpected_members")
+    if set(value["members"]) != MEMBERS:
+        raise IncompleteReturn(
+            "missing_members:" + ",".join(sorted(MEMBERS - set(value["members"])))
+        )
     c1.require(value["raw_logs_included"] is False, "logs")
     c1.require(value["raw_predictions_exported"] is False, "predictions")
     parsed = {}
@@ -262,7 +271,21 @@ def main():
         package(args.output)
     else:
         c1.require(args.receipt.stat().st_size <= 8 * 1024**2, "return_size")
-        rows = validate_return(args.receipt.read_bytes(), args.expected_sha256)
+        try:
+            rows = validate_return(args.receipt.read_bytes(), args.expected_sha256)
+        except IncompleteReturn as error:
+            print(
+                json.dumps(
+                    {
+                        "state": "incomplete_return_preserved",
+                        "ready_for_independent_review": False,
+                        "reason": str(error),
+                        "automatic_retry": False,
+                        "scientific_reporting_eligible": False,
+                    }
+                )
+            )
+            return 3
         args.output.mkdir(exist_ok=False)
         c1.write_csv(args.output / "test_inference.csv", rows)
         print("E0_TWENTY_FROZEN_FORWARDS_RECONCILED_NO_SOLVER")

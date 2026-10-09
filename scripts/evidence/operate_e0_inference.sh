@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-SOURCE=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)
+if [[ "${1:-}" == batch ]]; then
+  # Slurm runs a spool copy; BASH_SOURCE no longer identifies the checkout.
+  SOURCE=${E0_SOURCE:?missing submitted source}
+else
+  SOURCE=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)
+fi
 STAGE=$(dirname "$SOURCE")
 case "$STAGE" in /raid/vrcelestino/data/cfl-mvp2-evidence/e0/inference-*) ;; *) exit 2;; esac
 test "$(hostname -s)" = dgx-dasci
@@ -13,11 +18,12 @@ case "${1:-}" in
   test ! -e "$STAGE/job_id.txt"
   test ! -e "$STAGE/run"
   E0_PYTHON=$(command -v python3)
-  export E0_PYTHON
+  E0_SOURCE=$SOURCE
+  export E0_PYTHON E0_SOURCE
   "$E0_PYTHON" -B "$SOURCE/scripts/evidence/e0_frozen_inference.py" plan --output "$STAGE/plan.json"
   mkdir "$STAGE/submission.started"
   for name in ${!SBATCH_@}; do unset "$name"; done
-  sbatch --parsable --partition=batch --nodes=1-1 --ntasks=1 --cpus-per-task=4 \
+  sbatch --parsable --export=ALL --partition=batch --nodes=1-1 --ntasks=1 --cpus-per-task=4 \
     --hint=nomultithread --mem=32G --gres=gpu:1 --time=00:40:00 --no-requeue \
     --job-name=cfl_e0_inference --chdir="$SOURCE" \
     --output="$STAGE/job-%j.out" --error="$STAGE/job-%j.err" \

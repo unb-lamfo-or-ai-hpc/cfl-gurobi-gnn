@@ -19,5 +19,9 @@ if ((Get-FileHash -LiteralPath $receipt -Algorithm SHA256).Hash.ToLowerInvariant
 Write-Host "E0_DOWNLOAD_HASH_OK: $destination"
 & python -B (Join-Path $PSScriptRoot 'e0_frozen_inference.py') review `
     --receipt $receipt --expected-sha256 $ExpectedSha256 --output (Join-Path $destination 'review')
-if ($LASTEXITCODE -ne 0) { throw 'Incomplete or inconsistent return. Share directory for review; no retry.' }
+if ($LASTEXITCODE -eq 3) {
+    Write-Warning "E0_INCOMPLETE_RETURN_PRESERVED: $destination. Share for diagnosis; do not resubmit."
+    return
+}
+if ($LASTEXITCODE -ne 0) { throw 'Inconsistent return. Share directory for review; no retry.' }
 Write-Host "E0_FROZEN_TEST_RETURN_OK: $destination"
