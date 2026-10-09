@@ -2,7 +2,7 @@ name: Public evidence integrity
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, feature/e0-existing-evidence]
     paths:
       - 'docs/evidence/**'
       - 'docs/research/pr64-evidence-hpc-baseline.md'
@@ -19,6 +19,7 @@ on:
       - 'docs/research/pr66-dasci-runbook.md'
       - 'configs/experiments/pr66_thread_screen_v1.json'
       - 'scripts/evidence/**'
+      - 'src/cfl_gnn/solvers/paired_partial_start.py'
       - 'tests/evidence/**'
       - 'configs/experiments/mvp2_gpu_comparison_v1.json'
       - 'configs/quality/pr64-ruff.toml'
@@ -73,4 +74,5 @@ jobs:
           bash -n scripts/evidence/operate_pr80_numeric.sh
           bash -n scripts/evidence/operate_pr80_integrated.sh
           bash -n scripts/evidence/operate_e0_inference.sh
+          bash -n scripts/evidence/operate_e0_solves.sh
       - run: python -m unittest discover -s tests/evidence -v
