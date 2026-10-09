@@ -1,0 +1,33 @@
+{
+  "auc_independently_recomputed": false,
+  "confusion_metrics_recomputed": true,
+  "e0_hpc_coverage_complete": false,
+  "e0_missing_published_method_rows": 24,
+  "generalization_or_solver_benefit_established": false,
+  "historical_receipts_modified": false,
+  "job_id": "3503",
+  "missing_values_are_zero": false,
+  "new_execution_authorized": false,
+  "new_observations": 15,
+  "numeric_parents_reviewed": 54,
+  "prediction_vectors_independently_recomputed": false,
+  "quantiles": "linear_type7",
+  "return_sha256": "20ed978d7e6a9c0ccc6a284f15cf54c9df6940a0bc5985c1b836db5f69362f60",
+  "reused_observations": 39,
+  "sample_admission_supported": true,
+  "source_commit": "1faa3491b0b5edcd07b4d6a6043bd7cc8b262f22",
+  "source_hashes": {
+    "historical_solver_table": "5b936dec45576eee6f8473fb22bd46ad616ef10bfed7044459e7bf4a957c6546",
+    "sprint_b_review": "fe9af1e741abdc9395766631599dfae2c9095da5fa679cb498cdff1d5d7a0a21"
+  },
+  "table_hashes": {
+    "e0_published_coverage.csv": "f8638edfbbdfcd90167fcbcf7cc85d386ffaf720e8485b039689f22b8ca5bae0",
+    "inference_metrics.csv": "771049a590948eec62bf93553e4eccb5029b20f6dccc0259cf4c6a0976d366a1",
+    "sample_parents.csv": "11f4069c5663f74f921dcf050fd331eaf9f1f4239b31ac3d4bbde19dcf31cb4b",
+    "sample_summary.csv": "93ad684bf70ffe15989b304c85cf3fc0f79366c874e8bb608f3dce8fdf528797",
+    "sprint_b_allocation_costs.csv": "abefbd92ee75a7f2b054bb2f8377d0a871a3b076be58c429dd70ac8d6bd06ad7",
+    "sprint_b_cpu.csv": "3e91d4554dc3847e5d53b13e4f91e545302170d5c06c6b1e0460cee91d32be58"
+  },
+  "training_or_optimization_added": 0,
+  "validation_forwards_reviewed": 4
+}
