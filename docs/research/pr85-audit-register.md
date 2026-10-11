@@ -1,5 +1,10 @@
 # PR85 — Scientific provenance and formulation audit
 
+> Final documentary review: [PR85 closure](pr85-closure.md) reconciles the
+> installed receipt. Audit complete with explicit limitations; execution gates
+> remain blocked. The original work register below is historical, not the
+> current PR readiness status. No merge or new HPC execution is authorized.
+
 > Implementation checkpoint, 11 October: the original work register below is
 > retained. The [executed offline audit](pr85-scientific-audit.md) now provides
 > the parent matrix, checkpoint chains, micro/macro metrics and reproducible

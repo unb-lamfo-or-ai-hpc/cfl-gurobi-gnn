@@ -1,5 +1,10 @@
 # PR85 — auditoria científica e correção do sentido do objetivo
 
+> Encerramento: a coleta abaixo foi executada e reconciliada. Este registro
+> da primeira entrega é preservado; suas pendências/estado draft descrevem
+> aquela etapa. O [encerramento atual](pr85-closure.md) incorpora o retorno,
+> delimita as afirmações e mantém bloqueada a execução PR86/87.
+
 Checkpoint: 11/10/2026. Base: `develop` em
 `5d7b00d4c650c3145bd376e8e270711eba984dbd`, depois dos merges das PR83/84.
 Escopo autorizado: auditoria dos materiais existentes. Não autoriza merge,

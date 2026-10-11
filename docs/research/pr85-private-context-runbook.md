@@ -1,5 +1,9 @@
 # PR85 — uma coleta documental, sem novo experimento
 
+> Coleta já concluída; não repetir. O [encerramento](pr85-closure.md) e o
+> recibo versionado registram o resultado e seus limites. Os comandos abaixo
+> preservam o procedimento histórico, não são uma nova solicitação de CLI.
+
 ## O que, como e por quê
 
 Esta continuação reúne as duas pendências da auditoria numa única intervenção

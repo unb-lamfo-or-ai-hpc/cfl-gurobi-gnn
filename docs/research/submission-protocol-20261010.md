@@ -6,7 +6,8 @@
 > PR86/87 preliminary protocols are accepted, but their exact execution budgets
 > and all new HPC work remain unapproved. The dated proposals below are retained
 > for traceability; see the [PR85 implementation audit](pr85-scientific-audit.md)
-> for the current evidence and remaining gates. No merge of PR85 is authorized.
+> for the first audit and the [closure](pr85-closure.md) for the reconciled
+> installed receipt and current limitations. No merge of PR85 is authorized.
 
 ## Status and independence
 
