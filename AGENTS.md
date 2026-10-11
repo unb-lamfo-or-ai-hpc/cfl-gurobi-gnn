@@ -2,6 +2,12 @@
 
 ## Scope
 
+Read `docs/current_status.md`, `docs/research_context.md`,
+`docs/experiment_protocol.md`, and `docs/article_plan.md` for the portable
+checkpoint. The approved 2026-10-10 roadmap is in
+`docs/research/submission-protocol-20261010.md`; it supersedes older scheduling
+proposals, not historical receipts. A proposed budget is not execution authority.
+
 This repository contains the reproducible CFL--GNN research pipeline. Treat
 the repository and the evidence directories referenced by its receipts as the
 source of truth. Chat histories are context, not experimental evidence.
@@ -31,6 +37,9 @@ source of truth. Chat histories are context, not experimental evidence.
   versions and investigate compatibility only when a real execution requires it.
 - Before a PR is ready, run the repository's pinned tests and quality checks;
   document what was not run and why.
+- Act proactively within the approved scope. Ask for merge only after the PR
+  is ready for review. HPC execution needs its own explicit authorization;
+  never treat approval of documentation as approval of jobs or training.
 
 ## Documentation rule
 
