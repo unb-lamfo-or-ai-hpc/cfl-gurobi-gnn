@@ -166,6 +166,9 @@ class BindingTests(unittest.TestCase):
                 binding.domain(lines)
 
     def test_zero_execution_contract_and_ten_parent_selection(self):
+        # Nested, pretty-printed medium predictions can exceed the old easy cap.
+        self.assertGreater(binding.PREDICTION_BYTES, 128 * 1024**2)
+        self.assertLessEqual(binding.PREDICTION_BYTES, 512 * 1024**2)
         self.assertEqual(len(binding.existing.flow.CASES), 10)
         self.assertEqual(sum("_medium_" in p for p in binding.existing.flow.CASES), 4)
         self.assertIn("solver_execution_admitted", binding.FALSE)

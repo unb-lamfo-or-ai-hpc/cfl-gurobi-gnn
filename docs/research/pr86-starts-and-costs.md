@@ -55,7 +55,8 @@ Depois da publicação e dos quatro braços CI do head exato, executar o bloco
 preparado para vinculação instalada: uma leitura limitada em `tfm_env`, sem
 Gurobi, Torch, GPU, Slurm, inferência, treino ou novo job. Limites: 600 s no
 leitor, timeout externo 660 s, espaço virtual 16 GiB, arquivos de predição
-até 128 MiB cada, raiz expandida até 512 MiB, leitura hash até 4 GiB de dados
+até 512 MiB cada (não reutilizar o teto de 128 MiB dos fáceis), raiz expandida
+até 512 MiB, leitura hash até 4 GiB de dados
 e 2 GiB de predições. A interpretação expandida tem limites próprios; esses
 tetos não são medições de consumo. Diretório novo em `/raid`, sem sobrescrita.
 O comando não recebe autorização para resolver a matriz ou medir novos custos.

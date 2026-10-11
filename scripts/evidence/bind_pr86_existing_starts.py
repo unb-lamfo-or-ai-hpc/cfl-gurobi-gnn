@@ -13,6 +13,7 @@ import prepare_e0_easy_starts as existing
 require = proposal.review.require
 PROTOCOL = "pr86_ten_historical_start_bindings_v1"
 MERGED_PR85 = "bb3f28f8078abde5ed4d95461f04fe675be2f37e"
+PREDICTION_BYTES = 512 * 1024**2
 ZERO = (
     "optimization_runs_added",
     "training_runs_added",
@@ -190,10 +191,10 @@ def prepare(data_root, inference_stage, output, source_commit):
         require(sources[parent]["prediction_file"] == filename, "prediction_filename")
         pred = inference_stage / "run/predictions" / filename
         predictions.verify(pred, row["prediction_sha256"])
-        require(pred.stat().st_size <= 128 * 1024**2, "prediction_size")
+        require(pred.stat().st_size <= PREDICTION_BYTES, "prediction_size")
         with pred.open("rb") as stream:
-            raw = stream.read(128 * 1024**2 + 1)
-        require(len(raw) <= 128 * 1024**2, "prediction_size")
+            raw = stream.read(PREDICTION_BYTES + 1)
+        require(len(raw) <= PREDICTION_BYTES, "prediction_size")
         require(proposal.digest(raw) == row["prediction_sha256"], "prediction_changed")
         payload = existing.flow.meta.strict_json(raw)
         del raw
