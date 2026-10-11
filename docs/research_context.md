@@ -74,3 +74,9 @@ M1's matched support cardinality/positive count from equality of variable IDs,
 and charges GNN-dependent preparation to it. Effective MINIMIZE is mandatory
 under the author-approved cost-objective correction. This does not erase
 PR85's remaining formulation/provenance limitations or approve execution.
+
+PR85 is now merged at `bb3f28f8078abde5ed4d95461f04fe675be2f37e`.
+The [PR86 continuation](research/pr86-starts-and-costs.md) reuses job3505's
+existing predictions/roots for ten-parent variable binding. This is not another
+inference or root solve. Existing E0 timing coverage is decomposed without
+double-counting export; unmeasured preparation remains unknown.

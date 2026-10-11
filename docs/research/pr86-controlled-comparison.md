@@ -1,6 +1,10 @@
 # PR86 — matriz controlada e orçamento proposto
 
 Checkpoint 11/10/2026: **primeira entrega offline; draft; sem execução**.
+Atualização posterior ao merge PR85: ver [vínculos e custos](pr86-starts-and-costs.md).
+O texto e manifesto iniciais abaixo registram a proposta original, não o
+estado corrente de cada gate. O merge documental foi confirmado; os gates
+científicos/de execução continuam pendentes.
 Branch independente, a partir de `develop` após PR84. Depende cientificamente
 do encerramento PR85 e da resolução dos gates afetados, não apenas de seu merge.
 

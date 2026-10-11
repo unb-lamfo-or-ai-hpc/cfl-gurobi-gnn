@@ -7,7 +7,9 @@
 > and all new HPC work remain unapproved. The dated proposals below are retained
 > for traceability; see the [PR85 implementation audit](pr85-scientific-audit.md)
 > for the first audit and the [closure](pr85-closure.md) for the reconciled
-> installed receipt and current limitations. No merge of PR85 is authorized.
+> installed receipt and current limitations. PR85 was subsequently merged by
+> the author at `bb3f28f8078abde5ed4d95461f04fe675be2f37e`. PR86 implementation
+> may continue; its exact HPC budget and all new experiments remain unapproved.
 
 ## Status and independence
 

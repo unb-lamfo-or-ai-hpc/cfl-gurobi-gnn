@@ -1,12 +1,13 @@
 # Current status
 
-Updated: 2026-10-11. PR85 implementation authorized; no new experiment authorized.
+Updated: 2026-10-11. PR85 merged; PR86 implementation in progress. No new experiment authorized.
 
 ## Integrated baseline
 
-`develop` contains the merged MVP 2.0 baseline through PR #84 at commit
+`develop` contains the merged MVP 2.0 baseline through PR #85 at commit
+`bb3f28f8078abde5ed4d95461f04fe675be2f37e`. PR84 was
 `5d7b00d4c650c3145bd376e8e270711eba984dbd`. PR83 merged as
-`8d8c92eff823658458990263b1278e7e220c494d`; PR84 as the develop head above.
+`8d8c92eff823658458990263b1278e7e220c494d`; PR84 as `5d7b00d` above.
 The baseline includes the E0
 easy three-method executor evidence for job 3506, the bounded numerical and
 resource audits, and the published CPU comparison tables and figures.
@@ -52,9 +53,10 @@ receipt flags remain false. See [PR83](https://github.com/unb-lamfo-or-ai-hpc/cf
 PR83/84 are merged. PR84 relocated the four portable documents into `docs/`
 and consolidated the approved roadmap. The 11 October authorization starts
 PR85 implementation and confirms the preliminary PR86/87 protocols; it does
-not authorize their exact resource budgets, runs or the PR85 merge.
+not authorize their exact resource budgets or runs. The author subsequently
+merged PR85 and authorized continued PR86 implementation.
 
-1. PR85: audit complete with explicit limitations, pending review/merge. The offline auditor reconciles
+1. PR85: merged, audit complete with explicit limitations. The offline auditor reconciles
    54 numerical parents, two checkpoint chains and 20 forwards, exporting micro
    and parent-macro metrics. MINIMIZE is the required correction of the source
    benchmark error, not equivalent maximization. Full raw-formulation mapping
@@ -100,6 +102,13 @@ release review. A future whole-branch `develop` to `main` merge would include
 these documents unless that release explicitly makes another arrangement.
 
 ## Independent PR86 planning checkpoint — 11 October
+
+The dated initial checkpoint below describes the first proposal. It is
+superseded operationally by the [post-PR85 preparation](research/pr86-starts-and-costs.md):
+ten-parent binding code and disjoint cost accounting are locally tested;
+installed binding, complete prospective executor instrumentation, formulation
+mapping and exact resource authorization are still pending. The original
+proposal bytes remain preserved. No execution gates are cleared by code alone.
 
 This branch starts from develop after merged PR83/84 (5d7b00d). The earlier
 checkpoint above is retained; PR85's independent documentary audit is under

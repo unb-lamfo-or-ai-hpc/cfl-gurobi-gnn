@@ -9,7 +9,8 @@ with mandatory correction from source MAXIMIZE to effective MINIMIZE for
 cost-minimizing CFL. PR86/87 protocols accepted preliminarily, with no exact
 HPC execution budget approved. PR85's documentary audit is now complete with
 explicit limitations; see its [closure](research/pr85-closure.md). This does
-not clear the remaining execution gates or authorize a merge.
+not clear the remaining execution gates. PR85 was subsequently merged by the
+author at `bb3f28f8`; PR86 implementation continues without HPC authorization.
 
 ## Proposed narrative
 
@@ -101,3 +102,9 @@ from cold and amortized preparation costs, retain every planned cell's final
 state, and bind metrics to receipts. PR85 is independently reviewable; merging
 it alone does not clear scientific execution gates. Mandatory serial/4-GPU
 training and manuscript work retain separate budgets and acceptance criteria.
+
+Post-merge PR85 continuation: [PR86 preparation](research/pr86-starts-and-costs.md)
+adds a reproducible 18-row historical cost-coverage table and a tested ten-parent
+start binder. These are coverage/implementation assets, not newly observed
+CPU-scaling or end-to-end results. The prospective three-method executor and
+approved execution budget remain prerequisites for the planned result figures.

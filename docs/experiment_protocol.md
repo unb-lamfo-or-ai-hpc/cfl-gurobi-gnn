@@ -104,3 +104,11 @@ Mandatory MINIMIZE corrects the author-identified benchmark cost-objective
 error; it is not equivalence to unchanged-cost maximization. No job can be
 submitted by this planner. Parameter/source/cost binding and an exact budget
 approval are required before adapting the existing executor for execution.
+
+Post-PR85 merge: [binding and cost continuation](research/pr86-starts-and-costs.md)
+adds a separate ten-parent contract; the historical six-parent validator and
+original proposal are unchanged. A public binding attests variable identity
+and deterministic selection, not completion feasibility or solver acceptance.
+Cost regions must be disjoint; the historical executor's `other` includes
+export. Charge GNN preparation to M1 as well as M2; do not turn unknown
+preparation into zero or count shared campaign preparation twice.
