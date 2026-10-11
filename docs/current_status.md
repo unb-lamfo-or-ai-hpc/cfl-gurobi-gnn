@@ -2,6 +2,13 @@
 
 Updated: 2026-10-11. PR85 merged; PR86 implementation in progress. No new experiment authorized.
 
+PR86 continuation: `190f5b8` is published and its four exact-head CI checks
+passed. The [prospective instrumentation](research/pr86-prospective-instrumentation.md)
+now provides an explicit thread/seed solver core and immutable attempt/export
+timing records, tested with synthetic dispatchers. Installed launcher,
+preparation/environment/formulation binding and budget admission remain open;
+no HPC command, new experiment or merge is admitted by this implementation.
+
 ## Integrated baseline
 
 `develop` contains the merged MVP 2.0 baseline through PR #85 at commit
