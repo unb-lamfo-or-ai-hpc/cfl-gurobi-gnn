@@ -1,0 +1,42 @@
+{
+  "admitted_parents": 54,
+  "all_admitted_numeric_receipts_use_minimize": true,
+  "auc_or_calibration_independently_rescored": false,
+  "base_develop_commit": "5d7b00d4c650c3145bd376e8e270711eba984dbd",
+  "blocking_gates": [
+    "raw_CFL_constraint_domain_cost_mapping_and_units_not_in_public_receipts",
+    "historical_preprocessing_fit_provenance_not_fully_exported",
+    "PR86_PR87_exact_execution_budget_not_approved"
+  ],
+  "claim_scope": "partition_identity_and_existing_confusion_metrics_only_not_blanket_scientific_promotion",
+  "duplicate_selected_parent_artifacts": 0,
+  "equivalence_to_original_maximization_claimed": false,
+  "frozen_forwards_reconciled": 20,
+  "full_benchmark_formulation_semantics_qualified": false,
+  "hard_maximize_triviality": "author_reported_not_retimed_or_independently_verified_here",
+  "historical_prenorm_and_pos_weight_fit_independently_replayed": false,
+  "historically_unexposed_test_claimed": false,
+  "new_comparison_admitted": false,
+  "numerically_passed_parents": 54,
+  "optimization_runs_added": 0,
+  "partition_counts": {
+    "test": 10,
+    "train": 34,
+    "validation": 10
+  },
+  "population": 90,
+  "protocol_id": "pr85_existing_evidence_scientific_audit_v1",
+  "raw_receipt_flags_rewritten": false,
+  "required_effective_sense": "MINIMIZE",
+  "resource_budget_approved": false,
+  "sense_decision": "author_approved_benchmark_error_correction_20261011",
+  "source_receipts": {
+    "artifacts": "e0b51fce0ad3e207c1f0a72b1b5678c89974f8fe856a1918a7b189b0ae981681",
+    "inference": "8f8f0b3c9dc350422f7a36bdb6c46d338186274ebf629d14acb88ea0ecbf9c40",
+    "metadata": "1183e69f817a62ae249e2d41a110de941084b19cfbfa4c641d03248a3796781e",
+    "numeric": "20ed978d7e6a9c0ccc6a284f15cf54c9df6940a0bc5985c1b836db5f69362f60"
+  },
+  "source_sense": "MAXIMIZE",
+  "submissions_added": 0,
+  "training_runs_added": 0
+}
