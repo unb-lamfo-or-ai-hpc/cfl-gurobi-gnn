@@ -1,5 +1,14 @@
 # Submission protocol and authorization gates — 10 October 2026
 
+> Authorization update, 11 October: PR83/84 are merged. PR85's scope and
+> implementation are approved; effective MINIMIZE must correct the source
+> MAXIMIZE error for cost-minimizing CFL, without claiming equivalence.
+> PR86/87 preliminary protocols are accepted, but their exact execution budgets
+> and all new HPC work remain unapproved. The dated proposals below are retained
+> for traceability; see the [PR85 implementation audit](pr85-scientific-audit.md)
+> for the first audit and the [closure](pr85-closure.md) for the reconciled
+> installed receipt and current limitations. No merge of PR85 is authorized.
+
 ## Status and independence
 
 The authors approved this roadmap with mandatory 1-GPU serial versus 4-GPU

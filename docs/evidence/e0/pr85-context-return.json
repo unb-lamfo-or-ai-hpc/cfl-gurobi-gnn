@@ -1,0 +1,269 @@
+{
+  "new_comparison_admitted": false,
+  "optimization_runs_added": 0,
+  "private_paths_included": false,
+  "protocol_id": "pr85_existing_lp_and_training_context_v1",
+  "raw_model_text_included": false,
+  "representative_models": {
+    "CFL_easy_instance_0": {
+      "bound_syntax_counts": {
+        "V <= N": 12400
+      },
+      "coverage": "representative_parent_only_not_all_54",
+      "economic_units": "not_encoded_or_inferred",
+      "expanded_bytes": 12355069,
+      "explicit_binary_variables": 148000,
+      "explicit_domain_families": {
+        "binary": {
+          "x": 148000
+        },
+        "integer": {}
+      },
+      "explicit_general_variables": 0,
+      "full_semantics_qualified": false,
+      "objective": {
+        "constant": 0.0,
+        "families": {
+          "x": {
+            "maximum": 9.957439052524695,
+            "minimum": 9.81646e-07,
+            "negative": 0,
+            "terms": 160400,
+            "zero": 0
+          }
+        }
+      },
+      "remaining_continuous_by_linear_lp_default": 12400,
+      "representative_row_summaries": [
+        {
+          "families": {
+            "x": {
+              "maximum": 1.0,
+              "minimum": 1.0,
+              "negative": 0,
+              "terms": 400,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 1.0,
+          "sense": ">="
+        },
+        {
+          "families": {
+            "x": {
+              "maximum": 0.9989497685689341,
+              "minimum": -400.0,
+              "negative": 1,
+              "terms": 378,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 0.0,
+          "sense": "<="
+        },
+        {
+          "families": {
+            "x": {
+              "maximum": 0.9989497685689341,
+              "minimum": -400.0,
+              "negative": 1,
+              "terms": 412,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 0.0,
+          "sense": "<="
+        },
+        {
+          "families": {
+            "x": {
+              "maximum": 0.9989497685689341,
+              "minimum": -400.0,
+              "negative": 1,
+              "terms": 413,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 0.0,
+          "sense": "<="
+        }
+      ],
+      "required_effective_sense": "MINIMIZE",
+      "row_senses": {
+        "<=": 400,
+        ">=": 400
+      },
+      "row_structure_groups": [
+        {
+          "families": [
+            "x"
+          ],
+          "rhs_maximum": 1.0,
+          "rhs_minimum": 1.0,
+          "rows": 400,
+          "sense": ">="
+        },
+        {
+          "families": [
+            "x"
+          ],
+          "rhs_maximum": 0.0,
+          "rhs_minimum": 0.0,
+          "rows": 400,
+          "sense": "<="
+        }
+      ],
+      "source_sense": "MAXIMIZE",
+      "source_sha256": "c5c6703a158ced73c7d20ae6c969146c306bd6d71c56163724965d561eb255d1",
+      "variables_observed": 160400
+    },
+    "CFL_medium_instance_0": {
+      "bound_syntax_counts": {
+        "V <= N": 129600
+      },
+      "coverage": "representative_parent_only_not_all_54",
+      "economic_units": "not_encoded_or_inferred",
+      "expanded_bytes": 103193258,
+      "explicit_binary_variables": 1152000,
+      "explicit_domain_families": {
+        "binary": {
+          "x": 1152000
+        },
+        "integer": {}
+      },
+      "explicit_general_variables": 0,
+      "full_semantics_qualified": false,
+      "objective": {
+        "constant": 0.0,
+        "families": {
+          "x": {
+            "maximum": 9.99892339223863,
+            "minimum": 4.9913e-08,
+            "negative": 0,
+            "terms": 1281600,
+            "zero": 0
+          }
+        }
+      },
+      "remaining_continuous_by_linear_lp_default": 129600,
+      "representative_row_summaries": [
+        {
+          "families": {
+            "x": {
+              "maximum": 1.0,
+              "minimum": 1.0,
+              "negative": 0,
+              "terms": 1600,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 1.0,
+          "sense": ">="
+        },
+        {
+          "families": {
+            "x": {
+              "maximum": 0.999695656189549,
+              "minimum": -800.0,
+              "negative": 1,
+              "terms": 787,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 0.0,
+          "sense": "<="
+        },
+        {
+          "families": {
+            "x": {
+              "maximum": 0.999695656189549,
+              "minimum": -800.0,
+              "negative": 1,
+              "terms": 748,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 0.0,
+          "sense": "<="
+        },
+        {
+          "families": {
+            "x": {
+              "maximum": 0.999695656189549,
+              "minimum": -800.0,
+              "negative": 1,
+              "terms": 872,
+              "zero": 0
+            }
+          },
+          "rhs_minus_lhs_constant": 0.0,
+          "sense": "<="
+        }
+      ],
+      "required_effective_sense": "MINIMIZE",
+      "row_senses": {
+        "<=": 1600,
+        ">=": 800
+      },
+      "row_structure_groups": [
+        {
+          "families": [
+            "x"
+          ],
+          "rhs_maximum": 1.0,
+          "rhs_minimum": 1.0,
+          "rows": 800,
+          "sense": ">="
+        },
+        {
+          "families": [
+            "x"
+          ],
+          "rhs_maximum": 0.0,
+          "rhs_minimum": 0.0,
+          "rows": 1600,
+          "sense": "<="
+        }
+      ],
+      "source_sense": "MAXIMIZE",
+      "source_sha256": "0711f47bce3f4090bc4eef20cc9693c2f690788e7b3c3baa305f87fc2dd09bcb",
+      "variables_observed": 1281600
+    }
+  },
+  "request_sha256": "17b339e3356994b884a81343908921acbf49747799e154d911966e4091d6012a",
+  "scientific_reporting_eligible": false,
+  "submissions_added": 0,
+  "training_reports": {
+    "easy": {
+      "checkpoint_sha256": "86e0fb9cf92e6a5d30aaa432caa4074b7e0d2bb22b344cdcbd9be7ed81279cf8",
+      "cohort": "easy",
+      "epochs_completed": 100,
+      "historical_fit_replayed": false,
+      "plan_sha256": "cbf0fe92b07aa79de97b9ac616a64178534156b58224fd43ae8494b9d54839ae",
+      "pos_weight": 388.2835998535156,
+      "pos_weight_train_only_scope": "code_path_review_not_consumed_sample_replay",
+      "prenorm_training_graphs": 18,
+      "report_sha256": "87e21c55db85b038bb06800be10633bd8b479f49c405a9388f03bf62bd87626f",
+      "test_graphs_loaded": 0,
+      "threshold": 0.9975354671478271,
+      "train_only_prenorm_attested_by_hashed_report": true,
+      "train_parents": 18
+    },
+    "mixed": {
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "cohort": "mixed",
+      "epochs_completed": 100,
+      "historical_fit_replayed": false,
+      "plan_sha256": "07c3377c20ef49c0ad3ae33a6b57d9dd70f92fc48a32f5f80c25b5cb32aa5da4",
+      "pos_weight": 1132.975830078125,
+      "pos_weight_train_only_scope": "code_path_review_not_consumed_sample_replay",
+      "prenorm_training_graphs": 34,
+      "report_sha256": "974236918746711d044e2c0111a1e145d9487b27e20e7953cda6b63058ef3822",
+      "test_graphs_loaded": 0,
+      "threshold": 0.9991843104362488,
+      "train_only_prenorm_attested_by_hashed_report": true,
+      "train_parents": 34
+    }
+  },
+  "training_runs_added": 0
+}
