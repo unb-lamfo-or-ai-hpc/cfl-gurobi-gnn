@@ -1,5 +1,13 @@
 # PR85 — Scientific provenance and formulation audit
 
+> Implementation checkpoint, 11 October: the original work register below is
+> retained. The [executed offline audit](pr85-scientific-audit.md) now provides
+> the parent matrix, checkpoint chains, micro/macro metrics and reproducible
+> checks. MINIMIZE is the mandatory author-approved benchmark correction,
+> not an undecided choice or equivalence to unchanged-cost maximization.
+> Full raw-formulation mapping and historical preprocessing-fit provenance
+> remain specific open gates. The PR remains draft; no HPC work or merge.
+
 Status: **in progress / evidence not yet promoted**. Scope approved 2026-10-11. This document is an audit work register, not a report of checks already executed.
 
 ## Boundaries
