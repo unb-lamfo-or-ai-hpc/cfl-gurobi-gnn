@@ -4,6 +4,11 @@ Approved planning revision: 2026-10-10. Target: submission by December 2026,
 preferably by 11 December with the remainder of December as contingency.
 Implementation/resource authorizations remain separate.
 
+11 October update: PR83/84 merged; PR85 scope and implementation approved,
+with mandatory correction from source MAXIMIZE to effective MINIMIZE for
+cost-minimizing CFL. PR86/87 protocols accepted preliminarily, with no exact
+HPC execution budget approved. See [PR85's current audit](research/pr85-scientific-audit.md).
+
 ## Proposed narrative
 
 1. Introduce CFL, the computational bottleneck, and the gap between generic

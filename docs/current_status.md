@@ -1,11 +1,13 @@
 # Current status
 
-Updated: 2026-10-10. Documentary checkpoint; no new experiment authorized.
+Updated: 2026-10-11. PR85 implementation authorized; no new experiment authorized.
 
 ## Integrated baseline
 
-`develop` contains the merged MVP 2.0 baseline through PR #82 at commit
-`91630762bf0b86ec153e2882c42dc83161eebe4a`. The baseline includes the E0
+`develop` contains the merged MVP 2.0 baseline through PR #84 at commit
+`5d7b00d4c650c3145bd376e8e270711eba984dbd`. PR83 merged as
+`8d8c92eff823658458990263b1278e7e220c494d`; PR84 as the develop head above.
+The baseline includes the E0
 easy three-method executor evidence for job 3506, the bounded numerical and
 resource audits, and the published CPU comparison tables and figures.
 
@@ -15,7 +17,7 @@ threads, and resource allocation.
 
 ## PR83 documentary closure
 
-PR #83 is a separate draft branch for the installed M13/M26 medium-artifact
+PR #83 is merged and closes the installed M13/M26 medium-artifact
 continuation. Its first inventory is preserved with SHA256
 `9e73c05c776b12dc2b8132c8904cc462b9ce90735e4ebea74101d15537ad08b9`.
 It contains two original MILP byte objects and eight metadata candidates. The
@@ -47,15 +49,17 @@ receipt flags remain false. See [PR83](https://github.com/unb-lamfo-or-ai-hpc/cf
 
 ## Approved next sequence and authorization boundary
 
-PR84 relocates the four portable documents from repository root to `docs/`
-and consolidates the approved roadmap. PR83/84 are independent branches based
-on `develop`, with no merge authorized by the 10 October request. No claim
-here asserts that the PR83 closure receipt is already merged into this branch.
+PR83/84 are merged. PR84 relocated the four portable documents into `docs/`
+and consolidated the approved roadmap. The 11 October authorization starts
+PR85 implementation and confirms the preliminary PR86/87 protocols; it does
+not authorize their exact resource budgets, runs or the PR85 merge.
 
-1. PR85: approve the final scope in the
-   [protocol proposal](research/submission-protocol-20261010.md#pr85--final-scope-for-approval)
-   before implementation. Audit parent partitions, checkpoint provenance,
-   predictive validation, mathematical formulation and objective convention.
+1. PR85: approved scope, implementation started. The offline auditor reconciles
+   54 numerical parents, two checkpoint chains and 20 forwards, exporting micro
+   and parent-macro metrics. MINIMIZE is the required correction of the source
+   benchmark error, not equivalent maximization. Full raw-formulation mapping
+   and historical preprocessing provenance remain delimited gates. See the
+   [audit and next steps](research/pr85-scientific-audit.md).
 2. PR86: M0/M1/M2, five CPU caps, repeatability and end-to-end cost. The 210
    solves are a preliminary ceiling, not an approved budget or a submission.
 3. PR87: mandatory full-training comparison of 1 GPU serial (no DDP) versus
