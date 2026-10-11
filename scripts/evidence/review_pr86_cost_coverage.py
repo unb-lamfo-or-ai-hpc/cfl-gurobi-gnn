@@ -31,8 +31,8 @@ def build():
                 "source_return_sha256": historical.SHA,
                 **{k + "_seconds": v for k, v in disjoint.items()},
                 "execution_seconds": estimate["execution_seconds"],
-            "execution_scope": "solver_function_only_not_whole_worker_or_job",
-            "worker_overhead_seconds": None,
+                "execution_scope": "solver_function_only_not_whole_worker_or_job",
+                "worker_overhead_seconds": None,
                 "preparation_seconds": estimate["preparation_seconds"],
                 "cold_end_to_end_seconds": estimate["cold_end_to_end_seconds"],
                 "amortized_end_to_end_seconds": estimate[
