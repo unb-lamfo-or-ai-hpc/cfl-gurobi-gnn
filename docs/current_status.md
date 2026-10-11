@@ -40,7 +40,7 @@ receipt flags remain false. See [PR83](https://github.com/unb-lamfo-or-ai-hpc/cf
   not a final sample of 39. Preserve job3503's original return SHA256
   `20ed978d7e6a9c0ccc6a284f15cf54c9df6940a0bc5985c1b836db5f69362f60`.
 - PR81/job3505: 20 frozen forwards (two existing models x ten test parents),
-  no solver. Existing predictive evidence still needs the PR85 provenance audit.
+  no solver. PR85 reconciles their provenance with the limitations in its closure.
 - PR82/job3506: 18 solves (six easy parents x three methods). GNN faster in
   3/6; geometric solver-time ratio 1.1802, not consistent acceleration.
   End-to-end historical preparation cost is not qualified. Detailed
@@ -106,8 +106,10 @@ these documents unless that release explicitly makes another arrangement.
 The dated initial checkpoint below describes the first proposal. It is
 superseded operationally by the [post-PR85 preparation](research/pr86-starts-and-costs.md):
 ten-parent binding code and disjoint cost accounting are locally tested;
-installed binding, complete prospective executor instrumentation, formulation
-mapping and exact resource authorization are still pending. The original
+the installed ten-parent receipt has now passed independent public review
+(`45eab23962f8`), documented in the [installed review](research/pr86-installed-binding-review.md).
+Complete prospective executor instrumentation, formulation mapping and exact
+resource authorization are still pending. The original
 proposal bytes remain preserved. No execution gates are cleared by code alone.
 
 This branch starts from develop after merged PR83/84 (5d7b00d). The earlier

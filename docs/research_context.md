@@ -80,3 +80,10 @@ The [PR86 continuation](research/pr86-starts-and-costs.md) reuses job3505's
 existing predictions/roots for ten-parent variable binding. This is not another
 inference or root solve. Existing E0 timing coverage is decomposed without
 double-counting export; unmeasured preparation remains unknown.
+
+The installed [ten-parent binding review](research/pr86-installed-binding-review.md)
+now reconciles receipt `45eab23962f8`: six easy starts cover 10% of binary
+variables; four medium starts hit the 20,000 cap (about 1.68–1.74%). This is
+variable/start identity evidence, not solver acceptance or new performance.
+Existing job3506 supervisor timings support a separately scoped attempt-cost
+table; historical guided preparation and whole-job end-to-end costs remain unknown.

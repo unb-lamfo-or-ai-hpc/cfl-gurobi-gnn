@@ -1,5 +1,9 @@
 # PR86 — continuação após PR85: vínculos e custos
 
+Atualização: o retorno instalado dos dez pais foi recebido e revisado.
+Consulte a [revisão e os produtos regeneráveis](pr86-installed-binding-review.md).
+A seção CLI abaixo preserva a instrução já executada, não solicita repetição.
+
 ## O que, como e por quê
 
 PR85 foi merged em `develop` em `bb3f28f8078abde5ed4d95461f04fe675be2f37e`.

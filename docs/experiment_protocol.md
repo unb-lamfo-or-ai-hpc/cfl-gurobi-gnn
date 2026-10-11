@@ -112,3 +112,10 @@ and deterministic selection, not completion feasibility or solver acceptance.
 Cost regions must be disjoint; the historical executor's `other` includes
 export. Charge GNN preparation to M1 as well as M2; do not turn unknown
 preparation into zero or count shared campaign preparation twice.
+
+The installed ten-parent binding is reviewed in
+[PR86 installed review](research/pr86-installed-binding-review.md). It clears
+only the historical start-identity step. Supervisor-minus-solver timing is a
+scoped attempt overhead, not a whole-job cost. Failed/stopped attempts retain
+observed wall time and never receive completed end-to-end costs. Prospective
+preparation, executor qualification and exact budget approval remain required.
