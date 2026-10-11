@@ -1,6 +1,8 @@
 # Experiment protocol
 
-Current approved planning contract: 2026-10-10. Detailed PR85 scope and PR86/87
+Current approved planning contract: 2026-10-10, updated by authorization on
+2026-10-11: PR85 implementation approved; PR86/87 protocols preliminarily
+accepted, exact execution budgets still pending. Detailed PR85 scope and PR86/87
 protocol/resource proposals: [submission protocol](research/submission-protocol-20261010.md).
 This document approves no experiment, training, retry or HPC submission.
 
@@ -50,11 +52,15 @@ M2 (frozen GNN partial start). These method labels are not medium-parent IDs;
 tables must keep separate `method` and `parent` columns. The root comes from
 Gurobi preparation, not from the GNN. Existing M1 matches M2's support and
 positive-count budget: disclose that dependency and account for its preparation
-cost. Supply only selected binary values, leaving continuous and unselected
+cost. Matching means equal cardinality and positive-count budget, not necessarily
+the same variable indices. Supply only selected binary values, leaving continuous and unselected
 variables unspecified; a partial start is not a feasible complete solution or
 a fixing of bounds. Report acceptance, rejection, repair and abstention.
 
-Do not equate a `MINIMIZE` override with mathematical validity. PR85 must verify
+Effective `MINIMIZE` is mandatory: the authors identified source `MAXIMIZE`
+as erroneous for the intended cost-minimizing CFL on 11 October. This correction
+is not algebraic equivalence to maximizing unchanged costs. Preserve source
+bytes and coefficients; reject effective maximization. PR85 must verify
 the intended CFL formulation, coefficients/units, constraints, variable domains,
 objective constants/signs and any transformation from the source `MAXIMIZE`.
 Keep original bytes and historical interpretations; unresolved inconsistency

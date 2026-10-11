@@ -1,0 +1,15 @@
+{
+  "files": {
+    "representative_models.csv": "1dbc2ce70ed5263fc3ed0bed757e5b87a0bdca760f707d4034d84f284e58b26e",
+    "review.json": "5dc4b2691f1fb8f29ca0e543b47346f4368df20e8d7fe563c0c12c7935f56526",
+    "training_reports.csv": "98cea319b687781daea7038a168baf25d6e3caf98e5e87ad8dd64d8e571e7df7"
+  },
+  "protocol_id": "pr85_documentary_closure_v1",
+  "raw_receipts_normalized": false,
+  "reviewer_source_sha256_lf": "7e691f1c7c577dc86e97648f80a4121ec0f8961fd9b776d62e6ffaf11a0a3aea",
+  "source_receipts_sha256_raw": {
+    "docs/evidence/e0/pr85-context-request.json": "fc388d59086963647485c1663dfe2f65094013869edec94a667f7e7be4d02b88",
+    "docs/evidence/e0/pr85-context-return.json": "15136b4d0d22bc97b82ef5f778bca6dbe0686fb32209980dd62b2df0c907a282",
+    "docs/evidence/e0/pr85/manifest.json": "60f3b38c7f34fe94595c513eb5632a75a34760063daa1c0e5a1ff2ec8dcac743"
+  }
+}
