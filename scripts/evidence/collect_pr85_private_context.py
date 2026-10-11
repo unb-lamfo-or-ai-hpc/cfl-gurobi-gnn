@@ -115,6 +115,8 @@ def lp_summary(lines, tick=lambda: None):
     section, buffer, expanded = None, [], 0
     variables, domains = set(), {"binary": set(), "integer": set()}
     rows, samples, bounds = collections.Counter(), [], collections.Counter()
+    sample_groups = collections.Counter()
+    structures = {}
     objective, sense = None, None
 
     def flush():
@@ -144,9 +146,37 @@ def lp_summary(lines, tick=lambda: None):
                 "families": aggregates(terms),
             }
             require(math.isfinite(rhs - constant), "nonfinite_lp_rhs")
+            key = json.dumps(
+                [
+                    parts[1],
+                    [
+                        (name, value["minimum"] < 0, value["maximum"] > 0)
+                        for name, value in description["families"].items()
+                    ],
+                ]
+            )
+            group = structures.setdefault(
+                key,
+                {
+                    "rows": 0,
+                    "sense": parts[1],
+                    "families": list(description["families"]),
+                    "rhs_minimum": rhs - constant,
+                    "rhs_maximum": rhs - constant,
+                },
+            )
+            require(len(structures) <= 128, "lp_row_structure_limit")
+            group["rows"] += 1
+            group["rhs_minimum"] = min(group["rhs_minimum"], rhs - constant)
+            group["rhs_maximum"] = max(group["rhs_maximum"], rhs - constant)
             # Representative summaries only; do not export the full matrix.
-            if len(samples) < 12 and description not in samples:
+            if (
+                len(samples) < 12
+                and sample_groups[key] < 3
+                and description not in samples
+            ):
                 samples.append(description)
+                sample_groups[key] += 1
 
     for raw in lines:
         tick()
@@ -202,6 +232,7 @@ def lp_summary(lines, tick=lambda: None):
         "required_effective_sense": "MINIMIZE",
         "objective": objective,
         "row_senses": dict(rows),
+        "row_structure_groups": list(structures.values()),
         "representative_row_summaries": samples,
         "variables_observed": len(variables),
         "explicit_domain_families": {
