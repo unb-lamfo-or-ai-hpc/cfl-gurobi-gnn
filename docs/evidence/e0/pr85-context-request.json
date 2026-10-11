@@ -110,7 +110,7 @@
   "protocol_id": "pr85_existing_lp_and_training_context_v1",
   "source_sha256_lf": {
     "audit_sprint_c_inputs.py": "19ace1bfbd67fecb926d677972a7eaec4b726578c0bbf9f31d2ae1a08acdf289",
-    "collect_pr85_private_context.py": "75d954a3dbd53a90b86a1edc865b6179d91c1e085d68d6620d33885254ba7e1b",
+    "collect_pr85_private_context.py": "3eec686e0fea7c36b13feb1053043aabcb0b14bf11cfbd3a47ccc631ae240bad",
     "verify_sprint_c_artifacts.py": "f642f86a5a5a87e33c0547e1cd47b7a296a545eb905322ccce9800f62acefc06"
   }
 }
