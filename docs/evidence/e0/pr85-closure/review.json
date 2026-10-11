@@ -1,0 +1,48 @@
+{
+  "admitted_numeric_parents_reconciled": 54,
+  "allowed_claims": [
+    "54_selected_parent_identities_partitions_and_existing_numeric_checks",
+    "20_existing_confusion_matrices_and_recomputed_micro_parent_macro_metrics",
+    "two_frozen_training_reports_attest_train_only_prenorm_not_fit_replay",
+    "two_representative_lp_dimensions_match_existing_numeric_receipts",
+    "six_easy_existing_starts_reconciled_not_medium_start_qualification"
+  ],
+  "existing_easy_warmstart_bindings_reconciled": 6,
+  "frozen_forwards_reconciled": 20,
+  "full_benchmark_formulation_semantics_qualified": false,
+  "historical_fit_independently_replayed": false,
+  "lp_matching": "same_support_cardinality_and_positive_count_not_necessarily_same_variable_ids",
+  "new_comparison_admitted": false,
+  "not_qualified": [
+    "all_54_economic_variable_constraint_mapping_and_units",
+    "historically_untouched_test_or_independent_generalization",
+    "independent_historical_preprocessing_fit_replay",
+    "independent_probability_based_auc_or_calibration_rescoring",
+    "historical_end_to_end_speedup_or_consistent_gnn_superiority",
+    "hard_maximize_runtime_claim_independently_verified"
+  ],
+  "objective_policy": "author_approved_cost_minimization_correction_not_max_equivalence",
+  "optimization_runs_added": 0,
+  "parent_population": 90,
+  "partition_counts": {
+    "test": 10,
+    "train": 34,
+    "validation": 10
+  },
+  "protocol_id": "pr85_documentary_closure_v1",
+  "raw_receipt_flags_rewritten": false,
+  "remaining_execution_gates": [
+    "document_exact_source_formulation_mapping_for_intended_comparison",
+    "bind_medium_partial_starts_and_preparation_cost_measurements",
+    "freeze_complete_prospective_cost_resource_manifest",
+    "obtain_separate_exact_PR86_PR87_execution_budget_approval"
+  ],
+  "representative_lp_structures_reconciled": 2,
+  "required_effective_sense": "MINIMIZE",
+  "resource_budget_approved": false,
+  "source_receipt_sha256": "15136b4d0d22bc97b82ef5f778bca6dbe0686fb32209980dd62b2df0c907a282",
+  "state": "audit_complete_with_explicit_limitations",
+  "submissions_added": 0,
+  "training_report_chains_reconciled": 2,
+  "training_runs_added": 0
+}
