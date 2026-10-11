@@ -119,3 +119,10 @@ only the historical start-identity step. Supervisor-minus-solver timing is a
 scoped attempt overhead, not a whole-job cost. Failed/stopped attempts retain
 observed wall time and never receive completed end-to-end costs. Prospective
 preparation, executor qualification and exact budget approval remain required.
+
+Prospective [attempt instrumentation](research/pr86-prospective-instrumentation.md)
+separates receipt-export cost using a hash-linked timing tail. It does not label
+this scoped interval as whole-job end-to-end time. A SoftMemLimit return pauses
+the remaining matrix and is not treated as completed performance. The new core
+has no default admitted launcher; installed memory/affinity, preparation and
+authorization must be bound before any actual execution.
