@@ -11,6 +11,14 @@
   "claim_scope": "partition_identity_and_existing_confusion_metrics_only_not_blanket_scientific_promotion",
   "duplicate_selected_parent_artifacts": 0,
   "equivalence_to_original_maximization_claimed": false,
+  "existing_warmstart_trace": {
+    "accepted_starts_recorded": 12,
+    "historical_solves_reconciled": 18,
+    "medium_start_binding_qualified": false,
+    "parents": 6,
+    "private_variable_vectors_reloaded": false,
+    "source_solve_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce"
+  },
   "frozen_forwards_reconciled": 20,
   "full_benchmark_formulation_semantics_qualified": false,
   "hard_maximize_triviality": "author_reported_not_retimed_or_independently_verified_here",

@@ -1,15 +1,16 @@
 {
   "files": {
-    "audit.json": "faa53891b599d802f5d6a31eef3c5e19de7f74a1c83fd27131c59a6f5bc20272",
+    "audit.json": "2cba9637d8f730f1d531264a941651938d4566a1e52fda95e819e504e6966b29",
     "checkpoints.csv": "59694d7b3f65e25dff3be481951c5b32faffa4e93b506851a3e0a265d7a7b3c9",
     "parents.csv": "541bdf5b716133ce0ae141feaf55f8b54f7c5498fb3c0c2753d93783f19af8b4",
-    "predictive_summary.csv": "34156f9cc18bcec8ef1084e9fbc9cde739e80e6f72ab4266acc48d81a3c58bda"
+    "predictive_summary.csv": "34156f9cc18bcec8ef1084e9fbc9cde739e80e6f72ab4266acc48d81a3c58bda",
+    "warmstart_trace.csv": "b2b3ea208947cf45aad50ef08638d99329b8c02f14bd62249d6bf350cd53ad66"
   },
   "normalization_scope": "listed_source_text_only_not_historical_receipts",
   "protocol_id": "pr85_existing_evidence_scientific_audit_v1",
   "source_text_sha256_lf": {
     "configs/splits/cfl_90_seed42_folds.csv": "029069f9abe58c63e4cfc49233b847d716363af29141618775cc0f8e77771795",
-    "scripts/evidence/audit_pr85_scientific.py": "7cee84db20b477fe67a47f4dc9f5d11806c1f5aa00236b288c808f21797e956a",
+    "scripts/evidence/audit_pr85_scientific.py": "836e034de24d3c568448d3fe2e20c6fe5adafba3196cafff0fe9704fa0bfdc79",
     "src/cfl_gnn/models/versioning.py": "8cd368137cb7dce73d2eb5145f99d4c67c18dc092d541454daa1f77fc88dcb4b",
     "src/cfl_gnn/training/gasse_reconnected.py": "e2c7fdbf7763c05af5ac886ec6c0674bc0655c179ba4a28fd559d1933719a4f6"
   }
