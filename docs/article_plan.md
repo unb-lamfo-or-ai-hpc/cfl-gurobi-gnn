@@ -114,3 +114,9 @@ ten-parent start-coverage table (including the lower medium coverage imposed
 by the cap) and an 18-row historical supervised-attempt cost table. These can
 support the methods/measurement explanation; they add no prospective performance
 result and do not establish whole-job end-to-end speedup.
+
+The [prospective instrumentation](research/pr86-prospective-instrumentation.md)
+adds the parameter and timing contracts for future CPU/cost figures, not their
+data. Figure generators must keep solver, supervised attempt and batch-level
+scopes distinct, preserve stopped runs and avoid treating unknown preparation
+or timing-tail writes as zero. The C–F roadmap and separate budgets are unchanged.
