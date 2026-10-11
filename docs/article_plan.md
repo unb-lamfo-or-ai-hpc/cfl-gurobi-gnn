@@ -7,7 +7,9 @@ Implementation/resource authorizations remain separate.
 11 October update: PR83/84 merged; PR85 scope and implementation approved,
 with mandatory correction from source MAXIMIZE to effective MINIMIZE for
 cost-minimizing CFL. PR86/87 protocols accepted preliminarily, with no exact
-HPC execution budget approved. See [PR85's current audit](research/pr85-scientific-audit.md).
+HPC execution budget approved. PR85's documentary audit is now complete with
+explicit limitations; see its [closure](research/pr85-closure.md). This does
+not clear the remaining execution gates or authorize a merge.
 
 ## Proposed narrative
 

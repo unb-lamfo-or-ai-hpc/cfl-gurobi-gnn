@@ -52,7 +52,8 @@ M2 (frozen GNN partial start). These method labels are not medium-parent IDs;
 tables must keep separate `method` and `parent` columns. The root comes from
 Gurobi preparation, not from the GNN. Existing M1 matches M2's support and
 positive-count budget: disclose that dependency and account for its preparation
-cost. Supply only selected binary values, leaving continuous and unselected
+cost. Matching means equal cardinality and positive-count budget, not necessarily
+the same variable indices. Supply only selected binary values, leaving continuous and unselected
 variables unspecified; a partial start is not a feasible complete solution or
 a fixing of bounds. Report acceptance, rejection, repair and abstention.
 

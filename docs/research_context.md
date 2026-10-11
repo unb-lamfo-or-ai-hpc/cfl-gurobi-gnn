@@ -52,8 +52,9 @@ The authors confirmed on 11 October that the source `MAXIMIZE` declaration is
 a benchmark error for the intended cost-minimizing CFL. Effective `MINIMIZE`
 is mandatory, preserving coefficients, feasible region and original bytes.
 This is a correction, not equivalence to the original maximization. PR85
-reconciles that policy with existing receipts and delimits the remaining raw
-constraint/domain/cost-unit mapping in its [audit](research/pr85-scientific-audit.md).
+reconciles that policy with existing receipts. Its [closure](research/pr85-closure.md)
+also binds two representative LP structures and frozen training reports;
+full economic mapping and independent historical fit replay remain unqualified.
 
 ## Current project boundary
 
