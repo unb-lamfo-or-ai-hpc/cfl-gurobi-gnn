@@ -1,0 +1,120 @@
+{
+  "absence_proven": false,
+  "base_merge_commit": "91630762bf0b86ec153e2882c42dc83161eebe4a",
+  "bytes_read": 65302364,
+  "candidates": [
+    {
+      "artifact_id": "510adfc202029fd8389dd55f8bddfb9855e1d1559f8ed84519c4cb2163d833e7",
+      "bytes": 29742026,
+      "content_semantics_qualified": false,
+      "kind": "original_milp_bytes",
+      "parent": "CFL_medium_instance_13",
+      "sha256": "f219560e7ee07013152d4069af8585848e853d6d8bc213b248ba2ebcd0d8dde5"
+    },
+    {
+      "artifact_id": "ab3558dc5cc059dea786ee69ab5e0c6088e709ca914e98996e2b7d41044bc53d",
+      "bytes": 29730887,
+      "content_semantics_qualified": false,
+      "kind": "original_milp_bytes",
+      "parent": "CFL_medium_instance_26",
+      "sha256": "568bbff8df060b2de1df4d9bf3815d77e2e18ac73158fe676ba121182add70c8"
+    },
+    {
+      "artifact_id": "49206d29dc86d1f84524a9cbb4a558f4fa43319a6522bba7bcb685cd05882a1e",
+      "bytes": 5093,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_13",
+      "sha256": "ddc554438219758c6bed67e3077fddf90af80ead7331a4675f17dc9fe1ba256c"
+    },
+    {
+      "artifact_id": "0cf826a56d924668f229ab255402f8b2124734937ce508802a098f27f14ff4d6",
+      "bytes": 1508,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_13",
+      "sha256": "6cd2ff12f96eb075089ff510be49454d6eb083b55208bc10825f3bab123dcd14"
+    },
+    {
+      "artifact_id": "28cdbb25b0b7d8d8c68afb5dfdede9eb1ce8e6a80f7f5ed231d5490d180a8284",
+      "bytes": 5434,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_13",
+      "sha256": "dc187e492669e794b52919c06a7218780c0d52ebcf43769b55610e56d022f4cd"
+    },
+    {
+      "artifact_id": "d60044e8428c25e78492e53efea23323acf4d69acc24f8ef1f7ac5f8442c5aff",
+      "bytes": 2902690,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_13",
+      "sha256": "08985f2a964c41c061fa300403a974047598bc0e07c7eba739eb5cf8274eaa02"
+    },
+    {
+      "artifact_id": "0adb8849ab5a917ff6394a02ae539541653517aa0d18464c9ce90e433f08035b",
+      "bytes": 5092,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_26",
+      "sha256": "933004e9987a5bd62f80a94309971c440401deceae66bc41029703ff78c646f4"
+    },
+    {
+      "artifact_id": "714cfaf0ed94dbce21d1dd1181aa3154687fce440564f6bf54c31cfe8882d3da",
+      "bytes": 1508,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_26",
+      "sha256": "a655ef25eb285f3f16739f9f31a90dd59fbe6202d98d54f2fa7782d6abbef4cf"
+    },
+    {
+      "artifact_id": "cd5d412879da951e2cb61eb55f41d9417486c515f9585e4281290ad39cc64e57",
+      "bytes": 5435,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_26",
+      "sha256": "5425537b75d1208ebeeba0635c0d49bcdff57aaec32886b5912a4d58c00a32f8"
+    },
+    {
+      "artifact_id": "c909f9649ceaf1604dd6f551bf7efdba03bc1bb2252c7db91925d24ffb77124d",
+      "bytes": 2902691,
+      "content_semantics_qualified": false,
+      "kind": "metadata_candidate",
+      "parent": "CFL_medium_instance_26",
+      "sha256": "f60001c5133dba0e83e372a3b89a479ae330f7180fffface8cbbf945f0bcb30f"
+    }
+  ],
+  "canonical_role": "train",
+  "collector_sha256_lf": "f35d98c5dc40d3e8db573eefe2df060eeebde443dbade469705b507b42c5d6b2",
+  "discovery_scope": "two_canonical_originals_and_parent_named_files_in_existing_metadata_groups",
+  "entries_observed": 9391,
+  "forwards_added": 0,
+  "historically_exposed": true,
+  "learning_admitted": false,
+  "limits": {
+    "bytes": 4294967296,
+    "candidate_files": 64,
+    "elapsed_seconds_between_io_checks": 180,
+    "entries": 20000
+  },
+  "optimization_runs_added": 0,
+  "originals": {
+    "CFL_medium_instance_13": "source_discovered",
+    "CFL_medium_instance_26": "source_discovered"
+  },
+  "parents": [
+    "CFL_medium_instance_13",
+    "CFL_medium_instance_26"
+  ],
+  "protocol_id": "e0_medium_existing_artifact_inventory_v1",
+  "raw_content_included": false,
+  "raw_paths_included": false,
+  "scheduler_queries": 0,
+  "scientific_reporting_eligible": false,
+  "solver_execution_admitted": false,
+  "state": "bounded_inventory_complete",
+  "submissions_added": 0,
+  "symlinks_skipped": 0,
+  "training_runs_added": 0,
+  "warnings": []
+}
