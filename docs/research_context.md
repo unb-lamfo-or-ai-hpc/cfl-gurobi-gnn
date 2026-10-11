@@ -64,3 +64,9 @@ GNN faster in 3/6 easy parents, but a geometric solver-time ratio GNN/M0 of
 1.1802; this does not support consistent acceleration. Missing preparation
 times prevent a historical end-to-end speedup claim. See the
 [current checkpoint](current_status.md) and [approved roadmap](article_plan.md).
+
+PR86's [offline proposal](research/pr86-controlled-comparison.md) distinguishes
+M1's matched support cardinality/positive count from equality of variable IDs,
+and charges GNN-dependent preparation to it. Effective MINIMIZE is mandatory
+under the author-approved cost-objective correction. This does not erase
+PR85's remaining formulation/provenance limitations or approve execution.

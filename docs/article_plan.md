@@ -84,3 +84,13 @@ The article should state the installed environment (including PyTorch and
 CUDA versions) exactly as used; package upgrades are not required for the MVP.
 The final release should be synchronized to protected `main` only after the
 authors review the complete evidence and approve that release PR.
+
+## First PR86 implementation checkpoint — 11 October
+
+The [controlled-comparison proposal](research/pr86-controlled-comparison.md)
+now generates the prospective 210-row matrix and resource arithmetic offline.
+It creates no scientific result. Figures/tables will distinguish solver time
+from cold and amortized preparation costs, retain every planned cell's final
+state, and bind metrics to receipts. PR85 is independently reviewable; merging
+it alone does not clear scientific execution gates. Mandatory serial/4-GPU
+training and manuscript work retain separate budgets and acceptance criteria.

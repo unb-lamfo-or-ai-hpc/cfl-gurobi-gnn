@@ -84,3 +84,15 @@ promotion, or a new solver allocation. No superiority or independent
 generalization claim is admitted. Main synchronization remains a separate
 release review. A future whole-branch `develop` to `main` merge would include
 these documents unless that release explicitly makes another arrangement.
+
+## Independent PR86 planning checkpoint — 11 October
+
+This branch starts from develop after merged PR83/84 (5d7b00d). The earlier
+checkpoint above is retained; PR85's independent documentary audit is under
+review, not merged by this delivery. The authors confirmed mandatory MINIMIZE
+as the correction of the benchmark's cost-objective sense, not equivalence.
+PR86 now has a [regenerable offline proposal](research/pr86-controlled-comparison.md):
+210 planned cells, 70 paired groups, separately counted preparation and an
+unapproved resource envelope. No solver, inference, training or job added.
+PR85 evidence limitations, start binding, instrumentation and exact budget
+approval remain execution gates. PR87 (1/4 GPUs) and PR88 remain on the roadmap.

@@ -87,3 +87,14 @@ Unknown costs remain missing. Pair at the parent level, distinguish solver
 seeds from independent parents, preserve censored times and all failed attempts.
 Record cold end-to-end cost and cache-amortized cost separately. No automatic
 retry, requeue, extension, package upgrade or historical result overwrite.
+
+## PR86 proposal, not execution authorization
+
+The [offline comparison manifest](research/pr86-controlled-comparison.md)
+specifies 150 seed-42 cells at five caps plus 60 one-thread repeats. Its
+81-job ceiling separately counts 70 main groups, ten root preparations and
+one frozen inference job; all approval/execution gates remain false.
+Mandatory MINIMIZE corrects the author-identified benchmark cost-objective
+error; it is not equivalence to unchanged-cost maximization. No job can be
+submitted by this planner. Parameter/source/cost binding and an exact budget
+approval are required before adapting the existing executor for execution.
