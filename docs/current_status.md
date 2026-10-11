@@ -73,6 +73,12 @@ and [schedule/figure plan](article_plan.md).
 
 ## Open gates (current)
 
+PR85 has a prepared [single read-only collection](research/pr85-private-context-runbook.md)
+for the two remaining private-document gates. No collection result exists yet.
+It reads two representative LPs and the two frozen training reports, not
+checkpoints or graphs, and submits no job. Representative structure is not
+blanket qualification of all 54 formulations.
+
 - Keep any partial or inconsistent receipt and explain the limitation; never
   convert missing data into zero-cost or zero-runtime evidence.
 - Complete PR85's formulation and provenance audit before new comparative runs.
