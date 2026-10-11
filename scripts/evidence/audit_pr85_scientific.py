@@ -14,6 +14,8 @@ from pathlib import Path
 
 import audit_sprint_c_numeric as numeric
 import e0_frozen_inference as inference
+import prepare_e0_easy_starts as starts
+import review_e0_job3506 as solver_review
 import review_pr80_job3503 as c1
 from verify_sprint_c_artifacts import SELECTION, SOURCE_RECEIPT
 
@@ -347,13 +349,77 @@ def build():
     return report, parents, checkpoints, summary
 
 
+def warmstart_trace():
+    """Reconcile existing six-parent binding and 18 solves; never run a solver."""
+    binding = starts.validate(
+        (ROOT / "docs/evidence/e0/easy-start-binding.json").read_bytes(),
+        solver_review.flow.BINDING_SHA,
+    )
+    _, (solves, _, _) = solver_review.reviewed()
+    selected = numeric.selected_parents(numeric.source_receipt())
+    rows = []
+    for item in binding["parents"]:
+        parent = item["parent"]
+        group = [r for r in solves if r["source_instance_id"] == parent]
+        require(len(group) == 3, "three_method_binding")
+        guided = [r for r in group if r["method"] != solver_review.flow.METHODS[0]]
+        require(len(guided) == 2, "two_guided_methods")
+        require(
+            all(r["selected_support"] == item["selected_support"] for r in guided),
+            "installed_support_binding",
+        )
+        require(
+            all(
+                r["positive_assignments"] == item["positive_assignments"]
+                for r in guided
+            ),
+            "installed_positive_binding",
+        )
+        rows.append(
+            {
+                "parent": parent,
+                "alias": c1.alias(parent),
+                "model_sha256": item["mip_sha256"],
+                "graph_sha256": selected[parent]["graph"]["sha256"],
+                "root_sha256": item["root_sha256"],
+                "prediction_sha256": item["prediction_sha256"],
+                "private_starts_sha256": item["private_starts_sha256"],
+                "gnn_assignment_sha256": item["gnn_assignment_sha256"],
+                "lp_assignment_sha256": item["lp_assignment_sha256"],
+                "selected_support": item["selected_support"],
+                "positive_assignments": item["positive_assignments"],
+                "accepted_starts_recorded": sum(
+                    r["start_accepted_recorded"] is True for r in guided
+                ),
+                "source_binding_sha256": solver_review.flow.BINDING_SHA,
+                "source_solve_return_sha256": solver_review.SHA,
+                "variable_order_scope": "existing_installed_graph_root_prediction_start_checks_not_private_vector_reload",
+                "lp_control_depends_on_gnn_support": True,
+                "root_preparation_cost_seconds": None,
+                "new_optimization_runs": 0,
+            }
+        )
+    require(len(rows) == 6, "six_easy_start_bindings")
+    return rows
+
+
 def produce(output):
     report, parents, checkpoints, summary = build()
+    trace = warmstart_trace()
+    report["existing_warmstart_trace"] = {
+        "parents": 6,
+        "historical_solves_reconciled": 18,
+        "accepted_starts_recorded": sum(r["accepted_starts_recorded"] for r in trace),
+        "medium_start_binding_qualified": False,
+        "private_variable_vectors_reloaded": False,
+        "source_solve_return_sha256": solver_review.SHA,
+    }
     output.mkdir(parents=True, exist_ok=False)
     for name, rows in (
         ("parents.csv", parents),
         ("checkpoints.csv", checkpoints),
         ("predictive_summary.csv", summary),
+        ("warmstart_trace.csv", trace),
     ):
         c1.write_csv(output / name, rows)
     inference.legacy.write(output / "audit.json", report)
