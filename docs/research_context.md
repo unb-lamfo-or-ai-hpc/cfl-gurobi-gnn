@@ -48,9 +48,12 @@ presented as an independent LP-only baseline with that cost omitted. The GNN
 also uses root-LP features. Three method arms do not mean three independent
 data-generation pipelines.
 
-The original models' `MAXIMIZE` declarations and executed `MINIMIZE` overrides
-are a formulation audit gate, not proof of equivalence. PR85 must establish
-the intended CFL equations and the meaning of the executed objective.
+The authors confirmed on 11 October that the source `MAXIMIZE` declaration is
+a benchmark error for the intended cost-minimizing CFL. Effective `MINIMIZE`
+is mandatory, preserving coefficients, feasible region and original bytes.
+This is a correction, not equivalence to the original maximization. PR85
+reconciles that policy with existing receipts and delimits the remaining raw
+constraint/domain/cost-unit mapping in its [audit](research/pr85-scientific-audit.md).
 
 ## Current project boundary
 
