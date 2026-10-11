@@ -43,6 +43,13 @@ confundir finais de linha do Windows com alteração da partição canônica.
 - Os planos selecionados têm 30/54 registros vinculados aos artefatos
   revisados. Nenhum derivado adicional é admitido. Isso não qualifica todos os
   planos exploratórios, amostras derivadas ou buscas anteriores do repositório.
+- O vínculo histórico de seis fáceis também foi reconciliado com as 18
+  resoluções do job3506: 12 inícios registrados como aceitos. A tabela
+  `warmstart_trace.csv` encadeia modelo, grafo, raiz, predição, atribuições e
+  recibos; confere o suporte e o número de valores positivos nos dois métodos
+  guiados. Reutiliza verificações instaladas de identidade/ordem, sem recarregar
+  vetores privados. Não qualifica inícios das quatro médias nem custos totais.
+  O controle LP continua dependente do suporte/contagem positiva da GNN.
 
 ### Métricas: denominadores explícitos
 
