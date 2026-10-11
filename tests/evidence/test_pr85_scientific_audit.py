@@ -202,6 +202,15 @@ class ScientificAuditTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 audit.produce(output)
 
+    def test_existing_warmstart_trace_is_six_easy_not_ten(self):
+        rows = audit.warmstart_trace()
+        self.assertEqual(len(rows), 6)
+        self.assertTrue(all("_easy_" in r["parent"] for r in rows))
+        self.assertEqual(sum(r["accepted_starts_recorded"] for r in rows), 12)
+        self.assertTrue(all(r["lp_control_depends_on_gnn_support"] for r in rows))
+        self.assertTrue(all(r["root_preparation_cost_seconds"] is None for r in rows))
+        self.assertTrue(all(r["new_optimization_runs"] == 0 for r in rows))
+
 
 if __name__ == "__main__":
     unittest.main()
