@@ -1,5 +1,14 @@
 # Sprint C: data, representation, and matched training
 
+**Planning supersession, 10 October:** the approved
+[submission protocol](submission-protocol-20261010.md) now governs PR83-88.
+PR83 closes M13/M26's scoped artifact limitation without new experiments.
+PR85 audits formulation, objective sense, partitions and checkpoint provenance
+before comparative execution. GPU training comparison is obligatorily **one
+GPU serial versus four GPUs DDP**, not the older two-GPU proposal below.
+Historical receipts and parameter configurations remain unchanged; budgets
+and implementations still require the approvals specified in that protocol.
+
 **Current checkpoint, 9 October:** PR80 has reviewed all 54 parents and four
 frozen-model forwards. See [closure](pr80-closure-job3503.md) and
 [current C–F plan](mvp2-results-plan-20261009.md). The older minimum-PyTorch and
