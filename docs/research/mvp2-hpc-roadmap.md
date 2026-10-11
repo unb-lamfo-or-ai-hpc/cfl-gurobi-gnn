@@ -1,5 +1,13 @@
 # MVP 2.0: learning-assisted optimization and computational scaling
 
+**Current planning entry point, 10 October 2026:**
+[approved submission protocol](submission-protocol-20261010.md) and
+[article roadmap](../article_plan.md). These supersede the scheduling/status
+proposals below. In particular, PR83 closes its documented limitation without
+new experiments, PR85 adds the mandatory mathematical/objective-sense audit,
+and the training study is one GPU serial versus four GPUs DDP. This notice
+does not modify historical receipts or authorize HPC budgets or execution.
+
 ## Research objective and release boundary
 
 The current delivery sequence is the
