@@ -4,6 +4,7 @@ import copy
 import io
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -140,6 +141,64 @@ class PrivateContextTests(unittest.TestCase):
         raw = json.dumps(result).encode()
         with self.assertRaisesRegex(ValueError, "receipt_scope"):
             context.review(raw, context.digest(raw), request)
+
+    def test_complete_synthetic_collection_and_nested_review(self):
+        plan, report, model = self.fixture()
+        plan_raw, report_raw = json.dumps(plan).encode(), json.dumps(report).encode()
+        model.update(
+            plan_sha256=context.digest(plan_raw),
+            report_sha256=context.digest(report_raw),
+        )
+        request = {
+            "protocol_id": context.PROTOCOL,
+            "models": {"easy": model, "mixed": model},
+            "parents": {
+                p: context.digest(LP)
+                for p in ("CFL_easy_instance_0", "CFL_medium_instance_0")
+            },
+            "source_sha256_lf": {
+                n: context.digest(
+                    Path(context.__file__)
+                    .with_name(n)
+                    .read_bytes()
+                    .replace(b"\r\n", b"\n")
+                )
+                for n in (
+                    "collect_pr85_private_context.py",
+                    "verify_sprint_c_artifacts.py",
+                    "audit_sprint_c_inputs.py",
+                )
+            },
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "data"
+            (root / "analysis").mkdir(parents=True)
+            (root / "analysis/gasse_training_plan.json").write_bytes(plan_raw)
+            (root / "analysis/gasse_training_report.json").write_bytes(report_raw)
+            for parent in request["parents"]:
+                directory = (
+                    root
+                    / "raw/MILPBench/CFL"
+                    / ("CFL_" + parent.split("_")[1] + "_instance")
+                    / "LP"
+                )
+                directory.mkdir(parents=True)
+                (directory / (parent + ".lp")).write_bytes(LP)
+            result = context.collect(root, request)
+        self.assertTrue(
+            all(
+                v["train_only_prenorm_attested_by_hashed_report"]
+                for v in result["training_reports"].values()
+            )
+        )
+        self.assertTrue(
+            all(
+                v["variables_observed"] == 3
+                for v in result["representative_models"].values()
+            )
+        )
+        raw = json.dumps(result).encode()
+        self.assertEqual(context.review(raw, context.digest(raw), request), result)
 
     @staticmethod
     def fixture():
