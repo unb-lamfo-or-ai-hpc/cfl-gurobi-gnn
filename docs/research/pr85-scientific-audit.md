@@ -127,6 +127,12 @@ originais nem considera todos os 17 planos exploratórios aprovados.
 
 ## Pendências delimitadas da mesma PR85
 
+Continuação preparada: [coleta única de contexto privado](pr85-private-context-runbook.md),
+com leitor LP restrito, extração sanitizada dos relatórios congelados e
+verificação local do retorno. Ainda não executada no HPC. Os hashes do pedido
+são gerados dos recibos já revisados; não há novo experimento nem carregamento
+de modelos. F0/M0 são representativos, não substituem a amostra de 54.
+
 1. Mapear nos arquivos originais a variante exata de CFL: termos de custo,
    constante, sinais, domínios mistos observados, unidades/escala, atendimento,
    capacidade e eventual vínculo adicional. Os recibos têm correspondência
