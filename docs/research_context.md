@@ -87,3 +87,8 @@ variables; four medium starts hit the 20,000 cap (about 1.68–1.74%). This is
 variable/start identity evidence, not solver acceptance or new performance.
 Existing job3506 supervisor timings support a separately scoped attempt-cost
 table; historical guided preparation and whole-job end-to-end costs remain unknown.
+
+The [prospective solver/instrumentation core](research/pr86-prospective-instrumentation.md)
+explicitly sets the proposed caps/seeds instead of silently inheriting the
+historical one-thread/seed-42 defaults. Synthetic tests are implementation
+evidence only. The historical sources, results and eligibility flags are unchanged.
