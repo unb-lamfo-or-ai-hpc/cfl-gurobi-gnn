@@ -1,4 +1,76 @@
-# E0: continuación focalizada para M13/M26
+# E0: cierre documental de M13/M26
+
+Actualizado: 2026-10-10. Alcance final de PR83: inventario e inspección de
+artefactos existentes, **sin nuevos experimentos**. Este cierre sustituye la
+continuación de inferencia y resolución propuesta anteriormente. Las secciones
+históricas al final se conservan para trazabilidad y **no son instrucciones
+vigentes de ejecución**.
+
+## Resultado final de la inspección instalada
+
+La [inspección instalada](../evidence/e0/medium-inspection.json), SHA256
+`11ce18870f44759afc51cfa12b4f26a684fdf246ef6e720b42d7340a49546af0`, fue
+ejecutada con el código `2b94cae424e9854102241d55064a772e2c40c584`.
+Verificó los diez hashes fijados por el
+[inventario](../evidence/e0/medium-inventory.json), SHA256
+`9e73c05c776b12dc2b8132c8904cc462b9ce90735e4ebea74101d15537ad08b9`.
+Clasificó ocho perfiles, cuatro por padre, sin fallos registrados, y encontró
+**cero candidatos de raíz autoconsistentes**. Leyó 71 131 815 bytes y decodificó
+28 560 750 bytes, sin repetir la exploración del dataset.
+
+En cada padre se identificó un índice con 1 281 600 nombres de variables y
+un hash del MILP candidato coincidente con el original inventariado. Un índice
+de nombres **no es** un vector de solución de la relajación raíz. Los informes
+históricos declaran `TimeLimit=28800`, `Seed=42`, `Threads=1`,
+`NodeLimit=1000000`, `solution_count=10` y `gate_status=inconclusive`.
+Registran 28 800,598922 s para M13 y 28 800,126546 s para M26. Son metadatos
+históricos, no nuevas resoluciones ni diez etiquetas o incumbentes validados
+por esta inspección.
+
+## Qué, cómo y por qué termina aquí
+
+Se inspeccionaron los ocho JSON fijados y los vecinos conocidos descritos en
+el registro histórico siguiente. No se deserializaron grafos ni se usaron
+etiquetas para seleccionar inicios. No se identificó en este alcance una
+captura de raíz autoconsistente que permita vincular características, orden
+de variables y preparación reutilizable. Los indicadores de raíz falsos en
+un índice sin esos campos no prueban inviabilidad matemática ni un error de
+la relajación. Tampoco se prueba ausencia universal de artefactos
+(`absence_proven=false`). `declared_parent_matches=null` significa identidad
+declarada no establecida, no una discrepancia demostrada. La lista vacía de
+cachés opacas tampoco demuestra su inexistencia fuera del alcance inspeccionado.
+
+La decisión aprobada es documentar la cobertura no cualificada y continuar
+con las evidencias disponibles, sin recalcular raíces, inferir, entrenar,
+resolver ni ampliar búsquedas para M13/M26. No se requiere una resolución
+exitosa de ambos padres para cerrar este alcance documental.
+
+M13/M26 tienen rol canónico `train`, pero quedaron fuera de los 54 padres
+admitidos. No se añaden retroactivamente al entrenamiento ni al test. Fueron
+expuestos históricamente: no constituyen un test independiente nuevo. Las
+declaraciones históricas `maximize` y `minimize` no prueban equivalencia
+matemática: PR85 deberá comprobar formulación y transformación del objetivo.
+Los costes ausentes siguen ausentes, no se sustituyen por cero.
+
+## Validación y checkpoint de cierre
+
+El recibo importado conserva sus bytes originales. Se comprueban SHA256,
+identidad del inventario fuente, diez hashes verificados, ocho perfiles,
+cero candidatos de raíz y todos los contadores de nuevas operaciones a cero.
+Se conservan colectores, tests, recibos e historia experimental. No se admite
+inferencia ni solver y `scientific_reporting_eligible=false` permanece intacto.
+
+No se añade ninguna optimización, inferencia, entrenamiento, consulta Slurm
+o job. No hay CLI pendiente ni retry. PR83 y PR84 se mantienen independientes,
+sin merge autorizado. El contrato general se consolida en PR84; PR85 requiere
+aprobación de alcance antes de implementación. La sincronización de `main`
+es una decisión de publicación separada.
+
+## Registro histórico — propuestas retiradas, no ejecutar
+
+Lo siguiente documenta el estado anterior a recibir la inspección y a aprobar
+el cierre del 10/10/2026. Sus tareas pendientes, condición de merge y CLI
+quedan sustituidas por el cierre anterior.
 
 ## Estado actual: inventario instalado revisado
 
