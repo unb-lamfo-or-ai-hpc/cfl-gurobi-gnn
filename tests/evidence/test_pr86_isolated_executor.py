@@ -211,6 +211,7 @@ class Integrated(unittest.TestCase):
                 }
                 bundle = {
                     "protocol_id": executor.PROTOCOL,
+                    "formulation_contract": dict(executor.FORMULATION_CONTRACT),
                     "automatic_retry": False,
                     "scientific_reporting_eligible": False,
                     "source_sha256_lf": {},
