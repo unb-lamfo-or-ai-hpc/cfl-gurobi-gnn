@@ -172,7 +172,7 @@ class MainFirst(unittest.TestCase):
                 3,
             )
 
-    def make_return(self, stage):
+    def make_return(self, stage, job="999"):
         members = {}
         rows = []
         for i, cell in enumerate(self.frozen["cells"]):
@@ -182,13 +182,15 @@ class MainFirst(unittest.TestCase):
             result["mathematical_signature_sha256"] = "f" * 64
             binding = self.frozen["start_binding"]
             result["start"] = {
-                "status": "not_submitted" if i == 0 else "accepted",
-                "submitted_assignments": 0 if i == 0 else binding["selected_support"],
+                "status": "not_submitted" if cell["method"] == "M0" else "accepted",
+                "submitted_assignments": 0
+                if cell["method"] == "M0"
+                else binding["selected_support"],
                 "positive_assignments": 0
-                if i == 0
+                if cell["method"] == "M0"
                 else binding["positive_assignments"],
                 "assignment_sha256": ""
-                if i == 0
+                if cell["method"] == "M0"
                 else binding[cell["method"] + "_assignment_sha256"],
             }
             observation = {
@@ -219,7 +221,7 @@ class MainFirst(unittest.TestCase):
             )
             flow.write(
                 folder / "supervision.json",
-                {"job_id": "999", "observation": observation},
+                {"job_id": job, "observation": observation},
             )
             measured = flow.executor.supervised.reconcile(
                 observation, result, cell["method"], self.frozen["preparation_seconds"]
@@ -234,12 +236,15 @@ class MainFirst(unittest.TestCase):
             )
         flow.write(
             stage / "run/group.started.json",
-            {"group_id": flow.GROUP, "bundle_sha256": ["a" * 64] * 3},
+            {
+                "group_id": self.frozen["group"]["group_id"],
+                "bundle_sha256": ["a" * 64] * 3,
+            },
         )
         flow.write(
             stage / "run/group.json",
             {
-                "group_id": flow.GROUP,
+                "group_id": self.frozen["group"]["group_id"],
                 "attempts": rows,
                 "complete": True,
                 "stop_code": None,
@@ -247,7 +252,7 @@ class MainFirst(unittest.TestCase):
                 "scientific_reporting_eligible": False,
             },
         )
-        flow.write(stage / "batch.json", {"job_id": "999"})
+        flow.write(stage / "batch.json", {"job_id": job})
         for path in stage.rglob("*.json"):
             if path.name == "optimize.intent.json":
                 continue
@@ -261,7 +266,7 @@ class MainFirst(unittest.TestCase):
             "plan": self.frozen,
             "plan_sha256": flow.digest(flow.encoded(self.frozen)),
             "accounting": flow.roots.accounting.parse_accounting(
-                "999|COMPLETED|0:0|10|00:00:09|2|64G|", "999"
+                job + "|COMPLETED|0:0|10|00:00:09|2|64G|", job
             ),
             "members": members,
             "raw_logs_included": False,
