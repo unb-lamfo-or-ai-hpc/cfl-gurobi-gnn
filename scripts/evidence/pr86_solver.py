@@ -12,6 +12,7 @@ import platform
 from time import perf_counter
 
 import pr86_attempt_instrumentation as instrumentation
+from pr86_native_model import NativeModel
 
 from cfl_gnn.experiments.neural_guidance_policy import (
     guidance_directives,
@@ -19,7 +20,7 @@ from cfl_gnn.experiments.neural_guidance_policy import (
 )
 from cfl_gnn.graph.gurobi_graph_artifact import canonical_sha256
 from cfl_gnn.graph.instance_provenance import sha256_file
-from cfl_gnn.solvers.neural_guidance import NativeModel, _finite
+from cfl_gnn.solvers.neural_guidance import _finite
 from cfl_gnn.solvers.paired_partial_start import mathematical_signature, start_evidence
 from cfl_gnn.validation.mathematical import audit_gurobi_solution, common_gap
 
