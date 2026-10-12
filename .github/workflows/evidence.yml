@@ -84,6 +84,7 @@ jobs:
           bash -n scripts/evidence/operate_pr86_binding.sh
           bash -n scripts/evidence/operate_pr86_roots.sh
           bash -n scripts/evidence/operate_pr86_guidance.sh
+          bash -n scripts/evidence/operate_pr86_main_first.sh
       - name: T3 evidence regression (single discovery, no solver or training)
         shell: bash
         run: python -B -m unittest discover -s tests/evidence -v 2>&1 | tee evidence-tests.log
