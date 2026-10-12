@@ -31,10 +31,10 @@ class CostTests(unittest.TestCase):
         execution = dict.fromkeys(costs.EXECUTION, 1)
         lp = costs.end_to_end("M1", prep, execution, uses=7, worker_overhead=0)
         gnn = costs.end_to_end("M2", prep, execution, uses=7, worker_overhead=0)
-        self.assertEqual(lp["preparation_seconds"], 16)
+        self.assertEqual(lp["preparation_seconds"], 18)
         self.assertEqual(gnn["preparation_seconds"], 17)
-        self.assertEqual(lp["cold_end_to_end_seconds"], 22)
-        self.assertAlmostEqual(lp["amortized_end_to_end_seconds"], 6 + 16 / 7)
+        self.assertEqual(lp["cold_end_to_end_seconds"], 24)
+        self.assertAlmostEqual(lp["amortized_end_to_end_seconds"], 6 + 18 / 7)
         self.assertEqual(costs.campaign_preparation(prep)["seconds"], 18)
 
     def test_unknown_is_not_zero_and_control_needs_no_guidance(self):
@@ -54,6 +54,23 @@ class CostTests(unittest.TestCase):
             costs.end_to_end("M0", {}, execution)["cold_end_to_end_seconds"]
         )
         self.assertIsNone(costs.campaign_preparation({})["seconds"])
+
+    def test_historical_missing_list_cannot_compute_numeric_cost(self):
+        execution = dict.fromkeys(costs.EXECUTION, 1)
+        old = costs.end_to_end("M1", {}, execution, historical_missing_regions=True)
+        self.assertIsNone(old["preparation_seconds"])
+        self.assertNotIn("assembly_gnn", old["missing_preparation_regions"])
+        new = costs.end_to_end("M1", {}, execution)
+        self.assertIn("assembly_gnn", new["missing_preparation_regions"])
+        for prep, overhead in (({"root": 1}, None), ({}, 0)):
+            with self.assertRaisesRegex(ValueError, "historical_missing_regions_only"):
+                costs.end_to_end(
+                    "M1",
+                    prep,
+                    execution,
+                    worker_overhead=overhead,
+                    historical_missing_regions=True,
+                )
 
     def test_clock_synchronizes_and_rejects_overlap_and_duplicates(self):
         samples, sync = iter((10, 12)), []

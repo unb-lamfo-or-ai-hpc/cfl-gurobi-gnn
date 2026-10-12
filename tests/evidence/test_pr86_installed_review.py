@@ -118,8 +118,8 @@ class SupervisedCostsTests(unittest.TestCase):
         )
         prep = dict(root=10, features=2, inference=3, assembly_lp=1, assembly_gnn=2)
         value = costs.reconcile(self.supervision, self.result, "M1", prep)
-        self.assertEqual(value["cold_attempt_seconds"], 46)
-        self.assertAlmostEqual(value["amortized_attempt_seconds"], 30 + 16 / 7)
+        self.assertEqual(value["cold_attempt_seconds"], 48)
+        self.assertAlmostEqual(value["amortized_attempt_seconds"], 30 + 18 / 7)
 
 
 if __name__ == "__main__":

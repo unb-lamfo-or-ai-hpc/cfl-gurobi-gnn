@@ -129,7 +129,7 @@ class Integrated(unittest.TestCase):
                 costs = executor.existing.parsed(output / "prepared_costs.json")
                 self.assertEqual(
                     costs["measurement"]["cold_attempt_seconds"],
-                    0.5 if method == "M0" else 8.5,
+                    0.5 if method == "M0" else 10.5 if method == "M1" else 8.5,
                 )
                 self.assertFalse(costs["whole_job_end_to_end_qualified"])
                 child = executor.existing.parsed(output / "child.json")
