@@ -19,7 +19,7 @@ on:
       - 'docs/research/pr66-dasci-runbook.md'
       - 'configs/experiments/pr66_thread_screen_v1.json'
       - 'scripts/evidence/**'
-      - 'src/cfl_gnn/solvers/paired_partial_start.py'
+      - 'src/cfl_gnn/**'
       - 'tests/evidence/**'
       - 'configs/experiments/mvp2_gpu_comparison_v1.json'
       - 'configs/quality/pr64-ruff.toml'
@@ -30,6 +30,7 @@ on:
     paths:
       - 'docs/evidence/**'
       - 'scripts/evidence/**'
+      - 'src/cfl_gnn/**'
       - 'scripts/slurm/dasci/*pr65*'
       - 'scripts/slurm/dasci/*pr66*'
       - 'scripts/slurm/dasci/submit_paired_matrix.sbs'
@@ -63,9 +64,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: python -m pip install ruff==0.16.8 numpy==1.26.4
-      - run: python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
-      - run: python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
+          cache: pip
+          cache-dependency-path: .github/workflows/evidence.yml
+      - name: Install pinned offline test dependencies
+        run: python -m pip install ruff==0.16.8 numpy==1.26.4
+      - name: Scoped lint
+        run: python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
+      - name: Scoped format
+        run: python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence
       - name: Check medium operator shell syntax without execution
         shell: bash
         run: |
@@ -76,4 +82,14 @@ jobs:
           bash -n scripts/evidence/operate_e0_inference.sh
           bash -n scripts/evidence/operate_e0_solves.sh
           bash -n scripts/evidence/operate_pr86_binding.sh
-      - run: python -m unittest discover -s tests/evidence -v
+      - name: T3 evidence regression (single discovery, no solver or training)
+        shell: bash
+        run: python -B -m unittest discover -s tests/evidence -v 2>&1 | tee evidence-tests.log
+      - name: Preserve test identities, failures and elapsed time
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-tests-${{ matrix.os }}-${{ matrix.python-version }}
+          path: evidence-tests.log
+          if-no-files-found: ignore
+          retention-days: 14
