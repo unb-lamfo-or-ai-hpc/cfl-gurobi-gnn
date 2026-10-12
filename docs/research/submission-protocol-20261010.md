@@ -1,5 +1,12 @@
 # Submission protocol and authorization gates — 10 October 2026
 
+> Superseding author clarification, 12 October: accept the MILPBench CFL
+> formulation as correct except for MAXIMIZE; force MINIMIZE while preserving
+> original bytes and every other mathematical datum. This premise is frozen
+> through the final sprint. References below to renewed economic mapping or
+> generator certification are historical, not execution gates. Model/variable
+> identity, preparation provenance and specific HPC authorization still apply.
+
 > Authorization update, 11 October: PR83/84 are merged. PR85's scope and
 > implementation are approved; effective MINIMIZE must correct the source
 > MAXIMIZE error for cost-minimizing CFL, without claiming equivalence.

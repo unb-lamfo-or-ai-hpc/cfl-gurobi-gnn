@@ -118,7 +118,7 @@ os arquivos históricos e recibos não foram recalculados para acomodar mudança
 Limites explícitos: este adaptador não implementa ainda a posse global das
 210 células, submissão Slurm, coleta de toda a campanha ou contabilização de
 fila/job. A preparação prospectiva e sua revisão científica não são geradas
-por ele. Sem os quatro vínculos aceitos (formulação, preparação, ambiente e
+por ele. Sem os três vínculos aceitos (preparação, ambiente e
 orçamento), a execução falha antes da alocação/solver. Um hash prova identidade,
 não prova a verdade científica de uma aprovação.
 
@@ -163,22 +163,107 @@ ao runner GitHub. O CI remoto precisa validar o novo HEAD separadamente.
 ## Próxima fronteira
 
 Concluir o operador de campanha/coleta e a preparação medida sem combinar
-predições antigas com raiz nova de proveniência distinta. O mapeamento
-econômico da formulação permanece uma decisão científica delimitada na PR85,
-não uma alteração tácita do sentido MINIMIZE obrigatório. Nenhum vínculo de
-formulação aceito foi inventado para destravar a execução.
+predições antigas com raiz nova de proveniência distinta. A decisão explícita
+do autor em 12/10 congela a formulação CFL como correta, exceto por MAXIMIZE;
+MINIMIZE é obrigatório até a última Sprint. O executor registra esse contrato
+fixo e não exige uma nova aprovação de formulação por campanha.
 
 A busca delimitada no upstream MILPBench, commit
 `9379501f1edee74ee323489e2846b9e172823ff9`, não encontrou um gerador CFL que
 associe os índices achatados às entidades econômicas. O arquivo
 `Baseline Library/GNN_MILP/Code/my1_generate_data_new.py` lê modelos LP já
 existentes para gerar representações; não certifica sua geração econômica.
-Isso não prova ausência global de documentação. Antes de admitirmos novos
-runs, os autores devem decidir se o artigo pode delimitar a formulação ao MILP
-efetivamente armazenado (com MINIMIZE), sem alegar equivalência certificada ao
-CFL clássico, ou fornecer a correspondência/gerador para concluir essa prova.
+Isso não prova ausência global de documentação. O autor esclareceu que essa
+busca não deve bloquear o desenvolvimento nem gerar exigência de gerador:
+a formulação correta com correção exclusiva de sentido é premissa congelada.
+A solicitação anterior de recertificação foi retirada. Permanecem as verificações
+técnicas de identidade do modelo, variáveis, parâmetros, partições e recursos.
 
 Somente após esses vínculos e testes será apresentado o pacote HPC e seu
 orçamento exato. Os 210 solves e preparações adicionais continuam uma proposta.
 Tabelas e figuras prospectivas dependem de execução especificamente autorizada;
 nenhuma conclusão de superioridade, generalização ou speedup foi acrescentada.
+
+## Preparação prospectiva integrada: raízes e custos (12/10)
+
+**O quê:** `pr86_root_preparation.py` e `operate_pr86_roots.sh` preparam as dez
+raízes dos mesmos pais já vinculados. É trabalho útil para a futura construção
+dos grafos/inícios e para medir sua preparação, não um novo teste da formulação.
+Não há treino, inferência, novos pais ou comparação M0/M1/M2 nesta etapa.
+
+**Como:** um job CPU, dez filhos isolados sequenciais, no máximo uma chamada
+`optimize` por pai. Preserva a política existente: primeiro callback MIPNODE
+ótimo do nó zero, Presolve=0, NodeLimit=1, Threads=1, Seed=42, TimeLimit=600 s,
+Gurobi 13.0.1 e MINIMIZE obrigatório. Não substitui essa raiz por `model.relax()`.
+Um modelo sem essa observação para e preserva a evidência; não se inventa raiz.
+O adaptador fecha modelo/ambiente mesmo após exceção. Coeficientes, restrições,
+domínios e arquivos originais não são alterados.
+
+**Por quê:** faltam custos prospectivos da preparação. Os artefatos históricos
+continuam preservados, mas seus tempos ausentes não podem virar zero. Raiz nova
+exige features/inferência coerentes na próxima etapa; não será misturada
+tacitamente com predições geradas de outra raiz.
+
+### Orçamento proposto, ainda não autorizado
+
+| Item | Limite |
+| --- | --- |
+| Submissões | 1, sem requeue ou retry automático |
+| Recursos | batch, 1 nó, 1 tarefa, 1 núcleo físico, 64 GiB, sem GPU/exclusividade |
+| Preparações | 10 sequenciais, até 600 s de solver cada: 6.000 s no total |
+| Filho / job | 1.140 s por filho; 12.000 s (3 h 20 min) para o job |
+| Memória | SoftMemLimit 48 GB decimais; parada amostrada 56 GiB; cgroup até 64 GiB |
+
+Agrupar as dez preparações substitui a proposta anterior de dez reservas de
+1.200 s por uma reserva de 12.000 s, sem aumentar esse teto agregado. A mudança
+de agrupamento não constitui aprovação: o autor deve autorizar este job antes
+de `submit`. O plano mantém `resource_budget_approved=false`; a aprovação
+separada referencia o hash exato do plano. Nenhuma frase longa será exigida.
+
+`prepare` apenas verifica vínculos e grava o plano. `submit PLAN_SHA256` registra
+a autorização declarada pelo operador e submete uma vez. Uma marca exclusiva
+de campanha impede submissão repetida inclusive após resposta ambígua do Slurm.
+`status` faz uma consulta e retorna; `collect` só coleta estado terminal, sem
+aguardar em loop. A execução pausa ao primeiro retorno incompleto. Não apagar
+marcas, diretórios ou evidências para tentar novamente.
+
+### Duas entregas e seus limites
+
+1. Dez artefatos de raiz privados, com hash do modelo, ordem das variáveis,
+   vetor, parâmetros, assinatura matemática e sentido original/efetivo.
+2. Recibo público com tempos de captura e exportação separados, supervisão de
+   cada filho, memória amostrada, accounting Slurm, versões e hashes dos logs.
+
+`capture_wall_seconds` inclui leitura/hash, construção, callback e descarte;
+`root_export_wall_seconds` mede a escrita do artefato. O tempo supervisionado
+inclui o processo e fechamento do log, mas exclui a amostra inicial do supervisor.
+O intervalo do batch inclui orquestração; não inclui fila nem escrita final do
+próprio resumo. São escopos aninhados: não somá-los entre si. A decomposição
+end-to-end da comparação depende ainda de features, inferência e montagem dos
+inícios medidos e revisados. Não há promoção científica automática.
+
+Os vetores e textos dos logs permanecem no HPC. A coleta verifica os bytes
+privados antes de exportar hashes. A revisão independente valida identidade,
+ordem dos pais, sentidos, contagens, estado terminal e elegibilidade falsa.
+Retorno parcial continua revisável, mas não é marcado como preparação completa.
+
+### Validação e sequência
+
+T1 usa solver/scheduler sintéticos: sucesso, ausência de raiz ótima, vetor não
+finito, SoftMemLimit, exceções, descarte, aprovação divergente, plano alterado,
+submissão ambígua, parada imediata, preservação e adulteração de artefatos.
+T2 passou em 65 testes PR86 antes da última regressão adicional de plano;
+os nove testes da preparação passaram. T3 e CI devem validar a árvore final.
+Não se afirma validação instalada antes do retorno HPC.
+
+A primeira execução T3 desta continuação usou equivocadamente TEMP/TMP dentro
+do checkout: 838 testes, 111 erros e sete skips. Os contratos de exportação
+exigem destino fora do código; a configuração de teste foi corrigida para um
+diretório gravável externo ao checkout, sem relaxar esses contratos. O Bash
+local também não inicia no sandbox Windows (IPC MSYS negado); a verificação
+`bash -n` está incluída no CI, não é declarada aprovada localmente.
+
+Depois da revisão desse retorno: preparar features/inferência com o checkpoint
+congelado, revisar os custos e inícios, concluir o operador dos 70 grupos e
+solicitar separadamente a execução da comparação. Esta etapa não autoriza
+inferência, treinamento, os 210 solves ou merge. A PR86 permanece draft.
