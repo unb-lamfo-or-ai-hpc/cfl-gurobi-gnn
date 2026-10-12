@@ -1,5 +1,19 @@
 # Current status
 
+## Latest execution checkpoint — six-job wave approved
+
+Job3522 completed the first F0/one-thread/seed42 group in 546 s. Its original
+return `dd1a553b4532` passed independent nested review: three solves, matched
+parameters/model, MINIMIZE, both starts accepted, no memory stop. M0/M1/M2
+solver seconds: 100.705 / 109.595 / 306.390; no general performance claim.
+The author now requests six serial jobs of <=4 h, queued together. The
+[six-job wave](research/pr86-job3522-six-job-wave.md) implements the next frozen
+F0 groups, 18 calls inside the approved 210; <=24 h serial reservation and
+128 physical-core-hours. No repeat preparation. Slurm afterok plus predecessor
+artifact validation prevents continuation after failure. Next: final-head CI,
+source-pinned CLI, installed collection/review. No wave job submitted by this
+publication, no merge; PR86 remains draft. Older sections below are historical.
+
 Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. Jobs3520/3521
 completed the ten roots and ten prospective graph/inference/start preparations.
 Both public returns passed independent review. M1/M2 starts exist for all ten

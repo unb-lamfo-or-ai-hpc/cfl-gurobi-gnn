@@ -1,5 +1,11 @@
 # Article plan
 
+Latest PR86 evidence: [job3522 and serial wave](research/pr86-job3522-six-job-wave.md)
+provides the first three prospective solver observations, not a ten-parent
+conclusion. The six-job continuation completes F0's frozen CPU caps and one-thread
+repeats before remaining parents; final comparison figures must retain parent
+denominators and the scope of preparation-cost estimates.
+
 Approved planning revision: 2026-10-10. Target: submission by December 2026,
 preferably by 11 December with the remainder of December as contingency.
 Implementation/resource authorizations remain separate.

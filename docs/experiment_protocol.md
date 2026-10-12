@@ -1,5 +1,11 @@
 # Experiment protocol
 
+Latest execution update: job3522's first group is reviewed; the author requests
+six four-hour jobs queued with serial dependencies. The [wave contract](research/pr86-job3522-six-job-wave.md)
+selects the next six frozen F0 groups (18 calls), includes them within 210/70,
+retains no retry and requires predecessor artifact validity as well as afterok.
+It does not change method order, gap, seeds, model, preparation or thread caps.
+
 Current approved planning contract: 2026-10-10, updated by authorization on
 2026-10-11: PR85 implementation approved; PR86/87 protocols preliminarily
 accepted, exact execution budgets still pending. Detailed PR85 scope and PR86/87
