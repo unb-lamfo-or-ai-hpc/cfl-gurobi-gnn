@@ -54,7 +54,11 @@ is mandatory, preserving coefficients, feasible region and original bytes.
 This is a correction, not equivalence to the original maximization. PR85
 reconciles that policy with existing receipts. Its [closure](research/pr85-closure.md)
 also binds two representative LP structures and frozen training reports;
-full economic mapping and independent historical fit replay remain unqualified.
+independent historical fit replay remains unqualified. The 12 October author
+decision accepts the benchmark CFL formulation except for MAXIMIZE and removes
+renewed economic mapping/generator certification as an execution prerequisite.
+This frozen premise applies through the final sprint; model identity and
+MINIMIZE enforcement remain mandatory implementation checks.
 
 ## Current project boundary
 
@@ -73,7 +77,8 @@ PR86's [offline proposal](research/pr86-controlled-comparison.md) distinguishes
 M1's matched support cardinality/positive count from equality of variable IDs,
 and charges GNN-dependent preparation to it. Effective MINIMIZE is mandatory
 under the author-approved cost-objective correction. This does not erase
-PR85's remaining formulation/provenance limitations or approve execution.
+historical receipt contents or approve execution. The frozen formulation
+decision supersedes the former semantic-mapping gate, not provenance checks.
 
 PR85 is now merged at `bb3f28f8078abde5ed4d95461f04fe675be2f37e`.
 The [PR86 continuation](research/pr86-starts-and-costs.md) reuses job3505's

@@ -2,6 +2,13 @@
 
 Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. No new experiment authorized.
 
+**Frozen formulation decision (12 October):** the authors accept MILPBench CFL
+as correct except for MAXIMIZE. Always force MINIMIZE, preserving original
+files and all other mathematical data, through the final sprint. The generator/
+semantic-recertification gate is withdrawn. Historical audit limits below are
+retained as history, not a renewed requirement. Implementation identity,
+preparation provenance and explicit HPC budget remain required.
+
 PR86 baseline `a0ce4f7` passed its four exact-head CI checks. The
 [prospective integration](research/pr86-prospective-instrumentation.md) now
 connects the isolated child to the existing memory supervisor, validates
@@ -13,6 +20,16 @@ prospective preparation and scientific/resource admission remain open.
 Engineering follows T1 → T2 → stabilization → T3/final-head CI → Ready,
 with measured CI stages, no removal of distinct safety boundaries and no
 extra PR for technical fixes. No HPC or merge is admitted by these changes.
+
+The published integration `72edf61bc1172f294383df148dc0ae25bc987453` passed all
+four evidence CI arms. Its continuation implements the bounded ten-parent
+root-preparation operator, public collection/review and a one-connection
+PowerShell receiver. Proposed execution: one CPU job, one physical core,
+64 GiB, at most 10 sequential root optimizations of 600 s and 12,000 s job wall.
+This replaces ten proposed root jobs, not the 210 main solves. No budget has
+been granted. See the linked integration document for cost scopes and stopping
+conditions. The PR remains draft; installed evidence and the full comparison
+operator remain pending, not prerequisites for revisiting the frozen formulation.
 
 ## Integrated baseline
 
@@ -120,7 +137,7 @@ superseded operationally by the [post-PR85 preparation](research/pr86-starts-and
 ten-parent binding code and disjoint cost accounting are locally tested;
 the installed ten-parent receipt has now passed independent public review
 (`45eab23962f8`), documented in the [installed review](research/pr86-installed-binding-review.md).
-Complete prospective executor instrumentation, formulation mapping and exact
+Complete prospective executor instrumentation and exact
 resource authorization are still pending. The original
 proposal bytes remain preserved. No execution gates are cleared by code alone.
 

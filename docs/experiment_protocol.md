@@ -60,11 +60,13 @@ a fixing of bounds. Report acceptance, rejection, repair and abstention.
 Effective `MINIMIZE` is mandatory: the authors identified source `MAXIMIZE`
 as erroneous for the intended cost-minimizing CFL on 11 October. This correction
 is not algebraic equivalence to maximizing unchanged costs. Preserve source
-bytes and coefficients; reject effective maximization. PR85 must verify
-the intended CFL formulation, coefficients/units, constraints, variable domains,
-objective constants/signs and any transformation from the source `MAXIMIZE`.
-Keep original bytes and historical interpretations; unresolved inconsistency
-blocks new solver comparisons and the corresponding manuscript claims.
+bytes and coefficients; reject effective maximization. On 12 October the
+authors froze the CFL formulation as correct except for objective sense,
+through PR86 and the final sprint. No generator or renewed semantic mapping
+is required for execution. Verify that loading, feature construction and
+partial starts preserve coefficients, constraints, domains, bounds and variable
+identity. Do not rewrite historical receipts or describe this author-approved
+premise as a newly performed independent reconstruction of the benchmark.
 
 ## Mandatory GPU comparison
 
