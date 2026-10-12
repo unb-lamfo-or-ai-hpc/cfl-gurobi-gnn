@@ -273,6 +273,40 @@ class MainFirst(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             value = self.make_return(Path(temp))
             self.assertTrue(flow.validate_return(flow.encoded(value)))
+            changed = copy.deepcopy(value)
+            name = "run/attempt-0/attempt.json"
+            original = flow.executor.existing.review.flow.meta.strict_json(
+                base64.b64decode(changed["members"][name]["base64"])
+            )
+            original["measurement"]["solver_function_seconds"] += 1
+            raw = flow.encoded(original)
+            changed["members"][name] = {
+                "sha256": flow.digest(raw),
+                "base64": base64.b64encode(raw).decode(),
+            }
+            for member_name, mutate in (
+                (
+                    "run/attempt-0/timing_tail.json",
+                    lambda v: v.update(attempt_sha256=flow.digest(raw)),
+                ),
+                (
+                    "run/group.json",
+                    lambda v: v["attempts"][0].update(attempt_sha256=flow.digest(raw)),
+                ),
+            ):
+                member = flow.executor.existing.review.flow.meta.strict_json(
+                    base64.b64decode(changed["members"][member_name]["base64"])
+                )
+                mutate(member)
+                updated = flow.encoded(member)
+                changed["members"][member_name] = {
+                    "sha256": flow.digest(updated),
+                    "base64": base64.b64encode(updated).decode(),
+                }
+            with self.assertRaisesRegex(
+                ValueError, "attempt_measurement_reconciliation"
+            ):
+                flow.validate_return(flow.encoded(changed))
             for mutation in (
                 lambda v: v["members"].update({"../private.log": {}}),
                 lambda v: v["members"]["batch.json"].update(sha256="0" * 64),
