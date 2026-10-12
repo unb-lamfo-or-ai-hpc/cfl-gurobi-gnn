@@ -574,6 +574,14 @@ def validate_return(raw):
                         require(
                             supervision["job_id"] == state["job_id"], "supervision_job"
                         )
+                        reason, scoped_measurement = executor.metered.reconcile(
+                            cell, supervision["observation"], result
+                        )
+                        require(
+                            reason == attempt["stop_code"]
+                            and scoped_measurement == attempt["measurement"],
+                            "attempt_measurement_reconciliation",
+                        )
                         measured = executor.supervised.reconcile(
                             supervision["observation"],
                             result,
