@@ -1,7 +1,7 @@
 """Isolated PR86 attempt adapter; no scheduler, budget recorder or retry.
 
 An admission review is an input, not something this executor can grant itself.
-Only private execution bundles with separately reviewed preparation/formulation
+Only private execution bundles with separately reviewed preparation
 and explicit resource approval can reach the solver. No admitted bundle exists
 in the repository. Historical E0 executors and receipts are not rewritten.
 """
@@ -33,11 +33,17 @@ from cfl_gnn.graph.instance_provenance import sha256_file  # noqa: E402
 require = metered.require
 PROTOCOL = "pr86_isolated_attempt_adapter_v1"
 GATES = (
-    "formulation_review",
     "preparation_review",
     "environment_review",
     "resource_approval",
 )
+FORMULATION_CONTRACT = {
+    "protocol_id": "milpbench_cfl_frozen_minimize_20261012",
+    "benchmark_formulation_accepted": True,
+    "effective_objective_sense": "MINIMIZE",
+    "only_permitted_formulation_change": "objective_sense",
+    "original_files_preserved": True,
+}
 
 
 def load_bundle(path, expected_sha):
@@ -49,6 +55,10 @@ def load_bundle(path, expected_sha):
     require(bundle["protocol_id"] == PROTOCOL, "execution_protocol")
     require(bundle["automatic_retry"] is False, "retry")
     require(bundle["scientific_reporting_eligible"] is False, "scientific_scope")
+    require(
+        bundle["formulation_contract"] == FORMULATION_CONTRACT,
+        "frozen_formulation_contract",
+    )
     require(bundle["source_sha256_lf"] == existing.dependencies(), "source_bytes")
     head = subprocess.run(
         ["git", "-C", str(ROOT), "rev-parse", "HEAD"],
