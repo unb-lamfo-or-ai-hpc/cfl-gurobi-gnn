@@ -17,13 +17,16 @@ import pr86_root_preparation as roots  # noqa: E402
 class Roots(unittest.TestCase):
     def test_persisted_plan_change_is_rejected_before_execution(self):
         with tempfile.TemporaryDirectory() as temp:
-            stage = Path(temp) / ("roots-" + "a" * 12)
+            # Windows runners can expose TEMP via an 8.3 alias (RUNNER~1).
+            # The production gate intentionally requires a canonical stage.
+            canonical_base = Path(temp).resolve()
+            stage = canonical_base / ("roots-" + "a" * 12)
             stage.mkdir()
             frozen = roots.plan("a" * 40)
             roots.write(stage / "plan.json", frozen)
             with (
                 patch.object(roots, "head", return_value="a" * 40),
-                patch.object(roots, "BASE", Path(temp)),
+                patch.object(roots, "BASE", canonical_base),
             ):
                 self.assertEqual(roots.load(stage), frozen)
                 with (
