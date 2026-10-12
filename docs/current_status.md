@@ -1,13 +1,18 @@
 # Current status
 
-Updated: 2026-10-11. PR85 merged; PR86 implementation in progress. No new experiment authorized.
+Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. No new experiment authorized.
 
-PR86 continuation: `190f5b8` is published and its four exact-head CI checks
-passed. The [prospective instrumentation](research/pr86-prospective-instrumentation.md)
-now provides an explicit thread/seed solver core and immutable attempt/export
-timing records, tested with synthetic dispatchers. Installed launcher,
-preparation/environment/formulation binding and budget admission remain open;
-no HPC command, new experiment or merge is admitted by this implementation.
+PR86 baseline `a0ce4f7` passed its four exact-head CI checks. The
+[prospective integration](research/pr86-prospective-instrumentation.md) now
+connects the isolated child to the existing memory supervisor, validates
+physical affinity and admission bindings, seals logs and reconciles paired
+groups. Constructor/disposal failure cleanup is specialized without changing
+hash-bound historical sources. Tests substitute allocation and solver;
+installed qualification is not inferred. Campaign-wide claims/submission,
+prospective preparation and scientific/resource admission remain open.
+Engineering follows T1 → T2 → stabilization → T3/final-head CI → Ready,
+with measured CI stages, no removal of distinct safety boundaries and no
+extra PR for technical fixes. No HPC or merge is admitted by these changes.
 
 ## Integrated baseline
 
