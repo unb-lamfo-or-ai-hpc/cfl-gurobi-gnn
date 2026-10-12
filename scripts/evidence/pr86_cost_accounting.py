@@ -64,22 +64,32 @@ def execution_costs(timing):
     return result
 
 
-def end_to_end(method, preparation, execution, uses=7, worker_overhead=None):
+def end_to_end(
+    method,
+    preparation,
+    execution,
+    uses=7,
+    worker_overhead=None,
+    *,
+    historical_missing_regions=False,
+):
     if method not in ("M0", "M1", "M2") or type(uses) is not int or uses <= 0:
         raise ValueError("cost_scenario")
     if set(execution) != set(EXECUTION):
         raise ValueError("execution_regions")
     base = sum(seconds(v) for v in execution.values())
+    # M1 obtains its support/positive-count budget from the GNN assembly too.
     required = (
-        ()
-        if method == "M0"
-        else (
-            "root",
-            "features",
-            "inference",
-            "assembly_lp" if method == "M1" else "assembly_gnn",
-        )
+        () if method == "M0" else ("root", "features", "inference", "assembly_gnn")
     )
+    if method == "M1":
+        required += ("assembly_lp",)
+        # Only reproduce the old missing-cost ledger; never compute a cost
+        # without the dependency. New execution cannot use this escape hatch.
+        if historical_missing_regions:
+            if preparation or worker_overhead is not None:
+                raise ValueError("historical_missing_regions_only")
+            required = ("root", "features", "inference", "assembly_lp")
     missing = [k for k in required if preparation.get(k) is None]
     for key in required:
         if preparation.get(key) is not None:

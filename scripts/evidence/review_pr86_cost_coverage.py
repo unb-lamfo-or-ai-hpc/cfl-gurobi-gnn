@@ -22,7 +22,11 @@ def build():
     for attempt in value["matrix"]["attempts"]:
         child = attempt["child"]
         disjoint = costs.execution_costs(child["result"]["timing"])
-        estimate = costs.end_to_end(mapping[child["method"]], {}, disjoint)
+        # Preserve the published historical list of unknown regions bytewise.
+        # This mode cannot evaluate numerical preparation costs.
+        estimate = costs.end_to_end(
+            mapping[child["method"]], {}, disjoint, historical_missing_regions=True
+        )
         rows.append(
             {
                 "parent": child["parent"],
