@@ -1,6 +1,9 @@
 # Current status
 
-Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. No new experiment authorized.
+Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. The separately
+authorized root preparation completed as job3520. Ten roots and scoped costs
+passed public review; no main comparison or training has been authorized.
+See [job3520 and the next guidance stage](research/pr86-job3520-and-guidance.md).
 
 **Frozen formulation decision (12 October):** the authors accept MILPBench CFL
 as correct except for MAXIMIZE. Always force MINIMIZE, preserving original
@@ -26,9 +29,10 @@ four evidence CI arms. Its continuation implements the bounded ten-parent
 root-preparation operator, public collection/review and a one-connection
 PowerShell receiver. Proposed execution: one CPU job, one physical core,
 64 GiB, at most 10 sequential root optimizations of 600 s and 12,000 s job wall.
-This replaces ten proposed root jobs, not the 210 main solves. No budget has
-been granted. See the linked integration document for cost scopes and stopping
-conditions. The PR remains draft; installed evidence and the full comparison
+This replaced ten proposed root jobs, not the 210 main solves. The author
+subsequently approved this one root job; job3520 completed all ten roots.
+See the linked integration document for cost scopes and stopping
+conditions. The PR remains draft; installed guidance and the full comparison
 operator remain pending, not prerequisites for revisiting the frozen formulation.
 
 ## Integrated baseline

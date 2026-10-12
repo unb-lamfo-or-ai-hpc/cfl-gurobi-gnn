@@ -4,6 +4,11 @@ Approved planning revision: 2026-10-10. Target: submission by December 2026,
 preferably by 11 December with the remainder of December as contingency.
 Implementation/resource authorizations remain separate.
 
+12 October evidence update: [job3520](research/pr86-job3520-and-guidance.md)
+adds a regenerable ten-parent root-preparation cost table. Capture/export/
+supervisor/batch scopes are nested as documented, not additive totals.
+This is a methods/cost asset, not yet a three-arm performance result.
+
 11 October update: PR83/84 merged; PR85 scope and implementation approved,
 with mandatory correction from source MAXIMIZE to effective MINIMIZE for
 cost-minimizing CFL. PR86/87 protocols accepted preliminarily, with no exact

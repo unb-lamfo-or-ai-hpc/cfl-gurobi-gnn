@@ -6,6 +6,12 @@ accepted, exact execution budgets still pending. Detailed PR85 scope and PR86/87
 protocol/resource proposals: [submission protocol](research/submission-protocol-20261010.md).
 This document approves no experiment, training, retry or HPC submission.
 
+12 October execution update: the author separately authorized the bounded
+ten-root job, now completed as job3520. Its [review and next-stage proposal](research/pr86-job3520-and-guidance.md)
+preserve the original false eligibility flags. The proposed one-GPU graph/
+inference/start preparation and the 210 main solves still require their own
+resource authorization. No repeated roots are needed.
+
 ## Required record for every run
 
 Record the following before execution:
