@@ -214,7 +214,7 @@ def bundles(frozen, stage, mip, starts):
             "preparation_binding": frozen["start_binding"],
             "preparation_seconds": frozen["preparation_seconds"],
             "checkpoint_sha256": executor.proposal.CHECKPOINT,
-            "allocation_threads": 1,
+            "allocation_threads": cell["threads"],
             "private_mip_path": str(mip),
             "private_starts_path": str(starts),
             **refs,
@@ -227,7 +227,7 @@ def bundles(frozen, stage, mip, starts):
     write(stage / "requests.json", requests)
 
 
-def held_profile(text, job):
+def held_profile(text, job, threads=1):
     expected = {
         "JobId": job,
         "JobState": "PENDING",
@@ -236,7 +236,7 @@ def held_profile(text, job):
         "Requeue": "0",
         "Restarts": "0",
         "NumTasks": "1",
-        "CPUs/Task": "1",
+        "CPUs/Task": str(threads),
         "TimeLimit": "04:00:00",
     }
     fields = site.selected_fields(
@@ -249,7 +249,7 @@ def held_profile(text, job):
     )
     require(
         site.singleton(fields.get("NumNodes")) == 1
-        and site.singleton(fields.get("NumCPUs")) in (1, 2),
+        and site.singleton(fields.get("NumCPUs")) in (threads, 2 * threads),
         "held_cpu_topology",
     )
     require(fields.get("MinMemoryNode") in ("64G", "65536M"), "held_memory")
@@ -396,6 +396,24 @@ def collect(stage):
     admitted(stage, frozen)
     state = roots.status(stage)
     require(state["terminal"], "not_terminal_no_wait")
+    value = public_value(stage, frozen, state)
+    ready = validate_return(encoded(value))
+    output = stage / "public_return.json"
+    if output.exists():
+        require(read(output) == encoded(value), "preserve_prior_return")
+    else:
+        write(output, value)
+    return {
+        "job_id": state["job_id"],
+        "return_sha256": digest(read(output)),
+        "ready_for_independent_review": ready,
+        "output": str(output),
+        "remaining_dispatch_admitted": False,
+    }
+
+
+def export_members(stage):
+    """Seal allowlisted closed outputs; no scheduler query or approval."""
     members = {}
     paths = [
         stage / "run/group.started.json",
@@ -426,32 +444,23 @@ def collect(stage):
                 "sha256": digest(raw),
                 "base64": base64.b64encode(raw).decode("ascii"),
             }
-    value = {
+    return members
+
+
+def public_value(stage, frozen, state):
+    return {
         "protocol_id": PROTOCOL,
         "plan": frozen,
         "plan_sha256": digest(encoded(frozen)),
         "accounting": state,
-        "members": members,
+        "members": export_members(stage),
         "raw_logs_included": False,
         "scientific_reporting_eligible": False,
         "remaining_dispatch_admitted": False,
     }
-    ready = validate_return(encoded(value))
-    output = stage / "public_return.json"
-    if output.exists():
-        require(read(output) == encoded(value), "preserve_prior_return")
-    else:
-        write(output, value)
-    return {
-        "job_id": state["job_id"],
-        "return_sha256": digest(read(output)),
-        "ready_for_independent_review": ready,
-        "output": str(output),
-        "remaining_dispatch_admitted": False,
-    }
 
 
-def validate_return(raw):
+def validate_return(raw, *, expected_plan=None):
     value = executor.existing.review.flow.meta.strict_json(raw)
     require(
         set(value)
@@ -470,7 +479,8 @@ def validate_return(raw):
     require(value["protocol_id"] == PROTOCOL, "protocol")
     frozen = value["plan"]
     require(
-        frozen == plan(frozen["source_commit"])
+        frozen
+        == (plan(frozen["source_commit"]) if expected_plan is None else expected_plan)
         and value["plan_sha256"] == digest(encoded(frozen)),
         "source_plan",
     )
@@ -495,14 +505,25 @@ def validate_return(raw):
         and state["terminal"],
         "accounting",
     )
+    complete = validate_members(frozen, value["members"], state["job_id"])
+    return bool(
+        complete
+        and state["state"] == "COMPLETED"
+        and all(r["ExitCode"] == "0:0" for r in state["rows"])
+    )
+
+
+def validate_members(frozen, members, job_id):
+    """Artifact gate independent of scheduler accounting; not job completion."""
+    group_id = frozen["group"]["group_id"]
     allowed = {"run/group.started.json", "run/group.json", "batch.json"} | {
         f"run/attempt-{i}/{name}" for i in range(3) for name in FILES
     }
-    require(set(value["members"]) <= allowed, "member_allowlist")
+    require(set(members) <= allowed, "member_allowlist")
     complete = False
     with tempfile.TemporaryDirectory() as temporary:
         directory = Path(temporary)
-        for name, entry in value["members"].items():
+        for name, entry in members.items():
             require(set(entry) == {"sha256", "base64"}, "member_schema")
             member = base64.b64decode(entry["base64"], validate=True)
             require(digest(member) == entry["sha256"], "member_hash")
@@ -514,7 +535,7 @@ def validate_return(raw):
         if group_path.exists():
             group = parsed(group_path)
             require(
-                group["group_id"] == GROUP
+                group["group_id"] == group_id
                 and group["scientific_reporting_eligible"] is False,
                 "group_identity",
             )
@@ -571,9 +592,7 @@ def validate_return(raw):
                                 "guided_start",
                             )
                         supervision = parsed(folder / "supervision.json")
-                        require(
-                            supervision["job_id"] == state["job_id"], "supervision_job"
-                        )
+                        require(supervision["job_id"] == job_id, "supervision_job")
                         reason, scoped_measurement = executor.metered.reconcile(
                             cell, supervision["observation"], result
                         )
@@ -606,10 +625,10 @@ def validate_return(raw):
                 "completion_flags",
             )
             if complete:
-                require(set(value["members"]) == allowed, "complete_members")
+                require(set(members) == allowed, "complete_members")
                 started = parsed(directory / "run/group.started.json")
                 require(
-                    started["group_id"] == GROUP
+                    started["group_id"] == group_id
                     and len(started["bundle_sha256"]) == 3
                     and all(
                         re.fullmatch(r"[0-9a-f]{64}", s)
@@ -624,12 +643,8 @@ def validate_return(raw):
                     "paired_model_parameters",
                 )
                 batch = parsed(directory / "batch.json")
-                require(batch["job_id"] == state["job_id"], "batch_job")
-    return bool(
-        complete
-        and state["state"] == "COMPLETED"
-        and all(r["ExitCode"] == "0:0" for r in state["rows"])
-    )
+                require(batch["job_id"] == job_id, "batch_job")
+    return complete
 
 
 def main():
