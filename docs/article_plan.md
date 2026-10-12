@@ -9,6 +9,14 @@ adds a regenerable ten-parent root-preparation cost table. Capture/export/
 supervisor/batch scopes are nested as documented, not additive totals.
 This is a methods/cost asset, not yet a three-arm performance result.
 
+Job3521 now adds the [ten-parent preparation table and static SVG](research/pr86-job3521-review-and-main-budget.md),
+binding roots, graph construction, inference and both start assemblies.
+The ledger separates shared/residual costs and explicitly modeled allocations;
+it does not establish standalone cold cost or speedup. CPU scaling/result
+figures still require the main matrix, whose exact ceiling the author approved
+on 12 October. First-group execution/review precedes remaining dispatch; no
+main results are inferred from preparation and no additional preparation is needed.
+
 11 October update: PR83/84 merged; PR85 scope and implementation approved,
 with mandatory correction from source MAXIMIZE to effective MINIMIZE for
 cost-minimizing CFL. PR86/87 protocols accepted preliminarily, with no exact

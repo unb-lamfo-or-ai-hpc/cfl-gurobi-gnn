@@ -1,9 +1,15 @@
 # Current status
 
-Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. The separately
-authorized root preparation completed as job3520. Ten roots and scoped costs
-passed public review; no main comparison or training has been authorized.
-See [job3520 and the next guidance stage](research/pr86-job3520-and-guidance.md).
+Updated: 2026-10-12. PR85 merged; PR86 implementation in progress. Jobs3520/3521
+completed the ten roots and ten prospective graph/inference/start preparations.
+Both public returns passed independent review. M1/M2 starts exist for all ten
+parents, without abstention; their acceptance by the solver is not yet observed.
+See [job3521 review, costs and exact remaining budget](research/pr86-job3521-review-and-main-budget.md).
+The author approved the exact 210-main-solve/70-job ceiling on 12 October.
+The nonblocking first-group operator is implemented: only F0/1 thread/seed42,
+three methods counted inside that ceiling. Next: execute the final-head CLI,
+review its installed return, then enable remaining dispatch. No new root capture,
+inference or training is needed. No main job has been submitted here; PR86 is draft.
 
 **Frozen formulation decision (12 October):** the authors accept MILPBench CFL
 as correct except for MAXIMIZE. Always force MINIMIZE, preserving original
@@ -32,8 +38,9 @@ PowerShell receiver. Proposed execution: one CPU job, one physical core,
 This replaced ten proposed root jobs, not the 210 main solves. The author
 subsequently approved this one root job; job3520 completed all ten roots.
 See the linked integration document for cost scopes and stopping
-conditions. The PR remains draft; installed guidance and the full comparison
-operator remain pending, not prerequisites for revisiting the frozen formulation.
+conditions. The PR remains draft. Installed guidance subsequently completed
+as job3521; the full comparison operator remains pending. Neither reopens
+the frozen formulation.
 
 ## Integrated baseline
 

@@ -8,9 +8,15 @@ This document approves no experiment, training, retry or HPC submission.
 
 12 October execution update: the author separately authorized the bounded
 ten-root job, now completed as job3520. Its [review and next-stage proposal](research/pr86-job3520-and-guidance.md)
-preserve the original false eligibility flags. The proposed one-GPU graph/
-inference/start preparation and the 210 main solves still require their own
-resource authorization. No repeated roots are needed.
+preserve the original false eligibility flags. The subsequently executed
+one-GPU graph/inference/start preparation completed as job3521 and is now
+[independently reviewed](research/pr86-job3521-review-and-main-budget.md).
+The author then explicitly approved 210 main solves in <=70 sequential jobs,
+with the first group reviewed before further dispatch. The first-group operator
+admits only three cells after recording that approval; no main job is submitted
+by publication, and remaining dispatch is still blocked pending its review.
+No repeated roots or forwards are needed. Allocated preparation-cost scenarios
+are estimates, not measurements of standalone cold method executions.
 
 ## Required record for every run
 
