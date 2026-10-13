@@ -1,5 +1,25 @@
 # Article plan
 
+## Author revision — 13 October
+
+Keep development on develop and research branches. **Do not synchronize develop
+and main in either direction before the article revision is complete.** Final
+branch reconciliation, release PR and merge are the last delivery, with explicit
+approval; not a prerequisite for PR86/87 experiments or manuscript writing.
+
+Sprint C audit is closed through PR85. Sprint D: complete the210-cell PR86
+comparison in reviewed bounded waves (21 F0 cells now reconciled), implement
+mandatory matched1-GPU/4-GPU DDP PR87 with its own exact budget, and write PR88
+methods/sample/claim index in parallel. Sprint E: parent-paired CPU/quality/cost
+and GPU analyses, seed uncertainty and reproducible publication tables/figures.
+Sprint F: integrate results, revise with coauthors, check numerical consistency
+and journal requirements; only THEN reconcile/release develop/main. December
+2026 submission remains the priority. No augmentation or new architecture.
+
+The [F0 CPU table and SVG](research/pr86-f0-review-f3-wave.md) are the first
+prospective main-matrix assets: one-parent descriptions, not final article-wide
+estimates. Keep solver time distinct from modeled scoped preparation costs.
+
 Latest PR86 evidence: [job3522 and serial wave](research/pr86-job3522-six-job-wave.md)
 provides the first three prospective solver observations, not a ten-parent
 conclusion. The six-job continuation completes F0's frozen CPU caps and one-thread

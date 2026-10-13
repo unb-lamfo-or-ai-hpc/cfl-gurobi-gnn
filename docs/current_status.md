@@ -1,5 +1,24 @@
 # Current status
 
+## Current checkpoint — 13 October: F0 complete, F3 next
+
+The [F0 review](research/pr86-f0-review-f3-wave.md) reconciles jobs3522–3528:
+21/210 main cells, seven/70 groups, one independent parent. All reached the
+frozen 0.01% gap target, with matched models/parameters and valid returned
+solutions. No population speedup claim. Original receipt flags/bytes unchanged.
+CPU table, SVG and scoped cost scenarios regenerate from the pinned returns.
+Next: six frozen F3 groups (18 cells, <=24 serial reserved hours, <=68 physical
+core-hours), inside the approved budget. No repeated preparation, inference,
+training or automatic retry. F3/16 threads remains for the following wave.
+After success:39/210 cells; no dispatch beyond those six groups.
+
+Author decision: **defer ALL develop/main synchronization until AFTER the
+article revision**, including any main-to-develop reconciliation. Work stays in
+PR86/develop. Final synchronization requires separate release review/approval;
+neither these results nor publication authorizes a merge or HPC submission by
+the agent. PR87 mandatory 1/4-GPU training and PR88 manuscript remain next.
+The dated sections below are historical checkpoints, not current blockers.
+
 ## Latest execution checkpoint — six-job wave approved
 
 Job3522 completed the first F0/one-thread/seed42 group in 546 s. Its original

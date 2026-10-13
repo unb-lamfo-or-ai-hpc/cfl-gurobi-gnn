@@ -1,5 +1,14 @@
 # Experiment protocol
 
+13 October update: [F0 review and F3 wave](research/pr86-f0-review-f3-wave.md)
+qualifies 21 descriptive F0 rows, not generalization. Continue the frozen manifest
+with groups7–12 (zero-based), six F3 jobs. The approved210/70 ceiling applies;
+no new preparation or extra seeds. Original false eligibility flags remain
+unchanged; a separate review names the qualified metric scope. The author
+postponed develop/main synchronization until after the article revision.
+Earlier proposed/unapproved budget statements below are retained as history;
+the 12 October explicit budget approval and later wave instructions supersede them.
+
 Latest execution update: job3522's first group is reviewed; the author requests
 six four-hour jobs queued with serial dependencies. The [wave contract](research/pr86-job3522-six-job-wave.md)
 selects the next six frozen F0 groups (18 calls), includes them within 210/70,
