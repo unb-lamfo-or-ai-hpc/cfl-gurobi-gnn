@@ -1,5 +1,12 @@
 # Experiment protocol
 
+Latest: [57-cell review](research/pr86-wave13-review-wave19.md) covers19 groups.
+Next positions19–24 finish F6 and begin F14, without changing method order,
+parameters, models, seeds or approval ceiling. Preserve F6's nonzero but
+within-target gap and heterogeneous timings. No reruns or new preparation.
+The following updates remain historical; three exposed parents are not57
+independent observations. Main/develop synchronization follows article review.
+
 Latest return: [F3 review](research/pr86-f3-review-next-wave.md) brings the
 reviewed prefix to39/210 cells,13/70 groups. The next fixed wave is positions13–18:
 F3/16 and five F6 groups, with unchanged methods/order/budget and no repeated

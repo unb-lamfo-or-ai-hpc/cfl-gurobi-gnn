@@ -1,5 +1,10 @@
 # Article plan
 
+Latest assets: [57-cell cumulative ledger, completeF3 and partialF6 figures](research/pr86-wave13-review-wave19.md).
+Retain method/seed heterogeneity and F6/1/seed42 M2's small nonzero gap beside
+runtime. F6/8,16 are pending, not zero/interpolated. Scope and release order
+unchanged; no population speedup claim or whole-job cold-cost qualification.
+
 Latest PR86 asset: [39-cell cumulative ledger and partial F3 CPU figure](research/pr86-f3-review-next-wave.md).
 F3/16 is still pending; no interpolated/zero-filled result. Keep F0 and F3
 separate, preserve seed nesting and report scoped costs, not whole-job cold time.

@@ -1,5 +1,17 @@
 # Current status
 
+## Current checkpoint — 13 October: 57 cells reviewed, F6/F14 next
+
+[Jobs3555–3560 review](research/pr86-wave13-review-wave19.md):57/210 cells,
+19/70 groups; F0/F3 complete, F6/8,16 pending. Original bytes preserved;
+57-row CSV, completeF3 and partialF6 CPU figures regenerate offline. All18 new
+cells meet the gap target. F6 has heterogeneous method/seed behavior; no
+population or independent-generalization claim. Next fixed positions19–24:
+F6/8,16/seed42; F14/1/seeds42,43,44; F14/2/seed42. Six serial jobs,18solves,
+<=24h reservation,116 physical-core hours,64GiB/job,within approved210/70.
+Reuse preparation; no retry or further automatic dispatch. Prior sections are
+history. Main synchronization remains after article revision, not before.
+
 ## Current checkpoint — 13 October: 39 cells reviewed, F3/F6 next
 
 [Jobs3542–3547 review](research/pr86-f3-review-next-wave.md) adds 18 valid F3
