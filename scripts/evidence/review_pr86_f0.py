@@ -65,11 +65,8 @@ def member(returned, name):
     return json.loads(raw)
 
 
-def review(raw):
-    wave = review_wave(raw)
-    original = q.read(q.RECEIPT)
-    q.review_first(original)
-    returns = [json.loads(original), *wave["returns"]]
+def rows_from_returns(returns, receipt_shas):
+    """Extract named descriptive metrics after independent nested validation."""
     rows = []
     for returned in returns:
         job = returned["accounting"]["job_id"]
@@ -113,12 +110,27 @@ def review(raw):
                     "sampled_cgroup_peak_bytes": supervision[
                         "sampled_cgroup_peak_bytes"
                     ],
-                    "receipt_sha256": q.FIRST_SHA if job == "3522" else SHA,
+                    "receipt_sha256": receipt_shas[job],
                     "child_sha256": returned["members"][f"run/attempt-{i}/child.json"][
                         "sha256"
                     ],
                 }
             )
+    return rows
+
+
+def review(raw):
+    wave = review_wave(raw)
+    original = q.read(q.RECEIPT)
+    q.review_first(original)
+    returns = [json.loads(original), *wave["returns"]]
+    rows = rows_from_returns(
+        returns,
+        {
+            r["accounting"]["job_id"]: q.FIRST_SHA if i == 0 else SHA
+            for i, r in enumerate(returns)
+        },
+    )
     q.require(len(rows) == len({r["cell_id"] for r in rows}) == 21, "twenty_one_cells")
     q.require({r["parent"] for r in rows} == {"CFL_easy_instance_0"}, "one_parent")
     q.require(
@@ -147,15 +159,20 @@ def review(raw):
     return rows, summary
 
 
-def figure(rows):
+def figure(rows, alias="F0", caps=(1, 2, 4, 8, 16), subtitle=None):
     selected = [r for r in rows if r["seed"] == 42]
     maximum = max(r["solver_seconds"] for r in selected) * 1.12
     parts = [
         '<svg xmlns="http://www.w3.org/2000/svg" width="820" height="430" viewBox="0 0 820 430">',
         '<rect width="820" height="430" fill="white"/>',
         '<g font-family="sans-serif" fill="#182635">',
-        '<text x="60" y="28" font-size="20">F0: tiempo del solver por límite de hilos (seed 42)</text>',
-        '<text x="60" y="52" font-size="12">Un solo padre; observación descriptiva, sin generalización ni coste de preparación.</text>',
+        f'<text x="60" y="28" font-size="20">{alias}: tiempo del solver por límite de hilos (seed 42)</text>',
+        '<text x="60" y="52" font-size="12">'
+        + (
+            subtitle
+            or "Un solo padre; observación descriptiva, sin generalización ni coste de preparación."
+        )
+        + "</text>",
     ]
     for tick in range(5):
         y = 350 - tick * 65
@@ -164,7 +181,7 @@ def figure(rows):
         )
     for method, color in (("M0", "#3457a6"), ("M1", "#b15a10"), ("M2", "#128064")):
         points = []
-        for i, cap in enumerate((1, 2, 4, 8, 16)):
+        for i, cap in enumerate(caps):
             row = next(
                 r for r in selected if r["method"] == method and r["threads"] == cap
             )
@@ -177,7 +194,7 @@ def figure(rows):
         parts.append(
             f'<text x="710" y="{100 + int(method[1]) * 24}" fill="{color}">{method}</text>'
         )
-    for i, cap in enumerate((1, 2, 4, 8, 16)):
+    for i, cap in enumerate(caps):
         parts.append(f'<text x="{86 + i * 140}" y="375">{cap}</text>')
     parts += [
         '<text x="290" y="403">Límite de hilos / núcleos físicos</text>',
