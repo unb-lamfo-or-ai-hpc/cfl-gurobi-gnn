@@ -36,10 +36,17 @@ FILES = (
 
 
 def plan(commit):
+    return plan_for_group(commit, 0)
+
+
+def plan_for_group(commit, group_index):
     require(re.fullmatch(r"[0-9a-f]{40}", commit), "commit")
     original, cells = executor.proposal.build()
+    require(type(group_index) is int and 0 <= group_index < 70, "group_index")
+    group = original["groups"][group_index]
     value, rows, report = review.review(read(review.DESTINATION / "public_return.json"))
-    row = value["child"]["rows"][0]
+    index = next(i for i, r in enumerate(rows) if r["parent"] == group["parent"])
+    row = value["child"]["rows"][index]
     binding = {
         k: row[k]
         for k in (
@@ -66,11 +73,11 @@ def plan(commit):
         "source_commit": commit,
         "source_sha256_lf": executor.existing.dependencies(),
         "context": context,
-        "group": original["groups"][0],
-        "cells": [c for c in cells if c["group_id"] == GROUP],
+        "group": group,
+        "cells": [c for c in cells if c["group_id"] == group["group_id"]],
         "start_binding": binding,
         "preparation_seconds": {
-            "root": rows[0]["root_supervised_seconds"],
+            "root": rows[index]["root_supervised_seconds"],
             **{
                 k: row["regions_seconds"][k]
                 for k in ("features", "inference", "assembly_gnn", "assembly_lp")
@@ -108,14 +115,18 @@ def load(stage):
 
 def private_inputs(frozen):
     value, _, _ = review.review(read(GUIDANCE / "public_return.json"))
+    parent = frozen["group"]["parent"]
+    index = next(
+        i for i, r in enumerate(value["child"]["rows"]) if r["parent"] == parent
+    )
     require(
         frozen["start_binding"]["private_starts_sha256"]
-        == value["child"]["rows"][0]["private_starts_sha256"],
+        == value["child"]["rows"][index]["private_starts_sha256"],
         "review_binding",
     )
     original, _ = executor.proposal.build()
     inputs = roots.inputs({"parents": original["parents"]})
-    folder = GUIDANCE / "run/0"
+    folder = GUIDANCE / "run" / str(index)
     for filename, key in (
         ("graph.private.pt", "graph_sha256"),
         ("predictions.private.json", "prediction_sha256"),
@@ -127,11 +138,14 @@ def private_inputs(frozen):
         )
     review.roots.review(read(review.guidance.ROOT_STAGE / "public_return.json"))
     require(
-        roots.sha256_file(review.guidance.ROOT_STAGE / "run/0/root.private.json.gz")
+        roots.sha256_file(
+            review.guidance.ROOT_STAGE / "run" / str(index) / "root.private.json.gz"
+        )
         == frozen["start_binding"]["root_sha256"],
         "private_root_changed",
     )
-    mip = Path(inputs[0]["mip_path"])
+    require(inputs[index]["parent"] == parent, "private_parent_index")
+    mip = Path(inputs[index]["mip_path"])
     require(
         roots.sha256_file(mip) == frozen["cells"][0]["model_sha256"],
         "private_model_changed",

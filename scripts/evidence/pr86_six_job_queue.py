@@ -75,12 +75,12 @@ def plan(commit):
     }
 
 
-def load(stage):
+def load(stage, policy=None):
     value = parsed(stage / "plan.json")
-    require(value == plan(first.roots.head()), "source_plan_changed")
-    require(
-        stage.resolve() == BASE / ("six-f0-" + value["source_commit"][:12]), "stage"
-    )
+    planner = plan if policy is None else policy.plan
+    prefix = "six-f0-" if policy is None else policy.prefix
+    require(value == planner(first.roots.head()), "source_plan_changed")
+    require(stage.resolve() == BASE / (prefix + value["source_commit"][:12]), "stage")
     require(not (ROOT / "gurobi.env").exists(), "unexpected_parameter_file")
     return value
 
@@ -120,15 +120,21 @@ def profile(text, job, threads, previous):
     return {"resources": fields, "dependency": dependency}
 
 
-def submit(stage, approved_sha):
+def submit(stage, approved_sha, policy=None):
     first.roots.accounting.host()
     require(os.environ.get("CONDA_DEFAULT_ENV") == "tfm_env", "environment")
-    frozen = load(stage)
+    frozen = load(stage, policy)
     require(digest(read(stage / "plan.json")) == approved_sha, "approved_plan_sha")
-    require(installed_first() == frozen["first_review"], "installed_review")
-    mip, starts = first.private_inputs(frozen["groups"][0])
-    CLAIM.mkdir(exist_ok=False)
-    write(CLAIM / "claim.json", {"plan_sha256": approved_sha, "stage": str(stage)})
+    reviewer = installed_first if policy is None else policy.installed_review
+    require(reviewer() == frozen["first_review"], "installed_review")
+    claim = CLAIM if policy is None else policy.claim
+    private = {}
+    for group in frozen["groups"]:
+        parent = group["group"]["parent"]
+        if parent not in private:
+            private[parent] = first.private_inputs(group)
+    claim.mkdir(exist_ok=False)
+    write(claim / "claim.json", {"plan_sha256": approved_sha, "stage": str(stage)})
     write(
         stage / "approval.json",
         {
@@ -146,6 +152,7 @@ def submit(stage, approved_sha):
         folder.mkdir(exist_ok=False)
         write(folder / "plan.json", group)
         write(folder / "approval.json", first.approval(group))
+        mip, starts = private[group["group"]["parent"]]
         first.bundles(group, folder, mip, starts)
     env = {
         k: v
@@ -175,7 +182,7 @@ def submit(stage, approved_sha):
             "--time=04:00:00",
             "--no-requeue",
             "--kill-on-invalid-dep=yes",
-            f"--job-name=cfl_pr86_f0_{i}",
+            f"--job-name=cfl_pr86_{group['group']['group_id'].split('-')[0].lower()}_{i}",
             "--chdir=" + str(ROOT),
             "--output=" + str(folder / "job-%j.private.out"),
             "--error=" + str(folder / "job-%j.private.err"),
@@ -183,7 +190,11 @@ def submit(stage, approved_sha):
         if previous:
             args.append("--dependency=afterok:" + previous)
         args += [
-            str(ROOT / "scripts/evidence/operate_pr86_six_jobs.sh"),
+            str(
+                ROOT
+                / "scripts/evidence"
+                / ("operate_pr86_six_jobs.sh" if policy is None else policy.operator)
+            ),
             "batch",
             str(i),
         ]
@@ -220,10 +231,11 @@ def submit(stage, approved_sha):
     }
 
 
-def admitted(stage, frozen):
+def admitted(stage, frozen, policy=None):
     sha = digest(encoded(frozen))
     require(
-        parsed(CLAIM / "claim.json") == {"plan_sha256": sha, "stage": str(stage)},
+        parsed((CLAIM if policy is None else policy.claim) / "claim.json")
+        == {"plan_sha256": sha, "stage": str(stage)},
         "campaign_claim",
     )
     require(
@@ -292,9 +304,9 @@ def checked(stage, frozen, index, jobs):
     }
 
 
-def run(stage, index):
-    frozen = load(stage)
-    jobs = admitted(stage, frozen)
+def run(stage, index, policy=None):
+    frozen = load(stage, policy)
+    jobs = admitted(stage, frozen, policy)
     folder = group_stage(stage, index)
     require(os.environ.get("SLURM_JOB_ID") == jobs[index], "allocated_job")
     # afterok supplies scheduler completion; this separate gate supplies evidence validity.
@@ -346,8 +358,8 @@ def run(stage, index):
     return 0
 
 
-def status(stage):
-    load(stage)
+def status(stage, policy=None):
+    load(stage, policy)
     records = []
     for i in range(6):
         folder = group_stage(stage, i)
@@ -359,7 +371,7 @@ def status(stage):
     return {"jobs": records, "terminal": all(r["terminal"] for r in records)}
 
 
-def validate_return(raw):
+def validate_return(raw, policy=None):
     value = first.executor.existing.review.flow.meta.strict_json(raw)
     require(
         set(value)
@@ -376,8 +388,8 @@ def validate_return(raw):
     )
     frozen = value["plan"]
     require(
-        value["protocol_id"] == PROTOCOL
-        and frozen == plan(frozen["source_commit"])
+        value["protocol_id"] == (PROTOCOL if policy is None else policy.protocol)
+        and frozen == (plan if policy is None else policy.plan)(frozen["source_commit"])
         and value["plan_sha256"] == digest(encoded(frozen)),
         "queue_return_plan",
     )
@@ -420,13 +432,13 @@ def validate_return(raw):
     }
 
 
-def collect(stage):
-    frozen = load(stage)
-    admitted(stage, frozen)
-    states = status(stage)
+def collect(stage, policy=None):
+    frozen = load(stage, policy)
+    admitted(stage, frozen, policy)
+    states = status(stage, policy)
     require(states["terminal"], "not_terminal_no_wait")
     value = {
-        "protocol_id": PROTOCOL,
+        "protocol_id": PROTOCOL if policy is None else policy.protocol,
         "plan": frozen,
         "plan_sha256": digest(encoded(frozen)),
         "returns": [
@@ -443,7 +455,7 @@ def collect(stage):
         "scientific_reporting_eligible": False,
         "raw_logs_included": False,
     }
-    reviewed = validate_return(encoded(value))
+    reviewed = validate_return(encoded(value), policy)
     output = stage / "public_return.json"
     if output.exists():
         require(read(output) == encoded(value), "preserve_return")
