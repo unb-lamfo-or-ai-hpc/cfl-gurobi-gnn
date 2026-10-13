@@ -1,5 +1,11 @@
 # Experiment protocol
 
+Latest return: [F3 review](research/pr86-f3-review-next-wave.md) brings the
+reviewed prefix to39/210 cells,13/70 groups. The next fixed wave is positions13–18:
+F3/16 and five F6 groups, with unchanged methods/order/budget and no repeated
+preparation. Two historically exposed parents do not establish generalization.
+Previous updates below remain history; no protocol or scientific premise changed.
+
 13 October update: [F0 review and F3 wave](research/pr86-f0-review-f3-wave.md)
 qualifies 21 descriptive F0 rows, not generalization. Continue the frozen manifest
 with groups7–12 (zero-based), six F3 jobs. The approved210/70 ceiling applies;

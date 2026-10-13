@@ -1,5 +1,11 @@
 # Article plan
 
+Latest PR86 asset: [39-cell cumulative ledger and partial F3 CPU figure](research/pr86-f3-review-next-wave.md).
+F3/16 is still pending; no interpolated/zero-filled result. Keep F0 and F3
+separate, preserve seed nesting and report scoped costs, not whole-job cold time.
+The release sequence below remains unchanged: synchronize main only after
+article revision. PR87 matched1/4-GPU comparison remains mandatory.
+
 ## Author revision — 13 October
 
 Keep development on develop and research branches. **Do not synchronize develop

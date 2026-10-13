@@ -1,5 +1,18 @@
 # Current status
 
+## Current checkpoint — 13 October: 39 cells reviewed, F3/F6 next
+
+[Jobs3542–3547 review](research/pr86-f3-review-next-wave.md) adds 18 valid F3
+cells: **39/210 cells,13/70 groups** cumulatively, with original bytes preserved.
+F0 has all five caps; F3 has 1/2/4/8 and one-thread seeds42/43/44, with16 pending.
+The cumulative CSV and partial F3 figure are descriptive, not generalization.
+Next six fixed positions13–18: F3/16/seed42, then F6/1/seeds42,43,44 and
+F6/2,4/seed42. Up to18 solves,24 serial reserved hours,100 physical-core hours,
+64GiB/job, within the existing budget; no repeated preparation or automatic retry.
+The same serial executor now has tested two-parent input/bundle binding.
+Main/develop synchronization remains postponed until after article revision.
+Earlier sections are dated history, not the current execution state.
+
 ## Current checkpoint — 13 October: F0 complete, F3 next
 
 The [F0 review](research/pr86-f0-review-f3-wave.md) reconciles jobs3522–3528:
