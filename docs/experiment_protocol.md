@@ -1,5 +1,14 @@
 # Experiment protocol
 
+Latest [75-cell review](research/pr86-wave19-review-wave25.md):25 groups,
+four exposed parents; F0/F3/F6 complete, partial F14. Nonzero within-target
+gaps and heterogeneous timings remain visible. Next fixed positions25–30
+finish F14 and begin F27, with unchanged preparation/methods/parameters/budget.
+Manual recovery of an interrupted SCP is not a solver retry: preserve the old
+directory, use a unique new destination and repeat hash/nested checks only.
+No automatic retry or dispatch beyond the next six jobs. Earlier sections are
+historical snapshots; do not confuse pending entries there with current totals.
+
 Latest: [57-cell review](research/pr86-wave13-review-wave19.md) covers19 groups.
 Next positions19–24 finish F6 and begin F14, without changing method order,
 parameters, models, seeds or approval ceiling. Preserve F6's nonzero but

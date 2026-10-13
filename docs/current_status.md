@@ -1,5 +1,17 @@
 # Current status
 
+## Current checkpoint — 13 October: 75 cells reviewed, F14/F27 next
+
+[Jobs3562–3567 review](research/pr86-wave19-review-wave25.md):75/210 cells,
+25/70 groups; F0/F3/F6 complete, F14/4,8,16 pending. Original receipt and
+failed-transfer directory preserved. All18 new cells meet the gap target;
+F14 shows mixed GNN timing effects. Four exposed parents, not75 independent
+instances. New cumulative CSV and completeF6/partialF14 figures are regenerable.
+Next frozen positions25–30: F14/4,8,16/42 and F27/1/seeds42,43,44. Six serial
+jobs,18solves,<=24h reservation,124 physical-core hours,64GiB/job,inside210/70.
+No new preparation, retry or later automatic dispatch. Prior sections remain
+history. Final main synchronization still follows article revision.
+
 ## Current checkpoint — 13 October: 57 cells reviewed, F6/F14 next
 
 [Jobs3555–3560 review](research/pr86-wave13-review-wave19.md):57/210 cells,

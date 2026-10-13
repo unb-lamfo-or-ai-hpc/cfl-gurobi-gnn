@@ -1,5 +1,11 @@
 # Article plan
 
+Latest [75-row table, completeF6 and partialF14 CPU figures](research/pr86-wave19-review-wave25.md)
+preserve the mixed timing effects and nonzero within-target gaps. F14/4,8,16
+are pending, not interpolated. Scope, sample limitations, mandatory1/4-GPU
+comparison and manuscript/release sequence are unchanged. Old figures remain
+dated evidence, not overwritten. Synchronize main only after article review.
+
 Latest assets: [57-cell cumulative ledger, completeF3 and partialF6 figures](research/pr86-wave13-review-wave19.md).
 Retain method/seed heterogeneity and F6/1/seed42 M2's small nonzero gap beside
 runtime. F6/8,16 are pending, not zero/interpolated. Scope and release order
