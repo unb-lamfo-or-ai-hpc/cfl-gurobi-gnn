@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="430" viewBox="0 0 820 430">
+<rect width="820" height="430" fill="white"/>
+<g font-family="sans-serif" fill="#182635">
+<text x="60" y="28" font-size="20">F0: tiempo del solver por límite de hilos (seed 42)</text>
+<text x="60" y="52" font-size="12">Un solo padre; observación descriptiva, sin generalización ni coste de preparación.</text>
+<path d="M70 350H690" stroke="#dbe2e9"/><text x="15" y="354" font-size="12">0 s</text>
+<path d="M70 285H690" stroke="#dbe2e9"/><text x="15" y="289" font-size="12">91 s</text>
+<path d="M70 220H690" stroke="#dbe2e9"/><text x="15" y="224" font-size="12">183 s</text>
+<path d="M70 155H690" stroke="#dbe2e9"/><text x="15" y="159" font-size="12">274 s</text>
+<path d="M70 90H690" stroke="#dbe2e9"/><text x="15" y="94" font-size="12">366 s</text>
+<circle cx="90" cy="278.37" r="4" fill="#3457a6"/>
+<circle cx="230" cy="289.09" r="4" fill="#3457a6"/>
+<circle cx="370" cy="117.86" r="4" fill="#3457a6"/>
+<circle cx="510" cy="144.95" r="4" fill="#3457a6"/>
+<circle cx="650" cy="167.03" r="4" fill="#3457a6"/>
+<polyline points="90,278.37 230,289.09 370,117.86 510,144.95 650,167.03" fill="none" stroke="#3457a6" stroke-width="2"/>
+<text x="710" y="100" fill="#3457a6">M0</text>
+<circle cx="90" cy="272.05" r="4" fill="#b15a10"/>
+<circle cx="230" cy="286.77" r="4" fill="#b15a10"/>
+<circle cx="370" cy="120.45" r="4" fill="#b15a10"/>
+<circle cx="510" cy="166.94" r="4" fill="#b15a10"/>
+<circle cx="650" cy="140.38" r="4" fill="#b15a10"/>
+<polyline points="90,272.05 230,286.77 370,120.45 510,166.94 650,140.38" fill="none" stroke="#b15a10" stroke-width="2"/>
+<text x="710" y="124" fill="#b15a10">M1</text>
+<circle cx="90" cy="132.08" r="4" fill="#128064"/>
+<circle cx="230" cy="173.90" r="4" fill="#128064"/>
+<circle cx="370" cy="197.25" r="4" fill="#128064"/>
+<circle cx="510" cy="210.71" r="4" fill="#128064"/>
+<circle cx="650" cy="215.78" r="4" fill="#128064"/>
+<polyline points="90,132.08 230,173.90 370,197.25 510,210.71 650,215.78" fill="none" stroke="#128064" stroke-width="2"/>
+<text x="710" y="148" fill="#128064">M2</text>
+<text x="86" y="375">1</text>
+<text x="226" y="375">2</text>
+<text x="366" y="375">4</text>
+<text x="506" y="375">8</text>
+<text x="646" y="375">16</text>
+<text x="290" y="403">Límite de hilos / núcleos físicos</text>
+</g></svg>
