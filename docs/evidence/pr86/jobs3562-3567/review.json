@@ -1,0 +1,32 @@
+{
+  "F14_pending_caps": [
+    4,
+    8,
+    16
+  ],
+  "all_observed_target_gaps_met": true,
+  "complete_five_cap_parents": [
+    "F0",
+    "F3",
+    "F6"
+  ],
+  "completed_cells": 75,
+  "completed_groups": 25,
+  "distinct_historically_exposed_parents": 4,
+  "input_return_sha256": [
+    "dd1a553b453289b23dbed3d52bd4bd7e0ac93eb2b4283597b788e406fcab6825",
+    "55b5b60e835cde8af5ab11e9735b052c0c53fa13cdd222f912d192eac65c1024",
+    "f526e0fbdff7fe2402fa1d3a3c7a7d264d77c7f1275574e371547994aa5c747c",
+    "01a1a077c00c4a81cb38285652153e751ced77e60a02be1ce2b787a52a7cbd8b",
+    "003a856fec2b9dd81d5ba18bf944389b5f99a2f007827e8cf11bb3535d7886a3"
+  ],
+  "optimization_runs_added": 0,
+  "original_receipts_and_flags_unchanged": true,
+  "population_speedup_claim": false,
+  "protocol_id": "pr86_twentyfive_group_descriptive_review_v1",
+  "qualified_scope": "pinned_descriptive_solver_and_scoped_attempt_measurements",
+  "remaining_cells": 135,
+  "remaining_groups": 45,
+  "wave_scheduler_elapsed_sum_seconds": 2122,
+  "whole_job_cold_cost_qualified": false
+}
