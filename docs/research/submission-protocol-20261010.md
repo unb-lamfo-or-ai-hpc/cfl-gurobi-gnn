@@ -1,5 +1,12 @@
 # Submission protocol and authorization gates — 10 October 2026
 
+> Current update,13 October: the author approved the210-main-solve/70-job
+> budget on12 October. Jobs3522–3528 now qualify21 F0 rows descriptively;
+> continue in reviewed bounded waves, without retries or repeated preparation.
+> All develop/main synchronization is postponed until AFTER article revision,
+> with separate final release approval. PR87 training still needs its exact
+> budget. Earlier unapproved-budget statements below describe the dated proposal.
+
 > Superseding author clarification, 12 October: accept the MILPBench CFL
 > formulation as correct except for MAXIMIZE; force MINIMIZE while preserving
 > original bytes and every other mathematical datum. This premise is frozen
