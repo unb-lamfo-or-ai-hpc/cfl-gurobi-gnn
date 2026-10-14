@@ -1,5 +1,13 @@
 # Experiment protocol
 
+Current [111-solve review](research/pr86-wave31-review-wave37.md) covers 37
+groups from six historically exposed easy parents. Next positions37–42 finish
+F29 and start CFL_medium_instance_0. The latter's alias M0 is a parent ID;
+method M0 still means no external start. Keep those columns separate.
+Reuse the same preparation, parameters and budget. Memory stops pause the
+remaining campaign. No extra seed, retry or extension is introduced at the
+medium boundary. Original flags and quality differences remain visible.
+
 Current [93-cell review](research/pr86-wave25-review-wave31.md):31 groups,
 five exposed parents, complete F14 and partial F27. Preserve the original
 receipt flags, terminal gaps and heterogeneous timing effects. Next manifest

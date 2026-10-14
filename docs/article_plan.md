@@ -1,5 +1,12 @@
 # Article plan
 
+Current [111-row ledger, complete F27 and partial F29 CPU figures](research/pr86-wave31-review-wave37.md)
+cover the six exposed easy parents, with F29 still partial. Preserve F27's
+slower M2 result at16 threads and F29's mixed seed results, alongside gaps.
+Medium-parent evidence has not yet been observed in this controlled matrix.
+The next wave starts that stratum after finishing F29; future article tables
+must distinguish parent M0 from method M0. Earlier assets remain snapshots.
+
 Current [93-row cumulative table, completeF14 and partialF27 CPU figures](research/pr86-wave25-review-wave31.md)
 cover five exposed parents. F14's seven groups include three lower and four
 higher M2 times than M0; F27 has three one-thread seeds so far. Show the

@@ -1,5 +1,18 @@
 # Current status
 
+## Current checkpoint — 14 October: 111 solves reviewed; F29 and first medium group next
+
+[Jobs3586–3591 review](research/pr86-wave31-review-wave37.md) reconciles 111/210
+solves and 37/70 groups across six exposed easy parents. F0/F3/F6/F14/F27 are
+complete; F29 has one thread at seeds42/43. All 18 new solves meet gap<=0.01%,
+with valid solutions and no memory/callback stop. F27 is heterogeneous at16
+threads; F29 is mixed across its two seeds. Original bytes and flags, CSV111,
+complete F27 and partial F29 figures are preserved and regenerable.
+Next positions37–42: F29/1/seed44 and2/4/8/16/seed42, then medium M0/1/seed42.
+Six sequential jobs,18 solves,64GiB/job,at most4h/job;128 physical-core-hours
+reserved within approved210/70. Success would yield129/210 and43/70.
+CI at the final published commit precedes CLI release. Earlier sections are history.
+
 ## Current checkpoint — 14 October: 93 cells reviewed, F27/F29 next
 
 [Jobs3572–3577 review](research/pr86-wave25-review-wave31.md) reconciles93/210
