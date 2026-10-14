@@ -1,5 +1,14 @@
 # Experiment protocol
 
+Current [129-solve review](research/pr86-wave37-review-wave43.md) covers 43
+groups: 126 easy target-reaching solves and three medium time-limited solves.
+Preserve right censoring; terminal runtime near 3600 s is not time to target.
+Report incumbent and bound beside gap: better incumbent need not mean lower
+gap. Next positions 43–48 complete parent M0 with unchanged methods, order,
+caps, seeds, preparation and approved limits. Valid time-limited observations
+do not trigger retries/extensions; memory or evidence failures still pause
+the campaign. Original flags remain unchanged. Earlier entries are history.
+
 Current [111-solve review](research/pr86-wave31-review-wave37.md) covers 37
 groups from six historically exposed easy parents. Next positions37–42 finish
 F29 and start CFL_medium_instance_0. The latter's alias M0 is a parent ID;

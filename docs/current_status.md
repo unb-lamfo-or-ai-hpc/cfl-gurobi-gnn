@@ -1,5 +1,20 @@
 # Current status
 
+## Current checkpoint — 14 October: 129 solves reviewed; six easy parents complete
+
+[Jobs 3592–3597 review](research/pr86-wave37-review-wave43.md) reconciles
+129/210 solves and 43/70 groups. All six exposed easy parents are complete:
+126 target-reaching solves. The first medium group (parent M0, one thread,
+seed 42) adds three valid time-limited observations, censored for time to
+target. M2 has a better incumbent than method M0, but a worse gap; report
+incumbent, bound and gap separately. Original bytes/flags remain preserved.
+CSV129, complete F29 CPU and partial medium quality figures are regenerable.
+Remaining: 81 solves/27 groups. Next positions 43–48 complete parent M0:
+one-thread seeds 43/44, then 2/4/8/16 threads at seed 42. Six serial jobs,
+18 solves, up to 4 h/64 GiB per job and 128 physical core-reservation hours,
+within the approved ceiling. Success would yield 147/210 and 49/70.
+Final-head CI precedes CLI release. Earlier sections are historical snapshots.
+
 ## Current checkpoint — 14 October: 111 solves reviewed; F29 and first medium group next
 
 [Jobs3586–3591 review](research/pr86-wave31-review-wave37.md) reconciles 111/210

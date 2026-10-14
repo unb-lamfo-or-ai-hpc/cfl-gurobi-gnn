@@ -1,5 +1,14 @@
 # Article plan
 
+Current [129-row ledger and F29/medium figures](research/pr86-wave37-review-wave43.md)
+complete all six exposed easy parents (126 target-reaching solves) and add
+one medium group (three time-limited solves). Keep strata and censoring
+explicit; do not use near-equal timeout runtimes as time-to-target speedup.
+For the medium parent M0, method M2 has the best incumbent but method M0
+the smallest gap: show both objective and bound. The next wave completes
+that parent's remaining six groups without changing the protocol or budget.
+Final uncertainty/cost synthesis follows full coverage; earlier assets remain snapshots.
+
 Current [111-row ledger, complete F27 and partial F29 CPU figures](research/pr86-wave31-review-wave37.md)
 cover the six exposed easy parents, with F29 still partial. Preserve F27's
 slower M2 result at16 threads and F29's mixed seed results, alongside gaps.
