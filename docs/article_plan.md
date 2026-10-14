@@ -1,5 +1,12 @@
 # Article plan
 
+Current [93-row cumulative table, completeF14 and partialF27 CPU figures](research/pr86-wave25-review-wave31.md)
+cover five exposed parents. F14's seven groups include three lower and four
+higher M2 times than M0; F27 has three one-thread seeds so far. Show the
+nonzero within-target gaps with timings. Retain all prior assets, scope cost
+scenarios explicitly and avoid overall performance claims before full coverage.
+The mandatory1/4-GPU comparison and final article/release sequence continue.
+
 Latest [75-row table, completeF6 and partialF14 CPU figures](research/pr86-wave19-review-wave25.md)
 preserve the mixed timing effects and nonzero within-target gaps. F14/4,8,16
 are pending, not interpolated. Scope, sample limitations, mandatory1/4-GPU

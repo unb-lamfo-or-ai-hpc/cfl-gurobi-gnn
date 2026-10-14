@@ -1,5 +1,13 @@
 # Experiment protocol
 
+Current [93-cell review](research/pr86-wave25-review-wave31.md):31 groups,
+five exposed parents, complete F14 and partial F27. Preserve the original
+receipt flags, terminal gaps and heterogeneous timing effects. Next manifest
+positions31–36 complete F27 and start F29 using the same preparation, methods,
+parameters and approved ceiling. F29/seed44 follows later. No result-based
+selection or automatic dispatch beyond this six-job wave. Earlier entries
+are dated history; the current remaining count is117 solves/39 groups.
+
 Latest [75-cell review](research/pr86-wave19-review-wave25.md):25 groups,
 four exposed parents; F0/F3/F6 complete, partial F14. Nonzero within-target
 gaps and heterogeneous timings remain visible. Next fixed positions25–30
