@@ -1,5 +1,14 @@
 # Experiment protocol
 
+Current [147-solve review](research/pr86-wave43-review-wave49.md) completes
+medium parent M0: one target-reaching solve and20 time-limited observations.
+Keep censoring and incumbent/bound/gap distinctions; do not turn timeout
+runtimes into completed times to target. Higher CPU caps need not improve
+fixed-budget quality. Next positions49–54 begin M4 without changing the
+manifest, preparation, order, parameters, limits or approved ceiling.
+Its16-thread group follows later. Original bytes and flags remain unchanged.
+Earlier entries are dated history; no retry or outcome-based selection.
+
 Current [129-solve review](research/pr86-wave37-review-wave43.md) covers 43
 groups: 126 easy target-reaching solves and three medium time-limited solves.
 Preserve right censoring; terminal runtime near 3600 s is not time to target.

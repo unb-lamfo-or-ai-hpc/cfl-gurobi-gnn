@@ -1,5 +1,19 @@
 # Current status
 
+## Current checkpoint — 15 October: 147 solves reviewed; complete medium M0
+
+[Jobs 3598–3603 review](research/pr86-wave43-review-wave49.md) reconciles
+147/210 solves and 49/70 groups. The six easy parents and medium M0 are
+complete. There are 127 target-reaching solves and 20 censored observations.
+For M0, only M2/16 threads/seed42 reached the target (gap zero, 3204.179 s);
+GNN effects are heterogeneous across caps/seeds. CSV147 and complete M0 gap
+and sampled-memory figures retain quality, censoring and distinct cost scopes.
+Remaining: 63 solves/21 groups. Next positions49–54: M4/1/seeds42,43,44 and
+2/4/8/seed42; M4/16 follows later. Six serial jobs,18 solves, up to4h/64GiB
+per job,68 physical core-reservation hours within the approved ceiling.
+Success would yield165/210 and55/70. Final-head CI precedes CLI release.
+Earlier sections are historical snapshots, not the current remaining counts.
+
 ## Current checkpoint — 14 October: 129 solves reviewed; six easy parents complete
 
 [Jobs 3592–3597 review](research/pr86-wave37-review-wave43.md) reconciles

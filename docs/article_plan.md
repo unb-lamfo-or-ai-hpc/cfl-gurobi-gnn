@@ -1,5 +1,13 @@
 # Article plan
 
+Current [147-row ledger and complete M0 CPU/quality/memory figures](research/pr86-wave43-review-wave49.md)
+cover all six easy parents and the first medium parent. Of147 solves,127
+reached the target and20 are censored. M2/16 reached gap zero on M0, but
+GNN effects at lower caps/seeds are heterogeneous. Preserve that contrast,
+not a blanket speedup claim. Sampled job memory and Slurm/internal-solver
+memory retain different scopes. M4 follows in the original manifest order.
+Final paired uncertainty/cost synthesis awaits full coverage; snapshots persist.
+
 Current [129-row ledger and F29/medium figures](research/pr86-wave37-review-wave43.md)
 complete all six exposed easy parents (126 target-reaching solves) and add
 one medium group (three time-limited solves). Keep strata and censoring
