@@ -1,5 +1,16 @@
 # Experiment protocol
 
+[M4 numerical audit and author decision](research/pr86-m4-numeric-return-wave55.md):
+the author approved continuation of the original matrix after four stored
+vectors failed row feasibility following integer-only diagnostic rounding.
+Retain original tolerances, parameters, starts, MINIMIZE and all evidence.
+M4 is explicitly numerically sensitive; do not claim its reported gap-zero
+result is an unambiguous optimum or use it as certified speedup evidence.
+No raw flags are rewritten. Normalized residuals do not replace the original
+acceptance rule. Continuation does not prove the cause or repair solutions.
+The remaining45 original solves stay within210/70; six next jobs require
+source/plan/installed receipt checks and four final-head CI checks, no retry.
+
 The [M4 cross-run numeric screen](research/pr86-wave49-numeric-review.md)
 keeps structural success separate from numerical scientific qualification.
 Same-model bounds exceeding tolerance-feasible incumbents require investigation

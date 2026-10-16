@@ -1,5 +1,15 @@
 # Article plan
 
+The [installed M4 numerical review](research/pr86-m4-numeric-return-wave55.md)
+adds a reproducible four-vector diagnostic table and165-row collected ledger
+with explicit numerical-scope labels. All four rounded vectors fail original
+row tolerance; normalized residuals and extended precision do not certify an
+optimum. The author approved finishing the original matrix without reruns or
+parameter changes. Preserve M4 in reporting, but do not silently pool its
+reported zero-gap runtime into qualified speedup/time-to-target aggregates.
+147 previous scoped reviews and18 numerically sensitive observations are
+different denominators.45 original solves remain; C–F sprint order is unchanged.
+
 The [M4 numeric-review inventory](research/pr86-wave49-numeric-review.md)
 adds18 preserved observations, not18 newly qualified performance claims.
 165 cells are collected;147 have the previous scoped review. A reported

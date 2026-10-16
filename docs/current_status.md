@@ -1,5 +1,20 @@
 # Current status
 
+## Current checkpoint — 16 October: numeric audit received; author accepts limitation
+
+[Installed M4 audit and next wave](research/pr86-m4-numeric-return-wave55.md)
+bind receipt62232bb0347a: four stored vectors pass original tolerances, but
+all four fail original-unit row checks after integer-only in-memory rounding,
+including the reported zero-gap vector. Cause and exact optimality remain
+unproven. The author explicitly approved finishing the original matrix with
+M4's numerical limitation, without changing parameters or repeating solves.
+165 collected /55 groups;147 previously scoped-reviewed and18 numerically
+sensitive M4 observations.45 original solves remain. Next frozen positions55–60:
+M4/16/seed42, then M7/1/seeds42,43,44 and2/4/seed42. Six serial jobs,18 solves,
+at most4h/64GiB each,100 physical-core reservation hours inside210/70.
+No source-pinned CLI release before four final-head checks pass. PR86 is draft.
+Earlier no-dispatch checkpoints remain history, not the new author decision.
+
 ## Current checkpoint — 16 October: 165 collected; M4 numeric gate pending
 
 [M4 numerical review](research/pr86-wave49-numeric-review.md) preserves the
