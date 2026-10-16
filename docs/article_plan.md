@@ -1,5 +1,14 @@
 # Article plan
 
+The [M4 numeric-review inventory](research/pr86-wave49-numeric-review.md)
+adds18 preserved observations, not18 newly qualified performance claims.
+165 cells are collected;147 have the previous scoped review. A reported
+zero-gap M2/8 result conflicts with three tolerance-feasible incumbents under
+the same model identity. Until the stored-solution audit resolves or delimits
+this issue, do not present that status as unambiguous optimality or GNN speedup.
+Keep negative/inconsistent results, tolerances and numerical limitations visible.
+The45 unexecuted cells await the numerical gate; remaining sprint order is unchanged.
+
 Current [147-row ledger and complete M0 CPU/quality/memory figures](research/pr86-wave43-review-wave49.md)
 cover all six easy parents and the first medium parent. Of147 solves,127
 reached the target and20 are censored. M2/16 reached gap zero on M0, but

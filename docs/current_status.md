@@ -1,5 +1,17 @@
 # Current status
 
+## Current checkpoint — 16 October: 165 collected; M4 numeric gate pending
+
+[M4 numerical review](research/pr86-wave49-numeric-review.md) preserves the
+jobs3609–3614 original return,18-row table and three-conflict screen. Structural
+and per-run tolerance checks passed, but the reported M2/8 lower bound exceeds
+three same-model tolerance-feasible incumbents. Cause is not proven. Keep165
+collected distinct from147 previously reviewed;18 M4 cells await numerical
+qualification.45 main solves/15 groups remain unexecuted. Next: author-run
+read-only audit of four stored vectors, model and sealed logs; no optimization,
+job, retry, parameter change or next-wave release. PR86 remains draft.
+Earlier checkpoints are historical observations, not current dispatch authority.
+
 ## Current checkpoint — 15 October: 147 solves reviewed; complete medium M0
 
 [Jobs 3598–3603 review](research/pr86-wave43-review-wave49.md) reconciles

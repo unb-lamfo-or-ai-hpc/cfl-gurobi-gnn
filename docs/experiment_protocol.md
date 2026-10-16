@@ -1,5 +1,14 @@
 # Experiment protocol
 
+The [M4 cross-run numeric screen](research/pr86-wave49-numeric-review.md)
+keeps structural success separate from numerical scientific qualification.
+Same-model bounds exceeding tolerance-feasible incumbents require investigation
+before further dispatch. Current165 collected cells include18 M4 observations
+on hold; prior147 scoped reviews are unchanged. Do not rewrite receipt flags,
+tighten tolerances, round stored solutions, retry or change MINIMIZE to resolve
+the warning. Rounding an in-memory copy and row normalization are diagnostic,
+not newly approved acceptance criteria or repairs. No next wave is released.
+
 Current [147-solve review](research/pr86-wave43-review-wave49.md) completes
 medium parent M0: one target-reaching solve and20 time-limited observations.
 Keep censoring and incumbent/bound/gap distinctions; do not turn timeout
