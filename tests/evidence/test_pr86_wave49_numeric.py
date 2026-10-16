@@ -94,7 +94,7 @@ class NumericAudit(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "wave49_return_hash"):
             audit.load_wave(self.raw + b" ")
         with tempfile.TemporaryDirectory() as temp:
-            folder = Path(temp)
+            folder = Path(temp).resolve()
             audit.publish(folder)
             audit.publish(folder)
             for name in ("numeric_screen.json", "wave_results.csv", "manifest.json"):
@@ -138,7 +138,7 @@ class NumericAudit(unittest.TestCase):
 
     def test_installed_bindings_require_historical_seals_and_canonical_names(self):
         with tempfile.TemporaryDirectory() as temp:
-            folder = Path(temp)
+            folder = Path(temp).resolve()
             row, group, requests = self.binding_fixture(folder)
             sealed = {"bundle_sha256": [r["sha256"] for r in requests]}
             with patch.object(audit.f0, "member", return_value=sealed):
@@ -164,7 +164,7 @@ class NumericAudit(unittest.TestCase):
     def test_installed_bundle_checks_complete_cell_and_context(self):
         for field in ("cell", "context"):
             with self.subTest(field=field), tempfile.TemporaryDirectory() as temp:
-                folder = Path(temp)
+                folder = Path(temp).resolve()
                 row, _, requests = self.binding_fixture(folder)
                 frozen = self.wave["plan"]["groups"][0]
                 bundle = {
@@ -189,7 +189,9 @@ class NumericAudit(unittest.TestCase):
 
     def test_private_paths_and_public_stdout_remain_scoped(self):
         with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
+            # GitHub Windows runners expose TEMP through the RUNNER~1 alias.
+            # Canonicalize fixtures, not the strict installed input-path gate.
+            root = Path(temp).resolve()
             file = root / "safe.json"
             audit.q.write(file, {})
             self.assertEqual(audit.scoped_regular_file(file, root), file)
