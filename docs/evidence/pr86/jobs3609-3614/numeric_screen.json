@@ -1,0 +1,57 @@
+{
+  "campaign_cells_collected": 165,
+  "cause_proven": false,
+  "findings": [
+    {
+      "absolute_difference": 0.0007079172897110908,
+      "bound_cell": "M4-threads8-seed42-M2",
+      "candidate_cell": "M4-threads1-seed43-M2",
+      "classification": "bound_above_tolerance_feasible_incumbent_requires_private_audit",
+      "exact_feasibility_proven": false,
+      "relative_difference": 0.00014433580491400962,
+      "reported_lower_bound": 4.905362657205728,
+      "screening_absolute_tolerance": 1e-06,
+      "tolerance_feasible_objective": 4.904654739916017
+    },
+    {
+      "absolute_difference": 0.004595841778280985,
+      "bound_cell": "M4-threads8-seed42-M2",
+      "candidate_cell": "M4-threads2-seed42-M2",
+      "classification": "bound_above_tolerance_feasible_incumbent_requires_private_audit",
+      "exact_feasibility_proven": false,
+      "relative_difference": 0.0009377801375518278,
+      "reported_lower_bound": 4.905362657205728,
+      "screening_absolute_tolerance": 1e-06,
+      "tolerance_feasible_objective": 4.900766815427447
+    },
+    {
+      "absolute_difference": 0.0031998155267931594,
+      "bound_cell": "M4-threads8-seed42-M2",
+      "candidate_cell": "M4-threads4-seed42-M0",
+      "classification": "bound_above_tolerance_feasible_incumbent_requires_private_audit",
+      "exact_feasibility_proven": false,
+      "relative_difference": 0.0006527354619042518,
+      "reported_lower_bound": 4.905362657205728,
+      "screening_absolute_tolerance": 1e-06,
+      "tolerance_feasible_objective": 4.902162841678935
+    }
+  ],
+  "historical_receipts_and_flags_unchanged": true,
+  "new_wave_cells_collected": 18,
+  "new_wave_numeric_qualification_pending": true,
+  "optimization_runs_added": 0,
+  "plan_sha256": "84bda69a51876564e09f22351d26be79d0e29d433e81085499b7308a7d6a23f9",
+  "previously_reviewed_cells": 147,
+  "protocol_id": "pr86_wave49_cross_run_numeric_screen_v1",
+  "remaining_dispatch_admitted": false,
+  "remaining_unexecuted_cells": 45,
+  "remaining_unexecuted_groups": 15,
+  "reported_censored_cells_in_wave": 17,
+  "reported_target_reaching_cells_in_wave": 1,
+  "return_sha256": "ed87d2e280a1941228c7662ff234c24dd31a5906d8f0fe1d98962938fcdfdbe6",
+  "rounded_solution_audit_available": false,
+  "scientific_reporting_eligible": false,
+  "source_commit": "596c87bf004405f6148d381d2ba1764c650ca60c",
+  "structural_review_passed": true,
+  "wave_scheduler_elapsed_sum_seconds": 65856
+}
