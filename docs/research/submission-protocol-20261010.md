@@ -1,5 +1,19 @@
 # Submission protocol and authorization gates — 10 October 2026
 
+> Current update,13 October: the author approved the210-main-solve/70-job
+> budget on12 October. Jobs3522–3528 now qualify21 F0 rows descriptively;
+> continue in reviewed bounded waves, without retries or repeated preparation.
+> All develop/main synchronization is postponed until AFTER article revision,
+> with separate final release approval. PR87 training still needs its exact
+> budget. Earlier unapproved-budget statements below describe the dated proposal.
+
+> Superseding author clarification, 12 October: accept the MILPBench CFL
+> formulation as correct except for MAXIMIZE; force MINIMIZE while preserving
+> original bytes and every other mathematical datum. This premise is frozen
+> through the final sprint. References below to renewed economic mapping or
+> generator certification are historical, not execution gates. Model/variable
+> identity, preparation provenance and specific HPC authorization still apply.
+
 > Authorization update, 11 October: PR83/84 are merged. PR85's scope and
 > implementation are approved; effective MINIMIZE must correct the source
 > MAXIMIZE error for cost-minimizing CFL, without claiming equivalence.
@@ -7,7 +21,9 @@
 > and all new HPC work remain unapproved. The dated proposals below are retained
 > for traceability; see the [PR85 implementation audit](pr85-scientific-audit.md)
 > for the first audit and the [closure](pr85-closure.md) for the reconciled
-> installed receipt and current limitations. No merge of PR85 is authorized.
+> installed receipt and current limitations. PR85 was subsequently merged by
+> the author at `bb3f28f8078abde5ed4d95461f04fe675be2f37e`. PR86 implementation
+> may continue; its exact HPC budget and all new experiments remain unapproved.
 
 ## Status and independence
 

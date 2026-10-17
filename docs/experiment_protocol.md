@@ -1,10 +1,124 @@
 # Experiment protocol
 
+17 October [wave55 review](research/pr86-wave55-review-wave61.md):183 collected
+cells include21 M4 numerically sensitive observations, not183 certified results.
+All18 new solves are censored. The M4/16 incumbent extends the already disclosed
+cross-run discrepancy; the four-vector historical diagnostic does not validate
+this new vector. No parameter changes or new audit/retry are introduced. M7's
+15 observations have no conflict in the same screen, not exact certification.
+Next fixed positions61–66 finish M7 and start M12 with the unchanged manifest,
+method order, preparation, MINIMIZE and approved ceiling. No later automatic
+dispatch. Previous no-dispatch sections are history superseded by the explicit
+author decision, not new gates for semantic recertification.
+
+[M4 numerical audit and author decision](research/pr86-m4-numeric-return-wave55.md):
+the author approved continuation of the original matrix after four stored
+vectors failed row feasibility following integer-only diagnostic rounding.
+Retain original tolerances, parameters, starts, MINIMIZE and all evidence.
+M4 is explicitly numerically sensitive; do not claim its reported gap-zero
+result is an unambiguous optimum or use it as certified speedup evidence.
+No raw flags are rewritten. Normalized residuals do not replace the original
+acceptance rule. Continuation does not prove the cause or repair solutions.
+The remaining45 original solves stay within210/70; six next jobs require
+source/plan/installed receipt checks and four final-head CI checks, no retry.
+
+The [M4 cross-run numeric screen](research/pr86-wave49-numeric-review.md)
+keeps structural success separate from numerical scientific qualification.
+Same-model bounds exceeding tolerance-feasible incumbents require investigation
+before further dispatch. Current165 collected cells include18 M4 observations
+on hold; prior147 scoped reviews are unchanged. Do not rewrite receipt flags,
+tighten tolerances, round stored solutions, retry or change MINIMIZE to resolve
+the warning. Rounding an in-memory copy and row normalization are diagnostic,
+not newly approved acceptance criteria or repairs. No next wave is released.
+
+Current [147-solve review](research/pr86-wave43-review-wave49.md) completes
+medium parent M0: one target-reaching solve and20 time-limited observations.
+Keep censoring and incumbent/bound/gap distinctions; do not turn timeout
+runtimes into completed times to target. Higher CPU caps need not improve
+fixed-budget quality. Next positions49–54 begin M4 without changing the
+manifest, preparation, order, parameters, limits or approved ceiling.
+Its16-thread group follows later. Original bytes and flags remain unchanged.
+Earlier entries are dated history; no retry or outcome-based selection.
+
+Current [129-solve review](research/pr86-wave37-review-wave43.md) covers 43
+groups: 126 easy target-reaching solves and three medium time-limited solves.
+Preserve right censoring; terminal runtime near 3600 s is not time to target.
+Report incumbent and bound beside gap: better incumbent need not mean lower
+gap. Next positions 43–48 complete parent M0 with unchanged methods, order,
+caps, seeds, preparation and approved limits. Valid time-limited observations
+do not trigger retries/extensions; memory or evidence failures still pause
+the campaign. Original flags remain unchanged. Earlier entries are history.
+
+Current [111-solve review](research/pr86-wave31-review-wave37.md) covers 37
+groups from six historically exposed easy parents. Next positions37–42 finish
+F29 and start CFL_medium_instance_0. The latter's alias M0 is a parent ID;
+method M0 still means no external start. Keep those columns separate.
+Reuse the same preparation, parameters and budget. Memory stops pause the
+remaining campaign. No extra seed, retry or extension is introduced at the
+medium boundary. Original flags and quality differences remain visible.
+
+Current [93-cell review](research/pr86-wave25-review-wave31.md):31 groups,
+five exposed parents, complete F14 and partial F27. Preserve the original
+receipt flags, terminal gaps and heterogeneous timing effects. Next manifest
+positions31–36 complete F27 and start F29 using the same preparation, methods,
+parameters and approved ceiling. F29/seed44 follows later. No result-based
+selection or automatic dispatch beyond this six-job wave. Earlier entries
+are dated history; the current remaining count is117 solves/39 groups.
+
+Latest [75-cell review](research/pr86-wave19-review-wave25.md):25 groups,
+four exposed parents; F0/F3/F6 complete, partial F14. Nonzero within-target
+gaps and heterogeneous timings remain visible. Next fixed positions25–30
+finish F14 and begin F27, with unchanged preparation/methods/parameters/budget.
+Manual recovery of an interrupted SCP is not a solver retry: preserve the old
+directory, use a unique new destination and repeat hash/nested checks only.
+No automatic retry or dispatch beyond the next six jobs. Earlier sections are
+historical snapshots; do not confuse pending entries there with current totals.
+
+Latest: [57-cell review](research/pr86-wave13-review-wave19.md) covers19 groups.
+Next positions19–24 finish F6 and begin F14, without changing method order,
+parameters, models, seeds or approval ceiling. Preserve F6's nonzero but
+within-target gap and heterogeneous timings. No reruns or new preparation.
+The following updates remain historical; three exposed parents are not57
+independent observations. Main/develop synchronization follows article review.
+
+Latest return: [F3 review](research/pr86-f3-review-next-wave.md) brings the
+reviewed prefix to39/210 cells,13/70 groups. The next fixed wave is positions13–18:
+F3/16 and five F6 groups, with unchanged methods/order/budget and no repeated
+preparation. Two historically exposed parents do not establish generalization.
+Previous updates below remain history; no protocol or scientific premise changed.
+
+13 October update: [F0 review and F3 wave](research/pr86-f0-review-f3-wave.md)
+qualifies 21 descriptive F0 rows, not generalization. Continue the frozen manifest
+with groups7–12 (zero-based), six F3 jobs. The approved210/70 ceiling applies;
+no new preparation or extra seeds. Original false eligibility flags remain
+unchanged; a separate review names the qualified metric scope. The author
+postponed develop/main synchronization until after the article revision.
+Earlier proposed/unapproved budget statements below are retained as history;
+the 12 October explicit budget approval and later wave instructions supersede them.
+
+Latest execution update: job3522's first group is reviewed; the author requests
+six four-hour jobs queued with serial dependencies. The [wave contract](research/pr86-job3522-six-job-wave.md)
+selects the next six frozen F0 groups (18 calls), includes them within 210/70,
+retains no retry and requires predecessor artifact validity as well as afterok.
+It does not change method order, gap, seeds, model, preparation or thread caps.
+
 Current approved planning contract: 2026-10-10, updated by authorization on
 2026-10-11: PR85 implementation approved; PR86/87 protocols preliminarily
 accepted, exact execution budgets still pending. Detailed PR85 scope and PR86/87
 protocol/resource proposals: [submission protocol](research/submission-protocol-20261010.md).
 This document approves no experiment, training, retry or HPC submission.
+
+12 October execution update: the author separately authorized the bounded
+ten-root job, now completed as job3520. Its [review and next-stage proposal](research/pr86-job3520-and-guidance.md)
+preserve the original false eligibility flags. The subsequently executed
+one-GPU graph/inference/start preparation completed as job3521 and is now
+[independently reviewed](research/pr86-job3521-review-and-main-budget.md).
+The author then explicitly approved 210 main solves in <=70 sequential jobs,
+with the first group reviewed before further dispatch. The first-group operator
+admits only three cells after recording that approval; no main job is submitted
+by publication, and remaining dispatch is still blocked pending its review.
+No repeated roots or forwards are needed. Allocated preparation-cost scenarios
+are estimates, not measurements of standalone cold method executions.
 
 ## Required record for every run
 
@@ -60,11 +174,13 @@ a fixing of bounds. Report acceptance, rejection, repair and abstention.
 Effective `MINIMIZE` is mandatory: the authors identified source `MAXIMIZE`
 as erroneous for the intended cost-minimizing CFL on 11 October. This correction
 is not algebraic equivalence to maximizing unchanged costs. Preserve source
-bytes and coefficients; reject effective maximization. PR85 must verify
-the intended CFL formulation, coefficients/units, constraints, variable domains,
-objective constants/signs and any transformation from the source `MAXIMIZE`.
-Keep original bytes and historical interpretations; unresolved inconsistency
-blocks new solver comparisons and the corresponding manuscript claims.
+bytes and coefficients; reject effective maximization. On 12 October the
+authors froze the CFL formulation as correct except for objective sense,
+through PR86 and the final sprint. No generator or renewed semantic mapping
+is required for execution. Verify that loading, feature construction and
+partial starts preserve coefficients, constraints, domains, bounds and variable
+identity. Do not rewrite historical receipts or describe this author-approved
+premise as a newly performed independent reconstruction of the benchmark.
 
 ## Mandatory GPU comparison
 
@@ -93,3 +209,36 @@ Unknown costs remain missing. Pair at the parent level, distinguish solver
 seeds from independent parents, preserve censored times and all failed attempts.
 Record cold end-to-end cost and cache-amortized cost separately. No automatic
 retry, requeue, extension, package upgrade or historical result overwrite.
+
+## PR86 proposal, not execution authorization
+
+The [offline comparison manifest](research/pr86-controlled-comparison.md)
+specifies 150 seed-42 cells at five caps plus 60 one-thread repeats. Its
+81-job ceiling separately counts 70 main groups, ten root preparations and
+one frozen inference job; all approval/execution gates remain false.
+Mandatory MINIMIZE corrects the author-identified benchmark cost-objective
+error; it is not equivalence to unchanged-cost maximization. No job can be
+submitted by this planner. Parameter/source/cost binding and an exact budget
+approval are required before adapting the existing executor for execution.
+
+Post-PR85 merge: [binding and cost continuation](research/pr86-starts-and-costs.md)
+adds a separate ten-parent contract; the historical six-parent validator and
+original proposal are unchanged. A public binding attests variable identity
+and deterministic selection, not completion feasibility or solver acceptance.
+Cost regions must be disjoint; the historical executor's `other` includes
+export. Charge GNN preparation to M1 as well as M2; do not turn unknown
+preparation into zero or count shared campaign preparation twice.
+
+The installed ten-parent binding is reviewed in
+[PR86 installed review](research/pr86-installed-binding-review.md). It clears
+only the historical start-identity step. Supervisor-minus-solver timing is a
+scoped attempt overhead, not a whole-job cost. Failed/stopped attempts retain
+observed wall time and never receive completed end-to-end costs. Prospective
+preparation, executor qualification and exact budget approval remain required.
+
+Prospective [attempt instrumentation](research/pr86-prospective-instrumentation.md)
+separates receipt-export cost using a hash-linked timing tail. It does not label
+this scoped interval as whole-job end-to-end time. A SoftMemLimit return pauses
+the remaining matrix and is not treated as completed performance. The new core
+has no default admitted launcher; installed memory/affinity, preparation and
+authorization must be bound before any actual execution.

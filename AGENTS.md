@@ -14,6 +14,12 @@ source of truth. Chat histories are context, not experimental evidence.
 
 ## Scientific rules
 
+- Frozen author decision, 12 October 2026, through the final MVP2 sprint:
+  accept the MILPBench CFL formulation as correct except for the erroneous
+  MAXIMIZE declaration. Always force MINIMIZE at runtime; preserve original
+  files, coefficients, constraints, bounds and variable domains. Do not require
+  a generator or renewed semantic certification as an execution gate.
+  Still verify implementation/model/variable identity and resource approval.
 - Preserve parent-level train/validation/test partitions and instance IDs.
 - Never use test labels, future artifacts, or private paths to select a model,
   warm start, threshold, or hyperparameter.

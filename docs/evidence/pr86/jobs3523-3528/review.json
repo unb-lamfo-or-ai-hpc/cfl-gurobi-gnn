@@ -1,0 +1,17 @@
+{
+  "all_target_gaps_met": true,
+  "completed_cells": 21,
+  "completed_groups": 7,
+  "first_return_sha256": "dd1a553b453289b23dbed3d52bd4bd7e0ac93eb2b4283597b788e406fcab6825",
+  "independent_parents": 1,
+  "optimization_runs_added": 0,
+  "population_speedup_claim": false,
+  "protocol_id": "pr86_f0_seven_groups_review_v1",
+  "qualified_scope": "pinned_F0_descriptive_solver_and_scoped_attempt_observations",
+  "raw_eligibility_flags_unchanged": true,
+  "remaining_cells": 189,
+  "remaining_groups": 63,
+  "wave_return_sha256": "55b5b60e835cde8af5ab11e9735b052c0c53fa13cdd222f912d192eac65c1024",
+  "wave_scheduler_elapsed_sum_seconds": 3824,
+  "whole_job_cold_cost_qualified": false
+}

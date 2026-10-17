@@ -1,0 +1,8 @@
+{
+  "files": {
+    "historical_cost_coverage.csv": "09cd2db9d66b69e7acbcc798759699a4636f9a4c7af15bfeb04e72b297d0c117",
+    "readiness.json": "ef410bcaee37cd557e7b64fc051fcf32d970830ac9e4e1e30636c451a14b22a4"
+  },
+  "historical_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce",
+  "new_experiments": 0
+}

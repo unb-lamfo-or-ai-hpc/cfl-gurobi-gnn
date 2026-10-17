@@ -1,0 +1,18 @@
+{
+  "author_decision": "continue_frozen_matrix_with_explicit_M4_numeric_limitation_20261016",
+  "cause_of_cross_run_conflict_proven": false,
+  "collector_source_commit": "13eaff38457fb5c9aba168f4f2959caaa20fe00c",
+  "continuation_scope": "remaining_original_cells_only_unchanged_protocol_no_retry",
+  "diagnostic_summary_eligible": true,
+  "exact_optimality_certified": false,
+  "main_performance_promotion": false,
+  "numeric_audit_sha256": "62232bb0347a58f13d659abbdee408d38e6549654a20bdbc70e7e81548600cc8",
+  "optimization_runs_added": 0,
+  "original_receipts_and_flags_unchanged": true,
+  "protocol_id": "pr86_m4_numeric_review_v1",
+  "remaining_dispatch_admitted_by_diagnostic": false,
+  "reported_zero_gap_vector_also_fails_rounding": true,
+  "rounded_vectors_violating_original_unit_rows": 4,
+  "stored_vectors_within_original_tolerances": 4,
+  "wave_return_sha256": "ed87d2e280a1941228c7662ff234c24dd31a5906d8f0fe1d98962938fcdfdbe6"
+}

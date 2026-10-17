@@ -1,0 +1,47 @@
+{
+  "M0_pending_caps": [
+    2,
+    4,
+    8,
+    16
+  ],
+  "M0_pending_one_thread_seeds": [
+    43,
+    44
+  ],
+  "all_observed_target_gaps_met": false,
+  "complete_five_cap_parents": [
+    "F0",
+    "F3",
+    "F6",
+    "F14",
+    "F27",
+    "F29"
+  ],
+  "completed_cells": 129,
+  "completed_groups": 43,
+  "distinct_historically_exposed_parents": 7,
+  "easy_cells": 126,
+  "input_return_sha256": [
+    "dd1a553b453289b23dbed3d52bd4bd7e0ac93eb2b4283597b788e406fcab6825",
+    "55b5b60e835cde8af5ab11e9735b052c0c53fa13cdd222f912d192eac65c1024",
+    "f526e0fbdff7fe2402fa1d3a3c7a7d264d77c7f1275574e371547994aa5c747c",
+    "01a1a077c00c4a81cb38285652153e751ced77e60a02be1ce2b787a52a7cbd8b",
+    "003a856fec2b9dd81d5ba18bf944389b5f99a2f007827e8cf11bb3535d7886a3",
+    "a54d71775afcff941d496236bfb18f92569a0cc15b8ffadac68978c33c700968",
+    "13a9787e4ae72c255937a8fa614873a2b19e9ed6010bde4f498bda02e36430cd",
+    "fca3de37c0122955c6df593b5f11f7fef81a1dd2af3754de92c45cb60fb4cc94"
+  ],
+  "medium_cells": 3,
+  "optimization_runs_added": 0,
+  "original_receipts_and_flags_unchanged": true,
+  "population_speedup_claim": false,
+  "protocol_id": "pr86_fortythree_group_descriptive_review_v1",
+  "qualified_scope": "pinned_descriptive_solver_and_scoped_attempt_measurements",
+  "remaining_cells": 81,
+  "remaining_groups": 27,
+  "right_censored_cells": 3,
+  "target_met_cells": 126,
+  "wave_scheduler_elapsed_sum_seconds": 12737,
+  "whole_job_cold_cost_qualified": false
+}
