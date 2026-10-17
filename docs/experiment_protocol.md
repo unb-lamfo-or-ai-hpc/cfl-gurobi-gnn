@@ -1,5 +1,16 @@
 # Experiment protocol
 
+17 October [wave55 review](research/pr86-wave55-review-wave61.md):183 collected
+cells include21 M4 numerically sensitive observations, not183 certified results.
+All18 new solves are censored. The M4/16 incumbent extends the already disclosed
+cross-run discrepancy; the four-vector historical diagnostic does not validate
+this new vector. No parameter changes or new audit/retry are introduced. M7's
+15 observations have no conflict in the same screen, not exact certification.
+Next fixed positions61–66 finish M7 and start M12 with the unchanged manifest,
+method order, preparation, MINIMIZE and approved ceiling. No later automatic
+dispatch. Previous no-dispatch sections are history superseded by the explicit
+author decision, not new gates for semantic recertification.
+
 [M4 numerical audit and author decision](research/pr86-m4-numeric-return-wave55.md):
 the author approved continuation of the original matrix after four stored
 vectors failed row feasibility following integer-only diagnostic rounding.

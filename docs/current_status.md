@@ -1,5 +1,20 @@
 # Current status
 
+## Current checkpoint — 17 October: 183 collected; M7/M12 next
+
+[Jobs3625–3630 review](research/pr86-wave55-review-wave61.md) preserves the
+original return2cf7240c097f: six groups and18 time-limited observations.
+183/210 cells,61/70 groups;162 non-M4 scoped-reviewed and21 M4 numerically
+sensitive. Complete M4; M7 has1/2/4 threads plus one-thread seeds43/44.
+M4/16 adds another incumbent below the older reported M4/8 bound; no exact
+optimality/speedup qualification. M7 shows heterogeneous gaps and no conflict
+in the same bound/incumbent screen. CSV183 and four gap/memory SVGs regenerate.
+The receiver's local next49 label was a naming error, not a wrong receipt;
+preserve the original download and correct only future naming.27 solves/nine
+groups remain. Next positions61–66 finish M7 and begin M12: six serial jobs,
+18 solves,4h/64GiB/job,116 physical-core reservation hours,unchanged210/70.
+Final-head CI precedes source-pinned CLI release. Earlier sections are history.
+
 ## Current checkpoint — 16 October: numeric audit received; author accepts limitation
 
 [Installed M4 audit and next wave](research/pr86-m4-numeric-return-wave55.md)

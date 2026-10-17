@@ -1,5 +1,15 @@
 # Article plan
 
+17 October: [CSV183 and M4/M7 gap/memory figures](research/pr86-wave55-review-wave61.md)
+complete M4 and show partial M7.128 reported target-reaching cells include
+the disputed M4 report;55 are censored. Separate21 M4-sensitive observations
+from162 non-M4 scoped-reviewed cells. Heterogeneous terminal gaps, not timeout
+runtime ratios, describe M7 so far. M7/8,16 and all M12 remain unobserved;
+27 solves/nine groups remain. The next six groups would leave only nine solves;
+final uncertainty/cost synthesis follows full coverage. Mandatory1/4-GPU training,
+parallel manuscript and final develop/main synchronization after article review
+are unchanged. No augmentation or new hyperparameter search.
+
 The [installed M4 numerical review](research/pr86-m4-numeric-return-wave55.md)
 adds a reproducible four-vector diagnostic table and165-row collected ledger
 with explicit numerical-scope labels. All four rounded vectors fail original
