@@ -4,7 +4,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $stage = '/raid/vrcelestino/data/cfl-mvp2-evidence/pr86/next-55-' + $SourceCommit.Substring(0,12)
-$destination = Join-Path $PSScriptRoot ('../../outputs/pr86-next49-' + $ExpectedReturnSha.Substring(0,12))
+$destination = Join-Path $PSScriptRoot ('../../outputs/pr86-next55-' + $ExpectedReturnSha.Substring(0,12))
 if (Test-Path -LiteralPath $destination) {
     $destination += '-transfer-' + [guid]::NewGuid().ToString('N')
 }
