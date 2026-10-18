@@ -107,6 +107,21 @@ def group_stage(stage, index):
     return stage / f"group-{index}"
 
 
+def wave_size(frozen):
+    """Retain six-job waves and support only the final three-group tail."""
+    count = len(frozen["groups"])
+    require(count in (3, 6), "wave_size")
+    require(
+        frozen["maximum_submissions"] == count
+        and frozen["maximum_optimization_calls"] == count * 3
+        and frozen["campaign_completed_calls_before_this_wave"] + count * 3
+        <= frozen["campaign_calls_ceiling"]
+        == 210,
+        "wave_budget",
+    )
+    return count
+
+
 def profile(text, job, threads, previous):
     fields = first.held_profile(text, job, threads)
     dependency = first.site.selected_fields(text, {"Dependency"}).get("Dependency")
@@ -124,6 +139,7 @@ def submit(stage, approved_sha, policy=None):
     first.roots.accounting.host()
     require(os.environ.get("CONDA_DEFAULT_ENV") == "tfm_env", "environment")
     frozen = load(stage, policy)
+    count = wave_size(frozen)
     require(digest(read(stage / "plan.json")) == approved_sha, "approved_plan_sha")
     reviewer = installed_first if policy is None else policy.installed_review
     require(reviewer() == frozen["first_review"], "installed_review")
@@ -140,8 +156,8 @@ def submit(stage, approved_sha, policy=None):
         {
             "plan_sha256": approved_sha,
             "explicit_user_authorization": True,
-            "maximum_submissions": 6,
-            "maximum_optimization_calls": 18,
+            "maximum_submissions": count,
+            "maximum_optimization_calls": count * 3,
             "included_in_210": True,
             "automatic_retry": False,
         },
@@ -218,21 +234,24 @@ def submit(stage, approved_sha, policy=None):
         write(folder / "held_profile.json", held)
         jobs.append(job)
     write(stage / "chain.json", {"plan_sha256": approved_sha, "job_ids": jobs})
-    # Release tail first: the root cannot start before all six jobs are recorded.
-    for i in reversed(range(6)):
+    # Release tail first: the root cannot start before every job is recorded.
+    for i in reversed(range(count)):
         folder = group_stage(stage, i)
         write(folder / "release.intent.json", {"job_id": jobs[i]})
         first.roots.accounting.command(["scontrol", "release", jobs[i]])
         write(folder / "released.json", {"job_id": jobs[i]})
     return {
         "job_ids": jobs,
-        "submission": "six_serial_jobs_released",
+        "submission": "six_serial_jobs_released"
+        if count == 6
+        else "three_serial_jobs_released",
         "automatic_retry": False,
     }
 
 
 def admitted(stage, frozen, policy=None):
     sha = digest(encoded(frozen))
+    count = wave_size(frozen)
     require(
         parsed((CLAIM if policy is None else policy.claim) / "claim.json")
         == {"plan_sha256": sha, "stage": str(stage)},
@@ -243,8 +262,8 @@ def admitted(stage, frozen, policy=None):
         == {
             "plan_sha256": sha,
             "explicit_user_authorization": True,
-            "maximum_submissions": 6,
-            "maximum_optimization_calls": 18,
+            "maximum_submissions": count,
+            "maximum_optimization_calls": count * 3,
             "included_in_210": True,
             "automatic_retry": False,
         },
@@ -254,8 +273,8 @@ def admitted(stage, frozen, policy=None):
     jobs = chain["job_ids"]
     require(
         chain["plan_sha256"] == sha
-        and len(jobs) == 6
-        and len(set(jobs)) == 6
+        and len(jobs) == count
+        and len(set(jobs)) == count
         and all(re.fullmatch(r"[0-9]{1,20}", j) for j in jobs),
         "chain",
     )
@@ -306,6 +325,7 @@ def checked(stage, frozen, index, jobs):
 
 def run(stage, index, policy=None):
     frozen = load(stage, policy)
+    require(type(index) is int and 0 <= index < wave_size(frozen), "group_index")
     jobs = admitted(stage, frozen, policy)
     folder = group_stage(stage, index)
     require(os.environ.get("SLURM_JOB_ID") == jobs[index], "allocated_job")
@@ -359,9 +379,9 @@ def run(stage, index, policy=None):
 
 
 def status(stage, policy=None):
-    load(stage, policy)
+    frozen = load(stage, policy)
     records = []
-    for i in range(6):
+    for i in range(wave_size(frozen)):
         folder = group_stage(stage, i)
         records.append(
             first.roots.status(folder)
@@ -398,13 +418,19 @@ def validate_return(raw, policy=None):
         and value["scientific_reporting_eligible"] is False,
         "queue_return_scope",
     )
-    require(len(value["returns"]) == 6, "six_returns")
-    require(len(value["launch"]) == 6, "six_launch_records")
+    count = wave_size(frozen)
+    require(
+        len(value["returns"]) == count, "six_returns" if count == 6 else "three_returns"
+    )
+    require(
+        len(value["launch"]) == count,
+        "six_launch_records" if count == 6 else "three_launch_records",
+    )
     ready, ids = [], []
     for group, returned in zip(frozen["groups"], value["returns"]):
         ids.append(returned["accounting"]["job_id"])
         ready.append(first.validate_return(encoded(returned), expected_plan=group))
-    require(len(set(ids)) == 6, "duplicate_jobs")
+    require(len(set(ids)) == count, "duplicate_jobs")
     for i, launch in enumerate(value["launch"]):
         require(
             set(launch) == {"job_id", "held_profile"} and launch["job_id"] == ids[i],
@@ -426,7 +452,7 @@ def validate_return(raw, policy=None):
         )
     return {
         "complete_groups": sum(ready),
-        "groups": 6,
+        "groups": count,
         "ready_for_independent_review": all(ready),
         "dispatch_after_this_wave": False,
     }
@@ -450,7 +476,7 @@ def collect(stage, policy=None):
                 "job_id": states["jobs"][i]["job_id"],
                 "held_profile": parsed(group_stage(stage, i) / "held_profile.json"),
             }
-            for i in range(6)
+            for i in range(wave_size(frozen))
         ],
         "scientific_reporting_eligible": False,
         "raw_logs_included": False,
