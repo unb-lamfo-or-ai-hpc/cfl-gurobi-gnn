@@ -1,5 +1,21 @@
 # Current status
 
+## Current checkpoint — 18 October: 201 collected; M12 numeric gate
+
+[Jobs3645–3650 review](research/pr86-wave61-numeric-review.md) preserves original
+return4088a2d464ec and reconciles201/210 cells,67/70 groups,ten exposed parents.
+168 retain previous/non-M4/M12 scoped review;21M4 remain sensitive;12M12 await
+numerical qualification. The same-model screen finds eight M12 comparisons
+involving six vectors. Differences are below the0.01% target,but above the
+existing numerical screen; no unequivocal optimum/speedup or solver-defect
+claim.132reported target terminations include disputed/unqualified statuses;
+69cells censored. M7 has all five caps; results remain heterogeneous.
+Next: bounded read-only six-vector M12 audit,no job/optimization. The final
+nine solves M12/4,8,16/42 are not released. Then final CPU/cost/statistics assets,
+Sprint balance and detailed Project01/chat01.02 handoff. PR86 remains draft.
+PR87mandatory1/4GPU needs separate budget;PR88parallel;main sync after article.
+Earlier dated checkpoints below remain history.
+
 ## Current checkpoint — 17 October: 183 collected; M7/M12 next
 
 [Jobs3625–3630 review](research/pr86-wave55-review-wave61.md) preserves the

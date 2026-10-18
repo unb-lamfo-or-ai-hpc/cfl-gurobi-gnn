@@ -1,5 +1,15 @@
 # Article plan
 
+18 October: [CSV201,complete M7 and partial M12 CPU figures](research/pr86-wave61-numeric-review.md).
+M7 has heterogeneous final gaps; all21 observations censored. M12's four reported
+M2 target terminations need numerical delimitation before performance claims.
+Keep168 previous/non-M4/M12 scoped cells,21M4 sensitive and12M12 pending separate.
+Nine original solves remain; final synthesis and Sprint balance are not complete.
+After reconciliation prepare the detailed Project01/chat01.02 coauthor prompt,
+with achieved MVP2 outputs,limitations,remaining mandatory1/4GPU comparison,
+figure/table inventory and evidence-linked claims. No independent generalization
+or assumed GNN superiority. Main synchronization remains after article revision.
+
 17 October: [CSV183 and M4/M7 gap/memory figures](research/pr86-wave55-review-wave61.md)
 complete M4 and show partial M7.128 reported target-reaching cells include
 the disputed M4 report;55 are censored. Separate21 M4-sensitive observations

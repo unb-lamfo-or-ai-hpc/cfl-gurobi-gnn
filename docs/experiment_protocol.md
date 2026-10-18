@@ -1,5 +1,14 @@
 # Experiment protocol
 
+18 October [wave61 review](research/pr86-wave61-numeric-review.md):201 collected
+cells do not mean201 certified results. Retain21M4 sensitive cells and mark12
+M12 cells pending numeric qualification. Eight M12 bound/incumbent comparisons
+involve six vectors; their differences below the0.01% gap target do not erase
+the existing numerical screen. No new solve/tolerance/repair/semantic gate.
+Next author CLI only reads the stored model/six vectors/sealed logs with
+bounded resources; no job,optimization or raw export. Final nine original
+solves await delimitation; no implicit M12 authorization from the M4 decision.
+
 17 October [wave55 review](research/pr86-wave55-review-wave61.md):183 collected
 cells include21 M4 numerically sensitive observations, not183 certified results.
 All18 new solves are censored. The M4/16 incumbent extends the already disclosed
