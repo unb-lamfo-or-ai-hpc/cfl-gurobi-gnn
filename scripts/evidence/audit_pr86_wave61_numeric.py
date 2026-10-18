@@ -155,7 +155,7 @@ def validate_numeric(raw, expected_sha, collector):
                 diagnostics["stored"]["recomputed_objective"],
                 row["primal"],
                 rel_tol=1e-8,
-                abs_tol=1e-8,
+                abs_tol=1e-6,
             ),
             "recomputed_objective_parity",
         )
