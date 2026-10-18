@@ -92,7 +92,11 @@ class SixJobs(unittest.TestCase):
             if args[0] == "sbatch":
                 index = len(jobs)
                 self.assertTrue((stage / "claim/claim.json").exists())
-                self.assertTrue((stage / "group-5/approval.json").exists())
+                self.assertTrue(
+                    (
+                        stage / f"group-{len(self.frozen['groups']) - 1}/approval.json"
+                    ).exists()
+                )
                 self.assertIn("--hold", args)
                 self.assertIn("--kill-on-invalid-dep=yes", args)
                 self.assertNotIn("SBATCH_NODES", kwargs["env"])
