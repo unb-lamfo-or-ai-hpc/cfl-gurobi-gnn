@@ -1,0 +1,7 @@
+cell_id,method,reported_primal,reported_dual,stored_max_integrality_residual,stored_max_row_residual,integer_values_changed_by_rounding,rounded_original_unit_feasible,rounded_max_row_residual,rounded_residual_over_existing_tolerance,objective_change_after_rounding,exact_optimality_certified,private_solution_hash_is_historical_seal
+M12-threads1-seed42-M0,M0,4.741101359773271,4.453250706773666,5.207335880829013e-08,1.295336789761993e-11,1,False,4.16587e-05,41.6587,-3.151005945056795e-08,False,False
+M12-threads1-seed42-M1,M1,4.740932705476565,4.434673876940186,5.2073358891752575e-08,1.2886597943796187e-11,1,False,4.16587e-05,41.6587,-1.5383609053287728e-07,False,False
+M12-threads1-seed42-M2,M2,4.741382854739205,4.741382854739205,0.0,0.0,0,True,0.0,0.0,0.0,False,False
+M12-threads1-seed43-M2,M2,4.741382854739205,4.741382854739205,0.0,0.0,0,True,0.0,0.0,0.0,False,False
+M12-threads1-seed44-M2,M2,4.741382854739205,4.741382854739205,0.0,0.0,0,True,0.0,0.0,0.0,False,False
+M12-threads2-seed42-M2,M2,4.741382854739205,4.741255187252368,0.0,0.0,0,True,0.0,0.0,0.0,False,False
