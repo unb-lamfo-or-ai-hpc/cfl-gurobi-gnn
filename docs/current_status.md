@@ -1,5 +1,21 @@
 # Current status
 
+## Current checkpoint — 18 October: M12 audit received; final nine approved
+
+[M12 review and final tail](research/pr86-m12-audit-final-nine.md) bind audit
+c34d043463cb. All six stored vectors pass original tolerances. The four GNN
+vectors also pass integer-only diagnostic rounding; the two M0/M1 controls
+fail original-unit rows after that rounding. This differs from M4 and is not
+an exact certificate or proven cause. The author explicitly approved finishing
+the nine original cells with M12's tolerance limitation and no exact-optimum
+or certified-speedup claim. Original receipt flags/bytes remain unchanged.
+201/210 cells,67/70 groups remain the collected total:168 outside M4/M12 scoped,
+21 M4-sensitive,12 M12-sensitive. Next: three serial M12 jobs at4/8/16 threads,
+seed42,three methods each,inside the original budget. Four exact-head checks
+precede CLI release; no job submitted here. Then final matrix/figure/cost/seed
+synthesis and Project01/chat01.02 handoff. PR86 remains draft; PR87 DDP budget
+is separate; final main synchronization follows article revision.
+
 ## Current checkpoint — 18 October: 201 collected; M12 numeric gate
 
 [Jobs3645–3650 review](research/pr86-wave61-numeric-review.md) preserves original

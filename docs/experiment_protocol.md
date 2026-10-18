@@ -1,5 +1,15 @@
 # Experiment protocol
 
+18 October [M12 audit and separate author decision](research/pr86-m12-audit-final-nine.md):
+finish only the nine original remaining cells with explicit tolerance sensitivity.
+The six stored vectors pass existing rules; four GNN vectors pass rounding and
+two controls fail original-unit rows in that in-memory diagnostic. Do not equate
+this with M4 or certify an exact optimum/speedup. Keep every original parameter,
+start,seed,MINIMIZE,model byte and historical receipt unchanged. No retry or new
+preparation. Final groups67–69 use three serial jobs within210 solves/70 jobs,
+not six padded jobs. A separate review records continuation authority; raw
+audit flags stay false. Complete analysis follows the final return.
+
 18 October [wave61 review](research/pr86-wave61-numeric-review.md):201 collected
 cells do not mean201 certified results. Retain21M4 sensitive cells and mark12
 M12 cells pending numeric qualification. Eight M12 bound/incumbent comparisons

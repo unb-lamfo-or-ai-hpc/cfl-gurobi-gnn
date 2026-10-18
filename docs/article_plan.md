@@ -1,5 +1,15 @@
 # Article plan
 
+18 October [installed M12 diagnostic table](research/pr86-m12-audit-final-nine.md)
+distinguishes four GNN vectors passing the rounded-copy check from two controls
+failing original-unit rows in that copy. It is not an exact certificate and
+does not retroactively qualify M4. Keep M4/M12 sensitive strata visible. The
+author approved only the nine original remaining solves with those limitations;
+201/210 remains the observed count,not a completed matrix. Final paired CPU,
+quality,censoring,memory,seed and cost assets follow210-row reconciliation,
+then the CPU-delivery balance and detailed Project01/chat01.02 coauthor prompt.
+PR87 matched1/4GPU remains mandatory; main synchronization is still last.
+
 18 October: [CSV201,complete M7 and partial M12 CPU figures](research/pr86-wave61-numeric-review.md).
 M7 has heterogeneous final gaps; all21 observations censored. M12's four reported
 M2 target terminations need numerical delimitation before performance claims.
