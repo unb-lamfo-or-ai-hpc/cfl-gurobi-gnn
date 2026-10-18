@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="470" viewBox="0 0 940 470">
+<rect width="940" height="470" fill="white"/>
+<g font-family="sans-serif" fill="#182635">
+<text x="55" y="30" font-size="20">Instancia M7: brecha final reportada (%) (seed 42)</text>
+<text x="55" y="57" font-size="14">M7: cinco limites completos; observaciones, no certificados exactos.</text>
+<text x="55" y="80" font-size="12">M0/M1/M2: metodos. Puntos vacios: tiempo hasta objetivo censurado.</text>
+<path d="M75 340H700" stroke="#dbe2e9"/><text x="15" y="344" font-size="12">0.00</text>
+<path d="M75 285H700" stroke="#dbe2e9"/><text x="15" y="289" font-size="12">15.54</text>
+<path d="M75 230H700" stroke="#dbe2e9"/><text x="15" y="234" font-size="12">31.08</text>
+<path d="M75 175H700" stroke="#dbe2e9"/><text x="15" y="179" font-size="12">46.61</text>
+<path d="M75 120H700" stroke="#dbe2e9"/><text x="15" y="124" font-size="12">62.15</text>
+<circle cx="100" cy="281.80" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="240" cy="286.29" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="380" cy="152.19" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="520" cy="143.57" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="660" cy="196.65" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<polyline points="100,281.80 240,286.29 380,152.19 520,143.57 660,196.65" fill="none" stroke="#3457a6" stroke-width="2"/>
+<text x="745" y="150" fill="#3457a6">M0</text>
+<circle cx="100" cy="270.81" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="240" cy="288.72" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="380" cy="183.99" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="520" cy="159.64" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="660" cy="196.65" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<polyline points="100,270.81 240,288.72 380,183.99 520,159.64 660,196.65" fill="none" stroke="#b15a10" stroke-width="2"/>
+<text x="745" y="175" fill="#b15a10">M1</text>
+<circle cx="100" cy="290.72" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="240" cy="280.31" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="380" cy="289.45" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="520" cy="293.91" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="660" cy="293.47" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<polyline points="100,290.72 240,280.31 380,289.45 520,293.91 660,293.47" fill="none" stroke="#128064" stroke-width="2"/>
+<text x="745" y="200" fill="#128064">M2</text>
+<text x="96" y="368">1</text>
+<text x="236" y="368">2</text>
+<text x="376" y="368">4</text>
+<text x="516" y="368">8</text>
+<text x="656" y="368">16</text>
+<text x="260" y="403">Limite de hilos / nucleos fisicos</text>
+<text x="55" y="432" font-size="12">Brecha terminal no es tiempo hasta objetivo; RAM muestreada no es Slurm MaxRSS.</text>
+<text x="55" y="453" font-size="12">Padres historicamente expuestos; semillas 43/44 disponibles en la tabla.</text>
+</g></svg>
