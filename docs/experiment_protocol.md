@@ -1,5 +1,15 @@
 # Experiment protocol
 
+PR87 final preparation19October supersedes earlier multi-seed/five-arm GPU
+proposals: [one seed42 pair, serial1GPU versus DDP4](research/pr87-matched-gpu-protocol.md).
+100epochs,136global draws/34updates per epoch, batch4 with equivalent mean
+per-graph BCE and clipping after synchronization. Identical CPU-fitted train-only
+initial buffers/parameters; validation/test on unwrapped rank0 only.12h/job,
+128GiB RAM,112GiB sampled stop; two sequential jobs,60GPU-h/240physical-core
+reserved hours, no retry/requeue/extension. No new root/MIP/solver calls.
+Full protocol and explicit submission record bind authority; a false plan flag
+is not rewritten into scientific eligibility. Negative speed/quality is reportable.
+
 19 October [final CPU analysis](research/pr86-final-analysis.md):210cells/70groups
 collected. Terminal solver return is the timing endpoint; callback first-observed
 thresholds1/5/6/10% are not the terminal0.01% target. Keep75timeouts censored;

@@ -1,5 +1,11 @@
 # CFL--GNN research context
 
+PR87 author revision19October: compare only seed42 serial1GPU and DDP4, not
+three seeds. [Matched learning work and acceptance](research/pr87-matched-gpu-protocol.md)
+separate technical completeness from positive performance. One paired case
+does not support training-seed uncertainty or statistical noninferiority.
+No new architecture/data/hyperparameter search; CPU PR86 is already merged.
+
 19 October: [final210-cell CPU review](research/pr86-final-analysis.md) completes
 the planned comparison, not an independent test or the entire MVP2. Effects
 depend on parent, CPU cap and cost scope; M2/M1 remains an essential comparison.

@@ -1,5 +1,14 @@
 # Article plan
 
+19October PR87 scope frozen by author: one seed42 pair,1GPU serial versus4GPU
+DDP. [Final preparation protocol](research/pr87-matched-gpu-protocol.md) fixes
+equal batch/work, initialization, quality and bounded resources. Report a paired
+case, not training-seed variance. Required outputs:1/4GPU synchronized loop and
+whole-job timing/speedup/efficiency, resource utilization/memory, selected/terminal
+predictive quality and cost scopes. No result exists yet for that pair.
+PR86 CPU delivery is merged; its tables/figures are final scoped evidence.
+PR88 manuscript proceeds alongside GPU; release/main only after article review.
+
 19 October [CPU closeout](research/pr86-final-analysis.md): the planned210/70
 are collected and analytically consolidated. Use the [final source tables and
 six figures](evidence/pr86/final-210/) instead of partial-wave plots for final

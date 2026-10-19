@@ -1,5 +1,21 @@
 # Current status
 
+## Current checkpoint — PR86 merged; PR87 seed42-only GPU pair prepared
+
+PR86 merged into develop at3ac1883d081684acb36ba3855cd634e057a11c66.
+The [final PR87 protocol](research/pr87-matched-gpu-protocol.md) implements only
+one paired full training, seed42: serial1GPU versus DDP4. The author explicitly
+excluded varying seeds from MVP2. Same100epochs, global batch4,34updates/epoch,
+136draws/epoch; equal initialized parameters/buffers and train-only fitting.
+Reuse existing Gassev2, sampler and audited54graphs; no solver or package upgrade.
+Ceiling: two sequential jobs,12h/128GiB each,60GPU-h and240physical-core reserved
+hours. No automatic retry or extension. Budget is recorded separately at the
+explicit author-run submission, not inferred from the plan's false flag.
+No installed training result yet. Final-head evidence/tensor CI precedes CLI.
+Ready/merge awaits the installed pair and scientific review. Manuscript can
+advance in parallel; main release remains after article review. Older dated
+entries below are history, not permission to repeat PR86 or add seeds.
+
 ## Current checkpoint — 19 October: complete210/70 analytical CPU review
 
 [Final analysis](research/pr86-final-analysis.md) reconciles the original final
