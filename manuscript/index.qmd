@@ -194,10 +194,9 @@ not each method/thread row or binary variable, is the experimental unit.
 
 : Scope of the principal retrospective analysis; sensitivity is not an additional sample. {#tbl-mvp2-scope}
 
-The immutable source hash is
-`e5fc92d75f2d26620a51a4e4d9b1d1f63befd7ec2680ad7a3b2c34cd781390b8`.
-Derived tables and their manifest are retained in
-`docs/evidence/methodology-20261019/`. Neural speedup is defined as $T_0/T_2$,
+The immutable source hash remains in the PR86 final-210 archive manifest.
+Derived tables and their hashes are retained in the versioned
+methodology-20261019 evidence directory. Neural speedup is defined as $T_0/T_2$,
 so values above one favour M2; historical $T_2/T_0$ ratios retain their original
 names. Same-method CPU speedup is $T_m(1)/T_m(r)$ and efficiency divides this
 quantity by $r$. Compute these only for comparable attained targets and eligible
