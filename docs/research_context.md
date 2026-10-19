@@ -1,5 +1,13 @@
 # CFL--GNN research context
 
+19 October: [final210-cell CPU review](research/pr86-final-analysis.md) completes
+the planned comparison, not an independent test or the entire MVP2. Effects
+depend on parent, CPU cap and cost scope; M2/M1 remains an essential comparison.
+Uncertainty is exploratory with six exposed easy parents; medium censoring and
+M4/M12 sensitivity prevent certified-speedup aggregates there. Same-parent seed
+repeats do not enlarge the independent sample. The required1GPU/DDP4 training
+comparison and manuscript remain; no superiority assumption or new search.
+
 ## Research question
 
 Can a graph neural network (GNN) learn useful guidance for capacitated

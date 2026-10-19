@@ -1,5 +1,23 @@
 # Current status
 
+## Current checkpoint — 19 October: complete210/70 analytical CPU review
+
+[Final analysis](research/pr86-final-analysis.md) reconciles the original final
+returna3a219799291 with the prior201:210/210 cells and70/70groups. All planned
+CPU solves are collected; no submission, preparation or inference is repeated.
+135reported target terms and75time censures include168 outsideM4/M12
+(127/41),21M4(1/20) and21M12(7/14). They are not135exact certificates.
+M4/M12 retain their different diagnostics and no certified-speedup claim.
+
+The [final assets](evidence/pr86/final-210/) add sixSVG/PDF/PNG figures,
+parent-paired ratios includingM2/M1, exact empirical parent-bootstrap/LOO
+exploratory sensitivity, nested one-thread seed effects, two preparation-cost
+allocation scenarios, terminal-gap contrasts, memory and70-job accounting.
+Historical receipt flags are unchanged. No population or whole-job-cold claim.
+This analytical CPU delivery does not finish mandatoryPR87 1GPU/DDP4 orPR88
+manuscript/review. Their budgets/approvals are separate. main sync only after
+article revision. Earlier checkpoints below remain dated history.
+
 ## Current checkpoint — 18 October: M12 audit received; final nine approved
 
 [M12 review and final tail](research/pr86-m12-audit-final-nine.md) bind audit

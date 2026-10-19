@@ -1,5 +1,17 @@
 # Experiment protocol
 
+19 October [final CPU analysis](research/pr86-final-analysis.md):210cells/70groups
+collected. Terminal solver return is the timing endpoint; callback first-observed
+thresholds1/5/6/10% are not the terminal0.01% target. Keep75timeouts censored;
+terminal quality is not quality at exactly3600s. No medium timeout-runtime
+speedup; M4/M12 remain separate and numerically sensitive. Six easy parents
+support exploratory pointwise parent-bootstrap/LOO sensitivity only, not
+population coverage. At1thread average paired log ratios across three seeds
+within each parent; other caps have seed42only. ReportM2/M1 too. Cost scenarios
+show scoped and expanded allocation of observed preparation, amortized in seven
+uses; neither is measured standalone cold-job cost. No new experiments needed
+for this CPU closeout; no training authority implied by its completion.
+
 18 October [M12 audit and separate author decision](research/pr86-m12-audit-final-nine.md):
 finish only the nine original remaining cells with explicit tolerance sensitivity.
 The six stored vectors pass existing rules; four GNN vectors pass rounding and

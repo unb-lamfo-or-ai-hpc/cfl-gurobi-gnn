@@ -1,0 +1,13 @@
+claim_id,claim,source,unit_or_filter,limitation
+C01,210 observations in70groups,campaign_results.csv,unique cell_id and job_id,not210independent parents
+C02,135reported target terms and75censored,scope_and_censoring.csv,sum all three scopes,not135exact optima
+C03,42numerically sensitive observations,scope_and_censoring.csv,M4_sensitive plus M12_sensitive,no exact optimality or certified speedup
+C04,M2 effects depend on CPU cap,paired_uncertainty.csv,seed42 solver_seconds M2/M0,six exposed easy parents and pointwise exploratory intervals
+C05,Compare GNN with LP too,paired_uncertainty.csv,seed42 solver_seconds M2/M1,LP control depends on GNN support matching
+C06,One-thread paired repeatability,paired_seed_repeatability.csv,three seeds within each easy parent,no seed repeatability claim at other caps
+C07,Preparation can reverse solver benefit,cost_scenarios.csv,16threads seed42 paired easy ratios,scenarios not independent whole-job cold measurements
+C08,Terminal gap is not exact common-horizon quality,paired_terminal_gap.csv,parent cap seed pairs,censor flags and numerical_scope retained
+C09,Sampled memory and CPU accounting have different scopes,scheduler_accounting.csv,job records counted once not job plus steps,logical CPU accounting is not physical-core proof
+C10,First-observed gaps differ from terminal target,solve_details.csv,callback1percent versus terminal0.01percent,not exact first crossing and missing is not zero
+C11,14M12 screen comparisons,m12_cross_run_screen.json,seven bounds versus same two incumbents,not14independent anomalies or proven cause
+C12,1GPU versus4GPU DDP remains pending,../../../research/submission-protocol-20261010.md,PR87 matched work protocol,own exact budget and execution required

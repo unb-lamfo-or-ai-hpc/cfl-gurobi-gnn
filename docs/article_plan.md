@@ -1,5 +1,15 @@
 # Article plan
 
+19 October [CPU closeout](research/pr86-final-analysis.md): the planned210/70
+are collected and analytically consolidated. Use the [final source tables and
+six figures](evidence/pr86/final-210/) instead of partial-wave plots for final
+CPU claims. Preserve earlier figures as dated evidence. Main takeaways:
+heterogeneous GNN effects; compareLP too; preparation accounting can reverse a
+solver-only benefit; pointwise exploratory uncertainty and numerical sensitivity
+remain visible. No135certified optima, no time-to-target speedup from timeouts,
+no population claim. PR87 matched1GPU/DDP4 remains mandatory and budget-gated;
+PR88 writing/review can proceed in parallel. Release/main after article revision.
+
 18 October [installed M12 diagnostic table](research/pr86-m12-audit-final-nine.md)
 distinguishes four GNN vectors passing the rounded-copy check from two controls
 failing original-unit rows in that copy. It is not an exact certificate and
