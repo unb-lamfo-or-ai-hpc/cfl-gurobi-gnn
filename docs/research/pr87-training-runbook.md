@@ -5,6 +5,13 @@ Solo dos entrenamientos: serial1GPU y DDP4, seed42. El autor excluyó las demás
 seeds. No hay optimización, nueva etiqueta, upgrade o cambio de hiperparámetros.
 Techo24h secuenciales,60GPU-h y240núcleo-horas físicas reservadas.
 
+El primer CI comprobó correctamente la equivalencia serial/DDP4 y detectó
+una dependencia ausente del entorno de prueba: el import del paquete models
+también importa Liang y requiere PyG. El job CPU de CI instala ahora
+torch-geometric2.7.0, la versión existente en tfm_env. No modifica el entorno
+HPC ni la arquitectura o el protocolo; el forward/backward Gasse real sigue
+siendo obligatorio, sin sustituirlo por un mock o eliminar la comprobación.
+
 ## Inicio por el autor en dgx-dasci
 
 El bloque de entrega del chat fija el SHA completo publicado después de pasar

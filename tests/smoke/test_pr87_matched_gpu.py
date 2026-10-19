@@ -95,7 +95,7 @@ class MatchedTensorTests(unittest.TestCase):
                     atol=1e-12,
                 )
 
-    def test_torch_21_graph_layer_forward_backward_without_pyg(self):
+    def test_torch_21_graph_layer_forward_backward(self):
         from cfl_gnn.models.gasse_calibrated import GasseGNN
 
         model = GasseGNN(7, 5, edge_dim=1, hidden_dim=32, num_layers=2)

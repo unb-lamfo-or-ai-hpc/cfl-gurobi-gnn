@@ -130,6 +130,8 @@ jobs:
         run: |
           python -m pip install numpy==1.26.4 ruff==0.16.8
           python -m pip install torch==2.1.2+cpu --index-url https://download.pytorch.org/whl/cpu
+          # models/__init__.py imports Liang as well as Gasse; use the HPC PyG version.
+          python -m pip install torch-geometric==2.7.0
       - name: PR87 source and tensor test style
         run: |
           python -m ruff check --config configs/quality/pr64-ruff.toml src/cfl_gnn/training/matched_gpu.py tests/smoke/test_pr87_matched_gpu.py
