@@ -1,5 +1,22 @@
 # Article plan
 
+## Current editorial contract — PR88, D1–D6, 19 October
+
+Use [D3 figures](research/methodology-20261019/D3-figures.md),
+[D4 directed Related Work](research/methodology-20261019/D4-related-work.md),
+[D5 claim/evidence matrix](research/methodology-20261019/D5-contributions.md)
+and [D6 decision memo](research/methodology-20261019/D6-decision-memo.md).
+Keep the three Related Work subheads; no first-GNN/MIP or causal selector claim.
+Principal analysis150seed42; retain60other-seed rows and repeatability figure as
+historical only. Separate historic six-medium evidence from current ten exposed
+parents. CPU12h and GPU1/DDP4 have no results yet in this revision; do not fill
+missing figures/metrics. Describe heterogeneous/negative outcomes rigorously.
+
+Schedule remains D26Oct–13Nov,E9–20Nov,F16Nov–11Dec; milestones15Nov/15Dec/31Dec.
+The proposedCPU780hserial reservation plus queues is a critical calendar risk,
+not a promised completion date. Write in parallel, escalate prospective scope
+choices before execution; main synchronization after article review only.
+
 19 October [CPU closeout](research/pr86-final-analysis.md): the planned210/70
 are collected and analytically consolidated. Use the [final source tables and
 six figures](evidence/pr86/final-210/) instead of partial-wave plots for final

@@ -1,5 +1,19 @@
 # Experiment protocol
 
+## Current protocol — seed42 and unapproved separate resource packages
+
+[D1 metric dictionary](research/methodology-20261019/D1-protocol.md) supersedes
+old prospective recommendations. Main150seed42 rows retain original cells,
+97solver-reported terminal targets/53censored. Historical210 remains unchanged;
+multiseed aggregates excluded from principal conclusions. SpeedupM2M0=T0/T2;
+CPU scaling=T_m(1)/T_m(r); neither converts timeouts into certified speedups.
+M4/M12 numerical scope persists. Proposed four-medium60solve12h campaign is
+fresh, not resume; MIPGap1e-4 and all other frozen parameters unchanged.
+Track observed10/5/1/0.01% thresholds and1/4/8/12h temporal evidence prospectively,
+never interpolate. [D2](research/methodology-20261019/D2-cpu-budget.md) has false
+approval/gates and no submit command. GPU PR87 is separately authorized later.
+The author approved planning/software only: no HPC execution or merge here.
+
 19 October [final CPU analysis](research/pr86-final-analysis.md):210cells/70groups
 collected. Terminal solver return is the timing endpoint; callback first-observed
 thresholds1/5/6/10% are not the terminal0.01% target. Keep75timeouts censored;

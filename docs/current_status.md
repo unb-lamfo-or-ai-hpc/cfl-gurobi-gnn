@@ -1,5 +1,22 @@
 # Current status
 
+## Current — PR88 D1–D6 consolidation; separate GPU/CPU approvals pending
+
+Author-approved 19 October revision: [D1–D6](research/methodology-20261019/README.md)
+supersedes earlier future plans, not historical receipts. PR86 merged at
+3ac1883d081684acb36ba3855cd634e057a11c66. Preserve210 source rows; main view150
+seed42, with97 solver-reported terminal targets/53censored;30M4/M12 rows remain
+numerically sensitive. Seeds43/44 and repeatability plots are historical only.
+The new table/figure directory is `docs/evidence/methodology-20261019/`.
+
+PR87: only1GPUserial/DDP4, seed42, matched100epochs/globalbatch4; package proposed
+24hserial/60GPU-h/240physicalcore-h,128GiB/job. Requires new specific GPU approval.
+CPU:60 fresh solves,12hsolver/13hwall,64GiB/job,720solver-h/780serialreserve-h/
+4836physicalreserve-core-h; eight feasibility gates pending, separate approval.
+No jobs, training, optimization, merge or package upgrades in this consolidation.
+No runnable submission CLI released. Existing raw evidence remains untouched.
+Main synchronization only after article review. Older entries below are history.
+
 ## Current checkpoint — 19 October: complete210/70 analytical CPU review
 
 [Final analysis](research/pr86-final-analysis.md) reconciles the original final

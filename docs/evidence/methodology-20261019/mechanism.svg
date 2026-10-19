@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="864pt" height="338.4pt" viewBox="0 0 864 338.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 338.4
+L 864 338.4
+L 864 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="text_1">
+    <g id="patch_2">
+     <path d="M 27.648 133.892369
+L 74.40425 133.892369
+Q 79.40425 133.892369 79.40425 128.892369
+L 79.40425 108.016431
+Q 79.40425 103.016431 74.40425 103.016431
+L 27.648 103.016431
+Q 22.648 103.016431 22.648 108.016431
+L 22.648 128.892369
+Q 22.648 133.892369 27.648 133.892369
+z
+" style="fill: #edf3f8; stroke: #365f9a; stroke-linejoin: miter"/>
+    </g>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(27.648 115.614869)">MILP</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(27.648 126.812681)">MINIMIZE</text>
+   </g>
+   <g id="text_2">
+    <g id="patch_3">
+     <path d="M 204.552 134.092369
+L 293.225438 134.092369
+Q 298.225438 134.092369 298.225438 129.092369
+L 298.225438 107.816431
+Q 298.225438 102.816431 293.225438 102.816431
+L 204.552 102.816431
+Q 199.552 102.816431 199.552 107.816431
+L 199.552 129.092369
+Q 199.552 134.092369 204.552 134.092369
+z
+" style="fill: #edf3f8; stroke: #365f9a; stroke-linejoin: miter"/>
+    </g>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(204.552 115.814869)">Raíz LP + grafo</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(204.552 127.012681)">Coste compartido</text>
+   </g>
+   <g id="text_3">
+    <g id="patch_4">
+     <path d="M 406.728 133.892369
+L 484.456125 133.892369
+Q 489.456125 133.892369 489.456125 128.892369
+L 489.456125 108.016431
+Q 489.456125 103.016431 484.456125 103.016431
+L 406.728 103.016431
+Q 401.728 103.016431 401.728 108.016431
+L 401.728 128.892369
+Q 401.728 133.892369 406.728 133.892369
+z
+" style="fill: #edf3f8; stroke: #365f9a; stroke-linejoin: miter"/>
+    </g>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(406.728 115.614869)">GNN congelada</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(406.728 126.812681)">Inferencia</text>
+   </g>
+   <g id="text_4">
+    <g id="patch_5">
+     <path d="M 617.328 133.892369
+L 727.074875 133.892369
+Q 732.074875 133.892369 732.074875 128.892369
+L 732.074875 108.016431
+Q 732.074875 103.016431 727.074875 103.016431
+L 617.328 103.016431
+Q 612.328 103.016431 612.328 108.016431
+L 612.328 128.892369
+Q 612.328 133.892369 617.328 133.892369
+z
+" style="fill: #edf3f8; stroke: #365f9a; stroke-linejoin: miter"/>
+    </g>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(617.328 115.614869)">Selección class-aware</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(617.328 126.812681)">Start binario parcial</text>
+   </g>
+   <g id="text_5">
+    <g id="patch_6">
+     <path d="M 617.328 261.923781
+L 734.906125 261.923781
+Q 739.906125 261.923781 739.906125 256.923781
+L 739.906125 213.652219
+Q 739.906125 208.652219 734.906125 208.652219
+L 617.328 208.652219
+Q 612.328 208.652219 612.328 213.652219
+L 612.328 256.923781
+Q 612.328 261.923781 617.328 261.923781
+z
+" style="fill: #edf3f8; stroke: #365f9a; stroke-linejoin: miter"/>
+    </g>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(617.328 221.250656)">Gurobi: modelo original</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(617.328 232.448469)">M0: sin Start externo</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(617.328 243.646281)">M1: LP emparejado</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(617.328 254.844094)">M2: GNN</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 147.58614 118.4544
+Q 170.857138 118.4544 193.010103 118.4544
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+    <path d="M 189.010103 116.4544
+L 193.010103 118.4544
+L 189.010103 120.4544
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 358.181512 118.4544
+Q 377.241163 118.4544 395.18278 118.4544
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+    <path d="M 391.18278 116.4544
+L 395.18278 118.4544
+L 391.18278 120.4544
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 535.091682 118.4544
+Q 570.999951 118.4544 605.790186 118.4544
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+    <path d="M 601.790186 116.4544
+L 605.790186 118.4544
+L 601.790186 120.4544
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 709.992 149.665639
+Q 709.992 173.50343 709.992 196.223188
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+    <path d="M 711.992 192.223188
+L 709.992 196.223188
+L 707.992 192.223188
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 273.912398 148.008531
+Q 444.636369 177.994665 614.259163 207.787386
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+    <path d="M 610.665456 205.125569
+L 614.259163 207.787386
+L 609.973485 209.065261
+" style="fill: none; stroke: #444444; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font: 12px 'DejaVu Sans'; text-anchor: middle" x="432" y="41.544" transform="rotate(-0 432 41.544)">Mecanismo de orientación y fronteras de coste</text>
+   </g>
+  </g>
+  <g id="text_7">
+   <text style="font: 9px 'DejaVu Sans'" transform="translate(30.24 317.55825)">M1 usa soporte/número de unos definidos por M2; no es un baseline LP independiente.</text>
+   <text style="font: 9px 'DejaVu Sans'" transform="translate(30.24 328.068281)">Start no fija bounds ni restringe la región factible; el solver completa variables indefinidas.</text>
+  </g>
+ </g>
+</svg>

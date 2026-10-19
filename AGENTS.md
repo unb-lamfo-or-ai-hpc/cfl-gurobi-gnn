@@ -14,6 +14,14 @@ source of truth. Chat histories are context, not experimental evidence.
 
 ## Scientific rules
 
+- Current 19 October methodology: read `docs/research/methodology-20261019/`.
+  Main MVP2 analysis uses seed42 only (150 PR86 rows); preserve all210 rows,
+  but seeds43/44 and multiseed plots are historical, not main conclusions.
+  No new seeds, dataset expansion, hyperparameter search or causal class-aware
+  claim without its own scientific approval. M4/M12 numerical limits persist.
+  GPU PR87 and proposed CPU12h campaign require SEPARATE specific approvals.
+  Planning approval is not execution approval; old CLI release is superseded.
+
 - Frozen author decision, 12 October 2026, through the final MVP2 sprint:
   accept the MILPBench CFL formulation as correct except for the erroneous
   MAXIMIZE declaration. Always force MINIMIZE at runtime; preserve original

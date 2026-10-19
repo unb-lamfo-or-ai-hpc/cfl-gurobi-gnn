@@ -35,7 +35,7 @@ keywords:
   - Partial MIP starts
   - Computational reproducibility
 abstract: |
-  Can a graph neural network provide useful starting information for mixed-integer optimization? We investigate this question for capacitated facility location by learning binary solution values from variable-constraint graphs. Our class-aware procedure first selects variables predicted to take value 1, which are rare in this problem family, and then adds confident predictions of value 0. These values form a partial starting solution: Gurobi determines the remaining values and continues optimizing the unchanged model. The predictor is trained for 100 epochs on a quality-screened cohort of 54 original instances, using separate training, validation, and predictive-test partitions. It achieves pooled F1 of 0.6993 and average precision of 0.7745 on 5,536,400 binary targets. After qualifying the guidance policy on six medium validation instances, we evaluate it on six distinct medium test instances under a 3,600-second optimization budget. Comparisons include Gurobi without learned guidance and starting values selected from the root linear relaxation. Learned starts reduce the terminal relative MIP gap on five of six test instances, with a median improvement of 1.164 percentage points. Two learned-start runs finish before the time limit, while all unguided runs reach that limit. These findings demonstrate the practical potential of class-aware graph predictions in the examined setting and motivate broader evaluation across instances and computational budgets.
+  Can graph neural predictions improve mixed-integer optimization once preparation costs, censoring and numerical scope are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes the unspecified variables without restricting the original feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium-instance evidence from a retrospective controlled comparison on ten previously exposed test parents. The latter preserves 210 records, but its principal analysis uses only the 150 seed-42 observations across three methods and five CPU thread caps. These contain 97 solver-reported terminal-target attainments and 53 censored observations; attainments are not exact optimality certificates, and two medium parents retain explicit numerical-sensitivity restrictions. The root-LP comparator matches the learned start's support budget and positive count and is therefore not an independent LP heuristic. We separate neural speedup, same-method CPU scaling, terminal quality and scoped preparation-cost scenarios. The observations support heterogeneous effects rather than uniform neural superiority. A proposed longer-horizon medium-instance campaign and matched-work serial-versus-distributed GPU training remain pending specific execution authorization and are not reported as results.
 ---
 
 # Introduction
@@ -44,7 +44,7 @@ Capacitated facility location combines discrete facility decisions with allocati
 
 We examine this question using capacitated facility location (CFL) instances from MILPBench [@milpbench]. A graph neural network (GNN) learns to predict binary solution values from the relationships between variables and constraints. A subset of these predictions provides starting values to Gurobi. The remaining variables are left unspecified, allowing the solver to complete the candidate and continue its search. In this way, learning supplies information to the optimization process while the original constraints and variable domains remain intact.
 
-The research question is: can starting values predicted by a bipartite GNN improve the solutions obtained within a fixed time budget on medium CFL instances not used to fit the network? We address it through a class-aware selection rule. Here, class-aware means that selection treats predicted values of 1 and 0 separately, so that the much more numerous zeros do not displace promising positive assignments. We compare this approach with Gurobi without supplied starting values and with starting values obtained from the root linear programming (LP) relaxation. The latter comparator specifies the same number of variables and the same number of ones as the learned start, making the source of the selected values the main distinction between them.
+The research question is: under what conditions do predicted starting values benefit or harm fixed-budget CFL optimization, including their preparation cost? Class-aware selection treats predicted values of 1 and 0 separately, so that abundant zeros do not displace promising positive assignments. We compare Gurobi without an external start (M0), a root linear programming (LP) start (M1), and a frozen GNN start (M2). M1 specifies equally many values and ones as M2; it therefore depends on the GNN-associated budget and is not an independent LP-only heuristic. Fixed parent roles prevent training/test leakage, but previously exposed test instances support retrospective controlled evaluation rather than a new independent generalization claim.
 
 The study contributes a reproducible procedure connecting graph-based assignment prediction to native partial MIP starts, together with separate assessments of predictive performance and solver outcomes. @fig-pipeline summarizes this connection and distinguishes the offline learning stage from the online application to a new optimization instance.
 
@@ -68,7 +68,9 @@ Theoretical studies examine which optimization information graph architectures c
 
 ## Primal guidance
 
-Primal guidance seeks good feasible solutions during optimization. Examples include prediction-guided neighbourhood search [@ding2020], variable-bias guidance [@khalil2022], and GNN primal heuristics [@canturk2024]. Neural Diving also connects predicted partial assignments to an optimizer [@nair2020]. Local branching explores a neighbourhood around a feasible solution [@fischetti2003]. We use one checked solution per training instance as supervision and submit predictions through Gurobi's native `Start` attribute [@gurobi2026]. Unlike a restricted neighbourhood or fixed variable bounds, this interface offers a candidate to the solver without excluding other feasible solutions. Our focus is the selection of scarce positive predictions and its measured effect on fixed-budget CFL optimization.
+Primal guidance seeks good feasible solutions during optimization. MIP-GNN already uses learned variable biases for solver guidance, including warm-starting [@khalil2022]; we do not claim the first GNN--MIP integration. Neural Diving generates partial integer assignments and solves the remaining sub-MIPs [@nair2020]. Predict-and-Search instead explores a prediction-centred trust region [@han2023]. These mechanisms differ from supplying candidate values to an unrestricted original model.
+
+Uncertainty-based problem reduction iteratively removes uncertain assignments, solves reduced subproblems and uses the resulting solution for subsequent guided search [@canturk2024]. Our class-aware rule prioritizes scarce predicted ones under a bounded support budget, without iterative subproblem reduction or fixed bounds. This interface distinction is not evidence of causal superiority of our selector. Prediction-guided neighbourhood search [@ding2020] and local branching [@fischetti2003] provide further contrasts. We use Gurobi's native `Start` interface [@gurobi2026], leaving unspecified values to the solver. The contemporary survey of @scavuzzo2026survey situates these choices among learned branch-and-bound components. Our intended contribution is a controlled CFL assessment of this selection mechanism, its heterogeneous computational effects and its costs, not originality of the bipartite representation or a new solver paradigm.
 
 # Proposed method
 
@@ -120,6 +122,11 @@ For comparison, the root-LP start uses the relaxation rather than the network to
 
 # Experimental design
 
+The following single-thread, six-medium-instance design documents the historical
+study preserved in the publication archive. The separate MVP2 seed42 analysis
+and its exposed population are specified in @sec-mvp2-current; the historical
+tables are not a replacement for that principal analysis.
+
 ## Populations and information boundaries
 
 The learning cohort contains 54 quality-screened original instances: 30 easy and 24 medium. It is divided into 34 training, ten validation, and ten predictive-test parents. @tbl-populations identifies the purpose of each partition and distinguishes predictive testing from the separate optimization comparison.
@@ -168,7 +175,57 @@ Experiments ran on UJA DGX-DaSCI at the Higher Polytechnic School of Jaén, Univ
 
 Project-owned code and manuscript material use the MIT License; benchmark, solver, and publisher-template rights retain their respective terms. Shareable evidence excludes license credentials, private paths, raw logs, and model checkpoints. The repository contains the current publication tables and their provenance. The planned Zenodo archive and its DOI status are addressed in the final considerations; no unverified deposit is used as a data-availability claim.
 
-# Results
+# MVP2 principal analysis and pending extensions {#sec-mvp2-current}
+
+The PR86 campaign is preserved as 210 records in 70 groups. The principal MVP2
+view selects 150 seed42 records (six easy and four medium parents, three
+methods, five thread caps: 1, 2, 4, 8, 16). The other 60 records and multiseed
+figures are historical only, not evidence of initialization robustness in the
+principal analysis. The ten parents were already historically exposed. A parent,
+not each method/thread row or binary variable, is the experimental unit.
+
+| Principal seed42 view | Records | Interpretation |
+|:--|--:|:--|
+| Easy parents |90|Six exposed parents, three methods, five caps|
+| Medium parents |60|Four exposed parents, same design|
+| Solver-reported terminal target attained |97|Not 97 exact optimality certificates|
+| Terminal target right-censored |53|Not observed solution times at the time limit|
+| Numerically sensitive M4/M12 rows |30|Subset of the above; restricted scientific eligibility|
+
+: Scope of the principal retrospective analysis; sensitivity is not an additional sample. {#tbl-mvp2-scope}
+
+The immutable source hash is
+`e5fc92d75f2d26620a51a4e4d9b1d1f63befd7ec2680ad7a3b2c34cd781390b8`.
+Derived tables and their manifest are retained in
+`docs/evidence/methodology-20261019/`. Neural speedup is defined as $T_0/T_2$,
+so values above one favour M2; historical $T_2/T_0$ ratios retain their original
+names. Same-method CPU speedup is $T_m(1)/T_m(r)$ and efficiency divides this
+quantity by $r$. Compute these only for comparable attained targets and eligible
+pairs. Censored or numerically restricted runs are not certified speedups.
+Descriptive complete-pair summaries do not represent excluded censored pairs.
+
+M4/M12 retain explicit tolerance sensitivity: acceptance of original floating-point
+vectors does not certify feasibility of diagnostically rounded copies or exact
+optimality. More running time does not resolve that issue. Scoped cold and
+amortized preparation costs are scenarios, not independent end-to-end measurements;
+the new five-use scenario does not relabel historical seven-use values.
+Allocation, CPU time, cgroup memory, RSS, Slurm MaxRSS and GPU memory have
+different scopes and cannot be combined into an artificial efficiency indicator.
+
+Two extensions remain proposals, without new results here. The CPU proposal is
+60 fresh seed42 solves on the four medium parents, with 12-hour solver limits,
+unchanged $10^{-4}$ terminal relative gap, and separate authorization. It proposes
+first observed crossings of 10%, 5%, 1% and 0.01%, plus temporal records at
+1/4/8/12 hours without interpolation or invented exact-horizon measurements.
+The GPU proposal compares serial1 versus DDP4 under the same seed42,
+100 epochs, global batch4 and 3,400 optimizer updates. Neither its speedup nor
+its predictive-quality preservation has been observed. The CPU/GPU budgets,
+resource feasibility, numerical scope and calendar require separate decisions.
+
+# Results — historical six-medium study
+
+These archived results are retained with their original populations and budgets.
+They are not independent new evidence or the current principal150-row sample.
 
 ## Prediction and learning dynamics
 
@@ -236,9 +293,9 @@ Solution labels are feasible but may be approximate, and the 10% admission ceili
 
 The full 90-instance experiment, a hard-instance demonstration, and a controlled augmentation comparison have not been completed. Longer exploratory hard solves did not meet the label-admission ceiling; this is a computational outcome, not evidence of mathematical infeasibility. Current training uses Gurobi-labelled original instances, so the reported gains are not attributed to synthetic augmentation.
 
-Future experiments should replicate the comparison with additional independently frozen seeds and instances, quantify parent-level uncertainty, and isolate the effects of class-aware ordering, support size, calibration, and training population. Independent root-LP and random-support baselines would strengthen interpretation. Extension to the remaining medium and hard instances requires budget and resource studies that retain every outcome and avoid selecting experiments retrospectively by success.
+Beyond the current MVP2 scope, independent instances and mechanism-isolating ablations could strengthen interpretation. They are not authorized additions to this study. The frozen MVP2 policy uses seed42 only, with no hyperparameter search, dataset expansion or new architectures. Immediate proposed work is restricted to the four-medium longer-horizon comparison and the matched serial1/DDP4 pair, subject to separate resource approval. A single seed does not establish robustness across initializations; negative or heterogeneous outcomes remain valid findings.
 
-A second direction is controlled augmentation from checked Gurobi and SCIP incumbents. For incumbent $\bar x$, local branching [@fischetti2003] defines a descendant by adding
+A longer-term direction outside the frozen MVP2 execution scope is controlled augmentation from checked Gurobi and SCIP incumbents. For incumbent $\bar x$, local branching [@fischetti2003] defines a descendant by adding
 
 $$\sum_{j\in B_p:\bar x_j=0}x_j+\sum_{j\in B_p:\bar x_j=1}(1-x_j)\leq k.$$
 

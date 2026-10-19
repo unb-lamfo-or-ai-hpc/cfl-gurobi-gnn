@@ -1,0 +1,71 @@
+{
+  "automatic_retry": false,
+  "exclusive": false,
+  "execution_authorized": false,
+  "gates_pending": [
+    "partition_wall",
+    "physical_affinity",
+    "memory_guards",
+    "numerical_scope",
+    "artifact_integrity",
+    "total_budget",
+    "calendar",
+    "environment_permissions"
+  ],
+  "gpus": 0,
+  "horizons_seconds": [
+    3600,
+    14400,
+    28800,
+    43200
+  ],
+  "kernel_ram_gib": 64,
+  "maximum_concurrent_jobs": 1,
+  "maximum_jobs": 60,
+  "maximum_optimization_calls": 60,
+  "memory_mib_per_job": 65536,
+  "methods": [
+    "M0",
+    "M1",
+    "M2"
+  ],
+  "mip_gap_fraction": 0.0001,
+  "new_preparation_or_training_admitted": false,
+  "nodes_per_job": "1-1",
+  "numerical_sensitivity_preserved": [
+    "M4",
+    "M12"
+  ],
+  "objective_sense": "MINIMIZE",
+  "package_id": "pr88_cpu_medium12h_seed42_proposal_v1",
+  "partition": "batch",
+  "physical_cap_solver_core_hours_ceiling": 4464,
+  "physical_reserved_core_hours_ceiling": 4836,
+  "requeue": false,
+  "resource_budget_approved": false,
+  "resume": false,
+  "sampled_stop_gib": 56,
+  "scheduler_feasibility_verified": false,
+  "scientific_reporting_eligible": false,
+  "seed": 42,
+  "sequential_reserved_hours_ceiling": 780,
+  "solver_hours_ceiling": 720,
+  "solver_seconds_per_call": 43200,
+  "solver_soft_memory_decimal_gb": 48,
+  "source_campaign_sha256": "e5fc92d75f2d26620a51a4e4d9b1d1f63befd7ec2680ad7a3b2c34cd781390b8",
+  "targets_gap_fraction": [
+    0.1,
+    0.05,
+    0.01,
+    0.0001
+  ],
+  "tasks_per_job": 1,
+  "thread_caps": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "wall_seconds_per_job": 46800
+}

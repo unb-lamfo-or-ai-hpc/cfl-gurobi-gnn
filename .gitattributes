@@ -45,3 +45,5 @@ docs/evidence/pr80-job3503-return.json -text
 docs/evidence/pr80-results/* -text
 docs/evidence/e0/** -text
 docs/evidence/pr86/** -text
+# New methodological views/manifests preserve their reviewed byte identity too.
+docs/evidence/methodology-20261019/** -text

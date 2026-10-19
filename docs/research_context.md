@@ -1,5 +1,17 @@
 # CFL--GNN research context
 
+## Governing revision — 19 October 2026
+
+[D1–D6](research/methodology-20261019/README.md) is the current methodological
+contract. Preserve original210PR86 observations; principal analysis150seed42,
+60other-seed observations historical only. Ten exposed test parents support
+retrospective comparisons, not independent generalization. MINIMIZE override and
+accepted MILPBench formulation persist. M1 is GNN-budget-matched root-LP guidance,
+not an independent LP heuristic. Class-aware novelty/causality not established
+by this comparison. Costs, censoring, target equality and memory scopes must be
+explicit. PR87 GPU and new CPU12h package await independent execution approvals.
+No new architecture, seed search, expansion or experiment is authorized here.
+
 19 October: [final210-cell CPU review](research/pr86-final-analysis.md) completes
 the planned comparison, not an independent test or the entire MVP2. Effects
 depend on parent, CPU cap and cost scope; M2/M1 remains an essential comparison.
