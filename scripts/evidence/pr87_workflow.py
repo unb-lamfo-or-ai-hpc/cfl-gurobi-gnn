@@ -122,22 +122,35 @@ def profile(text, job, world):
     }
 
 
-def submit(stage, approved_sha):
+def submit(stage, approved_sha, authorization=None, authorization_sha=None):
     frozen = checked(stage)
     plan_sha = c.sha((stage / "plan.json").read_bytes())
     c.require(approved_sha == plan_sha, "explicit_approved_plan_required")
+    c.require(
+        authorization is not None and authorization_sha is not None,
+        "separate_gpu_execution_authorization_required",
+    )
+    raw = Path(authorization).read_bytes()
+    c.require(
+        len(raw) < 16384 and c.sha(raw) == authorization_sha, "authorization_file_hash"
+    )
+    bindings_sha = c.sha((stage / "private_bindings.json").read_bytes())
+    decision = c.validate_authorization(json.loads(raw), frozen, plan_sha, bindings_sha)
     # Claim precedes any side effect; uncertain/partial submissions never repeat.
     with (stage / "submission.claim").open("x"):
         pass
+    with (stage / "execution_authorization.json").open("xb") as stream:
+        stream.write(raw)
     c.write(
         stage / "approval.json",
         {
             "explicitly_approved": True,
             "plan_sha256": plan_sha,
-            "bindings_sha256": c.sha((stage / "private_bindings.json").read_bytes()),
+            "bindings_sha256": bindings_sha,
             "budget": frozen["protocol"]["budget"],
             "seed": 42,
-            "authority": "author_20261019_seed42_only_use_needed_budget_then_explicit_CLI",
+            "authorization_sha256": authorization_sha,
+            "decision_reference": decision["decision_reference"],
             "automatic_retry": False,
         },
     )
@@ -248,6 +261,23 @@ def run(stage, index):
         == c.sha((stage / "plan.json").read_bytes()),
         "approval_plan",
     )
+    # Submission, allocated launch and independent review protect different boundaries.
+    approval = c.read(stage / "approval.json")
+    auth_raw = (stage / "execution_authorization.json").read_bytes()
+    c.require(
+        c.sha(auth_raw) == approval["authorization_sha256"], "launch_authorization_hash"
+    )
+    c.require(
+        approval["bindings_sha256"]
+        == c.sha((stage / "private_bindings.json").read_bytes()),
+        "launch_bindings_changed",
+    )
+    c.validate_authorization(
+        json.loads(auth_raw),
+        frozen,
+        approval["plan_sha256"],
+        approval["bindings_sha256"],
+    )
     if index:
         c.validate_result(c.read(stage / "runs/0/result.json"), frozen, 0)
         prior = c.read(stage / "runs/0/supervisor.json")
@@ -294,7 +324,7 @@ def run(stage, index):
 def review(value):
     frozen = value["plan"]
     c.require(
-        value["protocol_id"] == "pr87_matched_parent_training_v1"
+        value["protocol_id"] == "pr87_matched_parent_training_v2"
         and frozen == c.plan(frozen["source_commit"]),
         "public_plan",
     )
@@ -302,6 +332,29 @@ def review(value):
         value["raw_logs_included"] is False
         and value["private_paths_included"] is False,
         "public_scope",
+    )
+    approval = value["approval"]
+    raw = value["authorization_json"].encode("utf-8")
+    c.require(
+        c.sha(raw) == approval["authorization_sha256"], "review_authorization_hash"
+    )
+    expected_plan_sha = c.sha(
+        (json.dumps(frozen, sort_keys=True, indent=2, allow_nan=False) + "\n").encode()
+    )
+    c.require(
+        approval["explicitly_approved"] is True
+        and approval["plan_sha256"] == expected_plan_sha
+        and approval["budget"] == frozen["protocol"]["budget"]
+        and approval["seed"] == 42
+        and approval["automatic_retry"] is False,
+        "review_approval_scope",
+    )
+    decision = c.validate_authorization(
+        json.loads(raw), frozen, expected_plan_sha, approval["bindings_sha256"]
+    )
+    c.require(
+        decision["decision_reference"] == approval["decision_reference"],
+        "review_decision",
     )
     c.require(
         len(value["results"]) == 2 and value["accounting"]["terminal"],
@@ -375,6 +428,9 @@ def collect(stage):
         "protocol_id": frozen["protocol"]["protocol_id"],
         "plan": frozen,
         "approval": c.read(stage / "approval.json"),
+        "authorization_json": (stage / "execution_authorization.json")
+        .read_bytes()
+        .decode("utf-8"),
         "results": results,
         "supervisors": supervisors,
         "accounting": account,
@@ -413,6 +469,8 @@ def main():
     )
     parser.add_argument("--stage", type=Path)
     parser.add_argument("--approved-plan-sha256")
+    parser.add_argument("--authorization", type=Path)
+    parser.add_argument("--authorization-sha256")
     parser.add_argument("--index", type=int)
     parser.add_argument("--receipt", type=Path)
     parser.add_argument("--expected-sha256")
@@ -427,7 +485,12 @@ def main():
     elif args.action == "prepare":
         prepare(args.stage)
     elif args.action == "submit":
-        submit(args.stage, args.approved_plan_sha256)
+        submit(
+            args.stage,
+            args.approved_plan_sha256,
+            args.authorization,
+            args.authorization_sha256,
+        )
     elif args.action == "status":
         print(json.dumps(status(args.stage), indent=2))
     elif args.action == "collect":

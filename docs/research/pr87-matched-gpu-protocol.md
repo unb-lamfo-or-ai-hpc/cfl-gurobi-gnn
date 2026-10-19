@@ -1,5 +1,14 @@
 # PR87 — entrenamiento serial en 1 GPU frente a DDP en 4 GPUs
 
+## Revisión vigente — autorización pendiente, 19/10/2026
+
+El [paquete GPU separado](pr87-gpu-authorization-package.md) y el contrato
+`pr87_matched_parent_training_v2` sustituyen la autoridad operativa anterior.
+La nueva decisión autoriza preparar, no ejecutar. No usar bloques CLI previos
+para nuevos envíos. PlanSHA solo no autoriza submit: se requiere recibo GPU
+específico ligado aplan,source,bindings y presupuesto. No hay merge autorizado.
+El trabajo100épocas/batch4 y la seed42 se conservan sin cambios.
+
 ## Decisión y objetivo
 
 Contrato final de preparación, 19/10/2026. El autor descartó variar la seed:
@@ -102,7 +111,8 @@ No se transforma el número de decisiones correlacionadas en tamaño muestral.
 
 ## Presupuesto exacto y riesgos aceptados
 
-El autor autoriza avanzar solo con seed42 y el presupuesto necesario. Se fija
+El autor autoriza preparar solo con seed42; el presupuesto de ejecución queda
+pendiente de decisión específica. Se propone
 un techo operativo acotado de12h/job, no una estimación de duración garantizada:
 
 | Recurso máximo | Serial | DDP4 | Pareja |
@@ -133,7 +143,7 @@ batch, grafo o precisión en silencio. Sin garantía sobre swap. Watchdog hasta
 muestrean cada5s; ausencia de telemetría se declara, no se convierte en cero.
 
 La duración y RAM del protocolo exacto no están probadas por tiempos de inferencia
-o por los registros legacy. Este es el riesgo acotado aceptado, no motivo para
+o por los registros legacy. Este es un riesgo acotado propuesto, no motivo para
 una campaña extra de pilotos. Si no termina, conservar ejecución incompleta,
 sin retry, extensión, más semillas, epochs reducidos ni benchmark corto sustituto.
 El presupuesto máximo no es consumo medido.
@@ -181,9 +191,10 @@ Conservar caché pip; no ampliar el CI indiscriminadamente.
 
 Preparación, envío, consulta y recogida están en
 `scripts/evidence/operate_pr87_training.sh`; consulta/recogida no esperan en bucle.
-El runbook fijará el commit publicado y las rutas de la campaña. La ejecución
-explícita del comando de envío registra el presupuesto aprobado por el autor;
-no pide una frase de confirmación ni aprobación para cada corrección técnica.
+El runbook fijará el commit publicado y las rutas de la campaña solo después
+de una autorización GPU específica. El recibo separado registra esa decisión;
+no basta ejecutar el comando ni conocer el planSHA. No se pide una frase larga
+ni aprobación para cada corrección técnica.
 En el momento de publicar este protocolo aún no se ejecutó ningún entrenamiento
 real de PR87. No confundir tests sintéticos CPU con cualificación instalada.
 

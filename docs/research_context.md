@@ -1,5 +1,13 @@
 # CFL--GNN research context
 
+19 October methodology revision: approved preparation only. PR88 consolidates
+D1–D6 and seed42-only main analysis, preserving210 originals and60other-seed
+records as history. Here PR87 retains matched100epochs/globalbatch4 and the
+same scientific training parameters, but changes its authority contract to v2:
+new specific GPU receipt required before submission, launch and review.
+The [GPU package](research/pr87-gpu-authorization-package.md) is independent of
+the CPU12h proposal. Neither execution nor merge is authorized by this revision.
+
 PR87 author revision19October: compare only seed42 serial1GPU and DDP4, not
 three seeds. [Matched learning work and acceptance](research/pr87-matched-gpu-protocol.md)
 separate technical completeness from positive performance. One paired case

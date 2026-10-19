@@ -8,6 +8,7 @@ import json
 import math
 import subprocess
 from collections import Counter
+from datetime import datetime
 from pathlib import Path
 
 import audit_sprint_c_numeric as admitted
@@ -118,6 +119,58 @@ def plan(commit):
         "automatic_retry": False,
         "scientific_reporting_eligible": False,
     }
+
+
+def validate_authorization(value, frozen, plan_sha, bindings_sha):
+    """Bind a separately recorded author decision, not a plan or a CPU approval.
+
+    This receipt is an audit record, not cryptographic proof of human identity.
+    No prepare/submit action is allowed to invent the researcher's decision.
+    """
+    require(
+        set(value)
+        == {
+            "package_id",
+            "execution_authorized",
+            "plan_sha256",
+            "bindings_sha256",
+            "source_commit",
+            "budget",
+            "seed",
+            "decision_reference",
+            "approved_at_utc",
+            "automatic_retry",
+        },
+        "authorization_schema",
+    )
+    require(
+        value["package_id"] == "pr87_gpu_seed42_authorization_v2",
+        "gpu_authorization_only",
+    )
+    require(value["execution_authorized"] is True, "execution_not_authorized")
+    require(
+        value["automatic_retry"] is False and value["seed"] == 42, "authorization_scope"
+    )
+    require(
+        value["plan_sha256"] == plan_sha and value["bindings_sha256"] == bindings_sha,
+        "authorization_plan_or_bindings",
+    )
+    require(
+        value["source_commit"] == frozen["source_commit"]
+        and value["budget"] == frozen["protocol"]["budget"],
+        "authorization_source_or_budget",
+    )
+    require(
+        isinstance(value["decision_reference"], str)
+        and 8 <= len(value["decision_reference"]) <= 500,
+        "author_decision_reference",
+    )
+    approved = datetime.fromisoformat(value["approved_at_utc"].replace("Z", "+00:00"))
+    require(
+        approved.utcoffset() is not None and approved.utcoffset().total_seconds() == 0,
+        "approval_timestamp_utc",
+    )
+    return value
 
 
 def validate_result(value, frozen, index):

@@ -27,6 +27,24 @@ def profile(job="123", world=1):
     )
 
 
+def approval_fixture(stage, frozen, plan_sha):
+    # Synthetic decision for offline tests only; never authorizes a real job.
+    value = {
+        "package_id": "pr87_gpu_seed42_authorization_v2",
+        "execution_authorized": True,
+        "plan_sha256": plan_sha,
+        "bindings_sha256": c.sha((stage / "private_bindings.json").read_bytes()),
+        "source_commit": frozen["source_commit"],
+        "budget": frozen["protocol"]["budget"],
+        "seed": 42,
+        "decision_reference": "OFFLINE_SYNTHETIC_FIXTURE_ONLY",
+        "approved_at_utc": "2026-10-19T00:00:00Z",
+        "automatic_retry": False,
+    }
+    path = stage / "fixture_authorization.json"
+    return path, c.write(path, value)
+
+
 class PR87Tests(unittest.TestCase):
     def complete_result(self, frozen, index):
         row = {
@@ -207,6 +225,7 @@ class PR87Tests(unittest.TestCase):
             frozen = c.plan("a" * 40)
             plan_sha = c.write(stage / "plan.json", frozen)
             c.write(stage / "private_bindings.json", {})
+            auth, auth_sha = approval_fixture(stage, frozen, plan_sha)
             calls = []
 
             def fake(args):
@@ -225,7 +244,7 @@ class PR87Tests(unittest.TestCase):
                 patch.object(w, "checked", return_value=frozen),
                 patch.object(w, "command", side_effect=fake),
             ):
-                w.submit(stage, plan_sha)
+                w.submit(stage, plan_sha, auth, auth_sha)
                 self.assertEqual(
                     [args[-1] for args in calls if args[:2] == ["scontrol", "release"]],
                     ["123", "124"],
@@ -238,7 +257,7 @@ class PR87Tests(unittest.TestCase):
                 )
                 previous = len(calls)
                 with self.assertRaises(FileExistsError):
-                    w.submit(stage, plan_sha)
+                    w.submit(stage, plan_sha, auth, auth_sha)
                 self.assertEqual(previous, len(calls))
 
     def test_partial_submission_never_repeats_or_releases(self):
@@ -247,6 +266,7 @@ class PR87Tests(unittest.TestCase):
             frozen = c.plan("a" * 40)
             plan_sha = c.write(stage / "plan.json", frozen)
             c.write(stage / "private_bindings.json", {})
+            auth, auth_sha = approval_fixture(stage, frozen, plan_sha)
             calls = []
 
             def fake(args):
@@ -260,7 +280,7 @@ class PR87Tests(unittest.TestCase):
                 patch.object(w, "command", side_effect=fake),
             ):
                 with self.assertRaises(ValueError):
-                    w.submit(stage, plan_sha)
+                    w.submit(stage, plan_sha, auth, auth_sha)
                 self.assertTrue((stage / "submission.claim").is_file())
                 self.assertTrue((stage / "submission-0.json").is_file())
                 self.assertFalse(any(a[:2] == ["scontrol", "release"] for a in calls))
@@ -301,6 +321,109 @@ class PR87Tests(unittest.TestCase):
         code = "import sys; import cfl_gnn.training.matched_gpu; assert 'torch' not in sys.modules"
         subprocess.run([sys.executable, "-c", code], env=env, check=True, timeout=30)
 
+    def test_plan_hash_alone_is_not_authorization(self):
+        with tempfile.TemporaryDirectory() as temp:
+            stage = Path(temp).resolve()
+            frozen = c.plan("a" * 40)
+            plan_sha = c.write(stage / "plan.json", frozen)
+            with (
+                patch.object(w, "checked", return_value=frozen),
+                patch.object(w, "command") as command,
+            ):
+                with self.assertRaisesRegex(ValueError, "separate_gpu_execution"):
+                    w.submit(stage, plan_sha)
+                command.assert_not_called()
+                self.assertFalse((stage / "submission.claim").exists())
+
+    def test_false_cpu_wrong_budget_or_source_receipt_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            stage = Path(temp).resolve()
+            frozen = c.plan("a" * 40)
+            plan_sha = c.write(stage / "plan.json", frozen)
+            c.write(stage / "private_bindings.json", {})
+            path, _ = approval_fixture(stage, frozen, plan_sha)
+            value = c.read(path)
+            for key, bad in (
+                ("execution_authorized", False),
+                ("package_id", "pr88_cpu_medium12h_seed42_proposal_v1"),
+                ("source_commit", "b" * 40),
+                ("budget", {}),
+                ("plan_sha256", "b" * 64),
+                ("bindings_sha256", "b" * 64),
+            ):
+                changed = copy.deepcopy(value)
+                changed[key] = bad
+                with self.assertRaises(ValueError):
+                    c.validate_authorization(
+                        changed, frozen, plan_sha, value["bindings_sha256"]
+                    )
+
+    def test_authorization_hash_before_claim_or_scheduler(self):
+        with tempfile.TemporaryDirectory() as temp:
+            stage = Path(temp).resolve()
+            frozen = c.plan("a" * 40)
+            plan_sha = c.write(stage / "plan.json", frozen)
+            c.write(stage / "private_bindings.json", {})
+            auth, _ = approval_fixture(stage, frozen, plan_sha)
+            with (
+                patch.object(w, "checked", return_value=frozen),
+                patch.object(w, "command") as command,
+            ):
+                with self.assertRaisesRegex(ValueError, "authorization_file_hash"):
+                    w.submit(stage, plan_sha, auth, "b" * 64)
+                command.assert_not_called()
+                self.assertFalse((stage / "submission.claim").exists())
+
+    def test_independent_review_rechecks_authorization_and_identity(self):
+        frozen = c.plan("a" * 40)
+        with tempfile.TemporaryDirectory() as temp:
+            stage = Path(temp).resolve()
+            plan_sha = c.write(stage / "plan.json", frozen)
+            c.write(stage / "private_bindings.json", {})
+            auth, auth_sha = approval_fixture(stage, frozen, plan_sha)
+            decision = c.read(auth)
+            value = {
+                "protocol_id": "pr87_matched_parent_training_v2",
+                "plan": frozen,
+                "raw_logs_included": False,
+                "private_paths_included": False,
+                "authorization_json": auth.read_bytes().decode(),
+                "approval": {
+                    "authorization_sha256": auth_sha,
+                    "explicitly_approved": True,
+                    "plan_sha256": plan_sha,
+                    "bindings_sha256": decision["bindings_sha256"],
+                    "budget": decision["budget"],
+                    "seed": 42,
+                    "automatic_retry": False,
+                    "decision_reference": decision["decision_reference"],
+                },
+                "results": [self.complete_result(frozen, i) for i in (0, 1)],
+                "supervisors": [{"child_exit_code": 0, "guard_stop": None}] * 2,
+                "accounting": {
+                    "terminal": True,
+                    "jobs": [
+                        {
+                            "job_id": str(i),
+                            "state": "COMPLETED",
+                            "rows": [{"JobID": str(i), "ExitCode": "0:0"}],
+                        }
+                        for i in (0, 1)
+                    ],
+                },
+            }
+            for i, result in enumerate(value["results"]):
+                result["job_id"] = str(i)
+            self.assertEqual(w.review(value)["seed"], 42)
+            changed = copy.deepcopy(value)
+            changed["authorization_json"] += " "
+            with self.assertRaisesRegex(ValueError, "review_authorization_hash"):
+                w.review(changed)
+            changed = copy.deepcopy(value)
+            changed["approval"]["budget"] = {}
+            with self.assertRaisesRegex(ValueError, "review_approval_scope"):
+                w.review(changed)
+
     def test_curve_metrics_match_existing_semantics(self):
         import train_pr87 as trainer
 
@@ -314,14 +437,14 @@ class PR87Tests(unittest.TestCase):
 
     def test_failed_return_is_not_complete(self):
         value = {
-            "protocol_id": "pr87_matched_parent_training_v1",
+            "protocol_id": "pr87_matched_parent_training_v2",
             "plan": c.plan("a" * 40),
             "results": [None, None],
             "raw_logs_included": False,
             "private_paths_included": False,
             "accounting": {"terminal": True},
         }
-        with self.assertRaises((ValueError, TypeError)):
+        with self.assertRaises((ValueError, TypeError, KeyError)):
             w.review(value)
         broken = copy.deepcopy(value)
         broken["private_paths_included"] = True

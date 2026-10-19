@@ -1,5 +1,12 @@
 # PR87 — operación de una pareja seed42, sin espera interactiva
 
+## Hold vigente — revisión metodológica 19/10/2026
+
+**No iniciar entrenamientos con la entrega CLI anterior.** El nuevo mandato
+requiere una autorización GPU específica independiente del presupuestoCPU.
+El [paquete para decisión](pr87-gpu-authorization-package.md) es la referencia
+actual. No se ha creado un recibo de autorización real en esta revisión.
+
 Consultar primero el [protocolo final](pr87-matched-gpu-protocol.md).
 Solo dos entrenamientos: serial1GPU y DDP4, seed42. El autor excluyó las demás
 seeds. No hay optimización, nueva etiqueta, upgrade o cambio de hiperparámetros.
@@ -26,15 +33,16 @@ comprobar CI, pero no inicia jobs ni hace merge por esta entrega.
    y un checkout `source` independiente con `git worktree add --detach`.
 4. Ejecutar `prepare`: resolver y verificar bytes de los54grafos/raíces/etiquetas
    ya admitidos. No entrenar, cargar Gurobi ni crear un job de prueba.
-5. Ejecutar una sola vez `submit` con el SHA256 del plan recién generado.
-   Esa intervención registra el presupuesto ya aprobado y encola los dos jobs
-   retenidos, verifica sus recursos y los libera con dependencia serial.
+5. Esperar aprobación específica del paquete GPU y un recibo vinculado al plan,
+   source ybindings. Solo entonces el bloqueCLI fijado al nuevo HEAD entregará
+   submit una vez con planSHA, archivo de autorización ySHA del archivo.
+   Después verifica ambos perfiles retenidos antes de liberarlos serialmente.
 
 No escribir manualmente una frase de aprobación ni modificar JSON a mano.
 `resource_budget_approved=false` del plan conserva su carácter de propuesta;
-la autorización separada en `approval.json` queda ligada al hash del plan y
-al mapa privado de entradas. La confirmación viene del contrato del autor y
-de ejecutar explícitamente el comando, no de reescribir el plan.
+la autorización separada queda ligada al hash del plan y al mapa privado.
+`approval.json` refiere al recibo específico aprobado, no inventa la decisión
+por ejecutar el comando. Se conserva el plan propuestofalse y sus bytes.
 
 `prepare` y `submit` no se repiten. Una reclamación de envío persiste incluso
 si sbatch/SSH devuelve un error incierto. `submission-0.json` y similares

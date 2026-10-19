@@ -1,5 +1,14 @@
 # Experiment protocol
 
+Current19October revision: preparation and software tests only. The GPU protocol
+v2 preserves seed42,100epochs,3,400updates,13,600global draws, same initialized
+state/schedule/loss and parent roles. It requires a separate author-approved
+GPU execution receipt tied to plan/source/bindings/budget; no file with true
+approval is created by prepare. A CPU receipt or planSHA alone is insufficient.
+See [GPU package](research/pr87-gpu-authorization-package.md). Old released CLI
+is superseded for new submissions; historical plans/results remain unchanged.
+CPU12h and GPU approvals must be decided separately; no HPC/merge here.
+
 PR87 final preparation19October supersedes earlier multi-seed/five-arm GPU
 proposals: [one seed42 pair, serial1GPU versus DDP4](research/pr87-matched-gpu-protocol.md).
 100epochs,136global draws/34updates per epoch, batch4 with equivalent mean

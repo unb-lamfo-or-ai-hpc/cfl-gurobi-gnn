@@ -1,5 +1,18 @@
 # Current status
 
+## Current revision — PR87 GPU execution hold; PR88 methodology in parallel
+
+The author approved D1–D6 consolidation in PR88 and contract corrections here,
+NOT new jobs or merge. The [separate GPU package](research/pr87-gpu-authorization-package.md)
+requires specific new execution approval: seed42 only, serial1/DDP4,100epochs,
+globalbatch4, two sequential12h/128GiB jobs, ceiling60GPU-h/240physicalcore-h.
+PlanSHA alone no longer authorizes submission. Preserve old CLI as superseded
+history; no new runnable submit block is released. No installed PR87 result
+was supplied for this review. CPU12h budget in PR88 needs independent approval.
+Principal PR86 view is150seed42;60seed43/44 rows and multiseed plots historical.
+MINIMIZE, benchmark formulation, source records and M4/M12 limitations persist.
+No HPC, training, solver, merge or environment update in this revision.
+
 ## Current checkpoint — PR86 merged; PR87 seed42-only GPU pair prepared
 
 PR86 merged into develop at3ac1883d081684acb36ba3855cd634e057a11c66.

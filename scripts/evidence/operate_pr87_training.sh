@@ -17,7 +17,7 @@ case "$ACTION" in
   prepare|status|collect)
     exec python3 -B "$SOURCE/scripts/evidence/pr87_workflow.py" "$ACTION" --stage "$STAGE" ;;
   submit)
-    exec python3 -B "$SOURCE/scripts/evidence/pr87_workflow.py" submit --stage "$STAGE" --approved-plan-sha256 "${3:?approved plan SHA256}" ;;
+    exec python3 -B "$SOURCE/scripts/evidence/pr87_workflow.py" submit --stage "$STAGE" --approved-plan-sha256 "${3:?approved plan SHA256}" --authorization "${4:?separate approved GPU receipt}" --authorization-sha256 "${5:?authorization SHA256}" ;;
   batch)
     exec python3 -B "$SOURCE/scripts/evidence/pr87_workflow.py" run --stage "$STAGE" --index "${3:?run index}" ;;
   *) echo PR87_UNKNOWN_ACTION >&2; exit 2;;

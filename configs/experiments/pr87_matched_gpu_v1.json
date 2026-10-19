@@ -1,5 +1,7 @@
 {
-  "protocol_id": "pr87_matched_parent_training_v1",
+  "protocol_id": "pr87_matched_parent_training_v2",
+  "authorization_package_id": "pr87_gpu_seed42_authorization_v2",
+  "separate_execution_authorization_required": true,
   "objective_sense": "MINIMIZE",
   "cohort": "mixed_54_parent_pr80_admitted",
   "partition_counts": {"train": 34, "validation": 10, "test": 10},

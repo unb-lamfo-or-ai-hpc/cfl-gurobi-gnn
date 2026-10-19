@@ -1,5 +1,14 @@
 # Article plan
 
+19October revision: PR88 owns D1–D6, targeted Related Work, seed42 main views
+and claim/evidence mapping. This PR87 only supplies matched-work GPU evidence
+AFTER specific execution authorization. Do not publish GPU speedup/quality as
+observed from synthetic CI. Main CPU analysis150seed42;60other-seed rows and
+repeatability figures historical. GPU allocation hours and utilization/time
+scopes differ; one pair gives no training-seed uncertainty. See the
+[separate package](research/pr87-gpu-authorization-package.md). Article work
+continues in parallel; develop/main synchronization after manuscript review.
+
 19October PR87 scope frozen by author: one seed42 pair,1GPU serial versus4GPU
 DDP. [Final preparation protocol](research/pr87-matched-gpu-protocol.md) fixes
 equal batch/work, initialization, quality and bounded resources. Report a paired
