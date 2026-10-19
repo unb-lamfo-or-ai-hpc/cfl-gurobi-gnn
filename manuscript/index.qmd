@@ -233,11 +233,11 @@ The predictive-test graphs contain 5,536,400 binary targets, of which 5,265 take
 
 ![Training and validation loss over 100 epochs.](figures/figure_training_validation_loss.pdf){#fig-loss width=95%}
 
-The solid curve represents training loss and the dashed curve validation loss; the vertical marker identifies epoch 34. Training BCE falls from 1.5877 to 0.0275. Validation BCE reaches a minimum of 0.0510 at the selected epoch and is 0.1124 at epoch 100. The minimum-validation rule therefore selects an earlier checkpoint rather than the final network state. @tbl-predictive reports performance of this selected checkpoint on the held-out predictive graphs.
+Training BCE falls from 1.5877 to 0.0275; validation BCE reaches its minimum 0.0510 at epoch34 and rises to 0.1124 at epoch100. @tbl-predictive reports the selected checkpoint, not the terminal state.
 
 {{< include tables/current_predictive.qmd >}}
 
-Pooled precision and recall are 0.6923 and 0.7064, respectively, giving F1 of 0.6993. AP is 0.7745, and the separately calculated trapezoidal PR-AUC is 0.7747. The parent-macro F1 of 0.7027 gives a similar picture when each instance receives equal weight. ROC-AUC is 0.99969. The table also records Brier and ECE, enabling score error and calibration to be examined alongside classification performance. These measurements describe prediction; the following subsections assess its effect on optimization.
+Precision/recall are 0.6923/0.7064, pooled F1 is 0.6993 and parent-macro F1 is 0.7027. AP0.7745 and trapezoidal PR-AUC0.7747 remain distinct. ROC-AUC, Brier and ECE complement prediction, not solver-performance evidence.
 
 ## Guidance validation
 
@@ -249,15 +249,15 @@ The six-instance validation comparison satisfies the precommitted qualification 
 
 {{< include tables/current_heldout.qmd >}}
 
-Learned starts reduce terminal gap on five of six test instances, with a median paired difference of -1.164 percentage points. The largest decreases occur on medium 20 and 12, whose learned runs finish before the time limit. Medium 0 has a slightly larger terminal gap with guidance despite reaching 10% earlier; medium 4 has a slightly smaller terminal gap but crosses 10% later. Thus, terminal optimality gap and progress during the run provide complementary views. @fig-effects displays the signed gap differences, keeping validation and optimization-test observations in separate panels.
+Historically, learned starts reduce terminal gap on five of six instances, median difference -1.164 percentage points. Medium12/20 dominate the decreases. Medium0 reaches10% earlier despite a worse terminal gap; medium4 shows the reverse. @fig-effects separates validation from optimization-test differences.
 
 ![Paired terminal-gap differences by instance.](figures/figure_validation_test_gap_effects.pdf){#fig-effects width=95%}
 
-Each bar compares the learned and unguided run for one medium instance. Bars left of zero indicate a smaller terminal gap with the GNN start; bars right of zero indicate a larger gap. Numeric labels give the difference in percentage points. Panel scales differ to keep smaller effects readable. The validation panel shows four improvements; the test panel shows five, with the pronounced medium-20 effect visible rather than absorbed into an average. @fig-target-time then examines the first observed time to the 10% target for each of the three methods.
+Negative bars favour GNN gap; panel scales differ and labels use percentage points. The medium20 effect remains visible. @fig-target-time compares the first observed10% crossing, a different endpoint.
 
 ![First observed time to a 10% relative gap.](figures/figure_time_to_ten_percent_gap.pdf){#fig-target-time width=95%}
 
-Shorter observed bars indicate earlier attainment of the target. Hatched bars mark censored observations at the 3,600-second budget boundary, indicated by dotted lines, rather than measured attainment times. The GNN run crosses 10% on four instances, compared with three for each comparator. On medium 20, the learned run crosses while both comparators remain above the target; on medium 12 and 20, its observed crossing times are approximately 672 and 1,168 seconds. All times in this figure concern optimization, with preparation and inference accounted for separately.
+Hatched bars indicate censoring at3,600s, not observed attainment. GNN crosses10% on four instances, versus three per comparator; its medium12/20 crossings are approximately672/1,168s. These are solver observations, excluding preparation and inference.
 
 ## Influence and computational cost
 
@@ -269,39 +269,25 @@ The mean paired difference is -7.200 percentage points across all six instances.
 
 {{< include tables/current_timing.qmd >}}
 
-The learned runs on medium 12 and 20 use approximately 702 and 1,585 seconds of optimization. Four learned runs and all six runs of each comparator reach the optimization budget and are right-censored for time to optimality. GNN worker totals exceed optimization times because the worker also verifies artifacts, builds the model, and audits the solution. The table's worker-total column excludes feature preparation and inference, as specified in its note; it describes a different timing scope from a complete cold application.
+Medium12/20 use approximately702/1,585solver seconds with GNN. Four GNN runs and all comparator runs are censored for time to optimality. Worker time includes verification, model construction and auditing, but excludes feature preparation/inference; it is not complete cold application time.
 
 # Discussion
 
-The results connect assignment prediction with a measurable solver intervention. The network recovers about 71% of labelled positives at roughly 69% precision, and the resulting class-aware starts yield smaller terminal gaps on five of six optimization-test instances. Together, these observations address the research question at both levels: the learned values carry predictive information, and supplying selected values can improve fixed-budget optimization in the examined setting.
+Historical assignment accuracy and terminal-gap improvements motivate the mechanism, but do not establish uniform acceleration. Current retrospective CPU effects depend on parent, thread cap, comparator and cost boundary. A favourable solver-only result can disappear after preparation costs. A gap decrease can arise from primal or dual progress and is not itself a speedup.
 
-This connection follows the L2O perspective of @bengio2021: learning is valuable when it improves a decision within an optimization procedure. Like the starting-scenario approach of @goerigk2025, our method learns information that initializes a conventional solution algorithm. The objects differ, however: their classifier selects scenarios, whereas ours selects variable values. In contrast to the constraint-generating integration of @qu2026, our partial start preserves the original feasible region. This distinction is important when interpreting the solver's subsequent objective bounds.
+The L2O perspective [@bengio2021] connects useful learned information to a conventional solver. Unlike starting-scenario selection [@goerigk2025], we predict variable values; unlike learned constraints [@qu2026], Start preserves the feasible region. Gasse-inspired structure does not make the representation original. Nor does comparing matched M1/M2 isolate the causal effect of class-aware ordering: support size and ones are matched, but preparation is dependent and no mechanism-isolating ablation was performed.
 
-The bipartite representation makes the proposal consistent with the structural learning approach of @gasse2019, but changes the target from branching to primal assignments. The favorable test-gap pattern complements the prediction-guided primal methods of @ding2020, @khalil2022, and @canturk2024. It also supports the practical rationale behind optimizer-completed partial assignments in @nair2020: a useful suggestion need not specify an entire solution. The class-aware construction gives this principle a concrete form for sparse binary positives, retaining predicted ones before filling the remaining support with zeros.
-
-The root-LP comparison provides an additional perspective. Because the two starts contain equally many values and equally many ones, their different outcomes concern which variables receive those values. The GNN improves gap on five test instances, compared with one for the matched relaxation-based start. This pattern is consistent with useful learned ordering information rather than a benefit from supplying an arbitrary start of the same size. It motivates further examination of the interaction between graph-derived scores and partial-start completion, rather than attributing the effect to network accuracy alone.
-
-Prediction quality and optimization progress also need different interpretations. Precision and recall focus attention on rare positive targets, as advocated for imbalanced classification by @saito2015. Brier and ECE complement that view by describing score error and reliability [@brier1950; @guo2017]. The terminal gap reflects both the feasible objective and the dual bound: a smaller gap does not necessarily mean a smaller feasible objective in every pair. Gap and time to the 10% target also capture different aspects of progress, as medium 0 and 4 illustrate. The separate predictive and optimization assessments therefore clarify how learned information is used by the solver.
+Rare-positive precision/recall [@saito2015] and calibration diagnostics [@brier1950; @guo2017] remain distinct from optimization utility. Numerical sensitivity, exposed parents, censoring and a single seed bound interpretation. Negative and heterogeneous results are scientifically informative; longer running time and DDP are proposed evaluations, not remedies assumed to succeed.
 
 # Final considerations, limitations and future work
 
-This study set out to determine whether a bipartite GNN could provide useful starting values for medium CFL optimization. The implemented offline-to-online procedure meets that objective in the examined development setting: it learns from checked original-instance solutions, constructs class-aware partial starts, and produces favorable terminal-gap differences on five of six test instances without changing the mathematical model. The median improvement is 1.164 percentage points, and two learned runs complete before the optimization limit. These findings establish a practical demonstration and a reproducible basis for further investigation.
+The contribution is an auditable native partial-start pipeline and a controlled, explicitly scoped assessment, not universal GNN superiority. The historical six-medium gap improvements remain archived; the principal150-row seed42 view instead exposes heterogeneous effects, censoring and numerical restrictions. Neither view establishes population-level significance, exact optimality or independent generalization.
 
-Several limitations define its scope. The experiment uses one seed and six optimization-test instances; the influence analysis shows that two instances account for much of the mean effect. The observations do not establish population-level statistical significance or a general speedup. Four learned runs and all comparator runs remain censored for time to optimality. Detailed preparation and inference costs are retained upstream but are not included in the transferred publication timing table, so cold end-to-end acceleration cannot be quantified from that table alone. The root-LP comparator depends on the learned start's support and positive count, and an independent random-support comparison has not been completed.
-
-Solution labels are feasible but may be approximate, and the 10% admission ceiling selects instances that the solver can already solve to that quality. Alternative good solutions can differ from the supervised label. Consequently, score agreement and calibration are not equivalent to solution quality. The earlier easy-only engineering pilot had mixed outcomes: guided gap improved from 6.753% to 6.391% on medium 0 but worsened from 7.172% to 7.830% on medium 1, and guided elapsed cost increased. Validation of the revised policy also includes increases of 2.326 and 0.735 percentage points on medium 11 and 17. These cases remain in the evidence and preclude attributing the improvement solely to the selector, since the training population also changed.
-
-The full 90-instance experiment, a hard-instance demonstration, and a controlled augmentation comparison have not been completed. Longer exploratory hard solves did not meet the label-admission ceiling; this is a computational outcome, not evidence of mathematical infeasibility. Current training uses Gurobi-labelled original instances, so the reported gains are not attributed to synthetic augmentation.
+Labels may be approximate and quality screening selects a tractable subset. Agreement with one label is not solution quality. The earlier easy-only pilot and validation include adverse cases, retained upstream; training-population changes also prevent a causal selector attribution. Hard-instance and full90-parent results are not available, and unsuccessful label admission is not mathematical infeasibility.
 
 Beyond the current MVP2 scope, independent instances and mechanism-isolating ablations could strengthen interpretation. They are not authorized additions to this study. The frozen MVP2 policy uses seed42 only, with no hyperparameter search, dataset expansion or new architectures. Immediate proposed work is restricted to the four-medium longer-horizon comparison and the matched serial1/DDP4 pair, subject to separate resource approval. A single seed does not establish robustness across initializations; negative or heterogeneous outcomes remain valid findings.
 
-A longer-term direction outside the frozen MVP2 execution scope is controlled augmentation from checked Gurobi and SCIP incumbents. For incumbent $\bar x$, local branching [@fischetti2003] defines a descendant by adding
-
-$$\sum_{j\in B_p:\bar x_j=0}x_j+\sum_{j\in B_p:\bar x_j=1}(1-x_j)\leq k.$$
-
-Each descendant requires its own model, graph, and independently checked label. It must inherit its original parent's partition, remain training-only, and be treated as a correlated sample. Comparisons with original-only training should match parent sampling mass and optimizer-step budgets. Further work can examine bipartite communities and variable/constraint roles through network-science methods, complementing PCA and UMAP visualizations.
-
-Finally, a curated Zenodo dataset is planned for intermediate LP models, bipartite graphs, produced embeddings, and principal results, including unsuccessful attempts. The source ledger already preserves these outcomes; the archive requires a redistribution-rights review and verified deposition. A DOI has not yet been verified as reserved or published. Once the draft and DOI are confirmed, the data-availability statement will identify the versioned record and distinguish reserved identification from public availability.
+Augmentation, independently labelled descendants and network-science visualizations remain outside this execution scope, not completed contributions. A curated archive must preserve unsuccessful attempts and undergo redistribution-rights and deposit verification. No Zenodo DOI is claimed as reserved or published; the versioned data-availability statement remains pending that verification.
 
 # Declaration of generative AI and AI-assisted technologies in the manuscript preparation process {.unnumbered}
 
