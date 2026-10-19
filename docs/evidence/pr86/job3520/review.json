@@ -1,0 +1,23 @@
+{
+  "batch_observed_wall_seconds": 287.4481668099761,
+  "batch_outside_supervision_seconds": 0.46226677391678095,
+  "capture_scope": "model_loading_checks_optimize_signature_and_disposal_not_solver_runtime",
+  "capture_wall_seconds_sum": 269.9229797767475,
+  "completed_roots": 10,
+  "job_id": "3520",
+  "main_comparison_admitted": false,
+  "observed_root_optimization_calls": 10,
+  "optimization_runs_added_by_review": 0,
+  "plan_sha256": "e73107a12affdbb1c4f4cab9a4e61b28cd0be7ca51d4a7c842321de6eca77e52",
+  "private_roots_reopened_by_public_review": false,
+  "prospective_starts_ready": false,
+  "protocol_id": "pr86_job3520_public_review_v1",
+  "return_sha256": "4b431deb2736b9f780582425c0d77b1e86dbe297abbfffcb48c4027f15549815",
+  "root_export_wall_seconds_sum": 9.842726562172174,
+  "sampled_cgroup_peak_bytes": 2164248576,
+  "scheduler_elapsed_seconds": 288,
+  "scientific_reporting_eligible": false,
+  "scope": "root_preparation_identity_and_nested_cost_observations_only",
+  "source_commit": "f58a7b899ab594a7dfac4ed7df4579be9612ab28",
+  "supervisor_wall_seconds_sum": 286.9859000360593
+}

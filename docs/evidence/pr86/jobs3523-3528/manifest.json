@@ -1,0 +1,11 @@
+{
+  "inputs": [
+    "dd1a553b453289b23dbed3d52bd4bd7e0ac93eb2b4283597b788e406fcab6825",
+    "55b5b60e835cde8af5ab11e9735b052c0c53fa13cdd222f912d192eac65c1024"
+  ],
+  "outputs": {
+    "f0_cpu.svg": "a19502c3900845b5d03ca8a7f15a6b6f1681fe038a76dde217d0114aabfe4c90",
+    "f0_results.csv": "d28ae35dfc3baca2c0758937c0ae7fee9ae15bbb09ac09aabc06bb2ac8e21cc6",
+    "review.json": "f5ecef73358799af9be071f90312e76192e497d8fc31b49368eddbd976022d0a"
+  }
+}

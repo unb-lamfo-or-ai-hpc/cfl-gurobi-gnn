@@ -1,0 +1,9 @@
+{
+  "execution_authorized": false,
+  "files": {
+    "plan.json": "bbc86d8e342c7f309f3fc6e66750522a77f6fa3e49f46c42ffe32eb30c52c727",
+    "planned_cells.csv": "6861f410bbb404018a751336491f3fa8dac107b2508358593214675c8a2279dd"
+  },
+  "planner_source_sha256_lf": "4918c5295771796123c19a267394d2106c45f357d76b68f4356b3a3b0c48e61c",
+  "protocol_id": "pr86_controlled_comparison_proposal_v1"
+}

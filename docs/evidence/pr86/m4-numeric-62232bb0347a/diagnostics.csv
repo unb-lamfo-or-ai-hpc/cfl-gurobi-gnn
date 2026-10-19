@@ -1,0 +1,5 @@
+cell_id,reported_primal,reported_dual,stored_max_integrality_residual,integer_values_changed_by_rounding,stored_max_row_residual,rounded_max_row_residual,rounded_residual_over_existing_tolerance,rounded_max_row_normalized_residual,normalized_rows_above_1e_minus6,objective_change_after_rounding,rounded_original_unit_feasible,exact_optimality_certified,private_solution_hash_is_historical_seal
+M4-threads1-seed43-M2,4.904654739916017,4.542297063792819,3.1709998348745057e-07,2,1.3210039561794423e-11,0.00025368,253.68,3.171e-07,0,-4.1801853711831427e-07,False,False,False
+M4-threads2-seed42-M2,4.900766815427447,4.54995299508049,8.910532920514136e-06,19,8.395774075964368e-10,0.00025368,253.68,3.171e-07,0,7.386160483235926e-07,False,False,False
+M4-threads4-seed42-M0,4.902162841678935,4.473633185110794,9.971299751866442e-06,25,1.2224938509414196e-11,0.00025661621007388237,256.61621007388237,3.20770262592353e-07,0,9.821556785638563e-07,False,False,False
+M4-threads8-seed42-M2,4.905362657205728,4.905362657205728,1.2395836015439435e-07,1,1.1876484523479572e-11,9.91667e-05,99.1667,1.23958375e-07,0,-6.432560706315371e-08,False,False,False

@@ -1,0 +1,105 @@
+"""Next six frozen F3 groups, inside the approved PR86 210-call budget."""
+
+import argparse
+import json
+from pathlib import Path
+from types import SimpleNamespace
+
+import pr86_six_job_queue as q
+import review_pr86_f0 as reviewed
+
+
+def predecessor(raw):
+    _, summary = reviewed.review(raw)
+    return {
+        k: summary[k]
+        for k in (
+            "wave_return_sha256",
+            "first_return_sha256",
+            "completed_cells",
+            "completed_groups",
+            "all_target_gaps_met",
+        )
+    }
+
+
+def plan(commit):
+    groups = [q.first.plan_for_group(commit, index) for index in range(7, 13)]
+    q.require(
+        all(g["group"]["parent"] == "CFL_easy_instance_3" for g in groups), "f3_only"
+    )
+    return {
+        "protocol_id": "pr86_six_serial_f3_groups_v1",
+        "source_commit": commit,
+        "first_review": predecessor(q.read(reviewed.DEST / "public_return.json")),
+        "groups": groups,
+        "maximum_submissions": 6,
+        "maximum_optimization_calls": 18,
+        "maximum_serial_reservation_seconds": 86400,
+        "maximum_physical_core_hours": sum(g["group"]["threads"] * 4 for g in groups),
+        "maximum_solver_seconds": 64800,
+        "campaign_completed_calls_before_this_wave": 21,
+        "campaign_calls_ceiling": 210,
+        "automatic_retry": False,
+        "scientific_reporting_eligible": False,
+        "dispatch_after_this_wave": False,
+    }
+
+
+def installed_review():
+    q.installed_first()
+    return predecessor(
+        q.read(q.BASE / ("six-f0-" + reviewed.COMMIT[:12]) / "public_return.json")
+    )
+
+
+POLICY = SimpleNamespace(
+    plan=plan,
+    prefix="six-f3-",
+    protocol="pr86_six_serial_f3_groups_v1",
+    claim=q.BASE / "main-comparison-f3-first-six.claim",
+    operator="operate_pr86_f3_jobs.sh",
+    installed_review=installed_review,
+)
+
+
+def prepare(stage):
+    q.first.roots.accounting.host()
+    frozen = plan(q.first.roots.head())
+    q.require(
+        stage.resolve() == q.BASE / (POLICY.prefix + frozen["source_commit"][:12]),
+        "stage",
+    )
+    q.require(installed_review() == frozen["first_review"], "predecessor_review")
+    q.first.private_inputs(frozen["groups"][0])
+    return {"plan_sha256": q.write(stage / "plan.json", frozen), "submissions_added": 0}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "action", choices=("prepare", "submit", "run", "status", "collect", "review")
+    )
+    parser.add_argument("--stage", type=Path)
+    parser.add_argument("--approved-plan-sha256")
+    parser.add_argument("--index", type=int)
+    parser.add_argument("--receipt", type=Path)
+    args = parser.parse_args()
+    if args.action == "prepare":
+        result = prepare(args.stage)
+    elif args.action == "submit":
+        result = q.submit(args.stage, args.approved_plan_sha256, POLICY)
+    elif args.action == "run":
+        return q.run(args.stage, args.index, POLICY)
+    elif args.action == "review":
+        result = q.validate_return(q.read(args.receipt), POLICY)
+    else:
+        result = {"status": q.status, "collect": q.collect}[args.action](
+            args.stage, POLICY
+        )
+    print(json.dumps(result, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

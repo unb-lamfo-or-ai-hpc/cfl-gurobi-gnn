@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="430" viewBox="0 0 820 430">
+<rect width="820" height="430" fill="white"/>
+<g font-family="sans-serif" fill="#182635">
+<text x="60" y="28" font-size="20">F3: tiempo del solver por límite de hilos (seed 42)</text>
+<text x="60" y="52" font-size="12">Serie parcial: 16 hilos pendiente. Sin generalización ni coste de preparación.</text>
+<path d="M70 350H690" stroke="#dbe2e9"/><text x="15" y="354" font-size="12">0 s</text>
+<path d="M70 285H690" stroke="#dbe2e9"/><text x="15" y="289" font-size="12">32 s</text>
+<path d="M70 220H690" stroke="#dbe2e9"/><text x="15" y="224" font-size="12">65 s</text>
+<path d="M70 155H690" stroke="#dbe2e9"/><text x="15" y="159" font-size="12">97 s</text>
+<path d="M70 90H690" stroke="#dbe2e9"/><text x="15" y="94" font-size="12">130 s</text>
+<circle cx="90" cy="221.77" r="4" fill="#3457a6"/>
+<circle cx="230" cy="236.08" r="4" fill="#3457a6"/>
+<circle cx="370" cy="202.89" r="4" fill="#3457a6"/>
+<circle cx="510" cy="224.91" r="4" fill="#3457a6"/>
+<polyline points="90,221.77 230,236.08 370,202.89 510,224.91" fill="none" stroke="#3457a6" stroke-width="2"/>
+<text x="710" y="100" fill="#3457a6">M0</text>
+<circle cx="90" cy="219.49" r="4" fill="#b15a10"/>
+<circle cx="230" cy="234.59" r="4" fill="#b15a10"/>
+<circle cx="370" cy="206.37" r="4" fill="#b15a10"/>
+<circle cx="510" cy="117.86" r="4" fill="#b15a10"/>
+<polyline points="90,219.49 230,234.59 370,206.37 510,117.86" fill="none" stroke="#b15a10" stroke-width="2"/>
+<text x="710" y="124" fill="#b15a10">M1</text>
+<circle cx="90" cy="276.89" r="4" fill="#128064"/>
+<circle cx="230" cy="284.36" r="4" fill="#128064"/>
+<circle cx="370" cy="263.24" r="4" fill="#128064"/>
+<circle cx="510" cy="268.50" r="4" fill="#128064"/>
+<polyline points="90,276.89 230,284.36 370,263.24 510,268.50" fill="none" stroke="#128064" stroke-width="2"/>
+<text x="710" y="148" fill="#128064">M2</text>
+<text x="86" y="375">1</text>
+<text x="226" y="375">2</text>
+<text x="366" y="375">4</text>
+<text x="506" y="375">8</text>
+<text x="290" y="403">Límite de hilos / núcleos físicos</text>
+</g></svg>

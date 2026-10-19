@@ -1,0 +1,464 @@
+{
+  "cause_proven": false,
+  "collector_source_commit": "3a2e3bfbc9fb8eb0341603d20f6593ad1bf6a416",
+  "collector_source_sha256_lf": "5b463d2e8b3a95941c0e42f208954dbe95d47e2404f5d9777b89b9920f97f247",
+  "diagnostic_helper_sha256_lf": "081d5d484aed191bae2740a4dd576791c02e6cc0857adfa48bc4fb3c2fee68a5",
+  "mathematical_model_or_solver_parameters_changed": false,
+  "model": {
+    "coefficients_below_1e_minus9": 0,
+    "constraints": 2400,
+    "mathematical_signature_sha256": "c7afb1159eb49876e07329b18f76f1e954f967278c564b63f3415fe4d8f6b127",
+    "max_abs_coefficient": 800.0,
+    "min_nonzero_abs_coefficient": 4.16587e-05,
+    "nonzeros": 2561600,
+    "sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+    "variables": 1281600
+  },
+  "newly_observed_private_hashes_are_not_historical_seals": true,
+  "optimization_runs_added": 0,
+  "original_solution_hashes_were_not_exported_in_historical_return": true,
+  "protocol_id": "pr86_wave61_m12_stored_solution_numeric_audit_v1",
+  "raw_logs_or_variable_values_included": false,
+  "remaining_dispatch_admitted": false,
+  "return_sha256": "4088a2d464ec1d1874b249b7aeed0e720a55bf36e35dfb329d859fb853b709d7",
+  "rounded_values_persisted_or_used_as_start": false,
+  "scheduler_queries": 0,
+  "scientific_reporting_eligible": false,
+  "solutions": [
+    {
+      "allowlisted_log_flags": {
+        "large_bounds": false,
+        "large_matrix_coefficient_range": false,
+        "large_rhs": false,
+        "numerical_trouble": false,
+        "optimal_solution_found": false,
+        "quad_precision": false,
+        "unscaled_dual_violation": false,
+        "unscaled_primal_violation": false
+      },
+      "cell_id": "M12-threads1-seed42-M0",
+      "child_sha256": "663cd90e2bd8ecc06c2251e3e1bacdfbf4b001cb18c03911d9f7153b80c22f89",
+      "diagnostics": {
+        "integer_values_changed_by_rounding": 1,
+        "rounded_in_memory_only": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": false
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 5.2073375e-08,
+            "max_row_residual": 4.16587e-05,
+            "recomputed_objective": 4.741101328263212
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 4.16587e-05,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 5.2073375e-08,
+          "recomputed_objective": 4.741101328263212,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": false
+        },
+        "rounded_objective_minus_stored_objective": -3.151005945056795e-08,
+        "stored": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 1.6191709870966122e-14,
+            "max_row_residual": 1.2953367896772897e-11,
+            "recomputed_objective": 4.741101359773271
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 5.207335880829013e-08,
+          "max_row_residual": 1.295336789761993e-11,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 1.6191709872024913e-14,
+          "recomputed_objective": 4.741101359773271,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        }
+      },
+      "private_solution_sha256_observed_now": "75b3bddd2c5aa6c94285a0824d31290869b8e8c8a28306b734085f128688831f",
+      "reported_dual": 4.453250706773666,
+      "reported_primal": 4.741101359773271,
+      "sealed_log_sha256": "42c38279617363968396fc9525cd880174090727c2a5ae31217feb4ab683b032"
+    },
+    {
+      "allowlisted_log_flags": {
+        "large_bounds": false,
+        "large_matrix_coefficient_range": false,
+        "large_rhs": false,
+        "numerical_trouble": false,
+        "optimal_solution_found": false,
+        "quad_precision": false,
+        "unscaled_dual_violation": false,
+        "unscaled_primal_violation": false
+      },
+      "cell_id": "M12-threads1-seed42-M1",
+      "child_sha256": "48612cb14d48f8c1055c77e7974917515f541d32ddf59c94e72f3d7983c62e88",
+      "diagnostics": {
+        "integer_values_changed_by_rounding": 1,
+        "rounded_in_memory_only": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": false
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 5.2073375e-08,
+            "max_row_residual": 4.16587e-05,
+            "recomputed_objective": 4.7409325516404754
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 4.16587e-05,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 5.2073375e-08,
+          "recomputed_objective": 4.740932551640475,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": false
+        },
+        "rounded_objective_minus_stored_objective": -1.5383609053287728e-07,
+        "stored": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 1.610824742656886e-14,
+            "max_row_residual": 1.2886597941255088e-11,
+            "recomputed_objective": 4.740932705476564
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 5.2073358891752575e-08,
+          "max_row_residual": 1.2886597943796187e-11,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 1.6108247429745234e-14,
+          "recomputed_objective": 4.740932705476565,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        }
+      },
+      "private_solution_sha256_observed_now": "e79d17909ea0dddcd729b6073028e582b73a7bde0274153e82a73f482b0ab9b4",
+      "reported_dual": 4.434673876940186,
+      "reported_primal": 4.740932705476565,
+      "sealed_log_sha256": "09aedb8986bb6068ebf7ec25a5cefa72f0440f5be6b3cd32ee55c9eaa2a9a0b9"
+    },
+    {
+      "allowlisted_log_flags": {
+        "large_bounds": false,
+        "large_matrix_coefficient_range": false,
+        "large_rhs": false,
+        "numerical_trouble": false,
+        "optimal_solution_found": true,
+        "quad_precision": false,
+        "unscaled_dual_violation": false,
+        "unscaled_primal_violation": false
+      },
+      "cell_id": "M12-threads1-seed42-M2",
+      "child_sha256": "1c079223f163099fd9e0c7cc80394714e372dc89848fda9f5f57d95963d28a3b",
+      "diagnostics": {
+        "integer_values_changed_by_rounding": 0,
+        "rounded_in_memory_only": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        },
+        "rounded_objective_minus_stored_objective": 0.0,
+        "stored": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        }
+      },
+      "private_solution_sha256_observed_now": "d24439e1245b5fefe824bfcea0830686459b7aed499a4ab2781c4d936597139d",
+      "reported_dual": 4.741382854739205,
+      "reported_primal": 4.741382854739205,
+      "sealed_log_sha256": "fd3b3c25202cfb7e2eac357d8398484b0fc349a53785d51f5a3f398f26e68075"
+    },
+    {
+      "allowlisted_log_flags": {
+        "large_bounds": false,
+        "large_matrix_coefficient_range": false,
+        "large_rhs": false,
+        "numerical_trouble": false,
+        "optimal_solution_found": true,
+        "quad_precision": false,
+        "unscaled_dual_violation": false,
+        "unscaled_primal_violation": false
+      },
+      "cell_id": "M12-threads1-seed43-M2",
+      "child_sha256": "370bcdaad2d8758edc98d205f198c882ad0f5bfa256c06afa0f5c5984a237254",
+      "diagnostics": {
+        "integer_values_changed_by_rounding": 0,
+        "rounded_in_memory_only": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        },
+        "rounded_objective_minus_stored_objective": 0.0,
+        "stored": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        }
+      },
+      "private_solution_sha256_observed_now": "ee1ba9d28d6437902aff700258cdc0d83b6890e08190709eace5390dba411b16",
+      "reported_dual": 4.741382854739205,
+      "reported_primal": 4.741382854739205,
+      "sealed_log_sha256": "16d5800627c283b37555ae3b6f00a51f143ac1fb0ab7d70c7cbb0f7889a52e47"
+    },
+    {
+      "allowlisted_log_flags": {
+        "large_bounds": false,
+        "large_matrix_coefficient_range": false,
+        "large_rhs": false,
+        "numerical_trouble": false,
+        "optimal_solution_found": true,
+        "quad_precision": false,
+        "unscaled_dual_violation": false,
+        "unscaled_primal_violation": false
+      },
+      "cell_id": "M12-threads1-seed44-M2",
+      "child_sha256": "5d69646194e1e4919a6ca6ba0e95283919d19a8bba34aaf6ae38bc2c7cc03808",
+      "diagnostics": {
+        "integer_values_changed_by_rounding": 0,
+        "rounded_in_memory_only": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        },
+        "rounded_objective_minus_stored_objective": 0.0,
+        "stored": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        }
+      },
+      "private_solution_sha256_observed_now": "3da1aeddf39899c97ff6e6b4dc1429a74007e7ed40f1f4c1ef433358872cf8cb",
+      "reported_dual": 4.741382854739205,
+      "reported_primal": 4.741382854739205,
+      "sealed_log_sha256": "1d6ad07897e5e640db6179fd06a1c3ac254c1dbc808cfd6fdf24a25ac1374df5"
+    },
+    {
+      "allowlisted_log_flags": {
+        "large_bounds": false,
+        "large_matrix_coefficient_range": false,
+        "large_rhs": false,
+        "numerical_trouble": false,
+        "optimal_solution_found": true,
+        "quad_precision": false,
+        "unscaled_dual_violation": false,
+        "unscaled_primal_violation": false
+      },
+      "cell_id": "M12-threads2-seed42-M2",
+      "child_sha256": "b69f0c479c3c297990f9a38f94f36fd0a95356ff914d140922a75d43eeb5af35",
+      "diagnostics": {
+        "integer_values_changed_by_rounding": 0,
+        "rounded_in_memory_only": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        },
+        "rounded_objective_minus_stored_objective": 0.0,
+        "stored": {
+          "checks": {
+            "bounds": true,
+            "integrality": true,
+            "objective": true,
+            "rows": true
+          },
+          "extended_precision": {
+            "exact_arithmetic_certificate": false,
+            "mantissa_bits": 63,
+            "max_row_normalized_residual": 0.0,
+            "max_row_residual": 0.0,
+            "recomputed_objective": 4.741382854739205
+          },
+          "feasibility_tolerance": 1e-06,
+          "integrality_tolerance": 1e-05,
+          "max_bound_residual": 0.0,
+          "max_integrality_residual": 0.0,
+          "max_row_residual": 0.0,
+          "max_row_violation_divided_by_max_abs_row_coefficient": 0.0,
+          "recomputed_objective": 4.741382854739205,
+          "row_normalization_is_diagnostic_not_new_acceptance_rule": true,
+          "rows_above_1e_minus6_after_row_normalization": 0,
+          "valid": true
+        }
+      },
+      "private_solution_sha256_observed_now": "0a19a7377ce7cec474ee05e65004d95d65814d5685fd8a3d70f173f30516542a",
+      "reported_dual": 4.741255187252368,
+      "reported_primal": 4.741382854739205,
+      "sealed_log_sha256": "497474d336bf62d81c437471fd7f8a1761c67926fea93f59ac1db7503052eab9"
+    }
+  ],
+  "source_commit": "34e470752988ec938605ae22dcaab6b4a03b4395",
+  "source_commit_role": "historical_campaign_worker",
+  "submissions_added": 0
+}
