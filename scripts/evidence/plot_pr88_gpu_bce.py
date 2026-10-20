@@ -95,7 +95,10 @@ def render(root=ROOT):
         )
         labels = ("Serial: 1 GPU", "DDP: 4 GPUs")
         for arm, color, style, label in zip(
-            ("serial1", "ddp4"), ("#214e78", "#c05b24"), ("-", "--"), labels
+            ("serial1", "ddp4"),
+            ("#214e78", "#c05b24") if es else ("#333333", "#888888"),
+            ("-", "--"),
+            labels,
         ):
             obs = value["arms"][arm]
             for ax, key in zip(axes, ("train_loss", "validation_loss")):
@@ -136,7 +139,11 @@ def render(root=ROOT):
             axes, ("Entrenamiento", "Validación") if es else ("Training", "Validation")
         ):
             ax.set_title(
-                title, loc="left", fontsize=12 if es else 10, fontweight="bold", pad=12
+                title,
+                loc="left",
+                fontsize=12 if es else 10,
+                fontweight="bold" if es else "normal",
+                pad=12,
             )
             ax.set_yscale("log")
             ax.set_xlim(1, 101)

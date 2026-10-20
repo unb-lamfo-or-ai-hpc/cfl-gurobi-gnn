@@ -57,6 +57,10 @@ class GPUFigureTests(unittest.TestCase):
             self.assertIn("DDP: 4 GPUs", svg)
             self.assertIn("Serial: 1 GPU", svg)
             self.assertNotIn("/raid/", svg)
+            if lang == "en":
+                self.assertIn("#333333", svg)
+                self.assertIn("#888888", svg)
+                self.assertNotIn("DejaVuSans-Bold", svg)
 
     def test_article_keeps_negative_quality_and_no_new_cpu_results(self):
         article = (ROOT / "manuscript/index.qmd").read_text(encoding="utf-8")

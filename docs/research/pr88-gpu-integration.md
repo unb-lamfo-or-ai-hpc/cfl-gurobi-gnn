@@ -37,7 +37,9 @@ en los solvesPR86 y no demuestran beneficio downstream de solver.
 [PDF español](../evidence/pr88/gpu/gpu_bce_by_epoch_es.pdf),
 [PNG](../evidence/pr88/gpu/gpu_bce_by_epoch_es.png) y
 [SVG](../evidence/pr88/gpu/gpu_bce_by_epoch_es.svg).
-La versión inglesa está incluida en el manuscrito. Dos paneles distinguen
+La versión inglesa está incluida en el manuscrito, en escala de grises y sin
+títulos en negrita, respetando el contrato editorial. La versiónES conserva color.
+Dos paneles distinguen
 entrenamiento y validación. Ambos ejes verticales tienen la misma escala
 logarítmica: distancias iguales representan razones, no diferencias aditivas.
 Se dibujan cuatro curvas de100valores (200filas de época,400valoresBCE),

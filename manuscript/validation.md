@@ -25,15 +25,23 @@ English vector figures were also rendered and inspected. Article text was
 condensed, not experimental evidence omitted, to retain the editorial limit.
 
 Local preview PDF SHA256:
-`321757360203aac4e2bc0b4ab29b6ca15a79948962d19075ecf2c509557a2c54`.
+`b56baa7c691da7dcc306f3d502b15a44c2ea000ad642c9729be0dd6191b88bf5`.
 Editable source ZIP SHA256:
-`d9a080399aabf25dbc550412af8cfe517703f90f0d2982ed707ac22a7d5a029a`;
+`ab0650e89c37322d2b1270849f2a6453fccd91a9b1ffde4c6e0f0cc4181ff475`;
 it includes the new vector figure. These hashes identify the local preview,
 not a byte-identical Linux CI rendering. Three nonfatal BibTeX empty-page
 warnings persist for chen2024branching, han2023 and labassi2022; no page ranges
 were invented. Final exact-head CI remains required before Ready.
 The unapproved CPU proposal, coauthor review, submission declarations and final
 release remain separate gates; this is not a submission-ready certification.
+
+Final editorial correction: the article BCE figure uses grayscale, solid/dashed
+styles and no bold titles under editorial requirements4/13. The Spanish
+presentation figure remains colored and byte-identical. The new regression
+checks the English SVG styling; no data, selections, metrics or scientific
+scope changed. The earlier colored article draft remains in Git history and
+was preserved locally before regeneration. The gray article PDF was rendered
+and page13 inspected again; page count and References boundary are unchanged.
 
 Validation covers source provenance, evidence hashes, exact citation coverage,
 author order and ORCID icons, the unchanged AI declaration, static rendering,
