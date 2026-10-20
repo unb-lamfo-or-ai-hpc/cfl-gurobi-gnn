@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 import pr87_contract as c
-from qualification_workflow import parse_accounting
+from qualification_workflow import TERMINAL, parse_accounting
 from verify_sprint_c_artifacts import Reader
 
 
@@ -321,7 +321,7 @@ def run(stage, index):
     c.require(value["seed"] == seed, "seed")
 
 
-def review(value):
+def review_envelope(value):
     frozen = value["plan"]
     c.require(
         value["protocol_id"] == "pr87_matched_parent_training_v2"
@@ -356,6 +356,69 @@ def review(value):
         decision["decision_reference"] == approval["decision_reference"],
         "review_decision",
     )
+    return frozen
+
+
+def inspect_return(value):
+    """Accept intact terminal-failure evidence without certifying a training pair."""
+    review_envelope(value)
+    c.require(
+        value["optimization_runs_added"] == 0
+        and value["scientific_reporting_eligible"] is False,
+        "receipt_scope",
+    )
+    c.require(
+        value["accounting"]["terminal"] is True
+        and len(value["accounting"]["jobs"]) == 2
+        and len(value["results"]) == len(value["supervisors"]) == 2,
+        "terminal_pair_shape",
+    )
+    jobs = value["accounting"]["jobs"]
+    c.require(len({j["job_id"] for j in jobs}) == 2, "distinct_jobs")
+    for job in jobs:
+        c.require(
+            re.fullmatch(r"[0-9]+", job["job_id"]) is not None
+            and job["terminal"] is True
+            and job["state"] in TERMINAL,
+            "terminal_job",
+        )
+        main = [r for r in job["rows"] if r["JobID"] == job["job_id"]]
+        c.require(
+            len(main) == 1 and main[0]["State"] == job["state"], "accounting_identity"
+        )
+    complete = all(j["state"] == "COMPLETED" for j in jobs) and all(
+        isinstance(r, dict) and r.get("state") == "complete" for r in value["results"]
+    )
+    if complete:
+        return {
+            "transfer_and_envelope_verified": True,
+            "ready_for_independent_review": True,
+            "review": review(value),
+            "remaining_dispatch_admitted": False,
+        }
+    c.require(
+        value["ready_for_independent_review"] is False, "failed_receipt_not_promoted"
+    )
+    c.require(
+        all(r is None or isinstance(r, dict) for r in value["results"])
+        and all(s is None or isinstance(s, dict) for s in value["supervisors"]),
+        "partial_result_shape",
+    )
+    return {
+        "transfer_and_envelope_verified": True,
+        "training_evidence_state": "terminal_without_complete_pair",
+        "job_states": [{"job_id": j["job_id"], "state": j["state"]} for j in jobs],
+        "result_reports_present": sum(r is not None for r in value["results"]),
+        "supervisor_reports_present": sum(r is not None for r in value["supervisors"]),
+        "ready_for_independent_review": False,
+        "scientific_reporting_eligible": False,
+        "historical_training_started": "not_established_by_missing_reports",
+        "remaining_dispatch_admitted": False,
+    }
+
+
+def review(value):
+    frozen = review_envelope(value)
     c.require(
         len(value["results"]) == 2 and value["accounting"]["terminal"],
         "incomplete_pair",
@@ -465,7 +528,8 @@ def collect(stage):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "action", choices=("prepare", "submit", "status", "collect", "run", "review")
+        "action",
+        choices=("prepare", "submit", "status", "collect", "run", "review", "inspect"),
     )
     parser.add_argument("--stage", type=Path)
     parser.add_argument("--approved-plan-sha256")
@@ -475,13 +539,14 @@ def main():
     parser.add_argument("--receipt", type=Path)
     parser.add_argument("--expected-sha256")
     args = parser.parse_args()
-    if args.action == "review":
+    if args.action in ("review", "inspect"):
         raw = args.receipt.read_bytes()
         c.require(
             len(raw) < 16 * 1024**2 and c.sha(raw) == args.expected_sha256,
             "download_hash",
         )
-        print(json.dumps(review(json.loads(raw))))
+        action = inspect_return if args.action == "inspect" else review
+        print(json.dumps(action(json.loads(raw))))
     elif args.action == "prepare":
         prepare(args.stage)
     elif args.action == "submit":

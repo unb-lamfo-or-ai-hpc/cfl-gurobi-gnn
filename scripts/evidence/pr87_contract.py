@@ -174,6 +174,7 @@ def validate_authorization(value, frozen, plan_sha, bindings_sha):
 
 
 def validate_result(value, frozen, index):
+    require(isinstance(value, dict), "training_result_absent")
     seed, world = frozen["protocol"]["pair_order"][index]
     require(value["state"] == "complete", "incomplete_training")
     require(value["seed"] == seed and value["world_size"] == world, "run_identity")

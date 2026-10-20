@@ -1,5 +1,19 @@
 # Current status
 
+## Current — 20 October: failed GPU pair3671/3672 preserved, no retry
+
+GPU authorization was recorded separately after the19October hold. The author
+submitted3671/3672 atf4b226476c8c: serialFAILED in0elapsed seconds; DDP CANCELLED.
+[Failure review](research/pr87-job3671-failure.md) preserves the original return
+e65676eb6f84fe515de766f11b467ba5a2b2ba25715425bf813b1f4eea7cf033.
+Transfer/hash/envelope verified; no result/supervisor reports. Missing reports
+do not prove an exact historical training/update count. A wrapper source-location
+defect at the Slurm copy boundary is fixed and gets an actual-copy Linux regression;
+private historical gate confirmation still pending. None-result review is classified
+without claiming successful training. No new submissions, retry, training or merge.
+Next intervention is read-only private diagnostics, not the old start/submit block.
+CPU package remains unauthorized; protocol/hyperparameters/environment unchanged.
+
 ## Current revision — PR87 GPU execution hold; PR88 methodology in parallel
 
 The author approved D1–D6 consolidation in PR88 and contract corrections here,

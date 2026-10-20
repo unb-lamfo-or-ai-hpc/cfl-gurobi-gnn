@@ -18,7 +18,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Transfer failed. Preserve this directory; no t
 $target = Join-Path $destination 'public_return.json'
 $actual = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()
 if ($actual -ne $ExpectedReturnSha) { throw 'Return hash mismatch; preserve download.' }
-& python -B (Join-Path $PSScriptRoot 'pr87_workflow.py') review --receipt $target --expected-sha256 $ExpectedReturnSha
+& python -B (Join-Path $PSScriptRoot 'pr87_workflow.py') inspect --receipt $target --expected-sha256 $ExpectedReturnSha
 if ($LASTEXITCODE -ne 0) { throw 'Incomplete/inconsistent pair. Preserve receipt for review; no resubmission.' }
-Write-Host "PR87_DOWNLOAD_HASH_AND_MATCHED_WORK_OK=$destination"
+Write-Host "PR87_DOWNLOAD_HASH_AND_ENVELOPE_OK=$destination"
+Write-Host 'An intact failed receipt is preserved evidence, not a qualified complete training pair.'
 Write-Host 'Return receipt and directory. No retry, new training, solver or merge.'

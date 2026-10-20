@@ -1,5 +1,12 @@
 # CFL--GNN research context
 
+20October: the first approved GPU pair3671/3672 failed/cancelled before producing
+result or supervisor reports; this is not a GPU performance/quality observation.
+See [source/receipt diagnosis](research/pr87-job3671-failure.md). Fix only the Slurm
+entry boundary and failed-receipt classification; preserve seed42/data/model/work.
+Historical exact failure-gate confirmation requires private read-only inspection.
+No new job/training/solve/merge or CPU authorization in this correction.
+
 19 October methodology revision: approved preparation only. PR88 consolidates
 D1–D6 and seed42-only main analysis, preserving210 originals and60other-seed
 records as history. Here PR87 retains matched100epochs/globalbatch4 and the

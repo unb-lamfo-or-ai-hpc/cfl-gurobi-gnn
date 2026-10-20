@@ -1,5 +1,12 @@
 # Experiment protocol
 
+20October operational correction: [jobs3671/3672](research/pr87-job3671-failure.md)
+have no complete training evidence. Batch resolves code from the approved stage,
+not the spooled script location; all Python allocation/identity/approval/memory
+checks persist. No scientific parameter changes or new resource authority.
+Intact terminal-failure receipts can be inspected, but complete-pair review remains
+strict. No retry, preparation repeat or new training is authorized by this fix.
+
 Current19October revision: preparation and software tests only. The GPU protocol
 v2 preserves seed42,100epochs,3,400updates,13,600global draws, same initialized
 state/schedule/loss and parent roles. It requires a separate author-approved

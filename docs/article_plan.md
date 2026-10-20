@@ -1,5 +1,10 @@
 # Article plan
 
+20October:3671FAILED/3672CANCELLED are operational adverse evidence, not completed
+serial/DDP results. Preserve their [failed receipt and diagnosis](research/pr87-job3671-failure.md).
+No GPU speedup/quality figure can be filled from this pair. Slurm-copy and receipt
+fixes leave the scientific protocol intact; no retry or CPU campaign approval.
+
 19October revision: PR88 owns D1–D6, targeted Related Work, seed42 main views
 and claim/evidence mapping. This PR87 only supplies matched-work GPU evidence
 AFTER specific execution authorization. Do not publish GPU speedup/quality as

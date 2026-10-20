@@ -387,6 +387,9 @@ class PR87Tests(unittest.TestCase):
                 "plan": frozen,
                 "raw_logs_included": False,
                 "private_paths_included": False,
+                "optimization_runs_added": 0,
+                "scientific_reporting_eligible": False,
+                "ready_for_independent_review": True,
                 "authorization_json": auth.read_bytes().decode(),
                 "approval": {
                     "authorization_sha256": auth_sha,
@@ -406,7 +409,14 @@ class PR87Tests(unittest.TestCase):
                         {
                             "job_id": str(i),
                             "state": "COMPLETED",
-                            "rows": [{"JobID": str(i), "ExitCode": "0:0"}],
+                            "terminal": True,
+                            "rows": [
+                                {
+                                    "JobID": str(i),
+                                    "ExitCode": "0:0",
+                                    "State": "COMPLETED",
+                                }
+                            ],
                         }
                         for i in (0, 1)
                     ],
@@ -415,6 +425,7 @@ class PR87Tests(unittest.TestCase):
             for i, result in enumerate(value["results"]):
                 result["job_id"] = str(i)
             self.assertEqual(w.review(value)["seed"], 42)
+            self.assertTrue(w.inspect_return(value)["ready_for_independent_review"])
             changed = copy.deepcopy(value)
             changed["authorization_json"] += " "
             with self.assertRaisesRegex(ValueError, "review_authorization_hash"):
