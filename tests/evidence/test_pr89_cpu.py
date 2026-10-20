@@ -211,6 +211,10 @@ class ContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 c.validate_authorization(self.frozen, changed)
 
+    def test_cpu_decision_preserves_original_bytes_across_windows_checkout(self):
+        attributes = (ROOT / ".gitattributes").read_text()
+        self.assertIn("docs/evidence/pr89/** -text -whitespace", attributes)
+
     def test_long_policy_reaches_same_solver_once_all_caps_methods(self):
         fake = fixture.SyntheticSolverTests()
         for cap in (1, 2, 4, 8, 16):

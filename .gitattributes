@@ -49,4 +49,6 @@ docs/evidence/pr86/** -text
 docs/evidence/methodology-20261019/** -text
 docs/evidence/pr87/** -text -whitespace
 docs/evidence/pr88/gpu/** -text -whitespace
+# Preserve the separate CPU author decision and future immutable returns.
+docs/evidence/pr89/** -text -whitespace
 manuscript/figures/gpu_bce_by_epoch_article_en.* -text -whitespace
