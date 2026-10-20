@@ -21,13 +21,22 @@ en la matriz principal. No es una medición nueva ni el coste de la campaña12h.
 |4 — CPU|Tres paneles separados: T_m(r),T_m(1)/T_m(r),eficiencia/r|`seed42_cpu_scaling.csv`; mismo método y objetivo común, n por panel|
 |5 — End-to-end|Raíz,grafo,inferencia,construcciónStart,solver; shared/reuse separados|`seed42_cost_scenarios.csv` acotado; componentes sin timer no se inventan, no barra de E2E total|
 |6 — Recursos|cgroup muestreado,TotalCPU,MaxRSS por alcance|cgroup disponible en150filas; CPU por job en contabilidad original filtrada por IDs42; no mezclar memoriaGPU|
-|GPU adicional|Serial1/DDP4:tiempo, S,S/4, GPU-h y calidad por padre|PendientePR87; no dibujar speedup esperado como observado|
+|GPU adicional|Serial1/DDP4:tiempo, S,S/4, GPU-h y calidad por padre|PR87 completada: lazo2,167x, job1,831x, mayor GPU-h y pérdida F1macro0,032468|
+|BCE por época|Dos paneles, entrenamiento/validación; serial1 frente aDDP4; escala logarítmica, sin suavizado|[PR88 ES](../../evidence/pr88/gpu/gpu_bce_by_epoch_es.pdf), versiónEN enmanuscript/figures;100puntos/brazo, mínimos99/92; no es curvaF1|
 
 Se regeneran además paneles descriptivos seed42 de warm-start/CPU y memoria
 con el script `plot_pr88_methodology.py`. No hay intervalos multiseed. Los
 medios censurados/sensibles se identifican mediante la tabla, no mediante un
 speedup terminal ficticio. Cada figura debe declarar denominador, unidad, alcance
 y restricción numérica. La figura6 de memoria muestreada no demuestra consumoCPU.
+
+PR87 se integró en develop el20/10, commit32be98219d2d962c7d75402b9716744a582f2998.
+La [revisión GPU de PR88](../pr88-gpu-integration.md) enlaza las siete tablas
+originales, el recibo909f6ce85dfd y el manifiesto de la figura nueva. El generador
+`plot_pr88_gpu_bce.py` verifica primero los productos de la revisión PR87 y
+registra200filas de época y400valoresBCE originales, sin interpolación. Las figuras de PR87 no se
+sobrescriben. El F1 seleccionado cae en10/10padres; el menor BCE de entrenamiento
+no equivale a calidad preservada en test. CPU12h sigue sin ejecutar.
 
 ## Tablas para el artículo
 

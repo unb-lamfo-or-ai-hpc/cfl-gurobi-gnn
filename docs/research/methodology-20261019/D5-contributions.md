@@ -9,7 +9,7 @@
 |EscalabilidadCPU y recursos|`seed42_cpu_scaling.csv`, contabilidad PR86 porjob, cgroup muestreado|Unidades y frentes diferentes; no sumar memorias ni confundir core físico/SMT|Figuras finales de utilización con cobertura explícita|
 |Costes de aplicación y amortización|`seed42_cost_scenarios.csv`, preparación3520/3521 y boundaries PR86|Escenarios acotados, no end-to-end independiente; M1 depende deM2|Ninguna medición ausente se llena con0; tiempos adicionales solo si se instrumentan|
 |Efecto de ampliar horizonte a12h|D2, matriz60 y límites|Hipótesis y propuesta no ejecutada; no promesa de convergencia|AutorizaciónCPU, gates, adaptador prospectivo y resultados|
-|Escalabilidad1GPU/DDP4 preservando trabajo|PR87 contrato/CI de gradientes y plan100épocas/batch4|Implementación y testCPU no prueban NCCL/V100, tiempo o calidad final|AutorizaciónGPU, dos entrenamientos reales, revisión de pérdidas/hashes y calidad|
+|Escalabilidad1GPU/DDP4 preservando trabajo|PR87 jobs3673/3674, recibo909f6ce85dfd, sieteCSV y manifiestos; figuraBCE PR88|Trabajo registrado igual; lazo2,167x, job1,831x;GPU-h0,5614→1,2267;F1macro−0,032468, sin calidad preservada|Interpretación y revisión de coautores; no otro entrenamiento ni nueva seed|
 |Contribución pertinente aC&OR|Mecanismo+comparación controlada+coste reproducible|Argumento de encaje, no garantía editorial; resultados negativos son válidos|Redacción, revisión por coautores y materiales reproducibles|
 
 Los resultados históricos de seis medios y las60filas43/44 permanecen

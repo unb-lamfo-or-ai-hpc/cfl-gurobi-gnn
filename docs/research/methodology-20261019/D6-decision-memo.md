@@ -1,6 +1,6 @@
 # D6 — Executive Decision Memo
 
-19/10/2026 · Memorando breve de decisión · PR88 / PR87
+20/10/2026 · Actualización tras integración PR87 · PR88
 
 ## 1. Cambio metodológico
 
@@ -30,12 +30,18 @@ justifica generalización independiente o robustez entre seeds.
 
 ## 3. Lagunas y dos paquetes independientes
 
-GPU — PR87 propone una pareja seed42, serial1GPU/DDP4,100épocas,
-batchglobal4,13.600presentaciones y3.400actualizaciones por brazo. Reutiliza
-Gassev2 y54grafos. Dos jobs secuenciales de hasta12h,128GiB,4/16núcleos,
-1/4V100: techo24hwall,60GPU-h y240núcleo-horas físicas. Los tests de gradientes
-y CI no sustituyen evidencia real NCCL/V100. La diferencia de calidad macro
-se informa junto al tiempo; margen0,02 descriptivo, no no-inferioridad estadística.
+GPU — PR87 ya completada y merged en develop a32be9821, desde el HEAD exacto
+337ff5dd autorizado. Jobs3673/3674, seed42,100épocas, batchglobal4,
+13.600presentaciones y3.400actualizaciones por brazo. Gassev2/54grafos,
+estados iniciales y schedule coinciden por hash. Lazo1724,128→795,637s:
+speedup2,167x, eficiencia54,17%. Job2021→1104s:1,831x.
+GPU-h asignadas0,5614→1,2267; no ahorro de capacidad asignada ni medida de energía.
+F1macro seleccionado0,723065→0,690597: pérdida0,032468, superior al margen
+descriptivo0,02. PR-AUCmacro0,783809→0,769959. No calidad preservada ni
+no-inferioridad; F1 cae en10/10padres. Una seed y orden fijo;4→16núcleos CPU
+acompañan a1→4GPU, sin causalidadGPU aislada. Causa de divergencia no probada.
+No reemplazar checkpointsM2 de PR86 con los recién entrenados ni inferir su
+beneficio para solver. Recibos fallidos3671/3672 y flags originales se preservan.
 
 CPU — D2 propone60resoluciones nuevas:4medios×3métodos×5caps,seed42.
 TimeLimit12h ywall13h porjob,64GiB, sinGPU, sin concurrencia entrejobs:
@@ -52,12 +58,13 @@ Se mantienen D26/10–13/11, E09/11–20/11 yF16/11–11/12, con hitos15/11,
 15/11 yE. No prometer esa fecha basándose en tiempos pasados ni recortar
 selectivamente la matriz. Si no cabe, decidir otra propuesta antes de ejecutarla.
 
-La redacción y figuras de datos existentes avanzan en paralelo. La figuraGPU
-y la evolución12h siguen pendientes; no se rellenan. La sincronización
+La redacción y figuras de datos existentes avanzan en paralelo. La figuraBCE
+comparativa y resultadosGPU ya están incorporados; la evoluciónCPU12h sigue
+pendiente, sin rellenar. La sincronización
 develop/main se pospone hasta revisar el artículo.
 
-Se solicitan decisiones separadas de autorización GPU yCPU. Aprobar este
-planeamiento no autoriza jobs, nuevas inferencias, paquetes, retries o merge.
-La preparación documental/software puede continuar autónomamente. La próxima
-frontera operativa es el permiso explícito y la CLI del autor, no otra frase
-larga ni sucesivos permisos para fixtures. No se ejecutó HPC en esta entrega.
+Solo el paqueteCPU sigue pendiente de decisión independiente; la autorización
+GPU utilizada no libera más entrenamientos. Esta integración documental y
+editorial no autoriza jobs, inferencias, upgrades, retries ni mergePR88.
+Puede continuar autónomamente la preparación/revisión con evidencia existente.
+No se ejecutó HPC en esta entrega; main sigue reservado para la revisión final.

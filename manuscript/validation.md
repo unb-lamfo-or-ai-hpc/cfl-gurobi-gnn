@@ -1,5 +1,40 @@
 # Manuscript validation
 
+## Current PR88 GPU integration — 20 October 2026
+
+PR87 merged from the explicitly authorized337ff5dd head at32be9821. PR88
+incorporates jobs3673/3674, the selected F1 loss, scoped timing/costs and
+unsmoothed train/validation BCE curves, without new research execution.
+The original909f6ce85dfd receipt and failed3671/3672 evidence remain intact.
+The source/figure manifest is `docs/evidence/pr88/gpu/manifest.json`.
+
+T1/T2:106 tests ran locally across PR87(31), PR88(12), manuscript(43) and
+archive(20), with two POSIX-only skips in PR87. Pinned Ruff0.16.8 check/format
+passed198 evidence files. Python3.10 with the existing compatible NumPy ran
+the related PR87 regression. An earlier local Python3.13 environment with a
+newer NumPy lacked legacy `np.trapz`; that was a local dependency mismatch,
+not a changed metric or reason to upgrade tfm_env. CI pins NumPy1.26.4.
+The actual-copy Bash regression is Linux-CI coverage, not claimed locally.
+
+Quarto/TeX rendered the current source without package installation. The
+23-page PDF has References starting on page20, preserving the unchanged body
+gate; no author identity or AI declaration change. Poppler extracted-text
+and rendered-evidence checks passed. All pages were rendered for visual QA,
+with full-size checks of GPU table/figure pages12/13. Standalone Spanish and
+English vector figures were also rendered and inspected. Article text was
+condensed, not experimental evidence omitted, to retain the editorial limit.
+
+Local preview PDF SHA256:
+`321757360203aac4e2bc0b4ab29b6ca15a79948962d19075ecf2c509557a2c54`.
+Editable source ZIP SHA256:
+`d9a080399aabf25dbc550412af8cfe517703f90f0d2982ed707ac22a7d5a029a`;
+it includes the new vector figure. These hashes identify the local preview,
+not a byte-identical Linux CI rendering. Three nonfatal BibTeX empty-page
+warnings persist for chen2024branching, han2023 and labassi2022; no page ranges
+were invented. Final exact-head CI remains required before Ready.
+The unapproved CPU proposal, coauthor review, submission declarations and final
+release remain separate gates; this is not a submission-ready certification.
+
 Validation covers source provenance, evidence hashes, exact citation coverage,
 author order and ORCID icons, the unchanged AI declaration, static rendering,
 and the internal 20-page body limit. Publication checks are separate from

@@ -99,7 +99,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("metric_or_dataset_references_missing")
     if any(term not in before_results for term in ("binary cross-entropy", "Average precision (AP)", "Brier score", "Expected calibration error (ECE)", "right-censored", "parent-macro")):
         failures.append("metrics_not_defined_before_results")
-    for identity in ("fig-pipeline", "fig-loss", "fig-effects", "fig-target-time"):
+    for identity in ("fig-pipeline", "fig-loss", "fig-effects", "fig-target-time", "fig-gpu-bce"):
         figure_match = re.search(r"!\[[^\n]+\]\([^\n]+\)\{#" + re.escape(identity) + r"\b[^\n]*\}", article)
         if not figure_match or "@" + identity not in article[:figure_match.start()]:
             failures.append("figure_not_introduced:" + identity)

@@ -35,14 +35,14 @@ keywords:
   - Partial MIP starts
   - Computational reproducibility
 abstract: |
-  Can graph neural predictions improve mixed-integer optimization once preparation costs, censoring and numerical scope are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes the unspecified variables without restricting the original feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium-instance evidence from a retrospective controlled comparison on ten previously exposed test parents. The latter preserves 210 records, but its principal analysis uses only the 150 seed-42 observations across three methods and five CPU thread caps. These contain 97 solver-reported terminal-target attainments and 53 censored observations; attainments are not exact optimality certificates, and two medium parents retain explicit numerical-sensitivity restrictions. The root-LP comparator matches the learned start's support budget and positive count and is therefore not an independent LP heuristic. We separate neural speedup, same-method CPU scaling, terminal quality and scoped preparation-cost scenarios. The observations support heterogeneous effects rather than uniform neural superiority. A proposed longer-horizon medium-instance campaign and matched-work serial-versus-distributed GPU training remain pending specific execution authorization and are not reported as results.
+  Can graph neural predictions improve mixed-integer optimization once preparation costs, censoring and numerical scope are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes unspecified variables without restricting the feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium evidence from a retrospective comparison on ten previously exposed test parents. Of 210 preserved records, the principal analysis uses 150 seed-42 observations across three methods and five CPU caps: 97 solver-reported terminal-target attainments and 53 censored observations. Attainments are not exact certificates; two medium parents retain numerical restrictions. The root-LP comparator matches the learned start's support budget and positive count and is not an independent LP heuristic. We separate neural speedup, CPU scaling, terminal quality and preparation-cost scenarios. A matched-work seed-42 training pair compares one-GPU serial training with four-GPU distributed training over 100 epochs and 3,400 updates. Distributed training accelerates the training loop by 2.167 times and the whole job by 1.831 times, but increases assigned GPU-hours and reduces selected parent-macro F1 from 0.7231 to 0.6906, exceeding the predeclared descriptive loss margin. These heterogeneous speed-quality-cost tradeoffs do not establish uniform superiority or preserved predictive quality. A longer-horizon CPU campaign remains unapproved and unexecuted.
 ---
 
 # Introduction
 
 Capacitated facility location combines discrete facility decisions with allocation subject to capacity restrictions. Mixed-integer linear programming (MILP) provides a general framework for such decisions, but difficult instances may leave a substantial primal-dual gap after hours of computation. Repeated solution of a related problem family creates an opportunity to learn assignment patterns. The practical question is not merely whether those patterns are predictable: it is whether they improve a solver without compromising the mathematical problem or its certificates.
 
-We examine this question using capacitated facility location (CFL) instances from MILPBench [@milpbench]. A graph neural network (GNN) learns to predict binary solution values from the relationships between variables and constraints. A subset of these predictions provides starting values to Gurobi. The remaining variables are left unspecified, allowing the solver to complete the candidate and continue its search. In this way, learning supplies information to the optimization process while the original constraints and variable domains remain intact.
+We use MILPBench capacitated facility location (CFL) instances [@milpbench]. A graph neural network (GNN) predicts binary values from variable-constraint relationships. Selected predictions provide starting values to Gurobi; unspecified variables remain for the solver to complete without changing constraints or domains.
 
 The research question is: under what conditions do predicted starting values benefit or harm fixed-budget CFL optimization, including their preparation cost? Class-aware selection treats predicted values of 1 and 0 separately, so that abundant zeros do not displace promising positive assignments. We compare Gurobi without an external start (M0), a root linear programming (LP) start (M1), and a frozen GNN start (M2). M1 specifies equally many values and ones as M2; it therefore depends on the GNN-associated budget and is not an independent LP-only heuristic. Fixed parent roles prevent training/test leakage, but previously exposed test instances support retrospective controlled evaluation rather than a new independent generalization claim.
 
@@ -50,27 +50,27 @@ The study contributes a reproducible procedure connecting graph-based assignment
 
 ![Offline learning and online solver guidance.](figures/figure_pipeline.pdf){#fig-pipeline width=100%}
 
-The upper row follows the preparation of checked solution labels, the construction of bipartite graphs, and network training. Validation then determines the checkpoint, decision threshold, and guidance policy. The lower row follows a new instance: a graph is constructed without its solution label, the frozen network predicts binary values, and selected values are submitted to a fresh Gurobi solve. The link between the rows represents the trained model and fixed selection policy, rather than access to the new instance's solution. Solver outcomes are evaluated only after this policy has been fixed.
+The upper row prepares checked labels, graphs and the model; validation selects the checkpoint, threshold and policy. The lower row applies that frozen model to a label-free graph and supplies a partial start to a fresh solve. The link transfers the model and policy, not the new instance's solution.
 
 # Related work
 
 ## Learning to Optimize
 
-Learning to Optimize (L2O) uses experience from related problems to improve optimization algorithms. The methodological perspective of @bengio2021 distinguishes learning a useful solver decision from replacing the entire solution process. @chen2022primer discuss learned algorithms and their evaluation, while @chen2024tutorial organize applications around acceleration, solution estimation, and model adaptation. The present study belongs to solution-guided acceleration: the network proposes values and a mathematical solver checks and completes them.
+Learning to Optimize (L2O) learns useful solver decisions rather than necessarily replacing optimization [@bengio2021; @chen2022primer]. Within the acceleration, estimation and adaptation perspectives of @chen2024tutorial, our network proposes values that a solver checks and completes.
 
-Recent work illustrates several ways to supply learned information. @qu2026 develop an unsupervised approach for parameterized mixed-integer programs that uses learned patterns to derive additional constraints. @goerigk2025 predict relevant starting scenarios for robust combinatorial optimization. @tang2024l2o study solution generation for mixed-integer nonlinear problems with feasibility mechanisms. Our approach instead supplies selected binary values through the solver's native starting-solution interface, leaving the feasible region unchanged.
+Learned information can supply constraints [@qu2026], starting scenarios [@goerigk2025] or nonlinear solution-generation mechanisms [@tang2024l2o]. Our native binary Start values leave the feasible region unchanged.
 
 ## Graph representations and solver decisions
 
-The variable-constraint bipartite architecture of @gasse2019 provides our principal architectural foundation. It represents a mathematical program as interacting variable and constraint nodes. Whereas their network learns branching decisions, ours predicts binary values for a starting solution. @cappart2021 review the wider use of graph representations in combinatorial reasoning. Related applications include comparing search nodes [@labassi2022], predicting objective values [@scavuzzo2024], and selecting cutting planes with structured graph learning [@zhang2026]. These studies share an interest in exploiting problem structure, but the predicted object and its role in the solver differ.
+Our architectural foundation is the variable-constraint bipartite network of @gasse2019, adapted from branching to binary-start prediction. Graph-based combinatorial reasoning [@cappart2021] also supports search-node comparison [@labassi2022], objective prediction [@scavuzzo2024] and cut selection [@zhang2026]; these have different targets and solver interfaces.
 
-Theoretical studies examine which optimization information graph architectures can represent. @chen2024branching analyze message-passing capacity for branching scores, and @chen2024quadratic study graph representations of quadratic programs. They motivate a task-specific design: the graph, learning target, and solver interface should be considered together.
+Message-passing expressiveness for branching [@chen2024branching] and quadratic programs [@chen2024quadratic] motivates matching representation to the prediction task.
 
 ## Primal guidance
 
-Primal guidance seeks good feasible solutions during optimization. MIP-GNN already uses learned variable biases for solver guidance, including warm-starting [@khalil2022]; we do not claim the first GNN--MIP integration. Neural Diving generates partial integer assignments and solves the remaining sub-MIPs [@nair2020]. Predict-and-Search instead explores a prediction-centred trust region [@han2023]. These mechanisms differ from supplying candidate values to an unrestricted original model.
+MIP-GNN already includes neural warm-starting [@khalil2022]; we claim neither the first GNN--MIP integration nor representation novelty. Neural Diving completes partial assignments through sub-MIPs [@nair2020], whereas Predict-and-Search uses prediction-centred trust regions [@han2023].
 
-Uncertainty-based problem reduction iteratively removes uncertain assignments, solves reduced subproblems and uses the resulting solution for subsequent guided search [@canturk2024]. Our class-aware rule prioritizes scarce predicted ones under a bounded support budget, without iterative subproblem reduction or fixed bounds. This interface distinction is not evidence of causal superiority of our selector. Prediction-guided neighbourhood search [@ding2020] and local branching [@fischetti2003] provide further contrasts. We use Gurobi's native `Start` interface [@gurobi2026], leaving unspecified values to the solver. The contemporary survey of @scavuzzo2026survey situates these choices among learned branch-and-bound components. Our intended contribution is a controlled CFL assessment of this selection mechanism, its heterogeneous computational effects and its costs, not originality of the bipartite representation or a new solver paradigm.
+Uncertainty-based reduction solves iteratively restricted subproblems [@canturk2024]; prediction-guided neighbourhoods [@ding2020] and local branching [@fischetti2003] likewise differ from native unrestricted `Start` completion [@gurobi2026]. Our rule prioritizes scarce ones under bounded support, without proving causal selector superiority. Situated among learned branch-and-bound components [@scavuzzo2026survey], the contribution is controlled CFL evaluation of heterogeneous effects and costs.
 
 # Proposed method
 
@@ -98,7 +98,7 @@ MILPBench groups the 90 original CFL instances into 30 easy, 30 medium, and 30 h
 
 ## Offline graph learning
 
-Each variable and constraint becomes a node, connected whenever its coefficient in $A_p$ is nonzero. The edge carries that coefficient. Variable features describe the objective, bounds, type, and value in a Gurobi root-node LP relaxation captured through a MIPNODE callback. Constraint features describe the right-hand side and row sense. This representation brings together the local properties of each variable and its relationships with the constraints. Relaxation values are matched by variable identity, and feature construction uses no solution labels at prediction time.
+Variables and constraints form nodes connected by nonzero coefficients in $A_p$. Each edge carries its coefficient. Variable features encode objective, bounds, type and root-LP value captured through a Gurobi MIPNODE callback; constraint features encode right-hand side and sense. Root values are aligned by variable identity, without prediction-time solution labels.
 
 The seven variable channels are transformed objective coefficient, lower bound, upper bound, three type indicators, and root value. The five row channels are transformed right-hand side, three sense indicators, and a constant. A single edge channel encodes the coefficient. Numerical coefficients and bounds use signed $\log(1+|t|)$ after clipping to $[-60000,60000]$; infinite bounds use the corresponding endpoint. Root values are clipped without logarithmic scaling. These numerical encodings affect learning inputs, not the original solver model; clipping counts are audited.
 
@@ -141,7 +141,7 @@ The learning cohort contains 54 quality-screened original instances: 30 easy and
 
 : Experimental populations and their roles. {#tbl-populations}
 
-The table separates two questions: how accurately the network predicts values, and whether those predictions improve optimization. The same original instance retains its assigned role across every representation. Optimization-test parents are medium 0, 4, 7, 9, 12, and 20. Medium 9 and 20 do not have admitted predictive-test labels but retain their fixed test role. Their solver evaluation uses label-free graph construction, without adding them to network fitting or selection.
+Predictive accuracy and optimization utility use distinct populations with fixed parent roles. Optimization-test parents are medium 0, 4, 7, 9, 12 and 20. Parents 9/20 lack admitted predictive-test labels but retain their test role through label-free graphs, without entering fitting or selection.
 
 Guidance validation uses medium 5, 6, 11, 14, 17, and 19. Medium 5 and 6 similarly retain their validation role for label-free optimization despite lacking admitted graph-validation labels. The qualification rule is fixed before validation execution: six valid nonabstained starts, at least four terminal-gap improvements, a nonpositive median guided-minus-control difference, and at most one gap increase exceeding one percentage point. After qualification, the checkpoint, threshold, coverage, and ordering remain fixed for the optimization test.
 
@@ -151,9 +151,9 @@ Each parent is solved using three fresh Gurobi models: an unguided control, a ma
 
 The primary optimization outcome is the terminal relative MIP gap. It measures the distance between the best feasible objective $z^P$ and the solver's bound $z^D$ on the optimum. For finite nonzero $z^P$, we use $g=|z^P-z^D|/|z^P|$, with explicit handling of unavailable or degenerate values. A smaller gap indicates a tighter optimality certificate. For method $m$, the paired effect is $\Delta g_{pm}=g_{pm}-g_{p,\mathrm{control}}$; multiplying it by 100 gives a percentage-point difference. Negative differences favor guidance. Means, medians, win counts, and leave-out diagnostics summarize these paired observations.
 
-Time measurements distinguish total worker elapsed time, source reading and verification, model construction, and optimization. LP parsing belongs to model construction; independent auditing and residual overhead are recorded separately. A cold application additionally includes feature preparation and network inference. A reusable-artifact application assumes these preparations have already been completed, while still verifying their artifacts. Offline training, scheduler waiting, and experiment orchestration are accounted for separately from online solver application.
+Worker time separates reading/verification, model construction (including LP parsing), optimization, independent audit and residual overhead. Cold application additionally needs feature preparation and inference; artifact reuse still requires verification. Offline training, queueing and orchestration remain separate.
 
-We also record the first observed time at which gap becomes at most 10%. An observation is right-censored when the target has not been reached before monitoring ends: its attainment time is unknown beyond the available budget. Accordingly, a run ending at 3,600 seconds without crossing the target is not assigned an observed crossing time of 3,600 seconds. Time to optimality is treated separately; a run may cross 10% and still be censored for optimality. Callback timestamps identify the first observed crossing rather than an exact continuous-time event. The unit of the solver comparison is the original instance, whereas predictive metrics summarize its binary variables.
+First observed 10% gap crossing is right-censored if unobserved before monitoring ends; a 3,600-second timeout is not a crossing at 3,600 seconds. Reaching 10% does not imply optimality. Callback timestamps are observed, not exact continuous-time crossings. Parents, not their binary variables, are the solver-comparison units.
 
 ## Predictive evaluation metrics {#sec-metrics}
 
@@ -169,11 +169,11 @@ Here, $S_b$ is a score bin; empty bins contribute zero, and score 1 is assigned 
 
 ## Reproducibility and data provenance
 
-The [canonical repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn) provides the implementation, split manifest, protocols, dependency specifications, and publication instructions. Original benchmark inputs remain available from MILPBench [@milpbench]. The evidence ledger binds training, validation, and optimization tables to their source artifacts using SHA256 hashes. It preserves complete outcomes and historical attempts separately. Manuscript figures are generated from these fixed tables, and publication builds execute no training, prediction, or optimization.
+The [canonical repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn) supplies code, splits, protocols, dependencies and rendering instructions; MILPBench supplies original inputs [@milpbench]. SHA256 manifests bind fixed tables and figures, preserving failed attempts separately. Publication builds execute no training, inference or optimization.
 
 Experiments ran on UJA DGX-DaSCI at the Higher Polytechnic School of Jaén, University of Jaén. The supplied DGX-1 inventory lists eight 32-GB Tesla V100 GPUs, two 20-core x86 CPUs at 2.2 GHz, and 512 GB memory. This inventory is not a runtime hardware probe and does not imply allocation of all eight GPUs to training. Solver workers use one Gurobi thread; actual Slurm allocations and software versions are recorded per run. Storage includes an OS SATA SSD with a 6 Gb/s interface and a four-device SSD RAID-0 array. Interface capacity is distinguished from measured throughput.
 
-Project-owned code and manuscript material use the MIT License; benchmark, solver, and publisher-template rights retain their respective terms. Shareable evidence excludes license credentials, private paths, raw logs, and model checkpoints. The repository contains the current publication tables and their provenance. The planned Zenodo archive and its DOI status are addressed in the final considerations; no unverified deposit is used as a data-availability claim.
+Project-owned material uses MIT; benchmark, solver and template retain their rights. Public tables exclude credentials, private paths, raw logs and checkpoints. No unverified Zenodo deposit supports an availability claim.
 
 # MVP2 principal analysis and pending extensions {#sec-mvp2-current}
 
@@ -211,15 +211,57 @@ the new five-use scenario does not relabel historical seven-use values.
 Allocation, CPU time, cgroup memory, RSS, Slurm MaxRSS and GPU memory have
 different scopes and cannot be combined into an artificial efficiency indicator.
 
-Two extensions remain proposals, without new results here. The CPU proposal is
+The remaining CPU extension is a proposal, without results here. It comprises
 60 fresh seed42 solves on the four medium parents, with 12-hour solver limits,
 unchanged $10^{-4}$ terminal relative gap, and separate authorization. It proposes
 first observed crossings of 10%, 5%, 1% and 0.01%, plus temporal records at
 1/4/8/12 hours without interpolation or invented exact-horizon measurements.
-The GPU proposal compares serial1 versus DDP4 under the same seed42,
-100 epochs, global batch4 and 3,400 optimizer updates. Neither its speedup nor
-its predictive-quality preservation has been observed. The CPU/GPU budgets,
-resource feasibility, numerical scope and calendar require separate decisions.
+Its budget, feasibility, numerical scope and calendar require separate resource approval.
+
+## Matched serial and distributed GPU training {#sec-gpu-matched}
+
+The completed seed42 pair uses the same 54-parent split, Gassev2 two-layer
+32-unit architecture, train-fitted initialization and schedule hashes, FP32,
+Adam at 0.001 and gradient clipping at 1. Global batch 4 means four serial graph
+accumulations or one graph per DDP rank with averaged gradients. Each of 100
+protocol epochs presents each training parent four times: 13,600 presentations
+and 3,400 updates per arm, not 100 single passes. Both finish 100 epochs; checkpoint
+selection uses validation only. @tbl-gpu-pair separates timing scopes and quality.
+
+| Measure | Serial 1 V100 | DDP 4 V100s |
+|:--|--:|--:|
+| Physical CPU cores |4|16|
+| Training loop (s) |1724.128|795.637|
+| Slurm job elapsed (s) |2021|1104|
+| Assigned GPU-hours |0.5614|1.2267|
+| Selected epoch |99|92|
+| Minimum validation BCE |0.045286|0.048772|
+| Selected parent-macro F1 |0.723065|0.690597|
+| Selected parent-macro PR-AUC |0.783809|0.769959|
+
+: One matched seed42 pair; quality averages the same ten exposed test parents. {#tbl-gpu-pair}
+
+Loop speedup is 2.167 with 54.17% efficiency; whole-job speedup is 1.831.
+Assigned GPU-hours increase, rather than measuring active GPU time or energy.
+Selected F1 falls 0.032468 (3.247 percentage points), exceeding the predeclared
+descriptive 0.02 loss margin, and decreases on all ten parents. PR-AUC falls
+0.013850; its smaller loss does not establish quality preservation or statistical
+noninferiority. Terminal checkpoints remain archived, not substituted after seeing
+the selected result. @fig-gpu-bce shows the original loss trajectories.
+
+![Weighted BCE by protocol epoch for the matched serial/DDP pair.](figures/gpu_bce_by_epoch_article_en.pdf){#fig-gpu-bce width=100%}
+
+Lower BCE is better on the common logarithmic scale; dots mark validation
+minima 99/92, not test-based selection. Positive weight 1132.97583 is train-fitted.
+Training averages 136 per-graph losses during updates; validation averages ten
+parents after each epoch. Curves are unsmoothed and BCE is not F1. Runtime:
+Python 3.10.20, PyTorch 2.1.2+cu121, CUDA build 12.1, NCCL 2.18.6, driver 550.90.07;
+no environment upgrade. Jobs 3673/3674 and original receipt 909f6ce85dfd bind the
+histories, tables and scoped review in the PR87 archive; PR88 adds the figure manifest.
+One seed, fixed serial-to-DDP order, exposed tests and accompanying CPU scaling
+preclude seed uncertainty, independent generalization and isolated GPU causality.
+Trajectory-divergence cause is unproven. These checkpoints do not replace the
+frozen PR86 models or establish downstream solver benefit.
 
 # Results — historical six-medium study
 
@@ -276,7 +318,7 @@ Historical assignment accuracy and terminal-gap improvements motivate the mechan
 
 The L2O perspective [@bengio2021] connects useful learned information to a conventional solver. Unlike starting-scenario selection [@goerigk2025], we predict variable values; unlike learned constraints [@qu2026], Start preserves the feasible region. Gasse-inspired structure does not make the representation original. Nor does comparing matched M1/M2 isolate the causal effect of class-aware ordering: support size and ones are matched, but preparation is dependent and no mechanism-isolating ablation was performed.
 
-Rare-positive precision/recall [@saito2015] and calibration diagnostics [@brier1950; @guo2017] remain distinct from optimization utility. Numerical sensitivity, exposed parents, censoring and a single seed bound interpretation. Negative and heterogeneous results are scientifically informative; longer running time and DDP are proposed evaluations, not remedies assumed to succeed.
+Rare-positive precision/recall [@saito2015] and calibration diagnostics [@brier1950; @guo2017] remain distinct from optimization utility. Numerical sensitivity, exposed parents, censoring and a single seed bound interpretation. The matched GPU case demonstrates faster training with worse selected F1 and greater assigned GPU-hours, not preserved quality. Longer CPU running time remains a proposed evaluation, not a remedy assumed to succeed.
 
 # Final considerations, limitations and future work
 
@@ -284,7 +326,7 @@ The contribution is an auditable native partial-start pipeline and a controlled,
 
 Labels may be approximate and quality screening selects a tractable subset. Agreement with one label is not solution quality. The earlier easy-only pilot and validation include adverse cases, retained upstream; training-population changes also prevent a causal selector attribution. Hard-instance and full90-parent results are not available, and unsuccessful label admission is not mathematical infeasibility.
 
-Beyond the current MVP2 scope, independent instances and mechanism-isolating ablations could strengthen interpretation. They are not authorized additions to this study. The frozen MVP2 policy uses seed42 only, with no hyperparameter search, dataset expansion or new architectures. Immediate proposed work is restricted to the four-medium longer-horizon comparison and the matched serial1/DDP4 pair, subject to separate resource approval. A single seed does not establish robustness across initializations; negative or heterogeneous outcomes remain valid findings.
+Beyond MVP2, independent instances and mechanism-isolating ablations could strengthen interpretation; neither is authorized here. The frozen policy uses seed42 without hyperparameter search, expansion or new architectures. The required serial1/DDP4 pair is complete with a negative quality finding; no further training is authorized. Only the four-medium longer-horizon CPU proposal awaits separate resource approval. One seed does not establish initialization robustness.
 
 Augmentation, independently labelled descendants and network-science visualizations remain outside this execution scope, not completed contributions. A curated archive must preserve unsuccessful attempts and undergo redistribution-rights and deposit verification. No Zenodo DOI is claimed as reserved or published; the versioned data-availability statement remains pending that verification.
 

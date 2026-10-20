@@ -1,0 +1,20 @@
+{
+  "package_id": "pr87_gpu_seed42_authorization_v2",
+  "execution_authorized": false,
+  "seed": 42,
+  "config": "configs/experiments/pr87_matched_gpu_v1.json",
+  "maximum_jobs": 2,
+  "maximum_training_runs": 2,
+  "serial_gpus": 1,
+  "ddp_gpus": 4,
+  "serial_physical_cores": 4,
+  "ddp_physical_cores": 16,
+  "memory_mib_per_job": 131072,
+  "wall_seconds_per_job": 43200,
+  "sequential_reserved_hours": 24,
+  "gpu_hours_reserved_ceiling": 60,
+  "physical_core_hours_reserved_ceiling": 240,
+  "optimization_calls": 0,
+  "automatic_retry": false,
+  "can_be_used_as_execution_receipt": false
+}

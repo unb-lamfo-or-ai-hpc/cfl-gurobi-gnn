@@ -1,6 +1,17 @@
 # Current status
 
-## Current — PR88 D1–D6 consolidation; separate GPU/CPU approvals pending
+## Current — 20 October: PR87 merged; PR88 GPU manuscript integration
+
+PR87 exact head337ff5dd728beff2779f98652564eead4509c027 passed five checks
+and merged into develop at32be98219d2d962c7d75402b9716744a582f2998 after
+explicit author approval. PR88 integrates its scoped GPU results and BCE curves:
+100 epochs per arm, selected epochs99/92; loop speedup2.167x, job1.831x,
+selected parent-macro F1 loss0.032468. No quality-preservation claim.
+CPU12h remains a separate unapproved proposal. No HPC/new training/solver or
+main synchronization in this integration; PR88 merge is not authorized.
+The earlier checkpoints below are retained as dated history, not active gates.
+
+## Historical planning — PR88 D1–D6, 19 October
 
 Author-approved 19 October revision: [D1–D6](research/methodology-20261019/README.md)
 supersedes earlier future plans, not historical receipts. PR86 merged at
@@ -9,13 +20,73 @@ seed42, with97 solver-reported terminal targets/53censored;30M4/M12 rows remain
 numerically sensitive. Seeds43/44 and repeatability plots are historical only.
 The new table/figure directory is `docs/evidence/methodology-20261019/`.
 
-PR87: only1GPUserial/DDP4, seed42, matched100epochs/globalbatch4; package proposed
-24hserial/60GPU-h/240physicalcore-h,128GiB/job. Requires new specific GPU approval.
+PR87 planning then proposed only1GPUserial/DDP4, seed42, matched100epochs/globalbatch4;
+24hserial/60GPU-h/240physicalcore-h,128GiB/job. That GPU pair is now completed above.
 CPU:60 fresh solves,12hsolver/13hwall,64GiB/job,720solver-h/780serialreserve-h/
 4836physicalreserve-core-h; eight feasibility gates pending, separate approval.
 No jobs, training, optimization, merge or package upgrades in this consolidation.
 No runnable submission CLI released. Existing raw evidence remains untouched.
 Main synchronization only after article review. Older entries below are history.
+## Historical closeout: PR87 replacement pair complete and analytically reviewed
+
+Jobs3673/3674 completed the authorized seed42 serial1GPU/DDP4 pair. The
+[scoped review](research/pr87-completed-pair-review.md) preserves original
+return909f6ce85dfd, reconciles100epochs/3400updates/13600draws per arm and
+matching initialization/schedule hashes. Loop speedup2.167x (efficiency54.17%);
+whole-job speedup1.831x. Assigned GPU-h rise0.5614→1.2267. Selected F1 macro
+falls0.723065→0.690597, a loss0.032468 beyond the frozen descriptive0.02 margin;
+selected PR-AUC macro loss0.013850 stays within that margin. Report a measured
+tradeoff, not preserved quality/noninferiority. One seed, exposed test parents,
+fixed arm order and accompanying CPU scaling limit claims.
+
+[Seven tables/four figures](evidence/pr87/jobs3673-3674/) regenerate offline;
+receipt flags and original failed-pair evidence are unchanged. No more GPU runs,
+CPU campaign, solver, package update or merge authorized. Next: final analytical
+HEAD CI, Ready after review, then ask merge. PR88 manuscript may incorporate
+these scoped assets. Earlier hold/pending statements below are dated history.
+
+## Current — 20 October: failed GPU pair3671/3672 preserved, no retry
+
+GPU authorization was recorded separately after the19October hold. The author
+submitted3671/3672 atf4b226476c8c: serialFAILED in0elapsed seconds; DDP CANCELLED.
+[Failure review](research/pr87-job3671-failure.md) preserves the original return
+e65676eb6f84fe515de766f11b467ba5a2b2ba25715425bf813b1f4eea7cf033.
+Transfer/hash/envelope verified; no result/supervisor reports. Missing reports
+do not prove an exact historical training/update count. A wrapper source-location
+defect at the Slurm copy boundary is fixed and gets an actual-copy Linux regression;
+private historical gate confirmation still pending. None-result review is classified
+without claiming successful training. No new submissions, retry, training or merge.
+Next intervention is read-only private diagnostics, not the old start/submit block.
+CPU package remains unauthorized; protocol/hyperparameters/environment unchanged.
+
+## Current revision — PR87 GPU execution hold; PR88 methodology in parallel
+
+The author approved D1–D6 consolidation in PR88 and contract corrections here,
+NOT new jobs or merge. The [separate GPU package](research/pr87-gpu-authorization-package.md)
+requires specific new execution approval: seed42 only, serial1/DDP4,100epochs,
+globalbatch4, two sequential12h/128GiB jobs, ceiling60GPU-h/240physicalcore-h.
+PlanSHA alone no longer authorizes submission. Preserve old CLI as superseded
+history; no new runnable submit block is released. No installed PR87 result
+was supplied for this review. CPU12h budget in PR88 needs independent approval.
+Principal PR86 view is150seed42;60seed43/44 rows and multiseed plots historical.
+MINIMIZE, benchmark formulation, source records and M4/M12 limitations persist.
+No HPC, training, solver, merge or environment update in this revision.
+
+## Current checkpoint — PR86 merged; PR87 seed42-only GPU pair prepared
+
+PR86 merged into develop at3ac1883d081684acb36ba3855cd634e057a11c66.
+The [final PR87 protocol](research/pr87-matched-gpu-protocol.md) implements only
+one paired full training, seed42: serial1GPU versus DDP4. The author explicitly
+excluded varying seeds from MVP2. Same100epochs, global batch4,34updates/epoch,
+136draws/epoch; equal initialized parameters/buffers and train-only fitting.
+Reuse existing Gassev2, sampler and audited54graphs; no solver or package upgrade.
+Ceiling: two sequential jobs,12h/128GiB each,60GPU-h and240physical-core reserved
+hours. No automatic retry or extension. Budget is recorded separately at the
+explicit author-run submission, not inferred from the plan's false flag.
+No installed training result yet. Final-head evidence/tensor CI precedes CLI.
+Ready/merge awaits the installed pair and scientific review. Manuscript can
+advance in parallel; main release remains after article review. Older dated
+entries below are history, not permission to repeat PR86 or add seeds.
 
 ## Current checkpoint — 19 October: complete210/70 analytical CPU review
 

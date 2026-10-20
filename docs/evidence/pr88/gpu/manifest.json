@@ -1,0 +1,22 @@
+{
+  "generator": "scripts/evidence/plot_pr88_gpu_bce.py",
+  "matplotlib_version": "3.9.2",
+  "optimization_runs_added": 0,
+  "original_scientific_flag_unchanged": true,
+  "outputs": {
+    "docs/evidence/pr88/gpu/curves.json": "6808f8d615b1b006c81d46e509c1f527787da280f7e64d9e7ce5271b619a710c",
+    "docs/evidence/pr88/gpu/gpu_bce_by_epoch_es.pdf": "fa80de73cb42318d3903566eb1b7becfc9a92587601922de886267eb274a41a2",
+    "docs/evidence/pr88/gpu/gpu_bce_by_epoch_es.png": "249167ff3f5ec20f0c7447990b735b6dae6dd9d9d3e5287ebd82ed3f8ef4c426",
+    "docs/evidence/pr88/gpu/gpu_bce_by_epoch_es.svg": "66d10f00b59390c9cc88f251e72e03aab23b1101b141ed8389a40279be8c6c9c",
+    "manuscript/figures/gpu_bce_by_epoch_article_en.pdf": "4806efeffebefc16754fd3148b58c4ebf7f1b00a51fdb169ffe93c322b1944ad",
+    "manuscript/figures/gpu_bce_by_epoch_article_en.png": "96a2e19510eaf3ccfa4ae831dd4dfa6cbc051ee3d630217bf0b50d86e97a932a",
+    "manuscript/figures/gpu_bce_by_epoch_article_en.svg": "b0a13c0d4fda2a29f864fc8d225cd79963c4238795469bf5feb9b194ce309149"
+  },
+  "source_return_sha256": "909f6ce85dfdd9541e1624f8774bb099f27752e21408270f695e81aba7d576ab",
+  "sources": {
+    "docs/evidence/pr87/jobs3673-3674/history.csv": "c411536327e0a01c00b8bd24e2a60a10da060fe6e50d40013f77ee551a566f42",
+    "docs/evidence/pr87/jobs3673-3674/public_return.json": "909f6ce85dfdd9541e1624f8774bb099f27752e21408270f695e81aba7d576ab",
+    "docs/evidence/pr87/jobs3673-3674/summary.csv": "14129a88e5fa83f7c79913917198cc22a3590ddd6d2d3adce5d7b540c9c6aa99"
+  },
+  "training_runs_added": 0
+}

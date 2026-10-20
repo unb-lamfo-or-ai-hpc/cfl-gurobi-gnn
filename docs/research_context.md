@@ -9,8 +9,39 @@ retrospective comparisons, not independent generalization. MINIMIZE override and
 accepted MILPBench formulation persist. M1 is GNN-budget-matched root-LP guidance,
 not an independent LP heuristic. Class-aware novelty/causality not established
 by this comparison. Costs, censoring, target equality and memory scopes must be
-explicit. PR87 GPU and new CPU12h package await independent execution approvals.
+explicit. PR87 GPU is completed and merged at32be9821 on20October; the new
+CPU12h package still awaits separate execution approval.
 No new architecture, seed search, expansion or experiment is authorized here.
+PR87 installed closeout: the [completed seed42 pair](research/pr87-completed-pair-review.md)
+has matched recorded work and2.167x loop/1.831x job speedup, but worse selected
+macro F1 by0.032468, exceeding the predeclared0.02 descriptive loss margin.
+Assigned GPU-h increase; CPU resources also scale. This is a speed/quality/cost
+tradeoff in one case, not preserved predictive quality, seed robustness or isolated
+GPU causality. Predictive references remain the historically exposed10parents.
+Original receipt flags and jobs3671/3672 are preserved. No tuning/retry is needed
+to make a negative observation scientifically reportable. CPU budget remains
+separate and unauthorized. The dated operational holds below are superseded.
+
+20October: the first approved GPU pair3671/3672 failed/cancelled before producing
+result or supervisor reports; this is not a GPU performance/quality observation.
+See [source/receipt diagnosis](research/pr87-job3671-failure.md). Fix only the Slurm
+entry boundary and failed-receipt classification; preserve seed42/data/model/work.
+Historical exact failure-gate confirmation requires private read-only inspection.
+No new job/training/solve/merge or CPU authorization in this correction.
+
+19 October methodology revision: approved preparation only. PR88 consolidates
+D1–D6 and seed42-only main analysis, preserving210 originals and60other-seed
+records as history. Here PR87 retains matched100epochs/globalbatch4 and the
+same scientific training parameters, but changes its authority contract to v2:
+new specific GPU receipt required before submission, launch and review.
+The [GPU package](research/pr87-gpu-authorization-package.md) is independent of
+the CPU12h proposal. Neither execution nor merge is authorized by this revision.
+
+PR87 author revision19October: compare only seed42 serial1GPU and DDP4, not
+three seeds. [Matched learning work and acceptance](research/pr87-matched-gpu-protocol.md)
+separate technical completeness from positive performance. One paired case
+does not support training-seed uncertainty or statistical noninferiority.
+No new architecture/data/hyperparameter search; CPU PR86 is already merged.
 
 19 October: [final210-cell CPU review](research/pr86-final-analysis.md) completes
 the planned comparison, not an independent test or the entire MVP2. Effects

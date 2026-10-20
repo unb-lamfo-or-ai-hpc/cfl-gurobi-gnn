@@ -1,7 +1,8 @@
 # Consolidación metodológica — PR88, 19 de octubre de 2026
 
-Decisión del autor: preparar y revisar; **sin jobs, entrenamientos, resoluciones
-nuevas ni merge**. Esta revisión sustituye propuestas anteriores para el trabajo
+Actualización20/10: PR87 completada y merged por autorización específica;
+PR88 incorpora sus resultados y curvasBCE, **sin jobs, entrenamientos,
+resoluciones nuevas ni mergePR88**. Esta revisión sustituye propuestas anteriores para el trabajo
 futuro; no modifica contratos ni bytes de campañas terminadas.
 
 | Entrega | Contenido |
@@ -19,7 +20,7 @@ verifica bytes y hashes. El CSV original de 210 filas permanece inalterado.
 La unidad experimental es el padre, no cada fila de método/hilo/variable.
 
 GPU: la [PR87](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/87)
-contiene su propio paquete y operador. PR88 no depende de que se integre PR87
-para documentar el protocolo, ni concede autorización al operador GPU.
+ya integrada aporta la pareja3673/3674 y la [revisión acotada](../pr88-gpu-integration.md).
+Trabajo igual no implica calidad preservada: informar pérdidaF1 junto al speedup.
 CPU: el JSON y la matriz de D2 son propuestas, no instrucciones de envío.
 Las dos autorizaciones son independientes; aprobar una no libera la otra.

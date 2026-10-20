@@ -1,5 +1,10 @@
 # D1 — Revised Experimental Protocol
 
+Actualización20/10: PR87 completó la parejaGPU autorizada y se integró en
+develop a32be9821. [PR88 integra resultados y BCE](../pr88-gpu-integration.md).
+El trabajo igual está registrado; la pérdidaF1 impide afirmar calidad preservada.
+La propuestaCPU siguiente continúa sin autorización ni resultados.
+
 ## Qué, cómo y por qué
 
 Evaluar cuándo la orientación neural beneficia o perjudica a Gurobi, separando

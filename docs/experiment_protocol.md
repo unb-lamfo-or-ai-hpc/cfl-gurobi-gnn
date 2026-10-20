@@ -1,6 +1,6 @@
 # Experiment protocol
 
-## Current protocol — seed42 and unapproved separate resource packages
+## Current protocol — seed42; GPU completed, separate CPU package unapproved
 
 [D1 metric dictionary](research/methodology-20261019/D1-protocol.md) supersedes
 old prospective recommendations. Main150seed42 rows retain original cells,
@@ -11,8 +11,43 @@ M4/M12 numerical scope persists. Proposed four-medium60solve12h campaign is
 fresh, not resume; MIPGap1e-4 and all other frozen parameters unchanged.
 Track observed10/5/1/0.01% thresholds and1/4/8/12h temporal evidence prospectively,
 never interpolate. [D2](research/methodology-20261019/D2-cpu-budget.md) has false
-approval/gates and no submit command. GPU PR87 is separately authorized later.
-The author approved planning/software only: no HPC execution or merge here.
+approval/gates and no submit command. The separately approved PR87 GPU pair is
+now complete and merged at32be9821. This PR88 integration authorizes neither
+new HPC execution nor PR88 merge. Older operational entries below are history.
+PR87 completed-pair review: [jobs3673/3674](research/pr87-completed-pair-review.md)
+finish the frozen100epoch/seed42 protocol without changing any scientific setting.
+Same work, initialization and schedule do not imply bitwise equal trajectories.
+Selected macro F1 loss0.032468 exceeds the descriptive0.02 margin; retain this
+negative result, rather than tune/retry or switch the primary view to terminal
+metrics. Distinguish2.167x loop from1.831x job speedup and assigned GPU-h from
+active GPU time. Only scoped descriptive review is qualified; original false
+eligibility stays false. No extra seed/solver/training/CPU execution authorized.
+
+20October operational correction: [jobs3671/3672](research/pr87-job3671-failure.md)
+have no complete training evidence. Batch resolves code from the approved stage,
+not the spooled script location; all Python allocation/identity/approval/memory
+checks persist. No scientific parameter changes or new resource authority.
+Intact terminal-failure receipts can be inspected, but complete-pair review remains
+strict. No retry, preparation repeat or new training is authorized by this fix.
+
+Current19October revision: preparation and software tests only. The GPU protocol
+v2 preserves seed42,100epochs,3,400updates,13,600global draws, same initialized
+state/schedule/loss and parent roles. It requires a separate author-approved
+GPU execution receipt tied to plan/source/bindings/budget; no file with true
+approval is created by prepare. A CPU receipt or planSHA alone is insufficient.
+See [GPU package](research/pr87-gpu-authorization-package.md). Old released CLI
+is superseded for new submissions; historical plans/results remain unchanged.
+CPU12h and GPU approvals must be decided separately; no HPC/merge here.
+
+PR87 final preparation19October supersedes earlier multi-seed/five-arm GPU
+proposals: [one seed42 pair, serial1GPU versus DDP4](research/pr87-matched-gpu-protocol.md).
+100epochs,136global draws/34updates per epoch, batch4 with equivalent mean
+per-graph BCE and clipping after synchronization. Identical CPU-fitted train-only
+initial buffers/parameters; validation/test on unwrapped rank0 only.12h/job,
+128GiB RAM,112GiB sampled stop; two sequential jobs,60GPU-h/240physical-core
+reserved hours, no retry/requeue/extension. No new root/MIP/solver calls.
+Full protocol and explicit submission record bind authority; a false plan flag
+is not rewritten into scientific eligibility. Negative speed/quality is reportable.
 
 19 October [final CPU analysis](research/pr86-final-analysis.md):210cells/70groups
 collected. Terminal solver return is the timing endpoint; callback first-observed
