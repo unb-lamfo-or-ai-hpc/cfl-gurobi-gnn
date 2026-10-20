@@ -386,8 +386,13 @@ def inspect_return(value):
         c.require(
             len(main) == 1 and main[0]["State"] == job["state"], "accounting_identity"
         )
-    complete = all(j["state"] == "COMPLETED" for j in jobs) and all(
-        isinstance(r, dict) and r.get("state") == "complete" for r in value["results"]
+    complete = (
+        all(j["state"] == "COMPLETED" for j in jobs)
+        and all(
+            isinstance(r, dict) and r.get("state") == "complete"
+            for r in value["results"]
+        )
+        and all(isinstance(s, dict) for s in value["supervisors"])
     )
     if complete:
         return {
@@ -433,6 +438,7 @@ def review(value):
         main = next(r for r in account["rows"] if r["JobID"] == result["job_id"])
         c.require(main["ExitCode"] == "0:0", "job_exit")
         supervisor = value["supervisors"][index]
+        c.require(isinstance(supervisor, dict), "supervisor_report_absent")
         c.require(
             supervisor["child_exit_code"] == 0 and supervisor["guard_stop"] is None,
             "guard",

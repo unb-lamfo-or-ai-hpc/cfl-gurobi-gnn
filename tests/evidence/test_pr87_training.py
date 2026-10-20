@@ -426,6 +426,14 @@ class PR87Tests(unittest.TestCase):
                 result["job_id"] = str(i)
             self.assertEqual(w.review(value)["seed"], 42)
             self.assertTrue(w.inspect_return(value)["ready_for_independent_review"])
+            missing_supervisor = copy.deepcopy(value)
+            missing_supervisor["ready_for_independent_review"] = False
+            missing_supervisor["supervisors"][0] = None
+            self.assertFalse(
+                w.inspect_return(missing_supervisor)["ready_for_independent_review"]
+            )
+            with self.assertRaisesRegex(ValueError, "supervisor_report_absent"):
+                w.review(missing_supervisor)
             changed = copy.deepcopy(value)
             changed["authorization_json"] += " "
             with self.assertRaisesRegex(ValueError, "review_authorization_hash"):
