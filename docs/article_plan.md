@@ -1,5 +1,39 @@
 # Article plan
 
+PR87 completed GPU delivery: [review](research/pr87-completed-pair-review.md)
+and [seven tables/four vector figures](evidence/pr87/jobs3673-3674/) supply the
+mandatory full-training serial1GPU/DDP4 comparison. Report seed42 matched work,
+2.167x loop/1.831x job speedup, increased assigned GPU-h and selected macro F1
+loss0.032468 beyond the frozen margin. Do not claim quality preservation,
+statistical noninferiority, independent generalization or solver benefit from
+these new checkpoints. The raw scientific flag remains unchanged. PR88 should
+integrate this tradeoff and exact runtime alongside its D1–D6 methodology.
+Additional CPU work remains separately budget-gated; no new GPU campaign is
+required by this closeout. Final develop/main synchronization remains last.
+
+20October:3671FAILED/3672CANCELLED are operational adverse evidence, not completed
+serial/DDP results. Preserve their [failed receipt and diagnosis](research/pr87-job3671-failure.md).
+No GPU speedup/quality figure can be filled from this pair. Slurm-copy and receipt
+fixes leave the scientific protocol intact; no retry or CPU campaign approval.
+
+19October revision: PR88 owns D1–D6, targeted Related Work, seed42 main views
+and claim/evidence mapping. This PR87 only supplies matched-work GPU evidence
+AFTER specific execution authorization. Do not publish GPU speedup/quality as
+observed from synthetic CI. Main CPU analysis150seed42;60other-seed rows and
+repeatability figures historical. GPU allocation hours and utilization/time
+scopes differ; one pair gives no training-seed uncertainty. See the
+[separate package](research/pr87-gpu-authorization-package.md). Article work
+continues in parallel; develop/main synchronization after manuscript review.
+
+19October PR87 scope frozen by author: one seed42 pair,1GPU serial versus4GPU
+DDP. [Final preparation protocol](research/pr87-matched-gpu-protocol.md) fixes
+equal batch/work, initialization, quality and bounded resources. Report a paired
+case, not training-seed variance. Required outputs:1/4GPU synchronized loop and
+whole-job timing/speedup/efficiency, resource utilization/memory, selected/terminal
+predictive quality and cost scopes. No result exists yet for that pair.
+PR86 CPU delivery is merged; its tables/figures are final scoped evidence.
+PR88 manuscript proceeds alongside GPU; release/main only after article review.
+
 19 October [CPU closeout](research/pr86-final-analysis.md): the planned210/70
 are collected and analytically consolidated. Use the [final source tables and
 six figures](evidence/pr86/final-210/) instead of partial-wave plots for final

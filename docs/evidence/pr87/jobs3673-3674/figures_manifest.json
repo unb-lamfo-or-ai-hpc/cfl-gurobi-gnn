@@ -1,0 +1,20 @@
+{
+  "analysis_manifest_sha256": "2a46f528201cdc774a6996d3e43bcb2f477735093b470e847e18cc79d90ff888",
+  "generator": "scripts/evidence/plot_pr87_training_pair.py",
+  "matplotlib": "3.9.2",
+  "outputs": {
+    "learning_curves.pdf": "8ca4c64c5e054bc45bf3ea6741367122d1ec0f5ae7d2c05a56eaa0c51586d82c",
+    "learning_curves.png": "e4d8d6a42512b644e7ba50e25300f8e4c165c3551f231042614959c46dc9f1f3",
+    "learning_curves.svg": "1e14e4db1ece0d6edad96587b513f5ea5f51db647d8e963b35a65dadbe2a34d6",
+    "predictive_quality.pdf": "3d72a1c9d7c59d3fd5d7facbe369f80beee2f1d60b469c355b2fd38f903b1057",
+    "predictive_quality.png": "9c5031e43b1528afcbe9387e2f55753dc4796cd2081f4bb757cc4e11655ecfbc",
+    "predictive_quality.svg": "2a1b87d793dc1b27f0a02ff51204f7a399e577fe1e6fbf3ab0d25df9d797b5be",
+    "resource_memory.pdf": "64092f25597ffe72ed351fa387de0b18573b14d99495bd98086d27aa3c7eb396",
+    "resource_memory.png": "e811fe86d71f6a347a8d069ce8162c69fb636ba7c3bdcc5f6296bc790d9d03be",
+    "resource_memory.svg": "cbd996facd9e055601f572bbcc263abb32481cd42ee88ff913dea555762b9b3f",
+    "training_time_cost.pdf": "33ccc9d7cd02a2f59e06550d9e6a65276d7af2f6d17c22104bd548a7cdeaebec",
+    "training_time_cost.png": "37d8a0aa94fa77e33748ffc8f0c3aec5530838708c475c05c76d59b1cf5e6fca",
+    "training_time_cost.svg": "f7df7a7e708df0c799664745b29c251562c679f1007f462c6773fec78f1948c4"
+  },
+  "source_return_sha256": "909f6ce85dfdd9541e1624f8774bb099f27752e21408270f695e81aba7d576ab"
+}
