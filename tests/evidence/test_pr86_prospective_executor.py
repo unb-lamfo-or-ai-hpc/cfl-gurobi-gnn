@@ -262,7 +262,7 @@ class ContextObject(SimpleNamespace):
 
 
 class SyntheticSolverTests(unittest.TestCase):
-    def call_fake(self, item, claim=None, version=(13, 0, 1)):
+    def call_fake(self, item, claim=None, version=(13, 0, 1), execution_policy=None):
         events = []
         self.events = events
         params = SimpleNamespace(
@@ -336,6 +336,7 @@ class SyntheticSolverTests(unittest.TestCase):
                 reported_method=item["method"],
                 cell=item,
                 before_optimize=claim or (lambda: events.append("claim")),
+                execution_policy=execution_policy,
             )
         self.assertEqual(events[0], "claim")
         self.assertEqual(events[1], ("optimize", item["threads"], item["seed"]))

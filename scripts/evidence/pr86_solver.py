@@ -40,8 +40,12 @@ def solve(
     *,
     cell,
     before_optimize,
+    execution_policy=None,
 ):
-    requested = instrumentation.parameters(cell)
+    # The historical default remains unchanged. A separately versioned policy
+    # supplies only parameter admission and additional observation, not a second
+    # model/start/optimization implementation.
+    requested = (execution_policy or instrumentation).parameters(cell)
     if expected_hash != cell["model_sha256"]:
         raise ValueError("cell_model_binding")
     if not callable(before_optimize):
@@ -169,6 +173,8 @@ def solve(
         first_feasible = None
         optimize_start = perf_counter()
         last_record = -30.0
+        recorder = execution_policy.Recorder() if execution_policy else None
+        gap_targets = execution_policy.THRESHOLDS if execution_policy else GAPS
 
         def record(primal, dual, event, force=False):
             nonlocal first_feasible, last_record
@@ -177,11 +183,17 @@ def solve(
             if p is not None and first_feasible is None:
                 first_feasible = seconds
             gap = common_gap(p, d)
+            if recorder is not None:
+                recorder.observe(seconds, p, d, event)
             if gap is not None:
-                for threshold in GAPS:
+                for threshold in gap_targets:
                     if gap <= threshold:
                         observed.setdefault(str(threshold), seconds)
-            if force or event == "MIPSOL" or seconds - last_record >= 30:
+            if (
+                force
+                or (event == "MIPSOL" and recorder is None)
+                or seconds - last_record >= 30
+            ):
                 trajectory.append(
                     dict(
                         seconds=seconds,
@@ -249,7 +261,7 @@ def solve(
             feasible_solution=values is not None,
             first_observed_feasible_seconds=first_feasible,
             first_observed_gap_times_seconds={
-                str(g): observed.get(str(g)) for g in GAPS
+                str(g): observed.get(str(g)) for g in gap_targets
             },
         )
         original_sense = backend.original_sense
@@ -344,4 +356,5 @@ def solve(
         ),
         development_only=True,
         scientific_reporting_eligible=False,
+        **({"temporal_evidence": recorder.finish()} if recorder is not None else {}),
     )

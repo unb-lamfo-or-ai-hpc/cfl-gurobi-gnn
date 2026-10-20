@@ -1,5 +1,14 @@
 # CFL--GNN research context
 
+20October continuation: PR88 is merged at`e5804a8c6762c2e5f13447e5a16784e5824de801`.
+The [fresh CPU12h operator](research/pr89-cpu12h.md) implements D1/D2 without
+changing source experiments, learning data, seeds, architectures or checkpoints.
+The old PR86 preparation is reused; more time is not a remedy for M4/M12
+numerical sensitivity. The author subsequently approved the specific CPU budget
+of720solver-h/780serial-reservation-h/4836physical-reserved-core-h on20October,
+conditional on installed preflight and exact-head CI. Older pending statements
+below describe prior proposals, not the current decision. No jobs submitted here.
+
 ## Governing revision — 19 October 2026
 
 [D1–D6](research/methodology-20261019/README.md) is the current methodological

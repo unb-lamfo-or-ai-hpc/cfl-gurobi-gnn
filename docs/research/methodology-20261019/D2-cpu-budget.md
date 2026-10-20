@@ -1,5 +1,12 @@
 # D2 — Extended HPC Budget: paquete CPU independiente
 
+Actualización20/10 tras PR88 merged: el autor aprobó explícitamente el paquete
+CPU completo, sujeto a preflight y CI del HEAD exacto. [Decisión registrada](../../evidence/pr89/cpu_author_decision.json)
+y [operador prospectivo](../pr89-cpu12h.md). No hay jobs ni resultados nuevos.
+El JSON/CSV propuestos abajo conservan sus bytes/flagsfalse: no eran autorización
+runtime. Los ocho gates siguen comprobándose en las fronteras correspondientes.
+Las referencias siguientes a «no autorizado» describen la propuesta original.
+
 **Propuesta, ejecución no autorizada.** No se entrega un comando sbatch.
 El [JSON de autorización propuesto](../../evidence/methodology-20261019/cpu_authorization_package.json)
 y la [matriz completa](../../evidence/methodology-20261019/cpu_60_jobs_proposed.csv)

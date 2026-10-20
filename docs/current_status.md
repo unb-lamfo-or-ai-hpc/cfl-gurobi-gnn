@@ -1,5 +1,23 @@
 # Current status
 
+## Current — 20 October: PR88 merged; fresh CPU12h executor in preparation
+
+PR88 merged into develop at`e5804a8c6762c2e5f13447e5a16784e5824de801`
+from head`fcc50396f0869c3b972257fedfc9b53141c93418`. The GPU tradeoff and
+BCE assets are now integrated, not awaiting another PR88 merge. Next delivery:
+[CPU12h executor and read-only installation preflight](research/pr89-cpu12h.md).
+Reuse PR86's original checkpoint/starts; the PR87-trained models do not replace
+M2. Four exposed medium parents, three methods, five caps, seed42:60fresh solves,
+one per job,12hsolver/13hwall,64GiB. The author explicitly approved the complete
+CPU package20October:720solver-h/780serial-reserved-h/4836physical-reserved-core-h,
+conditional on installed preflight and exact-head CI. Plan false flags remain
+false; a separate runtime authorization records this decision before submission.
+No jobs, optimization, training, inference or main synchronization performed.
+The next user CLI integrates existing hashes/environment/current partition,
+separate authorization and serial submission, stopping if preflight fails.
+Allocation gates are checked only in actual approved jobs.
+Earlier entries below are dated history, not current merge/dispatch authority.
+
 ## Current — 20 October: PR87 merged; PR88 GPU manuscript integration
 
 PR87 exact head337ff5dd728beff2779f98652564eead4509c027 passed five checks
