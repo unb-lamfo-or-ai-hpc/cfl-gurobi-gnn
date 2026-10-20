@@ -1,5 +1,13 @@
 # Article plan
 
+20October post-merge continuation: PR88's manuscript/GPU/BCE integration is in
+develop at`e5804a8c`. [CPU12h](research/pr89-cpu12h.md) prepares the missing temporal
+quality evidence, not an observed result. The worst-case32.5days plus queues
+threatens15November: no completion date or convergence is promised. Writing and
+coauthor review proceed using already measured data. No additional GPU pair,
+architecture search or main synchronization is required now. Main release stays
+after article revision with separate approval.
+
 ## Current editorial contract — PR88, D1–D6, updated 20 October
 
 Use [D3 figures](research/methodology-20261019/D3-figures.md),

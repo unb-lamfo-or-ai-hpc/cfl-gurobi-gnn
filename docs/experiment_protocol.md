@@ -1,5 +1,14 @@
 # Experiment protocol
 
+20October: PR88 merged; prospective [CPU12h implementation](research/pr89-cpu12h.md)
+adds the four observed thresholds and four timestamped horizons in a versioned
+adapter. Historical solver behavior remains the default. Source-frozen reuse,
+separate CPU authorization, held resource checks and predecessor artifact checks
+precede one optimization per job. The specific720hsolver/780hreserved CPU budget
+was approved by the author20October, conditional on preflight and exact-head CI;
+current partition preparation does not qualify a future cgroup/affinity/license.
+No new GPU training or historical receipt promotion is authorized.
+
 ## Current protocol — seed42; GPU completed, separate CPU package unapproved
 
 [D1 metric dictionary](research/methodology-20261019/D1-protocol.md) supersedes
