@@ -1,5 +1,15 @@
 # CFL--GNN research context
 
+PR87 installed closeout: the [completed seed42 pair](research/pr87-completed-pair-review.md)
+has matched recorded work and2.167x loop/1.831x job speedup, but worse selected
+macro F1 by0.032468, exceeding the predeclared0.02 descriptive loss margin.
+Assigned GPU-h increase; CPU resources also scale. This is a speed/quality/cost
+tradeoff in one case, not preserved predictive quality, seed robustness or isolated
+GPU causality. Predictive references remain the historically exposed10parents.
+Original receipt flags and jobs3671/3672 are preserved. No tuning/retry is needed
+to make a negative observation scientifically reportable. CPU budget remains
+separate and unauthorized. The dated operational holds below are superseded.
+
 20October: the first approved GPU pair3671/3672 failed/cancelled before producing
 result or supervisor reports; this is not a GPU performance/quality observation.
 See [source/receipt diagnosis](research/pr87-job3671-failure.md). Fix only the Slurm

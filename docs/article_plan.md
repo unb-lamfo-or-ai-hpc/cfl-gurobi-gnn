@@ -1,5 +1,16 @@
 # Article plan
 
+PR87 completed GPU delivery: [review](research/pr87-completed-pair-review.md)
+and [seven tables/four vector figures](evidence/pr87/jobs3673-3674/) supply the
+mandatory full-training serial1GPU/DDP4 comparison. Report seed42 matched work,
+2.167x loop/1.831x job speedup, increased assigned GPU-h and selected macro F1
+loss0.032468 beyond the frozen margin. Do not claim quality preservation,
+statistical noninferiority, independent generalization or solver benefit from
+these new checkpoints. The raw scientific flag remains unchanged. PR88 should
+integrate this tradeoff and exact runtime alongside its D1–D6 methodology.
+Additional CPU work remains separately budget-gated; no new GPU campaign is
+required by this closeout. Final develop/main synchronization remains last.
+
 20October:3671FAILED/3672CANCELLED are operational adverse evidence, not completed
 serial/DDP results. Preserve their [failed receipt and diagnosis](research/pr87-job3671-failure.md).
 No GPU speedup/quality figure can be filled from this pair. Slurm-copy and receipt

@@ -1,5 +1,11 @@
 # PR87 — jobs3671/3672: fallo de entrada y recibo incompleto
 
+Actualización: el diagnóstico privado devolvió logs vacíos y consulta de script
+con stdout vacío; no confirmó el gate histórico exacto. Se preservó la primera
+pareja y, con autorización específica nueva, se completó la sustituta3673/3674.
+La [revisión final](pr87-completed-pair-review.md) no borra ni recualifica esta
+evidencia fallida; los pasos pendientes siguientes son el estado histórico.
+
 20/10/2026. No nuevo job, retry, entrenamiento o merge autorizado por esta revisión.
 
 ## Hechos observados

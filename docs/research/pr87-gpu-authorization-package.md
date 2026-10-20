@@ -1,5 +1,11 @@
 # PR87 — paquete GPU separado para autorización
 
+Actualización posterior: la decisión específica autorizó la pareja sustituta
+3673/3674, ya completa y [revisada por scopes](pr87-completed-pair-review.md).
+No reutilizar este paquete para más envíos. Su presupuesto no autorizaCPU;
+recibos y ejecución fallida anterior se conservan. Los textos pendientes abajo
+son el estado histórico de la propuesta, no la instrucción vigente.
+
 Revisión19/10/2026 conforme D1–D6 dePR88. **Preparación aprobada; ejecución
 pendiente de una nueva autorización específica.** Esta entrada sustituye la
 liberación anterior del bloque CLI; no altera una campaña histórica ni cancela

@@ -1,5 +1,14 @@
 # Experiment protocol
 
+PR87 completed-pair review: [jobs3673/3674](research/pr87-completed-pair-review.md)
+finish the frozen100epoch/seed42 protocol without changing any scientific setting.
+Same work, initialization and schedule do not imply bitwise equal trajectories.
+Selected macro F1 loss0.032468 exceeds the descriptive0.02 margin; retain this
+negative result, rather than tune/retry or switch the primary view to terminal
+metrics. Distinguish2.167x loop from1.831x job speedup and assigned GPU-h from
+active GPU time. Only scoped descriptive review is qualified; original false
+eligibility stays false. No extra seed/solver/training/CPU execution authorized.
+
 20October operational correction: [jobs3671/3672](research/pr87-job3671-failure.md)
 have no complete training evidence. Batch resolves code from the approved stage,
 not the spooled script location; all Python allocation/identity/approval/memory

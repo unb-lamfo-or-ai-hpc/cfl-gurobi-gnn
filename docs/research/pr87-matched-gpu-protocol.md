@@ -1,5 +1,14 @@
 # PR87 — entrenamiento serial en 1 GPU frente a DDP en 4 GPUs
 
+## Actualización: ejecución y revisión completas
+
+La autorización específica posterior y la pareja sustituta3673/3674 completaron
+este protocolo. [Revisión y activos](pr87-completed-pair-review.md): mismo trabajo
+registrado, aceleración de lazo2,167x, pero caída F1macro0,032468 superior al margen
+descriptivo0,02. Resultado negativo de calidad explícito, no permiso para repetir.
+Los textos de autorización pendiente siguientes son historia fechada; parámetros,
+recibos y limitaciones originales permanecen. No nuevo job/solver/CPU o merge.
+
 ## Revisión vigente — autorización pendiente, 19/10/2026
 
 El [paquete GPU separado](pr87-gpu-authorization-package.md) y el contrato

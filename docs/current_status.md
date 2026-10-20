@@ -1,5 +1,23 @@
 # Current status
 
+## Current: PR87 replacement pair complete and analytically reviewed
+
+Jobs3673/3674 completed the authorized seed42 serial1GPU/DDP4 pair. The
+[scoped review](research/pr87-completed-pair-review.md) preserves original
+return909f6ce85dfd, reconciles100epochs/3400updates/13600draws per arm and
+matching initialization/schedule hashes. Loop speedup2.167x (efficiency54.17%);
+whole-job speedup1.831x. Assigned GPU-h rise0.5614→1.2267. Selected F1 macro
+falls0.723065→0.690597, a loss0.032468 beyond the frozen descriptive0.02 margin;
+selected PR-AUC macro loss0.013850 stays within that margin. Report a measured
+tradeoff, not preserved quality/noninferiority. One seed, exposed test parents,
+fixed arm order and accompanying CPU scaling limit claims.
+
+[Seven tables/four figures](evidence/pr87/jobs3673-3674/) regenerate offline;
+receipt flags and original failed-pair evidence are unchanged. No more GPU runs,
+CPU campaign, solver, package update or merge authorized. Next: final analytical
+HEAD CI, Ready after review, then ask merge. PR88 manuscript may incorporate
+these scoped assets. Earlier hold/pending statements below are dated history.
+
 ## Current — 20 October: failed GPU pair3671/3672 preserved, no retry
 
 GPU authorization was recorded separately after the19October hold. The author
