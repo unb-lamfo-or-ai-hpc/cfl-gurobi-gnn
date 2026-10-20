@@ -1,5 +1,17 @@
 # CFL--GNN research context
 
+## Governing revision — 19 October 2026
+
+[D1–D6](research/methodology-20261019/README.md) is the current methodological
+contract. Preserve original210PR86 observations; principal analysis150seed42,
+60other-seed observations historical only. Ten exposed test parents support
+retrospective comparisons, not independent generalization. MINIMIZE override and
+accepted MILPBench formulation persist. M1 is GNN-budget-matched root-LP guidance,
+not an independent LP heuristic. Class-aware novelty/causality not established
+by this comparison. Costs, censoring, target equality and memory scopes must be
+explicit. PR87 GPU is completed and merged at32be9821 on20October; the new
+CPU12h package still awaits separate execution approval.
+No new architecture, seed search, expansion or experiment is authorized here.
 PR87 installed closeout: the [completed seed42 pair](research/pr87-completed-pair-review.md)
 has matched recorded work and2.167x loop/1.831x job speedup, but worse selected
 macro F1 by0.032468, exceeding the predeclared0.02 descriptive loss margin.

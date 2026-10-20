@@ -1,5 +1,22 @@
 # Article plan
 
+## Current editorial contract — PR88, D1–D6, updated 20 October
+
+Use [D3 figures](research/methodology-20261019/D3-figures.md),
+[D4 directed Related Work](research/methodology-20261019/D4-related-work.md),
+[D5 claim/evidence matrix](research/methodology-20261019/D5-contributions.md)
+and [D6 decision memo](research/methodology-20261019/D6-decision-memo.md).
+Keep the three Related Work subheads; no first-GNN/MIP or causal selector claim.
+Principal analysis150seed42; retain60other-seed rows and repeatability figure as
+historical only. Separate historic six-medium evidence from current ten exposed
+parents. CPU12h has no results. GPU1/DDP4 is complete and merged at32be9821;
+incorporate measured speed/quality/cost tradeoffs and comparative BCE histories.
+Do not fill missing CPU figures/metrics. Describe negative outcomes rigorously.
+
+Schedule remains D26Oct–13Nov,E9–20Nov,F16Nov–11Dec; milestones15Nov/15Dec/31Dec.
+The proposedCPU780hserial reservation plus queues is a critical calendar risk,
+not a promised completion date. Write in parallel, escalate prospective scope
+choices before execution; main synchronization after article review only.
 PR87 completed GPU delivery: [review](research/pr87-completed-pair-review.md)
 and [seven tables/four vector figures](evidence/pr87/jobs3673-3674/) supply the
 mandatory full-training serial1GPU/DDP4 comparison. Report seed42 matched work,

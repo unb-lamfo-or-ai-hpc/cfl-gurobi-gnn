@@ -1,6 +1,33 @@
 # Current status
 
-## Current: PR87 replacement pair complete and analytically reviewed
+## Current — 20 October: PR87 merged; PR88 GPU manuscript integration
+
+PR87 exact head337ff5dd728beff2779f98652564eead4509c027 passed five checks
+and merged into develop at32be98219d2d962c7d75402b9716744a582f2998 after
+explicit author approval. PR88 integrates its scoped GPU results and BCE curves:
+100 epochs per arm, selected epochs99/92; loop speedup2.167x, job1.831x,
+selected parent-macro F1 loss0.032468. No quality-preservation claim.
+CPU12h remains a separate unapproved proposal. No HPC/new training/solver or
+main synchronization in this integration; PR88 merge is not authorized.
+The earlier checkpoints below are retained as dated history, not active gates.
+
+## Historical planning — PR88 D1–D6, 19 October
+
+Author-approved 19 October revision: [D1–D6](research/methodology-20261019/README.md)
+supersedes earlier future plans, not historical receipts. PR86 merged at
+3ac1883d081684acb36ba3855cd634e057a11c66. Preserve210 source rows; main view150
+seed42, with97 solver-reported terminal targets/53censored;30M4/M12 rows remain
+numerically sensitive. Seeds43/44 and repeatability plots are historical only.
+The new table/figure directory is `docs/evidence/methodology-20261019/`.
+
+PR87 planning then proposed only1GPUserial/DDP4, seed42, matched100epochs/globalbatch4;
+24hserial/60GPU-h/240physicalcore-h,128GiB/job. That GPU pair is now completed above.
+CPU:60 fresh solves,12hsolver/13hwall,64GiB/job,720solver-h/780serialreserve-h/
+4836physicalreserve-core-h; eight feasibility gates pending, separate approval.
+No jobs, training, optimization, merge or package upgrades in this consolidation.
+No runnable submission CLI released. Existing raw evidence remains untouched.
+Main synchronization only after article review. Older entries below are history.
+## Historical closeout: PR87 replacement pair complete and analytically reviewed
 
 Jobs3673/3674 completed the authorized seed42 serial1GPU/DDP4 pair. The
 [scoped review](research/pr87-completed-pair-review.md) preserves original

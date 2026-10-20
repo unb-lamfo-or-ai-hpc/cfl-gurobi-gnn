@@ -33,7 +33,8 @@ def package(output: Path, root: Path = MANUSCRIPT) -> None:
              "template-provenance/ELSEVIER-NOTICE.md"]
     names += ["figures/" + name + ".pdf" for name in (
         "figure_pipeline", "figure_training_validation_loss",
-        "figure_validation_test_gap_effects", "figure_time_to_ten_percent_gap")]
+        "figure_validation_test_gap_effects", "figure_time_to_ten_percent_gap",
+        "gpu_bce_by_epoch_article_en")]
     payload = {name: (root / name).read_bytes() for name in names}
     payload["index.tex"] = generated_tex(root).read_bytes()
     if UNSAFE.search(payload["index.tex"].decode("utf-8")):

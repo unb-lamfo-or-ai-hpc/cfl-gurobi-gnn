@@ -64,6 +64,14 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("mandatory_gasse_v3_reference_missing")
     if "## Learning to Optimize" not in article:
         failures.append("reviewed_l2o_context_missing")
+    if not {"han2023", "scavuzzo2026survey"}.issubset(keys):
+        failures.append("directed_primal_guidance_references_missing")
+    if any(term not in article for term in (
+        "150 seed42 records", "historical only", "numerically",
+        "not an independent LP-only heuristic", "separate resource approval",
+        "# Results — historical six-medium study",
+    )):
+        failures.append("mvp2_seed42_methodological_scope_missing")
     if r"\usepackage{orcidlink}" not in adapter or r"\providecommand{\orcidlink}" in adapter:
         failures.append("orcid_icon_package_missing_or_replaced")
     if "{elsarticle}" not in adapter or "elsarticle-harv" not in adapter or "cite-method: natbib" not in config:
@@ -91,7 +99,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("metric_or_dataset_references_missing")
     if any(term not in before_results for term in ("binary cross-entropy", "Average precision (AP)", "Brier score", "Expected calibration error (ECE)", "right-censored", "parent-macro")):
         failures.append("metrics_not_defined_before_results")
-    for identity in ("fig-pipeline", "fig-loss", "fig-effects", "fig-target-time"):
+    for identity in ("fig-pipeline", "fig-loss", "fig-effects", "fig-target-time", "fig-gpu-bce"):
         figure_match = re.search(r"!\[[^\n]+\]\([^\n]+\)\{#" + re.escape(identity) + r"\b[^\n]*\}", article)
         if not figure_match or "@" + identity not in article[:figure_match.start()]:
             failures.append("figure_not_introduced:" + identity)

@@ -45,4 +45,8 @@ docs/evidence/pr80-job3503-return.json -text
 docs/evidence/pr80-results/* -text
 docs/evidence/e0/** -text
 docs/evidence/pr86/** -text
-docs/evidence/pr87/** -text
+# New methodological views/manifests preserve their reviewed byte identity too.
+docs/evidence/methodology-20261019/** -text
+docs/evidence/pr87/** -text -whitespace
+docs/evidence/pr88/gpu/** -text -whitespace
+manuscript/figures/gpu_bce_by_epoch_article_en.* -text -whitespace

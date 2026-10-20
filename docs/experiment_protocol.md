@@ -1,5 +1,19 @@
 # Experiment protocol
 
+## Current protocol — seed42; GPU completed, separate CPU package unapproved
+
+[D1 metric dictionary](research/methodology-20261019/D1-protocol.md) supersedes
+old prospective recommendations. Main150seed42 rows retain original cells,
+97solver-reported terminal targets/53censored. Historical210 remains unchanged;
+multiseed aggregates excluded from principal conclusions. SpeedupM2M0=T0/T2;
+CPU scaling=T_m(1)/T_m(r); neither converts timeouts into certified speedups.
+M4/M12 numerical scope persists. Proposed four-medium60solve12h campaign is
+fresh, not resume; MIPGap1e-4 and all other frozen parameters unchanged.
+Track observed10/5/1/0.01% thresholds and1/4/8/12h temporal evidence prospectively,
+never interpolate. [D2](research/methodology-20261019/D2-cpu-budget.md) has false
+approval/gates and no submit command. The separately approved PR87 GPU pair is
+now complete and merged at32be9821. This PR88 integration authorizes neither
+new HPC execution nor PR88 merge. Older operational entries below are history.
 PR87 completed-pair review: [jobs3673/3674](research/pr87-completed-pair-review.md)
 finish the frozen100epoch/seed42 protocol without changing any scientific setting.
 Same work, initialization and schedule do not imply bitwise equal trajectories.
