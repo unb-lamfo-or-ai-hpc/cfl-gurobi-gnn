@@ -1,0 +1,74 @@
+{
+  "affinity_physical_cores": 16,
+  "candidate_integrated_into_executor": false,
+  "candidate_qualified_in_this_allocation": true,
+  "candidate_sha256": "e66696aadeced1d7cbdbeed6a232bb380765b11887667747c85d5345d99a6695",
+  "dependency_sha256": {
+    "paired_memory_guard.py": "8f99b5bdaa8c4722618787b4409af56b95f25c8df2f1b284074fef860ec12186",
+    "paired_memory_guard_v2.py": "faadff7e998d213497237e56c9f373ece0f5fd256a60bb266e4ad279557a238e",
+    "paired_memory_guard_v3.py": "2726b80752f63106f8914d9073d852bc346bce4058a7aa4784e50e854d6daff1"
+  },
+  "historical_job3490_cause_proven": false,
+  "initial_gate": {
+    "ancestor_limits_rechecked_each_sample": true,
+    "cgroup_version_observed": "v1",
+    "current_max_job_scoped_usage_bytes": 21630976,
+    "hierarchy_rechecked_each_sample": true,
+    "historical_rss_reconciled": false,
+    "job_anchor_depth_from_leaf": 2,
+    "job_anchor_ram_limit_bytes": 68719476736,
+    "job_scoped_min_ram_limit_bytes": 68719476736,
+    "leaf_ram_limit_bytes": 9223372036854771712,
+    "membership_and_mounts_verified": true,
+    "memory_gate_protocol": "job_scoped_hierarchical_ram_v2_candidate",
+    "mount_validation_scope": "memory_controller_and_job_path_covering_mounts",
+    "sanitized_failure_diagnostics": true,
+    "swap_limit_qualified": false,
+    "usage_scope": "maximum_leaf_through_job_anchor_including_siblings",
+    "validated_group_count": 3
+  },
+  "job3490_diagnostic_sha256": "b532de54f4fbe75e31166705eb0522ca09264aea66ead3cbbd8e9d728afa4b2f",
+  "job_id": "3491",
+  "matrix_claims_added": 0,
+  "mode": "allocated",
+  "optimization_runs_added": 0,
+  "protocol_id": "pr78_scoped_memory_qualification_v1",
+  "raw_logs_included": false,
+  "sample_count": 20,
+  "sampled_peak_bytes": 21856256,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "stages": [
+    {
+      "passed": true,
+      "stage": "allocation_and_affinity"
+    },
+    {
+      "passed": true,
+      "stage": "candidate_initial_gate"
+    },
+    {
+      "passed": true,
+      "stage": "five_second_read_only_samples"
+    },
+    {
+      "passed": true,
+      "stage": "synthetic_unrelated_mount_tolerated"
+    },
+    {
+      "passed": true,
+      "stage": "synthetic_usage_loss_rejected_and_classified"
+    },
+    {
+      "passed": true,
+      "stage": "final_real_gate"
+    }
+  ],
+  "synthetic_failure_diagnostic": {
+    "depth_from_leaf": 2,
+    "errno": 2,
+    "exception_type": "FileNotFoundError",
+    "private_text_included": false,
+    "stage": "usage_read_or_parse"
+  }
+}

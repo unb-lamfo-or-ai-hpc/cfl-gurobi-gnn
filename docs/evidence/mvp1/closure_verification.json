@@ -1,0 +1,31 @@
+{
+  "all_source_member_hash_declarations_equal": true,
+  "archive_compressed_bytes": 26481802784,
+  "archive_groups": {
+    "analysis": 1,
+    "bipartite_graphs": 23,
+    "intermediate": 1,
+    "models": 1
+  },
+  "archive_parts": 26,
+  "archive_payload_bytes": 181173992209,
+  "closure_package_sha256": "f5cc52a20f69ebae0af8aecff5ac7c2981de85118d09a4d5406c3877a4cef156",
+  "freeze_checksum_targets_verified": 8,
+  "gate_status": "passed",
+  "included_files": 8790,
+  "invalid_structured_files_retained": 1,
+  "large_archive_verification_source": "HPC_verification_receipt",
+  "large_archives_rehashed_locally": false,
+  "local_receipt_files": 10,
+  "package_report_receipt_hash_valid": true,
+  "policy_excluded_operational_paths": 7,
+  "publication_scope": "allowlisted_summary_not_private_archive",
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "scope": "private_archival_receipt_integrity_not_scientific_certification",
+  "source_main_commit": "c8297139aaeed78c7951c91379983c414b181860",
+  "synchronized_develop_commit": "534cc4f07be14c28ff1788352446af846d6458b3",
+  "upload_ready": false,
+  "withheld_file_crosschecks_valid": true,
+  "zenodo_upload_performed": false
+}

@@ -1,0 +1,18 @@
+{
+  "receipt_sha256": "ab949fc05dbab53c3aca48f3d78962006b44d624bc62a21a301f321278601c9b",
+  "candidate_rows": 50,
+  "method_records": 25,
+  "aggregate_records": 25,
+  "paired_historical_methods": 24,
+  "distinct_plan_bytes": 3,
+  "pairs": 8,
+  "missing_cells_in_recognized_scope": 24,
+  "scientific_reporting_eligible": false,
+  "scope": "historical_metadata_and_published_numeric_parity_not_new_solution_revalidation",
+  "limitations": [
+    "solver_version_not_exported_by_v1_collector",
+    "preparation_and_root_cost_not_exported",
+    "solution_bytes_not_reverified",
+    "no_new_matched_control_admission"
+  ]
+}

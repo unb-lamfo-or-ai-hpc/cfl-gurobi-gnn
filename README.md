@@ -13,6 +13,18 @@ instance.
 
 ## Current research result
 
+### MVP 2.0 / PR80: installed input review and first frozen-model forwards
+
+Job3503 completed the **54-original-parent numerical review** (30 easy, 24 medium)
+and four validation forwards on one V100, using the existing `tfm_env` without
+package updates, new training or optimization. See the
+[review, sample tables and CPU/GPU observation figures](docs/research/pr80-closure-job3503.md)
+and [accepted C–F results-first plan](docs/research/mvp2-results-plan-20261009.md).
+These validation observations do not establish solver improvement or GPU scaling.
+The older integrated submission commands must not be repeated.
+
+### Frozen MVP 1.0 baseline
+
 The MVP 1.0 baseline is a development-only research MVP:
 
 - 54 original-parent graphs were admitted to the learning cohort: 34 training,
@@ -121,6 +133,39 @@ graph artifacts is maintained in the [output inventory](docs/output-inventory.md
 | [sandbox](sandbox/README.md) | Toy bipartite numerical regression input |
 | [notebooks](notebooks/README.md) | Exploratory analyses, never acceptance gates |
 | [tools](tools/README.md) | Read-only diagnostics and maintenance helpers |
+
+## Computational platform: DaSCI DGX
+
+Operator-reported inventory received on **2026-10-08**, before the planned
+in-place update of `tfm_env`. This maps the host and installed environment;
+it is not a claim that every experiment used all these resources or versions.
+
+| Component | Observed configuration |
+|---|---|
+| Compute node | `dgx-dasci`; one-node platform |
+| CPU topology | 2 sockets, 40 physical cores, 80 logical CPUs (earlier 2026-10-06 inventory) |
+| GPUs | 8 NVIDIA Tesla V100-SXM2-32GB; nominal 32 GB per device, not one pooled memory space |
+| Scheduler | Slurm, `batch` partition; current configured GPU resources: `gpu:8` |
+| NVIDIA software | Driver and NVIDIA-SMI 550.90.07; NVML 550.90 |
+| Driver-reported CUDA | 12.4; distinct from installed toolkit packages and the PyTorch CUDA build |
+| Environment | Existing Conda environment `tfm_env`; Python 3.10.20 |
+| Learning stack | PyTorch 2.1.2+cu121, torchvision 0.16.2+cu121, torchaudio 2.1.2+cu121, PyG 2.7.0 |
+| Numerical/solver stack | NumPy 1.26.4, SciPy 1.15.3, gurobipy 13.0.1 |
+
+`pip check` reported no broken requirements; this is dependency-metadata
+consistency, not a GPU execution or numerical-validation test. The inventory
+was collected outside a Slurm job. The earlier `nvidia-smi` device query returned
+`No devices were found`, although procfs listed eight V100 devices and Slurm
+advertised eight GPUs; the cause and allocated GPU functionality remain unproven.
+
+The [dated platform record and manuscript guidance](docs/research/dasci-platform-20261008.md)
+preserve the observation, CUDA distinctions, earlier CPU provenance and
+per-experiment reporting requirements. The [PR80 integrated execution](docs/research/pr80-integrated-existing-runtime.md)
+keeps the existing `tfm_env` without upgrading packages or imposing a minimum
+PyTorch version. It combines numerical/descriptive auditing with frozen-model
+validation inference. Hardware capacity
+must be distinguished from allocated CPUs/GPUs, physical affinity, Gurobi thread
+limits, measured memory and effective training hyperparameters in each result.
 
 ## Installation
 

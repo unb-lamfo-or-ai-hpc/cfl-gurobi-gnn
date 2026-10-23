@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="500" viewBox="0 0 940 500">
+<rect width="940" height="500" fill="white"/>
+<g font-family="sans-serif" fill="#182635">
+<text x="60" y="28" font-size="20">Instancia M0: brecha final (%) por límite de hilos (seed 42)</text>
+<text x="60" y="52" font-size="12">Calidad al terminar: objetivo alcanzado o presupuesto agotado. No es tiempo hasta el objetivo.</text>
+<text x="60" y="74" font-size="12">M0/M1/M2 son métodos; M0 en el título identifica la instancia media.</text>
+<path d="M70 350H690" stroke="#dbe2e9"/><text x="10" y="354" font-size="12">0.0 %</text>
+<path d="M70 295H690" stroke="#dbe2e9"/><text x="10" y="299" font-size="12">13.0 %</text>
+<path d="M70 240H690" stroke="#dbe2e9"/><text x="10" y="244" font-size="12">26.1 %</text>
+<path d="M70 185H690" stroke="#dbe2e9"/><text x="10" y="189" font-size="12">39.1 %</text>
+<path d="M70 130H690" stroke="#dbe2e9"/><text x="10" y="134" font-size="12">52.1 %</text>
+<circle cx="100" cy="321.43" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="240" cy="324.52" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="380" cy="185.17" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="520" cy="187.97" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<circle cx="660" cy="153.57" r="5" fill="white" stroke="#3457a6" stroke-width="2"/>
+<polyline points="100,321.43 240,324.52 380,185.17 520,187.97 660,153.57" fill="none" stroke="#3457a6" stroke-width="2"/>
+<text x="730" y="210" fill="#3457a6">M0</text>
+<circle cx="100" cy="313.78" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="240" cy="337.17" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="380" cy="223.42" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="520" cy="169.65" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<circle cx="660" cy="194.48" r="5" fill="white" stroke="#b15a10" stroke-width="2"/>
+<polyline points="100,313.78 240,337.17 380,223.42 520,169.65 660,194.48" fill="none" stroke="#b15a10" stroke-width="2"/>
+<text x="730" y="234" fill="#b15a10">M1</text>
+<circle cx="100" cy="319.86" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="240" cy="309.09" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="380" cy="340.09" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="520" cy="344.70" r="5" fill="white" stroke="#128064" stroke-width="2"/>
+<circle cx="660" cy="350.00" r="5" fill="#128064" stroke="#128064" stroke-width="2"/>
+<polyline points="100,319.86 240,309.09 380,340.09 520,344.70 660,350.00" fill="none" stroke="#128064" stroke-width="2"/>
+<text x="730" y="258" fill="#128064">M2</text>
+<text x="96" y="375">1</text>
+<text x="236" y="375">2</text>
+<text x="376" y="375">4</text>
+<text x="516" y="375">8</text>
+<text x="656" y="375">16</text>
+<text x="280" y="405">Límite de hilos / núcleos físicos</text>
+<text x="60" y="435" font-size="12">Matriz completa: 20/21 censurados y 1/21 con objetivo alcanzado. Semillas 43/44 en la tabla.</text>
+<text x="60" y="458" font-size="12">Círculo vacío: tiempo censurado; lleno: objetivo alcanzado (M2/16, 3204,179 s, brecha cero).</text>
+<text x="60" y="481" font-size="12">Un padre expuesto; sin generalización. Las líneas conectan límites discretos, no nuevas observaciones.</text>
+</g></svg>

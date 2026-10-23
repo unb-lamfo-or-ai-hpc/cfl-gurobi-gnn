@@ -1,0 +1,30 @@
+{
+  "historical_failure_gate_proven": false,
+  "historical_training_started": "not_established_by_missing_reports",
+  "job_states": [
+    {
+      "job_id": "3671",
+      "state": "FAILED"
+    },
+    {
+      "job_id": "3672",
+      "state": "CANCELLED"
+    }
+  ],
+  "optimization_calls_added": 0,
+  "raw_logs_included": false,
+  "ready_for_independent_review": false,
+  "remaining_dispatch_admitted": false,
+  "result_reports_present": 0,
+  "retry_authorized": false,
+  "scientific_reporting_eligible": false,
+  "source_commit": "f4b226476c8c7520b88560319ec53bba5d2dfb4e",
+  "source_return_sha256": "e65676eb6f84fe515de766f11b467ba5a2b2ba25715425bf813b1f4eea7cf033",
+  "spooled_entry_location_defect_identified_in_source": true,
+  "submissions_added": 0,
+  "supervisor_reports_present": 0,
+  "training_evidence_state": "terminal_without_complete_pair",
+  "training_runs_added": 0,
+  "transfer_and_envelope_verified": true,
+  "transfer_failed": false
+}

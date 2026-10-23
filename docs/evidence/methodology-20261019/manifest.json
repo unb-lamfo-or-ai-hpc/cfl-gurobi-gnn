@@ -1,0 +1,15 @@
+{
+  "execution_authorized": false,
+  "historical_files_modified": false,
+  "outputs": {
+    "cpu_60_jobs_proposed.csv": "c2342682a14a42b0d9537f251f55b5a18cae2cd69885a6749266a6c9143f4f81",
+    "cpu_authorization_package.json": "1ea149744754cb0017ed8bed830324f61ef0919a52472bca888405299deea3a0",
+    "seed42_cost_scenarios.csv": "50829b95a06858f7edb0f220c805815198b7e22afd119651eb6a3f95f91c3d6d",
+    "seed42_cpu_scaling.csv": "5945e656ba0d2878073971cb9e48a34131165e724b9211a85626edfdaa85c466",
+    "seed42_main.csv": "c3f4919e51569a7c0ae20c892410d94db9069b95c274e23432e60e1676794b94",
+    "seed42_paired_speedups.csv": "982b274606d03668132ac3e23713e035827c74bb503ceedcb19077ccedcd42b4",
+    "summary.json": "545560f7e0775c227fd6e532d58269648e89a7c4e65dec4bbac70f9f1619a7cc"
+  },
+  "source": "docs/evidence/pr86/final-210/campaign_results.csv",
+  "source_sha256": "e5fc92d75f2d26620a51a4e4d9b1d1f63befd7ec2680ad7a3b2c34cd781390b8"
+}

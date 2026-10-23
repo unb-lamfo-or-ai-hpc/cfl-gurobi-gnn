@@ -1,6 +1,37 @@
 # MVP 2.0: learning-assisted optimization and computational scaling
 
+**Current planning entry point, 10 October 2026:**
+[approved submission protocol](submission-protocol-20261010.md) and
+[article roadmap](../article_plan.md). These supersede the scheduling/status
+proposals below. In particular, PR83 closes its documented limitation without
+new experiments, PR85 adds the mandatory mathematical/objective-sense audit,
+and the training study is one GPU serial versus four GPUs DDP. This notice
+does not modify historical receipts or authorize HPC budgets or execution.
+
 ## Research objective and release boundary
+
+The current delivery sequence is the
+[MVP 2.0 completion plan dated 2026-10-06](mvp2-delivery-plan-20261006.md).
+It supersedes stale scheduling/status statements here, while retaining the
+research objectives and experimental boundaries below. Estimated working-day
+figures below are historical estimates, not a current delivery commitment.
+
+The [PR66 screen](pr66-reconciliation-thread-pilot.md) completed in job 3468:
+ten attempts on the selected fitting parents at 300 seconds and a 10% gap
+target. All five easy attempts reached the target; no medium attempt did.
+These are development observations, not a population scaling result.
+The callback qualification and installed no-solver execution/operator checks
+have also completed. PR77 head `30f80577fa7302348ed3807551e3b2c660779faf`
+passed four-arm CI and its 18-test installed preview. Its ready/merge operation
+is explicitly authorized but remains pending at this planning checkpoint.
+
+The next experiment is the existing PR75/PR76 same-pair, seed-42 matrix:
+five thread caps, up to 3,600 seconds per attempt, easy gap target 1% and
+medium target 10%, with separate easy and medium jobs and independent easy
+review between them. Its resource budget is still unapproved. The original
+installed source and plan hashes remain frozen. Earlier six-parent/three-seed
+matrices are superseded proposals, not an executable default. Root methods,
+portfolios, GPU training and new parent selection are outside this CPU matrix.
 
 The next study will assess whether learned partial starts improve solution quality and time-to-target across CFL difficulty classes, and whether those gains remain useful after accounting for CPU, memory, GPU and preparation costs. Favorable effects are hypotheses, not acceptance requirements. An informative negative experiment is retained.
 
@@ -29,11 +60,16 @@ Deliverables: `parent_solver_ledger.csv`, `incumbent_inventory.json`, `augmentat
 
 ## Sprint B: CPU parallelism and root-relaxation resource pilot
 
+Implementation details and proposed budget gates are specified in the
+[computational reconciliation and thread-pilot protocol](computational-reconciliation-and-thread-pilot.md).
+Select within-class parents by varying structural composition rather than
+dimensions, which the recovered PR65 collection found constant within each class.
+
 Estimated effort: 3-5 working days plus controlled cluster execution.
 
-Precommit an easy/medium pilot subset selected by class and structural size, not by observed improvement. Test `Threads` in {1,2,4,8,16}. Set Slurm CPU allocation and solver thread limits explicitly, record BLAS/OpenMP settings and constrain aggregate memory/concurrency. Keep seeds, solve budgets, tolerances and source models matched. Preserve the existing 64 GiB reservation initially; increase only after measured resource qualification. Log out-of-memory and allocation failures, rather than dropping them.
+Precommit an easy/medium pilot subset selected by class and label-free structural composition, not by observed improvement. Test `Threads` in {1,2,4,8,16}. Set Slurm CPU allocation and solver thread limits explicitly, record BLAS/OpenMP settings and constrain aggregate memory/concurrency. Keep seeds, solve budgets, tolerances and source models matched. Preserve the existing 64 GiB reservation initially; increase only after measured resource qualification in a newly versioned profile. Log out-of-memory and allocation failures, rather than dropping them.
 
-Separate (a) parallelizing one solve, (b) independent-instance array throughput and (c) concurrent MIP portfolio search. Record wall-time speedup, parallel efficiency, aggregate CPU-seconds and peak memory: sixteen cores for half the time is not automatically cheaper. Where memory or root capture is problematic, compare automatic, dual-simplex and barrier root strategies on the pilot, checking root-feature semantics and mathematical equivalence. Do not select these settings using the final test results.
+Separate (a) parallelizing one solve, (b) independent-instance array throughput and (c) concurrent MIP portfolio search. Record wall-time speedup, parallel efficiency, aggregate CPU-seconds and peak memory: sixteen cores for half the time is not automatically cheaper. The approved first screen leaves all algorithmic choices at version defaults. A later comparison of root methods requires a separately approved contract; it is not included in PR66. Do not select settings using final test results.
 
 Consider concurrent MIP as a secondary portfolio experiment with the same total CPU allocation and separate nondeterminism accounting. A Benders or other decomposition requires verifying exploitable structure and an exact reconstruction/certificate contract; it is not an immediate assumption that these binary models decompose into independent subproblems. Distributed Gurobi requires compatible licenses/runtime and is distinct from threads on one DGX host.
 

@@ -1,0 +1,46 @@
+{
+  "archive_sha256": {
+    "job3489-public-return.zip": "9ad9e582eb947ae89da00bf770929cf357172ec880b8424749b30361bc2937d6",
+    "job3490-public-return.zip": "d0b8d349db6d1dc52ac30d45f2d625e4593f85de14a594bda56775444e20e5ff"
+  },
+  "disposition": "partial_delivery_with_documented_interruption",
+  "easy_complete": true,
+  "historical_failure_cause_proven": false,
+  "medium_complete": false,
+  "medium_exact_optimization_calls": null,
+  "medium_stop_code": "memory_observation_lost",
+  "new_resource_approval_recorded": false,
+  "optimization_runs_added": 0,
+  "predecessor_review": {
+    "easy_exact_optimization_calls": 5,
+    "easy_job_id": "3489",
+    "easy_preserved_without_rerun": true,
+    "easy_review_sha256": "a7b8acca50978b0a522be345bac3f80aac19f95d36adc0475941f8e5bcf75966",
+    "historical_failure_cause_proven": false,
+    "historical_stop_preserved": true,
+    "matrix_approval_sha256": "de16f405335cb2df7876ea0b244efc5740220020e093ed4ef61b749a75955ce2",
+    "matrix_package_sha256": {
+      "easy": "a35ef35d687d66c7b6f0d1c0e9b1e2c5bc7dc538c933981a6dcc9b67420cb571",
+      "medium": "b9d86015d24b56de316bfea5cea11207a0cc416e14916c14a651343f1460a7e5"
+    },
+    "medium_exact_optimization_calls": null,
+    "medium_interrupted_attempt": "medium-seed42-threads16",
+    "medium_job_id": "3490",
+    "medium_reserved_optimization_slots": 1,
+    "operator_approval_sha256": "f5e2f5bf8d348be46a80ef769cf3b76e174bfe7713117493fa0422561f176147",
+    "operator_plan_sha256": "2d59e104cd896d1f9dcec067fdd3d507f2e6c4d69085deefca4da2fa8e0a609e",
+    "reservation_is_not_a_measured_call_count": true,
+    "return_manifest_sha256": {
+      "easy": "06502e632c5ad0806cb5a7c331d72887b9298866a2b59e7b28bde97b1f51e329",
+      "medium": "4068bb9824bcd4dbd49c2327806d9e2a22980053c9a9ddb5e0e245c8e6436227"
+    },
+    "scientific_reporting_eligible": false,
+    "source_commit": "2a538fd7cc048eb988d44a529cc5ee5c9faf96bf"
+  },
+  "raw_logs_included": false,
+  "reviewed_runtime_commit": "80cf7d5b90202ba57c7cb62c5e0d670875cc02ac",
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "sprint_b_complete": false,
+  "submissions_added": 0
+}

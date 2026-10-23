@@ -14,3 +14,39 @@ manuscript/elsarticle-harv.bst -text -whitespace
 scripts/manuscript/** text eol=lf
 tests/manuscript/** text eol=lf
 .github/workflows/manuscript.yml text eol=lf
+# Public evidence manifests bind exact bytes on Windows and Linux.
+docs/evidence/mvp1/*.json -text
+docs/evidence/mvp1/SHA256SUMS.txt text eol=lf
+scripts/evidence/** text eol=lf
+tests/evidence/** text eol=lf
+configs/quality/pr64-ruff.toml text eol=lf
+.github/workflows/evidence.yml text eol=lf
+scripts/slurm/dasci/*pr65* text eol=lf
+configs/experiments/pr66_thread_screen_v1.json text eol=lf
+# These imported pilot receipts bind the original bytes, including final LF.
+docs/evidence/pr66/job3468/** -text
+# Preserve the returned phase exports and derived review exactly as reviewed.
+docs/evidence/pr67/job3468/** -text
+# Imported audit receipts and derived resource reviews bind exact bytes.
+docs/evidence/pr73/job3479/** -text
+docs/evidence/pr74/job3479/** -text
+# Installed PR75 fault qualification is preserved byte-identically.
+docs/evidence/pr75/fault-probe-c845ccd6b224/** -text
+# Installed PR76 operator receipt preserves its independently reviewed bytes.
+docs/evidence/pr76/operator-ad4800505bae/** -text
+docs/evidence/pr77/installed-budget-30f80577fa73/** -text
+# Installed hierarchical-memory qualification binds the original HPC bytes.
+docs/evidence/pr78/job3485/qualification.json -text
+docs/evidence/pr78/job3491/** -text
+# Job3501 return SHA binds original bytes, including nested CSV record terminators.
+docs/evidence/pr80-job3501-return.json -text
+docs/evidence/pr80-job3502-return.json -text
+docs/evidence/pr80-job3503-return.json -text
+docs/evidence/pr80-results/* -text
+docs/evidence/e0/** -text
+docs/evidence/pr86/** -text
+# New methodological views/manifests preserve their reviewed byte identity too.
+docs/evidence/methodology-20261019/** -text
+docs/evidence/pr87/** -text -whitespace
+docs/evidence/pr88/gpu/** -text -whitespace
+manuscript/figures/gpu_bce_by_epoch_article_en.* -text -whitespace

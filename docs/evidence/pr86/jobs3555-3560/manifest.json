@@ -1,0 +1,14 @@
+{
+  "inputs": [
+    "dd1a553b453289b23dbed3d52bd4bd7e0ac93eb2b4283597b788e406fcab6825",
+    "55b5b60e835cde8af5ab11e9735b052c0c53fa13cdd222f912d192eac65c1024",
+    "f526e0fbdff7fe2402fa1d3a3c7a7d264d77c7f1275574e371547994aa5c747c",
+    "01a1a077c00c4a81cb38285652153e751ced77e60a02be1ce2b787a52a7cbd8b"
+  ],
+  "outputs": {
+    "campaign_results.csv": "5ff393c136dca4941d83c8c5b6fca110f496683f4119dba313c18893b2c86a80",
+    "f3_cpu.svg": "782c1a10c724dbcb78841fbb4410b1f41c6add21578d0785b58f9cfce2b86d7c",
+    "f6_cpu_partial.svg": "34c6cb90807db09b31f38f897d394aedc5afb8867c6fca229ef37385746822b2",
+    "review.json": "8a55bd2a39c8c97fbe149fdacbcf84f006a8538297539250baa4c589b0a178bd"
+  }
+}

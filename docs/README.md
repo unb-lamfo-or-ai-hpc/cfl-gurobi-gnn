@@ -24,6 +24,10 @@ training contract or the six-parent solver benchmark.
 
 ## Evidence and historical interpretation
 
+- [Versioned evidence summaries](evidence/README.md): public-safe closure records
+  and computational observations linked to private-source hashes.
+- [MVP 2.0 Sprint A](research/pr64-evidence-hpc-baseline.md): evidence-led HPC
+  baseline and serial/DDP protocol, with PR base `develop`.
 - [Research protocols](research/README.md): scope, supersession, and runbook cautions.
 - [Architecture decisions](decisions/README.md): design rationale, not runtime proof.
 - [Validation receipts](validation/README.md): bounded observations and sanitization.

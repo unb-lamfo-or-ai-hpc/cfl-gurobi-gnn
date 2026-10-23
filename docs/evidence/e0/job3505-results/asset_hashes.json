@@ -1,0 +1,16 @@
+{
+  "files": {
+    "inference_cost.pdf": "80a22fb9f176d9464eea60d1374c9ff1d396217e630b29e2d629f18357f02b5d",
+    "inference_cost.png": "93f862953e2226db6a94941d504d3f163fb7c4206512b54c3d01ac8d17bb467f",
+    "inference_cost.svg": "f014f5ae3f502ffe6ad5d6fdd28811b4d3d944e42f3c5d0489f45ba0d6145b48",
+    "next_solve_proposal.json": "62906d43324840b35b5dd3498497b1d77ca8f52a18af4c1dddc332a82191c751",
+    "paired_effects.csv": "7f172c451f549ed9ff33117818e443b00df08d1976bc934854eda0627137dba1",
+    "per_parent.csv": "b170e0eca79cda1bbf0340ada34901f3f0f9ff93bbf3675e16b8c34664e622e5",
+    "predictive_comparison.pdf": "e71aa9da2259025d11ae88f953e14acc4c11283dea16db831b187245bdf874bc",
+    "predictive_comparison.png": "2937abfe982cad1ccc29e3c5f8d5dd0e5fc5f850835fb437f0c5450e427d3d40",
+    "predictive_comparison.svg": "4083bf08d19446af3bdb1b7c284ee16553b0201338f3fa97b3943269af2c350c",
+    "review.json": "b95766f517d4a580c1fb9be815980b76e414b1f6a88c13d2800b8d51037db691",
+    "summary.csv": "8586e48010cdcfef7cabbbb163ff3ece4b2e127eadda6185b4607f6c51cd434c"
+  },
+  "source_return_sha256": "8f8f0b3c9dc350422f7a36bdb6c46d338186274ebf629d14acb88ea0ecbf9c40"
+}

@@ -1,0 +1,1034 @@
+{
+  "approval_alone_does_not_bypass_final_source_and_installed_binding_checks": true,
+  "automatic_retry": false,
+  "calls_per_job_maximum": 3,
+  "child_deadline_seconds": 3780,
+  "concurrent_jobs_maximum": 1,
+  "execution_interface_included": false,
+  "first_group_is_part_of_210_not_additional_pilot": true,
+  "first_group_must_be_reviewed_before_remaining_dispatch": true,
+  "groups": [
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F0-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_0",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F3-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_3",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F6-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_6",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F14-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_14",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F27-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_27",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "F29-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_easy_instance_29",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M0-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_0",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M4-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_4",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M7-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_7",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads1-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 1,
+      "seed": 42,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads1-seed43",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 1,
+      "seed": 43,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads1-seed44",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 1,
+      "seed": 44,
+      "threads": 1
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads2-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 2,
+      "seed": 42,
+      "threads": 2
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads4-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 4,
+      "seed": 42,
+      "threads": 4
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads8-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 8,
+      "seed": 42,
+      "threads": 8
+    },
+    {
+      "child_deadline_seconds": 3780,
+      "group_id": "M12-threads16-seed42",
+      "job_wall_seconds": 14400,
+      "method_order": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "parent": "CFL_medium_instance_12",
+      "physical_cores_requested": 16,
+      "seed": 42,
+      "threads": 16
+    }
+  ],
+  "guidance_return_sha256": "3a78942e349737c916ba717df7110bf867771e85613578a9f2256df2d6ea62f3",
+  "job_wall_seconds_maximum": 14400,
+  "main_optimization_calls_maximum": 210,
+  "matrix_plan_sha256": "bbc86d8e342c7f309f3fc6e66750522a77f6fa3e49f46c42ffe32eb30c52c727",
+  "memory": {
+    "kernel_ram_cap_bytes_maximum": 68719476736,
+    "loss_of_job_scoped_observation": "stop_preserve_pause_no_retry",
+    "sampled_stop_bytes": 60129542144,
+    "solver_soft_decimal_gb": 48
+  },
+  "new_forwards": 0,
+  "new_root_calls": 0,
+  "parameters": {
+    "MIPGap": 0.0001,
+    "SoftMemLimit": 48,
+    "TimeLimit": 3600
+  },
+  "planned_cells_sha256": "c793823fdffe31c8c1a7bb4b7bc589767fe1ece585c59d4aec2753103e44ebeb",
+  "protocol_id": "pr86_remaining_main_budget_request_v1",
+  "queues_included": false,
+  "reserved_physical_core_seconds_maximum": 4752000,
+  "resource_budget_approved": false,
+  "root_return_sha256": "4b431deb2736b9f780582425c0d77b1e86dbe297abbfffcb48c4027f15549815",
+  "scheduler": {
+    "affinity": "one_logical_cpu_per_requested_physical_core",
+    "concurrent_jobs_maximum": 1,
+    "exclusive": false,
+    "main_solver_gpus": 0,
+    "memory_mib": 65536,
+    "nodes": 1,
+    "partition": "batch",
+    "requeue": false,
+    "root_gpus": 0,
+    "tasks": 1
+  },
+  "sequential_reserved_wall_seconds_maximum": 1008000,
+  "solver_capacity_physical_core_seconds_maximum": 3564000,
+  "solver_execution_admitted": false,
+  "solver_seconds_maximum": 756000,
+  "stop_policy": "stop_and_pause_on_failed_or_incomplete_group_no_replacement",
+  "submissions_maximum": 70,
+  "training_runs": 0
+}

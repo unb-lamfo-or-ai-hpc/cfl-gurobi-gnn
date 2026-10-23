@@ -1,0 +1,127 @@
+{
+  "config": {
+    "algorithm_policy": "reset_all_model_parameters_to_version_defaults_before_controls",
+    "cluster": "dgx-dasci",
+    "default_parameters_observed": [
+      "Method",
+      "NodeMethod",
+      "Crossover",
+      "ConcurrentMIP",
+      "MIPFocus",
+      "MIPGapAbs",
+      "FeasibilityTol",
+      "IntFeasTol",
+      "OptimalityTol",
+      "Presolve",
+      "Cuts",
+      "Heuristics",
+      "NodeLimit"
+    ],
+    "effective_objective_sense": "MINIMIZE",
+    "exclusive": false,
+    "extension_enabled": false,
+    "frozen_optimization_test_parent_ids": [
+      "CFL_medium_instance_0",
+      "CFL_medium_instance_4",
+      "CFL_medium_instance_7",
+      "CFL_medium_instance_9",
+      "CFL_medium_instance_12",
+      "CFL_medium_instance_20"
+    ],
+    "gurobi_version": [
+      13,
+      0,
+      1
+    ],
+    "maximum_future_time_limit_seconds": 3600,
+    "mip_gap_relative": 0.1,
+    "objective_sense_policy": "historical_cfl_minimization_in_memory_only",
+    "protocol_id": "pr66_dasci_shared_thread_screen_defaults_v2",
+    "requested_physical_cores": 16,
+    "scheduler_memory_gib": 64,
+    "schema_version": 1,
+    "scientific_reporting_eligible": false,
+    "seed": 42,
+    "soft_memory_limit_decimal_gb": 48,
+    "source_objective_sense": "MAXIMIZE",
+    "thread_caps": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "time_limit_seconds": 300
+  },
+  "config_sha256": "b78f6d4d78c58cf2bc5bc97371114d75e042265b215a5cd50289cf3d4ab8055e",
+  "dependency_sha256": {
+    "collect_class_statistics.py": "6780b2b2ef770e8b6c8c80319bf5529ca167deb1099341fea3d618dbc4855e89",
+    "collect_computational_ledger.py": "370a19783a59441778659c12948c4cbba74a605f2ecd6fcbe1aaeebf7850f0e0",
+    "publish_mvp2_baseline.py": "235f5afa12da7cefebae47261c06446b25220b9bf6b6ee3c0b7c3f76db1d149a"
+  },
+  "eligible_pools": {
+    "easy": [
+      "CFL_easy_instance_13",
+      "CFL_easy_instance_15",
+      "CFL_easy_instance_16",
+      "CFL_easy_instance_17",
+      "CFL_easy_instance_18",
+      "CFL_easy_instance_19",
+      "CFL_easy_instance_2",
+      "CFL_easy_instance_20",
+      "CFL_easy_instance_21",
+      "CFL_easy_instance_22",
+      "CFL_easy_instance_23",
+      "CFL_easy_instance_24",
+      "CFL_easy_instance_25",
+      "CFL_easy_instance_26",
+      "CFL_easy_instance_28",
+      "CFL_easy_instance_5",
+      "CFL_easy_instance_7",
+      "CFL_easy_instance_8"
+    ],
+    "medium": [
+      "CFL_medium_instance_1",
+      "CFL_medium_instance_10",
+      "CFL_medium_instance_15",
+      "CFL_medium_instance_16",
+      "CFL_medium_instance_18",
+      "CFL_medium_instance_2",
+      "CFL_medium_instance_21",
+      "CFL_medium_instance_22",
+      "CFL_medium_instance_23",
+      "CFL_medium_instance_24",
+      "CFL_medium_instance_25",
+      "CFL_medium_instance_27",
+      "CFL_medium_instance_28",
+      "CFL_medium_instance_29",
+      "CFL_medium_instance_3",
+      "CFL_medium_instance_8"
+    ]
+  },
+  "models": [
+    {
+      "difficulty": "easy",
+      "original_lp_sha256": "d6e3e0853c13f8ad363e813f1538b2f1154d5efce2cbb39bb6d01967f09ea73c",
+      "relative_path": "CFL_easy_instance/LP/CFL_easy_instance_17.lp.gz",
+      "role": "train",
+      "source_instance_id": "CFL_easy_instance_17"
+    },
+    {
+      "difficulty": "medium",
+      "original_lp_sha256": "34d6773b78a2f7ea748b61e0f99a418f696e24f96d25886dd5c433549e8bbd4b",
+      "relative_path": "CFL_medium_instance/LP/CFL_medium_instance_1.lp.gz",
+      "role": "train",
+      "source_instance_id": "CFL_medium_instance_1"
+    }
+  ],
+  "optimization_runs": 0,
+  "python_version": "3.10.20",
+  "role_plan_contract_sha256": "432a42dab9f49f01a31d7b28f658bd14f7c50450ac2d83d1ae3102bcc12f0d40",
+  "role_plan_sha256": "07c3377c20ef49c0ad3ae33a6b57d9dd70f92fc48a32f5f80c25b5cb32aa5da4",
+  "role_plan_sha256_semantics": "original_stored_json_bytes",
+  "sampling": "python_random_Random42_choice_sorted_train_pools_easy_then_medium",
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "worker_sha256": "b3d0c85aeac0c2bd23a28563dfda8b3d692510733910a8b48ab3d016524b6a58"
+}

@@ -1,0 +1,81 @@
+{
+  "M1_depends_on_gnn_assembly": true,
+  "abstentions": 0,
+  "allocation_is_modeled_not_observed_standalone_cold_cost": true,
+  "allocation_scenario": "equal_parent_shared_overhead_and_full_coupled_export_to_each_guided_method",
+  "child_observed_wall_seconds": 404.16044149082154,
+  "combined_instrumented_preparation_seconds": 692.6264503132552,
+  "disjoint_campaign_components_seconds": {
+    "assembly_gnn": 15.49116186145693,
+    "assembly_lp": 9.894064563326538,
+    "features": 325.2289311978966,
+    "guidance_child_residual": 4.28606852889061,
+    "guidance_supervisor_residual": 1.0178420124575496,
+    "inference": 4.188977861776948,
+    "private_export": 41.91563369799405,
+    "root_batch_residual": 0.46226677391678095,
+    "root_supervised": 286.9859000360593,
+    "shared_initialization": 3.1556037794798613
+  },
+  "forward_calls": 10,
+  "gpu_peak_allocated_bytes": 2316073472,
+  "gpu_peak_reserved_bytes": 2491416576,
+  "guidance_region_totals_seconds": {
+    "assembly_gnn": 15.49116186145693,
+    "assembly_lp": 9.894064563326538,
+    "features": 325.2289311978966,
+    "inference": 4.188977861776948,
+    "private_export": 41.91563369799405
+  },
+  "guidance_supervisor_wall_seconds": 405.1782835032791,
+  "job_id": "3521",
+  "main_comparison_admitted": false,
+  "optimization_calls": 0,
+  "optimization_runs_added_by_review": 0,
+  "parents": 10,
+  "plan_sha256": "ea921855f000158fc0adc9da554f73338c7ec6d3494fb2e2e5f3762eefd53eaa",
+  "private_artifacts_reopened": false,
+  "protocol_id": "pr86_job3521_public_review_v1",
+  "qualified_scope": "pinned_public_preparation_identity_support_and_timing_observations",
+  "return_sha256": "3a78942e349737c916ba717df7110bf867771e85613578a9f2256df2d6ea62f3",
+  "root_return_sha256": "4b431deb2736b9f780582425c0d77b1e86dbe297abbfffcb48c4027f15549815",
+  "runtime": {
+    "bitwise_reproducibility_claimed": false,
+    "gpu_name": "Tesla V100-SXM2-32GB",
+    "packages": {
+      "libc": [
+        "glibc",
+        "2.35"
+      ],
+      "machine": "x86_64",
+      "minimum_torch_version_gate": false,
+      "nvidia_driver_procfs": "550.90.07",
+      "packages": {
+        "gurobipy": "13.0.1",
+        "numpy": "1.26.4",
+        "packaging": "26.0",
+        "pyg-lib": null,
+        "scipy": "1.15.3",
+        "torch": "2.1.2+cu121",
+        "torch-cluster": null,
+        "torch-geometric": "2.7.0",
+        "torch-scatter": null,
+        "torch-sparse": null,
+        "torchaudio": "2.1.2+cu121",
+        "torchvision": "0.16.2+cu121"
+      },
+      "packages_modified": false,
+      "python": "3.10.20"
+    },
+    "torch_cuda_build": "12.1"
+  },
+  "sampled_job_cgroup_peak_bytes": 4732194816,
+  "scheduler_elapsed_seconds": 407,
+  "scientific_reporting_eligible": false,
+  "shared_setup_seconds": 3.1556037794798613,
+  "solver_start_acceptance_observed": false,
+  "source_commit": "4209e959021b4e85d11cc5b9726702328462cc94",
+  "standalone_cold_preparation_measured": false,
+  "training_runs": 0,
+  "whole_job_end_to_end_qualified": false
+}

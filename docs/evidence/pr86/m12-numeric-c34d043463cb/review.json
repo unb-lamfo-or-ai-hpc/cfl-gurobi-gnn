@@ -1,0 +1,20 @@
+{
+  "author_decision": "continue_final_nine_with_explicit_M12_tolerance_limitation_20261018",
+  "cause_of_cross_run_discrepancy_proven": false,
+  "collector_source_commit": "3a2e3bfbc9fb8eb0341603d20f6593ad1bf6a416",
+  "continuation_authorized_by_author_not_by_raw_receipt": true,
+  "continuation_scope": "only_final_original_nine_unchanged_protocol_no_retry",
+  "control_rounded_vectors_violating_original_unit_rows": 2,
+  "diagnostic_summary_eligible": true,
+  "exact_optimality_certified": false,
+  "gnn_rounded_vectors_passing_original_unit_rows": 4,
+  "gnn_vectors_with_zero_observed_integrality_and_row_residuals": 4,
+  "main_performance_promotion": false,
+  "numeric_audit_sha256": "c34d043463cb4f3e6ea389ac00b96b779b4a0b23e5c5cf62bda404b60047e7a2",
+  "optimization_runs_added": 0,
+  "original_receipts_and_flags_unchanged": true,
+  "protocol_id": "pr86_m12_numeric_review_v1",
+  "scientific_reporting_eligible": false,
+  "stored_vectors_within_original_tolerances": 6,
+  "wave_return_sha256": "4088a2d464ec1d1874b249b7aeed0e720a55bf36e35dfb329d859fb853b709d7"
+}

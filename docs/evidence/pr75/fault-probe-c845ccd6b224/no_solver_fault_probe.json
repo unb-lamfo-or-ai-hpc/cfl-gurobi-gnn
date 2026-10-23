@@ -1,0 +1,33 @@
+{
+  "actual_high_memory_pressure_injected": false,
+  "comparison_submission_ready": false,
+  "dependency_sha256": {
+    "collect_class_statistics.py": "6780b2b2ef770e8b6c8c80319bf5529ca167deb1099341fea3d618dbc4855e89",
+    "collect_computational_ledger.py": "370a19783a59441778659c12948c4cbba74a605f2ecd6fcbe1aaeebf7850f0e0",
+    "collect_pr66_log_phases.py": "21ccf71fa0890d2ba21614c5cf5355b9a8f3e7a95f64d7e103911929d08b1325",
+    "cpu_comparison_contract.py": "bb5df708fb7d69e3d1a26c98caaf3df163bdcee3b85dbdccd2e02f95e5f10931",
+    "gurobi_callback_adapter.py": "08f35a40ca81516e56d0e5b6157b0ad640c7312054524df1dd0f214fbea763ef",
+    "isolated_attempt_worker.py": "878fab8e992757b29c4fce7e1f5c52c43fc37d9d39f7aeb30185ef9248ca91d8",
+    "paired_matrix_executor.py": "226e27e55700a6dced7bc1f697d4d3305cc3b48c8465fd6cf0ac35e2519cb271",
+    "paired_matrix_no_solver_probe.py": "ed0db0c8e63a4af1c7750e8d3fcdfa63a3b39ce1bb64717f86e473985220ad98",
+    "paired_memory_guard.py": "8f99b5bdaa8c4722618787b4409af56b95f25c8df2f1b284074fef860ec12186",
+    "pr66_thread_pilot.py": "b3d0c85aeac0c2bd23a28563dfda8b3d692510733910a8b48ab3d016524b6a58",
+    "publish_mvp2_baseline.py": "235f5afa12da7cefebae47261c06446b25220b9bf6b6ee3c0b7c3f76db1d149a",
+    "qualification_workflow.py": "46dc21ec98f525c2ea51978bf5f730799451c6542f72d476cc7bb7b29e15a3a9",
+    "tests/evidence/test_isolated_attempt_worker.py": "03106a2032b526982a4e6912aa9b00a2402fccdec3b44cc88706a0d375e4afe1",
+    "tests/evidence/test_paired_matrix_executor.py": "b9297f2d91c252bbaea34e1770c141fea3a5f8a8e9839b0fd0380b7bb1d93072"
+  },
+  "errors": 0,
+  "failures": 0,
+  "kernel_ram_enforcement_in_allocation_qualified": false,
+  "optimization_runs_added": 0,
+  "passed_no_solver_fault_probe": true,
+  "protocol_id": "installed_paired_matrix_no_solver_fault_probe_v1",
+  "raw_logs_included": false,
+  "schema_version": 1,
+  "scientific_reporting_eligible": false,
+  "skipped": 0,
+  "source_commit": "c845ccd6b2242022c05ac16cbf2f666c023b8e82",
+  "submissions_added": 0,
+  "tests_run": 25
+}

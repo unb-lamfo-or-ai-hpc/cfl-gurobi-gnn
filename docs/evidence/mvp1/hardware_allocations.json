@@ -1,0 +1,61 @@
+{
+  "ddp_scaling_comparison_performed": false,
+  "jobs": [
+    {
+      "allocated_cpus": 8,
+      "allocated_gpus": 1,
+      "ddp_execution_verified": false,
+      "elapsed_seconds": 34134,
+      "exit_code": "0:0",
+      "gpu_utilization": null,
+      "job_id": "3307",
+      "phase": "mixed_39_training",
+      "reported_total_cpu_time": "09:36:18",
+      "requested_memory": "64G",
+      "state": "COMPLETED"
+    },
+    {
+      "allocated_cpus": 8,
+      "allocated_gpus": 1,
+      "ddp_execution_verified": false,
+      "elapsed_seconds": 5318,
+      "exit_code": "0:0",
+      "gpu_utilization": null,
+      "job_id": "3361",
+      "phase": "easy_only_training",
+      "reported_total_cpu_time": "01:30:49",
+      "requested_memory": "64G",
+      "state": "COMPLETED"
+    },
+    {
+      "allocated_cpus": 8,
+      "allocated_gpus": 1,
+      "ddp_execution_verified": false,
+      "elapsed_seconds": 86418,
+      "exit_code": "0:0",
+      "gpu_utilization": null,
+      "job_id": "3422",
+      "phase": "mixed_54_training_timeout",
+      "reported_total_cpu_time": "1-00:18:32",
+      "requested_memory": "64G",
+      "state": "TIMEOUT"
+    },
+    {
+      "allocated_cpus": 4,
+      "allocated_gpus": 1,
+      "ddp_execution_verified": false,
+      "elapsed_seconds": 159,
+      "exit_code": "0:0",
+      "gpu_utilization": null,
+      "job_id": "3427",
+      "phase": "evaluation_recovery",
+      "reported_total_cpu_time": "02:40.230",
+      "requested_memory": "32G",
+      "state": "COMPLETED"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "slurm_allocation_not_utilization",
+  "source_receipts_sha256": "f5cc52a20f69ebae0af8aecff5ac7c2981de85118d09a4d5406c3877a4cef156",
+  "training_quality_comparison_performed": false
+}

@@ -1,0 +1,26 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+#SBATCH --job-name=cfl_pr66_threads
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --hint=nomultithread
+#SBATCH --mem=64G
+#SBATCH --time=01:30:00
+
+set -euo pipefail
+cd "${PR66_EXEC_DIR:?}"
+test "$(hostname -s)" = dgx-dasci
+test "${PR66_SOURCE_COMMIT:?}" = "$(git -c "safe.directory=${PR66_EXEC_DIR}" rev-parse HEAD)"
+test -z "$(git -c "safe.directory=${PR66_EXEC_DIR}" status --porcelain)"
+test ! -e gurobi.env
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+# No exclusive flag, GPU reservation or concurrent solver workers.
+# Do not combine --hint with --cpu-bind=cores; Slurm documents that conflict.
+srun --ntasks=1 --cpus-per-task=16 --hint=nomultithread --cpu-bind=verbose \
+  python3 scripts/evidence/pr66_thread_pilot.py run \
+  --plan-dir "${PR66_PLAN_DIR:?}" \
+  --expected-plan-sha "${PR66_PLAN_SHA:?}" \
+  --raw-root "${PR66_RAW_ROOT:?}"

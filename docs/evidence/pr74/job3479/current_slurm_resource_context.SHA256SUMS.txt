@@ -1,0 +1,1 @@
+1f0cdb91c6abe628335265fa1a22059530d845789b84c4fd6ff6a3c9876f699f  current_slurm_resource_context.json

@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=cfl_pr65_ledger
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=8G
+#SBATCH --time=02:00:00
+# SPDX-License-Identifier: MIT
+set -euo pipefail
+cd "${PR65_EXEC_DIR:?}"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+srun python3 scripts/evidence/collect_computational_ledger.py collect \
+  --data-root "${PR65_DATA_ROOT:?}" --output "${PR65_OUTPUT:?}/ledger" \
+  --accounting "${PR65_OUTPUT}/slurm_accounting.private.txt"

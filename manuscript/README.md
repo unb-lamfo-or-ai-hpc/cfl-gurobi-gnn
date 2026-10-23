@@ -10,7 +10,13 @@ evidence remains under `results/` for historical reproducibility. Only
 
 The author-supplied archive is bound by SHA256 in
 `results/current/import_receipt.json`. Its 13 original publication files
-are preserved byte-for-byte. No graph, label, checkpoint, raw solver log,
+are preserved byte-for-byte. The PR88 GPU subsection separately uses the reviewed
+PR87 jobs3673/3674 archive; it does not replace those historical article assets.
+`docs/evidence/pr88/gpu/manifest.json` binds the new English BCE figure and its
+Spanish companion. `python scripts/evidence/plot_pr88_gpu_bce.py` regenerates
+them from audited histories, without model loading or HPC. Its recorded rendering
+runtime is Matplotlib3.9.2; data/hashes are checked independently of rendering.
+No graph, label, checkpoint, raw solver log,
 or license file is required for publication rendering. Derived vector
 figures and tables have a separate source/output receipt.
 

@@ -1,0 +1,144 @@
+{
+  "affinity": {
+    "bound_cpu_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "observed_cpu_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "physical_cores": 16
+  },
+  "algorithm_defaults": {
+    "ConcurrentMIP": {
+      "effective": 1,
+      "version_default": 1
+    },
+    "Crossover": {
+      "effective": -1,
+      "version_default": -1
+    },
+    "Cuts": {
+      "effective": -1,
+      "version_default": -1
+    },
+    "FeasibilityTol": {
+      "effective": 1e-06,
+      "version_default": 1e-06
+    },
+    "Heuristics": {
+      "effective": 0.05,
+      "version_default": 0.05
+    },
+    "IntFeasTol": {
+      "effective": 1e-05,
+      "version_default": 1e-05
+    },
+    "MIPFocus": {
+      "effective": 0,
+      "version_default": 0
+    },
+    "MIPGapAbs": {
+      "effective": 1e-10,
+      "version_default": 1e-10
+    },
+    "Method": {
+      "effective": -1,
+      "version_default": -1
+    },
+    "NodeLimit": {
+      "effective": "positive_infinity",
+      "version_default": "positive_infinity"
+    },
+    "NodeMethod": {
+      "effective": -1,
+      "version_default": -1
+    },
+    "OptimalityTol": {
+      "effective": 1e-06,
+      "version_default": 1e-06
+    },
+    "Presolve": {
+      "effective": -1,
+      "version_default": -1
+    }
+  },
+  "difficulty": "easy",
+  "dual": 4.601225560527587,
+  "effective_objective_sense": "MINIMIZE",
+  "gurobi_version": [
+    13,
+    0,
+    1
+  ],
+  "mip_gap_relative": 0.09948407250827532,
+  "model_read_setup_seconds": 0.2814913457259536,
+  "model_unchanged_after_execution": true,
+  "node_count": 934.0,
+  "objective_sense_override_applied": true,
+  "optimize_wall_seconds": 53.486407835036516,
+  "original_lp_sha256": "d6e3e0853c13f8ad363e813f1538b2f1154d5efce2cbb39bb6d01967f09ea73c",
+  "parameters": {
+    "MIPGap": 0.1,
+    "Seed": 42,
+    "SoftMemLimit": 48,
+    "Threads": 1,
+    "TimeLimit": 300
+  },
+  "parameters_sha256": "2c2e441d0e2ffb208e15504c5baaefe23056bab309ac5b076e9b4b8ac309a3a9",
+  "plan_sha256": "7cfd6bf270e04f96c0745ebf61ae427a949d24a85b571879d9c746af1f75b152",
+  "primal": 5.109543784909757,
+  "process_cpu_scope": "since_environment_setup_excluding_import_and_source_hashing",
+  "process_cpu_seconds": 53.807209501,
+  "process_peak_rss_bytes": 266977280,
+  "relative_path": "CFL_easy_instance/LP/CFL_easy_instance_17.lp.gz",
+  "role": "train",
+  "scientific_reporting_eligible": false,
+  "shared_node": true,
+  "slurm_job_id": "3468",
+  "solution_count": 10,
+  "solver_runtime_seconds": 53.486231088638306,
+  "solver_status": 2,
+  "source_instance_id": "CFL_easy_instance_17",
+  "source_objective_sense": "MAXIMIZE",
+  "system_load_average_after": [
+    0.98583984375,
+    0.8203125,
+    0.74755859375
+  ],
+  "system_load_average_before": [
+    0.5400390625,
+    0.72412109375,
+    0.712890625
+  ],
+  "termination": "gap_target_reached"
+}

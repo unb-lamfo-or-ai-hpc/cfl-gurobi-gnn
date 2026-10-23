@@ -1,0 +1,11 @@
+{
+  "files": {
+    "binding.json": "45eab23962f8427b28de1a86557cb03f251f4ecf49d62f23001f54a3215198b2",
+    "historical_attempt_costs.csv": "2879de4b5a32680f89fa19dbe170d110311b39842f18e75c8a7caad15337fa23",
+    "review.json": "1e46bb86471d3e0c3de5ef79ee2434f9dcbae5927cf923c5338c9bb8c6b708a2",
+    "start_coverage.csv": "0f5cae5e3cd4450bbf15a59f110dcf567a0f1a4e0b1f1a967e4037a13198d5e7"
+  },
+  "historical_return_sha256": "60260ac77b84538316b725ac0d38033fd3c4afa29b056915085b9455f749cfce",
+  "original_receipt_bytes_preserved": true,
+  "source_binding_sha256": "45eab23962f8427b28de1a86557cb03f251f4ecf49d62f23001f54a3215198b2"
+}

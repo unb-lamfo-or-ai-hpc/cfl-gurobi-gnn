@@ -1,0 +1,147 @@
+{
+  "cases": [
+    "CFL_easy_instance_0",
+    "CFL_easy_instance_3",
+    "CFL_easy_instance_6",
+    "CFL_easy_instance_14",
+    "CFL_easy_instance_27",
+    "CFL_easy_instance_29",
+    "CFL_medium_instance_0",
+    "CFL_medium_instance_4",
+    "CFL_medium_instance_7",
+    "CFL_medium_instance_12"
+  ],
+  "historical_exposure": "existing_split_not_new_untouched_holdout",
+  "label_use": "scoring_only_not_start_selection",
+  "lp_start_source": "original_root_json_values",
+  "maximum_forwards": 20,
+  "models": {
+    "easy": {
+      "architecture": {
+        "hidden_dim": 32,
+        "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+        "model_version": "gasse_v2_alternating_prenorm",
+        "num_layers": 2
+      },
+      "checkpoint_selection": "minimum_validation_weighted_bce",
+      "checkpoint_sha256": "86e0fb9cf92e6a5d30aaa432caa4074b7e0d2bb22b344cdcbd9be7ed81279cf8",
+      "new_selection_performed": false,
+      "plan_sha256": "cbf0fe92b07aa79de97b9ac616a64178534156b58224fd43ae8494b9d54839ae",
+      "report_sha256": "87e21c55db85b038bb06800be10633bd8b479f49c405a9388f03bf62bd87626f",
+      "threshold": 0.9975354671478271,
+      "threshold_source": "maximum_validation_f1",
+      "training_protocol": {
+        "architecture": {
+          "hidden_dim": 32,
+          "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+          "model_version": "gasse_v2_alternating_prenorm",
+          "num_layers": 2
+        },
+        "checkpoint_selection": {
+          "metric": "validation_weighted_bce",
+          "mode": "minimum",
+          "test_partition_access": "held_out_evaluation_only"
+        },
+        "evaluation": {
+          "calibration_bins": 10,
+          "report_per_difficulty": true,
+          "report_per_parent": true
+        },
+        "optimization": {
+          "epochs": 100,
+          "gradient_clip_norm": 1.0,
+          "learning_rate": 0.001,
+          "patience": 100,
+          "seed": 42
+        },
+        "protocol_id": "gasse_easy_only_medium_transfer_v1",
+        "sampling": {
+          "draws_per_parent_per_epoch": 4,
+          "maximum_label_mip_gap_relative": 0.1,
+          "method": "deterministic_parent_balanced_cycle_v1"
+        },
+        "schema_version": 1,
+        "threshold_selection": {
+          "fallback_for_partial_smoke": 0.5,
+          "method": "maximum_validation_f1"
+        }
+      }
+    },
+    "mixed": {
+      "architecture": {
+        "hidden_dim": 32,
+        "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+        "model_version": "gasse_v2_alternating_prenorm",
+        "num_layers": 2
+      },
+      "checkpoint_selection": "minimum_validation_weighted_bce",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "new_selection_performed": false,
+      "plan_sha256": "07c3377c20ef49c0ad3ae33a6b57d9dd70f92fc48a32f5f80c25b5cb32aa5da4",
+      "report_sha256": "974236918746711d044e2c0111a1e145d9487b27e20e7953cda6b63058ef3822",
+      "threshold": 0.9991843104362488,
+      "threshold_source": "maximum_validation_f1",
+      "training_protocol": {
+        "architecture": {
+          "hidden_dim": 32,
+          "legacy_gasse_git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+          "model_version": "gasse_v2_alternating_prenorm",
+          "num_layers": 2
+        },
+        "checkpoint_selection": {
+          "metric": "validation_weighted_bce",
+          "mode": "minimum",
+          "test_partition_access": "held_out_evaluation_only"
+        },
+        "evaluation": {
+          "calibration_bins": 10,
+          "report_per_difficulty": true,
+          "report_per_parent": true
+        },
+        "optimization": {
+          "epochs": 100,
+          "gradient_clip_norm": 1.0,
+          "learning_rate": 0.001,
+          "patience": 100,
+          "seed": 42
+        },
+        "protocol_id": "gasse_pr57_54_parent_development_v1",
+        "sampling": {
+          "draws_per_parent_per_epoch": 4,
+          "maximum_label_mip_gap_relative": 0.1,
+          "method": "deterministic_parent_balanced_cycle_v1"
+        },
+        "schema_version": 1,
+        "threshold_selection": {
+          "fallback_for_partial_smoke": 0.5,
+          "method": "maximum_validation_f1"
+        }
+      }
+    }
+  },
+  "new_threshold_or_prenorm_fit": false,
+  "optimization_runs_added": 0,
+  "protocol_id": "e0_frozen_test_inference_v1",
+  "raw_predictions_exported": false,
+  "role": "test",
+  "root_reoptimized": false,
+  "scheduler": {
+    "cpus_per_task": 4,
+    "exclusive": false,
+    "gpus": 1,
+    "memory_mib": 32768,
+    "nodes": 1,
+    "requeue": false,
+    "tasks": 1,
+    "wall_seconds": 2400
+  },
+  "scientific_reporting_eligible": false,
+  "solver_execution_admitted": false,
+  "source_c1_return_sha256": "20ed978d7e6a9c0ccc6a284f15cf54c9df6940a0bc5985c1b836db5f69362f60",
+  "support": {
+    "fraction": 0.1,
+    "maximum": 20000,
+    "rule": "existing_pr58_class_aware_and_matched_lp"
+  },
+  "training_runs_added": 0
+}

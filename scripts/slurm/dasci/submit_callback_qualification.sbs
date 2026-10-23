@@ -1,0 +1,24 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+#SBATCH --job-name=cfl_callback_qual
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --hint=nomultithread
+#SBATCH --mem=64G
+#SBATCH --time=00:10:00
+#SBATCH --no-requeue
+
+set -euo pipefail
+umask 077
+test "$#" -eq 2
+test "$(hostname -s)" = dgx-dasci
+test "${CONDA_DEFAULT_ENV:-}" = tfm_env
+test ! -e gurobi.env
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
+# CPU binding is qualified by the worker; do not combine hint with bind=cores.
+# No GPU, exclusive allocation, arrays, restart loop or warm starts.
+srun --ntasks=1 --cpus-per-task=16 --hint=nomultithread --cpu-bind=verbose \
+  python3 -B scripts/evidence/qualification_workflow.py run \
+  --directory "$1" --approval-sha "$2"

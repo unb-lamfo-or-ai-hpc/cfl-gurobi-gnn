@@ -1,0 +1,36 @@
+{
+  "additional_jobs_authorized": false,
+  "allocated_gpu_hours_pair": 1.7880555555555555,
+  "authorization_sha256": "74df18d2da3711598528864932ab3336ca13af92701374e126e7a0fa260953b5",
+  "automatic_retry": false,
+  "cause_of_trajectory_divergence_proven": false,
+  "descriptive_loss_margin_absolute": 0.02,
+  "execution_source_commit": "a2fef6040c71cbbf63c29e9f712e868ba7bfa42b",
+  "f1_loss_exceeds_margin": true,
+  "independent_generalization_claimed": false,
+  "independent_probability_rescoring_performed": false,
+  "matched_learning_work_reconciled": true,
+  "optimization_runs_added": 0,
+  "pr_auc_loss_exceeds_margin": false,
+  "qualified_descriptive_scopes": [
+    "matched_recorded_work",
+    "recorded_timing_scopes",
+    "resource_accounting_with_scope_limits",
+    "recorded_predictive_case_metrics"
+  ],
+  "quality_preservation_supported": false,
+  "raw_receipt_scientific_flag_unchanged": true,
+  "review_protocol": "pr87_completed_pair_scoped_review_v1",
+  "scope": "single_seed42_serial_then_ddp4_case_with_scaled_cpu_resources",
+  "selected_f1_parents_lower": 10,
+  "selected_macro_ddp4_minus_serial": {
+    "f1_score": -0.03246806865884001,
+    "pr_auc": -0.013850410067921214
+  },
+  "source_return_sha256": "909f6ce85dfdd9541e1624f8774bb099f27752e21408270f695e81aba7d576ab",
+  "statistical_noninferiority_claimed": false,
+  "submissions_added": 0,
+  "technical_pair_complete": true,
+  "training_runs_added": 0,
+  "training_seed_uncertainty_estimated": false
+}

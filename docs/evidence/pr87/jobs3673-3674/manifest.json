@@ -1,0 +1,18 @@
+{
+  "execution_source_commit": "a2fef6040c71cbbf63c29e9f712e868ba7bfa42b",
+  "generator": "scripts/evidence/review_pr87_training_pair.py",
+  "outputs": {
+    "aggregates.csv": "918e70402a298d0fe9b1af02a3db5c15a43d3c7fb24299c803dbf8d2f6d84cce",
+    "deltas.csv": "3ea34c777a523f56a9fb809f981da91899e59ca6d93fa7a1e5699e380f43b27f",
+    "history.csv": "c411536327e0a01c00b8bd24e2a60a10da060fe6e50d40013f77ee551a566f42",
+    "public_return.json": "909f6ce85dfdd9541e1624f8774bb099f27752e21408270f695e81aba7d576ab",
+    "quality.csv": "e5779abbaa8270746ab96e590ac7630e4cd1a9143b49018693ccce9f558b27e3",
+    "ranks.csv": "1df8955d942dd685afbcd65f84635f5c0a1745ae1d72c7e2ad85c58565636d52",
+    "review.json": "1067414126bb6cc8d8f5b2a8f1266be9020fbfcaa57551b1083547cfe6efe795",
+    "summary.csv": "14129a88e5fa83f7c79913917198cc22a3590ddd6d2d3adce5d7b540c9c6aa99",
+    "timings.csv": "ba9fd3d1a5964145158c0c6620a3a2682c00d2ddf2b04f8bac8c5c9f9ec017a3"
+  },
+  "source_return_sha256": "909f6ce85dfdd9541e1624f8774bb099f27752e21408270f695e81aba7d576ab",
+  "submissions_added": 0,
+  "training_runs_added": 0
+}

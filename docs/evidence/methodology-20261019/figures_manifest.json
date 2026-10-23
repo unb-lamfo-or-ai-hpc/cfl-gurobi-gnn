@@ -1,0 +1,20 @@
+{
+  "assets": {
+    "cpu_scalability_seed42.pdf": "c9f594f728f787d006d117033ba054795cf1b26d0d3e4cec87901de49628228f",
+    "cpu_scalability_seed42.png": "3121e23aaf390eaa8772a8dc7641c2ce6530c556e927a5442e099383df5e5916",
+    "cpu_scalability_seed42.svg": "8f2e6f55ad2387c535efb0dbdc50e58dc1094e70c3fa76ca7bb214ea8be9b8f4",
+    "mechanism.pdf": "94037d277e88bdc7b14f330832973028481b5f76454fcb836936ca0126d86561",
+    "mechanism.png": "2944dc96083618f77e6c398d90351c7dda7b8a2b041618bba08408a066cc1cea",
+    "mechanism.svg": "4f2ab35c5492f329e56ac1f191913504062e9e0b64903bb0a539b7c18bac7ab4",
+    "sampled_memory_seed42.pdf": "7947f38b2bc27aa1be2beaa18e6e90f58487996d9d481ed6cefbc089c3b1ba81",
+    "sampled_memory_seed42.png": "f0b2b60d318e0e98628a2e53ad7ba75712bf05d3e1edb67412ab7798bac9522c",
+    "sampled_memory_seed42.svg": "fcf4dfa3cb848225c338505866cb4d359dde29c76b884d825d1d26da004dead2",
+    "warm_start_seed42.pdf": "c92ef1a17fc20b8ab50e95226743ed95a354a873c988678fa1698e1cd7dded7f",
+    "warm_start_seed42.png": "1aa5e56fdf6de552c597715c00bb098bc742a87a06f5add4d622b42da7005ec8",
+    "warm_start_seed42.svg": "99ed70133918724c991d633b082adb0c9591613711b656c5efeb6606fa7ed4dd"
+  },
+  "data_manifest_sha256": "3d44633483646488df91c61f95eb620f904b0e1f4905079d565cf213a9220808",
+  "experimental_runs_added": 0,
+  "historical_figures_modified": false,
+  "matplotlib": "3.9.2"
+}

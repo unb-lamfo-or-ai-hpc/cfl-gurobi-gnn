@@ -6,6 +6,26 @@ instructions to replay every preceding campaign.
 
 ## Current routes
 
+- [PR80 closure: all 54 parents and four validation forwards](pr80-closure-job3503.md):
+  current result, tables/figures, limitations and E0 handoff. Do not resubmit.
+- [Accepted results-first plan, C through article review](mvp2-results-plan-20261009.md):
+  six planned successor deliveries, mandatory CPU/GPU evaluation and visual outputs.
+
+- [PR80 integrated execution in the existing tfm_env](pr80-integrated-existing-runtime.md):
+  historical commands; numerical/descriptive audit plus frozen-model inference,
+  no package upgrades, new training or solver optimization.
+
+- [DaSCI platform inventory and manuscript guidance](dasci-platform-20261008.md):
+  eight V100-SXM2-32GB GPUs, driver/runtime distinctions, dated provenance and
+  per-experiment resource reporting; not an allocated execution test.
+- [Withdrawn PR80 environment update proposal](pr80-tfm-env-upgrade.md):
+  retained only as decision history. Neither an upgrade nor an isolated CPU
+  environment is required by the current procedure.
+- [PR80 job 3500 runtime diagnosis and immediate CLI](pr80-job3500-runtime-diagnosis.md):
+  numerical audit blocked by the installed PyTorch version; no resubmission.
+- [MVP2 current contract, sample, methods and next CLI](mvp2-contract-20261008.md):
+  approved October 8 revision; mandatory CPU/GPU study, early E0 and PR80 gates.
+  Start here before using older campaign instructions.
 - [Scalable paired parent collection](scalable-paired-parent-collection.md):
   population planning, Gurobi-first execution, budget isolation, and rescue.
 - [Gurobi graph contract](gurobi-root-graph-pipeline.md):

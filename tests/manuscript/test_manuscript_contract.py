@@ -92,8 +92,12 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
 
     def test_class_aware_abstract_must_explain_positive_values(self):
-        self.change("index.qmd", "value 1, which are rare", "the rare class")
+        self.change("index.qmd", "value 1 receive priority", "the rare class receives priority")
         self.assertIn("class_aware_abstract_explanation_missing", CHECK.check_source(self.root))
+
+    def test_current_seed42_scope_cannot_be_silently_removed(self):
+        self.change("index.qmd", "150 seed42 records", "210 multiseed records")
+        self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
     def test_article_has_no_bold_emphasis(self):
         self.change("index.qmd", "# Introduction", "# Introduction\n\n**Emphasis**")

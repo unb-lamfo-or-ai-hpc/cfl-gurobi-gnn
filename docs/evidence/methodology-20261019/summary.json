@@ -1,0 +1,17 @@
+{
+  "easy_main_rows": 90,
+  "exact_optimality_claimed": false,
+  "execution_authorized": false,
+  "experimental_units": 10,
+  "historical_only_seed43_44_rows": 60,
+  "historical_rows_preserved": 210,
+  "main_seed42_rows": 150,
+  "medium_main_rows": 60,
+  "new_jobs": 0,
+  "new_optimization_calls": 0,
+  "new_training_runs": 0,
+  "numerically_sensitive_main_rows": 30,
+  "right_censored_terminal_target": 53,
+  "solver_hours_seed42_measured": 58.482187114225496,
+  "solver_reported_terminal_target": 97
+}

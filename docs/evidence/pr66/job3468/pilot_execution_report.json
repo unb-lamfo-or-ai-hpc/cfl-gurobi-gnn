@@ -1,0 +1,97 @@
+{
+  "affinity": {
+    "bound_cpu_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "observed_cpu_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "physical_cores": 16
+  },
+  "executions": [
+    {
+      "attempt": "easy-threads1",
+      "exit_code": 0,
+      "report_sha256": "076b7472c474a94b4be91c787adf0a5c7fe878cf949bf08b1aa129d9922114b2"
+    },
+    {
+      "attempt": "medium-threads1",
+      "exit_code": 0,
+      "report_sha256": "98c29abef8ceb40c4c5ec808d36bdbc3cb053e16cb03d047eb4d669cdf517019"
+    },
+    {
+      "attempt": "easy-threads2",
+      "exit_code": 0,
+      "report_sha256": "e039c1899869e06bbb85ac0d32d5a784e90c370d8203817a6132859c83f802da"
+    },
+    {
+      "attempt": "medium-threads2",
+      "exit_code": 0,
+      "report_sha256": "dff5420ad5453d6c67e534e92202156404bc7af4831d6fe62cb44355358ad89e"
+    },
+    {
+      "attempt": "easy-threads4",
+      "exit_code": 0,
+      "report_sha256": "cf2020486ffb7978d8aabfd6de3818a73d8cecff938ff6ac195de0c926e9a81a"
+    },
+    {
+      "attempt": "medium-threads4",
+      "exit_code": 0,
+      "report_sha256": "b8d3f60899dac737aafa25561c5d1ad6e6ae99b9dc46c1c482c9d9f84fbd90ff"
+    },
+    {
+      "attempt": "easy-threads8",
+      "exit_code": 0,
+      "report_sha256": "bfa68cd163f0bc739c6561e30f97a0a60611ba9496a0dc6df1d7324620ce90d5"
+    },
+    {
+      "attempt": "medium-threads8",
+      "exit_code": 0,
+      "report_sha256": "258a7b37de31a5aa394d2796e80ebfacf8c43a00cfe6c87f4766c1f8081fcdb3"
+    },
+    {
+      "attempt": "easy-threads16",
+      "exit_code": 0,
+      "report_sha256": "39ffe798c28ae0a8d208d1d4c2cb7591aff17514923a90aaf444a619cbc46bab"
+    },
+    {
+      "attempt": "medium-threads16",
+      "exit_code": 0,
+      "report_sha256": "c43880861b2e4bb2cf23468d7cbcf87f54441adde14e037db452d801e506864b"
+    }
+  ],
+  "failure_type": null,
+  "plan_sha256": "7cfd6bf270e04f96c0745ebf61ae427a949d24a85b571879d9c746af1f75b152",
+  "scientific_reporting_eligible": false,
+  "wall_seconds": 1793.728797055781
+}
