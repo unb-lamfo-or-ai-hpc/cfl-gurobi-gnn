@@ -1,5 +1,18 @@
 # Repository instructions
 
+## Current continuation authority — 26 October 2026
+
+Read `docs/research/mvp2-r3-contract.md` first, then its methods/model and
+metrics/reproducibility companions and evidence index. R3 and the author's
+26 October transfer decision supersede earlier scheduling, budget-pending
+and finish-on-old-machine conditions below. PR89 is already submitted and
+running; installed source/plan/starts/parameters remain frozen. Its existing
+collection authority is not permission to prepare, submit or solve again.
+Work directly on GitHub/Codex; local files are temporary only. Every HPC access
+requires the author's intervention; use existing data storage/directories,
+never create further home captures or alter the installed campaign.
+Merges and editorial submission still need explicit human approval.
+
 ## Scope
 
 Read `docs/current_status.md`, `docs/research_context.md`,

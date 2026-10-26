@@ -1,5 +1,48 @@
 # Article plan
 
+## Current completion plan — 26 October 2026, R3
+
+The [R3 contract and S1–S6 plan](research/mvp2-r3-contract.md) supersedes older
+calendar and transfer requirements. Deadline: **14 January 2027** for MVP2
+completion and author-approved article submission. Methods and writing proceed
+in parallel with the still-running PR89 campaign; no pending results are filled.
+
+Next coherent PR: contract, B/R/G formalization, dataset/model provenance and
+metrics/reproducibility, reusing PR80/85/86/87/88. Close the existing PR89 after
+its authorized return/review. Then integrate CPU/GPU synthesis, R2-D8, manuscript
+and supplements in one editorial delivery, followed by an explicitly approved
+develop-to-main scientific release. Do not reserve PR numbers or create
+separate PRs per helper or result wave.
+
+| Sprint | Target window | Product / acceptance |
+| --- | --- | --- |
+| S1 | 26–31 October | Transfer/contract/plan; R2-D1/D7, one operational owner |
+| S2 | 1–15 November, anticipatable | R2-D2/D3/D4, source-linked methods/provenance/reproducibility |
+| S3 | 16–30 November, anticipatable | PR89 and R2-D5/D6, all 60 cells explained with metric eligibility |
+| S4 | 1–15 December | CPU/GPU synthesis, SO/C evidence matrix, R2-D8 |
+| S5 | 16–31 December, writing now | Complete manuscript/supplements for coauthor review |
+| S6 | 1–14 January 2027 | Final corrections, approved release and submission |
+
+Reuse the PR90 Pages review version and PR88 figures. PR90 does not include
+future PR89 results or authorize later publication. Keep the GPU speed/quality
+tradeoff, small historically exposed sample, numerical limits and bounded
+costs explicit. Claims need traceable evidence and verified literature.
+IA assistance transparency is separate from the optional Human–AI study.
+
+Internal targets are full text by 31 December, approval by 7 January and
+submission by 10 January, with 11–14 January contingency. Queue/failure risks
+and coauthor turnaround remain uncertain; no old 78h23m ETA is reused.
+No new seeds, hard instances, checkpoint search or corrective training is
+required. Post-MVP P1–P5 remain planned, not authorized.
+See the [evidence index](research/mvp2-r3-evidence-index.json) for pending products.
+
+## Historical editorial plans — original dated text preserved
+
+Dated proposals below are retained, including superseded December deadlines,
+CPU approval holds and final-before-transfer conditions. The R3 plan governs
+current scheduling and ownership; it does not rewrite their original evidence.
+
+
 ## Current editorial contract — PR88, D1–D6, updated 20 October
 
 Use [D3 figures](research/methodology-20261019/D3-figures.md),

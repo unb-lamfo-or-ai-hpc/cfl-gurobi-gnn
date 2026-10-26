@@ -1,0 +1,397 @@
+{
+  "schema_version": 1,
+  "document_kind": "r3_documentary_consolidation_source_index",
+  "date_local": "2026-10-26",
+  "timezone": "America/Sao_Paulo",
+  "governing_contract": "CFL-GNN-SCI-2026-10-22-R3 with 2026-10-26 ongoing-transfer decision",
+  "repository": "unb-lamfo-or-ai-hpc/cfl-gurobi-gnn",
+  "integration_base_commit": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+  "deadline": "2027-01-14",
+  "scope": {
+    "new_experiments": 0,
+    "new_jobs": 0,
+    "new_training_runs": 0,
+    "new_inference_or_root_preparation": 0,
+    "checkpoint_weights_deserialized": false,
+    "private_artifacts_reloaded": false,
+    "historical_fit_independently_replayed": false,
+    "raw_receipt_flags_rewritten": false,
+    "pr89_final_return_received": false,
+    "scientific_blanket_certification": false,
+    "literature_novelty_verified": false
+  },
+  "operational_authority": {
+    "existing_cpu_budget_approved_date": "2026-10-20",
+    "existing_jobs_already_submitted": 60,
+    "transfer_authorized_date": "2026-10-26",
+    "exclusive_receiver_acknowledged": true,
+    "no_parallel_campaign_operators": true,
+    "source_installation_changes_authorized": false,
+    "retry_authorized": false,
+    "merge_authorized": false,
+    "editorial_submission_authorized": false,
+    "work_location": "GitHub or Codex; local files temporary only",
+    "hpc_access": "Human intervention for every access; one-file scp from local PowerShell; password in terminal",
+    "remote_storage": "discodatos, preferably existing directories; no further home writes; installed artifacts unchanged"
+  },
+  "pr89": {
+    "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+    "source_tree": "69ed16b9635c493161bf620727c9e0a0aee7a7dc",
+    "plan_sha256": "48fca37e2cc698f4d35e4850fdd48d8115b36d7f64b97438ded3b9e17dea3dd1",
+    "preflight_sha256": "b31d5ac2e80a3ae76c3904e197851ce8b42c1bbc92a955212dc277c4cbb252c0",
+    "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
+    "seed": 42,
+    "physical_caps": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "parents": [
+      "M0",
+      "M4",
+      "M7",
+      "M12"
+    ],
+    "methods": [
+      "M0",
+      "M1",
+      "M2"
+    ],
+    "solver_seconds": 43200,
+    "wall_seconds": 46800,
+    "memory_mib": 65536,
+    "gpus": 0,
+    "maximum_concurrent_jobs": 1,
+    "solver_hours_ceiling": 720,
+    "serial_reserved_hours_ceiling": 780,
+    "physical_reserved_core_hours_ceiling": 4836,
+    "status_evidence": {
+      "kind": "author_executed_identity_gated_read_only_query_transferred_by_scp_receiver_verified",
+      "date_local": "2026-10-26",
+      "raw_capture_sha256": "4a8ab4ec1f3c1c20fdea5cb4cac8a02b07fc12b94f01b664f88cd8dbbaff7797",
+      "raw_capture_bytes": 40255,
+      "submitted": 60,
+      "unsubmitted": 0,
+      "terminal": false,
+      "completed_job_range": [
+        3675,
+        3709
+      ],
+      "completed": 35,
+      "completed_exit_code": "0:0",
+      "running": [
+        {
+          "job_id": 3710,
+          "elapsed_seconds": 41238
+        }
+      ],
+      "pending_job_range": [
+        3711,
+        3734
+      ],
+      "pending": 24,
+      "live_status_claimed": false,
+      "job_to_cell_mapping_independently_reconciled": false,
+      "scientific_results_certified": false,
+      "public_checkpoint": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6420991852"
+    }
+  },
+  "aliases": [
+    {
+      "presentation": "B",
+      "name": "BASE",
+      "historical": "M0"
+    },
+    {
+      "presentation": "R",
+      "name": "RELAX",
+      "historical": "M1",
+      "matches": [
+        "G support cardinality",
+        "G positive count"
+      ],
+      "same_indices_claimed": false,
+      "independent_of_gnn_preparation": false
+    },
+    {
+      "presentation": "G",
+      "name": "GNN-START",
+      "historical": "M2",
+      "checkpoint_family": "original PR86 mixed"
+    }
+  ],
+  "sample": {
+    "candidate_parents": 90,
+    "admitted_parents": 54,
+    "admitted_easy": 30,
+    "admitted_medium": 24,
+    "admitted_hard": 0,
+    "train": {
+      "easy": 18,
+      "medium": 16,
+      "total": 34
+    },
+    "validation": {
+      "easy": 6,
+      "medium": 4,
+      "total": 10
+    },
+    "test": {
+      "easy": 6,
+      "medium": 4,
+      "total": 10,
+      "historically_exposed": true
+    },
+    "experimental_unit": "parent",
+    "independent_generalization_demonstrated": false
+  },
+  "historical_main_view": {
+    "source": "docs/evidence/methodology-20261019/summary.json",
+    "preserved_rows": 210,
+    "principal_seed": 42,
+    "principal_rows": 150,
+    "easy_rows": 90,
+    "medium_rows": 60,
+    "historical_only_seed43_44_rows": 60,
+    "solver_reported_terminal_targets": 97,
+    "right_censored_terminal_target": 53,
+    "numerically_sensitive_main_rows": 30,
+    "exact_optimality_claimed": false
+  },
+  "products": [
+    {
+      "id": "R2-D1",
+      "location": "mvp2-r3-contract.md",
+      "status": "documented_for_review"
+    },
+    {
+      "id": "R2-D2",
+      "location": "mvp2-r3-methods-and-models.md",
+      "status": "source_linked_consolidation"
+    },
+    {
+      "id": "R2-D3",
+      "location": "mvp2-r3-methods-and-models.md",
+      "status": "documentary_provenance_with_historical_fit_limits"
+    },
+    {
+      "id": "R2-D4",
+      "location": "mvp2-r3-metrics-and-reproducibility.md",
+      "status": "source_and_official_documentation_assessment_no_new_repetitions"
+    },
+    {
+      "id": "R2-D5",
+      "location": "pr86-final-analysis.md",
+      "status": "partial_pr89_pending"
+    },
+    {
+      "id": "R2-D6",
+      "location": "pr86-final-analysis.md",
+      "status": "partial_bounded_costs_pr89_pending"
+    },
+    {
+      "id": "R2-D7",
+      "location": "mvp2-r3-contract.md",
+      "status": "overlapping_s1_s6_plan"
+    },
+    {
+      "id": "R2-D8",
+      "location": null,
+      "status": "pending_integrated_specialist_report"
+    }
+  ],
+  "sources": [
+    {
+      "path": "docs/research/pr85-closure.md",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "3852b24b5d5a657a813c099002775184c38f05f9",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/research/pr85-closure.md"
+    },
+    {
+      "path": "docs/research/pr86-installed-binding-review.md",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "c38ac252f08c0236492bbf4a529a50bf4a593b29",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/research/pr86-installed-binding-review.md"
+    },
+    {
+      "path": "docs/research/pr86-final-analysis.md",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "9a30f846d8da025f9881953dd8d5ed79ec999ea2",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/research/pr86-final-analysis.md"
+    },
+    {
+      "path": "docs/research/pr87-completed-pair-review.md",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "f2a48e437c96c24f5fceb192b7ebcff764c1c82a",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/research/pr87-completed-pair-review.md"
+    },
+    {
+      "path": "docs/research/methodology-20261019/D1-protocol.md",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "a931a87213be90d564c9faedb27343d7efb061c3",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/research/methodology-20261019/D1-protocol.md"
+    },
+    {
+      "path": "docs/research/methodology-20261019/D5-contributions.md",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "c976b5160d78fa5f75f5e622fa65b312638f5a4f",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/research/methodology-20261019/D5-contributions.md"
+    },
+    {
+      "path": "docs/evidence/e0/pr85/checkpoints.csv",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "1121e21c8f7971a402fb660e30fae477d3cf3436",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/evidence/e0/pr85/checkpoints.csv"
+    },
+    {
+      "path": "docs/evidence/e0/pr85/audit.json",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "c879f6d1fd5f9e7e13e8be159c55d1a69f8f8793",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/evidence/e0/pr85/audit.json"
+    },
+    {
+      "path": "docs/evidence/pr86/job3521/public_return.json",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "f648215409cd4778013e258bccb29cc7e1163efb",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/evidence/pr86/job3521/public_return.json"
+    },
+    {
+      "path": "docs/evidence/pr86/job3521/review.json",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "500d0db4cbca0a2c9312f5c71e2ad0fdf256698c",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/evidence/pr86/job3521/review.json"
+    },
+    {
+      "path": "docs/evidence/methodology-20261019/summary.json",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "a853f4599db4689a4d86f05f6e0bbd7d32fe555b",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/docs/evidence/methodology-20261019/summary.json"
+    },
+    {
+      "path": "src/cfl_gnn/experiments/pr58_guidance.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "a0c71de58180cc555f580fec7b492579f427a611",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/src/cfl_gnn/experiments/pr58_guidance.py"
+    },
+    {
+      "path": "scripts/evidence/pr86_root_preparation.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "1a1be6b23046bee3fbe0ff5a1541c7e0802dffb1",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/scripts/evidence/pr86_root_preparation.py"
+    },
+    {
+      "path": "scripts/evidence/pr86_guidance_preparation.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "044e16e5b1c15768d6af88876513cc6e64cb58ed",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/scripts/evidence/pr86_guidance_preparation.py"
+    },
+    {
+      "path": "scripts/evidence/pr86_solver.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "77cf7cbe80a872991d139005b87055509ec392b0",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/scripts/evidence/pr86_solver.py"
+    },
+    {
+      "path": "scripts/evidence/pr86_native_model.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "d51f54950cc4a55a9f2bff41777b32d859293063",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/scripts/evidence/pr86_native_model.py"
+    },
+    {
+      "path": "src/cfl_gnn/models/gasse.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "e2937ebcca149f8a99ec437c3c8e7fd31e49438b",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/src/cfl_gnn/models/gasse.py"
+    },
+    {
+      "path": "src/cfl_gnn/models/gasse_calibrated.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "ee5051829dc85bc4bac88bcc035afc3b95dbb286",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/src/cfl_gnn/models/gasse_calibrated.py"
+    },
+    {
+      "path": "src/cfl_gnn/models/versioning.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "24d615a29ad42dadb3c2e3ad3f14974fe0228379",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/src/cfl_gnn/models/versioning.py"
+    },
+    {
+      "path": "src/cfl_gnn/training/gasse_reconnected.py",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "ab9e18f2094e06aa19883fd6154874daf2aaf913",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/src/cfl_gnn/training/gasse_reconnected.py"
+    },
+    {
+      "path": "configs/training/gasse_pr57_54_v1.json",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "72914314ab8dc130ecd3bc09e9cd9a8a6306621d",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/configs/training/gasse_pr57_54_v1.json"
+    },
+    {
+      "path": "configs/training/gasse_easy_transfer_v1.json",
+      "ref": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+      "git_blob_sha1": "4d1169b03947445a9a64189c1e55ffe2735e00a7",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5804a8c6762c2e5f13447e5a16784e5824de801/configs/training/gasse_easy_transfer_v1.json"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_contract.py",
+      "ref": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+      "git_blob_sha1": "12d1c44499988c9f56ac98520534535cd4c52cf4",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/scripts/evidence/pr89_cpu_contract.py"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_temporal.py",
+      "ref": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+      "git_blob_sha1": "a3e031cdd34e14141e1a968333364ef8c2d0d521",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/scripts/evidence/pr89_cpu_temporal.py"
+    },
+    {
+      "path": "docs/research/pr89-cpu12h.md",
+      "ref": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+      "git_blob_sha1": "1fc84aead5bbd0eec054d0465ed74aa273ec5a56",
+      "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/docs/research/pr89-cpu12h.md"
+    }
+  ],
+  "external_primary_sources": [
+    {
+      "topic": "conditional determinism and wall-clock stopping",
+      "url": "https://support.gurobi.com/hc/en-us/articles/360031636051-Is-Gurobi-deterministic",
+      "checked_date": "2026-10-26"
+    },
+    {
+      "topic": "termination and timing guidelines",
+      "url": "https://docs.gurobi.com/projects/optimizer/en/current/concepts/parameters/guidelines.html",
+      "checked_date": "2026-10-26"
+    },
+    {
+      "topic": "WorkLimit context, not authorization to change PR89",
+      "url": "https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameter:WorkLimit",
+      "checked_date": "2026-10-26"
+    },
+    {
+      "topic": "partial Start attribute",
+      "url": "https://docs.gurobi.com/projects/optimizer/en/current/reference/attributes/variable.html#attr:Start",
+      "checked_date": "2026-10-26"
+    }
+  ],
+  "authority_checkpoints": [
+    "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6299990335",
+    "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6417273624",
+    "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6420991852"
+  ],
+  "validation_policy": {
+    "permitted_changes": [
+      "AGENTS.md",
+      "four portable context docs",
+      "three R3 companion documents",
+      "this index"
+    ],
+    "unchanged_executable_or_evidence_scope": true,
+    "workflow_filters": "existing evidence and manuscript workflows do not select this docs-only diff",
+    "untriggered_ci_is_not_passed_ci": true,
+    "checks": "verify JSON, source identities, relative links, preserved historical text and final published diff; no executable or scientific replay"
+  }
+}

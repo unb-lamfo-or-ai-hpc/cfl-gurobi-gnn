@@ -1,5 +1,43 @@
 # Experiment protocol
 
+## Governing interpretation — 26 October 2026, R3
+
+The [R3 contract](research/mvp2-r3-contract.md) and
+[metrics/reproducibility assessment](research/mvp2-r3-metrics-and-reproducibility.md)
+reconcile current authority and measurement boundaries. The original
+[D1 dictionary](research/methodology-20261019/D1-protocol.md) remains dated evidence.
+
+PR89 is already authorized/submitted: 60 fresh single-solve CPU jobs, four
+medium parents × B/R/G × physical caps 1/2/4/8/16, seed42, 12h solver/13h wall,
+64GiB/job, no GPU, strictly serial. No repeat of installed preflight,
+prepare/authorize/submit, roots, inference or training; no retry/extension,
+cancellation, parameter/resource/source/environment change.
+The frozen installed source is `9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`;
+this documentation does not install or alter it.
+
+Preserve MINIMIZE, model identity/feasible region, original starts/checkpoint
+and M4/M12 numerical limits. B/R/G are presentation aliases; raw IDs/flags stay
+unchanged. R's support size and one-count depend on G. Seed42 is principal;
+seed43/44 are historical, and WorkLimit is not substituted for TimeLimit.
+
+Compare actual observations at 10/5/1/0.01% and 1/4/8/12h using their clocks,
+brackets, censoring and missingness; no interpolation or certified runtime
+from a timeout. PR89 gap null encoding is not a zero gap.
+Every cell and named metric requires separate qualification after collection.
+COMPLETED and successful software checks are not scientific certification.
+
+All HPC/SCP access has human intervention; local files are temporary and
+remote writes use existing data storage, preferably existing directories.
+The final collector runs only once all known jobs are terminal and reuses an
+already existing return. Failure does not authorize replacement experiments.
+
+## Historical protocols — original dated text preserved
+
+Earlier budget/dispatch proposals, callback thresholds and acceptance holds
+below describe their own dates. They do not revoke later approved authority,
+reopen the generator gate, or authorize repeating any completed preparation.
+
+
 ## Current protocol — seed42; GPU completed, separate CPU package unapproved
 
 [D1 metric dictionary](research/methodology-20261019/D1-protocol.md) supersedes
