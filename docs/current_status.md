@@ -1,5 +1,40 @@
 # Current status
 
+## Current — 26 October: R3 handoff accepted; PR89 still running
+
+The [R3 contract and plan](research/mvp2-r3-contract.md) is the governing
+continuation checkpoint. PR89 remains open/draft at installed source
+`9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`; 60 jobs were already submitted.
+The author-assisted full status capture records 35 COMPLETED/0:0,
+3710 RUNNING at 11:27:18, and 24 PENDING; terminal=false. This is a dated
+snapshot, not a live assertion or scientific result. No final return received.
+
+The receiving Codex accepted exclusive responsibility; no parallel operator.
+The author-approved transfer supersedes the old requirement to close PR89 on
+the original machine. Do not repeat prepare/authorize/submit or request the
+same CPU budget. Preserve seed42, MINIMIZE, the original PR86 starts/checkpoint,
+source and resource limits. Failure needs diagnosis and a specific human decision.
+
+PR87/88 are merged; PR90 is merged in main at `4e1ac7b6` for manuscript review.
+Develop remains `e5804a8c`; their different commits need no reset.
+Deadline: **14 January 2027**, with overlapping S1–S6 and R2-D1–R2-D8.
+Methods/provenance/metric documentation can advance now; PR89 scientific
+closeout and manuscript integration await qualified evidence.
+
+Work on GitHub/Codex, local files temporary only. Every HPC access requires
+the author's intervention; use discodatos, preferably existing directories,
+without further home writes or changes to the installed campaign.
+See [methods/models](research/mvp2-r3-methods-and-models.md),
+[metrics/reproducibility](research/mvp2-r3-metrics-and-reproducibility.md)
+and the [evidence index](research/mvp2-r3-evidence-index.json).
+
+## Historical checkpoints — original dated text preserved
+
+Earlier operational holds, proposals, deadlines and transfer conditions below
+are historical. Apply the 26 October R3 supersessions above, not an old
+prepare/submit instruction or an obsolete completion forecast.
+
+
 ## Current — 20 October: PR87 merged; PR88 GPU manuscript integration
 
 PR87 exact head337ff5dd728beff2779f98652564eead4509c027 passed five checks

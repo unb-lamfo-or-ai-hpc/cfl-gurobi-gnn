@@ -1,5 +1,36 @@
 # CFL--GNN research context
 
+## Governing continuation — 26 October 2026, R3
+
+Read the [R3 contract](research/mvp2-r3-contract.md),
+[methods and models](research/mvp2-r3-methods-and-models.md), and
+[metrics/reproducibility assessment](research/mvp2-r3-metrics-and-reproducibility.md).
+They consolidate the prior audits and the author-approved ongoing PR89 handoff.
+
+B/R/G are aliases for historical M0/M1/M2, not renamed receipts. R ranks stored
+root-LP scores, matching G's cardinality and one-count, not necessarily indices.
+G uses the original mixed PR86 checkpoint; newer PR87 models do not replace it.
+MINIMIZE and the accepted formulation remain frozen; M4/M12 limitations persist.
+
+The principal analysis remains 150 seed42 rows, with all 210 originals retained.
+Ten historically exposed test parents support retrospective comparisons, not
+independent generalization. GPU matched training is already complete, with
+measured speedup and F1 loss 0.032468; no corrective training is needed.
+The CPU budget was separately approved on 20 October and 60 jobs submitted.
+PR89 remains active, with no final scientific return yet received.
+
+R2-D1–R2-D8 and overlapping S1–S6 lead to the 14 January 2027 deadline.
+Class-aware causal benefit, multiseed robustness and independent generalization
+are not established or automatically required for MVP2.
+The [evidence index](research/mvp2-r3-evidence-index.json) separates documentary
+coverage, existing scoped results and pending CPU closeout.
+
+## Historical context — original dated text preserved
+
+The following dated descriptions retain their provenance. Their old CPU-budget,
+transfer and scheduling holds are superseded by the governing R3 contract.
+
+
 ## Governing revision — 19 October 2026
 
 [D1–D6](research/methodology-20261019/README.md) is the current methodological
