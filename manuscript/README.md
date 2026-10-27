@@ -1,5 +1,23 @@
 # Class-aware GNN partial-start manuscript
 
+## Current review scope — 27 October 2026
+
+The integrated MVP2 draft follows the [R3 contract](../docs/research/mvp2-r3-contract.md)
+merged in PR91. The [working claim/evidence map](editorial-plan.md) separates
+existing results from the pending PR89 return. B/R/G are presentation aliases;
+archived M0/M1/M2 IDs and the imported six-medium tables remain unchanged.
+`evidence-status.json` explicitly distinguishes that historical archive contract
+from the 150-row principal seed42 view and the CPU campaign still in progress.
+No final coauthor approval or editorial submission is asserted.
+
+The existing Manuscript workflow performs source checks, manuscript/archive
+regressions and static HTML/PDF preview. It does not execute research or deploy
+a pull request to Pages. This branch remains draft until the completion
+criteria in the editorial plan are met, even if its current preview passes.
+
+## Earlier build and archive instructions
+
+
 The current article targets **Computers & Operations Research**. It reports
 the 54-parent, 100-epoch predictor; six-parent validation qualification; and
 a distinct six-parent frozen optimization benchmark. The earlier 39-parent

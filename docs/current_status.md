@@ -1,5 +1,25 @@
 # Current status
 
+## Current — 27 October: PR91 merged; integrated editorial draft
+
+PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.
+The [integrated manuscript plan](../manuscript/editorial-plan.md) advances
+independent writing and existing-evidence synthesis while PR89 remains active.
+The installed PR89 source remains `9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`.
+
+The author's selected squeue report for3713–3734 records3713 RUNNING at01:57:23
+and3714–3734 PENDING/Dependency (21jobs). It does not establish the states of
+3675–3712 or a new total of COMPLETED jobs; no final return is received.
+
+Read-only diagnostics supplied by the author show NumNodes=1-1, NumTasks=1,
+TimeLimit13:00:00 and Requeue0 for pending3714 (8CPUs) and3720 (1CPU), with
+their afterok predecessors and NodeList(null). This supports those requests,
+not a future allocation or all-job resource certification. The differing
+squeue NODES display is not proof of allocation on two nodes; its specific
+display cause was not determined. No queue/source/resource change follows.
+See the [27 October checkpoint](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6450594964).
+
+
 ## Current — 26 October: R3 handoff accepted; PR89 still running
 
 The [R3 contract and plan](research/mvp2-r3-contract.md) is the governing

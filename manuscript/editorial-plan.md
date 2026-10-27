@@ -1,5 +1,62 @@
 # Scientific and editorial revision
 
+## Current integrated manuscript — 27 October 2026
+
+PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.
+The [R3 contract](../docs/research/mvp2-r3-contract.md) governs completion by
+14 January 2027. This editorial branch begins the integrated manuscript while
+PR89 remains in progress. It is not the final specialist report or a
+submission-ready article.
+
+Current changes reconcile B/R/G presentation with historical M0/M1/M2,
+first optimal root-node capture, G-dependent R support/one counts, historical
+batch1 versus matched GPU globalbatch4, and the authorized pending CPU campaign.
+The immutable historical publication archive, PR86/87/88 receipts and existing
+figures are reused. No pending PR89 quality or time result is inserted.
+
+### Working claim-to-evidence map
+
+| Claim / article location | Existing evidence | Qualification and next dependency |
+| --- | --- | --- |
+| B/R/G partial Start; Proposed method | [R3 methods](../docs/research/mvp2-r3-methods-and-models.md), [selection source](../src/cfl_gnn/experiments/pr58_guidance.py) | Implemented mechanism; not a causal class-aware ablation |
+| Root capture and original checkpoint; Offline graph learning | [Root preparation](../scripts/evidence/pr86_root_preparation.py), [checkpoint table](../docs/evidence/e0/pr85/checkpoints.csv) | First optimal root-node event; original mixed CPU weights, not later GPU weights |
+| Admission and partitions; Instances / Design | [PR85 closure](../docs/research/pr85-closure.md), [R3 model/data audit](../docs/research/mvp2-r3-methods-and-models.md) | 90 candidates, 54 admitted, 34/10/10; label-quality selection and exposed tests |
+| Main CPU coverage; MVP2 principal analysis | [Main summary](../docs/evidence/methodology-20261019/summary.json), [PR86 final review](../docs/research/pr86-final-analysis.md) | 150 seed42 rows, 97 reported targets/53 censures, 30 sensitive M4/M12; not exact certificates |
+| CPU scaling and preparation costs; MVP2 / Discussion | [D1 metrics](../docs/research/methodology-20261019/D1-protocol.md), [PR86 final assets](../docs/evidence/pr86/final-210/README.md) | Eligible matched targets and stated cost boundaries; no complete cold job cost |
+| GPU speed/quality; Matched training | [PR87 review](../docs/research/pr87-completed-pair-review.md), [PR88 figure manifest](../docs/evidence/pr88/gpu/manifest.json) | One seed; loop2.167x/job1.831x, F1 loss0.032468, increased assigned GPU-h |
+| Historical six-medium figures/tables | [Imported archive manifest](results/current/pr60_scientific_evidence_manifest.json) | Preserve all original outcomes/labels and historical scope; not the ten-parent principal cohort |
+| Authorized CPU12h; Pending campaign paragraph | [R3 source index](../docs/research/mvp2-r3-evidence-index.json), [operational checkpoint](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6450594964) | In progress; final return, 60-cell reconciliation and named metric review pending |
+| C1/C2/C3 and SO1–SO8; Discussion / synthesis | [R3 coverage](../docs/research/mvp2-r3-contract.md), [D5 matrix](../docs/research/methodology-20261019/D5-contributions.md) | Mechanism, conditional regimes and bounded economics; original literature positioning and final synthesis pending |
+
+This map is an editorial work product reusing prior audits, not eight new
+reports or a new scientific promotion. R2-D8 remains pending integrated
+results, specialist questions and human review.
+
+### Completion criteria for this PR
+
+1. Integrate PR89 only after its authorized return is received and reviewed.
+   Every planned cell needs a state; failures/censoring/unavailable records
+   remain visible. Installed source, starts, seed and rawflags are unchanged.
+2. Complete the principal CPU/GPU narrative, figures and machine-readable
+   claim provenance using the existing generators where applicable.
+3. Reconcile SO/C coverage and limitations without assuming superiority,
+   independent generalization or multiseed robustness.
+4. Validate sources, relevant manuscript/archive regressions and final-head
+   static HTML/PDF render; inspect PDF pages and keep the 20-page body budget.
+5. Obtain coauthor review and final human editorial declarations before
+   scientific release/submission. A successful preview is not that approval.
+
+While CPU execution continues, refine methods, existing-evidence exposition,
+supplement structure and editorial consistency. Do not start new experiments,
+retune models, republish Pages or open one PR per small revision.
+
+## Historical editorial plan — original text preserved
+
+The dated text below describes the earlier six-medium archive and its
+selection/metrics. Its population and checkpoint are not substituted for
+the later PR86/87/89 cohorts or checkpoints.
+
+
 Target: **Computers & Operations Research**. The alternatives considered were
 **European Journal of Operational Research** and **Expert Systems with Applications**.
 Journal suitability is an editorial judgment, not an acceptance prediction.

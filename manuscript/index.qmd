@@ -35,7 +35,7 @@ keywords:
   - Partial MIP starts
   - Computational reproducibility
 abstract: |
-  Can graph neural predictions improve mixed-integer optimization once preparation costs, censoring and numerical scope are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes unspecified variables without restricting the feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium evidence from a retrospective comparison on ten previously exposed test parents. Of 210 preserved records, the principal analysis uses 150 seed-42 observations across three methods and five CPU caps: 97 solver-reported terminal-target attainments and 53 censored observations. Attainments are not exact certificates; two medium parents retain numerical restrictions. The root-LP comparator matches the learned start's support budget and positive count and is not an independent LP heuristic. We separate neural speedup, CPU scaling, terminal quality and preparation-cost scenarios. A matched-work seed-42 training pair compares one-GPU serial training with four-GPU distributed training over 100 epochs and 3,400 updates. Distributed training accelerates the training loop by 2.167 times and the whole job by 1.831 times, but increases assigned GPU-hours and reduces selected parent-macro F1 from 0.7231 to 0.6906, exceeding the predeclared descriptive loss margin. These heterogeneous speed-quality-cost tradeoffs do not establish uniform superiority or preserved predictive quality. A longer-horizon CPU campaign remains unapproved and unexecuted.
+  Can graph neural predictions improve mixed-integer optimization when preparation costs and censoring are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes unspecified variables without restricting the feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium evidence from a retrospective comparison on ten previously exposed test parents. Of 210 preserved records, the principal analysis uses 150 seed-42 observations across three methods and five CPU caps: 97 solver-reported terminal-target attainments and 53 censored observations. Attainments are not exact certificates; two medium parents retain numerical restrictions. The root-LP comparator matches the learned start's support budget and positive count and is not an independent LP heuristic. We separate neural speedup, CPU scaling, terminal quality and preparation-cost scenarios. A matched-work seed-42 training pair compares one-GPU serial training with four-GPU distributed training over 100 epochs and 3,400 updates. Distributed training accelerates the training loop by 2.167 times and the whole job by 1.831 times, but increases assigned GPU-hours and reduces selected parent-macro F1 from 0.7231 to 0.6906, exceeding the predeclared descriptive loss margin. These heterogeneous speed-quality-cost tradeoffs do not establish uniform superiority or preserved predictive quality. An authorized longer-horizon CPU campaign is in progress; its final results remain pending.
 ---
 
 # Introduction
@@ -44,7 +44,7 @@ Capacitated facility location combines discrete facility decisions with allocati
 
 We use MILPBench capacitated facility location (CFL) instances [@milpbench]. A graph neural network (GNN) predicts binary values from variable-constraint relationships. Selected predictions provide starting values to Gurobi; unspecified variables remain for the solver to complete without changing constraints or domains.
 
-The research question is: under what conditions do predicted starting values benefit or harm fixed-budget CFL optimization, including their preparation cost? Class-aware selection treats predicted values of 1 and 0 separately, so that abundant zeros do not displace promising positive assignments. We compare Gurobi without an external start (M0), a root linear programming (LP) start (M1), and a frozen GNN start (M2). M1 specifies equally many values and ones as M2; it therefore depends on the GNN-associated budget and is not an independent LP-only heuristic. Fixed parent roles prevent training/test leakage, but previously exposed test instances support retrospective controlled evaluation rather than a new independent generalization claim.
+The research question is: under what conditions do predicted starting values benefit or harm fixed-budget CFL optimization, including their preparation cost? Class-aware selection treats predicted values of 1 and 0 separately, so that abundant zeros do not displace promising positive assignments. We compare BASE (B), Gurobi without an external start; RELAX (R), a root linear programming (LP) partial start; and GNN-START (G), a frozen neural partial start. Historical identifiers M0/M1/M2 remain unchanged in archived artifacts. R matches G's supplied-value and one-count budgets, not necessarily its indices, and is not an independent LP-only heuristic. Parent roles are recorded, but historically exposed tests support retrospective controlled evaluation rather than independent generalization.
 
 The study contributes a reproducible procedure connecting graph-based assignment prediction to native partial MIP starts, together with separate assessments of predictive performance and solver outcomes. @fig-pipeline summarizes this connection and distinguishes the offline learning stage from the online application to a new optimization instance.
 
@@ -98,7 +98,7 @@ MILPBench groups the 90 original CFL instances into 30 easy, 30 medium, and 30 h
 
 ## Offline graph learning
 
-Variables and constraints form nodes connected by nonzero coefficients in $A_p$. Each edge carries its coefficient. Variable features encode objective, bounds, type and root-LP value captured through a Gurobi MIPNODE callback; constraint features encode right-hand side and sense. Root values are aligned by variable identity, without prediction-time solution labels.
+Variables and constraints form nodes connected by nonzero coefficients in $A_p$. Each edge carries its coefficient. Variable features encode objective, bounds, type and root-LP value captured at the first optimal root-node MIPNODE callback; constraint features encode right-hand side and sense. Root values are aligned by variable identity. Reference labels read by the graph encoder support its separate feasibility audit; they do not enter the neural forward or start selection.
 
 The seven variable channels are transformed objective coefficient, lower bound, upper bound, three type indicators, and root value. The five row channels are transformed right-hand side, three sense indicators, and a constant. A single edge channel encodes the coefficient. Numerical coefficients and bounds use signed $\log(1+|t|)$ after clipping to $[-60000,60000]$; infinite bounds use the corresponding endpoint. Root values are clipped without logarithmic scaling. These numerical encodings affect learning inputs, not the original solver model; clipping counts are audited.
 
@@ -106,7 +106,7 @@ The Gasse-inspired network uses two message-passing layers with hidden dimension
 
 $$\ell_{pj}=-w_+y_{pj}\log\sigma(s_{pj})-(1-y_{pj})\log(1-\sigma(s_{pj})),$$
 
-where $w_+$ is estimated from the training targets. BCE penalizes disagreement between predicted scores and binary labels; the extra weight increases the contribution of the rare positive class. Logarithmic scoring has a well-established basis in probabilistic prediction [@gneiting2007]. Class weighting is used here to learn useful assignments, and the resulting scores are assessed separately for calibration. Adam uses learning rate $10^{-3}$, gradient-norm clipping at 1, seed 42, and 100 epochs. Parent-balanced sampling draws each training parent four times per epoch. Validation weighted BCE selects the checkpoint, and validation F1 selects the threshold $\tau=0.9991843104362488$. The evaluation metrics are defined in @sec-metrics.
+where $w_+$ is estimated from the training targets. BCE penalizes disagreement between predicted scores and binary labels; the extra weight increases the contribution of the rare positive class. Logarithmic scoring has a well-established basis in probabilistic prediction [@gneiting2007]. Class weighting is used here to learn useful assignments, and the resulting scores are assessed separately for calibration. Adam uses learning rate $10^{-3}$, gradient-norm clipping at 1, seed 42, and 100 epochs. Parent-balanced sampling draws each training parent four times per epoch. Validation weighted BCE selects the checkpoint, and validation F1 selects the threshold $\tau=0.9991843104362488$. The historical CPU checkpoint uses serial graph batches of one and remains frozen; the later GPU comparison uses global batch four. Evaluation metrics are defined in @sec-metrics.
 
 ## Class-aware partial starts
 
@@ -118,7 +118,7 @@ The support of a partial start is the set of variables for which values are supp
 
 Selected values are assigned to Gurobi's `Start` attribute, while other values remain undefined. Gurobi then attempts to complete or repair this partial candidate as part of its solution process. We verify that the objective, matrix, row senses, and bounds have identical mathematical signatures before and after submission.
 
-For comparison, the root-LP start uses the relaxation rather than the network to select variables. Suppose the GNN supplies $K'$ values, including $r$ ones. The comparator assigns 1 to the $r$ binary variables with the largest relaxation values and 0 to the $K'-r$ remaining variables with the smallest relaxation values. Both starts therefore supply equally many values with the same balance of ones and zeros. This matched construction helps examine whether learned variable selection adds useful information beyond that available from the LP relaxation.
+For comparison, the root-LP start uses the relaxation rather than the network to select variables. Suppose the GNN supplies $K'$ values, including $r$ ones. The comparator assigns 1 to the $r$ binary variables with the largest relaxation values and 0 to the $K'-r$ remaining variables with the smallest relaxation values. Root values are clipped to $[0,1]$ before ranking; variable names break ties. R and G therefore match assignment and one counts, while their selected indices may differ. Their preparation dependencies are included in cost accounting.
 
 # Experimental design
 
@@ -171,7 +171,7 @@ Here, $S_b$ is a score bin; empty bins contribute zero, and score 1 is assigned 
 
 The [canonical repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn) supplies code, splits, protocols, dependencies and rendering instructions; MILPBench supplies original inputs [@milpbench]. SHA256 manifests bind fixed tables and figures, preserving failed attempts separately. Publication builds execute no training, inference or optimization.
 
-Experiments ran on UJA DGX-DaSCI at the Higher Polytechnic School of Jaén, University of Jaén. The supplied DGX-1 inventory lists eight 32-GB Tesla V100 GPUs, two 20-core x86 CPUs at 2.2 GHz, and 512 GB memory. This inventory is not a runtime hardware probe and does not imply allocation of all eight GPUs to training. Solver workers use one Gurobi thread; actual Slurm allocations and software versions are recorded per run. Storage includes an OS SATA SSD with a 6 Gb/s interface and a four-device SSD RAID-0 array. Interface capacity is distinguished from measured throughput.
+Experiments ran on UJA DGX-DaSCI at the Higher Polytechnic School of Jaén, University of Jaén. The supplied DGX-1 inventory lists eight 32-GB Tesla V100 GPUs, two 20-core x86 CPUs at 2.2 GHz, and 512 GB memory. This inventory is not a runtime hardware probe and does not imply allocation of all eight GPUs to training. Historical six-medium workers use one Gurobi thread; the principal CPU comparison uses caps 1/2/4/8/16. Actual allocations and software versions are recorded per run. Storage includes an OS SATA SSD with a 6 Gb/s interface and a four-device SSD RAID-0 array. Interface capacity is distinguished from measured throughput.
 
 Project-owned material uses MIT; benchmark, solver and template retain their rights. Public tables exclude credentials, private paths, raw logs and checkpoints. No unverified Zenodo deposit supports an availability claim.
 
@@ -196,9 +196,9 @@ not each method/thread row or binary variable, is the experimental unit.
 
 The immutable source hash remains in the PR86 final-210 archive manifest.
 Derived tables and their hashes are retained in the versioned
-methodology-20261019 evidence directory. Neural speedup is defined as $T_0/T_2$,
-so values above one favour M2; historical $T_2/T_0$ ratios retain their original
-names. Same-method CPU speedup is $T_m(1)/T_m(r)$ and efficiency divides this
+methodology-20261019 evidence directory. Neural speedup is $T_B/T_G$ or $T_R/T_G$,
+with values above one favouring G; historical $T_2/T_0$ ratios retain their
+original names and orientation. Same-method CPU speedup is $T_m(1)/T_m(r)$ and efficiency divides this
 quantity by $r$. Compute these only for comparable attained targets and eligible
 pairs. Censored or numerically restricted runs are not certified speedups.
 Descriptive complete-pair summaries do not represent excluded censored pairs.
@@ -211,12 +211,15 @@ the new five-use scenario does not relabel historical seven-use values.
 Allocation, CPU time, cgroup memory, RSS, Slurm MaxRSS and GPU memory have
 different scopes and cannot be combined into an artificial efficiency indicator.
 
-The remaining CPU extension is a proposal, without results here. It comprises
-60 fresh seed42 solves on the four medium parents, with 12-hour solver limits,
-unchanged $10^{-4}$ terminal relative gap, and separate authorization. It proposes
-first observed crossings of 10%, 5%, 1% and 0.01%, plus temporal records at
-1/4/8/12 hours without interpolation or invented exact-horizon measurements.
-Its budget, feasibility, numerical scope and calendar require separate resource approval.
+The authorized longer-horizon CPU campaign is in progress; its final results
+remain pending. It comprises 60 fresh seed42 solves: four medium parents,
+three methods and five caps, with 12-hour solver limits and unchanged
+$10^{-4}$ terminal relative gap. The protocol records first observed crossings
+of 10%, 5%, 1% and 0.01% and observations around 1/4/8/12 hours, preserving
+timestamps, brackets, censoring and unavailable values without interpolation.
+The original PR86 checkpoint, starts and numerical restrictions are retained.
+Changes or new experiments require separate resource approval; collection
+of this existing campaign does not renew its budget.
 
 ## Matched serial and distributed GPU training {#sec-gpu-matched}
 
@@ -314,11 +317,11 @@ Medium12/20 use approximately702/1,585solver seconds with GNN. Four GNN runs and
 
 # Discussion
 
-Historical assignment accuracy and terminal-gap improvements motivate the mechanism, but do not establish uniform acceleration. Current retrospective CPU effects depend on parent, thread cap, comparator and cost boundary. A favourable solver-only result can disappear after preparation costs. A gap decrease can arise from primal or dual progress and is not itself a speedup.
+Historical assignment accuracy and terminal-gap improvements motivate the mechanism; current tables retain archived M0/M1/M2 labels. They do not establish uniform acceleration. Current retrospective CPU effects depend on parent, thread cap, comparator and cost boundary. A favourable solver-only result can disappear after preparation costs. A gap decrease can arise from primal or dual progress and is not itself a speedup.
 
 The L2O perspective [@bengio2021] connects useful learned information to a conventional solver. Unlike starting-scenario selection [@goerigk2025], we predict variable values; unlike learned constraints [@qu2026], Start preserves the feasible region. Gasse-inspired structure does not make the representation original. Nor does comparing matched M1/M2 isolate the causal effect of class-aware ordering: support size and ones are matched, but preparation is dependent and no mechanism-isolating ablation was performed.
 
-Rare-positive precision/recall [@saito2015] and calibration diagnostics [@brier1950; @guo2017] remain distinct from optimization utility. Numerical sensitivity, exposed parents, censoring and a single seed bound interpretation. The matched GPU case demonstrates faster training with worse selected F1 and greater assigned GPU-hours, not preserved quality. Longer CPU running time remains a proposed evaluation, not a remedy assumed to succeed.
+Rare-positive precision/recall [@saito2015] and calibration diagnostics [@brier1950; @guo2017] remain distinct from optimization utility. Numerical sensitivity, exposed parents, censoring and a single seed bound interpretation. The matched GPU case demonstrates faster training with worse selected F1 and greater assigned GPU-hours, not preserved quality. The longer-horizon CPU campaign is in progress; it does not yet support an efficacy conclusion.
 
 # Final considerations, limitations and future work
 
@@ -326,7 +329,7 @@ The contribution is an auditable native partial-start pipeline and a controlled,
 
 Labels may be approximate and quality screening selects a tractable subset. Agreement with one label is not solution quality. The earlier easy-only pilot and validation include adverse cases, retained upstream; training-population changes also prevent a causal selector attribution. Hard-instance and full90-parent results are not available, and unsuccessful label admission is not mathematical infeasibility.
 
-Beyond MVP2, independent instances and mechanism-isolating ablations could strengthen interpretation; neither is authorized here. The frozen policy uses seed42 without hyperparameter search, expansion or new architectures. The required serial1/DDP4 pair is complete with a negative quality finding; no further training is authorized. Only the four-medium longer-horizon CPU proposal awaits separate resource approval. One seed does not establish initialization robustness.
+Beyond MVP2, independent instances and mechanism-isolating ablations could strengthen interpretation; neither is authorized here. The frozen policy uses seed42 without hyperparameter search, expansion or new architectures. The required serial1/DDP4 pair is complete with a negative quality finding; no further training is authorized. The approved four-medium CPU campaign awaits its final return and metric-specific review. One seed does not establish initialization robustness.
 
 Augmentation, independently labelled descendants and network-science visualizations remain outside this execution scope, not completed contributions. A curated archive must preserve unsuccessful attempts and undergo redistribution-rights and deposit verification. No Zenodo DOI is claimed as reserved or published; the versioned data-availability statement remains pending that verification.
 

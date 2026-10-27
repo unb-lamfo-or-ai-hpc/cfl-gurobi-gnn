@@ -72,6 +72,44 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         "# Results — historical six-medium study",
     )):
         failures.append("mvp2_seed42_methodological_scope_missing")
+    continuation = evidence.get("mvp2_continuation", {})
+    if not isinstance(continuation, dict):
+        continuation = {}
+    principal = {
+        "source": "docs/evidence/methodology-20261019", "seed": 42, "rows": 150,
+        "easy_rows": 90, "medium_rows": 60, "exposed_test_parents": 10,
+        "preserved_historical_rows": 210, "historical_only_seed43_44_rows": 60,
+        "reported_terminal_targets": 97, "right_censored_targets": 53,
+        "numerically_sensitive_rows": 30,
+    }
+    pending_cpu = {
+        "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+        "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
+        "execution_authorized_date": "2026-10-20", "jobs_already_submitted": 60,
+        "execution_state": "in_progress_author_reported",
+        "final_return_received": False, "scientific_results_included": False,
+        "new_execution_authorized_by_this_revision": False,
+    }
+    if (evidence.get("current_protocol_scope")
+            != "historical_six_medium_publication_archive_not_the_pr86_pr89_solver_cohort"
+            or continuation.get("principal_analysis") != principal
+            or continuation.get("method_aliases") != {"B": "M0", "R": "M1", "G": "M2"}
+            or continuation.get("cpu_checkpoint_sha256")
+            != "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028"):
+        failures.append("mvp2_principal_provenance_drift")
+    if (continuation.get("governing_contract") != "CFL-GNN-SCI-2026-10-22-R3"
+            or continuation.get("pr89") != pending_cpu
+            or continuation.get("editorial_state")
+            != "partial_integration_for_review_pr89_closeout_pending"
+            or continuation.get("final_coauthor_approval") is not False
+            or continuation.get("submission_authorized") is not False):
+        failures.append("pending_cpu_campaign_misrepresented")
+    if ("CPU campaign is in progress" not in article
+            or any(term in article for term in (
+                "unapproved and unexecuted", "CPU extension is a proposal",
+                "CPU proposal awaits separate resource approval",
+            ))):
+        failures.append("obsolete_cpu_campaign_authority")
     if r"\usepackage{orcidlink}" not in adapter or r"\providecommand{\orcidlink}" in adapter:
         failures.append("orcid_icon_package_missing_or_replaced")
     if "{elsarticle}" not in adapter or "elsarticle-harv" not in adapter or "cite-method: natbib" not in config:
