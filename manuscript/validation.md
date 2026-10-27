@@ -21,6 +21,19 @@ this new source. The editorial PR stays draft while PR89 and integrated
 scientific review are pending. No claim of successful new rendering is made
 by this paragraph.
 
+## Additional numerical traceability — 27 October 2026
+
+The working supplement binds 17 existing principal CPU/GPU claim groups to four
+public source files. The standard source check now validates their hashes,
+unique JSON/CSV selectors, scope, rounding and article values. New targeted
+regressions cover numeric drift, omitted negative evidence, altered source
+bytes, clock/averaging substitution, loss direction, ambiguous rows, unsafe
+source paths, unavailable values and pending-result invention.
+This does not rescore predictions or certify scientific eligibility. Final-head
+CI outcomes are recorded in PR92. The article/render inputs remain unchanged
+in this traceability step, so earlier preview receipts identify the preceding
+source revision rather than a new rendering.
+
 ## Historical validation receipts — original text preserved
 
 

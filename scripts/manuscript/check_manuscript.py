@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from check_claim_evidence import check_claim_evidence
 from import_pr60_evidence import ARCHIVE_SHA, ARTIFACTS, CONTRACT, MANIFEST, REPORT, UNSAFE, verify_payload
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -47,7 +48,7 @@ def safe_child(root: Path, name: str) -> Path | None:
 
 
 def check_source(root: Path = MANUSCRIPT) -> list[str]:
-    failures = []
+    failures = check_claim_evidence(root, ROOT)
     article = (root / "index.qmd").read_text(encoding="utf-8")
     bibliography = (root / "references.bib").read_text(encoding="utf-8")
     evidence = json.loads((root / "evidence-status.json").read_text(encoding="utf-8"))

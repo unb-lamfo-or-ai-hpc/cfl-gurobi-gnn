@@ -7,6 +7,13 @@ The [integrated manuscript plan](../manuscript/editorial-plan.md) advances
 independent writing and existing-evidence synthesis while PR89 remains active.
 The installed PR89 source remains `9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`.
 
+The [working evidence supplement](../manuscript/supplement/README.md) and its
+machine-readable map now bind 17 existing principal CPU/GPU claim groups to
+four public files. The manuscript source gate checks hashes, unique selectors,
+clock/averaging scope and displayed values. This is independent editorial work
+in draft PR92; the article inputs and installed campaign remain unchanged by
+this additional step. Final-head CI results are recorded in the PR.
+
 The author's selected squeue report for3713–3734 records3713 RUNNING at01:57:23
 and3714–3734 PENDING/Dependency (21jobs). It does not establish the states of
 3675–3712 or a new total of COMPLETED jobs; no final return is received.

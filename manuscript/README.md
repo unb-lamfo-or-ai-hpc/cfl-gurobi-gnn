@@ -9,6 +9,9 @@ archived M0/M1/M2 IDs and the imported six-medium tables remain unchanged.
 `evidence-status.json` explicitly distinguishes that historical archive contract
 from the 150-row principal seed42 view and the CPU campaign still in progress.
 No final coauthor approval or editorial submission is asserted.
+The [working evidence supplement](supplement/README.md) supplies a numerical
+provenance manifest checked by the existing source gate; pending CPU results
+are absent rather than filled with placeholders.
 
 The existing Manuscript workflow performs source checks, manuscript/archive
 regressions and static HTML/PDF preview. It does not execute research or deploy

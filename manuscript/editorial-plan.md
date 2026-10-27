@@ -32,6 +32,18 @@ This map is an editorial work product reusing prior audits, not eight new
 reports or a new scientific promotion. R2-D8 remains pending integrated
 results, specialist questions and human review.
 
+### Independent work completed while PR89 runs
+
+The [working supplement](supplement/README.md) separates population/evidence
+chains, clock/cost conventions and remaining integration decisions. Its
+[machine-readable claim map](supplement/claim-evidence.json) binds 17 existing
+principal CPU/GPU claim groups to four public source files with hashes and
+unambiguous selectors. The source gate verifies the corresponding displayed
+values and rejects missing claims, clock/averaging substitutions and invented
+pending results. Coverage is stated explicitly; this is not complete scientific
+review or a final journal supplement. Article prose, figures, raw evidence and
+the installed PR89 source are unchanged by this additional step.
+
 ### Completion criteria for this PR
 
 1. Integrate PR89 only after its authorized return is received and reviewed.
