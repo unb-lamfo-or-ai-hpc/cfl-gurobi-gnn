@@ -218,8 +218,7 @@ $10^{-4}$ terminal relative gap. The protocol records first observed crossings
 of 10%, 5%, 1% and 0.01% and observations around 1/4/8/12 hours, preserving
 timestamps, brackets, censoring and unavailable values without interpolation.
 The original PR86 checkpoint, starts and numerical restrictions are retained.
-Changes or new experiments require separate resource approval; collection
-of this existing campaign does not renew its budget.
+Execution status alone supplies no quality or time-to-target result.
 
 ## Matched serial and distributed GPU training {#sec-gpu-matched}
 

@@ -68,7 +68,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("directed_primal_guidance_references_missing")
     if any(term not in article for term in (
         "150 seed42 records", "historical only", "numerically",
-        "not an independent LP-only heuristic", "separate resource approval",
+        "not an independent LP-only heuristic",
         "# Results — historical six-medium study",
     )):
         failures.append("mvp2_seed42_methodological_scope_missing")
