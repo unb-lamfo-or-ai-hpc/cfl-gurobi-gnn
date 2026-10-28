@@ -1,5 +1,14 @@
 # Class-aware GNN partial-start manuscript
 
+## PR93 continuation
+
+The independent PR92 stage is the baseline for this draft integration.
+See the [working R2-D8 assessment](../docs/research/mvp2-integrated-assessment.md)
+and [editorial completion criteria](editorial-plan.md). PR93 remains gated
+by qualified CPU evidence, final synthesis and the complete audit; none is
+inferred from a passing preview.
+
+
 ## Current PR92 review scope — 28 October 2026
 
 PR92 delivers the independent R3 methods, provenance and preliminary review

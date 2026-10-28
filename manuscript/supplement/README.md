@@ -10,10 +10,18 @@ PR92 closes methods, existing provenance and preliminary review preparation.
 The [coauthor brief](../coauthor-review-brief.md) is available now, including
 the independent first-pass audit record. It has not been circulated by Codex.
 
-The next draft PR completes synthesis and the CPU-dependent integration.
+PR93 begins synthesis and carries the CPU-dependent final integration.
 Final results, supplement packaging and the integral audit are not declared
 complete by PR92's readiness. See the
 [Sprint/PR plan](../../docs/research/mvp2-closeout-plan.md) for milestones.
+
+## Synthesis work in PR93
+
+The [working R2-D8 assessment](../../docs/research/mvp2-integrated-assessment.md)
+now separates available CPU/GPU evidence, objective coverage, remaining
+qualification and editorial-package roles. It advances S4/S5 before the
+CPU return without introducing a new result or estimator. Its pending
+sections are scientific dependencies, not zero-filled observations.
 
 ## How to read this material
 

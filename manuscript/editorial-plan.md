@@ -1,6 +1,25 @@
 # Scientific and editorial revision
 
-## Current delivery split — 28 October 2026
+## PR93 — synthesis and final integration
+
+PR93 starts from the verified PR92 stage. It is a draft based on PR92's
+branch until that merge is explicitly approved; then verify and retarget
+to develop. The [working assessment](../docs/research/mvp2-integrated-assessment.md)
+is the first S4 deliverable, using existing evidence only.
+
+Completion requires: the reconciled 60-cell return with explicit metric
+eligibility; the integrated CPU/GPU interpretation and R2-D8 assessment;
+updated numerical provenance and consistent tables/figures/prose; an
+explicitly packaged scientific supplement with availability/rights resolved;
+the integral second-pass audit and final-head verification; and the
+relevant author scientific/editorial decisions. PR92's independent first
+pass does not close these requirements.
+
+The following sections preserve PR92's delivered scope and earlier review
+history. They do not mark PR93 complete or authorize a new experiment.
+
+
+## PR92 delivery baseline — 28 October 2026
 
 The author requests completion of PR92 now and preparation of the next PR.
 PR92 closes the independent methods, evidence provenance and preliminary

@@ -18,7 +18,7 @@ claim provenance, the preliminary coauthor brief and the first-pass audit
 record. It can be ready for review while PR89 is running. It is not the final
 article, R2-D8 closeout or publication approval.
 
-**The next draft PR carries final synthesis and article integration.** It
+**[PR93](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93) carries final synthesis and article integration.** It
 can start immediately with existing-evidence synthesis and the audit items
 independent of the CPU campaign. Qualified PR89 results, final figures/tables,
 the final scientific supplement, R2-D8 and the second-pass audit belong there.
@@ -39,11 +39,11 @@ for every minor correction or invent future PR numbers.
 
 | Sprint | Delivery and timing | PR responsibility | Exit criterion |
 | --- | --- | --- | --- |
-| S1 — governance and completion record | Close the independent planning/scope work now; maintain decisions through completion | PR92, then the synthesis PR | One current plan, explicit supersessions and no confusion between a partial PR and MVP2 completion |
-| S2 — methods and independent audit | Consolidate methods/model/data/reproducibility now; preliminary author feedback sought by 15 November | PR92 supplies the brief and first-pass record; synthesis PR resolves further independent findings | Fixed choices, validation selection, B/R/G dependencies and known limitations are source-linked; no new experiment |
-| S3 — existing CPU campaign | Triggered by the authorized return, reconciliation and subsequent metric-specific qualification | Existing PR89 campaign; qualified evidence integrated in the synthesis PR | All60 cells have explicit dispositions; failures, absences, censoring and M4/M12 eligibility remain visible |
+| S1 — governance and completion record | Close the independent planning/scope work now; maintain decisions through completion | PR92, then PR93 | One current plan, explicit supersessions and no confusion between a partial PR and MVP2 completion |
+| S2 — methods and independent audit | Consolidate methods/model/data/reproducibility now; preliminary author feedback sought by 15 November | PR92 supplies the brief and first-pass record; PR93 resolves further independent findings | Fixed choices, validation selection, B/R/G dependencies and known limitations are source-linked; no new experiment |
+| S3 — existing CPU campaign | Triggered by the authorized return, reconciliation and subsequent metric-specific qualification | Existing PR89 campaign; qualified evidence integrated in PR93 | All60 cells have explicit dispositions; failures, absences, censoring and M4/M12 eligibility remain visible |
 | S4 — scientific synthesis | Start now with existing CPU/GPU evidence; finish after PR89 qualification | Synthesis PR | R2-D8 and SO1–SO8/C1–C3 assessment distinguish findings, limitations and unachieved objectives |
-| S5 — article and scientific supplement | Preliminary brief now; complete manuscript to coauthors by 15 December | PR92 closes preliminary preparation; synthesis PR delivers the complete version | Consistent argument, all numbers traceable, figures interpreted, supplement explicitly packaged |
+| S5 — article and scientific supplement | Preliminary brief now; complete manuscript to coauthors by 15 December | PR92 closes preliminary preparation; PR93 delivers the complete version | Consistent argument, all numbers traceable, figures interpreted, supplement explicitly packaged |
 | S6 — final review and submission | December revisions; final approval target 7 January; submission target 10 January; absolute deadline 14 January | Final integration/release scope, with separately approved merges/publication/submission | Author scientific/editorial decisions, closed final audit and verified submission package |
 
 S1, S2, S4 and S5 overlap; they do not wait for the campaign. Only the existing
@@ -87,7 +87,7 @@ historical figures and supplements. The
 evidence/disposition register. Its coverage and remaining limitations are
 stated; this is not blanket software or scientific certification.
 
-Continue any unfinished independent review in the synthesis PR. No generator
+Continue any unfinished independent review in PR93. No generator
 certification or repeated experiment is reopened. Existing source reviews,
 manifests, numerical checks and previously inspected renders can be reused
 when their inputs are unchanged.
@@ -167,7 +167,7 @@ and applicable final-head checks are complete. Mark it ready and request
 human merge authorization; do not close it as abandoned or merge it automatically.
 Its readiness does not mean the whole article is submission-ready.
 
-Prepare the synthesis PR as a draft. Final readiness depends on qualified
+PR93 is prepared as a draft. Final readiness depends on qualified
 PR89 evidence, complete R2-D8, integrated article/supplement, the second-pass
 audit and the relevant author decisions. Any later PR89 scientific-closeout
 or release merge also needs explicit authorization. The installed execution
