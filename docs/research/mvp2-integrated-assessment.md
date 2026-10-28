@@ -160,6 +160,13 @@ ablations; its options remain future work. The Human–AI register explains
 accountability separately from a scientific study of collaboration, preserving
 the conditional Appendix B decision and existing author declaration.
 
+The [configuration reference](../../manuscript/supplement/configuration-reference.md)
+adds an appendix-ready account of data inputs, feature encoding, fixed and
+validation-selected hyperparameters, the recorded Gurobi map and the separate
+GPU settings. Fixed-revision source links retain provenance. Preparation
+Presolve=0 is distinguished from the recorded solve setting Presolve=-1;
+missing effective fields are not filled from assumed defaults.
+
 This is a source-based editorial reconciliation, not a replay of training,
 a robustness result or the completed scientific supplement. The numerical
 claim manifest, historical data and article rendering inputs remain unchanged.

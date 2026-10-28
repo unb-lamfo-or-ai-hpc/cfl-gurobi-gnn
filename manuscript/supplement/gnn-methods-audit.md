@@ -411,6 +411,15 @@ comparison must be addressed or the claim removed before submission.
 Reviewer requests are a possible trigger for follow-up, not the sole test
 of scientific sufficiency.
 
+## Finding exact values and source files
+
+Use the [configuration reference](configuration-reference.md) to locate the
+inputs and parameter values discussed here. It separates root preparation,
+historical training, CPU solves and the matched GPU pair, with links to their
+versioned files. The rationale above explains why a choice is reasonable;
+the reference identifies whether its value was fixed, selected on validation
+data or recorded in an existing receipt.
+
 ## Implementation and evidence sources
 
 The narrative above uses the

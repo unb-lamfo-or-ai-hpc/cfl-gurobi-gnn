@@ -13,6 +13,12 @@ distinguishes training from inference, and follows a prediction into a
 partial solver Start. A schematic example explains why R matches G's
 assignment counts without copying its variable choices.
 
+The [configuration reference](configuration-reference.md) then lists the
+data inputs, graph encoding, hyperparameters, validation-selected settings,
+Gurobi parameter map and separate GPU configuration. It includes fixed-revision
+GitHub links to the files behind each group, including settings whose effective
+runtime values were not exported.
+
 Then use the evidence and metric sections below to interpret an outcome.
 Prediction agreement, a loaded Start, a gap crossing, terminal solver status
 and a timing ratio are different observations. None should stand in for another.
