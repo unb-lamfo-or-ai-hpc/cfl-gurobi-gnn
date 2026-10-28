@@ -1,5 +1,25 @@
 # Reference selection and Zotero collection
 
+## Hyperparameter rationale and benchmarking — reader revision
+
+Three references now support specific methodological statements:
+Kingma and Ba (ICLR 2015, author version 9) for Adam's conventional 0.001 rate;
+Pascanu, Mikolov and Bengio (ICML 2013, pages 1310–1318) for gradient-norm
+clipping as a stabilization principle; and Beiranvand, Hare and Lucet
+(Optimization and Engineering 18, 815–848, 2017;
+DOI 10.1007/s11081-017-9366-1) for transparent benchmarking settings.
+
+The Adam algorithm and clipping discussion were checked in primary full texts.
+The benchmarking discussion uses the author full-text version; publisher
+metadata were checked separately. The Gurobi bibliography entry now identifies
+the full version 13.0 reference manual, so it supports root-method parameters
+as well as native Start attributes.
+
+None of these sources establishes the best depth, width, clipping threshold,
+seed count or study sufficiency for CFL. The methods text makes those limits
+explicit. No Zotero record or collection was modified.
+
+
 ## Critical foundation update — 28 October 2026
 
 The [source-linked GNN audit](supplement/gnn-methods-audit.md) records the

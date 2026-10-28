@@ -6,13 +6,19 @@ a new experimental return, a final journal supplement or the R2-D8 closeout.
 
 ## Methods and accelerated review preparation — 28 October 2026
 
-The [GNN/solver-method audit](gnn-methods-audit.md) consolidates E1–E9 of the
-literature/architecture mandate: primary architectural distinctions, actual
-hyperparameters, pinned Gasse source comparison, weighted-loss/DDP matching,
-root capture and inference, and the limits of Seed42/automatic Method selection.
+The [methods explanation](gnn-methods-audit.md) follows the scientific
+argument from graph representation and hyperparameter choices to solver
+comparisons and their limits. It distinguishes a reasonable fixed design
+from a configuration shown to outperform alternatives.
+
+The [sensitivity assessment](sensitivity-review-plan.md) explains which
+questions would require different solver seeds, explicit root methods,
+new neural training or component ablations. Its execution counts and resource
+ceilings are planning examples; no new experiment is authorized.
+
 The [Human–AI register](human-ai-traceability.md) records the conditional
 Appendix B decision and missing primary human-acceptance evidence.
-These are documentary working materials, not new experimental results.
+These are working review materials, not additional experimental results.
 
 The [accelerated completion plan](../../docs/research/mvp2-20261028-accelerated-plan.md)
 advances S1/S2/S4/S5 now, targets a complete coauthor version by15December,

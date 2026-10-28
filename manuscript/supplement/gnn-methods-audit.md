@@ -1,370 +1,316 @@
-# GNN foundation, implementation and solver-interface audit
+# Why this GNN, and what its experiments can establish
 
-28 October 2026 · working coauthor-review material · CFL-GNN-LIT-ARCH-2026-02.
-Documentary baseline: [PR92 source 7bd4b345](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/7bd4b34556cc9c4f01d063bab74a38e4d058bd7c).
-The [R3 contract](../../docs/research/mvp2-r3-contract.md) governs experiments.
-This audit does not rerun a model, certify a checkpoint fit retrospectively, or
-change the installed PR89 source. The author's current instruction permits
-editorial GitHub changes, superseding the attached mandate's read-only
-repository restriction; its prohibition on new experiments remains in force.
+This supplement explains the modelling choices behind the CFL study and the
+limits of the evidence. It should be read alongside the manuscript, especially
+its distinction between prediction quality and optimization performance.
+A network can predict many binary values correctly and still provide an
+unhelpful starting point to a mixed-integer solver. Conversely, a small set
+of useful assignments can improve a solve without maximizing classification
+accuracy. The experimental question concerns that connection.
 
-## E1 — Critical assessment and five priorities
+The implementation discussed here is the fixed Gasse-inspired model used to
+prepare the CPU starts. The ongoing longer-horizon campaign reuses those
+starts and the original checkpoint. Nothing in this methodological discussion
+changes that campaign or constitutes a new experiment.
 
-**Adopt with reservations.** The mandate correctly separates architecture,
-predictive validity and optimization utility. A bipartite message-passing model
-is a defensible way to use the MILP coefficient structure and shared weights
-across instance sizes. This is a modelling rationale, not evidence that two
-32-dimensional cycles are optimal or outperform a structure-free predictor.
+## 1. Why represent the MILP as a bipartite graph?
 
-The mandate is too broad if treated as nine independent reports, a general GNN
-survey or an implicit architecture benchmark. Consolidate E1–E9 here, in the
-existing numerical supplement and in the accelerated completion plan. Preserve
-R3's scientific question; qualify the word “deterministic” by actual solver
-configuration and stopping rule. Do not rewrite the question to promise gains.
+A linear constraint couples variables through its nonzero coefficients.
+Representing variables and constraints as two kinds of nodes therefore gives
+the network access to the structure that the solver sees. A variable receives
+information from the constraints in which it participates; a constraint
+combines information from its incident variables. Coefficients remain edge
+attributes, so two otherwise similar connections can convey different
+numerical information.
 
-Five immediate priorities are: (1) distinguish our implementation from Gasse's
-branching model; (2) expose actual fixed/selected hyperparameters and unknown
-choice rationales; (3) explain root capture, inference and B/R/G dependencies;
-(4) reconcile serial/DDP mathematical work with its adverse quality finding;
-(5) align every claim with its population, evidence and limitations. References
-absent from the manuscript are candidates, not a checklist for inclusion.
+This choice follows [Gasse et al. (2019)](https://arxiv.org/abs/1906.01629v3).
+Their network learns a branching decision within SCIP. Our adaptation learns
+binary values from checked incumbent solutions and passes selected values
+to Gurobi as a partial start. The prediction target, loss and solver interface
+are consequently different. It would be inaccurate to describe the present
+model as a complete reproduction of their method.
 
-COR suitability is a separate scientific gate. The publisher's
-[official journal description](https://shop.elsevier.com/journals/computers-and-operations-research/0305-0548)
-calls for substantive algorithmic content, scientifically valuable numerical
-comparisons, reproducible data/code and clear scientific English. Improving
-documentation alone cannot establish sufficient originality or experimental
-coverage. The authors must judge whether the bounded fixed-model B/R/G study
-meets that standard; a positive editorial outcome is not guaranteed.
-This observation does not authorize expanding the experiment scope.
+It is also useful to distinguish this model from other familiar GNNs.
+[GCN](https://arxiv.org/html/1609.02907v4) uses degree-normalized propagation;
+[GraphSAGE](https://arxiv.org/html/1706.02216v4) combines a node representation
+with an aggregate of its neighbours; [GAT](https://arxiv.org/html/1710.10903v3)
+and [GATv2](https://arxiv.org/html/2105.14491v3) learn attention weights over
+neighbours. Our model uses coefficient-aware message functions, sum aggregation
+and separate variable/constraint updates. These alternatives are conceptually
+relevant, but their existence does not establish an empirical ranking on CFL.
+The repository's optional BiGNN attention block is dense dot-product attention,
+not a GAT or GATv2 experiment.
 
-Choose E8 alternative **B**: documentary foundation plus analysis of existing
-records, without new inference, training or solves. A is sufficient for some
-editorial issues but leaves reusable provenance unexamined. C, a new controlled
-architecture comparison, is deferred beyond this submission unless separately
-authorized. No budget or acceptance forecast is invented for C.
+### From coefficients to predictions
 
-## E2 — Architectural distinctions
+The input has seven variable channels: transformed objective coefficient,
+lower and upper bounds, three type indicators and the captured root-relaxation
+value. Rows have five channels: transformed right-hand side, three sense
+indicators and a constant. Each edge carries one transformed coefficient.
+Signed logarithms and clipping control the range of numerical inputs;
+they do not change the coefficients, domains or feasible region of the
+optimization model. Clipping can discard scale information, so it is an
+encoding choice with limitations, not an exact representation of every number.
 
-Notation: h is a node embedding, N(i) its neighbours, rho a nonlinearity,
-and || concatenation. Equations below identify representative operators;
-they are not claims that all variants have identical inputs or cost.
-N and E denote node and edge counts, d a common hidden width.
-
-| Family and representative update | Centre / edge treatment | Scaling and transfer limits | Evidence in this project |
-| --- | --- | --- | --- |
-| MLP: h_i'=rho(W h_i+b) | Centre only; no graph edges | O(N d²) for dense hidden layers; shared weights accept different N but ignore structure | Conceptual comparator, not a matched executed baseline |
-| Kipf–Welling GCN: H'=rho(Dtilde^(-1/2) Atilde Dtilde^(-1/2) H W) | Self-loops and degree-normalized sum; canonical operator has no arbitrary coefficient-edge channel | Sparse propagation O(E d+N d²); degree normalization differs from our learned coefficient messages | Not the architecture used in PR86/89 |
-| GraphSAGE: h_i'=rho(W[h_i || AGG({h_j})]) | Centre concatenated with neighbour aggregate; mean/pool/LSTM variants and sampling differ; canonical form does not consume MILP coefficients automatically | Full-neighbour work depends on E; sampled work on fan-outs and depth; inductive function does not establish CFL generalization | Not a qualified campaign comparator |
-| GAT: h_i'=rho(sum_j alpha_ij W h_j), alpha=softmax_j LeakyReLU(a^T[Wh_i||Wh_j]) | Masked neighbour attention; original additive form has static neighbour ranking; coefficient features need an explicit extension | Sparse attention roughly O(N d²+E d) per head; cost depends on heads; not dense global attention | No matched GAT experiment |
-| GATv2: e_ij=a^T LeakyReLU(W[h_i||h_j]), followed by neighbour softmax/aggregation | Changes order of projection/nonlinearity, allowing query-dependent ranking; not equivalent to GAT | Similar sparse-order costs with variant-dependent projections; greater attention expressivity is not guaranteed downstream gain | No matched GATv2 experiment |
-| Gasse-inspired bipartite model | Separate variable/row embeddings; coefficient-aware messages, sum, fixed prenorm; V→C→V | Dense message MLPs give approximately O(L(E+N)d²) time and O(E d+N d) forward activations per cycle; autograd/storage add overhead | Actual frozen architecture; empirical comparison is B/R/G, not architecture ranking |
-| Repository BiGNN / BiGNN+ATT | Two encoder stages, same GasseBipartiteConv; optional softmax(QK^T/sqrt(d))V on variable embeddings within each graph | Attention adds O(n_v² d) work and O(n_v²) scores per graph; padding can increase memory | Implemented in liang.py; presence of code is not a qualified principal training result; neither variant is GAT/GATv2 |
-
-Primary foundations: [GCN](https://arxiv.org/html/1609.02907v4),
-[GraphSAGE](https://arxiv.org/html/1706.02216v4),
-[GAT](https://arxiv.org/html/1710.10903v3),
-[GATv2](https://arxiv.org/html/2105.14491v3),
-[Gasse v3](https://arxiv.org/abs/1906.01629v3).
-These papers support operator distinctions, not an empirical ordering on CFL.
-Repository sources: [gasse.py](../../src/cfl_gnn/models/gasse.py),
-[gasse_calibrated.py](../../src/cfl_gnn/models/gasse_calibrated.py),
-[liang.py](../../src/cfl_gnn/models/liang.py).
-
-Sum aggregation retains multiplicity information but changes scale with degree;
-prenorm addresses activation scale without proving degree invariance. Two
-alternating cycles permit variable information to traverse up to four bipartite
-edges. They do not solve arbitrary global dependencies. Shared operators and
-sum aggregation are permutation equivariant in exact arithmetic when features
-and identities are permuted consistently; floating-point ordering and the
-name-based selection tie-break need separate treatment. Over-smoothing and
-information bottlenecks are theoretical concerns, not diagnosed causes of our
-observed errors. Neither deeper layers nor attention is an automatic remedy.
-
-### Actual propagation and adaptation from Gasse
-
-With t=1,...,2, initial embeddings are ReLU(linear(features)). The implementation is
+Each propagation cycle first updates constraint embeddings and then variable
+embeddings. With initial embedded features v and c, the implemented updates are
 
 $$
-c_i^t=\operatorname{ReLU} f_C^t\left[c_i^{t-1}\,\Vert\,
- P_C^t\left(\sum_{j\in N(i)}g_C^t[c_i^{t-1}\Vert v_j^{t-1}\Vert e_{ij}]\right)\right],
-$$
-$$
-v_j^t=\operatorname{ReLU} f_V^t\left[v_j^{t-1}\,\Vert\,
- P_V^t\left(\sum_{i\in N(j)}g_V^t[c_i^t\Vert v_j^{t-1}\Vert e_{ij}]\right)\right].
+c_i^t=\operatorname{ReLU} f_C^t\!\left[c_i^{t-1}\Vert
+ P_C^t\!\left(\sum_{j\in N(i)}g_C^t[c_i^{t-1}\Vert v_j^{t-1}\Vert e_{ij}]\right)\right],
 $$
 
-Each f/g is Linear→ReLU→Linear. P is a fixed affine prenorm.
-The second direction uses the **fresh** row embeddings. The final two-layer
-MLP produces one logit per binary variable; sigmoid is applied for scoring.
+$$
+v_j^t=\operatorname{ReLU} f_V^t\!\left[v_j^{t-1}\Vert
+ P_V^t\!\left(\sum_{i\in N(j)}g_V^t[c_i^t\Vert v_j^{t-1}\Vert e_{ij}]\right)\right].
+$$
 
-The upstream comparison is pinned to
-[learn2branch 57e82603](https://github.com/ds4dm/learn2branch/tree/57e82603fba39c34ff81baf9bd0b5768f5a1a860),
-not an unspecified mutable master.
+Here N denotes neighbours, e the encoded coefficient and || concatenation.
+The message functions g and update functions f are two-layer perceptrons.
+P denotes a fixed affine normalization fitted on training graphs. The second
+update uses the newly computed constraint embeddings, allowing information
+from other incident variables to reach a variable within the same cycle.
+The final prediction head produces one logit for each binary variable.
 
-| Dimension | Upstream baseline | CFL-GNN campaign model |
+Two cycles allow information to travel up to four edges in the bipartite
+graph. This is a reason to consider more than one cycle when predictions
+depend on interacting constraints. It does not imply that four-edge
+neighbourhoods are sufficient for all CFL decisions. Shared message functions
+also permit application to different graph sizes, but architectural
+applicability is not evidence of independent statistical generalization.
+
+## 2. Why these hyperparameters?
+
+A defensible explanation must separate three things: the value actually used,
+the methodological reason for considering it, and evidence that it performs
+better than alternatives. Our records establish the first. Literature and
+the structure of the task can inform the second. For most fixed choices,
+the third has not been measured.
+
+In particular, no inspected configuration or historical receipt documents
+a search that selected two cycles and width 32 over one cycle and width 64.
+We should state that gap directly. The rationale below explains why the
+configuration is scientifically reasonable; it does not reconstruct an
+undocumented original decision or turn a fixed setting into a validated optimum.
+
+### Network capacity and numerical scale
+
+The upstream Gasse baseline uses one cycle and width 64. The present two-cycle,
+width-32 adaptation trades a longer local information path against a smaller
+representation. Both are meaningful design dimensions: depth determines how
+far information propagates, while width affects the capacity and cost of
+the learned message functions. For this implementation, their leading dense
+message cost scales approximately with L(E+N)d², where L is the number of
+cycles, E and N are edge/node counts, and d is width. This is an analytical
+scaling argument, not a measured speed or memory comparison with Gasse's
+different implementation.
+
+A shallow model with modest width is therefore a parsimonious starting point
+for large coefficient graphs. Neither Gasse's results nor this argument proves
+that 2×32 is preferable on our instances. The correct claim is evaluation of
+one fixed model. Claims of architectural superiority would require controlled
+comparisons that are currently absent.
+
+Sum aggregation preserves the contribution of repeated incident messages,
+but its magnitude depends on node degree. Fixed prenormalization addresses
+activation scale. In the version used here, variable-side statistics are fitted
+after the corresponding constraint update, using training graphs only.
+This differs from the legacy fit procedure. The versions and their buffers
+cannot be interchanged retrospectively; “calibrated” in a source filename
+does not mean that output probabilities have been calibrated.
+
+### Optimization, imbalance and selection
+
+[Kingma and Ba (2015)](https://arxiv.org/abs/1412.6980) provide the basis for
+Adam and identify 0.001 as a useful default learning rate in their experiments.
+This supports using it as a conventional starting point. It does not show
+that it is optimal for this GNN. The implementation fixes that rate and does
+not invoke a learning-rate scheduler in the relevant training paths. Other
+Adam arguments use the installed runtime defaults and were not tuned separately.
+
+Gradient-norm clipping limits the size of an unusually large gradient before
+an update. [Pascanu et al. (2013)](https://proceedings.mlr.press/v28/pascanu13.html)
+explain this stabilization principle in recurrent-network training. That
+reference motivates the operation; it is not CFL-specific evidence for our
+threshold of 1. The threshold is a fixed implementation choice whose
+sensitivity remains unmeasured.
+
+The loss addresses a different concern. Positive binary labels are rare, so
+an unweighted objective can be dominated by zeros. The positive-class weight
+is the training negative-to-positive ratio, increasing the loss contribution
+of a missed positive label. This changes what a sigmoid score means. For
+an idealized conditional label probability p and positive weight w, the
+weighted-BCE risk is minimized at q*=wp/(wp+1−p). A score close to one is
+therefore not automatically a calibrated probability of a correct assignment.
+Likewise, selecting a threshold to maximize validation F1 is not probability
+calibration.
+
+The 100-epoch limit bounds the training schedule. Validation loss, rather
+than the last epoch, selects the retained checkpoint; validation F1 selects
+the classification threshold. These are actual data-dependent selections.
+The architecture, learning rate and epoch ceiling are fixed settings.
+This distinction is important because observing a useful validation minimum
+does not justify every other hyperparameter retrospectively.
+
+| Choice | Value used | Rationale and evidential limit |
 | --- | --- | --- |
-| Decision / solver interface | Imitate strong-branching candidate choice inside SCIP | Predict binary incumbent values, then native Gurobi partial Start |
-| Loss / output interpretation | Candidate softmax cross-entropy | Positive-weighted binary BCE; sigmoid scores are not calibrated probabilities |
-| Depth / width | One V→C→V cycle, width64 | Two cycles, width32 |
-| Inputs | 19 variable / 5 row / 1 edge channels, solver-state features | 7 variable / 5 row / 1 edge channels, custom signed-log/clipping and captured root values |
-| Message / encoder implementation | Separate linear left/edge/right transforms added, prenorm and nonlinear maps; deeper initial embeddings | Concatenated edge inputs through MLPs; single linear node encoders; distinct normalization layout |
-| Data | Generated facilities instances and branching samples | Existing MILPBench parents and quality-screened incumbent labels |
-| Evidence | Original paper's experiments | Historical CPU evidence and separate matched GPU pair; no full reproduction claim |
+| Propagation / width | Two cycles / 32 channels | Local structural context with modest capacity; no comparative tuning evidence |
+| Messages / activation | Coefficient-aware MLPs, sum, ReLU | Preserve typed variable/constraint interactions; no aggregation or activation ablation |
+| Prenormalization | Alternating, training-only, fixed buffers | Control activation scale without fitting on validation/test; version-specific |
+| Optimizer / rate | Adam / 0.001 | Literature-supported default, not a CFL-selected optimum |
+| Clipping | Gradient norm 1 | Stabilization safeguard; numerical threshold not validated by sensitivity analysis |
+| Sampling | Four draws per training parent per epoch | Equal presentation counts across parents; does not make binary variables independent samples |
+| Historical graph batch | One graph | Actual original training path; no batch-size search |
+| Matched GPU batch | Four graphs globally | Equal work per serial/DDP update, not a prediction-quality optimization |
+| Training / checkpoint | At most 100 historical epochs, patience 100; validation-loss selection | Selected historical checkpoint is epoch 34, not the terminal state |
+| Matched GPU schedule | 100 epochs, no early stopping | Validation selects epochs 99/92; both arms complete the same update budget |
+| Positive weight / seed | Training class ratio / 42 | Imbalance handling and fixed initialization setting; no training-seed robustness estimate |
+| Classification threshold | Original CPU 0.9991843104362488, selected by validation F1 | Model-specific decision rule, not evidence of probability calibration |
+| Start policy | 10% support, at most 20,000 values; ones before zeros; abstention if no predicted one | Limit the information supplied and retain rare positives; no causal selector or support-fraction ablation |
 
-See upstream [baseline model](https://github.com/ds4dm/learn2branch/blob/57e82603fba39c34ff81baf9bd0b5768f5a1a860/models/baseline/model.py),
-[training](https://github.com/ds4dm/learn2branch/blob/57e82603fba39c34ff81baf9bd0b5768f5a1a860/03_train_gcnn.py),
-[feature extraction](https://github.com/ds4dm/learn2branch/blob/57e82603fba39c34ff81baf9bd0b5768f5a1a860/utilities.py),
-and [facilities generator](https://github.com/ds4dm/learn2branch/blob/57e82603fba39c34ff81baf9bd0b5768f5a1a860/01_generate_instances.py).
-That generator writes binary facility y and bounded continuous allocation x,
-with demand/capacity and strengthening constraints. It is not the identity of
-our benchmark formulation. No generator is run and no new formulation gate
-is opened by this comparison.
+The batch distinction deserves emphasis. Historical serial training and the
+later matched GPU experiment have different update schedules. In the latter,
+four graph-mean losses form one update. Its serial arm accumulates four
+losses divided by four; DDP averages one gradient per rank. Clipping and
+Adam are applied once after that aggregation. This matches the mathematical
+objective, not necessarily the floating-point trajectory.
 
-The legacy prenorm fit computes variable-side statistics before the row update;
-v2 fits them after that update using all training graphs in deterministic order
-and population moments. These versions are not interchangeable. The name
-“calibrated” in the source file refers to prenorm handling, not a fitted
-probability calibration map. Existing checkpoint provenance remains binding;
-reading today's fit procedure does not reproduce a historical fit.
+The observed GPU comparison remains an adverse quality finding: training
+is faster, but selected parent-macro F1 falls by 0.032468 and assigned
+GPU-hours increase. A higher speedup does not justify replacing the original
+CPU checkpoint or claiming downstream optimization benefit.
 
-For the configured 7/5/1, width32, two-cycle model, static dense-layer counting
-gives 26,753 trainable scalars: 448 encoders + 2×12,608 message/update layers +
-1,089 head. Prenorm buffers are excluded. This is a source-derived count,
-not a runtime measurement or model loading. It does not quantify memory:
-edge activations, graph sizes, autograd, optimizer and device runtime matter.
+## 3. How the relaxation becomes a partial start
 
-## E3 — Hyperparameter and historical-decision matrix
+The root-relaxation vector is a feature source and a comparator input, not
+a predicted solution. In the existing preparation, Gurobi reads the original
+MILP under the minimization convention. A callback captures variable values
+at the first optimal root-node LP event and terminates that preparation.
+The call is cbGetNodeRel inside a MIPNODE callback; it is not a separate
+model.relax() solve and need not represent the final root bound after every
+possible cut pass.
 
-Sources: [frozen training configuration](../../configs/training/gasse_pr57_54_v1.json),
-[serial implementation](../../src/cfl_gnn/training/gasse_reconnected.py),
-[matched-pair configuration](../../configs/experiments/pr87_matched_gpu_v1.json),
-[matched worker](../../scripts/evidence/train_pr87.py),
-[selection](../../src/cfl_gnn/experiments/pr58_guidance.py),
-and the [R3 checkpoint audit](../../docs/research/mvp2-r3-methods-and-models.md).
-The PR57 configuration entered the reviewed history at
-[39c40f1c](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/commit/39c40f1c2967501bfcfc9df58c95ad79234f8a63).
-The gasse.py history reaches
-[d8219438](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/commit/d82194383312b1d8c5a293258a8517038300b091).
-These establish versioned choices, not an unrecorded tuning study.
-No inspected configuration, receipt or history establishes why 2×32 was
-empirically preferred to 1×64. Record that rationale as unavailable.
+The captured values are aligned with original variable identities and enter
+the graph. A frozen model in evaluation mode maps that graph to binary-variable
+scores without gradient computation. Labels inspected by the encoder belong
+to a separate feasibility audit; they are not supplied to the neural forward
+or used to choose a start.
 
-| Group / parameter | Actual value and origin | Selection, alternatives, sensitivity and implication |
-| --- | --- | --- |
-| Network: cycles / width | 2 / 32; project adaptation, versus upstream1/64 | Fixed; no qualified architecture search or sensitivity; not “best architecture” |
-| Network: features | 7 / 5 / 1; project encoder | Fixed; signed log/clipping can lose scale information; no feature ablation |
-| Network: aggregation / activations | Sum / ReLU, final linear logit; Gasse-inspired adaptation | Fixed; not mean aggregation or attention; sensitivity unmeasured |
-| Network: prenorm | v2 alternating train-only population moments, frozen buffers | Versioned correction, not validation-selected; do not refit the CPU checkpoint |
-| Optimizer / learning rate | Adam / 0.001 in serial and matched worker | Fixed; no scheduler invoked in these paths; no learning-rate search |
-| Adam subsidiary settings | Worker constructs Adam with lr only; PR87 config specifies default betas/eps, zero weight decay | Runtime defaults are inherited, not tuned; do not silently substitute modern defaults into a historical runtime |
-| Initial state | PyTorch module initialization and seed controls; PR87 binds tensor-state and schedule hashes across arms | Not claimed identical to upstream orthogonal initialization; no seed robustness study |
-| Historical serial graph batch | 1; four draws of each of34 train parents per epoch | 136 updates/epoch, unlike PR87; not a serial member of the matched globalbatch4 comparison |
-| Matched serial / DDP batch | Global4: serial four graph accumulations / DDP one graph per rank | 34 updates/epoch, same ordered groups; no batch-size search |
-| Gradient clipping | Norm1, after accumulation or averaged gradients | Fixed; before each Adam update; sensitivity unmeasured |
-| Epochs / early stopping | Historical maximum100, patience100; matched100 with early stopping disabled | Historical selected epoch34 differs from terminal100; matched selected99/92. Selection is not tuning epoch count on test |
-| Loss / class weight | Mean binary weighted BCE per graph; weight from train negatives/positives | Not class-frequency weighting fitted on test; PR87 weight1132.97583 is pair-specific |
-| Sampling / seed | Parent-balanced four draws/epoch, seed42 | Fixed schedule; the one-seed pair cannot establish stochastic robustness |
-| Checkpoint selection | Minimum validation weighted BCE; earliest retained strict improvement | Actual validation selection, not minimum test loss |
-| Threshold | Maximum pooled validation F1; original CPU0.9991843104362488; matched serial≈0.998544, DDP≈0.997792 | Different frozen models have different validation thresholds; not probability calibration |
-| Start support | min(n,20000,max(1,floor(0.10n))) | Fixed policy; no support-fraction ablation |
-| Start ordering / abstention | Ones by descending score, then zeros by descending1−score; names break ties; abstain if no predicted one | Implemented policy, not demonstrated causal advantage of prioritization |
-| RELAX support | Match actual G count k and number q of ones | Dependent comparator; not identical indices or independent LP tuning |
+For G, the fixed policy selects predicted ones first and then fills remaining
+support with predicted zeros. Let k be the actual number of assignments
+and q the number of ones. R uses the same root vector to choose q high-valued
+variables as ones and k−q low-valued remaining variables as zeros. It matches
+these counts, not G's selected indices. Thus R depends on G's preparation;
+it is not an independent LP-only heuristic.
 
-No new parameter range is prescribed. The existence of augmentation arms or
-BiGNN code does not establish a fair architecture comparison.
+A fresh solver model then receives the selected Start values. Unspecified
+variables remain undefined and Gurobi attempts to complete or repair the
+candidate. This does not fix variable bounds, guarantee acceptance or prove
+feasibility. B, R and G preserve the same mathematical model. Their purpose
+is to compare the solver's response to different supplied information.
 
-## E4 — Serial/DDP mathematical and empirical reconciliation
+## 4. What repeatability means for the solver comparison
 
-For graph g with n_g binary targets define
-L_g=(1/n_g) sum_j BCE_w(s_gj,y_gj). The matched objective per update is
-L=(1/4) sum_(g in batch) L_g. This is a mean of four **graph means**, not
-one mean over all variables. Large graphs therefore do not gain additional
-weight merely by containing more binary targets.
+Three questions should not be conflated. Can another researcher reconstruct
+the same experiment? Would the solver follow the same algorithmic path on
+an identical run? Would it stop at exactly the same state after a specified
+number of seconds? Complete provenance supports the first; the other two
+also depend on algorithms, environment and stopping conditions.
 
-[matched_gpu.py](../../src/cfl_gnn/training/matched_gpu.py) divides each
-serial graph loss by four before backward, accumulates all four gradients,
-clips once, then steps Adam once. DDP backward uses one unscaled graph-mean
-loss per rank; the default four-rank reduction averages gradients, followed
-by one clipping/update. Dividing each DDP loss by four again would be wrong.
-Both use the same34-parent schedule, four presentations/parent/epoch,
-100epochs, 13,600 graph presentations and3,400 updates. Initialization,
-prenorm buffers and positive weight are bound across arms; buffers are
-broadcast explicitly before DDP with broadcast_buffers=False. Validation
-uses all ten validation parents on the unwrapped rank0 model each epoch.
+The earlier wording gave Method=−1 too much explanatory weight. This parameter
+controls the continuous algorithm, including the MIP root relaxation; it does
+not select the entire MIP search strategy. The
+[Gurobi 13.0 parameter manual](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameter:Method)
+describes dual simplex as the usual automatic MIP-root choice and deterministic
+concurrent variants for some large roots. Its usual automatic choice for a
+standalone continuous LP is different. Automatic selection alone is therefore
+not evidence that our MIP jobs ran a non-deterministic algorithm.
 
-The loss definitions and gradient regression support mathematical matching.
-They do not prove bitwise trajectory identity. The installed PyTorch2.1.2
-[DDP documentation in source](https://github.com/pytorch/pytorch/blob/v2.1.2/torch/nn/parallel/distributed.py)
-is the version anchor, rather than a later API manual. Actual histories diverge;
-their cause is unproven. Do not attribute the F1 decrease as fact to reduction
-order, NCCL, a sampler error or overfitting.
+The [official determinism guidance](https://support.gurobi.com/hc/en-us/articles/360031636051-Is-Gurobi-deterministic)
+conditions repeatability on inputs, version and machine, and distinguishes
+parallel optimization from time-dependent stopping. Seed 42 fixes a search
+perturbation; it neither makes all seeds equivalent nor ensures identical
+wall times. Even an explicitly deterministic root algorithm would not make
+a time-limited solve stop at exactly the same work point.
 
-The [completed review](../../docs/research/pr87-completed-pair-review.md)
-and [numerical claim manifest](claim-evidence.json) retain loop speedup2.167,
-job speedup1.831, selected parent-macro F1 loss0.032468, and increased assigned
-GPU-hours. CPUs scale4→16. This is one descriptive matched-work case with a
-negative quality finding, not noninferiority, isolated GPU causality,
-energy/financial savings or downstream Gurobi benefit. The PR89 CPU model
-remains the original mixed checkpoint SHA256
-a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028.
+We retain Method=−1 because it belongs to the frozen protocol. Existing logs
+can clarify which root algorithm actually ran; absent information must remain
+unavailable. In particular, ConcurrentMIP was not exported in the inherited
+parameter dictionary, so its effective value must not be reconstructed from
+a documented default. No job is rerun to fill such a field.
 
-## E5 — Root relaxation, inference, starts and validity
+### What can be concluded from the existing runs?
 
-### Three separate operations, already performed
+The comparisons are observations under a specified configuration. Within each
+parent, thread cap and seed, B/R/G use the same parameter settings and differ
+in their external starts. Identical search paths are not required: changing
+the search is precisely how a start can help or harm. What is required is
+consistent model identity, resource/stopping rules and a clear account of
+which outcome is compared.
 
-1. **Capture a root vector once.** The historical
-   [root preparer](../../scripts/evidence/pr86_root_preparation.py)
-   reads the original model through NativeModel, forces MINIMIZE and sets
-   Threads=1, Seed=42, Presolve=0, NodeLimit=1, TimeLimit=600,
-   SoftMemLimit=48, OutputFlag=1 and LogToConsole=0. It calls optimize(observer).
-   At GRB.Callback.MIPNODE it requires MIPNODE_STATUS==GRB.OPTIMAL and root
-   node count near zero, reads cbGetNodeRel(ordered_variables), records
-   MIPNODE_OBJBND, then calls terminate(). It captures the first qualifying
-   root-node LP event. It does **not** call model.relax().optimize(), round
-   an incumbent, or wait for every possible root cut pass. The captured bound
-   is not asserted to equal the final best bound of the later MIP solve.
-2. **Encode and infer once.** The
-   [guidance preparer](../../scripts/evidence/pr86_guidance_preparation.py)
-   binds model/root/checkpoint hashes and original variable identities.
-   The graph encoder gives the captured values to variable channel6
-   (zero-based), alongside original objective/bounds/types and coefficient
-   edges. Reference labels serve a separate encoder feasibility audit;
-   they are not forward inputs. The model is loaded strictly, put in eval
-   mode and evaluated under torch.no_grad(). Logits→sigmoid→frozen threshold
-   and class-aware selection produce G, not a new Gurobi solve.
-3. **Construct R and solve fresh models.** R selects q largest root values
-   as ones and k−q smallest remaining values as zeros, matching G's actual
-   k/q, with name tie-breaks. It uses root values to choose its own indices.
-   R therefore depends on G's preparation. B has no external start;
-   R/G set selected binary Var.Start values and leave other variables
-   GRB.UNDEFINED. The native backend attempts completion/repair.
-   Start is neither a bound fixation nor proof of acceptance/feasibility.
-   Each campaign cell then invokes the frozen solver once; receipt
-   reconciliation, not source inspection alone, establishes actual calls.
+For each eligible parent we can report the observed primal objective, dual
+bound, terminal gap and follow-up. We can compare recorded time to a common
+target when both runs attain it and show censored runs separately. We cannot
+estimate across-seed variability from one seed, treat thread caps as repeated
+trials, or generalize an observed timing ratio into a stable expected gain.
+Numerical restrictions on M4/M12 remain independent of these timing issues.
 
-This is a description of executed paths, not an alternative runbook.
-PR89 reuses these roots, predictions and starts; none should be regenerated.
-See official [cbGetNodeRel](https://docs.gurobi.com/projects/optimizer/en/current/reference/python/model.html#Model.cbGetNodeRel)
-and [Start](https://docs.gurobi.com/projects/optimizer/en/current/reference/attributes/variable.html#attr:Start).
+This is a narrower claim than robust superiority, but it is still informative:
+it shows where one frozen predictor helps, fails or costs more under the
+reported conditions. Gurobi's
+[comparison guidance](https://support.gurobi.com/hc/en-us/articles/26992650628369-How-can-I-make-accurate-comparisons)
+recommends accounting for performance variability, including using different
+seeds when instances are limited. Our single-seed principal analysis does not
+meet that stronger robustness objective. Transparent reporting is necessary;
+it does not make the missing variability estimate disappear.
 
-### Seed42 and parallel determinism
+## 5. What further experiments would add
 
-Seed chooses an algorithmic search perturbation;42 is a reproducible protocol
-choice, not a guarantee of identical terminal outcomes. With fixed inputs,
-version, machine and suitable algorithms, parallel Gurobi can be deterministic.
-Changing the thread cap changes the configuration; wall-time termination may
-stop at different work points. Automatic/concurrent algorithm selection must
-also be considered. See [official guidance](https://support.gurobi.com/hc/en-us/articles/360031636051-Is-Gurobi-deterministic)
-and the [parameter reference](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html).
+Changing a seed is a robustness check, changing Method is solver-configuration
+sensitivity, and removing a model/policy component is an ablation. They answer
+different questions. A large Cartesian product of all three would be costly
+and difficult to interpret.
 
-The frozen [PR89 parameter constructor](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/scripts/evidence/pr89_cpu_contract.py)
-merges a hash-checked PR86 job3522 result with explicit cell settings and
-TimeLimit=43200. Reading that embedded receipt gives:
+The companion [sensitivity assessment](sensitivity-review-plan.md) recommends
+completing the existing evidence and keeping these unresolved questions visible
+in the manuscript now. A small, separately approved follow-up can be designed
+if a coauthor or reviewer identifies a specific claim that needs it. Two
+additional solver seeds at one fixed thread cap would address search-path
+sensitivity more directly than an immediate survey of GCN, GraphSAGE and GAT.
+Testing an explicit root method would be justified by a concrete configuration
+question, not by assuming Method=−1 invalidates the campaign.
 
-| Parameter | Frozen inherited/requested value |
-| --- | --- |
-| Threads / Seed | Cell cap1/2/4/8/16 /42 |
-| TimeLimit / SoftMemLimit | 43200 /48 |
-| MIPGap / MIPGapAbs | 0.0001 /1e-10 |
-| Method / Presolve / Cuts | −1 /−1 /−1 |
-| Heuristics / MIPFocus | 0.05 /0 |
-| StartNodeLimit / SubMIPNodes | −1 /500 |
-| FeasibilityTol / IntFeasTol | 1e-6 /1e-5 |
+Deferral is defensible only when the conclusions are limited accordingly.
+A limitations paragraph cannot support a present claim of seed robustness,
+architectural superiority or causal benefit from class-aware ordering.
+If any of these becomes central to the claimed contribution, the missing
+comparison must be addressed or the claim removed before submission.
+Reviewer requests are a possible trigger for follow-up, not the sole test
+of scientific sufficiency.
 
-Receipt source: [job3522 public return](../../docs/evidence/pr86/job3522/public_return.json),
-outer SHA256 dd1a553b453289b23dbed3d52bd4bd7e0ac93eb2b4283597b788e406fcab6825,
-decoded child SHA256 a10bcb4ed2a3e4b54a4ec268725cdf017ebc7432d57b4b16ed0531238ff2e104.
-These are frozen requested values, not a newly collected effective-parameter
-record for every PR89 cell. Method=−1 retains automatic selection, so a
-strong determinism guarantee cannot be inferred from Seed42 alone.
-ConcurrentMIP was not exported in that parameter dictionary; its effective
-runtime value is **unavailable here**, not retroactively filled with a default.
-No parameter is changed to improve this wording. WorkLimit is not substituted
-for the authorized time limit. Existing parameter/log evidence may qualify
-the assessment at final collection; no repetition is needed or authorized.
+## Implementation and evidence sources
 
-### Predictive and experimental validity
+The narrative above uses the
+[28 October source snapshot](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/e5c3ba0e77ea87905fa7986a70567523166156df).
+The [model](../../src/cfl_gnn/models/gasse.py),
+[versioned prenorm](../../src/cfl_gnn/models/gasse_calibrated.py),
+[training configuration](../../configs/training/gasse_pr57_54_v1.json)
+and [matched updates](../../src/cfl_gnn/training/matched_gpu.py)
+establish the implemented choices. Static layer counting gives 26,753
+trainable scalars for the configured model, excluding prenorm buffers;
+this is not a runtime memory measurement.
 
-| Issue | Evidence and defensible interpretation | Remaining boundary |
-| --- | --- | --- |
-| Label quality | Feasible admitted incumbents with relative gap≤0.10 | Approximate, potentially multiple valid solutions; agreement is not optimality |
-| Population | 54 admitted of90;34/10/10 split | Quality-selection bias, no hard generalization, exposed tests |
-| Class imbalance | Test positives5265/5,536,400 | Accuracy or an all-zero Brier score alone can mislead; retain precision/recall, AP and parent-macro views |
-| Weighted BCE | Train-fitted positive weight; validation threshold | Scores are not automatically calibrated event probabilities |
-| Checkpoint | Validation-selected, original identities frozen | No test selection, retrospective substitution or retraining |
-| Solver utility | Existing B/R/G parent-level comparisons | Predictive F1 does not establish solver gain; no causal selector ablation |
-| Numerical/censoring | M4/M12 restrictions and observed follow-up | No exact-optimum or certified-speedup claims outside metric eligibility |
-| PR89 | Approved60 submitted jobs, final return pending | No CPU12h results in this audit |
+The upstream comparison uses
+[learn2branch at commit 57e82603](https://github.com/ds4dm/learn2branch/tree/57e82603fba39c34ff81baf9bd0b5768f5a1a860).
+Its facilities generator and branching data are not our benchmark cohort.
+No generator or formulation certification is reopened.
 
-For the idealized conditional weighted-BCE risk, if p=P(y=1|x), its minimizer
-is q*=w p/(w p+1−p). This elementary loss calculation explains why a sigmoid
-near one under class weighting is not itself a calibrated probability.
-It is not an estimate of this finite network's calibration. Validation-F1
-thresholding and fitted probability calibration are different procedures.
-Brier/ECE diagnostics do not turn label agreement into optimization utility.
-
-## E6 — Critical bibliographic reconciliation
-
-Use citations to support an actual sentence or methodological choice. Do not
-import every missing Zotero item or count citations as scientific progress.
-The earlier inventory found42 GNN items; collection overlap also requires
-DOI/title matching because Gasse exists under distinct keys. That inventory
-is not redone here. Zotero was used only to read the existing Vargas-Pérez PDF;
-**no items, collections, metadata or attachments were modified**.
-
-| Candidate group | Decision for this revision | Access / purpose |
-| --- | --- | --- |
-| Gasse and existing primal-guidance precedents | A: essential, already cited | Paper v3 plus pinned upstream code distinguish branching from partial starts |
-| Kipf–Welling, Hamilton et al., Veličković et al., Brody et al. | A for the concise architecture distinction; add only these four foundations | Primary author full-text versions checked; one bibliographic record per work |
-| Vargas-Pérez et al., DOI10.1109/TCSS.2024.3508452 | A for a specific reporting comparison, not a CFL efficacy claim | Full13-page PDF from Zotero; TablesIII–V visually checked |
-| Broader MPNN/expressivity/benchmarking/calibration literature | B when an exact supplementary claim needs it; existing calibration citations retained | No assertion that every suggested work has been critically read |
-| Social-dynamics applications with no transferable method point, unrelated domain winners | C or D for this article | Do not cite merely because an author or journal is prestigious |
-| Fresh GCN/SAGE/GAT experiments | C: prospective | Not performed and not necessary to claim fixed-model conditional effects |
-
-Vargas-Pérez, Giráldez-Cru, Mesejo and Cordón (IEEE TCSS12(2),725–737,
-2025; online2024) infer bounded-confidence parameters in opinion dynamics.
-This is regression with MSE, not imbalanced binary primal-value prediction.
-Their TableIII varies layers{4,5}, width{16,32}, learning rate
-{0.01,0.001,0.0001}, batch{2,4,8}:36settings×4architectures×2scenarios=288runs.
-Those runs belong to that study, not CFL-GNN. MLP, GCN, GraphSAGE and GATv2
-are compared; GATv2 should not be renamed GAT.
-
-The synthetic datasets contain180 graphs per scenario derived from nine base
-topologies and20 feature/threshold configurations, split115/29/36. Their own
-footnote notes repeated topologies with different node features. Thus graph
-count is not independent-topology count. External-topology evaluation is
-a different generalization setting from our exposed benchmark parents.
-GraphSAGE leads their synthetic comparisons, but the real-topology homogeneous
-case also favours GATv2 in some comparisons. No universal architecture winner
-or parameter-transfer justification follows for CFL. What transfers is the
-clear separation of candidate settings, validation selection, test metrics,
-parameter counts and training clocks.
-
-The current article uses short claim-specific comparisons; it does not
-become a GNN survey. No missing DOI or article pagination is invented.
-The public Pages version may lag this PR.
-
-## E7–E9 — Editorial integration, decisions and next action
-
-The manuscript should explain the optimization problem first, then the
-representation, actual update, supervised target, frozen selection and native
-Start interface. Keep detailed architecture/hyperparameter tables here and
-essential equations in the main text. Separate prediction, optimization,
-training efficiency and bounded cost; retain adverse outcomes.
-
-The [accelerated plan](../../docs/research/mvp2-20261028-accelerated-plan.md)
-advances S1/S2/S4/S5 now. Final CPU-dependent S3 and the cross-artifact audit
-remain gated by the existing campaign's terminal return. This document is
-partial R2-D8 input, not a declaration that SO1–SO8 have been achieved.
-
-Author decisions still needed at scientific review: defensibility of C1–C3
-and final title, adequacy of fixed-model/no-architecture-ablation limits,
-the bounded IIEA-S treatment, and final editorial/data-rights declarations.
-No routine GitHub edit needs renewed permission. Merge, release, submission
-and any future experiment retain separate human gates.
-
-**One next operational priority:** finish source-linked editorial integration
-in PR92 and circulate its existing-evidence review pack when verified. CPU
-execution continues unchanged; the researcher supplies any later HPC query
-or final collection command execution under the original contract.
+[Root preparation](../../scripts/evidence/pr86_root_preparation.py),
+[guidance preparation](../../scripts/evidence/pr86_guidance_preparation.py)
+and the [native solver path](../../scripts/evidence/pr86_solver.py)
+document the interface. The [R3 methods](../../docs/research/mvp2-r3-methods-and-models.md),
+[metric definitions](../../docs/research/mvp2-r3-metrics-and-reproducibility.md),
+[completed GPU review](../../docs/research/pr87-completed-pair-review.md)
+and [numerical claim map](claim-evidence.json) retain exact provenance and
+qualifications. The installed CPU source and original checkpoint remain
+unchanged; the final CPU return is still pending.

@@ -1,5 +1,16 @@
 # Article plan
 
+## Scientific writing and sensitivity clarification
+
+The [methods explanation](../manuscript/supplement/gnn-methods-audit.md)
+has been rewritten around the scientific argument, including the rationale
+and evidence limits for fixed hyperparameters. The
+[sensitivity assessment](../manuscript/supplement/sensitivity-review-plan.md)
+distinguishes solver seeds, root methods, neural training and component
+ablations. These remain prospective; the ongoing CPU campaign is unchanged.
+The accelerated plan continues S1, S2, S4 and S5 without new execution authority.
+
+
 ## Documentary continuation — 28 October 2026
 
 The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)

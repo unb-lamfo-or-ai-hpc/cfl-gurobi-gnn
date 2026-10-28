@@ -7,6 +7,26 @@ without changing scientific scope, author decisions of22October, installed
 PR89 protocol or experimental authority. Dates are delivery targets, not an
 HPC completion forecast.
 
+## Scientific-writing and sensitivity update
+
+The methods supplement has been rewritten as an academic explanation for a
+reader: why the representation fits the task, why the fixed hyperparameters
+are reasonable, what was actually selected by validation, and what remains
+untested. Literature supports design principles, not an undocumented claim
+that 2×32 or a clipping threshold of 1 is optimal.
+
+The [sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md)
+keeps new runs outside the current execution scope. The immediate path is
+to finish the existing evidence and bound the article's claims. Additional
+solver seeds at one cap are the first candidate if robustness evidence is
+needed; explicit root methods or network changes require a specific question.
+A missing central comparison cannot be excused solely by waiting for reviewers.
+
+S1/S2 now reconcile this interpretation with the scientific contract.
+S4 assesses the claim/evidence boundary; S5 integrates readable methods,
+discussion and future work. Dates and the mandatory post-CPU audit remain
+as planned below. No new trial is scheduled.
+
 ## Executive decision
 
 Maintain PR92 as the integrated editorial delivery. Its existing base is

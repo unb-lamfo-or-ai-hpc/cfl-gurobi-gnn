@@ -1,5 +1,27 @@
 # Scientific and editorial revision
 
+## Reader-oriented revision and sensitivity decisions
+
+The methods text is now organized around the reader's questions rather than
+internal deliverable identifiers. It explains why bipartite messages fit
+the MILP structure, separates fixed values from validation-selected choices,
+and gives the limits of literature-based hyperparameter justification.
+Adam and gradient clipping are supported by their primary references without
+claiming that those references validate the exact CFL settings.
+
+The solver discussion corrects an overly broad interpretation of Method=−1:
+automatic selection alone does not imply a non-deterministic MIP algorithm.
+The manuscript distinguishes observed conditional comparisons from
+across-seed robustness. Its conclusions now describe targeted sensitivity
+work without presenting it as completed evidence or promising reviewer acceptance.
+
+See the [prospective assessment](supplement/sensitivity-review-plan.md) for
+incremental counts, cost boundaries and the conditions for deferral.
+A narrow seed study would take priority over a broad architecture grid if
+the final claim requires robustness evidence. No new experiment accompanies
+this revision, and the CPU-dependent synthesis remains pending.
+
+
 ## Accelerated scientific preparation — 28 October 2026
 
 The [updated S1–S6 plan](../docs/research/mvp2-20261028-accelerated-plan.md)
