@@ -103,12 +103,14 @@ Variables and constraints form nodes connected by nonzero coefficients in $A_p$.
 The seven variable channels are transformed objective coefficient, lower bound, upper bound, three type indicators, and root value. The five row channels are transformed right-hand side, three sense indicators, and a constant. A single edge channel encodes the coefficient. Numerical coefficients and bounds use signed $\log(1+|t|)$ after clipping to $[-60000,60000]$; infinite bounds use the corresponding endpoint. Root values are clipped without logarithmic scaling. These numerical encodings affect learning inputs, not the original solver model; clipping counts are audited.
 
 The Gasse-inspired network predicts binary values rather than strong-branching choices. It uses two width-32 cycles, versus one width-64 cycle in the upstream baseline, and concatenated coefficient-aware message inputs rather than its additive feature transforms. These are fixed adaptations, without an architectural search or a demonstrated advantage over other GNNs. For cycle $t$, row and variable embeddings update as
-$
+
+$$
 \begin{aligned}
 c_i^t&=\operatorname{ReLU}f_C^t\!\left(c_i^{t-1}\Vert P_C^t\!\sum_{j\in N(i)}g_C^t(c_i^{t-1}\Vert v_j^{t-1}\Vert e_{ij})\right),\\
 v_j^t&=\operatorname{ReLU}f_V^t\!\left(v_j^{t-1}\Vert P_V^t\!\sum_{i\in N(j)}g_V^t(c_i^t\Vert v_j^{t-1}\Vert e_{ij})\right).
 \end{aligned}
-$
+$$
+
 Here $N$ denotes neighbours, $\Vert$ concatenation, $e_{ij}$ the encoded coefficient, and $f/g$ two-layer perceptrons. Fixed affine prenorms $P$ use training graphs only; the variable update uses fresh row embeddings. A final perceptron gives binary-variable logits $s_{pj}$ and scores $q_{pj}=\sigma(s_{pj})$. Training minimizes positive-class-weighted binary cross-entropy (BCE),
 
 $$\ell_{pj}=-w_+y_{pj}\log\sigma(s_{pj})-(1-y_{pj})\log(1-\sigma(s_{pj})),$$
