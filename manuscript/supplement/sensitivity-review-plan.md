@@ -1,5 +1,20 @@
 # A proportionate response to unresolved sensitivity questions
 
+## Scope decision for the current MVP2 plan
+
+Only option A belongs to the present completion work: receive, qualify and
+analyze the campaign already authorized. Options B–E and the separate
+four-hour diagnostic design are retained as limitations and future work.
+They are not scheduled in S1–S6 and do not delay completion merely because
+they have been described. No reviewer request or prospective cost estimate
+is execution authority.
+
+The [post-CPU closeout plan](../../docs/research/mvp2-closeout-plan.md)
+explains the path from reconciled results to scientific sign-off and the
+coauthor version. If the evidence cannot support a central claim, narrow
+that claim; a new study requires a separate human decision.
+
+
 This is a proposal for coauthor review, not an experiment authorization.
 The current CPU campaign, model, starts and parameters remain frozen.
 The purpose is to decide which additional evidence would answer a specific
@@ -184,11 +199,11 @@ D/E should follow a specific predictive or mechanism claim, not precede it
 automatically.
 
 The coauthor review before 15 December should decide whether the bounded
-contribution is sufficient for submission. If it is, unresolved sensitivity
-analyses can remain future work and be performed if justified by subsequent
-review. If it is not, postponement until reviewer demand would leave a known
-gap in the central argument: narrow the claims or obtain separate approval
-for the required study before submission.
+contribution is sufficient for submission. The current plan keeps unresolved
+sensitivity analyses as future work. If the present evidence is insufficient,
+narrow the claims or revisit the submission strategy; do not quietly turn
+these prospective studies into Sprint tasks. Any later change to the
+experimental scope requires a separate human decision and protocol.
 
 No launcher, CLI command, budget request or new execution accompanies this
 assessment. Existing source, data, checkpoint and PR89 evidence remain intact.

@@ -2,6 +2,11 @@
 
 ## Scientific writing and sensitivity clarification
 
+The [post-CPU closeout plan](research/mvp2-closeout-plan.md) defines the five
+remaining deliveries after reconciliation. Only the existing PR89 campaign
+belongs to experimental completion; sensitivity options B–E and the four-hour
+diagnostic design remain future work outside the current Sprints.
+
 The [methods explanation](../manuscript/supplement/gnn-methods-audit.md)
 has been rewritten around the scientific argument, including the rationale
 and evidence limits for fixed hyperparameters. The

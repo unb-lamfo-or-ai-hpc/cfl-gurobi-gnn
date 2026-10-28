@@ -1,5 +1,20 @@
 # Scientific and editorial revision
 
+## Completion after reconciled CPU results
+
+The [closeout plan](../docs/research/mvp2-closeout-plan.md) sets the remaining
+sequence: scientific qualification of PR89, integrated CPU/GPU assessment,
+complete manuscript/supplement, integral audit and a verified coauthor package.
+It also identifies the editorial work that can advance before the return:
+contribution wording, endpoint clarity, display interpretation and consistent
+limits throughout the manuscript.
+
+Options B–E in the sensitivity assessment and the shorter diagnostic design
+remain future work. They are not part of the current Sprints or mandatory
+new experiments for MVP2. The article must avoid claims that would depend
+on those unperformed comparisons.
+
+
 ## Reader-oriented revision and sensitivity decisions
 
 The methods text is now organized around the reader's questions rather than

@@ -4,27 +4,32 @@
 This working supplement supports review of the integrated article. It is not
 a new experimental return, a final journal supplement or the R2-D8 closeout.
 
-## Methods and accelerated review preparation — 28 October 2026
+## How to read this material
 
-The [methods explanation](gnn-methods-audit.md) follows the scientific
-argument from graph representation and hyperparameter choices to solver
-comparisons and their limits. It distinguishes a reasonable fixed design
-from a configuration shown to outperform alternatives.
+Start with the article for the research question, methods and findings.
+The [methods explanation](gnn-methods-audit.md) provides the reasoning behind
+the fixed model, hyperparameters and solver interface. It also explains why
+a conditional observed comparison differs from a claim of robust superiority.
 
-The [sensitivity assessment](sensitivity-review-plan.md) explains which
-questions would require different solver seeds, explicit root methods,
-new neural training or component ablations. Its execution counts and resource
-ceilings are planning examples; no new experiment is authorized.
+Use the numerical provenance sections below to trace a displayed result to
+its source. The historical publication archive, principal CPU analysis and
+matched GPU pair have different populations and measurement boundaries.
+The pending CPU campaign has no final results in this supplement.
 
-The [Human–AI register](human-ai-traceability.md) records the conditional
-Appendix B decision and missing primary human-acceptance evidence.
-These are working review materials, not additional experimental results.
+The [sensitivity assessment](sensitivity-review-plan.md) concerns limitations
+and future work: options B–E and its shorter diagnostic design are outside
+the current Sprints. Option A is the existing study's completion. Prospective
+counts and resource ceilings are not execution authority.
 
-The [accelerated completion plan](../../docs/research/mvp2-20261028-accelerated-plan.md)
-advances S1/S2/S4/S5 now, targets a complete coauthor version by15December,
-and preserves the post-PR89 integral audit and14January submission deadline.
-Only existing-evidence material can circulate before the CPU return is qualified.
-No library changes, new training/solver runs or merges accompany this update.
+The [Human–AI register](human-ai-traceability.md) supports the authors'
+Appendix B decision. It is an internal review aid, not an additional
+experimental result or an approved journal appendix.
+
+The [closeout plan](../../docs/research/mvp2-closeout-plan.md) identifies the
+remaining qualification, synthesis, writing and audit tasks. A complete
+coauthor version is targeted for 15 December; final submission remains
+14 January. The current working documents must be selected and packaged
+explicitly before they are described as the journal supplement.
 
 ## Populations and evidence chains
 

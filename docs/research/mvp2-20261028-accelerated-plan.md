@@ -7,6 +7,19 @@ without changing scientific scope, author decisions of22October, installed
 PR89 protocol or experimental authority. Dates are delivery targets, not an
 HPC completion forecast.
 
+## Experimental scope and post-CPU closeout
+
+The only campaign still running is the already authorized PR89. S3 covers
+its receipt, reconciliation and analysis; no additional jobs are scheduled.
+S1, S2, S4, S5 and S6 use documentation and existing evidence.
+
+The sensitivity document's options B–E, including the four-hour diagnostic
+alternative, are limitations and future work outside the current Sprints.
+Option A means finishing the existing study. The
+[post-CPU closeout plan](mvp2-closeout-plan.md) defines the remaining five
+deliveries, approximate working windows, scientific audit and coauthor package.
+It preserves the 15 December target and the 14 January submission deadline.
+
 ## Scientific-writing and sensitivity update
 
 The methods supplement has been rewritten as an academic explanation for a
