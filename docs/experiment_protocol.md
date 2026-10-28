@@ -1,5 +1,18 @@
 # Experiment protocol
 
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+
+
 ## Governing interpretation — 26 October 2026, R3
 
 The [R3 contract](research/mvp2-r3-contract.md) and

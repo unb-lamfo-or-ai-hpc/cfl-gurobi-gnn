@@ -1,5 +1,27 @@
 # Current status
 
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+Latest human partial report,28October; exact capture time unavailable:
+3713 COMPLETED12:01:05, ExitCode0:0, AllocCPUS8, batch MaxRSS16050788K;
+3714 RUNNING08:03:49, AllocCPUS16; author reports3715–3734 PENDING.
+This is not a fresh agent query or a complete60-job snapshot. No final
+return has been received or qualified. Earlier job states are not inferred
+by subtraction; scheduler completion does not establish solver quality.
+The receiver retains exclusive campaign reconciliation responsibility and
+the original source9ab7823c remains frozen.
+
+
+
 ## Current — 27 October: PR91 merged; integrated editorial draft
 
 PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.

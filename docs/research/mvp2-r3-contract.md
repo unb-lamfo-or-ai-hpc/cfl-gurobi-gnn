@@ -1,5 +1,24 @@
 # MVP2 R3 — governing contract and completion plan
 
+## Schedule and documentary continuation — 28 October 2026
+
+The author requests a complete version for coauthors by15December2026,
+preserving14January2027 as the submission deadline and the R3 scientific scope.
+The [accelerated plan](mvp2-20261028-accelerated-plan.md) supersedes only the
+sprint dates below: S1/S2/S4/S5 proceed now; S3's CPU execution/analysis waits
+the existing campaign's terminal return. Final synthesis and the mandatory
+integral audit remain dependent on its qualification. The original schedule
+is retained as a dated baseline.
+
+PR92 remains the integrated editorial delivery. The
+[GNN audit](../../manuscript/supplement/gnn-methods-audit.md) explains fixed
+choices and their limitations; the
+[Human–AI register](../../manuscript/supplement/human-ai-traceability.md)
+defers a full Appendix B pending definition/evidence/coauthor review.
+Current GitHub editorial authority supersedes the attached literature
+mandate's read-only repository wording, without authorizing experiments,
+Zotero edits, merges or publication.
+
 26 October 2026 · CFL-GNN-SCI-2026-10-22-R3 · deadline: **14 January 2027**.
 Products R2-D1 and R2-D7; the evidence map below also tracks R2-D2–R2-D8.
 This is a documentary consolidation of existing decisions, not an experimental

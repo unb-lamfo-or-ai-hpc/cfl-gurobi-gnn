@@ -1,5 +1,32 @@
 # Scientific and editorial revision
 
+## Accelerated scientific preparation — 28 October 2026
+
+The [updated S1–S6 plan](../docs/research/mvp2-20261028-accelerated-plan.md)
+sets15December2026 as the target for a complete coauthor-review version,
+retaining14January2027 for submission. S1/S2/S4/S5 advance concurrently;
+S3 waits the qualified return of the existing campaign, and final S4/S5
+synthesis remains dependent on it. Keep PR92 as the integrated editorial PR.
+
+The [GNN audit](supplement/gnn-methods-audit.md) supplies source-linked
+architecture, hyperparameter, serial/DDP and solver-interface reconciliation.
+The article now includes actual message equations and concise distinctions
+between GCN, GraphSAGE and GAT/GATv2, plus the task-specific value and limits
+of the coauthors' opinion-dynamics paper. Five references are added because
+they support these statements, not because every Zotero item must be cited.
+
+The [IIEA-S decision register](supplement/human-ai-traceability.md) recommends
+a bounded traceability account; a full Appendix B remains conditional on
+a stable definition, primary decision evidence and coauthor approval.
+The agreed AI declaration and author identities remain unchanged.
+
+An early review pack uses the current manuscript preview, existing claim map,
+methods audit, figures and explicit author decisions. Preparing it does not
+authorize sending it to coauthors. CPU12h numbers remain pending.
+The scientific priority is explaining the fixed model and defensible claims,
+not proposing an unapproved architecture search. See the plan's mandatory
+A–D audit and T1/T2/T3 exit criteria.
+
 ## Current integrated manuscript — 27 October 2026
 
 PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.
