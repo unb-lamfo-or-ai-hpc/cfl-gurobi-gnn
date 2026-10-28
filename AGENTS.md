@@ -1,5 +1,15 @@
 # Repository instructions
 
+## Latest Sprint/PR boundary — 28 October 2026
+
+Use docs/research/mvp2-closeout-plan.md for current delivery boundaries.
+PR92 closes the independent methods and preliminary coauthor-review stage;
+the next draft PR carries synthesis and final CPU integration. Earlier
+criteria requiring PR92 itself to await PR89 are superseded by the author's
+explicit scope split. D0 remains reception/reconciliation, followed by metric
+qualification. Audit independent aspects now and the complete package after
+qualification. No new experiment, merge, publication or submission is authorized.
+
 ## Current continuation authority — 26 October 2026
 
 Read `docs/research/mvp2-r3-contract.md` first, then its methods/model and

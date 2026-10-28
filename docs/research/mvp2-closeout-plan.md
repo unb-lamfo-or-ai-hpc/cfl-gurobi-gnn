@@ -1,209 +1,180 @@
-# MVP2 closeout after the CPU campaign
+# MVP2 completion by Sprints and pull requests
 
-28 October 2026. The target is a complete version for coauthors by
-**15 December 2026**, with final editorial revision and submission by
-**14 January 2027**. This plan implements the existing R3 scope. It does
-not add an experimental campaign.
+28 October 2026 · revised after the author's conditional approval.
+This is the canonical delivery plan; the
+[accelerated-plan index](mvp2-20261028-accelerated-plan.md) points here rather
+than maintaining another timetable. Scientific scope remains R3.
 
-MVP2 is complete when the software, experimental evidence and article support
-the same bounded scientific account. Completion does not require a favourable
-GNN effect. Negative, censored or unavailable outcomes must be accounted for;
-they cannot be removed to make the project appear successful.
+The earlier D0–D+10 structure was an estimate, not a guarantee. Scheduling is
+now expressed through Sprints, PRs and dated milestones. **D0 remains an
+evidence event**, as defined below; it is not silently redefined or moved
+to the date of later scientific qualification.
 
-## What belongs to the current work?
+## Delivery boundaries
 
-The only experimental campaign still in progress is PR89, whose 60 jobs were
-already authorized and submitted. S3 covers its receipt, reconciliation and
-scientific analysis. The matched GPU experiment is complete and supplies
-existing evidence.
+**PR92 closes the independent methods and preliminary-review stage.** It
+contains the readable methods and limitations, existing CPU/GPU exposition,
+claim provenance, the preliminary coauthor brief and the first-pass audit
+record. It can be ready for review while PR89 is running. It is not the final
+article, R2-D8 closeout or publication approval.
 
-| Sprint | Remaining role in completion | New experimental execution |
-| --- | --- | --- |
-| S1 | Maintain the contract, decisions, responsibility and completion record | None |
-| S2 | Finish source-linked methods, model/data provenance and reproducibility explanations | None |
-| S3 | Reconcile and analyze the existing PR89 campaign | No additional jobs, preparation, inference or training |
-| S4 | Synthesize the qualified CPU and GPU findings; complete the specialist assessment | None |
-| S5 | Complete the article, figures, tables and scientific supplements | None |
-| S6 | Address author review, verify editorial requirements and prepare the approved release/submission | None |
+**The next draft PR carries final synthesis and article integration.** It
+can start immediately with existing-evidence synthesis and the audit items
+independent of the CPU campaign. Qualified PR89 results, final figures/tables,
+the final scientific supplement, R2-D8 and the second-pass audit belong there.
+Its initial base is PR92's branch; after the author-approved PR92 merge,
+verify and retarget it to develop. No unapproved merge is needed to prepare it.
 
-In the [sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md),
-option A means completing the existing study. Options B–E and the separate
-four-hour diagnostic design are **future work outside S1–S6**: additional
-solver seeds, an explicit root method, depth/width changes and training-seed
-checks. Their execution counts are planning information, not a schedule,
-budget approval or commitment to perform them before submission.
+**PR89 remains untouched during execution.** Its source, resources, seeds,
+models, parameters, sequence and collection contract remain frozen. The
+receiver retains exclusive operational responsibility. Human intervention is
+required for every HPC/PowerShell operation; no retry, cancellation or new
+preparation is implicit in this plan.
 
-A reviewer request would not automatically authorize those studies. If a
-missing comparison is essential to a central claim, the immediate editorial
-response is to narrow that claim; any change to the experimental scope
-requires a separate human decision.
+A later release PR is justified only for an independently reviewable release/
+publication scope. Its identity will be determined then. Do not create a PR
+for every minor correction or invent future PR numbers.
 
-## Starting point and working calendar
+## Sprint-to-PR map
 
-Let D0 be the date on which the final authorized return has been received
-and the 60 planned cells have been reconciled against their submitted jobs.
-This must satisfy the original collection gate; it does not mean that all
-cells succeeded or that every metric is scientifically eligible.
+| Sprint | Delivery and timing | PR responsibility | Exit criterion |
+| --- | --- | --- | --- |
+| S1 — governance and completion record | Close the independent planning/scope work now; maintain decisions through completion | PR92, then the synthesis PR | One current plan, explicit supersessions and no confusion between a partial PR and MVP2 completion |
+| S2 — methods and independent audit | Consolidate methods/model/data/reproducibility now; preliminary author feedback sought by 15 November | PR92 supplies the brief and first-pass record; synthesis PR resolves further independent findings | Fixed choices, validation selection, B/R/G dependencies and known limitations are source-linked; no new experiment |
+| S3 — existing CPU campaign | Triggered by the authorized return, reconciliation and subsequent metric-specific qualification | Existing PR89 campaign; qualified evidence integrated in the synthesis PR | All60 cells have explicit dispositions; failures, absences, censoring and M4/M12 eligibility remain visible |
+| S4 — scientific synthesis | Start now with existing CPU/GPU evidence; finish after PR89 qualification | Synthesis PR | R2-D8 and SO1–SO8/C1–C3 assessment distinguish findings, limitations and unachieved objectives |
+| S5 — article and scientific supplement | Preliminary brief now; complete manuscript to coauthors by 15 December | PR92 closes preliminary preparation; synthesis PR delivers the complete version | Consistent argument, all numbers traceable, figures interpreted, supplement explicitly packaged |
+| S6 — final review and submission | December revisions; final approval target 7 January; submission target 10 January; absolute deadline 14 January | Final integration/release scope, with separately approved merges/publication/submission | Author scientific/editorial decisions, closed final audit and verified submission package |
 
-The following is a planning allowance of about ten working days after D0,
-with writing and synthesis overlapping. It is not a guarantee or permission
-to skip a failed check. Work on methods, existing evidence and prose should
-continue before D0 so that only the CPU-dependent additions remain.
+S1, S2, S4 and S5 overlap; they do not wait for the campaign. Only the existing
+PR89 experiment is still running. The sensitivity document's options B–E
+and separate four-hour diagnostic design remain **limitations and future
+work outside S1–S6**. Option A means completing the existing study.
+No new training, model, seed, inference, solve or resource budget is introduced.
 
-| Delivery | Indicative window | What must be available at its completion |
-| --- | --- | --- |
-| 1. Scientific closeout of PR89 | D0 to D+2 | Qualified outcomes, metric eligibility and an explicit disposition for every planned cell |
-| 2. Integrated CPU/GPU assessment | D+2 to D+5 | Answers to the research question and objectives, with supporting and adverse evidence |
-| 3. Complete article and supplements | D+3 to D+7 | A coherent manuscript and all corresponding tables, figures and provenance |
-| 4. Mandatory integral audit | D+7 to D+9 | Repository, evidence, article and supplements reconciled; material findings resolved or explicitly limiting claims |
-| 5. Coauthor-ready version | Target D+10 | Verified reading package, specialist report and concise remaining author decisions |
+## D0 and the subsequent scientific qualification gate
 
-A reconciled return by the end of November is the working dependency for the
-15 December target. If receipt, qualification or a material audit issue slips,
-revise the milestone explicitly. Do not compensate by omitting adverse cells,
-creating results, repeating experiments or removing the audit. Coauthors can
-review the methods and existing-evidence material before the CPU closeout.
+D0 records reception of the final authorized return and reconciliation of
+the 60 planned cells, irrespective of favourable or adverse outcomes.
+It is not the date at which all metrics become eligible or all runs succeed.
+The original collection gate still applies; this document does not authorize
+premature collection while jobs remain active.
 
-## 1. Close PR89 scientifically
+The subsequent scientific closeout requires an explicit disposition for every
+cell and eligibility for each named metric. Keep scheduler state, solver
+status, primal/dual values, gap, observed follow-up, censoring, failure,
+missingness and numerical restrictions separate. Do not convert missing
+observations to zero, numeric ineligibility to ordinary censoring, or an
+observed crossing to an exact continuous first-hit time.
 
-Reconciliation establishes which record belongs to which execution.
-Scientific qualification then establishes which comparisons the record
-supports. Preserve the installed source, model/checkpoint and start identities,
-seed 42, MINIMIZE, original parameters and historical identifiers.
+If a cell has no return or a dependency is blocked, record the absence/block
+and the evidence available. Ask for a specific human decision. Preserve the
+recorded reception/reconciliation dates; do not silently reset D0 to conceal
+the problem or declare scientific qualification complete. No automatic retry
+or change to the queue, tolerances, source or protocol is allowed.
 
-For each cell, keep scheduler state, solver status, primal value, dual bound,
-gap, observed follow-up, threshold observations, resource accounting and
-numerical qualification distinct. A scheduler COMPLETED state is not a
-certificate of optimality. A missing observation is not zero; numerical
-ineligibility is not ordinary administrative censoring.
+M4/M12 remain in coverage and retain metric-specific restrictions. A
+COMPLETED scheduler state or a longer run does not certify exact optimality.
+Raw flags and historical receipts remain unchanged.
 
-Report B/R/G comparisons within the same parent and physical cap. Use
-recorded observations at the defined thresholds and horizons, retaining
-timestamps and brackets. Do not interpolate an exact crossing, extend a
-terminated trajectory or divide timeout runtimes to claim a solution speedup.
-M4/M12 remain visible with their existing metric-specific restrictions.
+## Audit in two passages
 
-The deliverable is a sanitized evidence package, readable result tables,
-a separate eligibility review and an analysis that includes failures,
-censoring and regressions. Raw flags and historical receipts remain unchanged.
-A blocked dependency or failed job receives read-only diagnosis and a specific
-human decision; no retry or cancellation is implicit in project closeout.
+**Passage 1 — independent review, before D0.** Reuse the completed R3 and
+implementation reviews for software structure, the accepted formulation,
+B/R/G interfaces, model/checkpoint provenance, bibliography, article structure,
+historical figures and supplements. The
+[coauthor brief](../../manuscript/coauthor-review-brief.md) contains a compact
+evidence/disposition register. Its coverage and remaining limitations are
+stated; this is not blanket software or scientific certification.
 
-## 2. Explain the combined findings
+Continue any unfinished independent review in the synthesis PR. No generator
+certification or repeated experiment is reopened. Existing source reviews,
+manifests, numerical checks and previously inspected renders can be reused
+when their inputs are unchanged.
 
-The synthesis must answer three connected questions:
+**Passage 2 — integral final audit, after D0 and qualification.** Reconcile the
+integrated results, every table/figure and repeated number, scientific claims,
+repository documentation and editorial package. Check that the methods,
+artifacts and published version refer to the actual experiment, and that
+censoring, numerical restrictions and adverse findings remain visible.
+Inspect the final rendered article and supplied supplement.
 
-- **Prediction:** What information does the fixed model recover from checked
-  incumbent labels, and how do imbalance, approximate labels and historical
-  test exposure limit that evidence?
-- **Optimization:** When do the supplied partial starts help or harm primal
-  quality, dual progress, terminal gap or observed time to a common target?
-- **Cost:** Does an observed solver benefit remain after the stated preparation
-  boundary, and what does the completed GPU pair show about speed, quality
-  and assigned resources?
+Passage 1 reduces late surprises; it **never replaces the final gate**.
+Use proportional source/link checks, affected numerical/manuscript/archive
+tests and final-head rendering/visual review. Passing CI confirms its checked
+properties, not scientific sufficiency.
 
-Keep the historical six-medium study, principal one-hour CPU analysis,
-longer-horizon four-medium campaign and matched GPU pair distinguishable.
-They do not form one enlarged independent sample. In particular, more time
-is not a repair for numerical sensitivity, and historical seeds 43/44 do not
-become repetitions of the CPU12h design.
+## Early coauthor review and milestones
 
-Complete the R2-D8 specialist assessment by mapping SO1–SO8 and C1–C3 to
-specific findings and limitations. An objective that was not demonstrated
-must remain unachieved or bounded. Do not turn the absence of independent
-generalization or architecture ablation into an implied positive result.
+The preliminary set is now prepared in the
+[scientific brief](../../manuscript/coauthor-review-brief.md): working title,
+research question, empirical gap, candidate C1–C3, methods, existing limitations
+and focused review questions. It is informed by chat 01.04's completed review
+and the implementation reconciliation. It does not reopen that investigation
+or claim originality from citation counts.
 
-## 3. Make the article and supplements tell the same story
-
-The article should move from the optimization question to the proposed
-information, the comparison design and the findings. Methods explain the
-actual fixed predictor; results explain what was observed; discussion
-explains what follows and what does not. Operational history belongs in
-the evidence record rather than interrupting the scientific argument.
-
-The main remaining editorial tasks are:
-
-1. State the contribution precisely and check that the title, abstract and
-   conclusions make the same claim.
-2. Distinguish label agreement, solution quality, proof progress and speedup;
-   define each endpoint before using it.
-3. Replace coverage inventories with interpreted results once qualified:
-   introduce every display, identify its denominator and explain its meaning.
-4. Keep the CPU/GPU contrast balanced, including slower, censored, numerically
-   restricted and lower-quality outcomes.
-5. Use one consistent account of fixed hyperparameters, validation selection,
-   automatic root methods and the limits of repeatability.
-6. State the sensitivity studies as future work, without adding them to the
-   current methods or completion requirements.
-7. Separate the scientific supplement from internal review registers and
-   machine-readable provenance; give the reader a clear reading order.
-
-Update the claim-to-evidence map for the qualified CPU return and reconcile
-all repeated numbers in abstract, prose, tables, captions and conclusions.
-Preserve the historical figures and their original scopes. Derived tables
-and figures may be regenerated from qualified existing evidence; this does
-not authorize a new solver or training run.
-
-Package the final scientific supplement explicitly. The current repository
-working material is not already part of the editable LaTeX ZIP. Verify
-contents, citations, source identities and data/software availability, with
-redistribution rights stated. Do not claim an unpublished deposit or DOI.
-
-The Human–AI register remains supporting review material. A full IIEA-S
-Appendix B is not a new MVP2 requirement; inclusion depends on a clear
-scientific purpose, an agreed definition, sufficient primary decision evidence
-and coauthor review.
-
-## 4. Perform the mandatory final audit
-
-| Area | Question that must be answered |
+| Milestone | Target and condition |
 | --- | --- |
-| Repository and scientific software | Do the described architecture, B/R/G paths, configurations, checkpoints and supplied artifacts correspond to the recorded experiment? |
-| Experimental evidence | Are all planned cells accounted for, denominators correct, metrics eligible, clocks comparable and adverse outcomes retained? |
-| Article | Do the question, literature position, contribution, methods, findings and conclusions form one defensible argument? |
-| Supplements and editorial package | Does every displayed number and figure agree with its source, and are references, availability, rights and declarations consistent? |
+| Preliminary coauthor feedback | Seek a preliminary manifestation by 15 November 2026, through circulation authorized by the authors |
+| Complete manuscript to coauthors | 15 December 2026, conditional on receipt, qualification and audit capacity |
+| Scientific/editorial revisions | December 2026, continuing as needed toward final approval |
+| Final approval | Intended by 7 January 2027 |
+| Editorial submission | Intended by 10 January 2027 |
+| Maximum submission deadline | 14 January 2027 |
 
-Use source/link review, affected numerical/manuscript/archive tests and
-final-head HTML/PDF rendering. Inspect the rendered pages visually.
-Reuse completed audits and reopen them only for a concrete new discrepancy.
-Passing CI establishes its checked properties, not scientific sufficiency.
+No material or communication is sent on behalf of the authors without
+authorization. Preparing the brief does not establish that feedback was
+requested, received or approved. Final manuscript review remains necessary
+after the qualified CPU results.
 
-Material findings must be resolved or used to narrow a claim before the
-version is described as complete. Missing numerical qualification or a
-central unsupported claim cannot be relegated to a cosmetic checklist item.
+If reconciliation or audit reveals material risk, state the blocked deliverable,
+its effect on the dated milestones and the earliest defensible revised path.
+An editorial alternative may be a narrower claim supported by the qualified
+evidence, with all exclusions disclosed. It requires author scientific
+judgment; it cannot conceal failed cells or manufacture a successful answer.
+If a central claim remains unsupported, revise the claim or submission
+strategy rather than quietly adding experiments to a Sprint.
 
-## 5. Deliver to coauthors, then complete the editorial release
+## Scientific and editorial completion
 
-The coauthor package consists of the complete article preview and editable
-sources, scientific supplement, evidence/provenance index, R2-D8 assessment
-and a short decision list. Preparing it does not itself authorize sending
-messages to coauthors.
+The synthesis must keep the historical six-medium study, principal one-hour
+CPU analysis, four-medium CPU12h campaign and matched GPU pair distinguishable.
+Parents, not method/cap cells or binary variables, are the comparison units.
+Historical seeds 43/44 do not become repetitions of the CPU12h design.
+Preparation costs, solver clocks and assigned resources retain their boundaries.
 
-Human scientific review must settle contribution/title wording, the adequacy
-of the bounded claims, final availability/rights and declarations, and any
-Appendix B inclusion. The existing authorship and AI-use declaration remain
-unchanged unless the authors explicitly revise them.
+The article must connect question, literature position, mechanism, evaluation
+and conclusions. Interpret displays rather than merely inventorying records.
+Keep label prediction distinct from solver utility; conditional observations
+distinct from seed robustness; fixed architecture distinct from an optimized
+one; and CI success distinct from scientific validity.
 
-PR89 can be marked ready once its scientific closeout and applicable checks
-are complete. Request its merge only then. Integrate the approved evidence
-into PR92 against develop, resolve any documentary conflicts, and validate
-the resulting final head. Request the PR92 merge when its own completion
-criteria are satisfied. Do not merge either automatically or reset histories
-to make branch identities match.
+The final PR must update the claim map for qualified CPU evidence, reconcile
+abstract/prose/captions/tables, and package the scientific supplement explicitly.
+The present repository working documents are not automatically included in
+the editable LaTeX ZIP or approved for journal submission. Verify availability,
+redistribution rights and declarations without inventing a deposit or DOI.
 
-Use 16–31 December primarily for coauthor revisions and 1–14 January for
-final editorial checks and submission preparation. A release/main merge
-that publishes Pages must be identified as such for approval. Editorial
-submission remains a human decision; it is not implied by a GitHub merge.
+The Human–AI register supports review. A full IIEA-S Appendix B is not a new
+MVP2 requirement; inclusion needs a clear purpose, agreed definition, adequate
+primary decision evidence and coauthor approval. Authorship and the agreed
+AI-use declaration remain unchanged absent explicit author revision.
 
-## Definition of completion
+## Review, merge and sign-off
 
-MVP2 is ready for scientific sign-off when the R2-D1–D8 products are delivered,
-the qualified existing evidence is reflected in the article and supplement,
-the integral audit is closed, reproducibility/availability limitations are
-explicit, and the authors have accepted the bounded interpretation.
-Paper acceptance is a later outcome, not an MVP2 completion condition.
+Close PR92's revised stage when the brief, first-pass record, documentation
+and applicable final-head checks are complete. Mark it ready and request
+human merge authorization; do not close it as abandoned or merge it automatically.
+Its readiness does not mean the whole article is submission-ready.
 
-Until D0, the next executable action is to finish the independent editorial
-work in PR92. After D0, the first priority is the metric-specific scientific
-closeout of PR89, not another experiment.
+Prepare the synthesis PR as a draft. Final readiness depends on qualified
+PR89 evidence, complete R2-D8, integrated article/supplement, the second-pass
+audit and the relevant author decisions. Any later PR89 scientific-closeout
+or release merge also needs explicit authorization. The installed execution
+source is not changed by documentary integration.
+
+MVP2 sign-off requires delivered R2-D1–D8 products, a consistent qualified
+evidence account, closed final audit, explicit availability limitations and
+author acceptance of the bounded interpretation. Negative/censored outcomes
+can be scientifically valid; acceptance by a journal is a later outcome.
+Publication and editorial submission remain specifically approved human gates.

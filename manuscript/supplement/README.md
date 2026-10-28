@@ -4,6 +4,17 @@
 This working supplement supports review of the integrated article. It is not
 a new experimental return, a final journal supplement or the R2-D8 closeout.
 
+## Current PR delivery boundary
+
+PR92 closes methods, existing provenance and preliminary review preparation.
+The [coauthor brief](../coauthor-review-brief.md) is available now, including
+the independent first-pass audit record. It has not been circulated by Codex.
+
+The next draft PR completes synthesis and the CPU-dependent integration.
+Final results, supplement packaging and the integral audit are not declared
+complete by PR92's readiness. See the
+[Sprint/PR plan](../../docs/research/mvp2-closeout-plan.md) for milestones.
+
 ## How to read this material
 
 Start with the article for the research question, methods and findings.

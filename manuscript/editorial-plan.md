@@ -1,19 +1,25 @@
 # Scientific and editorial revision
 
-## Completion after reconciled CPU results
+## Current delivery split — 28 October 2026
 
-The [closeout plan](../docs/research/mvp2-closeout-plan.md) sets the remaining
-sequence: scientific qualification of PR89, integrated CPU/GPU assessment,
-complete manuscript/supplement, integral audit and a verified coauthor package.
-It also identifies the editorial work that can advance before the return:
-contribution wording, endpoint clarity, display interpretation and consistent
-limits throughout the manuscript.
+The author requests completion of PR92 now and preparation of the next PR.
+PR92 closes the independent methods, evidence provenance and preliminary
+coauthor-review stage. The [completion plan](../docs/research/mvp2-closeout-plan.md)
+is organized by Sprints and PRs and supersedes the earlier requirement that
+this PR wait for the final CPU return.
 
-Options B–E in the sensitivity assessment and the shorter diagnostic design
-remain future work. They are not part of the current Sprints or mandatory
-new experiments for MVP2. The article must avoid claims that would depend
-on those unperformed comparisons.
+The [coauthor brief](coauthor-review-brief.md) is the immediate independent
+deliverable: working title, question, empirical gap, C1–C3, methods and
+limitations, informed by chat 01.04. Preliminary feedback is sought by
+15 November through circulation controlled by the authors. No material has
+been sent. Its first-pass audit register reuses completed source reviews;
+it is not the final scientific gate.
 
+The next draft PR begins the existing-evidence synthesis and any unfinished
+independent audit work. Its final CPU integration, R2-D8, article/supplement
+and second-pass integral audit await the authorized return and qualification.
+The complete manuscript target is 15 December; final approval is intended
+by 7 January, submission by 10 January and no later than 14 January.
 
 ## Reader-oriented revision and sensitivity decisions
 
@@ -108,23 +114,25 @@ pending results. Coverage is stated explicitly; this is not complete scientific
 review or a final journal supplement. Article prose, figures, raw evidence and
 the installed PR89 source are unchanged by this additional step.
 
-### Completion criteria for this PR
+### Completion criteria for PR92's independent stage
 
-1. Integrate PR89 only after its authorized return is received and reviewed.
-   Every planned cell needs a state; failures/censoring/unavailable records
-   remain visible. Installed source, starts, seed and rawflags are unchanged.
-2. Complete the principal CPU/GPU narrative, figures and machine-readable
-   claim provenance using the existing generators where applicable.
-3. Reconcile SO/C coverage and limitations without assuming superiority,
-   independent generalization or multiseed robustness.
-4. Validate sources, relevant manuscript/archive regressions and final-head
-   static HTML/PDF render; inspect PDF pages and keep the 20-page body budget.
-5. Obtain coauthor review and final human editorial declarations before
-   scientific release/submission. A successful preview is not that approval.
+1. Provide the readable fixed-model methods, implementation-linked caveats
+   and existing-evidence claim map without promoting pending CPU results.
+2. Complete the preliminary coauthor brief and record the first-pass audit
+   coverage, limitations and unresolved human questions.
+3. Keep one current Sprint/PR plan with D0 separate from metric qualification,
+   two audit passages and all additional experiments outside current Sprints.
+4. Pass applicable final-head source/manuscript/archive checks and rendering;
+   reuse earlier visual review only where the render inputs remain unchanged.
+5. Prepare the next draft integration PR with explicit dependency on PR92.
+   Mark PR92 ready and request merge authorization; no merge or publication
+   is included in this stage.
 
-While CPU execution continues, refine methods, existing-evidence exposition,
-supplement structure and editorial consistency. Do not start new experiments,
-retune models, republish Pages or open one PR per small revision.
+The final manuscript integration criteria move to the next PR: qualify the
+60-cell return, finish the principal CPU/GPU interpretation, reconcile SO/C
+coverage and all repeated numbers, package the scientific supplement, perform
+the complete audit and obtain the necessary author/editorial decisions.
+These are not declared complete by PR92's readiness.
 
 ## Historical editorial plan — original text preserved
 

@@ -1,15 +1,22 @@
 # CFL--GNN research context
 
-## Scientific writing and sensitivity clarification
+## Current Sprint/PR delivery — 28 October 2026
 
-The [methods explanation](../manuscript/supplement/gnn-methods-audit.md)
-has been rewritten around the scientific argument, including the rationale
-and evidence limits for fixed hyperparameters. The
-[sensitivity assessment](../manuscript/supplement/sensitivity-review-plan.md)
-distinguishes solver seeds, root methods, neural training and component
-ablations. These remain prospective; the ongoing CPU campaign is unchanged.
-The accelerated plan continues S1, S2, S4 and S5 without new execution authority.
+The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
+PR92 closes the independent methods and preliminary-review stage; the next
+draft PR carries synthesis and final CPU integration. This scope split
+supersedes the earlier condition that PR92 itself await the CPU campaign.
 
+The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+author-controlled circulation and preliminary feedback by 15 November.
+It includes the first-pass audit record. The complete post-qualification
+audit remains mandatory. Targets are manuscript 15 December, final approval
+7 January, intended submission 10 January and absolute deadline 14 January.
+
+D0 remains reception/reconciliation of 60 planned cells, not the later metric
+qualification date. Missing returns or blocks require a recorded human
+decision, not a silent date change or retry. Additional experiments stay
+outside the current Sprints.
 
 ## Documentary continuation — 28 October 2026
 
