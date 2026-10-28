@@ -1,5 +1,72 @@
 # Current status
 
+## Current Sprint/PR delivery — 28 October 2026
+
+The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
+PR92 closes the independent methods and preliminary-review stage; the next
+draft PR carries synthesis and final CPU integration. This scope split
+supersedes the earlier condition that PR92 itself await the CPU campaign.
+
+The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+author-controlled circulation and preliminary feedback by 15 November.
+It includes the first-pass audit record. The complete post-qualification
+audit remains mandatory. Targets are manuscript 15 December, final approval
+7 January, intended submission 10 January and absolute deadline 14 January.
+
+D0 remains reception/reconciliation of 60 planned cells, not the later metric
+qualification date. Missing returns or blocks require a recorded human
+decision, not a silent date change or retry. Additional experiments stay
+outside the current Sprints.
+
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+Latest human partial report,28October; exact capture time unavailable:
+3713 COMPLETED12:01:05, ExitCode0:0, AllocCPUS8, batch MaxRSS16050788K;
+3714 RUNNING08:03:49, AllocCPUS16; author reports3715–3734 PENDING.
+This is not a fresh agent query or a complete60-job snapshot. No final
+return has been received or qualified. Earlier job states are not inferred
+by subtraction; scheduler completion does not establish solver quality.
+The receiver retains exclusive campaign reconciliation responsibility and
+the original source9ab7823c remains frozen.
+
+
+
+## Current — 27 October: PR91 merged; integrated editorial draft
+
+PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.
+The [integrated manuscript plan](../manuscript/editorial-plan.md) advances
+independent writing and existing-evidence synthesis while PR89 remains active.
+The installed PR89 source remains `9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`.
+
+The [working evidence supplement](../manuscript/supplement/README.md) and its
+machine-readable map now bind 17 existing principal CPU/GPU claim groups to
+four public files. The manuscript source gate checks hashes, unique selectors,
+clock/averaging scope and displayed values. This is independent editorial work
+in draft PR92; the article inputs and installed campaign remain unchanged by
+this additional step. Final-head CI results are recorded in the PR.
+
+The author's selected squeue report for3713–3734 records3713 RUNNING at01:57:23
+and3714–3734 PENDING/Dependency (21jobs). It does not establish the states of
+3675–3712 or a new total of COMPLETED jobs; no final return is received.
+
+Read-only diagnostics supplied by the author show NumNodes=1-1, NumTasks=1,
+TimeLimit13:00:00 and Requeue0 for pending3714 (8CPUs) and3720 (1CPU), with
+their afterok predecessors and NodeList(null). This supports those requests,
+not a future allocation or all-job resource certification. The differing
+squeue NODES display is not proof of allocation on two nodes; its specific
+display cause was not determined. No queue/source/resource change follows.
+See the [27 October checkpoint](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6450594964).
+
+
 ## Current — 26 October: R3 handoff accepted; PR89 still running
 
 The [R3 contract and plan](research/mvp2-r3-contract.md) is the governing

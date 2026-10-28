@@ -39,6 +39,23 @@ No new repeated runs are proposed. Identical reruns would not create
 independent parents; seed43/44 remain historical, with broader robustness
 deferred beyond MVP2.
 
+## Interpreting the fixed configuration — clarification of 28 October
+
+Automatic Method selection is not evidence that a MIP run used a
+non-deterministic algorithm. The [reader-oriented methods supplement](../../manuscript/supplement/gnn-methods-audit.md)
+explains the distinction between a standalone LP, the MIP root algorithm,
+parallel MIP and wall-time stopping. Existing logs can clarify the actual
+algorithm; missing effective fields remain unavailable.
+
+The present B/R/G analysis is conditional on the recorded parent, seed,
+cap, settings and stopping rule. It can describe the observed contrasts and
+their censoring/numerical qualifications. It cannot estimate across-seed
+variance, treat caps as repetitions, or establish stable expected speedups.
+A parameter-fixed comparison does not require identical search paths.
+The [prospective sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md)
+separates solver seeds, root methods, training seeds and component ablations.
+It is a planning document, not new experimental authority.
+
 ## Optimization quality and denominator rules
 
 For the same MINIMIZE model, report finite primal zP, dual zD, terminal status,

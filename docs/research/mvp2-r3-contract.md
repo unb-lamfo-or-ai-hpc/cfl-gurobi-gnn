@@ -1,5 +1,25 @@
 # MVP2 R3 — governing contract and completion plan
 
+## Latest delivery decision — 28 October 2026
+
+The author approves the completion structure with D0 unchanged as the
+60-cell reception/reconciliation event, followed by explicit metric-specific
+qualification. Blocking conditions or missing returns require a recorded
+human decision, not a silent date change or retry.
+
+The [current completion plan](mvp2-closeout-plan.md) expresses delivery through
+Sprints and PRs. PR92 closes the independent methods/preliminary-review stage;
+the next draft PR carries final synthesis and CPU-dependent integration.
+This supersedes the earlier requirement that PR92 itself await the campaign,
+without changing the scientific or installed execution contract.
+
+An independent audit passage begins now and a complete final passage follows
+the qualified return. The [coauthor brief](../../manuscript/coauthor-review-brief.md)
+supports preliminary feedback by 15 November, without unauthorized circulation.
+Targets are complete manuscript 15 December, final approval 7 January,
+submission 10 January and absolute deadline 14 January. Earlier schedule
+tables below are retained as historical baselines.
+
 26 October 2026 · CFL-GNN-SCI-2026-10-22-R3 · deadline: **14 January 2027**.
 Products R2-D1 and R2-D7; the evidence map below also tracks R2-D2–R2-D8.
 This is a documentary consolidation of existing decisions, not an experimental
