@@ -3,9 +3,12 @@
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
-PR92 closes the independent methods and preliminary-review stage; the next
-draft PR carries synthesis and final CPU integration. This scope split
-supersedes the earlier condition that PR92 itself await the CPU campaign.
+PR92 delivered the independent methods and preliminary-review stage and was
+merged with explicit author approval at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`.
+PR93 now targets develop and carries synthesis and final CPU integration.
+Its [supplement guide](../manuscript/supplement/README.md) records the independent
+claim reconciliation and reader-oriented explanations. PR93 remains a draft;
+the qualified return and final audit are still required.
 
 The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
 author-controlled circulation and preliminary feedback by 15 November.
@@ -22,7 +25,7 @@ outside the current Sprints.
 
 The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
 targets a complete coauthor-review version by15December2026 and preserves
-the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
 the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
 The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
 [conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)

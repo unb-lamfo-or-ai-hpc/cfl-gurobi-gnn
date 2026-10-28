@@ -1,24 +1,29 @@
 # A proportionate response to unresolved sensitivity questions
 
-## Scope decision for the current MVP2 plan
+## What this discussion is for
 
-Only option A belongs to the present completion work: receive, qualify and
-analyze the campaign already authorized. Options B–E and the separate
-four-hour diagnostic design are retained as limitations and future work.
-They are not scheduled in S1–S6 and do not delay completion merely because
-they have been described. No reviewer request or prospective cost estimate
-is execution authority.
+A useful follow-up should resolve a scientific uncertainty. *Sensitivity*
+asks how an observed result changes when a specified choice changes.
+*Robustness* asks whether the interpretation survives those changes.
+An *ablation* removes or replaces a component to examine its contribution.
+These questions overlap, but they are not interchangeable: changing a solver
+seed does not test a neural architecture, and faster training does not show
+that a Start helps the optimizer.
 
-The [post-CPU closeout plan](../../docs/research/mvp2-closeout-plan.md)
-explains the path from reconciled results to scientific sign-off and the
-coauthor version. If the evidence cannot support a central claim, narrow
-that claim; a new study requires a separate human decision.
+The present article studies one fixed prediction-to-Start pipeline. This
+document explains which additional comparisons could strengthen particular
+claims, and what those comparisons would still leave unresolved. The resource
+counts below are planning examples, not experimental findings.
 
+Only option A belongs to the current S1–S6 completion work: receive, qualify
+and analyze the campaign already authorized. Options B–E and the separate
+four-hour diagnostic design remain limitations and future work. They introduce
+no new training, inference or solves into the current plan.
 
-This is a proposal for coauthor review, not an experiment authorization.
-The current CPU campaign, model, starts and parameters remain frozen.
-The purpose is to decide which additional evidence would answer a specific
-scientific question, rather than to accumulate configurations.
+The [Sprint/PR plan](../../docs/research/mvp2-closeout-plan.md) governs
+completion and coauthor review. Existing CPU jobs, starts and settings remain
+frozen. A later study would require a separate human decision and a prospective
+protocol; neither a reviewer request nor a cost ceiling authorizes it.
 
 ## What the present article can defend
 
@@ -97,8 +102,8 @@ core-hours. Queue time is additional and unknown. These are conservative
 ceilings obtained by multiplication, not estimated actual consumption.
 
 Using one thread avoids repeating the five-cap scalability experiment.
-It also removes parallel reduction as a factor in this particular comparison,
-without eliminating wall-clock variation. A parallel cap would be appropriate
+It narrows the proposed comparison to a serial solver regime without
+eliminating wall-clock variation. A parallel cap would be appropriate
 only if the scientific question explicitly concerns a parallel regime; it
 must be chosen before looking at the new results.
 

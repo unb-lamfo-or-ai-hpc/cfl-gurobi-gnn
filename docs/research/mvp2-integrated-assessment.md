@@ -144,6 +144,27 @@ correction, including the phrase “time to optimality”. No raw evidence,
 numerical display, scientific eligibility decision or PR89 source is changed.
 This closes one independent wording finding, not the final results audit.
 
+## Reader-oriented supplement reconciliation
+
+The methods supplement now introduces the prediction-to-optimization stages
+and their vocabulary before the message equations. It explains weighted
+learning versus calibrated probabilities, the support cap and dependent R
+comparison, then separates prediction metrics, Start acceptance, gap crossings
+and terminal solver outcomes. The schematic assignment example is explicitly
+illustrative, not a new experimental observation.
+
+The [supplement guide](../../manuscript/supplement/README.md#claims-reconciled-before-the-longer-horizon-cpu-return)
+records the independent claim boundaries and source links.
+The sensitivity discussion distinguishes robustness questions from component
+ablations; its options remain future work. The Human–AI register explains
+accountability separately from a scientific study of collaboration, preserving
+the conditional Appendix B decision and existing author declaration.
+
+This is a source-based editorial reconciliation, not a replay of training,
+a robustness result or the completed scientific supplement. The numerical
+claim manifest, historical data and article rendering inputs remain unchanged.
+Qualified CPU results and the final integral audit are still required.
+
 ## Finalization conditions for this PR
 
 Complete the qualified CPU integration and source-linked interpretation;

@@ -13,6 +13,36 @@ prepare the CPU starts. The ongoing longer-horizon campaign reuses those
 starts and the original checkpoint. Nothing in this methodological discussion
 changes that campaign or constitutes a new experiment.
 
+## Reading the prediction-to-optimization pipeline
+
+Capacitated facility location asks where to open facilities and how to serve
+demand while respecting capacities and minimizing cost. Its mixed-integer
+linear programming (MILP) model contains discrete decisions coupled by
+linear constraints. The solver must find good feasible solutions and assess
+how far their objective values may be from the best possible value.
+
+The neural network supplies selected binary values intended to help that
+search. It does not replace the mathematical model or certify solution quality.
+The stages answer different questions:
+
+1. **Prepare structural information.** A stored root-relaxation vector and
+   the model's coefficients describe the problem before the later B/R/G solves.
+2. **Predict binary values.** A frozen graph neural network (GNN) converts
+   these inputs into scores. No learning takes place during this inference.
+3. **Select a partial Start.** A policy chooses a limited number of suggested
+   values. Gurobi attempts to complete them while solving the original model.
+4. **Evaluate the outcome.** Prediction quality, Start acceptance, solution
+   quality, elapsed time and preparation cost are assessed separately.
+
+An *incumbent* is the solver's best known feasible solution, subject to its
+numerical tolerances. A *parent* is an original problem instance. A *checkpoint*
+stores learned weights and associated model state. An *embedding* is a
+learned vector summarizing a node's information. A *logit* is an unrestricted
+network output; the sigmoid maps it to a score between zero and one.
+
+B, R and G are the article's names for historical methods M0, M1 and M2.
+A medium parent called M0 is an instance identifier, not method M0.
+
 ## 1. Why represent the MILP as a bipartite graph?
 
 A linear constraint couples variables through its nonzero coefficients.
@@ -52,8 +82,14 @@ they do not change the coefficients, domains or feasible region of the
 optimization model. Clipping can discard scale information, so it is an
 encoding choice with limitations, not an exact representation of every number.
 
-Each propagation cycle first updates constraint embeddings and then variable
-embeddings. With initial embedded features v and c, the implemented updates are
+Message passing can be understood as an exchange of summaries. A constraint
+collects information from the variables that occur in it. Each variable then
+receives information from its constraints, including their other variables.
+Learned message functions determine which combinations of features are useful.
+
+To connect this description to the equations, let $v_j^{t-1}$ be variable j's
+current embedding and $c_i^{t-1}$ constraint i's embedding before cycle t.
+Each cycle updates constraints first, then variables:
 
 $$
 c_i^t=\operatorname{ReLU} f_C^t\!\left[c_i^{t-1}\Vert
@@ -65,12 +101,14 @@ v_j^t=\operatorname{ReLU} f_V^t\!\left[v_j^{t-1}\Vert
  P_V^t\!\left(\sum_{i\in N(j)}g_V^t[c_i^t\Vert v_j^{t-1}\Vert e_{ij}]\right)\right].
 $$
 
-Here N denotes neighbours, e the encoded coefficient and || concatenation.
-The message functions g and update functions f are two-layer perceptrons.
-P denotes a fixed affine normalization fitted on training graphs. The second
-update uses the newly computed constraint embeddings, allowing information
-from other incident variables to reach a variable within the same cycle.
-The final prediction head produces one logit for each binary variable.
+Here $N(i)$ and $N(j)$ are the relevant neighbours, $e_{ij}$ is an encoded
+coefficient and $\Vert$ joins vectors. The sums combine incoming messages.
+Each g or f is a small feed-forward network with two learned linear
+transformations and a rectified linear unit (ReLU) between them; ReLU replaces
+negative activations by zero. P is a fixed affine normalization fitted on
+training graphs. The second equation uses the newly updated constraints,
+so information from other incident variables reaches a variable in the same
+cycle. The final prediction head produces one logit per binary variable.
 
 Two cycles allow information to travel up to four edges in the bipartite
 graph. This is a reason to consider more than one cycle when predictions
@@ -89,8 +127,8 @@ the third has not been measured.
 
 In particular, no inspected configuration or historical receipt documents
 a search that selected two cycles and width 32 over one cycle and width 64.
-The configuration must therefore be treated as fixed, not optimal. The rationale below explains why the
-configuration is scientifically reasonable; it does not reconstruct an
+The configuration must therefore be treated as fixed, not optimal. The
+rationale below explains why it is a reasonable starting point; it does not reconstruct an
 undocumented original decision or turn a fixed setting into a validated optimum.
 
 ### Network capacity and numerical scale
@@ -119,7 +157,7 @@ This differs from the legacy fit procedure. The versions and their buffers
 cannot be interchanged retrospectively; “calibrated” in a source filename
 does not mean that output probabilities have been calibrated.
 
-### Optimization, imbalance and selection
+### Learning the predictor, handling imbalance and selecting its output
 
 [Kingma and Ba (2015)](https://arxiv.org/abs/1412.6980) provide the basis for
 Adam and identify 0.001 as a useful default learning rate in their experiments.
@@ -135,15 +173,30 @@ reference motivates the operation; it is not CFL-specific evidence for our
 threshold of 1. The threshold is a fixed implementation choice whose
 sensitivity remains unmeasured.
 
-The loss addresses a different concern. Positive binary labels are rare, so
-an unweighted objective can be dominated by zeros. The positive-class weight
-is the training negative-to-positive ratio, increasing the loss contribution
-of a missed positive label. This changes what a sigmoid score means. For
-an idealized conditional label probability $p$ and positive weight $w$, the
-weighted-BCE risk is minimized at $q^\star=wp/(wp+1-p)$. A score close to one is
-therefore not automatically a calibrated probability of a correct assignment.
-Likewise, selecting a threshold to maximize validation F1 is not probability
-calibration.
+The loss addresses a different concern. Training labels say whether each
+binary variable is zero or one in a checked reference incumbent. Such an
+incumbent need not be an exact optimum or the only useful solution.
+Learning its labels is a prediction task, not an optimality proof.
+
+Positive labels are rare. Predicting mostly zeros can look accurate while
+missing the decisions that motivate a positive-first Start policy.
+The training loss is binary cross-entropy (BCE), with positive errors weighted
+by the training negative-to-positive ratio. This gives missed positive labels
+more influence during learning; it does not create additional positive examples.
+
+The weighting changes the meaning of a score. For an idealized conditional
+probability p that the reference label is one and a positive loss weight w,
+the expected loss is $-wp\log q-(1-p)\log(1-q)$. It is minimized at
+$q^\star=wp/(wp+1-p)$. This is a property of the loss, not a new fitted result.
+For 0<p<1 and w>1, the minimizing score is shifted upward relative to p.
+A score close to one therefore need not be a calibrated probability that
+the proposed assignment is correct. A threshold chosen for validation F1
+does not remove this distinction.
+
+Precision measures how often predicted ones agree with the reference labels;
+recall measures how many reference ones are recovered. F1 combines them.
+These metrics assess the predictor; the solver must still determine whether
+the selected values lead to useful feasible solutions.
 
 The 100-epoch limit bounds the training schedule. Validation loss, rather
 than the last epoch, selects the retained checkpoint; validation F1 selects
@@ -166,7 +219,7 @@ does not justify every other hyperparameter retrospectively.
 | Matched GPU schedule | 100 epochs, no early stopping | Validation selects epochs 99/92; both arms complete the same update budget |
 | Positive weight / seed | Training class ratio / 42 | Imbalance handling and fixed initialization setting; no training-seed robustness estimate |
 | Classification threshold | Original CPU 0.9991843104362488, selected by validation F1 | Model-specific decision rule, not evidence of probability calibration |
-| Start policy | 10% support, at most 20,000 values; ones before zeros; abstention if no predicted one | Limit the information supplied and retain rare positives; no causal selector or support-fraction ablation |
+| Start policy | Requested support bounded by 10% and 20,000 values; ones before zeros; abstention if no predicted one | Limit the information supplied and retain rare positives; no causal selector or support-fraction ablation |
 
 The batch distinction deserves emphasis. Historical serial training and the
 later matched GPU experiment have different update schedules. In the latter,
@@ -180,15 +233,20 @@ is faster, but selected parent-macro F1 falls by 0.032468 and assigned
 GPU-hours increase. A higher speedup does not justify replacing the original
 CPU checkpoint or claiming downstream optimization benefit.
 
-## 3. How the relaxation becomes a partial start
+## 3. From a relaxation to scores and a partial Start
 
-The root-relaxation vector is a feature source and a comparator input, not
-a predicted solution. In the existing preparation, Gurobi reads the original
+A linear relaxation allows integer-constrained variables to take fractional
+values. It can describe the optimization landscape without being a feasible
+mixed-integer solution. The root relaxation is considered at the initial node
+of the solver's search. Here its recorded vector is a feature source and
+comparator input, not a predicted integer solution. In the existing preparation, Gurobi reads the original
 MILP under the minimization convention. A callback captures variable values
 at the first optimal root-node LP event and terminates that preparation.
-The call is cbGetNodeRel inside a MIPNODE callback; it is not a separate
-model.relax() solve and need not represent the final root bound after every
-possible cut pass.
+A callback is code invoked when the solver reaches a specified event.
+The implementation calls `cbGetNodeRel` at an eligible `MIPNODE` event to
+read the relaxation values. It does not call `model.relax()` as a separate
+LP solve. Nor does the captured vector necessarily describe the final root
+bound after every possible cutting-plane pass.
 
 The captured values are aligned with original variable identities and enter
 the graph. A frozen model in evaluation mode maps that graph to binary-variable
@@ -196,18 +254,50 @@ scores without gradient computation. Labels inspected by the encoder belong
 to a separate feasibility audit; they are not supplied to the neural forward
 or used to choose a start.
 
-For G, the fixed policy selects predicted ones first and then fills remaining
-support with predicted zeros. Let k be the actual number of assignments
-and q the number of ones. R uses the same root vector to choose q high-valued
-variables as ones and k−q low-valued remaining variables as zeros. It matches
-these counts, not G's selected indices. Thus R depends on G's preparation;
-it is not an independent LP-only heuristic.
+### Why R depends on G
 
-A fresh solver model then receives the selected Start values. Unspecified
-variables remain undefined and Gurobi attempts to complete or repair the
-candidate. This does not fix variable bounds, guarantee acceptance or prove
-feasibility. B, R and G preserve the same mathematical model. Their purpose
-is to compare the solver's response to different supplied information.
+For n eligible binary variables, the requested assignment budget is
+$K=\min\{n,20000,\max(1,\lfloor0.10n\rfloor)\}$.
+This limits the number of supplied values, not the feasible region.
+The absolute cap binds for the medium parents, so their coverage is below 10%.
+
+G first selects predicted ones in descending score order. If fewer than K
+are available, it fills the remaining slots with predicted zeros in descending
+zero-confidence order. Variable names break ties. If no one is predicted,
+the policy abstains and supplies no assignments.
+
+Let k be the number actually supplied and q the number assigned one.
+R ranks the stored root values, clipped to [0,1]: the q largest receive one,
+followed by the k−q smallest remaining values receiving zero, with name-based
+tie breaking. R matches the amount of supplied information and its one/zero
+composition, rather than copying G's selected indices.
+
+For a schematic example of this matching, suppose G supplies
+$x_a=1,x_b=0,x_c=0$. R could instead supply $x_d=1,x_e=0,x_c=0$.
+Both contain three assignments and one positive, yet suggest different
+variables. This invented example illustrates count matching only; it is not
+an experimental result or an application of the study's support formula.
+
+Thus R depends on G's preparation. It asks how LP-ranked information compares
+with learned information at a matched support/composition budget. It does
+not estimate the performance or preparation cost of a standalone LP heuristic.
+
+### What the solver receives
+
+A fresh copy of the model receives the selected values through Gurobi's
+`Start` attribute. Other variables remain unspecified, using
+`GRB.UNDEFINED`; the original bounds are preserved. A supplied value of one
+is a candidate starting value, not a constraint requiring the final solution
+to keep that value. B supplies no external Start, while Gurobi's internal
+heuristics remain available.
+
+The [Gurobi Start documentation](https://docs.gurobi.com/projects/optimizer/en/current/reference/attributes/variable.html#attr:Start)
+describes attempts to complete partially supplied starts. Supplying values
+does not ensure acceptance, improvement or feasibility of the partial
+prediction as a complete solution. Here a loaded-start message records solver
+acceptance under its numerical conventions. It is not an exact feasibility
+certificate or evidence that the later search improves. B, R and G preserve
+the same mathematical model and compare its response to different information.
 
 ## 4. What repeatability means for the solver comparison
 
@@ -263,6 +353,39 @@ recommends accounting for performance variability, including using different
 seeds when instances are limited. Our single-seed principal analysis does not
 meet that stronger robustness objective. Transparent reporting is necessary;
 it does not make the missing variability estimate disappear.
+
+### Reading prediction and optimization outcomes together
+
+For minimization, a feasible incumbent gives an upper bound on the best
+objective, while a valid solver lower bound describes what might still be
+achievable. Improving the incumbent and strengthening the lower bound are
+different forms of progress. Their relative separation is the MIP gap;
+a smaller gap is not synonymous with a better incumbent.
+
+| Observation | What it can support | What it does not establish |
+| --- | --- | --- |
+| Higher validation or test F1 | Better agreement with the specified labels and averaging rule | A better Start or faster optimization |
+| A user Start is loaded | Solver acceptance under its conventions | Exact feasibility, optimality or a later gain |
+| A 10% gap crossing is recorded | That endpoint was observed by the recorded time | Attainment of the tighter terminal criterion |
+| A time limit is reached | The solver stopped because its time budget ended | That every gap target was unobserved, or that runtime is a successful time-to-target |
+| Optimal status or zero displayed gap | A numerical solver outcome under the stated tolerances | An exact mathematical certificate; M4/M12 restrictions remain |
+| A shorter training loop | Less elapsed time inside that loop | Lower whole-job cost, preserved F1 or better CPU starts |
+
+The configured terminal MIPGap of 0.0001 corresponds to 0.01%, whereas
+10% is a separate, less demanding descriptive threshold.
+The [historical endpoint reconciliation](../../docs/research/mvp2-r3-metrics-and-reproducibility.md#historical-endpoint-reconciliation--28-october)
+explains why the archived terminal `right_censored` flag is not the censoring
+indicator for every threshold. Missing observations and numerically restricted
+comparisons require their own dispositions.
+
+The completed evidence chains also answer different questions. Historical
+six-medium optimization results retain their original population. The principal
+CPU comparison uses ten exposed parents at seed 42; method/cap rows are repeated
+conditions within those parents. The later GPU pair studies training speed,
+quality and assigned resources with a different update schedule. Its faster
+loop and lower selected F1 cannot be transferred into a claim about the original
+checkpoint's downstream utility. These boundaries are carried into the article;
+the longer-horizon CPU return remains pending.
 
 ## 5. What further experiments would add
 

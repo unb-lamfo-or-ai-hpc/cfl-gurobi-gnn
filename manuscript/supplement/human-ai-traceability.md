@@ -4,6 +4,18 @@
 Read with the [accelerated plan](../../docs/research/mvp2-20261028-accelerated-plan.md)
 and [GNN audit](gnn-methods-audit.md).
 
+## Why document Human–AI collaboration here?
+
+An AI assistant can propose code, interpretations or prose, but a plausible
+proposal is not itself scientific evidence. A reader needs to know what was
+checked, what the check established and who accepted the resulting claim.
+Traceability connects those steps to records that can be inspected.
+
+This is different from studying whether AI makes research faster or more
+reliable. Such a study would need its own question, comparison design and
+evidence. The present record concerns accountability within the CFL project;
+it does not measure a causal benefit of Human–AI collaboration.
+
 ## Decision and scientific scope
 
 **Adopt with reservations** as a description of how scientific decisions were
@@ -47,7 +59,12 @@ for the article. Missing fields stay “not documented”. Do not export private
 chat histories, credentials, licenses, paths or coauthor communications.
 Public sanitized decisions can be referenced where already available.
 
-## Four validation levels, recorded separately
+## Four questions about validation
+
+A passing software test answers a narrower question than a scientific review.
+For example, a table can be generated correctly from a file while its comparison
+still uses an inappropriate population or endpoint. Separating the following
+questions helps make such gaps visible.
 
 | Level | Required question | Evidence boundary |
 | --- | --- | --- |

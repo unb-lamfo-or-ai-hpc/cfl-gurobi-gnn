@@ -1,54 +1,49 @@
-# MVP2 evidence supplement — working repository material
+# Supplementary explanations and evidence guide
 
-27 October 2026. Governed by the [R3 contract](../../docs/research/mvp2-r3-contract.md).
-This working supplement supports review of the integrated article. It is not
-a new experimental return, a final journal supplement or the R2-D8 closeout.
+These materials explain how neural predictions enter the facility-location
+solver and how the evidence should be interpreted. They accompany the article,
+with background for a reader who knows optimization or machine learning without
+necessarily specializing in both.
 
-## Current PR delivery boundary
+## A route through the material
 
-PR92 closes methods, existing provenance and preliminary review preparation.
-The [coauthor brief](../coauthor-review-brief.md) is available now, including
-the independent first-pass audit record. It has not been circulated by Codex.
+Begin with [why this GNN and what it can establish](gnn-methods-audit.md).
+It introduces the problem, explains graph messages before their equations,
+distinguishes training from inference, and follows a prediction into a
+partial solver Start. A schematic example explains why R matches G's
+assignment counts without copying its variable choices.
 
-PR93 begins synthesis and carries the CPU-dependent final integration.
-Final results, supplement packaging and the integral audit are not declared
-complete by PR92's readiness. See the
-[Sprint/PR plan](../../docs/research/mvp2-closeout-plan.md) for milestones.
+Then use the evidence and metric sections below to interpret an outcome.
+Prediction agreement, a loaded Start, a gap crossing, terminal solver status
+and a timing ratio are different observations. None should stand in for another.
 
-## Synthesis work in PR93
+Finally, the [sensitivity discussion](sensitivity-review-plan.md) explains
+what is still unknown and which future designs could address it. Additional
+solver seeds, root methods, neural settings and the shorter diagnostic design
+remain future work outside S1–S6. Prospective counts are not results or
+authority to execute.
 
-The [working R2-D8 assessment](../../docs/research/mvp2-integrated-assessment.md)
-now separates available CPU/GPU evidence, objective coverage, remaining
-qualification and editorial-package roles. It advances S4/S5 before the
-CPU return without introducing a new result or estimator. Its pending
-sections are scientific dependencies, not zero-filled observations.
+The [Human–AI register](human-ai-traceability.md) has a different purpose:
+it supports the authors' decision about a possible Appendix B. It is an
+internal accountability record, not an approved scientific appendix or evidence
+that AI improved research quality.
 
-## How to read this material
+## Claims reconciled before the longer-horizon CPU return
 
-Start with the article for the research question, methods and findings.
-The [methods explanation](gnn-methods-audit.md) provides the reasoning behind
-the fixed model, hyperparameters and solver interface. It also explains why
-a conditional observed comparison differs from a claim of robust superiority.
+| Question | Interpretation retained | Supporting explanation |
+| --- | --- | --- |
+| Was the neural configuration shown to be best? | Fixed choices differ from checkpoint/threshold selection on validation data; comparative optimality is not established | [Model and hyperparameters](gnn-methods-audit.md#2-why-these-hyperparameters) |
+| Is R an independent LP-only heuristic? | R's support and positive count come from G, so its preparation is neural-dependent | [Relaxation-to-Start path](gnn-methods-audit.md#3-from-a-relaxation-to-scores-and-a-partial-start) |
+| Does automatic Method imply non-determinism? | It is not sufficient evidence of the algorithm used; the single-seed study remains conditional on its settings and time limit | [Repeatability](gnn-methods-audit.md#4-what-repeatability-means-for-the-solver-comparison) |
+| Does the terminal censoring flag describe every threshold? | A run can cross 10% and later time out; endpoints need separate interpretation | [Endpoint reconciliation](../../docs/research/mvp2-r3-metrics-and-reproducibility.md#historical-endpoint-reconciliation--28-october) |
+| Does faster GPU training establish better downstream optimization? | The matched pair has lower selected F1 and greater assigned GPU-hours; the original CPU checkpoint remains separate | [GPU review](../../docs/research/pr87-completed-pair-review.md) |
+| Does documenting AI assistance validate a collaboration method? | Traceability and human review differ from a causal evaluation of productivity or validity | [Appendix B decision](human-ai-traceability.md) |
 
-Use the numerical provenance sections below to trace a displayed result to
-its source. The historical publication archive, principal CPU analysis and
-matched GPU pair have different populations and measurement boundaries.
-The pending CPU campaign has no final results in this supplement.
-
-The [sensitivity assessment](sensitivity-review-plan.md) concerns limitations
-and future work: options B–E and its shorter diagnostic design are outside
-the current Sprints. Option A is the existing study's completion. Prospective
-counts and resource ceilings are not execution authority.
-
-The [Human–AI register](human-ai-traceability.md) supports the authors'
-Appendix B decision. It is an internal review aid, not an additional
-experimental result or an approved journal appendix.
-
-The [closeout plan](../../docs/research/mvp2-closeout-plan.md) identifies the
-remaining qualification, synthesis, writing and audit tasks. A complete
-coauthor version is targeted for 15 December; final submission remains
-14 January. The current working documents must be selected and packaged
-explicitly before they are described as the journal supplement.
+This reconciliation concerns definitions, source-linked interpretation and
+completed evidence chains. It supplies neither the pending CPU results nor
+the final scientific audit. The
+[working R2-D8 assessment](../../docs/research/mvp2-integrated-assessment.md)
+sets out the remaining objective- and contribution-specific questions.
 
 ## Populations and evidence chains
 
@@ -65,14 +60,19 @@ the independent parent count. The [methods/model audit](../../docs/research/mvp2
 records the 54-parent admission, 34/10/10 partitions, original CPU checkpoint,
 selection rules and historical test exposure.
 
-## Machine-readable numerical provenance
+## Tracing numerical claims to their sources
 
-[claim-evidence.json](claim-evidence.json) binds 17 principal CPU/GPU claim
-groups to four existing public files. Each source has a commit, Git blob
-identity and SHA256. JSON pointers select named fields; CSV selectors require
-exactly one row with the stated clock, checkpoint, scope and averaging.
-The only transformations are sign, percent conversion and displayed rounding.
-The article section and text template bind the source value to its prose/table.
+A displayed value needs a defined population, metric and measurement boundary.
+A training-loop speedup cannot replace whole-job speedup, and a selected-model
+F1 cannot be replaced by a terminal-epoch F1.
+[claim-evidence.json](claim-evidence.json) records these bindings for 17
+principal CPU/GPU claim groups using four existing public files.
+
+For reproducibility, sources carry their revision and file-content identifiers
+(Git blob and SHA256). Named JSON fields or uniquely selected CSV rows identify
+the values, including clock, checkpoint, scope and averaging. Sign conventions,
+percent conversion and rounding are explicit; text templates connect the
+values to the article's statements and table.
 
 The existing manuscript source gate now verifies source bytes, required claim
 coverage, unique selectors and displayed values. A missing claim, changed
@@ -87,9 +87,9 @@ rights, declarations and interpretation still require the existing checks
 and human review; this manifest does not claim exhaustive automated verification.
 
 The source gate runs through `scripts/manuscript/check_manuscript.py` in the
-existing Manuscript CI. This repository material is linked from the editorial
-plan and README. It is not included in the current editable LaTeX ZIP or
-published to Pages by this PR; final journal supplement packaging remains pending.
+existing Manuscript CI. The checks do not automatically package these working Markdown files in
+the editable LaTeX ZIP or publish them to Pages. Final journal supplement
+selection and packaging remain pending.
 
 ## Clocks, costs and numerical interpretation
 
@@ -122,7 +122,23 @@ campaign operator. The installed campaign source and sequence remain frozen.
 The researcher performs any needed HPC/PowerShell intervention; existing
 collection authority does not authorize a new run.
 
-## Editorial work still requiring evidence or decisions
+## Editorial status and remaining decisions
+
+28 October 2026 · governed by the [R3 contract](../../docs/research/mvp2-r3-contract.md).
+PR92 delivered the independent methods and preliminary-review stage and was
+merged with author approval. PR93 now targets develop and remains a draft.
+The [coauthor brief](../coauthor-review-brief.md) is prepared for author-controlled
+circulation; Codex has not sent it. The [Sprint/PR plan](../../docs/research/mvp2-closeout-plan.md)
+retains 15 December for a complete coauthor version and 14 January as the
+maximum submission deadline.
+
+These files are working repository materials. A journal supplement needs an
+explicit selection of scientific content, qualified results, resolved
+availability/rights, final rendering and author review. Planning documents
+and internal decision registers are not included merely because they reside
+here. R2-D8 and the integral post-qualification audit remain unfinished.
+
+The remaining tasks are to:
 
 - Integrate the CPU closeout, eligible parent pairs, cost boundaries and all
   adverse/censored outcomes before final CPU/GPU synthesis.
