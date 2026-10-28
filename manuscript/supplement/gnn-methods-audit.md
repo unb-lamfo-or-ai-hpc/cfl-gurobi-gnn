@@ -89,7 +89,7 @@ the third has not been measured.
 
 In particular, no inspected configuration or historical receipt documents
 a search that selected two cycles and width 32 over one cycle and width 64.
-We should state that gap directly. The rationale below explains why the
+The configuration must therefore be treated as fixed, not optimal. The rationale below explains why the
 configuration is scientifically reasonable; it does not reconstruct an
 undocumented original decision or turn a fixed setting into a validated optimum.
 
@@ -217,7 +217,7 @@ an identical run? Would it stop at exactly the same state after a specified
 number of seconds? Complete provenance supports the first; the other two
 also depend on algorithms, environment and stopping conditions.
 
-The earlier wording gave Method=−1 too much explanatory weight. This parameter
+Method=−1 specifies automatic selection of the continuous algorithm. It
 controls the continuous algorithm, including the MIP root relaxation; it does
 not select the entire MIP search strategy. The
 [Gurobi 13.0 parameter manual](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameter:Method)

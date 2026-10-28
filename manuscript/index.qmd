@@ -46,7 +46,7 @@ We use MILPBench CFL instances [@milpbench]. A graph neural network (GNN) repres
 
 The research question is: under what conditions do predicted starts benefit or harm fixed-budget CFL optimization, including preparation cost? Class-aware selection prioritizes scarce predicted ones over abundant zeros. We compare BASE (B), without an external start; RELAX (R), using root-relaxation values; and GNN-START (G), using a frozen predictor. R matches G's assignment and one-count budgets and is not an independent LP-only heuristic. Historically exposed tests support retrospective evaluation, not independent generalization.
 
-The contribution connects graph-based assignment prediction to native partial starts and assesses predictive quality separately from solver outcomes. @fig-pipeline distinguishes offline learning from online guidance.
+The contribution connects graph-based assignment prediction to native partial starts and assesses predictive quality separately from solver outcomes. @fig-pipeline summarizes the offline learning and online guidance stages.
 
 ![Offline learning and online solver guidance.](figures/figure_pipeline.pdf){#fig-pipeline width=100%}
 
