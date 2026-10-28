@@ -139,8 +139,8 @@ The loss addresses a different concern. Positive binary labels are rare, so
 an unweighted objective can be dominated by zeros. The positive-class weight
 is the training negative-to-positive ratio, increasing the loss contribution
 of a missed positive label. This changes what a sigmoid score means. For
-an idealized conditional label probability p and positive weight w, the
-weighted-BCE risk is minimized at q*=wp/(wp+1−p). A score close to one is
+an idealized conditional label probability $p$ and positive weight $w$, the
+weighted-BCE risk is minimized at $q^\star=wp/(wp+1-p)$. A score close to one is
 therefore not automatically a calibrated probability of a correct assignment.
 Likewise, selecting a threshold to maximize validation F1 is not probability
 calibration.

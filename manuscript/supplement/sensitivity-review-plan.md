@@ -64,7 +64,7 @@ M4/M12 still require their existing metric-specific numerical qualifications.
 | --- | --- | --- | --- |
 | A — finish the existing study | Qualify the CPU return, inspect available logs and report bounded conclusions | No additional training, inference or solves | Variability across seeds, configurations or trained models |
 | B — two additional solver seeds | Keep Method=−1, original checkpoint/starts and one fixed thread cap; use two seeds chosen before examining new outcomes | 4 parents × 3 methods × 2 seeds = 24 solves; at most 288 solver-hours | Precise distributional estimates or robustness beyond this small seed/parent set |
-| C — explicit root-method check | Method=1, seed42, same fixed starts and one thread; compare with the corresponding automatic-setting observations | 4 × 3 = 12 solves; at most 144 solver-hours | Repeatability of wall-time termination or a seed×method interaction |
+| C — explicit root-method check | Method=1, seed 42, same fixed starts and one thread; compare with the corresponding automatic-setting observations | 4 × 3 = 12 solves; at most 144 solver-hours | Repeatability of wall-time termination or a seed×method interaction |
 | D — narrow network sensitivity | Compare baseline L=2,d=32 with L=1,d=32 and L=2,d=64, using the same data roles and validation rules | At least two trainings, graph inference and 16 new R/G solves; up to 192 solver-hours for those R/G cells, plus any required B controls | Superiority over GCN/SAGE/GAT, training-seed robustness, or a pure selector effect |
 | E — training-seed check | Two additional training seeds with the fixed architecture, followed by validation-selected checkpoints/thresholds and R/G evaluation | At least two trainings, new inference and 16 R/G solves; controls and training resources require their own design | Architectural optimality or solver-seed robustness when solver seed remains fixed |
 
@@ -107,13 +107,13 @@ This option never changes or truncates the current campaign.
 
 A small seed study asks whether the observed direction is sensitive to the
 solver search perturbation. It keeps the learned information fixed and changes
-one factor. If required, option B would use seed42 from the qualified existing
+one factor. If required, option B would use seed 42 from the qualified existing
 one-thread cells and two additional seeds specified prospectively, such as
-43 and44. Three seeds are a modest sensitivity check, not a statistically
+43 and 44. Three seeds are a modest sensitivity check, not a statistically
 justified universal minimum. More could be needed if dispersion changes the
 interpretation; no automatic expansion is proposed.
 
-The historical seed43/44 records belong to a different horizon and cannot
+The historical seed 43/44 records belong to a different horizon and cannot
 be counted as CPU12h replications. They can inform a clearly labelled historical
 discussion. They must not be pooled to claim that the longer-horizon campaign
 already has three seeds.
@@ -156,7 +156,7 @@ costs as well as solver outcomes.
 
 An old B record can be reused only if the proposed protocol explicitly
 accepts its identity, configuration, horizon and measurement conditions.
-Otherwise include new B controls. In particular, an automatic-setting seed42
+Otherwise include new B controls. In particular, an automatic-setting seed 42
 run cannot silently become an explicit-Method=1 replication even if its
 log suggests dual simplex. A new configuration remains a new treatment.
 
