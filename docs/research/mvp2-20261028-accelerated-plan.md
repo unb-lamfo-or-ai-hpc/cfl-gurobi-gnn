@@ -130,6 +130,10 @@ AI declaration, required highlights, exact citation resolution and20-page
 body budget. The official current COR guide must be rechecked before final
 submission. A403 from the publisher is not confirmation of compliance;
 the pinned template and existing checklist remain the working baseline.
+The [official Elsevier journal description](https://shop.elsevier.com/journals/computers-and-operations-research/0305-0548)
+was accessible and checked: contribution, meaningful numerical comparisons,
+reproducibility and scientific English remain substantive author-review gates.
+Template compliance alone does not establish journal suitability.
 
 ## Mandatory final audit — prepared now, executed after CPU qualification
 

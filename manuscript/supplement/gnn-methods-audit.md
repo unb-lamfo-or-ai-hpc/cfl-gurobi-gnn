@@ -29,6 +29,15 @@ choice rationales; (3) explain root capture, inference and B/R/G dependencies;
 (5) align every claim with its population, evidence and limitations. References
 absent from the manuscript are candidates, not a checklist for inclusion.
 
+COR suitability is a separate scientific gate. The publisher's
+[official journal description](https://shop.elsevier.com/journals/computers-and-operations-research/0305-0548)
+calls for substantive algorithmic content, scientifically valuable numerical
+comparisons, reproducible data/code and clear scientific English. Improving
+documentation alone cannot establish sufficient originality or experimental
+coverage. The authors must judge whether the bounded fixed-model B/R/G study
+meets that standard; a positive editorial outcome is not guaranteed.
+This observation does not authorize expanding the experiment scope.
+
 Choose E8 alternative **B**: documentary foundation plus analysis of existing
 records, without new inference, training or solves. A is sufficient for some
 editorial issues but leaves reusable provenance unexamined. C, a new controlled
