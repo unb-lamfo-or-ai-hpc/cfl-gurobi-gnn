@@ -168,7 +168,7 @@ The primary optimization outcome is the terminal relative MIP gap. It measures t
 
 Worker time separates reading/verification, model construction (including LP parsing), optimization, independent audit and residual overhead. Cold application additionally needs feature preparation and inference; artifact reuse still requires verification. Offline training, queueing and orchestration remain separate.
 
-Censoring is defined for each endpoint. A run may attain the 10% gap threshold yet reach the time limit before satisfying the solver’s terminal stopping criterion. An unobserved crossing is censored at the recorded follow-up, not assigned a crossing time of 3,600 seconds. Observed callback times are not exact continuous hitting times, and neither a threshold crossing nor solver-reported optimal status establishes exact mathematical optimality. Parents, not their binary variables, are the solver-comparison units.
+Censoring is endpoint-specific: a run may attain 10% gap yet time out before satisfying the terminal solver criterion. Unobserved crossings are censored at recorded follow-up; a timeout is not an event time. Callback times are observed, not exact continuous hitting times. Solver status remains tolerance-dependent. Parents, not binary variables, are the comparison units.
 
 ## Predictive evaluation metrics {#sec-metrics}
 
@@ -299,7 +299,7 @@ Precision/recall are 0.6923/0.7064, pooled F1 is 0.6993 and parent-macro F1 is 0
 
 ## Guidance validation
 
-The six-instance validation comparison satisfies the precommitted qualification rule. Solver messages confirm that all learned starts are loaded, with no policy abstention. Four reduce terminal gap; the median difference is -1.224 percentage points, and one increase exceeds one percentage point. Medium 19 reports zero terminal gap after approximately 671 seconds, while its unguided control reaches the time limit. The validation observations are displayed alongside the distinct test observations in @fig-effects below; only the validation observations qualify the policy.
+Solver messages confirm loading of all six validation starts, without abstention. Four reduce terminal gap; the median difference is -1.224 percentage points, and one increase exceeds one percentage point, satisfying the precommitted qualification rule. Medium 19 reports zero gap at approximately 671 seconds; its unguided control times out. @fig-effects separates these policy-qualification observations from the optimization test.
 
 ## Frozen optimization test
 
@@ -327,7 +327,7 @@ The mean paired difference is -7.200 percentage points across all six instances.
 
 {{< include tables/current_timing.qmd >}}
 
-Medium12/20 use approximately702/1,585solver seconds with GNN. Four GNN runs and all comparator runs reach the time limit before attaining the solver’s terminal criterion. This does not mean their 10% crossing is necessarily censored: medium0/4 attain that threshold with GNN before termination. Worker time includes verification, model construction and auditing, but excludes feature preparation/inference; it is not complete cold application time.
+GNN runs on medium12/20 take approximately 702/1,585 solver seconds. Four GNN runs and all comparator runs time out; medium0/4 nevertheless attain 10% with GNN. Worker time excludes feature preparation/inference and therefore does not measure complete cold application time.
 
 # Discussion
 
