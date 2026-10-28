@@ -2,9 +2,9 @@
 
 ## PR93 — synthesis and final integration
 
-PR93 starts from the verified PR92 stage. It is a draft based on PR92's
-branch until that merge is explicitly approved; then verify and retarget
-to develop. The [working assessment](../docs/research/mvp2-integrated-assessment.md)
+PR92 was merged into develop with explicit author approval on 28 October
+(merge `ac2dccb8bd56af6b03b866db5199d19944b7a28b`). PR93 now targets
+develop and remains a draft requiring its own merge approval. The [working assessment](../docs/research/mvp2-integrated-assessment.md)
 is the first S4 deliverable, using existing evidence only.
 
 Completion requires: the reconciled 60-cell return with explicit metric
@@ -68,7 +68,8 @@ The [updated S1–S6 plan](../docs/research/mvp2-20261028-accelerated-plan.md)
 sets15December2026 as the target for a complete coauthor-review version,
 retaining14January2027 for submission. S1/S2/S4/S5 advance concurrently;
 S3 waits the qualified return of the existing campaign, and final S4/S5
-synthesis remains dependent on it. Keep PR92 as the integrated editorial PR.
+synthesis remains dependent on it. PR92 delivered the independent stage;
+PR93 now carries final integration.
 
 The [GNN audit](supplement/gnn-methods-audit.md) supplies source-linked
 architecture, hyperparameter, serial/DDP and solver-interface reconciliation.

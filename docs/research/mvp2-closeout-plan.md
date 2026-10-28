@@ -22,8 +22,9 @@ article, R2-D8 closeout or publication approval.
 can start immediately with existing-evidence synthesis and the audit items
 independent of the CPU campaign. Qualified PR89 results, final figures/tables,
 the final scientific supplement, R2-D8 and the second-pass audit belong there.
-Its initial base is PR92's branch; after the author-approved PR92 merge,
-verify and retarget it to develop. No unapproved merge is needed to prepare it.
+PR92 was merged into develop with explicit author approval on 28 October,
+at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`. PR93 now targets develop.
+It remains a draft; its merge needs separate approval.
 
 **PR89 remains untouched during execution.** Its source, resources, seeds,
 models, parameters, sequence and collection contract remain frozen. The

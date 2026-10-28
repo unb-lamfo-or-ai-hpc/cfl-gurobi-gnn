@@ -110,6 +110,37 @@ limitations. More time or OPTIMAL does not establish exact optimality or
 certified speedup. Do not change original flags to grant blanket eligibility;
 produce a separate review naming qualified rows/metrics and exclusions.
 
+## Historical endpoint reconciliation — 28 October
+
+The six-medium archive uses two distinct event definitions. A solver run can
+reach the 10% threshold and still exhaust its time budget before meeting the
+terminal criterion. Accordingly, the archived `right_censored` flag cannot
+be used as a censoring indicator for every threshold.
+
+| Observation | Evidence and interpretation |
+| --- | --- |
+| Start loaded | The sanitized solver message identifies a loaded user MIP start. Submission alone is insufficient; acceptance does not establish optimality or guarantee a later improvement. |
+| 10% crossing observed | `first_observed_gap_le_0.1_seconds` supplies an observed callback time. A missing crossing requires its own follow-up/eligibility assessment. |
+| Terminal limit reached | The historical recorder sets `right_censored` from limit/interruption status codes. Preserve that flag and interpret it at the terminal endpoint. |
+| Solver reports optimal status | A tolerance-dependent solver conclusion, not an exact mathematical certificate. M4/M12 restrictions remain metric-specific. |
+
+For example, historical optimization-test medium0 with G has a recorded
+10% crossing at 1157.8713 seconds and terminal `right_censored=True`.
+These are compatible observations, not conflicting records.
+The [archived table](../../manuscript/results/current/table_solver_outcomes.csv)
+and [figure/table generator](../../scripts/manuscript/build_cor_assets.py)
+already distinguish the crossing field from the terminal flag. The article
+wording is corrected; raw data, figure values and historical flags are unchanged.
+
+This reading follows the existing
+[recorder and Start evidence](../../src/cfl_gnn/solvers/paired_partial_start.py)
+and [archival analysis](../../src/cfl_gnn/analysis/pr60_scientific_evidence.py).
+Gurobi's [status definitions](https://docs.gurobi.com/projects/optimizer/en/current/reference/numericcodes/statuscodes.html)
+describe optimal status subject to tolerances; the
+[MIPGap definition](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameter:MIPGap)
+specifies a relative stopping tolerance. Checked on 28 October 2026.
+This source review executes no optimization and changes no eligibility flag.
+
 ## Comparable time and scaling
 
 | Quantity | Definition | Qualification |

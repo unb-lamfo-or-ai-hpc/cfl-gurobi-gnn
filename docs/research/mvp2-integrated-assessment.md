@@ -127,6 +127,23 @@ This avoids presenting planning or hypothetical resource ceilings as
 experimental findings. It also identifies the packaging gap without claiming
 that the journal supplement is already complete.
 
+## First-pass finding: distinct historical endpoints
+
+The independent review traced Start acceptance and censoring through the
+recorder, historical CSV, archival analysis and display generator.
+Loaded Start messages support the acceptance statement; they do not prove
+an optimal solution or a subsequent benefit. The historical terminal
+`right_censored` flag differs from the censoring of a 10% gap crossing.
+Medium0 with G demonstrates why: its crossing is observed before a later
+time-limit termination.
+
+The [metric reconciliation](mvp2-r3-metrics-and-reproducibility.md#historical-endpoint-reconciliation--28-october)
+records the source chain and example. Existing tables and figures already use
+the appropriate crossing field. Only the article's interpretation required
+correction, including the phrase “time to optimality”. No raw evidence,
+numerical display, scientific eligibility decision or PR89 source is changed.
+This closes one independent wording finding, not the final results audit.
+
 ## Finalization conditions for this PR
 
 Complete the qualified CPU integration and source-linked interpretation;
