@@ -209,6 +209,25 @@ class ManuscriptContractTests(unittest.TestCase):
         path.write_text("Body\f" * 20 + "References\n")
         self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
 
+    def test_hpc_acknowledgements_must_precede_ai_declaration(self):
+        self.change("index.qmd", CHECK.ACKNOWLEDGEMENTS, "Acknowledgements pending.")
+        self.assertIn("hpc_acknowledgements_missing_changed_or_misplaced", CHECK.check_source(self.root))
+
+    def test_ai_heading_must_be_numbered_without_changing_disclosure(self):
+        self.change("index.qmd", f"# {CHECK.AI_HEADING}\n", f"# {CHECK.AI_HEADING} {{.unnumbered}}\n")
+        self.assertIn("ai_declaration_missing_changed_or_not_before_references", CHECK.check_source(self.root))
+
+    def test_numbered_references_still_enforce_pdf_body_budget(self):
+        path = self.root / "text.txt"
+        path.write_text("Body\f" * 20 + "11. References\n")
+        self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
+
+    def test_backmatter_requires_sequential_heading_numbers(self):
+        good = f"9. Acknowledgements\n10. {CHECK.AI_HEADING}\n11. References"
+        self.assertTrue(CHECK.numbered_backmatter(good))
+        self.assertFalse(CHECK.numbered_backmatter(good.replace("11. References", "References")))
+        self.assertFalse(CHECK.numbered_backmatter(good.replace("10. ", "12. ")))
+
     def test_pdf_orcid_identifier_not_printed(self):
         path = self.root / "text.txt"
         path.write_text("ORCID: 0000-0001-5913-2997")
@@ -222,6 +241,7 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_references_heading_is_not_suppressed_in_the_adapter(self):
         adapter = (ROOT / "manuscript/_extensions/elsevier/template.tex").read_text()
         self.assertNotIn(r"\renewcommand{\bibsection}{}", adapter)
+        self.assertIn(r"\renewcommand{\bibsection}{\section{\refname}}", adapter)
 
     def test_pdf_uses_vector_fonts_and_unicode_text_mapping(self):
         adapter = (ROOT / "manuscript/_extensions/elsevier/template.tex").read_text()

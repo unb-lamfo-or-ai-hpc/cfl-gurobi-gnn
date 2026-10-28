@@ -17,7 +17,10 @@ before submission; this checklist is not publisher approval.
 - Explicit development scope, regressions, censoring, influence sensitivity,
   label selection, missing measurements, and unachieved objectives.
 - Original material MIT; publisher class/style retain LPPL notices.
-- Generative-AI declaration immediately before References.
+- Numbered Acknowledgements thanking UJA and DaSCI for access to dgx-dasci HPC,
+  immediately before the numbered generative-AI declaration.
+- Numbered generative-AI declaration immediately before numbered References;
+  author-approved disclosure wording preserved.
 
 ## Author and evidence actions before journal submission
 

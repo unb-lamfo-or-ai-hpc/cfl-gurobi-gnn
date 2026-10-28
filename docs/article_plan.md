@@ -1,5 +1,12 @@
 # Article plan
 
+## Backmatter accepted for PR93 — 28 October 2026
+
+Use numbered Acknowledgements, then the numbered AI declaration and numbered
+References. Thank UJA and DaSCI for access to dgx-dasci HPC; preserve the
+approved disclosure text. The [editorial plan](../manuscript/editorial-plan.md)
+records the requirement and validation. No new review PDF is requested.
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.

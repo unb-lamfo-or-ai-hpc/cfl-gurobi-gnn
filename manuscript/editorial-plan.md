@@ -19,6 +19,22 @@ The following sections preserve PR92's delivered scope and earlier review
 history. They do not mark PR93 complete or authorize a new experiment.
 
 
+## Backmatter requirements from author review — 28 October 2026
+
+Before PR93 is ready for merge, retain this order: numbered Acknowledgements,
+numbered Declaration of generative AI and AI-assisted technologies in the
+manuscript preparation process, then numbered References. Preserve the
+approved AI disclosure text. The acknowledgements thank the University of
+Jaén (UJA) and the DaSCI Institute for access to the dgx-dasci HPC infrastructure;
+they do not add an unconfirmed funding or grant statement.
+
+The manuscript and local Elsevier adapter implement this requirement without
+editing the upstream class. Source, HTML and PDF checks cover the order and
+numbering; numbered References must still trigger the existing body-page
+budget check. No new review PDF is requested or delivered for this change.
+The final qualified CPU return and complete audit remain prerequisites for
+PR93 closeout; this editorial correction does not authorize its merge.
+
 ## PR92 delivery baseline — 28 October 2026
 
 The author requests completion of PR92 now and preparation of the next PR.

@@ -349,7 +349,11 @@ Sensitivity to solver seeds, explicit root algorithms and neural hyperparameters
 
 The original CPU checkpoint is retained while the approved four-medium campaign awaits its final return and metric-specific review. The completed serial/DDP pair contributes a negative quality finding. Additional independent instances and mechanism ablations could strengthen interpretation. Augmentation and network-science visualizations are not completed contributions. The curated archive must preserve unsuccessful attempts and undergo redistribution-rights and deposit verification; no Zenodo DOI is claimed as reserved or published.
 
-# Declaration of generative AI and AI-assisted technologies in the manuscript preparation process {.unnumbered}
+# Acknowledgements
+
+The authors thank the University of Jaén (UJA) and the DaSCI Institute for providing access to the dgx-dasci high-performance computing infrastructure used in this study.
+
+# Declaration of generative AI and AI-assisted technologies in the manuscript preparation process
 
 During the preparation of this work, the authors used Gurobot, Gemini 3.1 Pro, and ChatGPT Codex with models 5.6 Sol and 6.0 Astra, to assist with the codebase implementation and to support the preparation, structuring, language refinement, and data visualization of this manuscript. After using these tools/services, the authors reviewed and edited the content as needed and took full responsibility for the content of the published article.
 

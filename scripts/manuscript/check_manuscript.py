@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 import sys
+from html import unescape
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -25,6 +26,7 @@ AUTHORS = (
     ("Pedro González García", "0000-0002-6733-3868", "pglez@ujaen.es"),
 )
 AI_HEADING = "Declaration of generative AI and AI-assisted technologies in the manuscript preparation process"
+ACKNOWLEDGEMENTS = "The authors thank the University of Jaén (UJA) and the DaSCI Institute for providing access to the dgx-dasci high-performance computing infrastructure used in this study."
 AI_DISCLOSURE = (
     "During the preparation of this work, the authors used Gurobot, Gemini 3.1 Pro, "
     "and ChatGPT Codex with models 5.6 Sol and 6.0 Astra, to assist with the codebase "
@@ -154,9 +156,13 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     highlights = (root / "highlights.txt").read_text().splitlines()
     if not 3 <= len(highlights) <= 5 or any(len(line) > 85 or not line.strip() for line in highlights):
         failures.append("highlight_budget_invalid")
-    tail = f"# {AI_HEADING} {{.unnumbered}}\n\n{AI_DISCLOSURE}\n\n# References"
+    tail = f"# {AI_HEADING}\n\n{AI_DISCLOSURE}\n\n# References"
     if not article.rstrip().endswith(tail):
         failures.append("ai_declaration_missing_changed_or_not_before_references")
+    if f"# Acknowledgements\n\n{ACKNOWLEDGEMENTS}\n\n{tail}" not in article:
+        failures.append("hpc_acknowledgements_missing_changed_or_misplaced")
+    if r"\renewcommand{\bibsection}{\section{\refname}}" not in adapter:
+        failures.append("numbered_bibliography_heading_missing")
     if any(x not in article for x in ("not a runtime hardware probe", "6 Gb/s interface", "all eight GPUs")):
         failures.append("computational_environment_scope_missing")
     if evidence.get("schema_version") != 4 or evidence.get("source_contract_sha256") != CONTRACT:
@@ -218,6 +224,10 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("rendered_scope_or_declaration_missing")
     if re.search(r"(?:Figure|Table|Section)\s*<a[^>]*class=\"quarto-xref\"[^>]*>(?:Figure|Table|Section)", content):
         failures.append("duplicated_crossreference_prefix")
+    headings = "\n".join(unescape(re.sub(r"<[^>]+>", " ", match.group(2)))
+                         for match in re.finditer(r"<h([1-6])\b[^>]*>(.*?)</h\1>", content, re.DOTALL))
+    if not numbered_backmatter(headings):
+        failures.append("html_backmatter_numbering_or_order_missing")
     if not pdf.read_bytes().startswith(b"%PDF-"):
         failures.append("invalid_pdf_header")
     # An HTML-only refresh must not accidentally qualify a preceding draft PDF.
@@ -250,6 +260,19 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
     return failures
 
 
+def numbered_backmatter(text: str) -> bool:
+    """Check sequential headings without depending on their current section IDs."""
+    normalized = " ".join(text.split())
+    titles = ("Acknowledgements", AI_HEADING, "References")
+    matches = [re.search(r"\b(\d+)\.?\s+" + re.escape(title), normalized)
+               for title in titles]
+    if any(match is None for match in matches):
+        return False
+    numbers = [int(match.group(1)) for match in matches]
+    return (matches[0].start() < matches[1].start() < matches[2].start()
+            and numbers[1] == numbers[0] + 1 and numbers[2] == numbers[1] + 1)
+
+
 def check_pdf_text(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     normalized = " ".join(text.split())
@@ -266,7 +289,9 @@ def check_pdf_text(path: Path) -> list[str]:
             failures.append("pdf_author_email_missing:" + email)
     if "Gurobot, Gemini 3.1 Pro" not in normalized:
         failures.append("pdf_ai_declaration_missing")
-    match = re.search(r"(?m)(?:^|[\n\f])[ \t]*(References)[ \t]*(?:\n|$)", text)
+    if not numbered_backmatter(text):
+        failures.append("pdf_backmatter_numbering_or_order_missing")
+    match = re.search(r"(?m)(?:^|[\n\f])[ \t]*(?:\d+\.[ \t]+)?(References)[ \t]*(?:\n|$)", text)
     if "\f" in text and match and text[:match.start(1)].count("\f") + 1 > 20:
         failures.append("manuscript_body_exceeds_twenty_pages")
     if UNSAFE.search(text):
