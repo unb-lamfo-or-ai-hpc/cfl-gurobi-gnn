@@ -44,9 +44,12 @@ campaign is still absent.
 | Matched GPU pair | One seed; loop speedup 2.167, job speedup 1.831; selected F1 loss 0.032468 | Increased assigned GPU-hours and lower selected quality; no noninferiority or isolated GPU causality. [Completed review](pr87-completed-pair-review.md) |
 | CPU12h | 60 cells already submitted; final return pending | No result values or inferred outcome counts are inserted here. [Frozen R3 scope](mvp2-r3-contract.md) |
 
-Existing numerical values above are already bound by the
-[claim map](../../manuscript/supplement/claim-evidence.json).
-This document does not introduce a new estimator, pooled dataset or experiment.
+The principal CPU coverage and displayed matched-GPU values are bound by
+the [claim map](../../manuscript/supplement/claim-evidence.json). Data-admission
+and partition counts use the R3 methods record; historical figures retain
+their imported manifest. The numerical gate does not claim coverage of every
+quantity in this report. This document introduces no new estimator, pooled
+dataset or experiment.
 The first-pass audit record remains in the coauthor brief; its reuse is
 explicit, not a declaration that all software or conclusions have been verified.
 
