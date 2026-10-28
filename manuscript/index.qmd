@@ -299,7 +299,7 @@ Precision/recall are 0.6923/0.7064, pooled F1 is 0.6993 and parent-macro F1 is 0
 
 ## Guidance validation
 
-The six-instance validation comparison satisfies the precommitted qualification rule: solver messages confirm that all learned starts are loaded, with no policy abstention, four reduce terminal gap, the median difference is -1.224 percentage points, and one increase exceeds one percentage point. Medium 19 reports zero terminal gap after approximately 671 seconds, while its unguided control reaches the time limit. The validation observations are displayed alongside the distinct test observations in @fig-effects below; only the validation observations qualify the policy.
+The six-instance validation comparison satisfies the precommitted qualification rule. Solver messages confirm that all learned starts are loaded, with no policy abstention. Four reduce terminal gap; the median difference is -1.224 percentage points, and one increase exceeds one percentage point. Medium 19 reports zero terminal gap after approximately 671 seconds, while its unguided control reaches the time limit. The validation observations are displayed alongside the distinct test observations in @fig-effects below; only the validation observations qualify the policy.
 
 ## Frozen optimization test
 
