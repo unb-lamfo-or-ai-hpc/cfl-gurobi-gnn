@@ -87,6 +87,22 @@ without eliminating wall-clock variation. A parallel cap would be appropriate
 only if the scientific question explicitly concerns a parallel regime; it
 must be chosen before looking at the new results.
 
+### A shorter diagnostic study, if the later question permits it
+
+A separately designed four-hour study could use all three seeds at one cap:
+4 parents × 3 methods × 3 seeds = 36 new solves, with a ceiling of 144
+solver-hours. This costs less solver time than adding two 12-hour seeds,
+but answers a different question: sensitivity under a four-hour budget.
+It cannot establish robustness of the full 12-hour result.
+
+Seed 42 would also need a run with the newly specified four-hour limit.
+The first four hours of an existing 12-hour trajectory cannot automatically
+be treated as an experiment configured with TimeLimit=14400: stopping
+parameters can affect solver behaviour, and recorded horizon observations
+have their own timestamp/coverage qualifications. Existing traces can
+inform the question, but not silently replace the missing treatment.
+This option never changes or truncates the current campaign.
+
 ## Why the smallest follow-up would usually start with seeds
 
 A small seed study asks whether the observed direction is sensitive to the
