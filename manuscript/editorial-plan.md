@@ -31,7 +31,9 @@ OneDrive Temp Codex location exists but was not used for writes. A local
 write/read probe passed; direct PowerShell DNS for api.github.com failed,
 while the GitHub connector succeeded. This is a point-in-time observation,
 not a general claim about every sandbox capability. No external desktop app,
-remote HPC command, temporary cloud/blob upload or review-PDF export is used.
+remote HPC command, session-file transfer through a blob service or review-PDF
+export is used. GitHub source commits, PR notes and standard CI reports remain
+project validation records.
 
 Source and rendering checks enforce the reader-text boundary without replacing
 the integral scientific audit after campaign qualification. PR93 remains draft;
