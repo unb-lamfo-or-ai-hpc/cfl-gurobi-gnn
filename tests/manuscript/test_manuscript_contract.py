@@ -30,6 +30,23 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_sources_pass_without_generated_assets(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
+    def test_coauthor_instructions_do_not_belong_in_article(self):
+        self.change("index.qmd", "# Introduction", "# Introduction\n\nFor coauthor review only.")
+        self.assertIn("internal_note_in_reader_text:index.qmd", CHECK.check_source(self.root))
+
+    def test_operational_status_does_not_belong_in_supplement(self):
+        path = self.root / "supplement/configuration-reference.md"
+        with path.open("a", encoding="utf-8") as stream:
+            stream.write("\nThe final return is pending.\n")
+        self.assertIn("internal_note_in_reader_text:supplement/configuration-reference.md",
+                      CHECK.check_source(self.root))
+
+    def test_internal_review_file_is_not_a_registered_supplement(self):
+        path = self.root / "supplement/human-ai-traceability.md"
+        path.write_text("Internal review record.", encoding="utf-8")
+        self.assertIn("unregistered_supplement_text:human-ai-traceability.md",
+                      CHECK.check_source(self.root))
+
     def test_changed_source_csv_fails(self):
         path = self.root / "results/current/table_predictive_metrics.csv"
         path.write_bytes(path.read_bytes() + b"\n")

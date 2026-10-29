@@ -17,7 +17,7 @@ Its [supplement guide](../manuscript/supplement/README.md) records the independe
 claim reconciliation and reader-oriented explanations. PR93 remains a draft;
 the qualified return and final audit are still required.
 
-The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+The [coauthor brief](research/coauthor-review-brief.md) is prepared for
 author-controlled circulation and preliminary feedback by 15 November.
 It includes the first-pass audit record. The complete post-qualification
 audit remains mandatory. Targets are manuscript 15 December, final approval
@@ -35,7 +35,7 @@ targets a complete coauthor-review version by15December2026 and preserves
 the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
 the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
 The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
-[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+[conditional Appendix B register](research/human-ai-traceability-review.md)
 record actual methods, critical references and evidence gaps. No experiment,
 checkpoint, campaign parameter or raw result is changed.
 
@@ -102,7 +102,7 @@ The proposedCPU780hserial reservation plus queues is a critical calendar risk,
 not a promised completion date. Write in parallel, escalate prospective scope
 choices before execution; main synchronization after article review only.
 PR87 completed GPU delivery: [review](research/pr87-completed-pair-review.md)
-and [seven tables/four vector figures](evidence/pr87/jobs3673-3674/) supply the
+and [seven tables/four vector figures](evidence/pr87/jobs3673-3674) supply the
 mandatory full-training serial1GPU/DDP4 comparison. Report seed42 matched work,
 2.167x loop/1.831x job speedup, increased assigned GPU-h and selected macro F1
 loss0.032468 beyond the frozen margin. Do not claim quality preservation,
@@ -137,7 +137,7 @@ PR88 manuscript proceeds alongside GPU; release/main only after article review.
 
 19 October [CPU closeout](research/pr86-final-analysis.md): the planned210/70
 are collected and analytically consolidated. Use the [final source tables and
-six figures](evidence/pr86/final-210/) instead of partial-wave plots for final
+six figures](evidence/pr86/final-210) instead of partial-wave plots for final
 CPU claims. Preserve earlier figures as dated evidence. Main takeaways:
 heterogeneous GNN effects; compareLP too; preparation accounting can reverse a
 solver-only benefit; pointwise exploratory uncertainty and numerical sensitivity

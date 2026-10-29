@@ -35,7 +35,7 @@ keywords:
   - Partial MIP starts
   - Computational reproducibility
 abstract: |
-  Can graph neural predictions improve mixed-integer optimization when preparation costs and censoring are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes unspecified variables without restricting the feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium evidence from a retrospective comparison on ten previously exposed test parents. Of 210 preserved records, the principal analysis uses 150 seed-42 observations across three methods and five CPU caps: 97 solver-reported terminal-target attainments and 53 censored observations. Attainments are not exact certificates; two medium parents retain numerical restrictions. The root-LP comparator matches the learned start's support budget and positive count and is not an independent LP heuristic. We separate neural speedup, CPU scaling, terminal quality and preparation-cost scenarios. A matched-work seed-42 training pair compares one-GPU serial training with four-GPU distributed training over 100 epochs and 3,400 updates. Distributed training accelerates the training loop by 2.167 times and the whole job by 1.831 times, but increases assigned GPU-hours and reduces selected parent-macro F1 from 0.7231 to 0.6906, exceeding the predeclared descriptive loss margin. These heterogeneous speed-quality-cost tradeoffs do not establish uniform superiority or preserved predictive quality. An authorized longer-horizon CPU campaign is in progress; its final results remain pending.
+  Can graph neural predictions improve mixed-integer optimization when preparation costs and censoring are considered? We study capacitated facility location with class-aware partial starts: predictions of value 1 receive priority over abundant zeros, and Gurobi completes unspecified variables without restricting the feasible region. A bipartite predictor uses 54 quality-screened parents with fixed training, validation and test partitions. We distinguish historical six-medium evidence from a retrospective comparison on ten previously exposed test parents. Of 210 preserved records, the principal analysis uses 150 seed-42 observations across three methods and five CPU caps: 97 solver-reported terminal-target attainments and 53 censored observations. Attainments are not exact certificates; two medium parents retain numerical restrictions. The root-LP comparator matches the learned start's support budget and positive count and is not an independent LP heuristic. We separate neural speedup, CPU scaling, terminal quality and preparation-cost scenarios. A matched-work seed-42 training pair compares one-GPU serial training with four-GPU distributed training over 100 epochs and 3,400 updates. Distributed training accelerates the training loop by 2.167 times and the whole job by 1.831 times, but increases assigned GPU-hours and reduces selected parent-macro F1 from 0.7231 to 0.6906, exceeding the predeclared descriptive loss margin. These heterogeneous speed-quality-cost tradeoffs do not establish uniform superiority or preserved predictive quality.
 ---
 
 # Introduction
@@ -94,8 +94,6 @@ Let $B_p\subseteq I_p$ contain the binary variables. A feasible incumbent, meani
 
 MILPBench groups the 90 original CFL instances into 30 easy, 30 medium, and 30 hard instances. These are benchmark difficulty categories, distinct from the binary target classes used in class-aware prediction. Our learning cohort contains all 30 easy instances and the 24 medium instances whose labels satisfy the admission threshold. The optimization experiments retain the original instance identities and evaluate medium instances separately from the pooled predictive assessment.
 
-<!-- MVP 2.0 reserved extension: compare all 90 parents by variable and constraint counts, binary-variable fraction, matrix nonzeros and density, coefficient scales, and variable/constraint degree distributions. Insert verified class-level descriptive tables and introduce/interpret PCA and UMAP projections fitted without test-label information. Evaluate the proposed network-based visual methodology separately; do not imply that it has already been implemented or validated. -->
-
 ## Offline graph learning
 
 Variables and constraints form nodes connected by nonzero coefficients in $A_p$. Each edge carries its coefficient. Variable features encode objective, bounds, type and root-LP value captured at the first optimal root-node MIPNODE callback; constraint features encode right-hand side and sense. Root values are aligned by variable identity. Reference labels read by the graph encoder support its separate feasibility audit; they do not enter the neural forward or start selection.
@@ -134,7 +132,7 @@ For comparison, the root-LP start uses the relaxation rather than the network to
 # Experimental design
 
 The following single-thread, six-medium-instance design documents the historical
-study preserved in the publication archive. The separate MVP2 seed42 analysis
+study preserved in the publication archive. The separate retrospective seed42 analysis
 and its exposed population are specified in @sec-mvp2-current; the historical
 tables are not a replacement for that principal analysis.
 
@@ -188,12 +186,12 @@ The [canonical repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn
 
 Experiments ran on UJA DGX-DaSCI at the Higher Polytechnic School of Jaén, University of Jaén. The supplied DGX-1 inventory lists eight 32-GB Tesla V100 GPUs, two 20-core x86 CPUs at 2.2 GHz, and 512 GB memory. This inventory is not a runtime hardware probe and does not imply allocation of all eight GPUs to training. Historical six-medium workers use one Gurobi thread; the principal CPU comparison uses caps 1/2/4/8/16. Actual allocations and software versions are recorded per run. Storage includes an OS SATA SSD with a 6 Gb/s interface and a four-device SSD RAID-0 array. Interface capacity is distinguished from measured throughput.
 
-Project-owned material uses MIT; benchmark, solver and template retain their rights. Public tables exclude credentials, private paths, raw logs and checkpoints. No unverified Zenodo deposit supports an availability claim.
+Project-owned material uses MIT; benchmark, solver and template retain their rights. Public tables exclude credentials, private paths, raw logs and checkpoints. Original benchmark files and large intermediate artifacts are managed separately under their respective access and redistribution terms.
 
-# MVP2 principal analysis and pending extensions {#sec-mvp2-current}
+# Retrospective CPU analysis and matched GPU training {#sec-mvp2-current}
 
-The PR86 campaign is preserved as 210 records in 70 groups. The principal MVP2
-view selects 150 seed42 records (six easy and four medium parents, three
+The CPU archive is preserved as 210 records in 70 groups. The principal
+retrospective view selects 150 seed42 records (six easy and four medium parents, three
 methods, five thread caps: 1, 2, 4, 8, 16). The other 60 records and multiseed
 figures are historical only, not evidence of initialization robustness in the
 principal analysis. The ten parents were already historically exposed. A parent,
@@ -209,12 +207,12 @@ not each method/thread row or binary variable, is the experimental unit.
 
 : Scope of the principal retrospective analysis; sensitivity is not an additional sample. {#tbl-mvp2-scope}
 
-The immutable source hash remains in the PR86 final-210 archive manifest.
+The immutable source hash is retained in the archived CPU data manifest.
 Derived tables and their hashes are retained in the versioned
 methodology-20261019 evidence directory. Neural speedup is $T_B/T_G$ or $T_R/T_G$,
 with values above one favouring G; historical $T_2/T_0$ ratios retain their
 original names and orientation. Same-method CPU speedup is $T_m(1)/T_m(r)$ and efficiency divides this
-quantity by $r$. Compute these only for comparable attained targets and eligible
+quantity by $r$. These ratios describe only comparable attained targets and eligible
 pairs. Censored or numerically restricted runs are not certified speedups.
 Descriptive complete-pair summaries do not represent excluded censored pairs.
 
@@ -222,18 +220,9 @@ M4/M12 retain explicit tolerance sensitivity: acceptance of original floating-po
 vectors does not certify feasibility of diagnostically rounded copies or exact
 optimality. More running time does not resolve that issue. Scoped cold and
 amortized preparation costs are scenarios, not independent end-to-end measurements;
-the new five-use scenario does not relabel historical seven-use values.
+five-use and seven-use allocations represent separate assumptions about reuse.
 Allocation, CPU time, cgroup memory, RSS, Slurm MaxRSS and GPU memory have
 different scopes and cannot be combined into an artificial efficiency indicator.
-
-The authorized longer-horizon CPU campaign is in progress; its final results
-remain pending. It comprises 60 fresh seed42 solves: four medium parents,
-three methods and five caps, with 12-hour solver limits and unchanged
-$10^{-4}$ terminal relative gap. The protocol records first observed crossings
-of 10%, 5%, 1% and 0.01% and observations around 1/4/8/12 hours, preserving
-timestamps, brackets, censoring and unavailable values without interpolation.
-The original PR86 checkpoint, starts and numerical restrictions are retained.
-Execution status alone supplies no quality or time-to-target result.
 
 ## Matched serial and distributed GPU training {#sec-gpu-matched}
 
@@ -273,17 +262,17 @@ minima 99/92, not test-based selection. Positive weight 1132.97583 is train-fitt
 Training averages 136 per-graph losses during updates; validation averages ten
 parents after each epoch. Curves are unsmoothed and BCE is not F1. Runtime:
 Python 3.10.20, PyTorch 2.1.2+cu121, CUDA build 12.1, NCCL 2.18.6, driver 550.90.07;
-no environment upgrade. Jobs 3673/3674 and original receipt 909f6ce85dfd bind the
-histories, tables and scoped review in the PR87 archive; PR88 adds the figure manifest.
+histories, tables, receipt hashes and figure provenance are retained in the
+versioned evidence archive.
 One seed, fixed serial-to-DDP order, exposed tests and accompanying CPU scaling
 preclude seed uncertainty, independent generalization and isolated GPU causality.
 Trajectory-divergence cause is unproven. These checkpoints do not replace the
-frozen PR86 models or establish downstream solver benefit.
+original CPU predictor or establish downstream solver benefit.
 
 # Results — historical six-medium study
 
 These archived results are retained with their original populations and budgets.
-They are not independent new evidence or the current principal150-row sample.
+They are not independent new evidence or the principal 150-row sample.
 
 ## Prediction and learning dynamics
 
@@ -337,7 +326,7 @@ The interface preserves the original feasible region: unlike learned restriction
 
 The same distinction applies to repeatability. Automatic root-method selection does not invalidate an observed comparison, but identical parameter settings do not establish a distribution of expected performance. One solver seed per principal configuration leaves search-path variability unquantified. We report the observed outcomes and their numerical and censoring restrictions, rather than treating thread caps or repeated measurements as independent problem instances. Rare-positive prediction metrics [@saito2015] and calibration diagnostics [@brier1950; @guo2017] answer different questions from solver utility.
 
-The GPU comparison reinforces this separation: training accelerates, but selected F1 declines and assigned GPU-hours increase. It does not show that faster training preserves prediction quality or improves the resulting starts. The longer-horizon CPU campaign remains in progress and supplies no final efficacy conclusion at this stage.
+The GPU comparison reinforces this separation: training accelerates, but selected F1 declines and assigned GPU-hours increase. It does not show that faster training preserves prediction quality or improves the resulting starts. The reported CPU comparisons do not establish the effects of longer optimization budgets.
 
 # Final considerations, limitations and future work
 
@@ -347,7 +336,7 @@ Labels are checked feasible incumbents, but may be approximate, and quality scre
 
 Sensitivity to solver seeds, explicit root algorithms and neural hyperparameters remains unresolved. A proportionate extension would vary one factor at a time: first solver seeds with frozen starts, then a root-method comparison if logs identify a relevant uncertainty, and targeted depth/width or training-seed checks if required by a stronger predictive claim. Such studies would retain validation-only selection, matched controls, censoring and preparation costs. They are future work, not completed evidence. Deferring them requires limiting the present claims; a limitations statement cannot establish robustness that was not tested.
 
-The original CPU checkpoint is retained while the approved four-medium campaign awaits its final return and metric-specific review. The completed serial/DDP pair contributes a negative quality finding. Additional independent instances and mechanism ablations could strengthen interpretation. Augmentation and network-science visualizations are not completed contributions. The curated archive must preserve unsuccessful attempts and undergo redistribution-rights and deposit verification; no Zenodo DOI is claimed as reserved or published.
+The CPU analyses concern the original frozen predictor; the later serial/DDP pair contributes a separate negative quality finding. Longer observation budgets, additional independent instances and mechanism ablations could strengthen interpretation. Augmentation and network-science visualizations were not evaluated as contributions of this study. Reproduction remains subject to the access and redistribution terms of benchmark, solver and model artifacts.
 
 # Acknowledgements
 

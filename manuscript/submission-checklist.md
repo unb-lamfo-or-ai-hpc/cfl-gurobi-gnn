@@ -8,6 +8,9 @@ before submission; this checklist is not publisher approval.
 
 ## Prepared
 
+- Article and registered supplements address journal readers; coauthor instructions,
+  operational status and scheduling belong only in internal repository records.
+
 - English article organized around a research question and method, not an audit diary.
 - Elsevier author-year preprint layout and editable LaTeX source.
 - Abstract at most 250 words; six keywords.

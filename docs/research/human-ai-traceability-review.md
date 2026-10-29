@@ -1,8 +1,10 @@
+<!-- Internal research record; excluded from article and journal supplements. -->
+
 # Human–AI traceability: Appendix B decision for coauthor review
 
 28 October 2026 · working material, not an approved journal appendix.
-Read with the [accelerated plan](../../docs/research/mvp2-20261028-accelerated-plan.md)
-and [GNN audit](gnn-methods-audit.md).
+Read with the [accelerated plan](mvp2-20261028-accelerated-plan.md)
+and [GNN audit](../../manuscript/supplement/gnn-methods-audit.md).
 
 ## Why document Human–AI collaboration here?
 
@@ -47,10 +49,10 @@ They are review candidates, not four completed case studies.
 
 | Episode | Existing primary repository evidence | What it may document | Missing acceptance / qualification |
 | --- | --- | --- | --- |
-| PR85 formulation and model bindings | [PR85 closure](../../docs/research/pr85-closure.md), mathematical signatures and source/model receipts | Detection, diagnosis and explicit preservation of model identity under the human MINIMIZE decision | Link exact dated human decision and its scope before attributing the decision to a collaboration stage |
-| PR86 M12 numerical sensitivity | [Final CPU analysis](../../docs/research/pr86-final-analysis.md), original and diagnostic-vector audits | Distinction between solver acceptance, rounded-vector feasibility and scientific metric eligibility | Explicit author acceptance of the final bounded interpretation; do not reopen formulation certification |
-| PR87 adverse GPU quality | [Completed-pair review](../../docs/research/pr87-completed-pair-review.md), histories, matched loss and returned metrics | Faster training with lower selected F1 retained visibly | Evidence of scientific review, not merely CI or a merged implementation |
-| PR88 methodological redirection | [D1 protocol](../../docs/research/methodology-20261019/D1-protocol.md), [D5 contributions](../../docs/research/methodology-20261019/D5-contributions.md), figure manifests | Separation of clocks, censoring, parent units and contribution limits | Bind the actual human decision that accepted each interpretation and show alternatives without rewriting history |
+| PR85 formulation and model bindings | [PR85 closure](pr85-closure.md), mathematical signatures and source/model receipts | Detection, diagnosis and explicit preservation of model identity under the human MINIMIZE decision | Link exact dated human decision and its scope before attributing the decision to a collaboration stage |
+| PR86 M12 numerical sensitivity | [Final CPU analysis](pr86-final-analysis.md), original and diagnostic-vector audits | Distinction between solver acceptance, rounded-vector feasibility and scientific metric eligibility | Explicit author acceptance of the final bounded interpretation; do not reopen formulation certification |
+| PR87 adverse GPU quality | [Completed-pair review](pr87-completed-pair-review.md), histories, matched loss and returned metrics | Faster training with lower selected F1 retained visibly | Evidence of scientific review, not merely CI or a merged implementation |
+| PR88 methodological redirection | [D1 protocol](methodology-20261019/D1-protocol.md), [D5 contributions](methodology-20261019/D5-contributions.md), figure manifests | Separation of clocks, censoring, parent units and contribution limits | Bind the actual human decision that accepted each interpretation and show alternatives without rewriting history |
 
 For an eventual appendix, each accepted row needs: date, trigger, original
 question, existing artifact identity, AI-assisted proposal, independent check,

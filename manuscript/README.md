@@ -14,7 +14,7 @@ inferred from a passing preview.
 
 PR92 delivers the independent R3 methods, provenance and preliminary review
 stage while the authorized CPU campaign continues. Its
-[coauthor brief](coauthor-review-brief.md) contains the scientific argument,
+[coauthor brief](../docs/research/coauthor-review-brief.md) contains the scientific argument,
 known limitations and a first-pass audit register. The
 [editorial plan](editorial-plan.md) defines this PR's completion criteria;
 the [Sprint/PR plan](../docs/research/mvp2-closeout-plan.md) separates it from

@@ -49,6 +49,41 @@ def safe_child(root: Path, name: str) -> Path | None:
     return path if not path.is_symlink() and path.resolve().is_relative_to(root.resolve()) else None
 
 
+READER_TEXTS = (
+    "index.qmd", "supplement/README.md", "supplement/gnn-methods-audit.md",
+    "supplement/configuration-reference.md", "supplement/sensitivity-review-plan.md",
+)
+READER_INTERNAL_NOTE = re.compile(
+    r"\bco[- ]?authors?\b|\bPR\d+\b|\bMVP ?2\b|\bS1[–-]S6\b"
+    r"|\bpending\b|\bin progress\b|\bfinal return\b|\bstill-running\b"
+    r"|\bmerge approval\b|\bsubmission deadline\b|\bauthor-controlled\b"
+    r"|\bbefore submission\b|\bworking material\b|\bnot an approved journal appendix\b",
+    re.IGNORECASE,
+)
+
+
+def check_reader_material(root: Path) -> list[str]:
+    """Keep editorial decisions and operational status outside journal prose."""
+    failures = []
+    allowed = {Path(name).name for name in READER_TEXTS if name.startswith("supplement/")}
+    for path in (root / "supplement").glob("*.md"):
+        if path.name not in allowed:
+            failures.append("unregistered_supplement_text:" + path.name)
+    for name in READER_TEXTS:
+        path = root / name
+        if not path.is_file():
+            failures.append("reader_text_missing:" + name)
+            continue
+        text = path.read_text(encoding="utf-8")
+        # Source URLs and cross-reference IDs can legitimately contain archive identifiers.
+        prose = re.sub(r"(\[[^\]]+\])\([^\n)]+\)", r"\1", text)
+        prose = re.sub(r"https?://[^\s)]+", "", prose)
+        prose = re.sub(r"\{#[^}]*\}|@(?:sec|fig|tbl|eq)-[\w-]+", "", prose)
+        if "<!--" in prose or READER_INTERNAL_NOTE.search(prose):
+            failures.append("internal_note_in_reader_text:" + name)
+    return failures
+
+
 def check_source(root: Path = MANUSCRIPT) -> list[str]:
     failures = check_claim_evidence(root, ROOT)
     article = (root / "index.qmd").read_text(encoding="utf-8")
@@ -107,12 +142,12 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
             or continuation.get("final_coauthor_approval") is not False
             or continuation.get("submission_authorized") is not False):
         failures.append("pending_cpu_campaign_misrepresented")
-    if ("CPU campaign is in progress" not in article
-            or any(term in article for term in (
-                "unapproved and unexecuted", "CPU extension is a proposal",
-                "CPU proposal awaits separate resource approval",
-            ))):
+    if any(term in article for term in (
+            "unapproved and unexecuted", "CPU extension is a proposal",
+            "CPU proposal awaits separate resource approval",
+    )):
         failures.append("obsolete_cpu_campaign_authority")
+    failures += check_reader_material(root)
     if r"\usepackage{orcidlink}" not in adapter or r"\providecommand{\orcidlink}" in adapter:
         failures.append("orcid_icon_package_missing_or_replaced")
     if "{elsarticle}" not in adapter or "elsarticle-harv" not in adapter or "cite-method: natbib" not in config:

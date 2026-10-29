@@ -1,3 +1,5 @@
+<!-- Internal research record; excluded from article and journal supplements. -->
+
 # Preliminary scientific brief for coauthor review
 
 28 October 2026 · working material accompanying PR92.
@@ -7,7 +9,7 @@ and no response or scientific approval is presumed.
 
 The purpose of early review is to assess the argument while the CPU campaign
 continues. The final manuscript will be reviewed again after its results are
-qualified. The [completion plan](../docs/research/mvp2-closeout-plan.md) records
+qualified. The [completion plan](mvp2-closeout-plan.md) records
 that distinction.
 
 ## Working title
@@ -47,8 +49,8 @@ the argument:
 | [Cantürk et al.](https://doi.org/10.1613/jair.1.14972) | Uncertainty-based reduction is a relevant primal-guidance precedent, not the same selection/completion policy. |
 | [Vargas-Pérez et al.](https://doi.org/10.1109/TCSS.2024.3508452) | Explicit architecture/settings/validation reporting is a useful example; results in opinion-dynamics regression do not justify an architecture winner for CFL. |
 
-The [methods explanation](supplement/gnn-methods-audit.md) and
-[reference review](reference-review.md) contain the implementation comparison
+The [methods explanation](../../manuscript/supplement/gnn-methods-audit.md) and
+[reference review](../../manuscript/reference-review.md) contain the implementation comparison
 and access/metadata qualifications. This brief does not repeat or extend the
 literature investigation.
 
@@ -120,7 +122,7 @@ has a different population and retains its own tables and limitations.
 The completed matched GPU pair records loop speedup 2.167 and job speedup 1.831,
 but selected parent-macro F1 decreases by 0.032468. Assigned GPU-hours increase.
 This does not establish predictive noninferiority, isolated GPU causality
-or downstream solver benefit. The [claim map](supplement/claim-evidence.json)
+or downstream solver benefit. The [claim map](../../manuscript/supplement/claim-evidence.json)
 binds these existing numbers to their qualified sources.
 
 The CPU12h campaign is still pending. No quality, speedup, threshold-crossing
@@ -129,7 +131,7 @@ would not support such a result.
 
 Additional solver seeds, explicit root methods, neural depth/width changes,
 training seeds and the shorter diagnostic design remain limitations and future
-work in the [sensitivity assessment](supplement/sensitivity-review-plan.md).
+work in the [sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md).
 They are not part of the current Sprints.
 
 ## Five questions for preliminary author feedback
@@ -157,13 +159,13 @@ or a blanket validation of the repository.
 
 | Aspect | Evidence reviewed or reused | Disposition before the CPU return |
 | --- | --- | --- |
-| Formulation and B/R/G interface | [R3 methods](../docs/research/mvp2-r3-methods-and-models.md), native model/Start signatures | Documented under the frozen MINIMIZE decision; no renewed generator-certification gate |
-| Architecture, hyperparameters and model provenance | [Methods explanation](supplement/gnn-methods-audit.md), versioned configuration and original checkpoint bindings | Source-linked; historical-fit replay and architecture superiority are not established |
+| Formulation and B/R/G interface | [R3 methods](mvp2-r3-methods-and-models.md), native model/Start signatures | Documented under the frozen MINIMIZE decision; no renewed generator-certification gate |
+| Architecture, hyperparameters and model provenance | [Methods explanation](../../manuscript/supplement/gnn-methods-audit.md), versioned configuration and original checkpoint bindings | Source-linked; historical-fit replay and architecture superiority are not established |
 | Root/inference/Start information path | Root and guidance preparation sources linked in the methods explanation | Described separately; no new preparation, inference or solver call |
-| Repeatability and metrics | [R3 definitions](../docs/research/mvp2-r3-metrics-and-reproducibility.md) | Conditional interpretation documented; unexported runtime fields remain unavailable |
-| Bibliography and positioning | Chat01.04 review, [reference review](reference-review.md), primary sources above | Current claim-specific positioning prepared; novelty sufficiency awaits coauthors |
+| Repeatability and metrics | [R3 definitions](mvp2-r3-metrics-and-reproducibility.md) | Conditional interpretation documented; unexported runtime fields remain unavailable |
+| Bibliography and positioning | Chat01.04 review, [reference review](../../manuscript/reference-review.md), primary sources above | Current claim-specific positioning prepared; novelty sufficiency awaits coauthors |
 | Manuscript structure and historical figures | Existing numerical manifests, source gates, final-head render/visual review from the previous verified article revision | Existing inputs and scopes reviewed; no CPU12h result is inferred |
-| Supplement structure and Human–AI material | [Reading order](supplement/README.md), claim map, conditional Appendix B register | Working review material; final journal packaging and final audit remain pending |
+| Supplement structure and Human–AI material | [Reading order](../../manuscript/supplement/README.md), claim map, conditional Appendix B register | Working review material; final journal packaging and final audit remain pending |
 
 The final post-D0 audit must still reconcile the integrated results, every
 published table/figure and claim, documentation and editorial package.

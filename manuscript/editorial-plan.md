@@ -1,5 +1,44 @@
 # Scientific and editorial revision
 
+## Reader-only publication boundary — 29 October 2026
+
+The author requires article and appendix/supplement prose to address future
+journal readers only. Internal review instructions, pending integration,
+campaign scheduler status, dates, approvals and resource decisions belong in
+GitHub research records and PR checkpoints, never in that prose.
+
+The registered reader texts are the article and supplement README, methods
+explanation, configuration reference and sensitivity discussion. The latter
+retains scientific limitations and future research questions, while its full
+prospective execution/budget discussion is preserved in
+[internal sensitivity planning](../docs/research/mvp2-sensitivity-planning.md).
+The [coauthor brief](../docs/research/coauthor-review-brief.md) and
+[Human–AI/Appendix B decision register](../docs/research/human-ai-traceability-review.md)
+are moved to docs/research with their evidence and limitations intact.
+No new Human–AI appendix is promoted.
+
+The article no longer narrates PR/job progress or reserves hidden editorial
+extension text. It states the scientific scope of the reported observations.
+No final CPU12h quality, timing or cost result is supplied. All original
+scientific data, checkpoints, configurations and the installed campaign stay
+unchanged. The [29 October scheduler transcription](../docs/evidence/pr89/status-20261029-author.json)
+records the human-supplied partial snapshot separately.
+
+Temporary files are local only, in the writable conversation directory under
+the user's .codex profile. The literal alternative profile-name suffix in the
+new message does not exist; the established .codex directory does. The
+OneDrive Temp Codex location exists but was not used for writes. A local
+write/read probe passed; direct PowerShell DNS for api.github.com failed,
+while the GitHub connector succeeded. This is a point-in-time observation,
+not a general claim about every sandbox capability. No external desktop app,
+remote HPC command, temporary cloud/blob upload or review-PDF export is used.
+
+Source and rendering checks enforce the reader-text boundary without replacing
+the integral scientific audit after campaign qualification. PR93 remains draft;
+merge, publication and submission still require their own human decisions.
+The full final article/annex review remains required.
+
+
 ## PR93 — synthesis and final integration
 
 PR92 was merged into develop with explicit author approval on 28 October
@@ -43,7 +82,7 @@ coauthor-review stage. The [completion plan](../docs/research/mvp2-closeout-plan
 is organized by Sprints and PRs and supersedes the earlier requirement that
 this PR wait for the final CPU return.
 
-The [coauthor brief](coauthor-review-brief.md) is the immediate independent
+The [coauthor brief](../docs/research/coauthor-review-brief.md) is the immediate independent
 deliverable: working title, question, empirical gap, C1–C3, methods and
 limitations, informed by chat 01.04. Preliminary feedback is sought by
 15 November through circulation controlled by the authors. No material has
@@ -94,7 +133,7 @@ between GCN, GraphSAGE and GAT/GATv2, plus the task-specific value and limits
 of the coauthors' opinion-dynamics paper. Five references are added because
 they support these statements, not because every Zotero item must be cited.
 
-The [IIEA-S decision register](supplement/human-ai-traceability.md) recommends
+The [IIEA-S decision register](../docs/research/human-ai-traceability-review.md) recommends
 a bounded traceability account; a full Appendix B remains conditional on
 a stable definition, primary decision evidence and coauthor approval.
 The agreed AI declaration and author identities remain unchanged.

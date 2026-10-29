@@ -9,9 +9,8 @@ of useful assignments can improve a solve without maximizing classification
 accuracy. The experimental question concerns that connection.
 
 The implementation discussed here is the fixed Gasse-inspired model used to
-prepare the CPU starts. The ongoing longer-horizon campaign reuses those
-starts and the original checkpoint. Nothing in this methodological discussion
-changes that campaign or constitutes a new experiment.
+prepare the CPU starts. The later matched GPU training comparison evaluates
+a separate update schedule and does not replace this predictor.
 
 ## Reading the prediction-to-optimization pipeline
 
@@ -119,16 +118,16 @@ applicability is not evidence of independent statistical generalization.
 
 ## 2. Why these hyperparameters?
 
-A defensible explanation must separate three things: the value actually used,
-the methodological reason for considering it, and evidence that it performs
-better than alternatives. Our records establish the first. Literature and
-the structure of the task can inform the second. For most fixed choices,
-the third has not been measured.
+Three aspects of a configuration have different evidential roles: its recorded
+value, the methodological reason for considering it, and comparative evidence
+of its performance. The records establish the values used. Literature and task
+structure motivate the design, while most fixed choices lack comparative
+tuning evidence.
 
 In particular, no inspected configuration or historical receipt documents
 a search that selected two cycles and width 32 over one cycle and width 64.
-The configuration must therefore be treated as fixed, not optimal. The
-rationale below explains why it is a reasonable starting point; it does not reconstruct an
+The configuration is therefore fixed rather than empirically optimal. The
+rationale below explains its suitability as a starting point without reconstructing an
 undocumented original decision or turn a fixed setting into a validated optimum.
 
 ### Network capacity and numerical scale
@@ -153,8 +152,7 @@ Sum aggregation preserves the contribution of repeated incident messages,
 but its magnitude depends on node degree. Fixed prenormalization addresses
 activation scale. In the version used here, variable-side statistics are fitted
 after the corresponding constraint update, using training graphs only.
-This differs from the legacy fit procedure. The versions and their buffers
-cannot be interchanged retrospectively; “calibrated” in a source filename
+This differs from the legacy fit procedure. The versions and their fitted buffers are not interchangeable; “calibrated” in a source filename
 does not mean that output probabilities have been calibrated.
 
 ### Learning the predictor, handling imbalance and selecting its output
@@ -323,11 +321,11 @@ perturbation; it neither makes all seeds equivalent nor ensures identical
 wall times. Even an explicitly deterministic root algorithm would not make
 a time-limited solve stop at exactly the same work point.
 
-We retain Method=−1 because it belongs to the frozen protocol. Existing logs
-can clarify which root algorithm actually ran; absent information must remain
-unavailable. In particular, ConcurrentMIP was not exported in the inherited
+Method=−1 is the setting recorded for the reported comparisons. Its value
+does not itself identify the effective root algorithm. Where the logs do not
+record that algorithm, it remains unavailable. In particular, ConcurrentMIP was not exported in the inherited
 parameter dictionary, so its effective value must not be reconstructed from
-a documented default. No job is rerun to fill such a field.
+a documented default. The documented default does not establish an unexported runtime value.
 
 ### What can be concluded from the existing runs?
 
@@ -384,32 +382,24 @@ CPU comparison uses ten exposed parents at seed 42; method/cap rows are repeated
 conditions within those parents. The later GPU pair studies training speed,
 quality and assigned resources with a different update schedule. Its faster
 loop and lower selected F1 cannot be transferred into a claim about the original
-checkpoint's downstream utility. These boundaries are carried into the article;
-the longer-horizon CPU return remains pending.
+checkpoint's downstream utility. These populations and measurement boundaries define the scope of the
+reported comparisons.
 
-## 5. What further experiments would add
+## 5. Questions for further study
 
-Changing a seed is a robustness check, changing Method is solver-configuration
-sensitivity, and removing a model/policy component is an ablation. They answer
-different questions. A large Cartesian product of all three would be costly
-and difficult to interpret.
+Solver seeds, root algorithms and neural components address different sources
+of variation. A solver-seed comparison with the predictor and starts held fixed
+would assess search-path sensitivity. A root-method comparison would examine
+a particular solver configuration. Replacing or removing a neural or selection
+component would address the mechanism behind an observed effect.
 
-The companion [sensitivity assessment](sensitivity-review-plan.md) recommends
-completing the existing evidence and keeping these unresolved questions visible
-in the manuscript now. A small, separately approved follow-up can be designed
-if a coauthor or reviewer identifies a specific claim that needs it. Two
-additional solver seeds at one fixed thread cap would address search-path
-sensitivity more directly than an immediate survey of GCN, GraphSAGE and GAT.
-Testing an explicit root method would be justified by a concrete configuration
-question, not by assuming Method=−1 invalidates the campaign.
-
-Deferral is defensible only when the conclusions are limited accordingly.
-A limitations paragraph cannot support a present claim of seed robustness,
-architectural superiority or causal benefit from class-aware ordering.
-If any of these becomes central to the claimed contribution, the missing
-comparison must be addressed or the claim removed before submission.
-Reviewer requests are a possible trigger for follow-up, not the sole test
-of scientific sufficiency.
+The [sensitivity discussion](sensitivity-review-plan.md) explains these
+questions and their interpretation. A broad architecture grid would vary
+several factors at once, while a narrowly controlled comparison can identify
+which change matters. Neither comparison was performed as part of the
+reported fixed-model study. The present evidence therefore supports
+conditional observations, not seed-averaged superiority, architectural
+optimality or a causal benefit of ones-first ordering.
 
 ## Finding exact values and source files
 
@@ -434,15 +424,14 @@ this is not a runtime memory measurement.
 
 The upstream comparison uses
 [learn2branch at commit 57e82603](https://github.com/ds4dm/learn2branch/tree/57e82603fba39c34ff81baf9bd0b5768f5a1a860).
-Its facilities generator and branching data are not our benchmark cohort.
-No generator or formulation certification is reopened.
+Its facilities generator and branching data are not the evaluated MILPBench cohort.
 
 [Root preparation](../../scripts/evidence/pr86_root_preparation.py),
 [guidance preparation](../../scripts/evidence/pr86_guidance_preparation.py)
 and the [native solver path](../../scripts/evidence/pr86_solver.py)
-document the interface. The [R3 methods](../../docs/research/mvp2-r3-methods-and-models.md),
+document the interface. The [model and data provenance](../../docs/research/mvp2-r3-methods-and-models.md),
 [metric definitions](../../docs/research/mvp2-r3-metrics-and-reproducibility.md),
 [completed GPU review](../../docs/research/pr87-completed-pair-review.md)
 and [numerical claim map](claim-evidence.json) retain exact provenance and
-qualifications. The installed CPU source and original checkpoint remain
-unchanged; the final CPU return is still pending.
+qualifications. These records preserve the source and model identities underlying the
+reported analyses.

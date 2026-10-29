@@ -1,5 +1,24 @@
 # Current status
 
+## Latest partial scheduler report — 29 October 2026
+
+The author supplied [sacct observations for jobs3713–3734](evidence/pr89/status-20261029-author.json).
+Exact capture time is unavailable. In this 22-job subset,3713/3714/3715 are
+COMPLETED with ExitCode0:0;3716 is RUNNING at07:26:20;3717–3734 are PENDING.
+No failure is reported in this subset. Jobs3675–3712 are not inferred.
+This is not a fresh agent query or a complete60-job snapshot. Scheduler status
+does not qualify solver results, and no final return has been received.
+
+The [editorial plan](../manuscript/editorial-plan.md) records the reader-only
+publication boundary. Coauthor/Appendix B decisions and prospective budgets
+are internal research records; they are excluded from article/supplement prose.
+The receiving agent retains exclusive campaign reconciliation responsibility;
+source9ab7823c, parameters, resources and sequence remain frozen.
+
+Earlier dated snapshots below are historical and are superseded for the
+overlapping job IDs only.
+
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
@@ -10,7 +29,7 @@ Its [supplement guide](../manuscript/supplement/README.md) records the independe
 claim reconciliation and reader-oriented explanations. PR93 remains a draft;
 the qualified return and final audit are still required.
 
-The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+The [coauthor brief](research/coauthor-review-brief.md) is prepared for
 author-controlled circulation and preliminary feedback by 15 November.
 It includes the first-pass audit record. The complete post-qualification
 audit remains mandatory. Targets are manuscript 15 December, final approval
@@ -28,11 +47,11 @@ targets a complete coauthor-review version by15December2026 and preserves
 the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
 the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
 The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
-[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+[conditional Appendix B register](research/human-ai-traceability-review.md)
 record actual methods, critical references and evidence gaps. No experiment,
 checkpoint, campaign parameter or raw result is changed.
 
-Latest human partial report,28October; exact capture time unavailable:
+Historical human partial report,28October; exact capture time unavailable:
 3713 COMPLETED12:01:05, ExitCode0:0, AllocCPUS8, batch MaxRSS16050788K;
 3714 RUNNING08:03:49, AllocCPUS16; author reports3715–3734 PENDING.
 This is not a fresh agent query or a complete60-job snapshot. No final
@@ -144,7 +163,7 @@ selected PR-AUC macro loss0.013850 stays within that margin. Report a measured
 tradeoff, not preserved quality/noninferiority. One seed, exposed test parents,
 fixed arm order and accompanying CPU scaling limit claims.
 
-[Seven tables/four figures](evidence/pr87/jobs3673-3674/) regenerate offline;
+[Seven tables/four figures](evidence/pr87/jobs3673-3674) regenerate offline;
 receipt flags and original failed-pair evidence are unchanged. No more GPU runs,
 CPU campaign, solver, package update or merge authorized. Next: final analytical
 HEAD CI, Ready after review, then ask merge. PR88 manuscript may incorporate
@@ -202,7 +221,7 @@ CPU solves are collected; no submission, preparation or inference is repeated.
 (127/41),21M4(1/20) and21M12(7/14). They are not135exact certificates.
 M4/M12 retain their different diagnostics and no certified-speedup claim.
 
-The [final assets](evidence/pr86/final-210/) add sixSVG/PDF/PNG figures,
+The [final assets](evidence/pr86/final-210) add sixSVG/PDF/PNG figures,
 parent-paired ratios includingM2/M1, exact empirical parent-bootstrap/LOO
 exploratory sensitivity, nested one-thread seed effects, two preparation-cost
 allocation scenarios, terminal-gap contrasts, memory and70-job accounting.

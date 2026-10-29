@@ -1,5 +1,17 @@
 # Repository instructions
 
+## Publication audience — author decision, 29 October 2026
+
+Article and registered supplement prose address journal readers. Keep review
+instructions, campaign status, deadlines, approvals and prospective budgets
+in docs/research or PR records. The coauthor brief and Human–AI decision
+register are internal records outside manuscript/supplement.
+Additional experiments remain future work. Use local Codex scratch only for
+temporary files; do not upload them to cloud/blob storage or use external
+desktop apps. Github source commits and PR checkpoints retain important steps.
+HPC intervention and merges remain human-controlled.
+
+
 ## Latest Sprint/PR boundary — 28 October 2026
 
 Use docs/research/mvp2-closeout-plan.md for current delivery boundaries.

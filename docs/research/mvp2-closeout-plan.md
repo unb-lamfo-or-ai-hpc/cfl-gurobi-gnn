@@ -84,7 +84,7 @@ Raw flags and historical receipts remain unchanged.
 implementation reviews for software structure, the accepted formulation,
 B/R/G interfaces, model/checkpoint provenance, bibliography, article structure,
 historical figures and supplements. The
-[coauthor brief](../../manuscript/coauthor-review-brief.md) contains a compact
+[coauthor brief](coauthor-review-brief.md) contains a compact
 evidence/disposition register. Its coverage and remaining limitations are
 stated; this is not blanket software or scientific certification.
 
@@ -108,7 +108,7 @@ properties, not scientific sufficiency.
 ## Early coauthor review and milestones
 
 The preliminary set is now prepared in the
-[scientific brief](../../manuscript/coauthor-review-brief.md): working title,
+[scientific brief](coauthor-review-brief.md): working title,
 research question, empirical gap, candidate C1–C3, methods, existing limitations
 and focused review questions. It is informed by chat 01.04's completed review
 and the implementation reconciliation. It does not reopen that investigation

@@ -5,7 +5,7 @@ This document begins the synthesis of existing evidence. It is **not** the
 final R2-D8 report, a qualified CPU12h return or a submission-ready conclusion.
 The [Sprint/PR plan](mvp2-closeout-plan.md) governs completion.
 
-The [preliminary coauthor brief](../../manuscript/coauthor-review-brief.md)
+The [preliminary coauthor brief](coauthor-review-brief.md)
 already states the title, question, literature position and candidate C1–C3.
 This assessment does not repeat that review. It asks what the available
 evidence can support and what must remain unresolved until qualification.
@@ -153,7 +153,7 @@ comparison, then separates prediction metrics, Start acceptance, gap crossings
 and terminal solver outcomes. The schematic assignment example is explicitly
 illustrative, not a new experimental observation.
 
-The [supplement guide](../../manuscript/supplement/README.md#claims-reconciled-before-the-longer-horizon-cpu-return)
+The [supplement guide](../../manuscript/supplement/README.md#interpreting-prediction-and-optimization-evidence)
 records the independent claim boundaries and source links.
 The sensitivity discussion distinguishes robustness questions from component
 ablations; its options remain future work. The Human–AI register explains
@@ -171,6 +171,20 @@ This is a source-based editorial reconciliation, not a replay of training,
 a robustness result or the completed scientific supplement. The numerical
 claim manifest, historical data and article rendering inputs remain unchanged.
 Qualified CPU results and the final integral audit are still required.
+
+## Publication text and internal records — 29 October
+
+The author requested a full reader-oriented revision. The article and registered
+supplements now contain scientific scope, methods, configuration provenance,
+interpretation and limitations. Campaign progress and review directions are
+removed from that corpus. The coauthor brief and Human–AI decision register
+are in docs/research; the original prospective sensitivity budgets are
+preserved separately from the reader-facing future-work discussion.
+
+The [editorial checkpoint](../../manuscript/editorial-plan.md#reader-only-publication-boundary--29-october-2026)
+records the disposition, local-only temporary-file policy, sandbox observations
+and the separate human-supplied scheduler snapshot. This editorial pass does
+not complete R2-D8, qualify CPU12h outcomes or replace the final integral audit.
 
 ## Finalization conditions for this PR
 

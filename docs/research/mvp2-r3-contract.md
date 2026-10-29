@@ -14,7 +14,7 @@ This supersedes the earlier requirement that PR92 itself await the campaign,
 without changing the scientific or installed execution contract.
 
 An independent audit passage begins now and a complete final passage follows
-the qualified return. The [coauthor brief](../../manuscript/coauthor-review-brief.md)
+the qualified return. The [coauthor brief](coauthor-review-brief.md)
 supports preliminary feedback by 15 November, without unauthorized circulation.
 Targets are complete manuscript 15 December, final approval 7 January,
 submission 10 January and absolute deadline 14 January. Earlier schedule

@@ -3,8 +3,8 @@
 This companion to the [methods explanation](gnn-methods-audit.md) identifies
 the settings behind the study. It is intended to let a reader answer three
 questions: what information enters a stage, which choices control it, and
-where those choices can be checked. It is candidate material for the data/
-methods appendix and scientific supplement, not a new experiment.
+where those choices can be checked. The tables distinguish data encoding, learning, inference, solver configuration
+and measurement controls.
 
 A **fixed setting** was specified without a demonstrated comparative search.
 A **selected setting** was chosen by a stated validation rule. A **recorded
@@ -12,21 +12,20 @@ runtime value** comes from an existing receipt. These sources have different
 evidential roles. In particular, a documented default is not a substitute
 for a missing runtime record.
 
-Links below point to fixed GitHub revisions. The ongoing CPU campaign is
-described using its separate installed source; none of its inputs or settings
-is changed here.
+Links point to fixed GitHub revisions. The one-hour CPU archive and the
+12-hour protocol have separate parameter specifications; configuration
+records are distinguished from outcome measurements.
 
 ## 1. Data inputs and information boundaries
 
-The optimization inputs are compressed LP models from MILPBench, rather than
-spreadsheets. The neural inputs are derived graphs and a stored root-relaxation
+The optimization inputs are compressed LP models from MILPBench. The neural inputs are derived graphs and a stored root-relaxation
 vector. Reference solutions provide training/evaluation labels. Those objects
 have different roles and must retain their original identities.
 
 | Input or choice | Content and setting | Source and interpretation |
 | --- | --- | --- |
 | Original optimization model | Objective coefficients/constant, linear rows, right-hand sides, variable names, bounds and domains from the original LP | [Data layout](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/data/README.md) and [upstream download links](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/README.md); raw LP files are external, not redistributed by this appendix |
-| Objective convention | MINIMIZE at runtime; original bytes and mathematical coefficients retained | [R3 author decision](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/research/mvp2-r3-contract.md); source MAXIMIZE declarations are preserved as provenance |
+| Objective convention | MINIMIZE at runtime; original bytes and mathematical coefficients retained | [Model-sense convention](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/research/mvp2-r3-contract.md); source MAXIMIZE declarations are preserved as provenance |
 | Candidate and admitted populations | 90 candidates; 54 admitted parents: 30 easy, 24 medium, no hard | [Data/model record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/research/mvp2-r3-methods-and-models.md); quality-selected admission, not random population sampling |
 | Parent partitions | 34 train, 10 validation, 10 historically exposed test parents | [Canonical fold table](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/configs/splits/cfl_90_seed42_folds.csv) and [parent inventory](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/evidence/e0/pr85/parents.csv); folds 0/1 correspond to test/validation, remaining folds to training, subject to admission |
 | Label-quality ceiling in training configuration | Relative label gap 0.10 (10%) | [Mixed-cohort training configuration](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/configs/training/gasse_pr57_54_v1.json); checked reference incumbents can be approximate |
@@ -79,7 +78,7 @@ No comparative architecture or hyperparameter search is reconstructed here.
 | Message/update functions | Two-layer MLPs, sum aggregation, ReLU | Fixed architecture; no component ablation in the present study |
 | Prenormalization | Fixed alternating constraint/variable statistics fitted on training graphs | Training-only fitted state; not probability calibration |
 | Optimizer / learning rate | Adam / 0.001 | Fixed; no learning-rate scheduler invoked in the relevant path |
-| Other Adam arguments | Installed-runtime defaults, not independently tuned | Their numerical beta/epsilon settings are not separately exported by this JSON; do not invent a historical parameter sweep |
+| Other Adam arguments | Installed-runtime defaults, not independently tuned | Their numerical beta/epsilon settings are not separately exported by this JSON; no comparative tuning is documented |
 | Gradient clipping | Global gradient norm limited to 1 | Fixed stabilization threshold |
 | Training seed | 42 | Fixed training initialization/sampling setting; distinct from the Gurobi seed |
 | Historical graph batch | One graph per update | Original serial training path |
@@ -133,17 +132,17 @@ configuration as leaving presolve automatic during a paired solve.
 | Logging controls | OutputFlag=1, LogToConsole=0 |
 
 The [root-preparation source](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/scripts/evidence/pr86_root_preparation.py)
-sets and verifies this map. These completed preparation steps are not repeated.
+sets and verifies this parameter map.
 
 The CPU table below reproduces the recorded search/tolerance map from
 [historical job3522 return](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/evidence/pr86/job3522/public_return.json),
 member `run/attempt-0/child.json`, `result.parameters`.
-The pending CPU12h contract explicitly reuses that map with its admitted
-TimeLimit and Threads. It is checked in the
-[frozen PR89 contract](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/scripts/evidence/pr89_cpu_contract.py);
-the table is not a new effective-parameter capture from the still-running jobs.
+The 12-hour parameter specification reuses that map with the stated
+TimeLimit and Threads, as defined in the
+[12-hour CPU protocol](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/scripts/evidence/pr89_cpu_contract.py);
+the table describes parameter specifications, not 12-hour outcome observations.
 
-| Parameter | Principal CPU study | Existing CPU12h campaign | Meaning |
+| Parameter | Principal CPU study | 12-hour CPU protocol | Meaning |
 | --- | --- | --- | --- |
 | Threads | 1, 2, 4, 8, 16 by cell | Same five caps | Solver thread cap; allocated SMT CPU accounting is a separate resource measure |
 | Seed | 42 in principal analysis | 42 | Solver search perturbation; historical 43/44 rows are not CPU12h replications |
@@ -177,7 +176,7 @@ M4/M12's metric-specific numerical restrictions.
 
 ### Observations and resource limits
 
-| Control | Existing principal CPU evidence | Existing CPU12h campaign |
+| Control | Principal CPU evidence | 12-hour CPU protocol |
 | --- | --- | --- |
 | Recorded threshold fractions | 0.01, 0.05, 0.06, 0.10 | 0.10, 0.05, 0.01, 0.0001 |
 | Temporal interpretation | First observed callback crossings; terminal flag distinct | First observed crossing and prior point; no continuous exact-time claim |
@@ -190,8 +189,8 @@ The [frozen temporal recorder](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi
 and [CPU12h resource record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9ab7823c6886d19e9ec865141a1cd35b3c3c16e5/docs/research/pr89-cpu12h.md)
 define these controls. A threshold, reporting cadence and memory guard are
 not interchangeable with solver stopping criteria. Missing data remain missing.
-The qualified final return must still reconcile every planned cell and its
-actual settings; no current result is inferred from this table.
+These specifications alone establish neither attained targets nor the
+quality or cost of an individual run.
 
 ## 4. Matched GPU training is a separate configuration
 
@@ -229,20 +228,16 @@ trajectories are identical. The
 keeps speed, selected quality and assigned GPU-hours separate. Parameter
 documentation does not convert its lower selected F1 into a positive result.
 
-## 5. How to use this reference in the final manuscript
+## 5. Scope of the configuration records
 
-A claim should identify its population, checkpoint, solver setting, endpoint
-and clock. References to “the configuration” are insufficient when the
-historical predictor, root capture, principal CPU study and later GPU pair
-have different settings. The explanatory text states why choices are
-reasonable; the linked files establish the values actually specified or
-recorded. The complete files also retain protocol identifiers and historical
-authorization metadata that are not neural hyperparameters.
+The historical predictor, root capture, one-hour CPU comparisons and matched
+GPU pair use different settings. Each outcome is interpreted with its own
+population, checkpoint, solver configuration, endpoint and clock. Fixed
+configuration files document specified choices; retained receipts document
+recorded runtime values. Neither establishes values that were not exported.
 
-Older proposal flags are preserved as dated evidence. They do not reverse
-later explicit execution decisions or supply current scientific qualification.
-Unexported effective fields, historical-fit limitations and M4/M12 restrictions
-remain visible. The additional studies in the
-[sensitivity discussion](sensitivity-review-plan.md) are future work outside
-S1–S6. No new root capture, inference, training, seed or solve accompanies
-this appendix. Final supplement packaging and author review remain pending.
+The available records do not independently replay the historical training
+fit or resolve every legacy summary discrepancy. Numerical restrictions on
+M4/M12 remain specific to the affected metrics. The additional comparisons
+described in the [sensitivity discussion](sensitivity-review-plan.md) concern
+unmeasured robustness and mechanisms, rather than completed evidence.

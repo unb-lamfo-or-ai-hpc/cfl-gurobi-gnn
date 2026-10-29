@@ -10,7 +10,7 @@ Its [supplement guide](../manuscript/supplement/README.md) records the independe
 claim reconciliation and reader-oriented explanations. PR93 remains a draft;
 the qualified return and final audit are still required.
 
-The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+The [coauthor brief](research/coauthor-review-brief.md) is prepared for
 author-controlled circulation and preliminary feedback by 15 November.
 It includes the first-pass audit record. The complete post-qualification
 audit remains mandatory. Targets are manuscript 15 December, final approval
@@ -28,7 +28,7 @@ targets a complete coauthor-review version by15December2026 and preserves
 the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
 the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
 The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
-[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+[conditional Appendix B register](research/human-ai-traceability-review.md)
 record actual methods, critical references and evidence gaps. No experiment,
 checkpoint, campaign parameter or raw result is changed.
 

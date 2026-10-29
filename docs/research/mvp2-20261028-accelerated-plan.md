@@ -19,7 +19,7 @@ Options B–E and the four-hour diagnostic in the
 [sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md)
 remain future work, outside these Sprints. No new experiment is scheduled.
 
-The [preliminary coauthor brief](../../manuscript/coauthor-review-brief.md)
+The [preliminary coauthor brief](coauthor-review-brief.md)
 provides title, question, gap, C1–C3, methods and known limitations, using
 chat 01.04's review. It includes the first-pass audit record. Seek preliminary
 feedback by 15 November through author-authorized circulation; no communication
