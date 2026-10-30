@@ -1,12 +1,31 @@
 # Working integrated assessment — R2-D8
 
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
 28 October 2026 · draft for the final synthesis PR.
 This document begins the synthesis of existing evidence. It is **not** the
 final R2-D8 report, a qualified CPU12h return or a submission-ready conclusion.
 The [Sprint/PR plan](mvp2-closeout-plan.md) governs completion.
 
 The [preliminary coauthor brief](coauthor-review-brief.md)
-already states the title, question, literature position and candidate C1–C3.
+states the approved title, question, literature position and C2/C3 framing.
 This assessment does not repeat that review. It asks what the available
 evidence can support and what must remain unresolved until qualification.
 
@@ -94,11 +113,11 @@ Cross-campaign comparison must retain the separate time-limit settings,
 measurement conditions, exposures and eligibility. Historical seed 43/44
 observations remain historical and are not CPU12h replications.
 
-## Questions for the final C1–C3 assessment
+## Methodological readiness and the final C2/C3 assessment
 
 | Candidate contribution | Evidence needed in the final integrated account | Claim that must not be inferred |
 | --- | --- | --- |
-| C1 — specified mechanism | Consistent model/variable/Start identities and a clear explanation of the dependent R comparator | First GNN warm start, architecture novelty or causal selector superiority |
+| C1 — methodological mechanism, not an independent contribution | Consistent model/variable/Start identities and a clear explanation of the dependent R comparator | First GNN warm start, architecture novelty or causal selector superiority |
 | C2 — conditional effects | All planned parent/cap outcomes, eligible comparisons, regressions, censoring and influence of restricted cases | Uniform acceleration, stable seed-averaged gain or independent population inference |
 | C3 — bounded economics | Explicit clocks, measured versus scenario preparation, training quality and assigned resources | Energy savings, monetary savings or complete cold cost without measurements |
 

@@ -50,7 +50,9 @@ jobs:
           python scripts/manuscript/build_results_assets.py
       - name: Render the Elsevier author-year manuscript
         # Quarto locates its private TinyTeX runtime; tlmgr is not on runner PATH.
-        run: quarto render manuscript --no-execute -M latex-auto-install:true
+        run: |
+          quarto render manuscript --no-execute -M latex-auto-install:true
+          quarto render manuscript/supplement --no-execute -M latex-auto-install:true
       - name: Validate publication outputs
         run: |
           sudo apt-get update

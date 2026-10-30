@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "as_of": "2026-10-27",
+  "as_of": "2026-10-30",
   "manuscript_status": "controlled_development_study_for_author_review",
   "development_only": true,
   "scientific_reporting_eligible": false,
@@ -74,5 +74,16 @@
     "editorial_state": "partial_integration_for_review_pr89_closeout_pending",
     "final_coauthor_approval": false,
     "submission_authorized": false
+  },
+  "approved_scientific_communication": {
+    "date": "2026-10-30",
+    "title": "Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems",
+    "scientific_contributions": [
+      "C2",
+      "C3"
+    ],
+    "C1_role": "methodological_obligation",
+    "diagnostic_and_organization_approved": true,
+    "new_experiments_authorized": false
   }
 }

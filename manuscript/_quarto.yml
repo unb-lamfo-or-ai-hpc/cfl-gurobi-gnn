@@ -35,4 +35,4 @@ format:
     fig-pos: htbp
 website:
   site-url: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/
-  description: Class-aware graph neural partial starts with controlled descriptive optimization evidence.
+  description: Evaluating conditional optimization effects and computational costs of GNN-based partial warm starts for CFL.

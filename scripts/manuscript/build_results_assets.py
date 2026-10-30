@@ -23,6 +23,8 @@ def build(root: Path = ROOT) -> None:
     if json.loads((root / "evidence-status.json").read_text())["schema_version"] == 4:
         from build_cor_assets import build as build_current
         build_current(root)
+        from build_principal_assets import build as build_principal
+        build_principal(root.parent)
         return
     evidence = json.loads((root / "results/source_evidence.json").read_text())
     figures = root / "figures"

@@ -1,5 +1,24 @@
 # MVP2 R3 — metrics and reproducibility assessment
 
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
 26 October 2026 · R2-D4 and metric definitions supporting R2-D5/D6.
 Governed by the [R3 contract](mvp2-r3-contract.md).
 Reuse the [existing D1 dictionary](methodology-20261019/D1-protocol.md);
@@ -52,7 +71,7 @@ cap, settings and stopping rule. It can describe the observed contrasts and
 their censoring/numerical qualifications. It cannot estimate across-seed
 variance, treat caps as repetitions, or establish stable expected speedups.
 A parameter-fixed comparison does not require identical search paths.
-The [prospective sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md)
+The [prospective sensitivity assessment](mvp2-sensitivity-planning.md)
 separates solver seeds, root methods, training seeds and component ablations.
 It is a planning document, not new experimental authority.
 

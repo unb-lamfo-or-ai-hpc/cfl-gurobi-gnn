@@ -8,6 +8,11 @@ before submission; this checklist is not publisher approval.
 
 ## Prepared
 
+- Exact author-approved title and C2/C3 scientific framing from 30 October; C1
+  is methodological. Article and supplements retain their separate evidence scopes.
+- Scientific supplements A/B/C cover methods, extended results and reproducibility;
+  prospective execution designs and Human–AI decisions remain internal.
+
 - Article and registered supplements address journal readers; coauthor instructions,
   operational status and scheduling belong only in internal repository records.
 

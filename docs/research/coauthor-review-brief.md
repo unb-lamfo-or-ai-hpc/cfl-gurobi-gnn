@@ -2,7 +2,7 @@
 
 # Preliminary scientific brief for coauthor review
 
-28 October 2026 · working material accompanying PR92.
+Updated 30 October 2026 · internal scientific brief accompanying PR93.
 Requested feedback target: **15 November 2026**.
 This brief is prepared for the authors to circulate. No material has been sent
 and no response or scientific approval is presumed.
@@ -12,21 +12,15 @@ continues. The final manuscript will be reviewed again after its results are
 qualified. The [completion plan](mvp2-closeout-plan.md) records
 that distinction.
 
-## Working title
+## Approved title
 
-**Class-aware graph neural warm starts for capacitated facility location:
-a controlled computational study**
+**Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**
 
-The title identifies the implemented selection rule, not a demonstrated
-causal advantage of class awareness. Coauthors should assess whether that
-emphasis accurately describes the contribution. A change in title must not
-imply an architectural or generalization result that was not measured.
+The author approved this title on 30 October. It centres conditional optimization effects and costs. Class-aware selection is an implemented method, not an independent novelty claim.
 
 ## Research question and empirical gap
 
-Can partial binary values predicted by a graph neural network help a MILP
-solver solve capacitated facility location problems under stated computational
-budgets? The article examines when that information helps or harms, including
+Can partial initial values predicted by a graph neural network (GNN) be used as warm starts for a deterministic MILP solver and improve its performance when solving Capacitated Facility Location (CFL) problems? The article examines when that information helps or harms, including
 its preparation cost. This operationalizes the R3 question without promising
 improvement or assuming identical terminal behaviour on repeated timed runs.
 
@@ -54,33 +48,15 @@ The [methods explanation](../../manuscript/supplement/gnn-methods-audit.md) and
 and access/metadata qualifications. This brief does not repeat or extend the
 literature investigation.
 
-## Candidate contributions C1–C3
+## Scientific contributions C2/C3 and methodological role of C1
 
-These are claims for discussion, not declarations of established originality
-or journal sufficiency.
+The author approved two scientific contributions on 30 October. C1 remains the historical identifier for the partial-start mechanism and is a methodological obligation, not a third scientific contribution.
 
-**C1 — A specified prediction-to-solver mechanism.** The contribution describes
-how a fixed bipartite predictor and class-aware selection supply nonbinding
-binary values through Gurobi's native Start interface. Its value is a precise,
-auditable mechanism with explicit information boundaries. Architecture novelty,
-first integration and a causal advantage of ones-first ordering are not claimed.
+**C2 — Conditional optimization effects.** Assess B/R/G responses by instance, thread cap and endpoint, separating primal quality, dual progress, gap and observed time to quality. Adverse outcomes, censoring and M4/M12 restrictions remain visible. Final CPU12h interpretation requires the qualified return.
 
-**C2 — Conditional effects on optimization.** The evaluation distinguishes
-instance and resource regimes, primal/dual progress, time to observed targets
-and terminal gap. Existing evidence supports heterogeneous outcomes rather
-than uniform acceleration. The longer-horizon CPU contribution remains pending
-receipt, cell reconciliation and metric-specific qualification.
+**C3 — Computational cost–benefit.** Assess which solver-level benefits remain within recorded preparation/execution scopes and stated reuse assumptions. Cold and amortized scenarios are not complete deployment measurements; GPU training speed, selected quality and allocation remain distinct.
 
-**C3 — Bounded computational economics.** Preparation, solver time and training
-are kept separate. The GPU comparison shows that faster training can coexist
-with worse selected predictive quality and greater assigned GPU-hours.
-Accounting scenarios are not measured energy or financial savings, and a
-solver-only benefit is not automatically an end-to-end benefit.
-
-Coauthors should decide whether these bounded contributions form a sufficiently
-clear and original OR article. If they do not, the current response is to narrow
-the argument or reconsider the editorial strategy, not silently introduce
-new experiments.
+The [approved revision record](pr93-editorial-revision-20261030.md) supplies the new structure and provisional abstract. Scientific sufficiency for the journal remains a final evidence-based decision. No new experiment is implied by that decision.
 
 ## Method in plain terms
 
@@ -131,14 +107,14 @@ would not support such a result.
 
 Additional solver seeds, explicit root methods, neural depth/width changes,
 training seeds and the shorter diagnostic design remain limitations and future
-work in the [sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md).
+work in the [sensitivity assessment](mvp2-sensitivity-planning.md).
 They are not part of the current Sprints.
 
 ## Five questions for preliminary author feedback
 
 1. Does the title and research question express a useful OR problem and an
    appropriately bounded contribution?
-2. Are C1–C3 sufficiently distinct from the precedents, without relying on
+2. Are C2/C3 sufficiently distinct from the precedents, without relying on
    architecture novelty, selector causality or independent generalization?
 3. Is the explanation of the fixed model, dependent R comparator and timed
    solver comparison clear and adequate?

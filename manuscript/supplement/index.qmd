@@ -1,0 +1,15 @@
+---
+title: "Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems"
+subtitle: "Supplementary Material: Methods, Extended Results and Reproducibility"
+---
+
+{{< include gnn-methods-audit.md >}}
+
+{{< include extended-results.md >}}
+
+{{< include configuration-reference.md >}}
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

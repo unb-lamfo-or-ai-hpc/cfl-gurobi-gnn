@@ -1,4 +1,4 @@
-# Configuration reference: inputs, parameters and selected settings
+# Supplementary C: Reproducibility and Computational Settings {#sec-supp-config}
 
 This companion to the [methods explanation](gnn-methods-audit.md) identifies
 the settings behind the study. It is intended to let a reader answer three
@@ -16,7 +16,9 @@ Links point to fixed GitHub revisions. The one-hour CPU archive and the
 12-hour protocol have separate parameter specifications; configuration
 records are distinguished from outcome measurements.
 
-## 1. Data inputs and information boundaries
+The public CPU archive is preserved as 210 records. The principal comparison uses 150 seed42 records; the other 60 records are historical only and do not provide replications of the reported resource matrix. Original instance identities, mathematical signatures and provenance remain associated with those records.
+
+## Data inputs and information boundaries
 
 The optimization inputs are compressed LP models from MILPBench. The neural inputs are derived graphs and a stored root-relaxation
 vector. Reference solutions provide training/evaluation labels. Those objects
@@ -31,7 +33,7 @@ have different roles and must retain their original identities.
 | Label-quality ceiling in training configuration | Relative label gap 0.10 (10%) | [Mixed-cohort training configuration](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/configs/training/gasse_pr57_54_v1.json); checked reference incumbents can be approximate |
 | Root feature | First eligible optimal root-node MIPNODE relaxation; full original variable alignment | [Root capture](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/scripts/evidence/pr86_root_preparation.py); not a separate model.relax() solve and not necessarily the final root after all cuts |
 | Information supplied to the GNN | Model features, stored root values and binary-variable mask | [Guidance preparation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/scripts/evidence/pr86_guidance_preparation.py); reference labels used by a separate audit do not enter the neural forward |
-| CPU checkpoint | SHA256 `a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028` | [Checkpoint bindings](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/evidence/e0/pr85/checkpoints.csv); the mixed historical model, not either later GPU checkpoint |
+| CPU checkpoint | Original mixed CPU predictor; exact SHA256 is recorded in the artifact-identity section below | [Checkpoint bindings](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/evidence/e0/pr85/checkpoints.csv); the mixed historical model, not either later GPU checkpoint |
 
 Historical six-medium optimization results and the principal ten-parent CPU
 comparison remain separate populations. Repetition across methods, caps or
@@ -52,7 +54,7 @@ the same feature in the same position at inference.
 | Coefficient edge (1) | Nonzero matrix coefficient |
 
 Numerical objective, bound, right-hand-side and edge channels are clipped
-to [−60000,60000], then transformed by signed log(1+absolute value).
+to [-60000,60000], then transformed by signed log(1+absolute value).
 Infinite values are mapped to the corresponding clipping limit. The root
 channel is clipped without the logarithm. The strict route rejects malformed
 or nonfinite root vectors and NaN model inputs; a generic legacy fallback in
@@ -61,7 +63,7 @@ These transformations affect the learning representation, not the original
 LP coefficients used by Gurobi. The encoding audit records clipping rather
 than treating it as lossless.
 
-## 2. Historical predictor: fixed settings and validation choices
+## Historical predictor: fixed settings and validation choices
 
 The complete [mixed training configuration](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/configs/training/gasse_pr57_54_v1.json)
 is implemented by the [trainer](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/src/cfl_gnn/training/gasse_reconnected.py),
@@ -116,7 +118,7 @@ The exact rules are in the
 Metadata named confidence or priority in an assignment file does not itself
 show that a Gurobi hint or branching-priority setting was applied.
 
-## 3. Root preparation and CPU solver settings
+## Root preparation and CPU solver settings
 
 Preparation and the later optimization runs have different purposes. In
 particular, disabling presolve for root-feature capture is not the same
@@ -135,7 +137,7 @@ The [root-preparation source](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-
 sets and verifies this parameter map.
 
 The CPU table below reproduces the recorded search/tolerance map from
-[historical job3522 return](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/evidence/pr86/job3522/public_return.json),
+[recorded CPU parameter return](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/docs/evidence/pr86/job3522/public_return.json),
 member `run/attempt-0/child.json`, `result.parameters`.
 The 12-hour parameter specification reuses that map with the stated
 TimeLimit and Threads, as defined in the
@@ -149,12 +151,12 @@ the table describes parameter specifications, not 12-hour outcome observations.
 | TimeLimit | 3600 s | 43200 s | Solver time ceiling; not measured successful time-to-target |
 | MIPGap | 0.0001 | 0.0001 | Relative terminal tolerance, equal to 0.01% |
 | MIPGapAbs | 1e-10 | 1e-10 | Absolute objective-gap stopping tolerance |
-| Method | −1 | −1 | Automatic continuous/root algorithm selection |
-| Presolve | −1 | −1 | Automatic presolve |
-| Cuts | −1 | −1 | Automatic cut control |
+| Method | -1 | -1 | Automatic continuous/root algorithm selection |
+| Presolve | -1 | -1 | Automatic presolve |
+| Cuts | -1 | -1 | Automatic cut control |
 | Heuristics | 0.05 | 0.05 | Heuristic effort control |
 | MIPFocus | 0 | 0 | Default balanced search focus, recorded explicitly |
-| StartNodeLimit | −1 | −1 | Automatic Start-completion node control |
+| StartNodeLimit | -1 | -1 | Automatic Start-completion node control |
 | SubMIPNodes | 500 | 500 | Sub-MIP heuristic node control |
 | FeasibilityTol | 1e-6 | 1e-6 | Solver primal feasibility tolerance |
 | IntFeasTol | 1e-5 | 1e-5 | Solver integrality tolerance |
@@ -164,7 +166,7 @@ The [CPU solver path](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob
 sanitized messages with OutputFlag=1 and LogToConsole=0. Private logs are not
 publication inputs. ConcurrentMIP was not exported in this parameter map:
 its effective value remains unavailable, not an inferred default.
-Method=−1 alone does not identify a non-deterministic MIP algorithm, and
+Method=-1 alone does not identify a non-deterministic MIP algorithm, and
 time-limited termination can vary even with otherwise reproducible work.
 
 Independent vector checks use feasibility tolerance 1e-6 and integrality
@@ -175,6 +177,8 @@ These floating-point checks do not establish exact feasibility or remove
 M4/M12's metric-specific numerical restrictions.
 
 ### Observations and resource limits
+
+Observation controls specify which events are recorded and how follow-up is bounded. They are distinct from the solver's stopping criteria and from the scheduled resource reservation.
 
 | Control | Principal CPU evidence | 12-hour CPU protocol |
 | --- | --- | --- |
@@ -192,7 +196,7 @@ not interchangeable with solver stopping criteria. Missing data remain missing.
 These specifications alone establish neither attained targets nor the
 quality or cost of an individual run.
 
-## 4. Matched GPU training is a separate configuration
+## Matched GPU training is a separate configuration
 
 The [matched-pair configuration](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/configs/experiments/pr87_matched_gpu_v1.json)
 and [training implementation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/c76b076591ff977a092fc5d7d6bf42a074f05133/scripts/evidence/train_pr87.py)
@@ -228,7 +232,7 @@ trajectories are identical. The
 keeps speed, selected quality and assigned GPU-hours separate. Parameter
 documentation does not convert its lower selected F1 into a positive result.
 
-## 5. Scope of the configuration records
+## Scope of the configuration records
 
 The historical predictor, root capture, one-hour CPU comparisons and matched
 GPU pair use different settings. Each outcome is interpreted with its own
@@ -238,6 +242,26 @@ recorded runtime values. Neither establishes values that were not exported.
 
 The available records do not independently replay the historical training
 fit or resolve every legacy summary discrepancy. Numerical restrictions on
-M4/M12 remain specific to the affected metrics. The additional comparisons
-described in the [sensitivity discussion](sensitivity-review-plan.md) concern
-unmeasured robustness and mechanisms, rather than completed evidence.
+M4/M12 remain specific to the affected metrics. Solver-seed, root-method and neural-component sensitivities remain future research, as described in the article's conclusion. They are not additional completed observations.
+
+
+## Environments, model identities and access
+
+The recorded computational environment includes Python 3.10.20, NumPy 1.26.4, SciPy 1.15.3, Gurobi 13.0.1, PyTorch 2.1.2+cu121 and PyG 2.7.0. The matched GPU records additionally identify CUDA build 12.1, NCCL 2.18.6 and driver 550.90.07. These are reported software identities, not a new runtime hardware or license inspection.
+
+The original mixed CPU predictor is bound to the following SHA256 identities:
+
+- Checkpoint:  
+  `a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028`.
+- Training plan:  
+  `07c3377c20ef49c0ad3ae33a6b57d9dd70f92fc48a32f5f80c25b5cb32aa5da4`.
+- Training report:  
+  `974236918746711d044e2c0111a1e145d9487b27e20e7953cda6b63058ef3822`.
+
+Its data roles are 34/10/10. The easy-only reference, the historical mixed predictor and the newer GPU-selected checkpoints are distinct artifacts; their values are not substituted across evidence chains.
+
+The [public checkpoint ledger](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/e0/pr85/checkpoints.csv) records identity reconciliation and the limits of the historical attestations. The [publication archive manifest](../results/current/pr60_scientific_evidence_manifest.json) binds the historical tables and figures independently. Mathematical model identity and experimental population are retained even where a display uses a shorter instance name.
+
+The repository makes source code, partitions, public outcome tables, figure generators and numerical provenance available. The original benchmark inputs are obtained from their upstream source. Raw checkpoints, original model files and private intermediate artifacts are not implied to be redistributed by the code's MIT license. Access and redistribution terms remain specific to each artifact.
+
+Reproducing the tables and figures from public records is different from rerunning model preparation, learning or optimization. The static publication path reads fixed tables and does not execute those scientific stages. A documented default, a missing timer or a hash identifier is not an observed runtime value, a zero cost or an independently replayed training fit.

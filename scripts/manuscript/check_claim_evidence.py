@@ -11,13 +11,37 @@ import string
 from pathlib import Path, PurePosixPath
 
 REQUIRED_CLAIMS = {
-    "cpu_preserved_rows", "cpu_principal_rows", "cpu_historical_rows",
-    "cpu_easy_rows", "cpu_medium_rows", "cpu_reported_targets",
-    "cpu_censored_targets", "cpu_sensitive_rows", "gpu_loop_speedup",
-    "gpu_job_speedup", "gpu_loop_efficiency", "gpu_f1_loss", "gpu_auc_loss",
-    "gpu_selected_f1", "gpu_selected_auc", "gpu_loop_seconds", "gpu_job_seconds",
+    "cpu_preserved_rows",
+    "cpu_principal_rows",
+    "cpu_historical_rows",
+    "cpu_easy_rows",
+    "cpu_medium_rows",
+    "cpu_reported_targets",
+    "cpu_censored_targets",
+    "cpu_sensitive_rows",
+    "gpu_loop_speedup",
+    "gpu_job_speedup",
+    "gpu_loop_efficiency",
+    "gpu_f1_loss",
+    "gpu_auc_loss",
+    "gpu_selected_f1",
+    "gpu_selected_auc",
+    "gpu_loop_seconds",
+    "gpu_job_seconds",
+    "cpu_cost_solver",
+    "cpu_cost_cold",
+    "cpu_cost_allocated_cold",
+    "cpu_cost_amortized",
+    "cpu_cost_allocated_amortized",
+    "cpu_m0_one_primal_dual",
+    "cpu_m7_eight_primal_dual",
+    "cpu_m0_sixteen_runtime",
+    "abstract_cpu_cost",
+    "abstract_gpu_job",
 }
-REQUIRED_SOURCES = {"cpu_main", "gpu_review", "gpu_timings", "gpu_metrics"}
+REQUIRED_SOURCES = {"cpu_main", "gpu_review", "gpu_timings", "gpu_metrics", "cpu_rows", "cpu_scaling", "cpu_pairs"}
+CLAIM_DOCUMENTS = {"index.qmd", "supplement/extended-results.md",
+                   "supplement/configuration-reference.md"}
 
 
 def _source_path(repository: Path, name: str) -> Path:
@@ -32,6 +56,8 @@ def _source_path(repository: Path, name: str) -> Path:
 
 
 def _section(article: str, identity: str) -> str:
+    if identity == "abstract":
+        return article.split("---", 2)[1].split("abstract: |", 1)[1]
     heading = re.search(r"(?m)^#{1,6} [^\n]*\{#" + re.escape(identity) + r"\}", article)
     if heading is None:
         raise ValueError("article_section_missing")
@@ -63,7 +89,7 @@ def _value(metric: dict, sources: dict) -> str:
     value = float(value)
     scale, spec = metric.get("scale", 1), metric["format"]
     if not math.isfinite(value) or scale not in (-1, 1, 100) or spec not in {
-        ".0f", ".2f", ".3f", ".6f",
+        ".0f", ".2f", ".3f", ".4f", ".6f",
     }:
         raise ValueError("invalid_numeric_format")
     return format(value * scale, spec)
@@ -87,7 +113,7 @@ def check_claim_evidence(manuscript: Path, repository: Path) -> list[str]:
                 or pending["final_return_received"] is not False
                 or pending["result_claims"] != []):
             failures.append("claim_evidence_pending_cpu_promoted")
-        article = (manuscript / "index.qmd").read_text(encoding="utf-8")
+        documents = {}
         sources = {}
         for record in records:
             path = _source_path(repository, record["path"])
@@ -112,7 +138,15 @@ def check_claim_evidence(manuscript: Path, repository: Path) -> list[str]:
                     raise ValueError("invalid_article_template")
                 statement = template.format(**{key: _value(metric, sources)
                                                for key, metric in metrics.items()})
-                section = _section(article, claim["section"])
+                name = claim.get("document", "index.qmd")
+                if name not in CLAIM_DOCUMENTS:
+                    raise ValueError("unsafe_claim_document")
+                path = manuscript / name
+                if path.is_symlink() or not path.resolve().is_relative_to(manuscript.resolve()):
+                    raise ValueError("unsafe_claim_document")
+                if name not in documents:
+                    documents[name] = path.read_text(encoding="utf-8")
+                section = _section(documents[name], claim["section"])
                 if " ".join(statement.split()) not in " ".join(section.split()):
                     failures.append("claim_value_mismatch:" + claim["id"])
             except (KeyError, TypeError, ValueError, IndexError):

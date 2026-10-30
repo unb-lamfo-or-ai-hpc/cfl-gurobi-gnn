@@ -108,12 +108,29 @@ class ManuscriptContractTests(unittest.TestCase):
         self.change("index.qmd", "# Introduction", "# Introduction\n\n@invented2026")
         self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
 
-    def test_class_aware_abstract_must_explain_positive_values(self):
-        self.change("index.qmd", "value 1 receive priority", "the rare class receives priority")
-        self.assertIn("class_aware_abstract_explanation_missing", CHECK.check_source(self.root))
+    def test_abstract_introduces_the_scientific_acronyms(self):
+        self.change("index.qmd", "Graph Neural Network (GNN)", "GNN")
+        self.assertIn("abstract_acronym_introduction_missing", CHECK.check_source(self.root))
+
+    def test_highlights_cannot_publish_operational_status(self):
+        path = self.root / "highlights.txt"
+        path.write_text("The final return is pending.\n")
+        self.assertIn("internal_note_in_reader_text:highlights.txt",
+                      CHECK.check_source(self.root))
+
+    def test_mechanism_cannot_return_as_a_third_scientific_contribution(self):
+        self.change("index.qmd", "# Introduction",
+                    "# Introduction\n\nWe claim three empirical contributions.")
+        self.assertIn("mechanism_promoted_to_independent_contribution",
+                      CHECK.check_source(self.root))
+
+    def test_approved_title_is_consistent(self):
+        self.change("index.qmd", CHECK.TITLE, "A different title")
+        self.assertIn("approved_scientific_communication_drift",
+                      CHECK.check_source(self.root))
 
     def test_current_seed42_scope_cannot_be_silently_removed(self):
-        self.change("index.qmd", "150 seed42 records", "210 multiseed records")
+        self.change("index.qmd", "150 seed42 observations", "210 multiseed observations")
         self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
 
@@ -152,7 +169,7 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("metrics_not_defined_before_results", CHECK.check_source(self.root))
 
     def test_final_section_uses_reviewed_structure(self):
-        self.change("index.qmd", "# Final considerations, limitations and future work", "# Conclusions")
+        self.change("index.qmd", "# Conclusions and Future Research", "# Conclusions")
         self.assertIn("editorial_final_section_missing", CHECK.check_source(self.root))
 
     def test_pipeline_is_announced_before_its_display(self):
@@ -160,11 +177,11 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("figure_not_introduced:fig-pipeline", CHECK.check_source(self.root))
 
     def test_predictive_table_is_announced_before_its_display(self):
-        self.change("index.qmd", "@tbl-predictive reports", "The table reports")
+        self.change("supplement/extended-results.md", "@tbl-predictive reports", "The table reports")
         self.assertIn("table_not_introduced:tbl-predictive", CHECK.check_source(self.root))
 
     def test_sections_cannot_start_with_a_table(self):
-        self.change("index.qmd", "{{< include tables/current_influence.qmd >}}", "## Empty lead\n\n{{< include tables/current_influence.qmd >}}")
+        self.change("supplement/extended-results.md", "{{< include ../tables/current_influence.qmd >}}", "## Empty lead\n\n{{< include ../tables/current_influence.qmd >}}")
         self.assertIn("section_starts_with_display", CHECK.check_source(self.root))
 
     def test_l2o_context_required(self):
@@ -172,7 +189,7 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
 
     def test_unapproved_include_fails(self):
-        self.change("index.qmd", "tables/current_predictive.qmd", "../../private.qmd")
+        self.change("index.qmd", "tables/principal_ratios.qmd", "../../private.qmd")
         self.assertIn("executable_or_unreviewed_included_content", CHECK.check_source(self.root))
 
     def test_executable_chunk_fails(self):

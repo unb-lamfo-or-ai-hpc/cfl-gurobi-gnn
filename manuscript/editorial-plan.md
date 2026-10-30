@@ -1,5 +1,24 @@
 # Scientific and editorial revision
 
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](../docs/research/pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
 ## Reader-only publication boundary — 29 October 2026
 
 The author requires article and appendix/supplement prose to address future
@@ -112,7 +131,7 @@ The manuscript distinguishes observed conditional comparisons from
 across-seed robustness. Its conclusions now describe targeted sensitivity
 work without presenting it as completed evidence or promising reviewer acceptance.
 
-See the [prospective assessment](supplement/sensitivity-review-plan.md) for
+See the [prospective assessment](../docs/research/mvp2-sensitivity-planning.md) for
 incremental counts, cost boundaries and the conditions for deferral.
 A narrow seed study would take priority over a broad architecture grid if
 the final claim requires robustness evidence. No new experiment accompanies
