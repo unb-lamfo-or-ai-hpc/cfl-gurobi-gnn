@@ -70,13 +70,14 @@ class GPUFigureTests(unittest.TestCase):
             "#fig-gpu-bce",
             "0.032468",
             "0.02 loss margin",
-            "13,600 presentations",
             "3,400 updates",
-            "cause is unproven",
             "historically exposed",
-            "not replace",
         ):
             self.assertIn(text, article)
+        # Allow editorial clarification while retaining the scientific safeguards.
+        self.assertRegex(article, r"13,600(?: graph)? presentations")
+        self.assertRegex(article, r"(?:cause is unproven|does not identify its cause)")
+        self.assertRegex(article, r"(?:not replace|neither replace)")
         self.assertNotIn("Neither its speedup nor", article)
         self.assertNotIn("GPU training remain pending", article)
         # Execution/qualification status belongs in repository metadata, not journal prose.
