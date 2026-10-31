@@ -1,5 +1,9 @@
 # Internal sensitivity planning and scientific interpretation
 
+## Latest proposed scope — 31 October 2026
+
+The author now proposes ten medium optimization parents and solver seeds42/43/44 while freezing the 54-parent learning corpus. The [canonical plan](mvp2-closeout-plan.md) distinguishes the proposed MVP2 solver-seed extension from GNN retraining/root-method/hyperparameter experiments, which remain future work. It records difficulty classification, historical exposure of M9/M20, reuse of 90 compatible one-hour cells, conditional resource ceilings and the separate execution gate. This supersedes earlier planning-only statements that every solver-seed extension was outside MVP2, but authorizes no execution. Do not duplicate the detailed protocol here.
+
 ## Hypotheses informed by the partial return — 31 October 2026
 
 Use the received 50 cells as pilot evidence, without changing the current campaign. First separate numerical comparability of M4/M12 from performance; then ask whether favourable and adverse B/R/G contrasts persist under prospectively chosen solver seeds. Distinguish intermediate quality targets from terminal attainment. The final ten cells should inform a proportionate proposal before any new execution decision. Do not launch a factorial seed/root-method/neural-hyperparameter campaign or treat pilot-selected contrasts as confirmatory. Existing-vector/log review and a future new-solve campaign are different activities. No new budget or execution is authorized.

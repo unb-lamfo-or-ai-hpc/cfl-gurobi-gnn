@@ -1,5 +1,10 @@
 # Experiment protocol
 
+## Latest planning direction — 31 October 2026
+
+The author proposes expanding optimization testing to ten medium parents, keeping six easy parents and the frozen54 learning split. Solver seeds42/43/44 and six added medium parents are a proposed next campaign, not submitted jobs or new execution authority. Neural retraining, root-method/hyperparameter experiments remain future work. The [canonical Sprint/PR plan](research/mvp2-closeout-plan.md) records conditional reuse, difficulty analysis, numerical/exposure limits and the publication sequence. PR89 stays frozen; current reader-facing results still use the original cohorts. The separate historical six-medium study uses M0/M4/M7/M9/M12/M20; the principal CPU/PR89 medium cohort is M0/M4/M7/M12.
+
+
 ## Author-directed descriptive CPU subset — 31 October 2026
 
 The author requested the 50-cell partial CPU return be included as a labelled exploratory subset in the article and Appendix B. This supersedes the earlier no-numerical-CPU-placeholder wording only for these received, receipt-checked descriptive observations. It does not qualify the full 60-cell campaign, change any original eligibility flag or authorize further execution. Sources are frozen in docs/evidence/pr89/partial-20261031; missing cells, endpoint-specific censoring, M4/M12 restrictions and the smaller M0 bound disagreement remain explicit. The AI disclosure now names Codex models 6.1 Sol and 6.0 Astra, as corrected by the author.

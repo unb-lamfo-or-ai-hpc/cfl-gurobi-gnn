@@ -44,7 +44,8 @@ QUESTION = (
     "as warm starts for a deterministic MILP solver and improve its performance "
     "when solving Capacitated Facility Location (CFL) problems?"
 )
-INCLUDES = {"tables/principal_ratios.qmd", "tables/principal_costs.qmd"}
+INCLUDES = {"tables/principal_ratios.qmd", "tables/principal_easy_gaps.qmd",
+            "tables/principal_costs.qmd"}
 SUPPLEMENT_INCLUDES = {
     "../tables/current_predictive.qmd", "../tables/current_heldout.qmd",
     "../tables/current_influence.qmd", "../tables/current_timing.qmd",

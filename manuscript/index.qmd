@@ -91,7 +91,7 @@ For binary variables, labels come from checked reference incumbents. An incumben
 
 A variable is represented by a variable node and a linear constraint by a constraint node. An edge joins them when the variable has a nonzero coefficient in that row, and the coefficient is an edge feature. This representation gives the GNN access to the couplings present in the MILP.
 
-The graph uses seven variable channels, five constraint channels and one coefficient channel. Variable features describe objective, bounds, type and a stored root-relaxation value. Constraint features describe right-hand side and row sense. Signed logarithmic transformations and clipping control numerical range; they change the learning representation, not the solver's coefficients. The ordered channels and transformations are specified in Appendix C.
+The graph has seven variable channels (objective, bounds, type and stored root-relaxation value), five constraint channels (right-hand side and row sense) and one coefficient channel. Signed logarithms and clipping control the representation's range without changing solver coefficients. Appendix C specifies their order and transformations.
 
 The relaxation values are captured during a separate preparation stage. Gurobi reads the original minimization model with Presolve=0, NodeLimit=1, one thread, seed 42 and a 600-second limit. At the first optimal MIPNODE event at the root, the callback reads cbGetNodeRel, stores the aligned vector and terminates preparation. This is not an independent call to model.relax(), nor necessarily the final root state after every cutting-plane pass.
 
@@ -174,9 +174,9 @@ Predictive metrics measure reference-label agreement separately. Precision is TP
 
 Solver Runtime measures optimization, whereas supervised execution also includes the recorded attempt overhead. Preparation can include root capture, graph construction, model loading, inference and Start construction. These intervals are charged according to their measured scope; nested components are not summed twice. R also pays its G-dependent matching preparation. Offline training, queueing and orchestration are separate.
 
-Cold-use and amortization calculations are delimited scenarios derived from existing measurements, not independent end-to-end application trials. A missing component remains unavailable. The historical seven-use allocation and the five-use allocations in other records are different reuse assumptions. At campaign level, shared work is counted once rather than summing alternative method scenarios as repeated physical expenditure.
+Cold-use and amortization calculations are scenarios, not independent end-to-end trials; missing components remain unavailable. Seven-use and five-use allocations are distinct assumptions. Campaign accounting counts shared work once, rather than summing alternative method scenarios as repeated expenditure.
 
-Experiments use UJA's dgx-dasci infrastructure. Its supplied inventory describes eight 32-GB V100 GPUs, two 20-core CPUs and 512 GB memory; it is not a runtime hardware probe or an allocation of all eight GPUs. Recorded allocations determine each comparison. The storage inventory includes a 6 Gb/s interface, which is a capacity specification rather than measured throughput. CPU allocation, logical CPU accounting, process memory and GPU-hours have distinct scopes. Assigned GPU-hours are allocation times job duration, not energy or active utilization.
+Experiments use UJA's dgx-dasci infrastructure: the supplied inventory describes eight 32-GB V100 GPUs, two 20-core CPUs and 512 GB memory. This is not a runtime hardware probe or an allocation of all eight GPUs. Recorded allocations determine each comparison. The 6 Gb/s interface is not measured throughput. CPU allocation, logical CPU accounting and process memory are distinct quantities. Assigned GPU-hours equal allocation times job duration; they measure neither energy nor active utilization.
 
 # Computational Results
 
@@ -190,18 +190,22 @@ Validation loss selects historical epoch 34 rather than the terminal epoch 100. 
 
 The principal analysis has 150 seed42 observations on ten instances. Ninety observations concern six easy instances and sixty concern four medium instances. Appendix B gives all reported dispositions and per-instance outcomes; the sensitive M4/M12 observations remain part of the same sample.
 
-The geometric-mean time ratios in @tbl-principal-ratios show why a single overall claim of acceleration would be misleading.
+The geometric-mean time ratios in @tbl-principal-ratios summarize paired relative effects on the six easy instances. For example, G/B is $\exp\{\frac{1}{6}\sum_i\log(T_{G,i}/T_{B,i})\}$. Each instance has equal weight regardless of its absolute runtime. This is a multiplicative summary, not a ratio of total computing times or evidence of uniform acceleration.
 
 {{< include tables/principal_ratios.qmd >}}
 
-All six easy instances attain the reported terminal target under each method/cap configuration, permitting descriptive time comparisons. @fig-principal-time shows their individual paired behaviour and separate CPU scaling.
+All 90 easy observations attain the reported 0.01% gap criterion, permitting descriptive time comparisons. Their final gaps are not uniformly zero: @tbl-easy-gaps reports the largest final gap for each instance/method across the five caps. Appendix B provides every final gap and runtime. These are tolerance-based outcomes, rather than exact-optimum certificates.
+
+{{< include tables/principal_easy_gaps.qmd >}}
+
+@fig-principal-time shows individual paired behaviour and separate CPU scaling.
 
 ![Between-method time ratios and within-method CPU scaling on the six easy instances.](figures/figure_principal_time_scaling.pdf){#fig-principal-time width=100%}
 
 The left panel shows G/B and G/R solver-time ratios by instance and cap, with geometric means. Lower ratios favour G. The right panel shows each method's geometric-mean scaling relative to its own one-thread runtime. No panel is a population-level uncertainty estimate.
 
 
-At one and two threads, G is slower than B in this aggregate; at four, eight and sixteen it is faster. The G/R comparison also changes with the cap. Individual instances differ, so these point summaries neither identify an optimal resource setting nor demonstrate a statistically established interaction. In particular, the exploratory G/B interval at sixteen threads includes one. Increasing the cap also does not ensure within-method acceleration: the B/R geometric-mean scaling falls below one at four through sixteen threads, while G's modest improvement is nonmonotonic.
+G is slower than B in aggregate at one/two threads and faster at four/eight/sixteen; G/R also varies. Individual effects differ, and the exploratory sixteen-thread G/B interval includes one. These summaries establish neither an optimal cap nor a statistical interaction. More threads do not ensure acceleration: B/R geometric-mean scaling is below one at caps four through sixteen, and G's improvement is nonmonotonic.
 
 The medium-instance comparisons concern terminal quality as well as censored times. @fig-medium-gap retains each instance separately, including the numerically sensitive cases.
 
@@ -209,7 +213,7 @@ The medium-instance comparisons concern terminal quality as well as censored tim
 
 Panels show terminal observations, not values measured at an identical exact horizon. Open markers indicate censoring for the terminal target. M4/M12 panels retain their numerical restrictions; a displayed zero is not an exact optimality certificate.
 
-The distinction between primal and dual progress is visible even in a single eligible comparison. On medium instance 0 with one thread, G's primal value is 4.6556, compared with B's 4.6664, but its dual bound is 4.3230 rather than 4.3504. G therefore has a larger terminal gap, despite a better incumbent. On medium instance 7 with eight threads, G has primal 5.4337 and dual 4.7261, versus B's 10.7283 and 4.7750. The much better incumbent accompanies a smaller gap despite a weaker bound. Appendix B reports the complete configurations, including adverse outcomes. These examples illustrate why primal and dual changes need to be interpreted together.
+On medium instance 0 at one thread, G improves the primal (4.6556 versus B's 4.6664) but weakens the dual (4.3230 versus 4.3504), leaving a larger terminal gap. On medium instance 7 at eight threads, G's much better primal (5.4337 versus 10.7283) yields a smaller gap despite a weaker dual (4.7261 versus 4.7750). Appendix B retains all configurations and adverse outcomes. Primal and dual changes therefore require joint interpretation.
 
 Medium instance 0 with G at sixteen threads reports zero terminal gap after approximately 3204 seconds, while both comparators are censored for the terminal target. This is a solver-reported outcome under tolerances, not an exact certificate. M4 and M12 retain metric-specific numerical limits: acceptance of original floating-point vectors does not establish feasibility of rounded diagnostic copies. Their observations cannot be promoted to certified speedups.
 
@@ -227,13 +231,13 @@ A solver-level advantage is not necessarily an application-level advantage. @tbl
 
 {{< include tables/principal_costs.qmd >}}
 
-The solver-only G/B ratio is 0.8435. The ratio becomes 1.0461 for supervised execution plus delimited cold preparation, and 1.0692 with the broader preparation allocation. Under the historical seven-use scenarios it is 0.8935 or 0.8969. Thus the direction of the point estimate changes with the accounting boundary and reuse assumption.
+The solver-only G/B ratio of 0.8435 becomes 1.0461 with delimited cold preparation, or 1.0692 with broader allocation. The corresponding seven-use scenarios yield 0.8935 and 0.8969. Accounting scope and reuse thus reverse the direction of the estimate.
 
 These are conditional cost scenarios, not complete deployment measurements. The exploratory intervals around the sixteen-thread solver and cold-use ratios both include one. The observation is useful for accounting decisions on this sample, without establishing a universal break-even rule. It also does not remove preparation from the measured campaign expenditure or imply that missing operational costs are zero.
 
 ## Complementary matched GPU training {#sec-gpu-matched}
 
-The matched seed42 pair compares serial one-V100 training with four-V100 distributed data parallel training. Both use the same learning split, train-fitted initialization and global batch of four. Each global update averages four graph losses: the serial arm accumulates them, whereas the distributed arm averages one per rank. Both complete 100 protocol epochs, each presenting every training instance four times, for 13,600 presentations and 3,400 updates per arm. Validation selects checkpoints independently without test-based reselection.
+The matched seed42 pair compares serial one-V100 training with four-V100 distributed data parallel (DDP) training. Serial denotes one training process; it does not imply sequential arithmetic within the GPU. DDP replicates the model across processes and synchronizes their gradients [@li2020ddp]. Both arms use the same learning split, train-fitted initialization and global batch of four. Each update averages four graph losses: accumulated serially in one arm, one per rank in the other. Both complete 100 epochs, 13,600 graph presentations and 3,400 updates. Validation selects checkpoints independently.
 
 | Measure | Serial 1 V100 | DDP 4 V100s |
 |:--|--:|--:|
@@ -252,11 +256,15 @@ Loop speedup is 2.167 with 54.17% efficiency; whole-job speedup is 1.831. Assign
 
 ![Training and validation weighted BCE for the matched serial/distributed comparison.](figures/gpu_bce_by_epoch_article_en.pdf){#fig-gpu-bce width=100%}
 
-The common logarithmic scale and unsmoothed curves retain the validation minima at epochs 99 and 92. BCE, selected F1 and time are different outcomes. The comparison has one seed, a fixed serial-to-distributed order and accompanying CPU scaling from four to sixteen cores, so it does not isolate GPU causality. The cause is unproven, so the quality loss cannot be attributed to a particular implementation mechanism. These weights do not replace the original CPU predictor or demonstrate downstream solver benefit.
+The unsmoothed curves retain validation minima at epochs 99 and 92. Sublinear speedup is compatible with DDP's communication and synchronization costs [@li2020ddp]. GNN systems also face irregular graph workloads and data movement: DistDGL addresses these through partitioning and load balancing [@zheng2020distdgl]. That system distributes a large graph; here, ranks process separate complete instance graphs. Its results therefore provide context, not a directly comparable speedup benchmark. Without component profiling, the contribution of each overhead remains unknown.
+
+Equal global batches control one source of optimization differences, but do not establish identical floating-point trajectories [@pytorch21numerical]. The observed F1 loss is not an intrinsic consequence of DDP, and this one pair does not identify its cause. One seed, fixed execution order and CPU scaling from four to sixteen cores limit attribution. These weights neither replace the CPU predictor nor establish downstream solver benefit.
 
 ## Preliminary six-medium evidence
 
-The separate historical optimization test reports smaller GNN terminal gaps on five of six medium instances, with a median guided-minus-control difference of -1.164 percentage points. Mean effects are influenced by medium instances 12 and 20. GNN reaches the observed 10% threshold on four instances, compared with three per comparator; an observed crossing can coexist with terminal censoring. Appendix B retains the full tables, influence diagnostics and curves.
+This earlier study evaluates M0, M4, M7, M9, M12 and M20 using its own single-thread, seed42, 3,600-second protocol. It is a separate historical optimization cohort: the principal CPU comparison and long-horizon extension use only M0, M4, M7 and M12. The two additional historical cases do not enlarge that four-medium evaluation or its learning split.
+
+GNN terminal gaps are smaller on five of the six historical instances, with median guided-minus-control difference -1.164 percentage points. M12 and M20 influence the mean. GNN reaches the observed 10% threshold on four instances, versus three per comparator; an earlier crossing can coexist with terminal censoring. Appendix B retains all values and influence diagnostics.
 
 Its distinct population and worker clock, which excludes neural preparation, limit inference about generalization or complete cold-use savings.
 
@@ -264,13 +272,13 @@ Its distinct population and worker clock, which excludes neural preparation, lim
 
 Partial starts can help or hinder depending on the instance, thread cap and endpoint. The easy-instance aggregate changes direction across caps; the medium comparisons distinguish primal improvements from dual progress and terminal attainment. Consequently, predictive accuracy, elapsed time and reported gap answer different questions and should be evaluated together.
 
-The method changes starting information while preserving the feasible region. This places it alongside learned primal guidance without equating it with the restricted subproblems of Neural Diving, prediction-centred regions of Predict-and-Search or other reductions [@nair2020; @han2023; @canturk2024]. MIP-GNN supplies a direct precedent for neural warm-starting [@khalil2022]. Our evidence contributes a scoped CFL assessment of the solver response and its costs; it does not establish that native starts outperform those other algorithms.
+The unchanged feasible region distinguishes these starts from the restricted searches of Neural Diving, Predict-and-Search and uncertainty-based reductions [@nair2020; @han2023; @canturk2024]. Following the warm-start precedent of MIP-GNN [@khalil2022], our contribution is a conditional CFL assessment, not evidence of superiority over those algorithms.
 
-R makes the comparison more informative than an unguided control alone, because it matches the amount and class composition of the supplied assignments. It also limits the interpretation: R depends on G's preparation, and their indices and values differ. Consequently, the contrast concerns the complete starting information, not a causal effect of prioritizing ones. Such a claim would need a separately controlled ablation.
+R controls assignment counts and class composition but depends on G's preparation and supplies different indices and values. Their contrast therefore concerns the complete starting information; identifying the causal effect of prioritizing ones would require a controlled ablation.
 
-Cost boundaries also change the interpretation. At sixteen threads, the easy-instance solver estimate favours G, while cold-use scenarios do not; reuse changes the result again. The GPU pair similarly combines shorter training time with lower selected F1 and higher allocated GPU-hours. These are configuration-specific trade-offs, not interchangeable measures of benefit.
+At sixteen threads, the easy-instance solver estimate favours G, whereas cold-use scenarios do not; reuse changes that conclusion. Likewise, shorter GPU training accompanies lower F1 and higher allocated GPU-hours. These outcomes describe distinct trade-offs.
 
-The evidence remains descriptive. Quality-selected labels, historically exposed tests, a small instance population and one principal solver seed limit the strength and scope of inference. Fixed architecture and partially measured costs leave additional uncertainty. Observed heterogeneity can reflect starting information, search, resources and time-based interruption; these mechanisms are not causally isolated. A single recorded run does not establish terminal-state repeatability. M4/M12 restrictions qualify the affected metrics regardless of elapsed time.
+Quality-selected labels, historical exposure, few instances, one principal seed, fixed architecture and incomplete costs limit inference. Starting information, search, resources and time-based interruption may all contribute to heterogeneity; none is causally isolated. Single runs do not establish repeatability, and M4/M12 restrictions apply regardless of runtime.
 
 # Conclusions and Future Research
 
@@ -278,9 +286,9 @@ We compared GNN-generated partial starts with unguided and relaxation-ranked sta
 
 Solver gains can disappear with cold preparation, while reuse changes their economics. Faster distributed training can also reduce selected predictive quality and increase allocated GPU-hours. The accounting remains delimited rather than a complete deployment estimate.
 
-The principal limitations are the small and historically exposed sample, numerical sensitivity, censoring, fixed predictor, single principal solver seed and incomplete operational cost coverage. Future research can examine solver-seed variability, repeated runs with work-based stopping, explicit root-method contrasts, targeted neural hyperparameters and mechanism ablations under matched validation and comparison rules. Additional independent instances and fuller cost measurements would strengthen external interpretation. These studies were not performed as part of the reported evaluation.
+Future research should examine solver-seed variability, work-based stopping, root-method contrasts, neural hyperparameters and mechanism ablations under matched validation rules. Independent instances and fuller cost measurements would strengthen external interpretation. These experiments are outside the reported evaluation.
 
-The canonical repository provides code, partitions and versioned evidence. Model and benchmark redistribution remain subject to their respective rights and access conditions; project-owned material uses MIT. These availability boundaries are distinct from the scientific conclusions.
+The repository provides code, partitions and versioned evidence. Project-owned material uses MIT; model and benchmark redistribution retain their respective rights and access conditions.
 
 # Acknowledgements
 

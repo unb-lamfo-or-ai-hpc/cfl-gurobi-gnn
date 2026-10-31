@@ -391,7 +391,7 @@
       "id": "cpu_cost_solver",
       "document": "index.qmd",
       "section": "sec-cost-results",
-      "article_template": "The solver-only G/B ratio is {n}",
+      "article_template": "The solver-only G/B ratio of {n}",
       "metrics": {
         "n": {
           "source": "cpu_pairs",
@@ -414,7 +414,7 @@
       "id": "cpu_cost_cold",
       "document": "index.qmd",
       "section": "sec-cost-results",
-      "article_template": "ratio becomes {n} for supervised execution plus delimited cold preparation",
+      "article_template": "becomes {n} with delimited cold preparation",
       "metrics": {
         "n": {
           "source": "cpu_pairs",
@@ -437,7 +437,7 @@
       "id": "cpu_cost_allocated_cold",
       "document": "index.qmd",
       "section": "sec-cost-results",
-      "article_template": "and {n} with the broader preparation allocation",
+      "article_template": "or {n} with broader allocation",
       "metrics": {
         "n": {
           "source": "cpu_pairs",
@@ -460,7 +460,7 @@
       "id": "cpu_cost_amortized",
       "document": "index.qmd",
       "section": "sec-cost-results",
-      "article_template": "it is {n}",
+      "article_template": "seven-use scenarios yield {n}",
       "metrics": {
         "n": {
           "source": "cpu_pairs",
@@ -483,7 +483,7 @@
       "id": "cpu_cost_allocated_amortized",
       "document": "index.qmd",
       "section": "sec-cost-results",
-      "article_template": "or {n}",
+      "article_template": "and {n}. Accounting scope",
       "metrics": {
         "n": {
           "source": "cpu_pairs",
@@ -506,7 +506,7 @@
       "id": "cpu_m0_one_primal_dual",
       "document": "index.qmd",
       "section": "sec-mvp2-current",
-      "article_template": "On medium instance 0 with one thread, G's primal value is {gp}, compared with B's {bp}, but its dual bound is {gd} rather than {bd}.",
+      "article_template": "On medium instance 0 at one thread, G improves the primal ({gp} versus B's {bp}) but weakens the dual ({gd} versus {bd}), leaving a larger terminal gap.",
       "metrics": {
         "gp": {
           "source": "cpu_rows",
@@ -563,7 +563,7 @@
       "id": "cpu_m7_eight_primal_dual",
       "document": "index.qmd",
       "section": "sec-mvp2-current",
-      "article_template": "On medium instance 7 with eight threads, G has primal {gp} and dual {gd}, versus B's {bp} and {bd}.",
+      "article_template": "On medium instance 7 at eight threads, G's much better primal ({gp} versus {bp}) yields a smaller gap despite a weaker dual ({gd} versus {bd}).",
       "metrics": {
         "gp": {
           "source": "cpu_rows",

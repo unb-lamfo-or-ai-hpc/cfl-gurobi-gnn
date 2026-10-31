@@ -141,7 +141,7 @@ The principal comparison contains 150 seed42 records on six easy and four medium
 
 : Scope and recorded dispositions of the principal CPU comparison. {#tbl-cpu-coverage}
 
-Every easy instance attains the reported terminal target in each configuration. @tbl-easy-times lists their solver runtimes so that aggregate ratios can be read alongside individual effects. F denotes an easy instance; M denotes a medium instance.
+Every easy instance attains the reported 0.01% gap criterion in each configuration. @tbl-easy-times lists both runtime and final MIP gap for all 90 observations; gaps are percentages, not fractions. Twelve gaps are nonzero, and the largest is approximately 0.009687%, for F14 with G at eight threads. A zero under solver tolerances does not establish exact optimality. F denotes an easy instance; M denotes a medium instance.
 
 {{< include ../tables/principal_easy_times.qmd >}}
 
@@ -177,7 +177,7 @@ Precision and recall are 0.6923 and 0.7064; pooled F1 is 0.6993 and parent-macro
 
 ## B.11. Preliminary six-medium optimization study {#sec-historical-six-medium}
 
-This study uses medium instances 0, 4, 7, 9, 12 and 20 for optimization testing, separately from its six-medium guidance-validation cohort. Its single-thread, seed42, 3,600-second runs retain their original policy and method-order protocol. It is supporting historical evidence, not the ten-instance principal CPU matrix.
+This study uses **M0, M4, M7, M9, M12 and M20** for optimization testing, separately from its six-medium guidance-validation cohort. The later principal CPU matrix and long-horizon extension use only **M0, M4, M7 and M12** as their medium instances. M9 and M20 belong to this earlier study; their presence here does not redefine the later split or add observations to the principal matrix. Its single-thread, seed42, 3,600-second runs retain their original policy and method-order protocol. Historical exposure precludes presenting M9/M20 as entirely untouched instances in a later evaluation.
 
 ### B.11.1. Guidance qualification and frozen testing
 

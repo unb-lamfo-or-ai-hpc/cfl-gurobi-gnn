@@ -341,3 +341,18 @@ Todos os caminhos abaixo foram consultados no HEAD 3f5789fe, salvo as fontes his
 - [Razões agregadas e intervalos existentes](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/pr86/final-210/paired_uncertainty.csv) e [componentes dos cenários de custo](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/pr86/final-210/cost_scenarios.csv). Foram conferidas as seleções seed42/M2/M0, seis instâncias fáceis, e as linhas de 16 threads; não foram reestimados intervalos nem executados experimentos.
 - [Manuscript CI](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/actions/runs/40874722918) e [evidence CI](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/actions/runs/40874723085).
 
+
+
+## Reader corrections and proposed continuation — 31 October 2026
+
+The author identified three omissions. The easy-runtime discussion now reports per-instance/method maximum terminal MIP gaps over the five caps; Appendix B lists all90 gap/runtime observations. Twelve easy gaps are nonzero; the maximum is0.0096870864%, F14/G/eight threads, below the0.01% criterion. The geometric mean is explained as an equally weighted paired relative effect, not total-time saving.
+
+Section5.5 and AppendixC.7 distinguish a single GPU training process from within-GPU serial computation, explain the matched graph-weighted gradient objective, and cite Li etal.(2020), Zheng etal.(2020), and PyTorch2.1 numerical/reproducibility documentation. DistDGL is context, not an executed or equivalent benchmark. No causal explanation of the observed F1 loss is asserted.
+
+Section5.6 and AppendixB.11 name the historical M0/M4/M7/M9/M12/M20 cohort and distinguish it from the principal/PR89 M0/M4/M7/M12 cohort. M9/M20 exposure is retained in the next-campaign proposal. No archived observation, metric or eligibility flag is rewritten.
+
+The canonical closeout plan now records a proposed16-parent evaluation(ten medium/six easy), frozen54-parent learning corpus, reuse-conditioned three-solver-seed design and empirical difficulty framework. The draft60-unit matrix contains six preparations and54 new one-hour solves, with no assigned jobs or execution authority. The55-hour ceiling covers optimizer time including roots; other preparation and wall allocations still require an exact manifest. It is not an approved launch or resource request for PR89.
+
+Validation: regenerate static tables from hash-bound existing inputs; run publication source/claim checks, the manuscript suite including a gap-unit/evidence regression, and static article/appendix renders. Final PDF layout, exact-head checks and hashes are recorded in the PR checkpoint. PR89 source and campaign remain intact, and no new research execution or merge is performed.
+
+Local source/claim checks and93 manuscript tests pass. Prose was deduplicated to retain the added easy-gap table and bibliography discussion within the existing20-page body gate; evidence values, selectors and hashes are unchanged. Seven article-template strings in the claim index follow the revised wording. Current local article:24 pages including references, which begin on page20; appendices:42 pages. Exact-head CI and final file identities follow in the PR checkpoint.

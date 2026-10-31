@@ -32,6 +32,18 @@ class PrincipalAssetTests(unittest.TestCase):
         self.assertEqual(len({r["alias"] for r in rows}), 10)
         self.assertEqual({r["seed"] for r in rows}, {"42"})
 
+    def test_easy_gaps_keep_nonzero_values_and_percentage_units(self):
+        rows, _, _ = ASSETS.fixed_inputs(self.root)
+        easy = [r for r in rows if r["alias"] in ASSETS.EASY]
+        self.assertEqual(len(easy), 90)
+        self.assertEqual(sum(float(r["gap_fraction"]) > 0 for r in easy), 12)
+        maximum = max(easy, key=lambda r: float(r["gap_fraction"]))
+        self.assertEqual((maximum["alias"], maximum["method"], maximum["threads"]),
+                         ("F14", "M2", "8"))
+        self.assertAlmostEqual(100 * float(maximum["gap_fraction"]),
+                               0.00968708641989751)
+        self.assertTrue(all(0 <= float(r["gap_fraction"]) <= 0.0001 for r in easy))
+
     def test_changed_source_bytes_are_not_accepted(self):
         path = self.root / ASSETS.INPUTS[0]
         path.write_bytes(path.read_bytes() + b"\n")

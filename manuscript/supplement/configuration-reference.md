@@ -296,6 +296,14 @@ trajectories are identical. The
 keeps speed, selected quality and assigned GPU-hours separate. Parameter
 documentation does not convert its lower selected F1 into a positive result.
 
+### C.7.1. What is matched between serial and distributed updates?
+
+Let $\ell_j(\theta)$ be the mean weighted binary cross-entropy for graph $j$ in a global batch of four. Both arms target $L(\theta)=\frac14\sum_{j=1}^{4}\ell_j(\theta)$. The serial arm accumulates gradients from four losses divided by four before an optimizer step. With one graph per rank, DDP averages the four rank gradients before the step [@li2020ddp]. Clipping is applied to the aggregated gradient. This matches the intended graph-weighted objective; it is not a pooled average over all binary variables, which would weight large graphs differently. Unlike the historical CPU training schedule, both matched GPU arms use these four-graph global updates.
+
+DDP's replicated models process different complete instance graphs; this is data parallelism across graphs, not partitioning the nodes of one graph. DistDGL instead distributes graph data and addresses locality and load balance [@zheng2020distdgl]. Its evidence motivates attention to irregular graph sizes and data movement but does not predict this implementation's efficiency. Gradient communication, unequal per-rank workloads and serial validation are plausible overheads; their individual costs were not profiled here.
+
+Mathematical agreement of objectives is weaker than bitwise agreement of training. Floating-point sums depend on operation order, and batched operations need not reproduce a sequence of individual operations [@pytorch21numerical]. PyTorch also distinguishes seeding random generators from eliminating all nondeterministic operations [@pytorch21reproducibility]. The recorded cuDNN flags do not establish universal determinism of graph reductions or equivalence across GPU topologies. These observations explain why matching seed and update counts is insufficient as a guarantee; they do not diagnose the cause of the measured F1 loss. Repeated training and gradient-level comparisons remain future work.
+
 ## C.8. Scope of the configuration records
 
 The historical predictor, root capture, one-hour CPU comparisons and matched

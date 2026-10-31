@@ -172,6 +172,19 @@ def build(repository=ROOT):
                 "favour the numerator. All pairs attain the reported terminal target under "
                 "tolerances; these are descriptive ratios, not exact certificates or "
                 "confirmatory significance tests.")
+    values = []
+    for parent in EASY:
+        maxima = [max(100 * float(indexed[parent, c, m]["gap_fraction"])
+                      for c in CAPS) for m in METHODS]
+        values.append([parent] + [f"{v:.6f}" for v in maxima])
+    write_table(tables / "principal_easy_gaps.qmd",
+                ["Instance", "B gap (%)", "R gap (%)", "G gap (%)"], values,
+                "Largest terminal reported MIP gap over the five thread caps, by easy instance and method, seed42.",
+                "tbl-easy-gaps",
+                "Each entry is the maximum of five final gaps, not an average; all 90 "
+                "observations are at or below the 0.01% criterion. Zero is reported "
+                "under solver tolerances, not an exact optimality certificate. "
+                "Appendix B gives every cap-specific final gap and runtime.")
     scopes = (
         ("Solver Runtime", "solver_seconds"),
         ("Execution + delimited cold preparation", "scoped_cold_cost_scenario_seconds"),
@@ -192,13 +205,18 @@ def build(repository=ROOT):
         for cap in CAPS:
             values.append([parent, str(cap)] + [
                 f"{float(indexed[parent, cap, m]['solver_seconds']):.3f}" for m in METHODS
+            ] + [
+                f"{100 * float(indexed[parent, cap, m]['gap_fraction']):.6f}" for m in METHODS
             ])
     write_table(tables / "principal_easy_times.qmd",
-                ["Instance", "Threads", "B (s)", "R (s)", "G (s)"], values,
-                "Solver runtimes for the principal easy-instance conditions.",
+                ["Instance", "Threads", "B (s)", "R (s)", "G (s)",
+                 "B gap (%)", "R gap (%)", "G gap (%)"], values,
+                "Solver runtimes and terminal MIP gaps for all easy-instance conditions, seed42.",
                 "tbl-easy-times",
                 "All rows attain the reported terminal target under the stated tolerances. "
-                "Times exclude neural preparation and supervised-attempt overhead.")
+                "Gaps are percentages, rounded to six decimal places; a displayed zero "
+                "need not be an exact certificate. Times exclude neural preparation "
+                "and supervised-attempt overhead.")
     values = []
     for parent in MEDIUM:
         for cap in CAPS:
@@ -222,7 +240,7 @@ def build(repository=ROOT):
                 "mean exact optimality. Raw values and actual follow-up remain in the "
                 "versioned source table.")
     outputs += [tables / name for name in (
-        "principal_ratios.qmd", "principal_costs.qmd",
+        "principal_ratios.qmd", "principal_easy_gaps.qmd", "principal_costs.qmd",
         "principal_easy_times.qmd", "principal_medium_quality.qmd",
     )]
     receipt = {
