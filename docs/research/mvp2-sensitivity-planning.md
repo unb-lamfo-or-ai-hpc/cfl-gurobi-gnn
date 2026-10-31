@@ -1,24 +1,44 @@
+# Internal sensitivity planning and scientific interpretation
+
+## Hypotheses informed by the partial return — 31 October 2026
+
+Use the received 50 cells as pilot evidence, without changing the current campaign. First separate numerical comparability of M4/M12 from performance; then ask whether favourable and adverse B/R/G contrasts persist under prospectively chosen solver seeds. Distinguish intermediate quality targets from terminal attainment. The final ten cells should inform a proportionate proposal before any new execution decision. Do not launch a factorial seed/root-method/neural-hyperparameter campaign or treat pilot-selected contrasts as confirmatory. Existing-vector/log review and a future new-solve campaign are different activities. No new budget or execution is authorized.
+
+## Optional work-limited repeatability — 30 October 2026
+
+WorkLimit is an optional future design for algorithmic repeatability or equal-work quality comparison, not a retrospective replacement for TimeLimit. No work-unit budget is inferred from Runtime, and no additional execution is authorized or required for the editorial correction. Current B/R/G inputs, seeds, caps and stopping rules remain frozen. S1/S2/S4/S5 continue documentary/offline work; S3 concerns only the existing campaign; S6 retains editorial approval gates. Any future work-limited or cross-engine experiment needs its own prospective estimand, protocol and specific authorization.
+
+
+30 October 2026: the standalone journal sensitivity supplement is retired in favour of concise future-research discussion in the article. The explanatory text is preserved below as an internal reference. Original prospective budgets remain historical planning, not execution authority. No seed, root method, predictor, training, inference or solve is added to S1–S6.
+
+<!-- Internal prospective planning record; not journal supplement text. -->
+
 # A proportionate response to unresolved sensitivity questions
 
-## Scope decision for the current MVP2 plan
+## What this discussion is for
 
-Only option A belongs to the present completion work: receive, qualify and
-analyze the campaign already authorized. Options B–E and the separate
-four-hour diagnostic design are retained as limitations and future work.
-They are not scheduled in S1–S6 and do not delay completion merely because
-they have been described. No reviewer request or prospective cost estimate
-is execution authority.
+A useful follow-up should resolve a scientific uncertainty. *Sensitivity*
+asks how an observed result changes when a specified choice changes.
+*Robustness* asks whether the interpretation survives those changes.
+An *ablation* removes or replaces a component to examine its contribution.
+These questions overlap, but they are not interchangeable: changing a solver
+seed does not test a neural architecture, and faster training does not show
+that a Start helps the optimizer.
 
-The [post-CPU closeout plan](../../docs/research/mvp2-closeout-plan.md)
-explains the path from reconciled results to scientific sign-off and the
-coauthor version. If the evidence cannot support a central claim, narrow
-that claim; a new study requires a separate human decision.
+The present article studies one fixed prediction-to-Start pipeline. This
+document explains which additional comparisons could strengthen particular
+claims, and what those comparisons would still leave unresolved. The resource
+counts below are planning examples, not experimental findings.
 
+Only option A belongs to the current S1–S6 completion work: receive, qualify
+and analyze the campaign already authorized. Options B–E and the separate
+four-hour diagnostic design remain limitations and future work. They introduce
+no new training, inference or solves into the current plan.
 
-This is a proposal for coauthor review, not an experiment authorization.
-The current CPU campaign, model, starts and parameters remain frozen.
-The purpose is to decide which additional evidence would answer a specific
-scientific question, rather than to accumulate configurations.
+The [Sprint/PR plan](mvp2-closeout-plan.md) governs
+completion and coauthor review. Existing CPU jobs, starts and settings remain
+frozen. A later study would require a separate human decision and a prospective
+protocol; neither a reviewer request nor a cost ceiling authorizes it.
 
 ## What the present article can defend
 
@@ -97,8 +117,8 @@ core-hours. Queue time is additional and unknown. These are conservative
 ceilings obtained by multiplication, not estimated actual consumption.
 
 Using one thread avoids repeating the five-cap scalability experiment.
-It also removes parallel reduction as a factor in this particular comparison,
-without eliminating wall-clock variation. A parallel cap would be appropriate
+It narrows the proposed comparison to a serial solver regime without
+eliminating wall-clock variation. A parallel cap would be appropriate
 only if the scientific question explicitly concerns a parallel regime; it
 must be chosen before looking at the new results.
 
@@ -207,3 +227,108 @@ experimental scope requires a separate human decision and protocol.
 
 No launcher, CLI command, budget request or new execution accompanies this
 assessment. Existing source, data, checkpoint and PR89 evidence remain intact.
+
+
+## Preserved explanatory discussion from the former standalone supplement
+
+### Sensitivity and directions for further study
+
+The reported comparisons evaluate a fixed predictor and partial-Start policy
+on identified facility-location instances. They describe observed improvements,
+regressions, censoring and costs. They do not estimate performance averaged
+over solver seeds, establish optimal neural hyperparameters, or isolate the
+causal contribution of class-aware selection. These limitations motivate
+several distinct research questions.
+
+## Search-path sensitivity
+
+Changing the solver seed while holding the predictor, stored Starts, parent
+and resource cap fixed would assess sensitivity to the solver's search.
+It would not test neural initialization. Multiple seeds would provide repeated
+measurements within each parent, rather than additional independent instances.
+With few parents or seeds, individual contrasts and direction changes would
+remain more informative than precise population-level uncertainty claims.
+
+The historical seed43/44 observations have a different scope from the
+principal seed42 analysis. They do not supply replications of a longer-horizon
+treatment and cannot establish training-seed robustness. The interpretation
+of any cross-seed analysis depends on retaining the same endpoint, stopping
+rule and information supplied to the solver.
+
+## Root algorithms and time-limited optimization
+
+An explicit root-method comparison could examine whether the automatic
+choice materially affects the supplied-Start comparison. Method controls the
+continuous/root algorithm, not the entire MIP search. Automatic selection
+commonly chooses dual simplex for a MIP root; a comparison with explicit
+Method=1 could therefore reproduce an already-used algorithm rather than
+introduce a substantively different mechanism.
+
+There is also a distinction between holding an algorithm fixed and repeating
+a wall-time endpoint. Even deterministic work can end at different points
+under a time limit. Work-based stopping addresses a different measurement
+question and is not interchangeable with a fixed-time treatment. Likewise,
+the first four hours of a twelve-hour trace are not automatically a solve
+configured with a four-hour limit. Stopping parameters and observation coverage
+remain part of the experimental definition.
+
+## Neural configuration and training variability
+
+The present two-cycle, width-32 network is one fixed configuration. A controlled
+depth or width comparison would examine representation capacity and propagation
+distance while retaining the data roles and validation rules. A training-seed
+comparison would instead examine variation in fitted weights and selected
+checkpoints. These designs address different questions and would require new
+predictions as well as training measurements.
+
+For each new predictor, R's Start would need to match that predictor's actual
+support and positive count. Reusing the earlier R Start would change the
+comparison. Training, root/graph preparation, inference and solver time would
+remain separate costs. A higher classification score alone would not establish
+greater optimization utility.
+
+GCN, GraphSAGE and attention-based models offer broader alternatives, but a
+comparison among them would vary architecture, training behaviour and model
+selection together. A narrow, interpretable comparison is better suited to
+a specific capacity question than an undifferentiated architecture grid.
+
+## Mechanism ablations
+
+A mechanism ablation asks whether a component explains an observed effect.
+For example, removing ones-first selection at the same assignment budget would
+address that ordering rule more directly than comparing two unrelated networks.
+A structure-free predictor could examine the value of graph information,
+provided that the available features and selection protocol were comparable.
+
+The existing B/R/G comparison does not isolate these mechanisms. R and G
+match assignment count and class composition, but differ in the supplied
+values and share neural-dependent preparation. Their contrast concerns the
+complete starting information, rather than a pure effect of the selector
+or an independent LP-only pipeline.
+
+## Comparability and interpretation
+
+A sensitivity analysis requires a defined question, factor contrast and
+analysis rule before inspecting its new outcomes. Parent-level partitions,
+validation-only selection and the exposure limitations of the data remain
+relevant. Favourable seeds or parents cannot replace the originally specified
+comparison set. Failures, unavailable observations, adverse outcomes and
+censoring contribute to the interpretation rather than disappearing from it.
+
+Paired comparisons concern the same parent, solver seed, cap, endpoint and
+stopping rule. Different Starts need not generate the same search path:
+changing that path is one way they can help or harm. Numerically sensitive
+M4/M12 outcomes remain subject to their metric-specific restrictions, even
+in a longer or repeated solve.
+
+These distinctions follow the emphasis on comparable settings, stopping rules
+and transparent parameter selection in
+[Beiranvand, Hare and Lucet (2017)](https://link.springer.com/article/10.1007/s11081-017-9366-1)
+and the [Gurobi benchmarking guidance](https://support.gurobi.com/hc/en-us/articles/26992650628369-How-can-I-make-accurate-comparisons).
+Neither supplies a universal seed count or certifies the adequacy of a particular
+study.
+
+The additional comparisons described here were not part of the reported
+fixed-model evaluation. They remain future work. The conclusions are therefore
+conditional on the recorded instances, predictor, settings and measurement
+boundaries, without claims of robust superiority or architectural optimality.

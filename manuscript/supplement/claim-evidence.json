@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "kind": "editorial_claim_evidence_not_scientific_certification",
-  "as_of": "2026-10-27",
+  "as_of": "2026-10-30",
   "governing_contract": "CFL-GNN-SCI-2026-10-22-R3",
-  "scope": "Existing principal CPU and matched GPU numerical claims only; historical six-medium assets retain their own manifests.",
+  "scope": "Existing CPU and matched GPU claims in article and scientific supplements; generated tables/figures additionally retain source/output receipts.",
   "sources": [
     {
       "id": "cpu_main",
@@ -36,12 +36,36 @@
       "sha256": "918e70402a298d0fe9b1af02a3db5c15a43d3c7fb24299c803dbf8d2f6d84cce",
       "commit": "a12d90c1eee0a1eeb1ccc42c0d3ff64aa7e48d24",
       "git_blob_sha1": "a14c97c94b62ea5f1649d73b5925d21fa06b181d"
+    },
+    {
+      "id": "cpu_rows",
+      "path": "docs/evidence/methodology-20261019/seed42_main.csv",
+      "format": "csv",
+      "sha256": "c3f4919e51569a7c0ae20c892410d94db9069b95c274e23432e60e1676794b94",
+      "commit": "3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f",
+      "git_blob_sha1": "4400fe138aa2295117c14f86f9da9e05e2e7445d"
+    },
+    {
+      "id": "cpu_scaling",
+      "path": "docs/evidence/methodology-20261019/seed42_cpu_scaling.csv",
+      "format": "csv",
+      "sha256": "5945e656ba0d2878073971cb9e48a34131165e724b9211a85626edfdaa85c466",
+      "commit": "3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f",
+      "git_blob_sha1": "743779c41bde127f523905e55a8a0dd9f68a8d3c"
+    },
+    {
+      "id": "cpu_pairs",
+      "path": "docs/evidence/pr86/final-210/paired_uncertainty.csv",
+      "format": "csv",
+      "sha256": "6a34a3b87a7a1681c6c58f2055649d2e462e46e18051c0a1bdb3aa90c16a8fc8",
+      "commit": "3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f",
+      "git_blob_sha1": "babd1d8472778921fd3b2442e411b75bc46efc3f"
     }
   ],
   "claims": [
     {
       "id": "cpu_preserved_rows",
-      "section": "sec-mvp2-current",
+      "section": "sec-supp-config",
       "article_template": "preserved as {n} records",
       "metrics": {
         "n": {
@@ -51,11 +75,12 @@
           "scale": 1
         }
       },
-      "interpretation": "Archive coverage; not independent experimental units."
+      "interpretation": "Archive coverage; not independent experimental units.",
+      "document": "supplement/configuration-reference.md"
     },
     {
       "id": "cpu_principal_rows",
-      "section": "sec-mvp2-current",
+      "section": "sec-cpu-coverage",
       "article_template": "{n} seed42 records",
       "metrics": {
         "n": {
@@ -65,12 +90,13 @@
           "scale": 1
         }
       },
-      "interpretation": "Principal retrospective view; ten historically exposed parents."
+      "interpretation": "Principal retrospective view; ten historically exposed parents.",
+      "document": "supplement/extended-results.md"
     },
     {
       "id": "cpu_historical_rows",
-      "section": "sec-mvp2-current",
-      "article_template": "The other {n} records",
+      "section": "sec-supp-config",
+      "article_template": "the other {n} records",
       "metrics": {
         "n": {
           "source": "cpu_main",
@@ -79,12 +105,13 @@
           "scale": 1
         }
       },
-      "interpretation": "Seeds 43/44 remain historical only."
+      "interpretation": "Seeds 43/44 remain historical only.",
+      "document": "supplement/configuration-reference.md"
     },
     {
       "id": "cpu_easy_rows",
-      "section": "sec-mvp2-current",
-      "article_template": "| Easy parents |{n}|",
+      "section": "sec-cpu-coverage",
+      "article_template": "| Easy instances | {n} |",
       "metrics": {
         "n": {
           "source": "cpu_main",
@@ -93,12 +120,13 @@
           "scale": 1
         }
       },
-      "interpretation": "Rows are method/cap observations, not 90 independent parents."
+      "interpretation": "Rows are method/cap observations, not 90 independent parents.",
+      "document": "supplement/extended-results.md"
     },
     {
       "id": "cpu_medium_rows",
-      "section": "sec-mvp2-current",
-      "article_template": "| Medium parents |{n}|",
+      "section": "sec-cpu-coverage",
+      "article_template": "| Medium instances | {n} |",
       "metrics": {
         "n": {
           "source": "cpu_main",
@@ -107,12 +135,13 @@
           "scale": 1
         }
       },
-      "interpretation": "Four historically exposed medium parents."
+      "interpretation": "Four historically exposed medium parents.",
+      "document": "supplement/extended-results.md"
     },
     {
       "id": "cpu_reported_targets",
-      "section": "sec-mvp2-current",
-      "article_template": "| Solver-reported terminal target attained |{n}|",
+      "section": "sec-cpu-coverage",
+      "article_template": "| Solver-reported terminal target attained | {n} |",
       "metrics": {
         "n": {
           "source": "cpu_main",
@@ -121,12 +150,13 @@
           "scale": 1
         }
       },
-      "interpretation": "Reported terminal targets, not exact optimality certificates."
+      "interpretation": "Reported terminal targets, not exact optimality certificates.",
+      "document": "supplement/extended-results.md"
     },
     {
       "id": "cpu_censored_targets",
-      "section": "sec-mvp2-current",
-      "article_template": "| Terminal target right-censored |{n}|",
+      "section": "sec-cpu-coverage",
+      "article_template": "| Terminal target right-censored | {n} |",
       "metrics": {
         "n": {
           "source": "cpu_main",
@@ -135,12 +165,13 @@
           "scale": 1
         }
       },
-      "interpretation": "Censored observations, not solution times at timeout."
+      "interpretation": "Censored observations, not solution times at timeout.",
+      "document": "supplement/extended-results.md"
     },
     {
       "id": "cpu_sensitive_rows",
-      "section": "sec-mvp2-current",
-      "article_template": "| Numerically sensitive M4/M12 rows |{n}|",
+      "section": "sec-cpu-coverage",
+      "article_template": "| Numerically sensitive M4/M12 rows | {n} |",
       "metrics": {
         "n": {
           "source": "cpu_main",
@@ -149,7 +180,8 @@
           "scale": 1
         }
       },
-      "interpretation": "Subset of the same sample; retain metric-specific numerical restrictions."
+      "interpretation": "Subset of the same sample; retain metric-specific numerical restrictions.",
+      "document": "supplement/extended-results.md"
     },
     {
       "id": "gpu_loop_speedup",
@@ -166,7 +198,8 @@
           "scale": 1
         }
       },
-      "interpretation": "Serial/DDP4 loop ratio; not a whole-job or downstream solver benefit."
+      "interpretation": "Serial/DDP4 loop ratio; not a whole-job or downstream solver benefit.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_job_speedup",
@@ -183,7 +216,8 @@
           "scale": 1
         }
       },
-      "interpretation": "Slurm job elapsed ratio, distinct from supervisor/process/loop clocks."
+      "interpretation": "Slurm job elapsed ratio, distinct from supervisor/process/loop clocks.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_loop_efficiency",
@@ -200,7 +234,8 @@
           "scale": 100
         }
       },
-      "interpretation": "Loop speedup divided by four allocated GPUs; scaled CPU resources accompany the pair."
+      "interpretation": "Loop speedup divided by four allocated GPUs; scaled CPU resources accompany the pair.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_f1_loss",
@@ -214,7 +249,8 @@
           "scale": -1
         }
       },
-      "interpretation": "Positive loss is the negative of DDP4-minus-serial; selected checkpoints only."
+      "interpretation": "Positive loss is the negative of DDP4-minus-serial; selected checkpoints only.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_auc_loss",
@@ -228,7 +264,8 @@
           "scale": -1
         }
       },
-      "interpretation": "Trapezoidal PR-AUC, not AP; not statistical noninferiority."
+      "interpretation": "Trapezoidal PR-AUC, not AP; not statistical noninferiority.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_selected_f1",
@@ -260,7 +297,8 @@
           "scale": 1
         }
       },
-      "interpretation": "Same ten exposed parents, selected checkpoints and parent-macro averaging; terminal or pooled values are not substitutes."
+      "interpretation": "Same ten exposed parents, selected checkpoints and parent-macro averaging; terminal or pooled values are not substitutes.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_selected_auc",
@@ -292,7 +330,8 @@
           "scale": 1
         }
       },
-      "interpretation": "Same ten exposed parents, selected checkpoints and parent-macro averaging; terminal or pooled values are not substitutes."
+      "interpretation": "Same ten exposed parents, selected checkpoints and parent-macro averaging; terminal or pooled values are not substitutes.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_loop_seconds",
@@ -318,7 +357,8 @@
           "scale": 1
         }
       },
-      "interpretation": "Keep clock scope and serial/DDP4 column orientation."
+      "interpretation": "Keep clock scope and serial/DDP4 column orientation.",
+      "document": "index.qmd"
     },
     {
       "id": "gpu_job_seconds",
@@ -344,18 +384,341 @@
           "scale": 1
         }
       },
-      "interpretation": "Keep clock scope and serial/DDP4 column orientation."
+      "interpretation": "Keep clock scope and serial/DDP4 column orientation.",
+      "document": "index.qmd"
+    },
+    {
+      "id": "cpu_cost_solver",
+      "document": "index.qmd",
+      "section": "sec-cost-results",
+      "article_template": "The solver-only G/B ratio is {n}",
+      "metrics": {
+        "n": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "solver_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Six easy instances; seed42; sixteen threads; scoped scenario, not a complete operational measurement."
+    },
+    {
+      "id": "cpu_cost_cold",
+      "document": "index.qmd",
+      "section": "sec-cost-results",
+      "article_template": "ratio becomes {n} for supervised execution plus delimited cold preparation",
+      "metrics": {
+        "n": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "scoped_cold_cost_scenario_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Six easy instances; seed42; sixteen threads; scoped scenario, not a complete operational measurement."
+    },
+    {
+      "id": "cpu_cost_allocated_cold",
+      "document": "index.qmd",
+      "section": "sec-cost-results",
+      "article_template": "and {n} with the broader preparation allocation",
+      "metrics": {
+        "n": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "allocated_cold_scenario_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Six easy instances; seed42; sixteen threads; scoped scenario, not a complete operational measurement."
+    },
+    {
+      "id": "cpu_cost_amortized",
+      "document": "index.qmd",
+      "section": "sec-cost-results",
+      "article_template": "it is {n}",
+      "metrics": {
+        "n": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "scoped_amortized_cost_scenario_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Six easy instances; seed42; sixteen threads; scoped scenario, not a complete operational measurement."
+    },
+    {
+      "id": "cpu_cost_allocated_amortized",
+      "document": "index.qmd",
+      "section": "sec-cost-results",
+      "article_template": "or {n}",
+      "metrics": {
+        "n": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "allocated_amortized_scenario_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Six easy instances; seed42; sixteen threads; scoped scenario, not a complete operational measurement."
+    },
+    {
+      "id": "cpu_m0_one_primal_dual",
+      "document": "index.qmd",
+      "section": "sec-mvp2-current",
+      "article_template": "On medium instance 0 with one thread, G's primal value is {gp}, compared with B's {bp}, but its dual bound is {gd} rather than {bd}.",
+      "metrics": {
+        "gp": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M0",
+            "threads": "1",
+            "seed": "42",
+            "method": "M2"
+          },
+          "column": "primal",
+          "format": ".4f",
+          "scale": 1
+        },
+        "bp": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M0",
+            "threads": "1",
+            "seed": "42",
+            "method": "M0"
+          },
+          "column": "primal",
+          "format": ".4f",
+          "scale": 1
+        },
+        "gd": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M0",
+            "threads": "1",
+            "seed": "42",
+            "method": "M2"
+          },
+          "column": "dual",
+          "format": ".4f",
+          "scale": 1
+        },
+        "bd": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M0",
+            "threads": "1",
+            "seed": "42",
+            "method": "M0"
+          },
+          "column": "dual",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Example distinguishes primal from dual progress; all configurations retained."
+    },
+    {
+      "id": "cpu_m7_eight_primal_dual",
+      "document": "index.qmd",
+      "section": "sec-mvp2-current",
+      "article_template": "On medium instance 7 with eight threads, G has primal {gp} and dual {gd}, versus B's {bp} and {bd}.",
+      "metrics": {
+        "gp": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M7",
+            "threads": "8",
+            "seed": "42",
+            "method": "M2"
+          },
+          "column": "primal",
+          "format": ".4f",
+          "scale": 1
+        },
+        "bp": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M7",
+            "threads": "8",
+            "seed": "42",
+            "method": "M0"
+          },
+          "column": "primal",
+          "format": ".4f",
+          "scale": 1
+        },
+        "gd": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M7",
+            "threads": "8",
+            "seed": "42",
+            "method": "M2"
+          },
+          "column": "dual",
+          "format": ".4f",
+          "scale": 1
+        },
+        "bd": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M7",
+            "threads": "8",
+            "seed": "42",
+            "method": "M0"
+          },
+          "column": "dual",
+          "format": ".4f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Observed incumbent improvement with a weaker dual bound, not isolated causal attribution."
+    },
+    {
+      "id": "cpu_m0_sixteen_runtime",
+      "document": "index.qmd",
+      "section": "sec-mvp2-current",
+      "article_template": "reports zero terminal gap after approximately {n} seconds",
+      "metrics": {
+        "n": {
+          "source": "cpu_rows",
+          "row": {
+            "alias": "M0",
+            "threads": "16",
+            "seed": "42",
+            "method": "M2"
+          },
+          "column": "solver_seconds",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Solver-reported tolerance outcome; zero gap is not an exact certificate."
+    },
+    {
+      "id": "abstract_cpu_cost",
+      "document": "index.qmd",
+      "section": "abstract",
+      "article_template": "ratio is {solver} for solver runtime and {cold} for supervised execution with delimited cold preparation",
+      "metrics": {
+        "solver": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "solver_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".3f",
+          "scale": 1
+        },
+        "cold": {
+          "source": "cpu_pairs",
+          "row": {
+            "threads": "16",
+            "seed_scope": "seed42",
+            "numerator": "M2",
+            "denominator": "M0",
+            "metric": "scoped_cold_cost_scenario_seconds",
+            "parents": "6"
+          },
+          "column": "geometric_mean_ratio",
+          "format": ".3f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Provisional abstract uses existing six-easy, sixteen-thread point summaries only."
+    },
+    {
+      "id": "abstract_gpu_job",
+      "document": "index.qmd",
+      "section": "abstract",
+      "article_template": "a {n}-fold whole-job speedup",
+      "metrics": {
+        "n": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "job_elapsed_seconds"
+          },
+          "column": "speedup",
+          "format": ".3f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Matched training-job time, not isolated GPU causality or downstream optimization benefit."
     }
   ],
   "pending_cpu": {
     "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
     "final_return_received": false,
     "result_claims": [],
-    "integration_requirement": "Reconcile all 60 planned cells and review named metrics, clocks, censoring and M4/M12 limitations before adding result claims."
+    "integration_requirement": "Final campaign claims require all 60 cells and metric qualification. The author separately requested a labelled descriptive 50-cell subset on 31 October 2026; its source and prose have independent checks."
   },
   "limits": [
     "Checks bind recorded public values and current article text; they do not independently rescore predictions or replay historical fits.",
     "No population-level significance, independent generalization, exact optimality, quality preservation or isolated GPU causality is certified.",
-    "PR89 pending state has no numerical result placeholder; missing or censored values must never be filled with zero."
-  ]
+    "Partial CPU numbers are labelled and source-bound; missing/censored values are never filled with zero and final campaign qualification remains false."
+  ],
+  "derived_assets": {
+    "generator": "scripts/manuscript/build_principal_assets.py",
+    "receipt": "tables/principal_assets.json",
+    "sources": [
+      "cpu_rows",
+      "cpu_scaling",
+      "cpu_pairs"
+    ],
+    "research_execution_performed": false
+  },
+  "partial_cpu_descriptive": {
+    "source_directory": "docs/evidence/pr89/partial-20261031",
+    "source_commit": "2593badd7f41e88bedeab13f300351e4993cdbd7",
+    "manifest_sha256": "d8f8e3fe7b95ad688cc6ab8e6218bdf133b16df88e28f39882dcb822426eec2b",
+    "checker": "scripts/manuscript/build_partial_cpu_assets.py",
+    "final_campaign_qualification": false
+  }
 }

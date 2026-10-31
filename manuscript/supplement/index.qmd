@@ -1,0 +1,24 @@
+---
+title: "Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems"
+author:
+  - Victor Rafael Rezende Celestino
+  - Víctor Alejandro Vargas-Pérez
+  - Óscar Cordón García
+  - Pedro González García
+subtitle: "Appendices A-C: Methods, Descriptive Analyses and Reproducibility"
+---
+
+{{< pagebreak >}}
+
+These appendices accompany the article as a separate document. Appendix A explains the model and prediction-to-solver mechanism; Appendix B provides the descriptive analyses and extended experimental results; Appendix C records computational settings and explains the scope of reproducibility across solver interfaces.
+
+{{< include gnn-methods-audit.md >}}
+
+{{< include extended-results.md >}}
+
+{{< include configuration-reference.md >}}
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

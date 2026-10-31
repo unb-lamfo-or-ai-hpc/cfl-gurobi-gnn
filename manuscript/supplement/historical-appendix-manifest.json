@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "kind": "historical_appendix_restoration_not_new_experiment",
+  "source_commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+  "historical_cohort": {
+    "parents": 39,
+    "easy": 30,
+    "medium": 9,
+    "train": 23,
+    "validation": 8,
+    "test": 8
+  },
+  "current_cohort_replaced": false,
+  "research_execution_performed": false,
+  "projection_refitted": false,
+  "learned_embeddings_extracted": false,
+  "sources": [
+    {
+      "id": "source_evidence",
+      "path": "manuscript/results/source_evidence.json",
+      "git_blob_sha1": "95304964d116f436637796ce7b7c64410c0a7644",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "json",
+      "sha256": "d891b113383043cf1ec0417b86577c9504375c97bb7b8a6596c585c17e25a3b4"
+    },
+    {
+      "id": "confirmation_final",
+      "path": "manuscript/results/confirmation_final.json",
+      "git_blob_sha1": "669d88a3af42a8aeafab57818c8b4e28e66c6a6b",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "json",
+      "sha256": "cdc36b2f80ef3cb0f45c6d2a9be6b20345e292cd3d8ad968bdcae58dad6512f2"
+    },
+    {
+      "id": "graph_statistics",
+      "path": "manuscript/results/graph_statistics.csv",
+      "git_blob_sha1": "dcf0f0fd5c6168c0c995c3fd68bd2a5ab3fa8da5",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "csv",
+      "sha256": "c4a2857318fcc3de1d45378446aef5e2c62805f7dc156f15f65179638a3e6a5a"
+    },
+    {
+      "id": "graph_clustering",
+      "path": "manuscript/results/graph_clustering.csv",
+      "git_blob_sha1": "11260988af2a9bbd563f87c53d4a1ebf0131ffad",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "csv",
+      "sha256": "ac8445d520706c9622af35421991d89a7f01ba8ea4ccfec527cb5f161ecf958d"
+    },
+    {
+      "id": "graph_clustering_report",
+      "path": "manuscript/results/graph_clustering_report.json",
+      "git_blob_sha1": "189dffc13818f233e87847c9d13f75faf05c1311",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "json",
+      "sha256": "86b745137f14b1806d55163b2534fe5d15881d152d3897533018e96f295d2ff2"
+    },
+    {
+      "id": "training_epoch_metrics",
+      "path": "manuscript/results/training_epoch_metrics.csv",
+      "git_blob_sha1": "121cf575e5e35739b310b7d4b454510e7e12237d",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "csv",
+      "sha256": "b29e61812af2ee1574b764d976764205d5dacb3087942ea5c0840d5b0b7a49b8"
+    },
+    {
+      "id": "per_parent_metrics",
+      "path": "manuscript/results/per_parent_metrics.csv",
+      "git_blob_sha1": "46af02422b676c63a0559c0907451fa0544291e0",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "csv",
+      "sha256": "fb1edf850bdcf095d94cce97b1047a4048d5e542171521c0b55983c75c01b6bc"
+    },
+    {
+      "id": "per_difficulty_metrics",
+      "path": "manuscript/results/per_difficulty_metrics.csv",
+      "git_blob_sha1": "c13ba9171a7e458d05ec51302120e6af404e074a",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "csv",
+      "sha256": "7a7c5b577283ac237a4c0d287f2a21bf5b494b77fd8838fe8da6fc3545a34e7c"
+    },
+    {
+      "id": "calibration_curve",
+      "path": "manuscript/results/calibration_curve.csv",
+      "git_blob_sha1": "313cb20eed1f5a78fea36bfadfcaea62a8fb422c",
+      "commit": "bb39aafe1535bfa255e77dca1a6f203479e88586",
+      "format": "csv",
+      "sha256": "188b0accc751d4c53648a9c9ef2b789d898749e522e157474a6a72910e4170ae"
+    }
+  ],
+  "claims": [
+    {
+      "id": "history39_cohort",
+      "section": "sec-history39-cohort",
+      "template": "The admitted cohort contains {n} original instances: {easy} easy and {medium} medium.",
+      "metrics": {
+        "n": {
+          "source": "confirmation_final",
+          "pointer": "/cohort/parents",
+          "format": ".0f"
+        },
+        "easy": {
+          "source": "confirmation_final",
+          "pointer": "/cohort/easy",
+          "format": ".0f"
+        },
+        "medium": {
+          "source": "confirmation_final",
+          "pointer": "/cohort/medium",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "id": "history39_pca",
+      "section": "sec-history39-pca",
+      "template": "PC1 accounts for {pc_one}% and PC2 for {pc_two}% of standardized-descriptor variance.",
+      "metrics": {
+        "pc_one": {
+          "source": "graph_clustering_report",
+          "pointer": "/summary/pca_explained_variance_ratio/0",
+          "scale": 100,
+          "format": ".2f"
+        },
+        "pc_two": {
+          "source": "graph_clustering_report",
+          "pointer": "/summary/pca_explained_variance_ratio/1",
+          "scale": 100,
+          "format": ".2f"
+        }
+      }
+    },
+    {
+      "id": "history39_selection",
+      "section": "sec-history39-learning",
+      "template": "The minimum validation BCE is {loss} at epoch {epoch}.",
+      "metrics": {
+        "loss": {
+          "source": "confirmation_final",
+          "pointer": "/training/best_validation_loss",
+          "format": ".4f"
+        },
+        "epoch": {
+          "source": "confirmation_final",
+          "pointer": "/training/best_validation_epoch_from_history",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "id": "history39_targets",
+      "section": "sec-history39-prediction",
+      "template": "The archived predictive test contains {targets} binary targets and {positives} positives from eight original instances.",
+      "metrics": {
+        "targets": {
+          "source": "confirmation_final",
+          "pointer": "/evaluation/aggregate_metrics/n_targets",
+          "format": ",.0f"
+        },
+        "positives": {
+          "source": "confirmation_final",
+          "pointer": "/evaluation/aggregate_metrics/n_positive",
+          "format": ",.0f"
+        }
+      }
+    },
+    {
+      "id": "history39_f1",
+      "section": "sec-history39-prediction",
+      "template": "Pooled F1 is {pooled}, while the unweighted mean of per-instance F1 is {macro}.",
+      "metrics": {
+        "pooled": {
+          "source": "confirmation_final",
+          "pointer": "/evaluation/aggregate_metrics/f1_score",
+          "format": ".4f"
+        },
+        "macro": {
+          "source": "confirmation_final",
+          "pointer": "/evaluation/parent_macro_classification/f1_score",
+          "format": ".4f"
+        }
+      }
+    },
+    {
+      "id": "history39_rank",
+      "section": "sec-history39-pca",
+      "template": "The recorded effective rank is {rank}; the retained cluster labels form {clusters} descriptive groups.",
+      "metrics": {
+        "rank": {
+          "source": "graph_clustering_report",
+          "pointer": "/summary/effective_rank",
+          "format": ".0f"
+        },
+        "clusters": {
+          "source": "graph_clustering_report",
+          "pointer": "/summary/clusters",
+          "format": ".0f"
+        }
+      }
+    }
+  ],
+  "legacy_projection": {
+    "path": "data/analysis/pyg_plot_pca_vs_umap.png",
+    "sha256": "9115868ea93725f4dd7f33cd7334c70cf57b936b243a4530427fcb8e44f39438",
+    "source_code_commit": "9903c1dc66f65e9497d7faa2d8d4f3ee414a0f42",
+    "source_code_path": "src/graph_transform/pyg_clustering_pca_umap.py",
+    "features": [
+      "Density",
+      "Prop_Discrete",
+      "Ratio_C_V"
+    ],
+    "learned_embedding": false,
+    "figure_coordinate_binding_available": false,
+    "used_for_current_quantitative_claims": false
+  }
+}

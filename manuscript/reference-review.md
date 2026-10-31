@@ -1,3 +1,11 @@
+# Reference reconciliation — 30 October 2026
+
+The author approved the diagnosis and C2/C3 framing in PR93. This update uses the existing literature review, with targeted checks of primary metadata and solver interfaces; it is not a new broad survey or Zotero-library modification. The bibliography retains Harvard/elsarticle-harv. Repeated DOI URLs are removed from display fields without changing source identities; undated benchmark/software pages use n.d. rather than an invented publication year. GraphSAGE pagination 1024–1034 is verified in the NeurIPS primary metadata, and the 2024 branching paper's volume37/DOI is verified on its proceedings page. Missing pagination in unpaginated conference records is not filled with guessed values. A failed Guide for Authors fetch does not constitute complete current-guide verification.
+
+Primary metadata: https://proceedings.neurips.cc/paper_files/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9-Metadata.json ; https://proceedings.neurips.cc/paper_files/paper/2024/hash/dff528ce3e1390c88f10bbf5e722a241-Abstract-Conference.html .
+
+Earlier verification records follow; their dates and access limits remain historical.
+
 # Reference selection and Zotero collection
 
 ## Hyperparameter rationale and benchmarking — reader revision

@@ -75,11 +75,18 @@ class GPUFigureTests(unittest.TestCase):
             "cause is unproven",
             "historically exposed",
             "not replace",
-            "separate resource approval",
         ):
             self.assertIn(text, article)
         self.assertNotIn("Neither its speedup nor", article)
         self.assertNotIn("GPU training remain pending", article)
+        # Execution/qualification status belongs in repository metadata, not journal prose.
+        metadata = json.loads(
+            (ROOT / "manuscript/evidence-status.json").read_text(encoding="utf-8")
+        )["mvp2_continuation"]["pr89"]
+        self.assertIs(metadata["final_return_received"], False)
+        self.assertIs(metadata["scientific_results_included"], False)
+        self.assertIs(metadata["new_execution_authorized_by_this_revision"], False)
+        self.assertNotIn("separate resource approval", article)
         raw = json.loads((ROOT / gpu.SOURCE / "public_return.json").read_bytes())
         self.assertIs(raw["scientific_reporting_eligible"], False)
 

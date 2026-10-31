@@ -1,6 +1,101 @@
 # Scientific and editorial revision
 
-## Current delivery split — 28 October 2026
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](../docs/research/pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
+## Reader-only publication boundary — 29 October 2026
+
+The author requires article and appendix/supplement prose to address future
+journal readers only. Internal review instructions, pending integration,
+campaign scheduler status, dates, approvals and resource decisions belong in
+GitHub research records and PR checkpoints, never in that prose.
+
+The registered reader texts are the article and supplement README, methods
+explanation, configuration reference and sensitivity discussion. The latter
+retains scientific limitations and future research questions, while its full
+prospective execution/budget discussion is preserved in
+[internal sensitivity planning](../docs/research/mvp2-sensitivity-planning.md).
+The [coauthor brief](../docs/research/coauthor-review-brief.md) and
+[Human–AI/Appendix B decision register](../docs/research/human-ai-traceability-review.md)
+are moved to docs/research with their evidence and limitations intact.
+No new Human–AI appendix is promoted.
+
+The article no longer narrates PR/job progress or reserves hidden editorial
+extension text. It states the scientific scope of the reported observations.
+No final CPU12h quality, timing or cost result is supplied. All original
+scientific data, checkpoints, configurations and the installed campaign stay
+unchanged. The [29 October scheduler transcription](../docs/evidence/pr89/status-20261029-author.json)
+records the human-supplied partial snapshot separately.
+
+Temporary files are local only, in the writable conversation directory under
+the user's .codex profile. The literal alternative profile-name suffix in the
+new message does not exist; the established .codex directory does. The
+OneDrive Temp Codex location exists but was not used for writes. A local
+write/read probe passed; direct PowerShell DNS for api.github.com failed,
+while the GitHub connector succeeded. This is a point-in-time observation,
+not a general claim about every sandbox capability. No external desktop app,
+remote HPC command, session-file transfer through a blob service or review-PDF
+export is used. GitHub source commits, PR notes and standard CI reports remain
+project validation records.
+
+Source and rendering checks enforce the reader-text boundary without replacing
+the integral scientific audit after campaign qualification. PR93 remains draft;
+merge, publication and submission still require their own human decisions.
+The full final article/annex review remains required.
+
+
+## PR93 — synthesis and final integration
+
+PR92 was merged into develop with explicit author approval on 28 October
+(merge `ac2dccb8bd56af6b03b866db5199d19944b7a28b`). PR93 now targets
+develop and remains a draft requiring its own merge approval. The [working assessment](../docs/research/mvp2-integrated-assessment.md)
+is the first S4 deliverable, using existing evidence only.
+
+Completion requires: the reconciled 60-cell return with explicit metric
+eligibility; the integrated CPU/GPU interpretation and R2-D8 assessment;
+updated numerical provenance and consistent tables/figures/prose; an
+explicitly packaged scientific supplement with availability/rights resolved;
+the integral second-pass audit and final-head verification; and the
+relevant author scientific/editorial decisions. PR92's independent first
+pass does not close these requirements.
+
+The following sections preserve PR92's delivered scope and earlier review
+history. They do not mark PR93 complete or authorize a new experiment.
+
+
+## Backmatter requirements from author review — 28 October 2026
+
+Before PR93 is ready for merge, retain this order: numbered Acknowledgements,
+numbered Declaration of generative AI and AI-assisted technologies in the
+manuscript preparation process, then numbered References. Preserve the
+approved AI disclosure text. The acknowledgements thank the University of
+Jaén (UJA) and the DaSCI Institute for access to the dgx-dasci HPC infrastructure;
+they do not add an unconfirmed funding or grant statement.
+
+The manuscript and local Elsevier adapter implement this requirement without
+editing the upstream class. Source, HTML and PDF checks cover the order and
+numbering; numbered References must still trigger the existing body-page
+budget check. No new review PDF is requested or delivered for this change.
+The final qualified CPU return and complete audit remain prerequisites for
+PR93 closeout; this editorial correction does not authorize its merge.
+
+## PR92 delivery baseline — 28 October 2026
 
 The author requests completion of PR92 now and preparation of the next PR.
 PR92 closes the independent methods, evidence provenance and preliminary
@@ -8,7 +103,7 @@ coauthor-review stage. The [completion plan](../docs/research/mvp2-closeout-plan
 is organized by Sprints and PRs and supersedes the earlier requirement that
 this PR wait for the final CPU return.
 
-The [coauthor brief](coauthor-review-brief.md) is the immediate independent
+The [coauthor brief](../docs/research/coauthor-review-brief.md) is the immediate independent
 deliverable: working title, question, empirical gap, C1–C3, methods and
 limitations, informed by chat 01.04. Preliminary feedback is sought by
 15 November through circulation controlled by the authors. No material has
@@ -36,7 +131,7 @@ The manuscript distinguishes observed conditional comparisons from
 across-seed robustness. Its conclusions now describe targeted sensitivity
 work without presenting it as completed evidence or promising reviewer acceptance.
 
-See the [prospective assessment](supplement/sensitivity-review-plan.md) for
+See the [prospective assessment](../docs/research/mvp2-sensitivity-planning.md) for
 incremental counts, cost boundaries and the conditions for deferral.
 A narrow seed study would take priority over a broad architecture grid if
 the final claim requires robustness evidence. No new experiment accompanies
@@ -49,7 +144,8 @@ The [updated S1–S6 plan](../docs/research/mvp2-20261028-accelerated-plan.md)
 sets15December2026 as the target for a complete coauthor-review version,
 retaining14January2027 for submission. S1/S2/S4/S5 advance concurrently;
 S3 waits the qualified return of the existing campaign, and final S4/S5
-synthesis remains dependent on it. Keep PR92 as the integrated editorial PR.
+synthesis remains dependent on it. PR92 delivered the independent stage;
+PR93 now carries final integration.
 
 The [GNN audit](supplement/gnn-methods-audit.md) supplies source-linked
 architecture, hyperparameter, serial/DDP and solver-interface reconciliation.
@@ -58,7 +154,7 @@ between GCN, GraphSAGE and GAT/GATv2, plus the task-specific value and limits
 of the coauthors' opinion-dynamics paper. Five references are added because
 they support these statements, not because every Zotero item must be cited.
 
-The [IIEA-S decision register](supplement/human-ai-traceability.md) recommends
+The [IIEA-S decision register](../docs/research/human-ai-traceability-review.md) recommends
 a bounded traceability account; a full Appendix B remains conditional on
 a stable definition, primary decision evidence and coauthor approval.
 The agreed AI declaration and author identities remain unchanged.

@@ -62,23 +62,45 @@ def build(root: Path = ROOT) -> None:
             generated.append(path)
         plt.close(fig)
 
-    fig, ax = plt.subplots(figsize=(6.4, 3.4))
-    ax.set(xlim=(0, 10), ylim=(0, 4.6))
+    fig, ax = plt.subplots(figsize=(6.8, 4.6))
+    ax.set(xlim=(0, 10.2), ylim=(0, 7.2))
     ax.axis("off")
-    box_rows = ((3.0, "OFFLINE", ("CFL models + checked labels\nMINIMIZE convention", "Bipartite graphs\nroot-relaxation features", "GNN fitting + validation\n100 epochs; select checkpoint")),
-                (0.9, "ONLINE", ("New medium model\nlabel-free graph + scores", "Class-aware partial start\nno domain restrictions", "Fresh Gurobi solve\ngap / time / feasibility")))
-    for y, title, texts in box_rows:
-        ax.text(.1, y+1.1, title, color="#333333", fontsize=11)
-        for index, label in enumerate(texts):
-            x = .1 + index * 3.35
-            ax.add_patch(FancyBboxPatch((x, y), 2.9, .88, boxstyle="round,pad=.06", facecolor="#f2f2f2", edgecolor="#555555"))
-            ax.text(x+1.45, y+.44, label, ha="center", va="center", fontsize=7.6)
-            if index < 2:
-                ax.annotate("", xy=(x+3.28, y+.44), xytext=(x+2.98, y+.44), arrowprops={"arrowstyle": "->", "color": "#555555"})
-    ax.annotate("", xy=(4.9, 1.9), xytext=(8.1, 2.94), arrowprops={"arrowstyle": "->", "connectionstyle": "arc3,rad=-.12", "color": "#555555"})
-    ax.text(6.5, 2.3, "Frozen checkpoint\nand validation-qualified policy", ha="center", va="center",
-            fontsize=8, bbox={"facecolor": "white", "edgecolor": "none", "pad": 2})
-    ax.text(.1, .25, "Test outcomes do not select model, threshold, support, or ordering.", fontsize=9)
+
+    def box(x, y, label):
+        ax.add_patch(FancyBboxPatch((x, y), 2.8, 1.0,
+                                   boxstyle="round,pad=.05",
+                                   facecolor="#f2f2f2", edgecolor="#555555"))
+        ax.text(x + 1.4, y + .5, label, ha="center", va="center", fontsize=9)
+
+    def arrow(begin, finish):
+        ax.annotate("", xy=finish, xytext=begin,
+                    arrowprops={"arrowstyle": "->", "color": "#555555"})
+
+    xs = (.2, 3.6, 7.0)
+    ax.text(.2, 6.7, "OFFLINE LEARNING", fontsize=10)
+    for x, label in zip(xs, ("Reference instances\nchecked labels",
+                            "Graph encoding\nGNN fit + validation",
+                            "Frozen weights\nand decision rule")):
+        box(x, 5.35, label)
+    arrow((3.05, 5.85), (3.5, 5.85))
+    arrow((6.45, 5.85), (6.9, 5.85))
+    ax.text(.2, 4.6, "APPLICATION", fontsize=10)
+    for x, label in zip(xs, ("Original model\nstored root values",
+                            "Aligned graph\nfrozen GNN inference",
+                            "G: learned values\nR: LP-ranked values\nmatched (k, q)")):
+        box(x, 3.25, label)
+    arrow((3.05, 3.75), (3.5, 3.75))
+    arrow((6.45, 3.75), (6.9, 3.75))
+    arrow((8.4, 5.25), (5.0, 4.35))
+    for x, label in zip(xs, ("B: no external Start",
+                            "Same MILP model\nsolver completion\nand search",
+                            "Primal / dual quality\ntime and cost")):
+        box(x, 1.1, label)
+    arrow((3.05, 1.6), (3.5, 1.6))
+    arrow((6.45, 1.6), (6.9, 1.6))
+    arrow((8.4, 3.15), (5.0, 2.2))
+    ax.text(.2, .35, "B/R/G preserve all original constraints and variable domains.",
+            fontsize=9)
     save(fig, "figure_pipeline")
 
     fig, ax = plt.subplots(figsize=(8, 3.0), layout="constrained")

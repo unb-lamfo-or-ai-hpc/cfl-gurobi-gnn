@@ -1,5 +1,29 @@
 # MVP2 R3 — metrics and reproducibility assessment
 
+## Separate appendices and determinism clarification — 30 October 2026
+
+The author requested separate article/appendices PDFs, recovery of the historical 39-instance descriptive material in Appendix B, and an expanded documented comparison of solver engines/interfaces in Appendix C. The 39-instance PCA is a projection of fixed structural descriptors, not learned GNN embeddings. No current cohort, result, protocol or PR89 setting changes. See the [canonical revision record](pr93-editorial-revision-20261030.md) for the technical diagnosis, provenance and implementation.
+
+
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
 26 October 2026 · R2-D4 and metric definitions supporting R2-D5/D6.
 Governed by the [R3 contract](mvp2-r3-contract.md).
 Reuse the [existing D1 dictionary](methodology-20261019/D1-protocol.md);
@@ -52,7 +76,7 @@ cap, settings and stopping rule. It can describe the observed contrasts and
 their censoring/numerical qualifications. It cannot estimate across-seed
 variance, treat caps as repetitions, or establish stable expected speedups.
 A parameter-fixed comparison does not require identical search paths.
-The [prospective sensitivity assessment](../../manuscript/supplement/sensitivity-review-plan.md)
+The [prospective sensitivity assessment](mvp2-sensitivity-planning.md)
 separates solver seeds, root methods, training seeds and component ablations.
 It is a planning document, not new experimental authority.
 
@@ -109,6 +133,37 @@ M4/M12 are retained in coverage and descriptive reporting with their respective
 limitations. More time or OPTIMAL does not establish exact optimality or
 certified speedup. Do not change original flags to grant blanket eligibility;
 produce a separate review naming qualified rows/metrics and exclusions.
+
+## Historical endpoint reconciliation — 28 October
+
+The six-medium archive uses two distinct event definitions. A solver run can
+reach the 10% threshold and still exhaust its time budget before meeting the
+terminal criterion. Accordingly, the archived `right_censored` flag cannot
+be used as a censoring indicator for every threshold.
+
+| Observation | Evidence and interpretation |
+| --- | --- |
+| Start loaded | The sanitized solver message identifies a loaded user MIP start. Submission alone is insufficient; acceptance does not establish optimality or guarantee a later improvement. |
+| 10% crossing observed | `first_observed_gap_le_0.1_seconds` supplies an observed callback time. A missing crossing requires its own follow-up/eligibility assessment. |
+| Terminal limit reached | The historical recorder sets `right_censored` from limit/interruption status codes. Preserve that flag and interpret it at the terminal endpoint. |
+| Solver reports optimal status | A tolerance-dependent solver conclusion, not an exact mathematical certificate. M4/M12 restrictions remain metric-specific. |
+
+For example, historical optimization-test medium0 with G has a recorded
+10% crossing at 1157.8713 seconds and terminal `right_censored=True`.
+These are compatible observations, not conflicting records.
+The [archived table](../../manuscript/results/current/table_solver_outcomes.csv)
+and [figure/table generator](../../scripts/manuscript/build_cor_assets.py)
+already distinguish the crossing field from the terminal flag. The article
+wording is corrected; raw data, figure values and historical flags are unchanged.
+
+This reading follows the existing
+[recorder and Start evidence](../../src/cfl_gnn/solvers/paired_partial_start.py)
+and [archival analysis](../../src/cfl_gnn/analysis/pr60_scientific_evidence.py).
+Gurobi's [status definitions](https://docs.gurobi.com/projects/optimizer/en/current/reference/numericcodes/statuscodes.html)
+describe optimal status subject to tolerances; the
+[MIPGap definition](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameter:MIPGap)
+specifies a relative stopping tolerance. Checked on 28 October 2026.
+This source review executes no optimization and changes no eligibility flag.
 
 ## Comparable time and scaling
 

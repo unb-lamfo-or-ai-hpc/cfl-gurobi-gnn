@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "as_of": "2026-10-27",
+  "as_of": "2026-10-31",
   "manuscript_status": "controlled_development_study_for_author_review",
   "development_only": true,
   "scientific_reporting_eligible": false,
@@ -66,13 +66,51 @@
       "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
       "execution_authorized_date": "2026-10-20",
       "jobs_already_submitted": 60,
-      "execution_state": "in_progress_author_reported",
+      "execution_state": "in_progress_partial_snapshot",
       "final_return_received": false,
       "scientific_results_included": false,
-      "new_execution_authorized_by_this_revision": false
+      "new_execution_authorized_by_this_revision": false,
+      "partial_descriptive_results_included": true,
+      "partial_received_cells": 50
     },
     "editorial_state": "partial_integration_for_review_pr89_closeout_pending",
     "final_coauthor_approval": false,
     "submission_authorized": false
+  },
+  "approved_scientific_communication": {
+    "date": "2026-10-30",
+    "title": "Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems",
+    "scientific_contributions": [
+      "C2",
+      "C3"
+    ],
+    "C1_role": "methodological_obligation",
+    "diagnostic_and_organization_approved": true,
+    "new_experiments_authorized": false
+  },
+  "appendix_distribution": {
+    "separate_from_article": true,
+    "sections": [
+      "A",
+      "B",
+      "C"
+    ],
+    "historical_39_parent_descriptive_material_restored": true,
+    "learned_embedding_extraction_performed": false,
+    "solver_interface_comparison": "documentary_not_experimental",
+    "historical_protocol_changed": false
+  },
+  "partial_cpu_descriptive_snapshot": {
+    "received": 50,
+    "planned": 60,
+    "reported_terminal_targets": 37,
+    "right_censored_targets": 13,
+    "source_commit": "2593badd7f41e88bedeab13f300351e4993cdbd7",
+    "archive_sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab",
+    "source_directory": "docs/evidence/pr89/partial-20261031",
+    "author_inclusion_request_date": "2026-10-31",
+    "raw_vector_audit_repeated": false,
+    "certified_speedups_claimed": false,
+    "final_campaign_qualified": false
   }
 }

@@ -1,13 +1,64 @@
 # Current status
 
+## Author-directed descriptive CPU subset — 31 October 2026
+
+The author requested the 50-cell partial CPU return be included as a labelled exploratory subset in the article and Appendix B. This supersedes the earlier no-numerical-CPU-placeholder wording only for these received, receipt-checked descriptive observations. It does not qualify the full 60-cell campaign, change any original eligibility flag or authorize further execution. Sources are frozen in docs/evidence/pr89/partial-20261031; missing cells, endpoint-specific censoring, M4/M12 restrictions and the smaller M0 bound disagreement remain explicit. The AI disclosure now names Codex models 6.1 Sol and 6.0 Astra, as corrected by the author.
+
+
+## Separate appendices and determinism clarification — 30 October 2026
+
+The author requested separate article/appendices PDFs, recovery of the historical 39-instance descriptive material in Appendix B, and an expanded documented comparison of solver engines/interfaces in Appendix C. The 39-instance PCA is a projection of fixed structural descriptors, not learned GNN embeddings. No current cohort, result, protocol or PR89 setting changes. See the [canonical revision record](research/pr93-editorial-revision-20261030.md) for the technical diagnosis, provenance and implementation.
+
+
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](research/pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
+## Latest partial scheduler report — 29 October 2026
+
+The author supplied [sacct observations for jobs3713–3734](evidence/pr89/status-20261029-author.json).
+Exact capture time is unavailable. In this 22-job subset,3713/3714/3715 are
+COMPLETED with ExitCode0:0;3716 is RUNNING at07:26:20;3717–3734 are PENDING.
+No failure is reported in this subset. Jobs3675–3712 are not inferred.
+This is not a fresh agent query or a complete60-job snapshot. Scheduler status
+does not qualify solver results, and no final return has been received.
+
+The [editorial plan](../manuscript/editorial-plan.md) records the reader-only
+publication boundary. Coauthor/Appendix B decisions and prospective budgets
+are internal research records; they are excluded from article/supplement prose.
+The receiving agent retains exclusive campaign reconciliation responsibility;
+source9ab7823c, parameters, resources and sequence remain frozen.
+
+Earlier dated snapshots below are historical and are superseded for the
+overlapping job IDs only.
+
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
-PR92 closes the independent methods and preliminary-review stage; the next
-draft PR carries synthesis and final CPU integration. This scope split
-supersedes the earlier condition that PR92 itself await the CPU campaign.
+PR92 delivered the independent methods and preliminary-review stage and was
+merged with explicit author approval at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`.
+PR93 now targets develop and carries synthesis and final CPU integration.
+Its [supplement guide](../manuscript/supplement/README.md) records the independent
+claim reconciliation and reader-oriented explanations. PR93 remains a draft;
+the qualified return and final audit are still required.
 
-The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+The [coauthor brief](research/coauthor-review-brief.md) is prepared for
 author-controlled circulation and preliminary feedback by 15 November.
 It includes the first-pass audit record. The complete post-qualification
 audit remains mandatory. Targets are manuscript 15 December, final approval
@@ -22,14 +73,14 @@ outside the current Sprints.
 
 The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
 targets a complete coauthor-review version by15December2026 and preserves
-the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
 the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
 The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
-[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+[conditional Appendix B register](research/human-ai-traceability-review.md)
 record actual methods, critical references and evidence gaps. No experiment,
 checkpoint, campaign parameter or raw result is changed.
 
-Latest human partial report,28October; exact capture time unavailable:
+Historical human partial report,28October; exact capture time unavailable:
 3713 COMPLETED12:01:05, ExitCode0:0, AllocCPUS8, batch MaxRSS16050788K;
 3714 RUNNING08:03:49, AllocCPUS16; author reports3715–3734 PENDING.
 This is not a fresh agent query or a complete60-job snapshot. No final
@@ -141,7 +192,7 @@ selected PR-AUC macro loss0.013850 stays within that margin. Report a measured
 tradeoff, not preserved quality/noninferiority. One seed, exposed test parents,
 fixed arm order and accompanying CPU scaling limit claims.
 
-[Seven tables/four figures](evidence/pr87/jobs3673-3674/) regenerate offline;
+[Seven tables/four figures](evidence/pr87/jobs3673-3674) regenerate offline;
 receipt flags and original failed-pair evidence are unchanged. No more GPU runs,
 CPU campaign, solver, package update or merge authorized. Next: final analytical
 HEAD CI, Ready after review, then ask merge. PR88 manuscript may incorporate
@@ -199,7 +250,7 @@ CPU solves are collected; no submission, preparation or inference is repeated.
 (127/41),21M4(1/20) and21M12(7/14). They are not135exact certificates.
 M4/M12 retain their different diagnostics and no certified-speedup claim.
 
-The [final assets](evidence/pr86/final-210/) add sixSVG/PDF/PNG figures,
+The [final assets](evidence/pr86/final-210) add sixSVG/PDF/PNG figures,
 parent-paired ratios includingM2/M1, exact empirical parent-bootstrap/LOO
 exploratory sensitivity, nested one-thread seed effects, two preparation-cost
 allocation scenarios, terminal-gap contrasts, memory and70-job accounting.

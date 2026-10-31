@@ -30,6 +30,23 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_sources_pass_without_generated_assets(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
+    def test_coauthor_instructions_do_not_belong_in_article(self):
+        self.change("index.qmd", "# Introduction", "# Introduction\n\nFor coauthor review only.")
+        self.assertIn("internal_note_in_reader_text:index.qmd", CHECK.check_source(self.root))
+
+    def test_operational_status_does_not_belong_in_supplement(self):
+        path = self.root / "supplement/configuration-reference.md"
+        with path.open("a", encoding="utf-8") as stream:
+            stream.write("\nThe final return is pending.\n")
+        self.assertIn("internal_note_in_reader_text:supplement/configuration-reference.md",
+                      CHECK.check_source(self.root))
+
+    def test_internal_review_file_is_not_a_registered_supplement(self):
+        path = self.root / "supplement/human-ai-traceability.md"
+        path.write_text("Internal review record.", encoding="utf-8")
+        self.assertIn("unregistered_supplement_text:human-ai-traceability.md",
+                      CHECK.check_source(self.root))
+
     def test_changed_source_csv_fails(self):
         path = self.root / "results/current/table_predictive_metrics.csv"
         path.write_bytes(path.read_bytes() + b"\n")
@@ -91,12 +108,29 @@ class ManuscriptContractTests(unittest.TestCase):
         self.change("index.qmd", "# Introduction", "# Introduction\n\n@invented2026")
         self.assertIn("bibliography_not_exactly_cited_or_duplicate_keys", CHECK.check_source(self.root))
 
-    def test_class_aware_abstract_must_explain_positive_values(self):
-        self.change("index.qmd", "value 1 receive priority", "the rare class receives priority")
-        self.assertIn("class_aware_abstract_explanation_missing", CHECK.check_source(self.root))
+    def test_abstract_introduces_the_scientific_acronyms(self):
+        self.change("index.qmd", "Graph Neural Network (GNN)", "GNN")
+        self.assertIn("abstract_acronym_introduction_missing", CHECK.check_source(self.root))
+
+    def test_highlights_cannot_publish_operational_status(self):
+        path = self.root / "highlights.txt"
+        path.write_text("The final return is pending.\n")
+        self.assertIn("internal_note_in_reader_text:highlights.txt",
+                      CHECK.check_source(self.root))
+
+    def test_mechanism_cannot_return_as_a_third_scientific_contribution(self):
+        self.change("index.qmd", "# Introduction",
+                    "# Introduction\n\nWe claim three empirical contributions.")
+        self.assertIn("mechanism_promoted_to_independent_contribution",
+                      CHECK.check_source(self.root))
+
+    def test_approved_title_is_consistent(self):
+        self.change("index.qmd", CHECK.TITLE, "A different title")
+        self.assertIn("approved_scientific_communication_drift",
+                      CHECK.check_source(self.root))
 
     def test_current_seed42_scope_cannot_be_silently_removed(self):
-        self.change("index.qmd", "150 seed42 records", "210 multiseed records")
+        self.change("index.qmd", "150 seed42 observations", "210 multiseed observations")
         self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
 
@@ -135,7 +169,7 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("metrics_not_defined_before_results", CHECK.check_source(self.root))
 
     def test_final_section_uses_reviewed_structure(self):
-        self.change("index.qmd", "# Final considerations, limitations and future work", "# Conclusions")
+        self.change("index.qmd", "# Conclusions and Future Research", "# Conclusions")
         self.assertIn("editorial_final_section_missing", CHECK.check_source(self.root))
 
     def test_pipeline_is_announced_before_its_display(self):
@@ -143,11 +177,11 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("figure_not_introduced:fig-pipeline", CHECK.check_source(self.root))
 
     def test_predictive_table_is_announced_before_its_display(self):
-        self.change("index.qmd", "@tbl-predictive reports", "The table reports")
+        self.change("supplement/extended-results.md", "@tbl-predictive reports", "The table reports")
         self.assertIn("table_not_introduced:tbl-predictive", CHECK.check_source(self.root))
 
     def test_sections_cannot_start_with_a_table(self):
-        self.change("index.qmd", "{{< include tables/current_influence.qmd >}}", "## Empty lead\n\n{{< include tables/current_influence.qmd >}}")
+        self.change("supplement/extended-results.md", "{{< include ../tables/current_influence.qmd >}}", "## Empty lead\n\n{{< include ../tables/current_influence.qmd >}}")
         self.assertIn("section_starts_with_display", CHECK.check_source(self.root))
 
     def test_l2o_context_required(self):
@@ -155,7 +189,7 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
 
     def test_unapproved_include_fails(self):
-        self.change("index.qmd", "tables/current_predictive.qmd", "../../private.qmd")
+        self.change("index.qmd", "tables/principal_ratios.qmd", "../../private.qmd")
         self.assertIn("executable_or_unreviewed_included_content", CHECK.check_source(self.root))
 
     def test_executable_chunk_fails(self):
@@ -209,6 +243,25 @@ class ManuscriptContractTests(unittest.TestCase):
         path.write_text("Body\f" * 20 + "References\n")
         self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
 
+    def test_hpc_acknowledgements_must_precede_ai_declaration(self):
+        self.change("index.qmd", CHECK.ACKNOWLEDGEMENTS, "Acknowledgements pending.")
+        self.assertIn("hpc_acknowledgements_missing_changed_or_misplaced", CHECK.check_source(self.root))
+
+    def test_ai_heading_must_be_numbered_without_changing_disclosure(self):
+        self.change("index.qmd", f"# {CHECK.AI_HEADING}\n", f"# {CHECK.AI_HEADING} {{.unnumbered}}\n")
+        self.assertIn("ai_declaration_missing_changed_or_not_before_references", CHECK.check_source(self.root))
+
+    def test_numbered_references_still_enforce_pdf_body_budget(self):
+        path = self.root / "text.txt"
+        path.write_text("Body\f" * 20 + "11. References\n")
+        self.assertIn("manuscript_body_exceeds_twenty_pages", CHECK.check_pdf_text(path))
+
+    def test_backmatter_requires_sequential_heading_numbers(self):
+        good = f"9. Acknowledgements\n10. {CHECK.AI_HEADING}\n11. References"
+        self.assertTrue(CHECK.numbered_backmatter(good))
+        self.assertFalse(CHECK.numbered_backmatter(good.replace("11. References", "References")))
+        self.assertFalse(CHECK.numbered_backmatter(good.replace("10. ", "12. ")))
+
     def test_pdf_orcid_identifier_not_printed(self):
         path = self.root / "text.txt"
         path.write_text("ORCID: 0000-0001-5913-2997")
@@ -222,6 +275,7 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_references_heading_is_not_suppressed_in_the_adapter(self):
         adapter = (ROOT / "manuscript/_extensions/elsevier/template.tex").read_text()
         self.assertNotIn(r"\renewcommand{\bibsection}{}", adapter)
+        self.assertIn(r"\renewcommand{\bibsection}{\section{\refname}}", adapter)
 
     def test_pdf_uses_vector_fonts_and_unicode_text_mapping(self):
         adapter = (ROOT / "manuscript/_extensions/elsevier/template.tex").read_text()

@@ -1,10 +1,39 @@
 # Class-aware GNN partial-start manuscript
 
-## Current PR92 review scope — 28 October 2026
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](../docs/research/pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
+## PR93 continuation
+
+PR92 is merged into develop at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`.
+PR93 now targets develop and continues that independent-stage baseline.
+See the [working R2-D8 assessment](../docs/research/mvp2-integrated-assessment.md)
+and [editorial completion criteria](editorial-plan.md). PR93 remains gated
+by qualified CPU evidence, final synthesis and the complete audit; none is
+inferred from a passing preview.
+
+
+## Delivered PR92 scope — 28 October 2026
 
 PR92 delivers the independent R3 methods, provenance and preliminary review
 stage while the authorized CPU campaign continues. Its
-[coauthor brief](coauthor-review-brief.md) contains the scientific argument,
+[coauthor brief](../docs/research/coauthor-review-brief.md) contains the scientific argument,
 known limitations and a first-pass audit register. The
 [editorial plan](editorial-plan.md) defines this PR's completion criteria;
 the [Sprint/PR plan](../docs/research/mvp2-closeout-plan.md) separates it from
@@ -75,13 +104,9 @@ current article. Author ORCIDs appear through `orcidlink`, not printed IDs.
 
 ## Interpretation and submission boundary
 
-Five of six learned-start terminal gaps improve, but the mean is sensitive
-to two parents. Regressions, censored events, population overlap rules, and
-the negative earlier pilot are retained. Predictive AP is not PR-AUC;
-accepted starts are not evidence of speedup. The transferred tables do not
-include preparation/inference or all four timing-region measurements, so
-they do not quantify cold end-to-end acceleration. No missing measurement
-is substituted with zero.
+The principal 150-row CPU comparison is interpreted across six easy and four medium instances, three methods and five thread caps. Time ratios change with the resource cap; primal improvement need not coincide with a smaller gap, and adding measured preparation can reverse a solver-level advantage. The separate historical six-medium study improves five of six learned-start terminal gaps, with a mean sensitive to two instances. Its original timing table omits upstream preparation/inference and is not a complete cold-application measurement. The studies are not pooled.
+
+Regressions, censoring, numerical restrictions, historical exposure and the negative earlier pilot are retained. Predictive AP is not PR-AUC; an accepted Start is not evidence of speedup. Cost scenarios retain their individual measurement boundaries, and unavailable measurements are never substituted with zero.
 
 Publication-integrity tests do not certify scientific validity, publication
 eligibility, statistical significance, or submission readiness. The internal
@@ -90,3 +115,12 @@ the declarations and data-release decisions in `submission-checklist.md`.
 
 Original manuscript material and scripts are MIT licensed. Upstream
 templates, benchmarks, and solvers retain their own rights.
+
+## Separate appendices build
+
+The reader appendices is assembled as A (methods), B (extended results) and C (computational settings/reproducibility). After building the static figures, render the article and then its separate supplement project:
+
+    quarto render manuscript --no-execute
+    quarto render manuscript/supplement --no-execute
+
+The second command writes the independent appendices PDF as manuscript/_manuscript/appendices/appendices.pdf. The article remains manuscript/_manuscript/index.pdf. It executes no solver, inference or training. Internal plans and coauthor material remain outside the supplement entry point. The final integral scientific audit still follows CPU12h qualification.

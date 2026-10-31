@@ -1,13 +1,45 @@
 # CFL--GNN research context
 
+## Author-directed descriptive CPU subset — 31 October 2026
+
+The author requested the 50-cell partial CPU return be included as a labelled exploratory subset in the article and Appendix B. This supersedes the earlier no-numerical-CPU-placeholder wording only for these received, receipt-checked descriptive observations. It does not qualify the full 60-cell campaign, change any original eligibility flag or authorize further execution. Sources are frozen in docs/evidence/pr89/partial-20261031; missing cells, endpoint-specific censoring, M4/M12 restrictions and the smaller M0 bound disagreement remain explicit. The AI disclosure now names Codex models 6.1 Sol and 6.0 Astra, as corrected by the author.
+
+
+## Separate appendices and determinism clarification — 30 October 2026
+
+The author requested separate article/appendices PDFs, recovery of the historical 39-instance descriptive material in Appendix B, and an expanded documented comparison of solver engines/interfaces in Appendix C. The 39-instance PCA is a projection of fixed structural descriptors, not learned GNN embeddings. No current cohort, result, protocol or PR89 setting changes. See the [canonical revision record](research/pr93-editorial-revision-20261030.md) for the technical diagnosis, provenance and implementation.
+
+
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](research/pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
-PR92 closes the independent methods and preliminary-review stage; the next
-draft PR carries synthesis and final CPU integration. This scope split
-supersedes the earlier condition that PR92 itself await the CPU campaign.
+PR92 delivered the independent methods and preliminary-review stage and was
+merged with explicit author approval at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`.
+PR93 now targets develop and carries synthesis and final CPU integration.
+Its [supplement guide](../manuscript/supplement/README.md) records the independent
+claim reconciliation and reader-oriented explanations. PR93 remains a draft;
+the qualified return and final audit are still required.
 
-The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+The [coauthor brief](research/coauthor-review-brief.md) is prepared for
 author-controlled circulation and preliminary feedback by 15 November.
 It includes the first-pass audit record. The complete post-qualification
 audit remains mandatory. Targets are manuscript 15 December, final approval
@@ -22,10 +54,10 @@ outside the current Sprints.
 
 The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
 targets a complete coauthor-review version by15December2026 and preserves
-the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
 the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
 The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
-[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+[conditional Appendix B register](research/human-ai-traceability-review.md)
 record actual methods, critical references and evidence gaps. No experiment,
 checkpoint, campaign parameter or raw result is changed.
 
