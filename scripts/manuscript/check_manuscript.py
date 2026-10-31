@@ -29,7 +29,7 @@ AI_HEADING = "Declaration of generative AI and AI-assisted technologies in the m
 ACKNOWLEDGEMENTS = "The authors thank the University of Jaén (UJA) and the DaSCI Institute for providing access to the dgx-dasci high-performance computing infrastructure used in this study."
 AI_DISCLOSURE = (
     "During the preparation of this work, the authors used Gurobot, Gemini 3.1 Pro, "
-    "and ChatGPT Codex with models 5.6 Sol and 6.0 Astra, to assist with the codebase "
+    "and ChatGPT Codex with models 6.1 Sol and 6.0 Astra, to assist with the codebase "
     "implementation and to support the preparation, structuring, language refinement, "
     "and data visualization of this manuscript. After using these tools/services, "
     "the authors reviewed and edited the content as needed and took full "
