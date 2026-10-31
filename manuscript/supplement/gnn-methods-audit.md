@@ -1,8 +1,8 @@
-# Supplementary A: Model and Method Details {#sec-supp-methods}
+# Appendix A: Model and Method Details {#sec-supp-methods}
 
-This supplement follows the information supplied to the solver: mathematical coefficients and a root-relaxation vector become graph features, neural scores and selected binary values. The distinction matters because a prediction, a partial candidate and an accepted feasible incumbent are different objects. The numerical settings and their sources are collected in Supplementary C.
+This appendix follows the information supplied to the solver: mathematical coefficients and a root-relaxation vector become graph features, neural scores and selected binary values. The distinction matters because a prediction, a partial candidate and an accepted feasible incumbent are different objects. The numerical settings and their sources are collected in Appendix C.
 
-## Representation and information exchange
+## A.1. Representation and information exchange
 
 A variable node represents a column of the MILP; a constraint node represents a linear row. A nonzero matrix coefficient creates an edge between them. A constraint can therefore collect information from the variables that determine its activity, and a variable can receive information from the constraints in which it participates. Coefficients describe those connections rather than merely indicating that they exist.
 
@@ -28,7 +28,7 @@ Here $N$ denotes neighbours, $e_{ij}$ an encoded coefficient and $\Vert$ concate
 
 The implementation uses two cycles and width 32. Two cycles permit propagation over up to four bipartite edges; that is not evidence that this neighbourhood suffices for all CFL decisions. Sharing message functions permits inputs of different sizes, but architectural applicability is distinct from statistical generalization.
 
-## Architectural context and fixed hyperparameters
+## A.2. Architectural context and fixed hyperparameters
 
 GCN uses degree-normalized propagation [@kipf2017]. GraphSAGE combines a node representation with an aggregation of its neighbours [@hamilton2017]. GAT and GATv2 learn attention weights [@velickovic2018; @brody2022]. The evaluated network instead uses coefficient-aware message functions, sum aggregation and separate constraint/variable updates. The optional dense attention block elsewhere in the repository is not a GAT or GATv2 experiment.
 
@@ -52,7 +52,7 @@ The upstream branching baseline uses one cycle and width 64. The two-cycle, widt
 
 Sum aggregation depends on node degree, which motivates prenormalization of activation scale. In the version used here, variable-side fitting follows the corresponding constraint update and uses training graphs only. A source filename containing “calibrated” describes this versioned internal normalization, not calibrated output probabilities. Legacy fitted buffers are not interchangeable with this state.
 
-## Labels, loss and selected outputs
+## A.3. Labels, loss and selected outputs
 
 A label says whether a binary variable is zero or one in a checked reference incumbent. The incumbent may be approximate and need not be the only useful feasible solution. Positive labels are rare, so the weighted BCE loss increases their contribution using the training negative-to-positive ratio.
 
@@ -66,7 +66,7 @@ Precision measures agreement among predicted ones; recall measures recovery of r
 
 The original CPU predictor and the matched GPU pair use distinct schedules. Historical training updates after one graph. In the matched comparison, four graph-mean losses form one update: serial training accumulates four losses divided by four, while DDP averages one gradient per rank. Clipping and Adam occur once after this aggregation. This matches the objective and work per update without requiring identical floating-point trajectories.
 
-## Relaxation, inference and partial-Start construction
+## A.4. Relaxation, inference and partial-Start construction
 
 A linear relaxation permits fractional values for integer-constrained variables. Its solution is informative about the model but need not be a feasible mixed-integer solution. Preparation reads the original model under MINIMIZE and records the first optimal root-node relaxation at an eligible MIPNODE event using cbGetNodeRel. A callback is code invoked when the solver reaches a specified event. The capture terminates that preparation run; it does not use a separate model.relax() solve or claim to include every later root cut.
 
@@ -89,7 +89,7 @@ For example, G might supply $x_a=1,x_b=0,x_c=0$ while R supplies $x_d=1,x_e=0,x_
 
 A fresh model receives the assignments through Start, with GRB.UNDEFINED elsewhere. A supplied one is a starting value, not a constraint fixing the final solution. A loaded-start message records acceptance under the solver's numerical conventions; it does not prove exact feasibility, optimality or later performance. R's dependence on G is also a computational dependency: its comparison is not the cost of an independently prepared LP heuristic.
 
-## Position among related solver interfaces
+## A.5. Position among related solver interfaces
 
 The table distinguishes how information is supplied, not a replicated performance ranking. The problems and endpoint definitions of the cited papers differ from this study.
 
@@ -106,17 +106,19 @@ Primal solution quality, primal-dual gap and computation time must be interprete
 
 For computational economics, comparable accounting would need to align training, feature construction, inference, candidate generation and solver time. This study does not normalize those papers' preparation costs to its CFL protocol and draws no claim that they omit such costs. Its measured and scenario-based accounting concerns its own B/R/G pipeline.
 
-## Repeatability and scientific interpretation
+## A.6. Repeatability and scientific interpretation
 
-Reconstruction of the same configuration, repetition of an algorithmic path and repetition of a wall-time endpoint are separate questions. Method=-1 controls automatic continuous/root selection, not the entire MIP strategy. Gurobi's MIP-root automatic choice differs from the usual standalone-LP choice. The setting alone does not identify the effective algorithm; unexported values, including ConcurrentMIP in the inherited dictionary, are not reconstructed from defaults.
+Gurobi documents deterministic conventional parallel MIP under controlled model, parameter, attribute, version and hardware conditions [@gurobideterminism2025]. Different starts and thread counts are different inputs and can yield different search paths. Concurrent MIP is a distinct mechanism that runs independent searches; requesting multiple threads does not by itself identify that mode.
 
-Official guidance conditions deterministic behaviour on inputs, version and machine, and identifies time-dependent parameters as a qualification [@gurobi2026]. Changing Threads changes a configuration input; parallel MIP is not automatically nondeterministic. Seed 42 fixes a search perturbation, while a time cap can still stop at different algorithmic work points. Different Starts are also intended to produce different search paths.
+The recorded Method=-1 selects the continuous/root algorithm automatically; it does not mean that dual simplex was explicitly requested or that the MIP run was necessarily nondeterministic. The actual selected root algorithm and unexported settings remain unavailable. Seed 42 holds one search perturbation fixed, without controlling all other inputs.
 
-The existing comparisons support observed contrasts under recorded conditions. They do not estimate across-seed variance, identify expected stable speedups or make thread conditions independent trials. Start acceptance, first observed 10% crossing, terminal status and exact optimality are distinct. The configured terminal MIPGap of 0.0001 equals 0.01%; it is not the 10% descriptive threshold.
+TimeLimit can stop otherwise repeatable search after different amounts of work as timing conditions change. WorkLimit is a distinct, work-based budget, not a conversion of elapsed seconds or a retrospective replacement. Appendix C explains the configuration record, software guarantees and interface differences.
 
-M4/M12 observations retain their metric-specific numerical restrictions. A longer solve or a solver-reported optimal status does not by itself remove them. Missing data, censoring and unqualified numerical comparisons therefore have separate dispositions.
+The comparisons describe observed outcomes under each configuration. They do not estimate across-seed variance, demonstrate stable expected speedups or make thread conditions independent trials. Start acceptance, first observed 10% crossing, terminal status and exact optimality are distinct. MIPGap=0.0001 equals 0.01%, not the 10% descriptive threshold.
 
-## Implementation sources
+M4/M12 retain their metric-specific numerical restrictions. More elapsed time or a solver-reported optimal status does not automatically remove them. Missing data, censoring and numerically restricted comparisons retain separate dispositions.
+
+## A.7. Implementation sources
 
 Fixed-revision sources document the
 [model](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5c3ba0e77ea87905fa7986a70567523166156df/src/cfl_gnn/models/gasse.py),

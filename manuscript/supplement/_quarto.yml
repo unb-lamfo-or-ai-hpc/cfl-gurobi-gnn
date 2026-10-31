@@ -1,6 +1,6 @@
 project:
   type: default
-  output-dir: ../_manuscript/supplement
+  output-dir: ../_manuscript/appendices
   render: [index.qmd]
 execute:
   enabled: false
@@ -13,6 +13,9 @@ format:
     number-sections: false
     code-fold: true
   pdf:
+    output-file: appendices.pdf
+    toc: true
+    toc-depth: 2
     documentclass: article
     papersize: a4
     fontsize: 11pt

@@ -1,5 +1,70 @@
 # PR93 — approved scientific/editorial revision, 30 October 2026
 
+## Partial CPU integration and validation — 31 October 2026
+
+The author requested inclusion of the sealed 50-cell snapshot after its offline review. The main article receives a 188-word exploratory subsection; Appendix B receives the 50 terminal records, endpoint-specific observations and explicit numerical qualifications. The six sanitized evidence files are versioned at commit 2593badd7f41e88bedeab13f300351e4993cdbd7, parented on the approved disclosure correction, without changing PR89. The input ZIP SHA256 is 111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab. Public file hashes, 150 nested seals, 50 parameter/temporal records and 50 cost reconciliations pass; underlying private logs/vectors were not reopened. A separate 60-cell disposition preserves ten unreceived cells. M4/M12 cannot support certified speedups, and the smaller M0 bound disagreement is visible. All scientific eligibility and final-campaign flags remain false.
+
+The main article retains its historical 150-observation analysis and incorporates the new subset separately. Eight targeted tests guard against censored/sensitive time ratios, changed input bytes and unqualified prose; all 92 manuscript tests pass. Source/rendered/PDF gates pass locally; the last measured page counts are 23 article / 41 appendices, subject to final visual QA after bibliographic style cleanup. References remain author–year, with access/version metadata preserved and unnecessary operational wording removed. Redundant discussion/conclusion prose was shortened to keep the 20-page body budget. No new experiment, training, inference, seed, model or resource change was executed. The next campaign remains prospective planning, not execution authority. Exact-head CI and final figure/page checks will be recorded in the PR checkpoint.
+
+
+## Author-directed descriptive CPU subset — 31 October 2026
+
+The author requested the 50-cell partial CPU return be included as a labelled exploratory subset in the article and Appendix B. This supersedes the earlier no-numerical-CPU-placeholder wording only for these received, receipt-checked descriptive observations. It does not qualify the full 60-cell campaign, change any original eligibility flag or authorize further execution. Sources are frozen in docs/evidence/pr89/partial-20261031; missing cells, endpoint-specific censoring, M4/M12 restrictions and the smaller M0 bound disagreement remain explicit. The AI disclosure now names Codex models 6.1 Sol and 6.0 Astra, as corrected by the author.
+
+
+## Additional author mandate: separate appendices and solver determinism
+
+30 October 2026, baseline bb39aafe1535bfa255e77dca1a6f203479e88586. The author requested implementation of the chat 01.01 technical review, separate distribution of article/appendices, recovery of earlier descriptive material in Appendix B, and a documentary gurobipy/Pyomo/SCIP/HiGHS comparison in Appendix C. This supersedes the preceding combined-PDF distribution choice, not any scientific protocol. The supplied review/mandate has SHA256 538dfd0f3e9c70c018695f8b504b3da5c1ccbfaca8d6a9fefa074faee9c605d3. It is an editorial instruction, not an empirical source or authority to execute research.
+
+### D1. Read-only diagnosis before editing
+
+The following comparison was established before the textual changes. The baseline article Section 4.2 and Appendix C already correctly stated Method=-1; no Method=1 configuration error was found.
+
+| Item | Evidence inspected | Result and editorial consequence |
+| --- | --- | --- |
+| Method, Seed and gap | PR86 job3522 public_return.json, decoded run/attempt-0/child.json, result.parameters | Method=-1, Seed=42, MIPGap=0.0001, MIPGapAbs=1e-10. Preserve; distinguish automatic Method=-1 from explicit dual simplex Method=1. |
+| Threads and one-hour budget | Same receipt plus existing seed42 main/scaling tables and R3 matrix | Recorded example Threads=1, TimeLimit=3600; principal factors 1/2/4/8/16. Different caps are configurations, not repeatability trials. |
+| CPU12h specification | scripts/evidence/pr89_cpu_contract.py at frozen 9ab7823c6886d19e9ec865141a1cd35b3c3c16e5 | Imports the hash-bound PR86 parameter map and specifies TimeLimit=43200, seed42 and the same five caps. This is protocol evidence, not a new 60-cell outcome return. |
+| Gurobi version | Decoded CPU child result.solver_version | [13,0,1]. The registered environment for CPU12h is described separately; no new live software inspection was performed. |
+| Effective concurrency | Exported parameter map | ConcurrentMIP absent. Documented default 1 must not be promoted to a recovered value. |
+| Selected root algorithm | Public result schema | Not exported; automatic-selection guidance does not reconstruct the executed algorithm. |
+| Runtime and Work | Child result.solve and frozen result schema | Runtime and node count available. Work not exported in the inspected schema; not calculated from seconds. WorkLimit is not a requested budget in the registered map; its effective value is not exported. |
+| Start and NoRel controls | Recorded map versus current manual | StartNodeLimit=-1 and SubMIPNodes=500 are exported. StartTimeLimit/StartWorkLimit and NoRelHeurTime/NoRelHeurWork effective values are not exported. Do not infer defaults. |
+| Hardware | Existing inventory and resource records | Supplied inventory/resource provenance retained; not a fresh hardware probe or evidence of isolated machine load. |
+| Native API | scripts/evidence/pr86_native_model.py and linked solver path | Uses the native Gurobi model path. Pyomo, SCIP and HiGHS are documentary context, not new B/R/G arms. |
+
+The four requested Gurobi sources were consulted: determinism guidance; parameter reference including Method, Seed, Threads, ConcurrentMIP, TimeLimit, WorkLimit, partial-start and NoRel controls; concurrent optimization; parameter guidelines. Model-attribute guidance distinguishes Runtime and Work. Current manual statements are identified as software documentation, not historical execution observations. Official Pyomo LP-writer documentation identifies version 6.10.1; the SCIP parameter page identifies 10.1.0. HiGHS references are the stable options/parallelism pages accessed on this date. No installed Pyomo/SCIP/HiGHS version is invented.
+
+### D2-D3. Reader changes and recovered material
+
+- Main Section 4.2 distinguishes conventional deterministic parallel MIP from Concurrent MIP, automatic root selection from the selected algorithm, fixed Seed from input identity, and TimeLimit from WorkLimit. Discussion retains causal restraint; repeated/equal-work studies remain future work.
+- Appendix A is harmonized without changing B/R/G mechanisms. Appendix C adds the requested parameter/availability table, stopping-criteria discussion and the solver-engine versus modeling-interface comparison.
+- A/B/C are titled and subdivided as appendices. The source directory remains manuscript/supplement to preserve Git history and links. Distribution is two PDFs: article plus separate appendices/appendices.pdf. The LaTeX package contains both independent documents and all required figures.
+- Appendix B restores the original 39-instance development study from nine already tracked sources: admission 42 to 39 (23/8/8), six retained unsuccessful acquisition attempts, four timing regions, complete graph inventory, descriptive distributions, source quality, all 17 projection descriptors, every stored PCA coordinate/cluster label, the full 100-epoch curve, earlier eight-instance prediction and all ten calibration bins.
+- The 39-instance analysis and its checkpoint/threshold remain separate from the later 54-instance predictor and ten-instance CPU comparison. Earlier validation minimum is epoch91; the later historical curve's minimum remains epoch34. The main CPU/GPU numbers are not changed.
+- The archived 39-instance projection is PCA of 17 hand-defined descriptors, not learned GNN embeddings. It is redrawn from fixed coordinates; PCA, clustering, training, inference and graph extraction are not run. The nine immutable source hashes and six added descriptive claim groups are in manuscript/supplement/historical-appendix-manifest.json.
+- The older PCA/UMAP PNG and dashboard are recovered as public links. Legacy source at 9903c1dc66f65e9497d7faa2d8d4f3ee414a0f42 uses three macro-features and no learned embeddings. Exact point/input and fitted-state binding is absent from the returned evidence. Their percentages and artifact counts are not mixed with the 39-instance PCA or adopted as independent-parent inference. The original images/summary remain unchanged.
+- Seven restored figures and fifteen tables are generated statically, with input/output receipts. No raw artifact is replaced or requalified. Full ROC/PR coordinate files remain unavailable; no curves are fabricated from AUC scalars.
+
+### D4. Classification of statements
+
+| Evidential category | Examples | Boundary |
+| --- | --- | --- |
+| Vendor-documented behaviour | Gurobi's controlled parallel-MIP determinism, concurrent search, work/clock distinction; Pyomo serialization; SCIP parallel modes; HiGHS options | Accessed software documentation, not measured equivalence in this project |
+| Source-established implementation | Native Gurobi path; exported map; CPU12h inheritance; descriptor definitions | Reading code does not identify every effective runtime choice |
+| Archived observation | CPU version/parameters/Runtime; original graph/PCA tables and training/evaluation records | Historical population and original validation limits retained |
+| Scientific interpretation | Different caps/starts can have different trajectories; wall-time interruption can affect endpoints; API equivalence requires effective input/state identity | No isolated causal attribution or repeated-run distribution inferred |
+| Unavailable information | Effective ConcurrentMIP/root algorithm/unexported controls, historical Work; old projection point/input bindings; withheld ROC/PR coordinates | Unavailable is not zero, false, default or a reconstructed measurement |
+
+### D5. Verification boundary
+
+T1 binds the nine historical sources to their existing Git blobs/SHA256, preserves the seven current numerical sources, and checks six additional descriptive claim groups. T2 uses focused publication/provenance tests; no manual training, tensor-gradient or solver tests are added or run for this editorial change. T3 statically renders and inspects the independent article/appendices PDFs. New-head CI and exact PDF hashes are recorded in the PR checkpoint after completion, without borrowing earlier green checks. Existing required automatic CI may run its established regression workflow; it does not authorize research execution.
+
+Local validation passed: 84 targeted publication tests; 201 relative links resolved; source/rendered/PDF text gates; no changes to the nine historical source blobs. The article remains 23 pages, with References beginning on page20. The independent appendices render to 38 pages in the local toolchain; final pagination/visual checks and new-head CI are reported in the PR checkpoint.
+
+PR89 remains frozen and untouched; no HPC query, submission, retry, training, inference, PCA refit or new experiment is performed. The final CPU qualification/audit and specific merge/publication/submission gates remain open.
+
+
 ## Author decision and implementation scope
 
 The author approved the diagnostic and proposed organization and explicitly authorized implementation in PR93. Merge and CLI intervention remain separate human gates. PR89 stays frozen at 9ab7823c6886d19e9ec865141a1cd35b3c3c16e5; no new scientific execution is performed.

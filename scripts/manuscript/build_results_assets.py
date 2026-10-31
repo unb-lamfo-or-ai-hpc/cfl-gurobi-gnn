@@ -25,6 +25,10 @@ def build(root: Path = ROOT) -> None:
         build_current(root)
         from build_principal_assets import build as build_principal
         build_principal(root.parent)
+        from build_historical_appendix import build as build_history
+        build_history(root)
+        from build_partial_cpu_assets import build as build_partial
+        build_partial(root)
         return
     evidence = json.loads((root / "results/source_evidence.json").read_text())
     figures = root / "figures"

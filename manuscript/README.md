@@ -116,11 +116,11 @@ the declarations and data-release decisions in `submission-checklist.md`.
 Original manuscript material and scripts are MIT licensed. Upstream
 templates, benchmarks, and solvers retain their own rights.
 
-## Scientific supplement build
+## Separate appendices build
 
-The reader supplement is assembled as A (methods), B (extended results) and C (computational settings/reproducibility). After building the static figures, render the article and then its separate supplement project:
+The reader appendices is assembled as A (methods), B (extended results) and C (computational settings/reproducibility). After building the static figures, render the article and then its separate supplement project:
 
     quarto render manuscript --no-execute
     quarto render manuscript/supplement --no-execute
 
-The second command writes beneath manuscript/_manuscript/supplement. It executes no solver, inference or training. Internal plans and coauthor material remain outside the supplement entry point. The final integral scientific audit still follows CPU12h qualification.
+The second command writes the independent appendices PDF as manuscript/_manuscript/appendices/appendices.pdf. The article remains manuscript/_manuscript/index.pdf. It executes no solver, inference or training. Internal plans and coauthor material remain outside the supplement entry point. The final integral scientific audit still follows CPU12h qualification.

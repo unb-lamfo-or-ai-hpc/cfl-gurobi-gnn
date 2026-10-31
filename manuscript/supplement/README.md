@@ -1,17 +1,15 @@
-# Supplementary material guide
+# Appendices to the article
 
-These materials accompany **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**. They explain the evaluated method, extend the reported results and identify the settings needed to interpret or reproduce the public analyses.
+The appendices accompany **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems** as a **separate PDF**, with their own title, contents and references.
 
-- [Supplementary A](gnn-methods-audit.md) develops the graph representation, predictor, selection rules and solver interface. It distinguishes the fixed implementation from other learned optimization mechanisms.
-- [Supplementary B](extended-results.md) presents per-instance CPU outcomes and the separate historical optimization evidence, retaining censoring, adverse outcomes and numerical restrictions.
-- [Supplementary C](configuration-reference.md) lists inputs, parameters, hyperparameters, partitions, software and artifact identities, including the limits of measurement and access.
+| Appendix | Content | Source |
+| --- | --- | --- |
+| A | Model, graph representation, learning and partial-start mechanisms | [Model and method details](gnn-methods-audit.md) |
+| B | Earlier descriptive analyses, PCA, acquisition and predictor diagnostics, followed by the principal and historical optimization results | [Descriptive analyses and extended results](extended-results.md) |
+| C | Inputs, hyperparameters, solver settings, determinism, gurobipy/Pyomo and SCIP/HiGHS context, environment and access | [Computational reproducibility](configuration-reference.md) |
 
-The combined supplement is rendered from [index.qmd](index.qmd). Its configuration records distinguish specifications from outcome observations. Sensitivity studies discussed in the article's conclusion remain future research.
+The [document entry](index.qmd) assembles these three appendices. The article and appendices are distributed separately; no combined PDF is required.
 
-## Interpreting prediction and optimization evidence
+The 39-instance development analysis, later 54-instance predictor, ten-instance CPU comparison and separate six-medium optimization study retain their own roles. The restored PCA uses stored structural descriptors, not learned GNN embeddings. Older PCA/UMAP illustrations remain linked with their provenance limitations.
 
-A predictive score measures agreement with a reference label; a Start is a partial candidate; and an incumbent is a solver-retained feasible solution under its numerical conventions. These objects are not interchangeable. Likewise, a common-target crossing, a time-limited terminal state and an exact optimality certificate have different evidential scopes.
-
-B/R/G are presentation names for stored methods M0/M1/M2. Original-instance identifiers occupy a separate field. Instance M0 is not method M0. Repeated method/resource conditions do not create additional independent instances.
-
-The [numerical claim index](claim-evidence.json) records immutable source identities, selectors, units and displayed rounding. It supports traceability of the registered numerical statements, including the extended results; it does not independently rescore predictions or establish scientific validity. Historical tables and figures retain their original manifest.
+Existing CPU/GPU claims are indexed in [claim-evidence.json](claim-evidence.json). The [historical appendix manifest](historical-appendix-manifest.json) identifies the nine frozen sources and six additional descriptive claim groups. Rendering their tables and stored projection coordinates does not rerun learning, inference or optimization.

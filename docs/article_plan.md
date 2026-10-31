@@ -1,5 +1,15 @@
 # Article plan
 
+## Author-directed descriptive CPU subset — 31 October 2026
+
+The author requested the 50-cell partial CPU return be included as a labelled exploratory subset in the article and Appendix B. This supersedes the earlier no-numerical-CPU-placeholder wording only for these received, receipt-checked descriptive observations. It does not qualify the full 60-cell campaign, change any original eligibility flag or authorize further execution. Sources are frozen in docs/evidence/pr89/partial-20261031; missing cells, endpoint-specific censoring, M4/M12 restrictions and the smaller M0 bound disagreement remain explicit. The AI disclosure now names Codex models 6.1 Sol and 6.0 Astra, as corrected by the author.
+
+
+## Separate appendices and determinism clarification — 30 October 2026
+
+The author requested separate article/appendices PDFs, recovery of the historical 39-instance descriptive material in Appendix B, and an expanded documented comparison of solver engines/interfaces in Appendix C. The 39-instance PCA is a projection of fixed structural descriptors, not learned GNN embeddings. No current cohort, result, protocol or PR89 setting changes. See the [canonical revision record](research/pr93-editorial-revision-20261030.md) for the technical diagnosis, provenance and implementation.
+
+
 ## Approved scientific/editorial revision — 30 October 2026
 
 The author approved the detailed diagnostic and its implementation in PR93.

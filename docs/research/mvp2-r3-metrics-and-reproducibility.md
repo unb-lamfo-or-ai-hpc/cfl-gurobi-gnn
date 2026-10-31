@@ -1,5 +1,10 @@
 # MVP2 R3 — metrics and reproducibility assessment
 
+## Separate appendices and determinism clarification — 30 October 2026
+
+The author requested separate article/appendices PDFs, recovery of the historical 39-instance descriptive material in Appendix B, and an expanded documented comparison of solver engines/interfaces in Appendix C. The 39-instance PCA is a projection of fixed structural descriptors, not learned GNN embeddings. No current cohort, result, protocol or PR89 setting changes. See the [canonical revision record](pr93-editorial-revision-20261030.md) for the technical diagnosis, provenance and implementation.
+
+
 ## Approved scientific/editorial revision — 30 October 2026
 
 The author approved the detailed diagnostic and its implementation in PR93.

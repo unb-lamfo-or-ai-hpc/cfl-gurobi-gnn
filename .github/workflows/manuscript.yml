@@ -58,7 +58,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes poppler-utils
           pdftotext -layout manuscript/_manuscript/index.pdf manuscript-pdf-text.txt
-          python scripts/manuscript/check_manuscript.py --rendered --pdf-text manuscript-pdf-text.txt
+          pdftotext -layout manuscript/_manuscript/appendices/appendices.pdf appendices-pdf-text.txt
+          python scripts/manuscript/check_manuscript.py --rendered --pdf-text manuscript-pdf-text.txt --appendix-pdf-text appendices-pdf-text.txt
           python scripts/manuscript/package_latex_project.py --output manuscript/_manuscript/cfl-cor-latex-project.zip
       - name: Preserve HTML and PDF for editorial inspection
         uses: actions/upload-artifact@v4

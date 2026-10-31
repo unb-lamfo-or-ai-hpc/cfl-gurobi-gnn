@@ -36,13 +36,17 @@ def package(output: Path, root: Path = MANUSCRIPT) -> None:
         "figure_validation_test_gap_effects", "figure_time_to_ten_percent_gap",
         "gpu_bce_by_epoch_article_en", "figure_principal_time_scaling",
         "figure_principal_medium_gap")]
+    names += ["figures/figure_history39_" + name + ".pdf" for name in (
+        "admission", "source_gap", "time_regions", "structure_pca",
+        "distributions", "training", "prediction")]
+    names += ["figures/partial_cpu_time_gap.pdf"]
     payload = {name: (root / name).read_bytes() for name in names}
     payload["index.tex"] = generated_tex(root).read_bytes()
     supplement_tex = root / "supplement/index.tex"
     if not supplement_tex.is_file() or supplement_tex.is_symlink():
         raise ValueError("generated supplement source missing; render the supplement first")
-    payload["supplement/index.tex"] = supplement_tex.read_bytes()
-    if UNSAFE.search(payload["supplement/index.tex"].decode("utf-8")):
+    payload["appendices/appendices.tex"] = supplement_tex.read_bytes()
+    if UNSAFE.search(payload["appendices/appendices.tex"].decode("utf-8")):
         raise ValueError("private content in generated supplement source")
     if UNSAFE.search(payload["index.tex"].decode("utf-8")):
         raise ValueError("private content in generated article source")
@@ -57,13 +61,13 @@ def package(output: Path, root: Path = MANUSCRIPT) -> None:
         "longtable, array, calc, hyperref, and natbib. The class loads natbib.\n\n"
         "Original article material uses MIT. Unmodified Elsevier class and style "
         "retain LPPL rights. Inspect the PDF before author approval or submission. "
-        "Compile supplement/index.tex from its own directory after the article; it uses "
+        "Compile appendices/appendices.tex from its own directory after the article; it uses "
         "the same bibliography and vector figures. "
         "A source archive is not proof of successful compilation or scientific validity.\n"
     )
     payload["README.md"] = instructions.encode("utf-8")
     receipt = {"schema_version": 1, "files": {n: hashlib.sha256(v).hexdigest() for n, v in payload.items()},
-               "scope": "editable_article_and_scientific_supplement_with_vector_figures", "research_execution_performed": False}
+               "scope": "editable_article_and_separate_appendices_with_vector_figures", "research_execution_performed": False}
     payload["MANIFEST.json"] = (json.dumps(receipt, indent=2) + "\n").encode("utf-8")
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:

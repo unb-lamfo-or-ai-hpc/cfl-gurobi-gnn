@@ -15,6 +15,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_claim_evidence import check_claim_evidence
+from build_historical_appendix import (TABLE_NAMES as HISTORY_TABLES,
+    check_source as check_historical_source, check_outputs as check_historical_outputs)
+from build_partial_cpu_assets import (TABLES as PARTIAL_TABLES, check_source as check_partial_source, check_outputs as check_partial_outputs)
 from import_pr60_evidence import ARCHIVE_SHA, ARTIFACTS, CONTRACT, MANIFEST, REPORT, UNSAFE, verify_payload
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,6 +62,9 @@ def safe_child(root: Path, name: str) -> Path | None:
     return path if not path.is_symlink() and path.resolve().is_relative_to(root.resolve()) else None
 
 
+SUPPLEMENT_INCLUDES |= {"../tables/history39_" + name + ".qmd" for name in HISTORY_TABLES}
+SUPPLEMENT_INCLUDES |= {"../tables/" + name + ".qmd" for name in PARTIAL_TABLES}
+
 READER_TEXTS = (
     "index.qmd", "highlights.txt", "supplement/index.qmd",
     "supplement/README.md", "supplement/gnn-methods-audit.md",
@@ -96,7 +102,7 @@ def check_reader_material(root: Path) -> list[str]:
 
 
 def check_source(root: Path = MANUSCRIPT) -> list[str]:
-    failures = check_claim_evidence(root, ROOT)
+    failures = check_claim_evidence(root, ROOT) + check_historical_source(root) + check_partial_source(root, ROOT)
     article = (root / "index.qmd").read_text(encoding="utf-8")
     bibliography = (root / "references.bib").read_text(encoding="utf-8")
     evidence = json.loads((root / "evidence-status.json").read_text(encoding="utf-8"))
@@ -137,7 +143,9 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
         "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
         "execution_authorized_date": "2026-10-20", "jobs_already_submitted": 60,
-        "execution_state": "in_progress_author_reported",
+        "execution_state": "in_progress_partial_snapshot",
+        "partial_descriptive_results_included": True,
+        "partial_received_cells": 50,
         "final_return_received": False, "scientific_results_included": False,
         "new_execution_authorized_by_this_revision": False,
     }
@@ -217,7 +225,10 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("metrics_not_defined_before_results")
     figure_documents = {
         "index.qmd": ("fig-pipeline", "fig-principal-time", "fig-medium-gap", "fig-gpu-bce"),
-        "supplement/extended-results.md": ("fig-loss", "fig-effects", "fig-target-time"),
+        "supplement/extended-results.md": ("fig-loss", "fig-effects", "fig-target-time",
+            "fig-history39-admission", "fig-history39-gap", "fig-history39-times",
+            "fig-history39-distributions", "fig-history39-structure",
+            "fig-history39-training", "fig-history39-prediction", "fig-partial-cpu"),
     }
     for name, identities in figure_documents.items():
         text = readers[name]
@@ -234,6 +245,10 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
             ("principal_easy_times", "tbl-easy-times"),
             ("principal_medium_quality", "tbl-medium-quality")),
     }
+    table_documents["supplement/extended-results.md"] += tuple(
+        ("history39_" + n, "tbl-history39-" + n.replace("_", "-")) for n in HISTORY_TABLES)
+    table_documents["supplement/extended-results.md"] += tuple(
+        (name, "tbl-" + name.replace("_", "-")) for name in PARTIAL_TABLES)
     for name, displays in table_documents.items():
         text = readers[name]
         prefix = "../" if name.startswith("supplement/") else ""
@@ -345,8 +360,8 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
             path = safe_child(output, asset["relative_path"])
             if path is None or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != asset["sha256"]:
                 failures.append("rendered_asset_hash_mismatch")
-    supplement_html = output / "supplement/index.html"
-    supplement_pdf = output / "supplement/index.pdf"
+    supplement_html = output / "appendices/index.html"
+    supplement_pdf = output / "appendices/appendices.pdf"
     if not supplement_html.is_file() or not supplement_pdf.is_file():
         failures.append("scientific_supplement_render_missing")
     else:
@@ -357,6 +372,8 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
                                 if name.startswith("supplement/"))
         if supplement_pdf.stat().st_mtime_ns < newest_supplement:
             failures.append("supplement_pdf_predates_sources")
+    failures += check_historical_outputs(root, output)
+    failures += check_partial_outputs(root, output)
     principal_receipt = output / "tables/principal_assets.json"
     if not principal_receipt.is_file():
         failures.append("principal_asset_receipt_missing")
@@ -423,16 +440,36 @@ def check_pdf_text(path: Path) -> list[str]:
     return failures
 
 
+def check_appendix_pdf_text(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8")
+    normalized = " ".join(text.split())
+    failures = []
+    for letter in "ABC":
+        if not re.search(r"Appendix\s+" + letter + r"\b", normalized):
+            failures.append("appendix_pdf_section_missing:" + letter)
+    for phrase in ("WorkLimit", "ConcurrentMIP", "Pyomo", "SCIP", "HiGHS", "85.78", "0.5825"):
+        if phrase not in normalized:
+            failures.append("appendix_pdf_content_missing:" + phrase)
+    if "??" in text or "[?]" in text:
+        failures.append("unresolved_appendix_pdf_reference")
+    if UNSAFE.search(text):
+        failures.append("private_appendix_pdf_content")
+    return failures
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rendered", action="store_true")
     parser.add_argument("--pdf-text", type=Path)
+    parser.add_argument("--appendix-pdf-text", type=Path)
     args = parser.parse_args()
     failures = check_source()
     if args.rendered:
         failures += check_rendered()
     if args.pdf_text:
         failures += check_pdf_text(args.pdf_text)
+    if args.appendix_pdf_text:
+        failures += check_appendix_pdf_text(args.appendix_pdf_text)
     print(json.dumps({"gate_status": "failed" if failures else "passed", "failures": failures,
                       "scientific_reporting_eligible": False, "scope": "publication_integrity_only"}, indent=2))
     return int(bool(failures))

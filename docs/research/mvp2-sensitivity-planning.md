@@ -1,5 +1,14 @@
 # Internal sensitivity planning and scientific interpretation
 
+## Hypotheses informed by the partial return — 31 October 2026
+
+Use the received 50 cells as pilot evidence, without changing the current campaign. First separate numerical comparability of M4/M12 from performance; then ask whether favourable and adverse B/R/G contrasts persist under prospectively chosen solver seeds. Distinguish intermediate quality targets from terminal attainment. The final ten cells should inform a proportionate proposal before any new execution decision. Do not launch a factorial seed/root-method/neural-hyperparameter campaign or treat pilot-selected contrasts as confirmatory. Existing-vector/log review and a future new-solve campaign are different activities. No new budget or execution is authorized.
+
+## Optional work-limited repeatability — 30 October 2026
+
+WorkLimit is an optional future design for algorithmic repeatability or equal-work quality comparison, not a retrospective replacement for TimeLimit. No work-unit budget is inferred from Runtime, and no additional execution is authorized or required for the editorial correction. Current B/R/G inputs, seeds, caps and stopping rules remain frozen. S1/S2/S4/S5 continue documentary/offline work; S3 concerns only the existing campaign; S6 retains editorial approval gates. Any future work-limited or cross-engine experiment needs its own prospective estimand, protocol and specific authorization.
+
+
 30 October 2026: the standalone journal sensitivity supplement is retired in favour of concise future-research discussion in the article. The explanatory text is preserved below as an internal reference. Original prospective budgets remain historical planning, not execution authority. No seed, root method, predictor, training, inference or solve is added to S1–S6.
 
 <!-- Internal prospective planning record; not journal supplement text. -->
