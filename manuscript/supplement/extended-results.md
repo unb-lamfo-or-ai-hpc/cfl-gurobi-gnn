@@ -220,13 +220,13 @@ The [historical manifest](../results/current/pr60_scientific_evidence_manifest.j
 
 ## B.12. Exploratory long-horizon CPU subset {#sec-partial-cpu-evidence}
 
-This separate extension reuses the four medium instances, original prediction-to-Start bindings and seed 42, with the five physical-thread limits and a 43,200-second solver budget. The 31 October 2026 snapshot contains 50 completed configurations of 60 planned. M0, M4 and M7 contribute all 15 combinations each; M12 contributes the three one-thread methods and R/G at two threads. The missing ten configurations are not treated as failures or zero outcomes. This completion-based subset is kept separate from the earlier 150 observations.
+This separate extension reuses the four medium instances, original prediction-to-Start bindings and seed 42, with the five physical-thread limits and a 43,200-second solver budget. The 1 November 2026 cutoff contains 54 completed configurations of 60 planned. M0, M4 and M7 contribute all 15 combinations each; M12 contributes all three methods at one, two and four threads. The missing six configurations are not treated as failures or zero outcomes. This completion-based subset is kept separate from the earlier 150 observations.
 
-The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/2593badd7f41e88bedeab13f300351e4993cdbd7/docs/evidence/pr89/partial-20261031) identifies the source commit, input archive hash, cells, threshold observations, horizon brackets and metric dispositions. Public receipt identities, parameter bindings, nested result seals, temporal records and cost arithmetic were checked. The underlying private models, solution vectors and solver logs were not reopened. All current comparisons are descriptive; this review does not certify exact optima or repeated-run performance.
+The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/1d5a65a5fa06d58b612a5615563f627ae87aedbf/docs/evidence/pr89/partial-20261101) identifies the source commit, two input archives, cells, threshold observations, horizon brackets and metric dispositions. The first 50 reviewed cells are retained; the four subsequent receipts have matching common controls and independently checked parameter bindings, nested seals, temporal records and cost arithmetic. The scheduler inventory combines dated sources rather than one simultaneous query of all 60 jobs. The underlying private models, solution vectors and solver logs were not reopened. All current comparisons are descriptive; this review does not certify exact optima or repeated-run performance.
 
 ### B.12.1. Target attainment, censoring and thread limits
 
-Of the 50 received configurations, 37 report the terminal 0.01% criterion and 13 stop at the 12-hour limit. All time-limited cases concern M7. Technical completion of a job is therefore different from attainment of its optimization target [@gurobi2026]. A first observed threshold crossing retains its previous observation and does not identify an exact continuous hitting time.
+Of the 54 received configurations, 41 report the terminal 0.01% criterion and 13 stop at the 12-hour limit. All time-limited cases concern M7. Technical completion of a job is therefore different from attainment of its optimization target [@gurobi2026]. A first observed threshold crossing retains its previous observation and does not identify an exact continuous hitting time.
 
 @tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. Ratios describe individual fixed-seed configurations, not replicated or population-level effects.
 
@@ -244,7 +244,7 @@ All M7 runs end with primal 5.428377599678637, but their dual bounds differ. @tb
 
 {{< include ../tables/partial_cpu_m7.qmd >}}
 
-The ranking also depends on the target. With four threads, G first observes 10% gap at 2.795 hours, versus 7.881 for B and 6.365 for R, yet none reaches 0.01% in that configuration. With eight threads, R reaches 10% before G, while G reaches 5% before R. Across the received records, the observed/censored counts are 50/0 at 10%, 44/6 at 5%, and 37/13 at both 1% and 0.01%. These counts preserve reported coverage, not numerical certification.
+The ranking also depends on the target. With four threads, G first observes 10% gap at 2.795 hours, versus 7.881 for B and 6.365 for R, yet none reaches 0.01% in that configuration. With eight threads, R reaches 10% before G, while G reaches 5% before R. Across the received records, the observed/censored counts are 54/0 at 10%, 48/6 at 5%, and 41/13 at both 1% and 0.01%. These counts preserve reported coverage, not numerical certification.
 
 The four quality horizons retain their actual before/after timestamps and staleness. A run ending before a horizon remains labelled terminated_before_horizon; its trajectory is neither extended nor interpolated. Bounds from another execution are not substituted into a censored run.
 
@@ -256,7 +256,11 @@ The four quality horizons retain their actual before/after timestamps and stalen
 
 M12 with one thread illustrates why runtime alone is insufficient. B, R and G use 20,379.962, 30,843.561 and 648.369 solver seconds, respectively. The resulting 31.43 and 47.57 runtime quotients are not certified speedups. G reports primal and dual 4.741382854739, while B/R report smaller feasible objectives 4.740937765901 and 4.740932705477. For minimization, the G objective is slightly worse, and its bound lies above those primal reports. The largest dual exceeds the smallest primal by 0.000450149263, approximately 0.009495%. A zero gap within one run does not resolve this cross-run disagreement.
 
-At two threads, R/G runtimes are 5,177.102/572.465 seconds, a quotient of 9.04; the B counterpart is not in this snapshot. G at one thread explores 1,023 nodes, compared with 90,601 for B and 133,938 for R. Model construction takes about 34--37 seconds and the independent audit about 23 seconds. The shorter runtime accompanies a much smaller search and a different reported bound; the available receipts do not isolate its numerical cause or establish faster attainment of the same exact optimum.
+At two threads, B/R/G use 6,479.262/5,177.102/572.465 seconds; R/G is 9.04. At four threads, B/R/G use 21,726.307/20,762.970/578.430 seconds. The latter runtime quotients, 37.56 and 35.90, are also not certified speedups: G again reports primal/dual 4.741382854739, above the B/R primal reports 4.740932705477/4.740937765901. All three runs report zero internal gap, which does not remove the cross-run discrepancy.
+
+At four threads G explores 1,738 nodes, versus 266,765 for B and 217,149 for R. Both supplied starts are reported accepted, but neither acceptance nor fewer nodes establishes attainment of the same exact optimum. Loading and auditing add about 65--68 seconds to these new job intervals, so they do not explain hours of difference. The shorter run accompanies a smaller search and a different reported bound; its numerical cause remains unresolved.
+
+The reported feasibility checks pass under the configured tolerances. For these new B/R observations, maximum integrality residuals are approximately $5.21\times10^{-8}$, while G reports zero; row residuals are also small. These summaries do not certify exact feasibility or justify rounding the original vectors. The private vectors were not re-audited, so the discrepancy cannot be assigned to a specific arithmetic or solver mechanism.
 
 M4 also retains its numerical restriction. Its smallest reported feasible objective is 4.900767176540, while the largest reported bound is 4.907256631978: a difference of 0.006489455439, or 0.132417%. Identical input identities and a passed feasibility report do not make these bounds mutually exact. M4/M12 remain visible in descriptive quality and cost accounting but are excluded from exact-optimum and certified-speedup claims.
 
@@ -264,7 +268,7 @@ M0 has a smaller disagreement: the largest bound, 4.608320190371, exceeds the sm
 
 ### B.12.3. Measurement and interpretation boundaries
 
-The 50 completed records contain 263.436 hours of summed solver Runtime and 264.399 hours of summed job elapsed time. The latter exceeds Runtime by 64.23--82.93 seconds per job. Thus loading, checking and export do not alone explain contrasts of several hours. These completed-job totals exclude queueing, unreceived executions and historical preparation expenditure.
+The 54 completed records contain 277.199 hours of summed solver Runtime and 278.236 hours of summed job elapsed time. The latter exceeds Runtime by 64.23--82.93 seconds per job. Thus loading, checking and export do not alone explain contrasts of several hours. These completed-job totals exclude queueing, unreceived executions and historical preparation expenditure.
 
 Preparation is reused from the earlier campaign rather than measured anew. Cold and five-use allocations retain their scenario definitions, including the G-dependent preparation charged to R. They are not complete new cold-deployment measurements.
 

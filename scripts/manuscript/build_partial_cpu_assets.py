@@ -10,8 +10,8 @@ import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = Path("docs/evidence/pr89/partial-20261031")
-MANIFEST_SHA = "d8f8e3fe7b95ad688cc6ab8e6218bdf133b16df88e28f39882dcb822426eec2b"
+SOURCE = Path("docs/evidence/pr89/partial-20261101")
+MANIFEST_SHA = "67916124db1d6b422cfc5a01399863b9de7e430902e9a6e4521bfac041b7d6fb"
 TABLES = ("partial_cpu_m0", "partial_cpu_m7", "partial_cpu_all")
 FIGURE = "partial_cpu_time_gap"
 
@@ -31,9 +31,17 @@ def load_sources(repository=ROOT):
     require(digest(raw) == MANIFEST_SHA, "partial_manifest_hash")
     m = json.loads(raw)
     require(
+        m["schema_version"] == 2
+        and m["input_archives"] == [
+            {"role": "baseline50", "sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab", "received": 50},
+            {"role": "delta4", "sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9", "received": 4},
+        ],
+        "partial_archive_chain",
+    )
+    require(
         m["scientific_reporting_eligible"] is False
         and m["final_campaign_return"] is False
-        and m["received_cells"] == 50
+        and m["received_cells"] == 54
         and m["planned_cells"] == 60,
         "partial_scope",
     )
@@ -61,12 +69,12 @@ def load_sources(repository=ROOT):
         )
     rows = sources["cells.csv"]
     require(
-        len(rows) == 50
-        and [r["job_id"] for r in rows] == [str(j) for j in range(3675, 3725)],
+        len(rows) == 54
+        and [r["job_id"] for r in rows] == [str(j) for j in range(3675, 3729)],
         "partial_cells",
     )
     require(
-        len({(r["alias"], r["threads"], r["method"]) for r in rows}) == 50,
+        len({(r["alias"], r["threads"], r["method"]) for r in rows}) == 54,
         "partial_duplicate_cell",
     )
     require(
@@ -78,7 +86,7 @@ def load_sources(repository=ROOT):
         "partial_promotion",
     )
     require(
-        sum(r["status"] == "2" for r in rows) == 37
+        sum(r["status"] == "2" for r in rows) == 41
         and sum(r["status"] == "9" for r in rows) == 13,
         "partial_stops",
     )
@@ -106,13 +114,13 @@ def load_sources(repository=ROOT):
         )
     ts = sources["thresholds.csv"]
     require(
-        len(ts) == 200
-        and len(sources["horizons.csv"]) == 200
+        len(ts) == 216
+        and len(sources["horizons.csv"]) == 216
         and len(sources["disposition.csv"]) == 60,
         "partial_temporal_coverage",
     )
     require(
-        len({(r["job_id"], float(r["threshold"])) for r in ts}) == 200,
+        len({(r["job_id"], float(r["threshold"])) for r in ts}) == 216,
         "partial_threshold_duplicate",
     )
     require(
@@ -120,7 +128,9 @@ def load_sources(repository=ROOT):
         "partial_threshold_state",
     )
     require(
-        sources["review.json"]["nested_triplets_verified"] == 50
+        sources["review.json"]["nested_triplets_verified"] == 54
+        and sources["review.json"]["previous_nested_triplets_reused"] == 50
+        and sources["review.json"]["delta_nested_seals_verified"] == 12
         and sources["review.json"]["scientific_reporting_eligible"] is False,
         "partial_review_scope",
     )
@@ -160,8 +170,8 @@ def check_source(manuscript, repository=ROOT):
             1
         ].split("\n## ", 1)[0]
         require(
-            "50 of 60 planned configurations" in section
-            and "Thirty-seven" in section
+            "54 of 60 planned configurations" in section
+            and "Forty-one" in section
             and "13 were time-limited, all on M7" in section,
             "partial_article_counts",
         )
@@ -198,6 +208,8 @@ def check_source(manuscript, repository=ROOT):
             "31.43",
             "47.57",
             "9.04",
+            "37.56",
+            "35.90",
         ):
             require(value in appendix, "partial_appendix_value:" + value)
         require(
@@ -332,7 +344,7 @@ def build(manuscript=None):
                 "Target",
             ],
             all_rows,
-            "All 50 received terminal records. M4/M12 retain numerical restrictions; no exact certificates are asserted.",
+            "All 54 received terminal records. M4/M12 retain numerical restrictions; no exact certificates are asserted.",
             "tbl-partial-cpu-all",
             small=True,
         ),
@@ -427,7 +439,7 @@ def build(manuscript=None):
     receipt = {
         "kind": "partial_descriptive_assets",
         "manifest_sha256": MANIFEST_SHA,
-        "received_cells": 50,
+        "received_cells": 54,
         "planned_cells": 60,
         "research_execution_performed": False,
         "scientific_reporting_eligible": False,
@@ -447,7 +459,7 @@ def check_outputs(manuscript, output):
         record = json.loads((output / "tables/partial_cpu_assets.json").read_text())
         require(
             record["manifest_sha256"] == MANIFEST_SHA
-            and record["received_cells"] == 50
+            and record["received_cells"] == 54
             and record["planned_cells"] == 60
             and record["research_execution_performed"] is False
             and record["scientific_reporting_eligible"] is False,

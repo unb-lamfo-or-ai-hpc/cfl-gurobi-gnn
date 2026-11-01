@@ -367,3 +367,14 @@ The author's new dgx-dasci snapshot reports jobs 3725–3728 COMPLETED/0:0, 3729
 The existing [delta runbook](runbooks/pr89-delta-20261101.md) is prepared for the human HPC/SCP intervention. Nine synthetic tests passed; only four requested terminal receipt sets are exported, common source/control/submission identities are checked, and running files/earlier receipt sets/installed source are not changed. A new archive is created exclusively in the existing data stage. No agent HPC access, new solve, training, inference, retry, merge or publication occurred.
 
 At the preceding source/test HEAD22ea282d, both Manuscript 57(run41246799289) and Public evidence 269(run41246799284) completed successfully, including Windows 3.10/3.12. The former checkpoint's pending Windows status is superseded. New documentary-head checks are tracked separately in the PR checkpoint.
+
+
+## Four-cell delta received and reconciled — 1 November 2026
+
+The transferred delta matches a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9. Its 25 member hashes, 12 nested seals, four parameter/Start/model identities, temporal records and cost recomputations passed. Three common control files match the earlier ZIP byte-for-byte. The earlier 50-cell scientific review was reused, not rerun; a new snapshot records54 unique cells and 216 threshold/horizon records with two-archive lineage. No old sealed file was changed.
+
+All four new M12 results report terminal zero gap. G at four threads is far shorter but ends with primal/dual above the B/R primal reports. The 37.56/35.90 runtime quotients are not certified speedups; the numerical restriction persists. The receipt checks report near-integral B/R vectors and zero G residuals, but the private vectors were not reopened and no numerical cause is isolated. Runtime, Slurm elapsed and preparation scenarios remain separate.
+
+The article/AppendixB and source checks move to 54 cells,41 reported target attainments and 13 M7 censures. Tests preserve the original 50 records and prevent a zero-gap M12 observation from becoming a certified ratio. Static publication rendering verifies layout only. PR89 stays unchanged; six cells remain unreceived.
+
+Local verification for the54-cell integration:95 manuscript tests, source/claim checks and rendered/PDF gates pass. The article remains24 pages with References starting on page20; appendices render to43 pages. All67 pages have no off-page characters or unresolved references. Changed article/appendix pages were visually inspected. New-head CI remains distinct from prior green runs.

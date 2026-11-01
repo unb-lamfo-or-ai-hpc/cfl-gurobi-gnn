@@ -146,7 +146,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         "execution_authorized_date": "2026-10-20", "jobs_already_submitted": 60,
         "execution_state": "in_progress_partial_snapshot",
         "partial_descriptive_results_included": True,
-        "partial_received_cells": 50,
+        "partial_received_cells": 54,
         "final_return_received": False, "scientific_results_included": False,
         "new_execution_authorized_by_this_revision": False,
     }

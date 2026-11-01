@@ -219,11 +219,11 @@ Medium instance 0 with G at sixteen threads reports zero terminal gap after appr
 
 ## Exploratory long-horizon CPU observations {#sec-cpu-long-partial}
 
-A separate extension retains the four medium instances, starts, seed and five thread caps, while increasing the solver limit to 12 hours. At the 31 October 2026 data cutoff, 50 of 60 planned configurations had completed: 15 each for M0, M4 and M7, and five for M12. Thirty-seven reached the solver-reported 0.01% terminal criterion; 13 were time-limited, all on M7. This completion-based subset is analyzed separately from the 150-observation retrospective comparison.
+A separate extension retains the four medium instances, starts, seed and five thread caps, while increasing the solver limit to 12 hours. At the 1 November 2026 data cutoff, 54 of 60 planned configurations had completed: 15 each for M0, M4 and M7, and nine for M12. Forty-one reached the solver-reported 0.01% terminal criterion; 13 were time-limited, all on M7. This completion-based subset is analyzed separately from the 150-observation retrospective comparison.
 
 On M0, G reached the reported target before B at four of five caps, but was slower than both comparators at two threads. All 15 M7 runs ended with the same reported primal value; only B at one thread and R at sixteen threads closed the terminal gap. Earlier progress therefore need not imply terminal attainment.
 
-Large runtime reductions on M12 remain numerical diagnostics: the one-thread G run ended with a slightly worse primal than B/R, and its reported bound exceeded those feasible-objective reports. M4 also retained cross-run bound disagreement. These cases do not establish certified speedups. Appendix B provides values, censoring, provenance and the limits of this partial comparison.
+Large runtime reductions on M12 remain numerical diagnostics: the G runs at one, two and four threads ended with slightly worse primals than B/R, and their reported bounds exceeded those feasible-objective reports. M4 also retained cross-run bound disagreement. These cases do not establish certified speedups. Appendix B provides values, censoring, provenance and the limits of this partial comparison.
 
 ## Efficiency after preparation costs {#sec-cost-results}
 

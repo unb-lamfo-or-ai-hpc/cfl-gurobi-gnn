@@ -1,5 +1,14 @@
 # MVP2 completion by Sprints and pull requests
 
+## Reviewed partial return — 1 November 2026
+
+The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
+
+The four new M12 cells retain numerical restrictions and all scientific eligibility flags remain false. At four threads, G/B/R solver runtimes are 578.430/21726.307/20762.970 seconds. G's primal/dual 4.741382854739 exceeds the smaller B/R primal reports; zero internal gaps therefore do not establish the same exact optimum. No certified-speedup or causal-mechanism claim follows. Private models, vectors and solver logs were not independently replayed.
+
+The article and AppendixB now use the [separate 54-cell data snapshot](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/1d5a65a5fa06d58b612a5615563f627ae87aedbf/docs/evidence/pr89/partial-20261101). PR89 source 9ab7823c, its plan, starts, parameters, resources and sequence are unchanged. Next new receipts concern 3729–3734 when terminal. New experimentation, retries, merges and publication are not executed by this receipt.
+
+
 ## Sprint plan approved — 1 November 2026
 
 The author approved the revised Sprint/PR plan and instructed autonomous continuation. The approved planning basis is ten medium plus six easy optimization parents; the 54-parent learning corpus, 34/10/10 split, CPU checkpoint and threshold stay frozen. Advance the recommended one-thread, one-hour solver-seed extension (42/43/44), including conditional reuse, preparation and empirical difficulty assessment, toward a concrete reviewable manifest. The wider-resource alternatives remain alternatives, not cumulative approved work.
