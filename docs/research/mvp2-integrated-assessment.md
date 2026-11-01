@@ -34,14 +34,22 @@ metric eligibility remains separate, including18 M4/M12-sensitive rows.
 The prospective Start bindings are from job3521 rather than the older E0
 generation. The earlier completed210-cell review is reused, not repeated.
 
-Existing E0 records identify original-file hashes for M13/M26; current bytes
-are still unverified. Four other candidate hashes remain unidentified in
-reviewed public records. A bounded no-solver original-file preflight is
-prepared and tested for the author's CLI, outside PR89. No current preflight
-result or additional preparation has been received. The previous M13/M26
-cache non-admission is retained without cache rescanning. Historical guidance
-used one GPU; preparation device/budget must be bound before any later
-execution, not silently converted to CPU-only work.
+The author-run [six-medium input preflight](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/a140a2e4833b80e461477c5397b1f76c71c6af45/docs/research/solver-seed-extension-v1/preflight-return-20261101.json) is now received.
+The receiver independently verified the archive digest, CRCs and two member
+seals. All six original files were uniquely located and completed the bounded
+text inventory without reported issues; M13/M26 match historical E0 hashes.
+All six current source hashes now bind the cohort and54 new-cell candidates.
+The reading took125.837 seconds, with no solver, inference, training or
+scheduler-mutation calls. The private path map/archive remain local.
+
+The six inputs share the observed total variables/rows/matrix-term counts,
+but differ in binary/continuous composition and coefficient ranges. This is
+structural characterization, not an empirical hardness ranking, independent
+feasibility validation or root/graph/Start binding. Previous M13/M26 cache
+non-admission remains in force, without cache rescanning. Historical guidance
+used one GPU; preparation device/budget and full resources remain unresolved.
+The input-identity subgate is closed; execution and per-metric qualification
+remain separate. PR89 coverage stays54/60 and its campaign is unchanged.
 
 Terminal return under a3600s setting is not first-observed threshold time
 or exact common-time quality. Retain actual follow-up, missing crossings,
