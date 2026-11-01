@@ -1,5 +1,9 @@
 # Current status
 
+## M12 gap and search audit — 1 November 2026
+
+The author requested a deeper interpretation of the four received M12 jobs. The [targeted audit](research/pr89-m12-gap-audit-20261101.md) recomputes G's reported objective excess as0.009494951534% versus B and0.009388202506% versus R. Actual terminal attributes, not table rounding, report zero gaps. Frozen code uses partial Start values without fixing variables. Historical M12 integer-rounded-copy failures make tolerance sensitivity the leading hypothesis; they do not yet diagnose these new vectors. The external65–68s timing difference cannot explain the hours, but does not exclude effects inside optimization. A stdlib-only closed-file exporter passed12 synthetic tests; collecting original vectors/model/sealed logs requires the author's CLI intervention. No new raw files have been received, no optimization or scheduler mutation occurred, and no final or exact-optimality qualification is made. PR89 remains at9ab7823c,54/60 cells remain received, and the prior PDFs remain the latest rendered reader-facing artifacts.
+
 ## Reviewed partial return — 1 November 2026
 
 The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
