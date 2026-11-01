@@ -1,5 +1,9 @@
 # Repository instructions
 
+## M12 raw-vector audit completed — 1 November 2026
+
+The author transferred the private forensic ZIP (SHA256 bf5f13a9d6e34de77312c10e613f8b677e7b2548eec97e2a3c03cb9cae4105c2). The [targeted raw audit](docs/research/pr89-m12-raw-audit-20261101.md) supersedes the earlier no-raw-replay wording for jobs3725–3728 only. Exact rational checks of all original rows and domains establish G3726's stored-point primal feasibility, not global optimality. Each B/R vector has one nonintegral binary; rounding exposes a4.16587e-5 violation, and a single-row interval certificate excludes every continuous completion of that fixed rounded binary pattern. Lower reported objectives therefore are not better exactly feasible integer points. Printed work/iterations/presolve sizes now substantiate substantially different search effort, without causal attribution. Keep the original54-cell receipts/flags, M4 limitations and six missing cells unchanged. The forensic archive/raw values remain private local scratch. No new solve or campaign change occurred.
+
 ## Reviewed partial return — 1 November 2026
 
 The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
