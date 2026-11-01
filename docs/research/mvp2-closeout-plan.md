@@ -1,305 +1,289 @@
 # MVP2 completion by Sprints and pull requests
 
-## Reviewed partial return — 1 November 2026
+Revised 1 November 2026. This is the current delivery plan, incorporating the
+author's PDF instruction and the completed four-point M12 audit. It replaces
+older operational schedules on this page; their rationale remains in the
+[previous version](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/94d322ab25b52a61cc699d60e8a980be50d6f0ce/docs/research/mvp2-closeout-plan.md).
+The approved scientific contracts, identities and archived receipts remain intact.
 
-The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
+## Current position and governing boundaries
 
-The four new M12 cells retain numerical restrictions and all scientific eligibility flags remain false. At four threads, G/B/R solver runtimes are 578.430/21726.307/20762.970 seconds. G's primal/dual 4.741382854739 exceeds the smaller B/R primal reports; zero internal gaps therefore do not establish the same exact optimum. No certified-speedup or causal-mechanism claim follows. Private models, vectors and solver logs were not independently replayed.
+PR93 is a draft targeting develop. PR89 remains open at frozen source
+9ab7823c6886d19e9ec865141a1cd35b3c3c16e5. There are 54 received and reconciled
+CPU12h cells out of 60. The author's latest snapshot, without a query timestamp,
+reports 3729 COMPLETED, 3730 RUNNING and 3731–3734 PENDING. A completed scheduler
+job is not a received result. The [terminal-tail collector](runbooks/pr89-terminal-tail-collection.md)
+is ready for the author's CLI execution when the remaining jobs are terminal.
 
-The article and AppendixB now use the [separate 54-cell data snapshot](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/1d5a65a5fa06d58b612a5615563f627ae87aedbf/docs/evidence/pr89/partial-20261101). PR89 source 9ab7823c, its plan, starts, parameters, resources and sequence are unchanged. Next new receipts concern 3729–3734 when terminal. New experimentation, retries, merges and publication are not executed by this receipt.
+Keep MINIMIZE, seed42 and the original five caps, method order, resources,
+checkpoints, starts, parameters and source throughout PR89. No retry, new solve,
+training or changed tolerance is introduced by this plan. Every HPC or local
+PowerShell operation requires the author; all merges, publication and editorial
+submission retain specific approval.
 
+The approved extension is a separate study: ten medium plus six easy evaluation
+parents, with solver seeds42/43/44. Its planning approval is already recorded;
+do not ask for that approval again. Execution remains unreleased until the
+concrete manifest, resource accounting and author's CLI intervention. Training,
+root-method, tolerance and hyperparameter ablations remain future work, rather
+than implicit additions to the extension.
 
-## Sprint plan approved — 1 November 2026
+**Do not generate or open new article/appendix review PDFs in Codex until the
+complete PR89 experiment has been integrated.** Completion means all 60 cells
+have explicit reconciled dispositions and the scientific interpretation is
+updated; it does not mean every solve succeeded. If returns remain unavailable,
+record the evidence and obtain the specific human disposition before closing.
+Only then compile, verify and present two separate PDFs in Codex tabs: article
+and appendices. Source editing and non-PDF checks can proceed now.
 
-The author approved the revised Sprint/PR plan and instructed autonomous continuation. The approved planning basis is ten medium plus six easy optimization parents; the 54-parent learning corpus, 34/10/10 split, CPU checkpoint and threshold stay frozen. Advance the recommended one-thread, one-hour solver-seed extension (42/43/44), including conditional reuse, preparation and empirical difficulty assessment, toward a concrete reviewable manifest. The wider-resource alternatives remain alternatives, not cumulative approved work.
+## What M12 changes in the interpretation
 
-Planning approval is recorded and must not be requested again. It does not start jobs: finish the exact identities, compatibility checks, preparation/host-memory/job-wall accounting and applicable offline checks before the author's CLI intervention. The 55 optimizer-hour ceiling includes six 600-second roots and 54 one-hour solves if all 90 historical cells are reusable; it is not a complete reserved-resource budget. If reuse or numerical review changes that design materially, report the change and its impact rather than silently expanding execution. No new training, root-method/hyperparameter experiment, merge, publication or submission is authorized. PR89 remains governed by its original execution/collection authority.
+The [four-point raw audit](pr89-m12-raw-audit-20261101.md) examined B at two/four
+threads and R/G at four threads. Exact rational evaluation of all original rows,
+bounds and domains establishes G/4 stored-point primal feasibility. Each
+control has one tolerated nonintegral binary; rounding exposes a 0.0000416587
+row violation. A single-row interval obstruction excludes every continuous
+completion with those rounded binaries fixed. The lower control objectives
+therefore are not better exactly feasible integer points.
 
-The [planning matrix](mvp2-proposed-job-matrix-20261031.csv) now records planning_approved=true with approval date 2026-11-01 while preserving execution_authorized=false, automatic_retry=false and empty job IDs. Its 60 units are six preparations plus 54 proposed solves, not another submission of PR89's 60 cells.
+The 0.009495% and 0.009388% reported G excesses over B/R are not demonstrated
+quality loss relative to better feasible integer solutions. A zero internal
+gap is not an exact global-optimality proof. The much smaller logged work,
+iteration counts and presolved model support a search-effort explanation of
+the time contrast, without isolating a causal neural effect.
 
-### Current operational priority and evidence boundary
+This result does not certify every M12 point or remove M4's distinct
+restrictions. Preserve the raw records and their original flags. Qualification
+must separate tolerance-accepted primal values, exact checked primal
+feasibility, reported bounds/gaps, threshold attainment, numerical eligibility
+and computational cost. Numerical ineligibility is not ordinary time censoring.
 
-The author supplied a dgx-dasci sacct snapshot on 1 November; its exact query time was not supplied. Relative to the already received 3675–3724 archive, jobs 3725–3728 are newly reported COMPLETED/0:0. Job 3729 is RUNNING (03:22:10); 3730–3734 are PENDING. This supports 54 jobs reported complete across the two snapshots, but **only 50 result cells have been received and checked**. No failure was reported in this snapshot. Scheduler state is not scientific qualification.
+## PR93: work that can finish while PR89 runs
 
-| New terminal job | Instance | Physical thread cap | Method | Slurm elapsed |
-| --- | --- | ---: | --- | --- |
-| 3725 | M12 | 2 | B (M0) | 01:49:05 |
-| 3726 | M12 | 4 | G (M2) | 00:10:46 |
-| 3727 | M12 | 4 | B (M0) | 06:03:11 |
-| 3728 | M12 | 4 | R (M1) | 05:47:09 |
+1. Reconcile every M12 statement in the article, appendices, captions, claim map
+   and project summaries. Use “higher reported objective” where the compared
+   point has not been shown exactly integer-feasible. Keep primal feasibility
+   distinct from global optimality and from a certified speedup.
+2. Complete the independent review of B/R/G implementation, accepted
+   formulation, G-dependent RELAX support, frozen predictor provenance,
+   parameters, bibliography and historical CPU/GPU cohorts. Reuse completed
+   audits whose inputs have not changed.
+3. Prepare the 60-cell disposition/metric-eligibility structure and the final
+   tables/figures pipeline with the six unreceived cells explicitly pending.
+   Do not fabricate observations or treat unknown values as zero.
+4. Finish reader-facing prose and appendix consistency. Retain easy final gaps,
+   paired-ratio interpretation, identified historical medium cohorts and the
+   serial/DDP evidence boundaries. Operational instructions stay outside the
+   article and appendices.
+5. Prepare the final audit checklist and release description; keep PDFs deferred
+   as instructed. Prepare the next protocol PR's offline inventory and exact
+   manifest where independent of the final CPU results.
 
-The existing frozen map establishes these identities. Elapsed is the scheduler clock, not solver Runtime or a solution speedup. M12's numerical restrictions remain. The [delta collection runbook](runbooks/pr89-delta-20261101.md) prepares receipt of these four only; it neither reads running-result files nor recollects the earlier 50. Keep the 31 October article cutoff and sealed evidence unchanged until the delta ZIP is transferred, hashed and reconciled. The D0/full qualification gate still requires all 60 dispositions.
+The article and Appendix B already incorporate the scoped M12 findings.
+Their latest source validation has 100 manuscript tests plus the source gate;
+the offline auditor has 12 tests. The terminal-tail collector has 18 tests.
+These are checked properties, not final scientific qualification of PR89.
 
-### Work advancing before the next experimental PR
+## PR93: completion gate after the tail receipt
 
-S1 records this approval and operational handoff. S2 can prepare the next substantive PR's input/checkpoint manifest, structural-feature inventory and frozen-predictor preparation interface, with labels confined to their independent audit. Keep M5/M6 guidance-validation exposure, M9/M20 optimization-test exposure and M13/M26 audit exposure explicit; no candidate is declared untouched. S4/S5 integrate only receipt-checked observations, preserving both the historical and principal populations. S3 continues collection and metric-specific review of PR89. S6 retains the final audit and specific human release/submission gates. Complete the current article/appendices after PR89, obtain develop merge approval, then use the separately approved main release path. The 15 December coauthor target and 14 January maximum submission deadline remain unchanged.
+### Reception and cell reconciliation
 
+Receive the six-job private ZIP, verify its hash and member/seal identities,
+and reconcile 3729–3734 with the 54 reviewed records. Reuse the sealed 50-cell
+and four-cell reviews. Retain a simultaneous full accounting snapshot when
+available, together with each snapshot's actual query time and scope.
 
-## Proposed continuation and difficulty analysis — 31 October 2026
+Every one of the 60 planned cells must retain a disposition: source/model/Start
+identity, scheduler and solver statuses, primal, dual, gap, follow-up, observed
+thresholds, censoring, cost, missingness/failure and metric eligibility. Preserve
+the original records rather than repairing numerical results or retrying them.
 
-This addendum records the author's new request and a concrete proposal for review. It supersedes the earlier interpretation that six new labelled training parents were required. It does **not** change the running PR89 contract or authorize new HPC execution. Earlier dates and no-new-experiment statements below describe the previously approved scope; the proposed extension must pass its own protocol/resource gate.
+D0 remains the reception/reconciliation event for the full planned matrix,
+independent of favorable results. It is not silently moved to a later date
+when metrics become eligible. Any unresolved absence requires its own recorded
+human decision; the schedule is not reset to conceal a block.
 
-### Populations and frozen learning
+### Scoped numerical qualification and scientific synthesis
 
-The intended optimization evaluation grows from four to **ten medium instances**, alongside the existing six easy instances: **16 evaluation parents**. It does not turn 60 PR89 cells into 60 instances and does not expand the admitted learning corpus. The GNN remains frozen on its 54-parent 34/10/10 split, checkpoint SHA256 a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028 and validation-selected threshold 0.9991843104362488. Solver seeds 42/43/44 vary optimizer search, not neural training.
+The tail includes the original six M12 vectors and closed logs at caps8/16.
+Check them against the same original model and classify their numeric
+properties. Extend exact checking only where the claim requires it and the
+artifacts support it. The existing raw audit covers four points, not all 15
+M12 cells; other points retain “not independently checked” where appropriate.
+If a broader claim needs additional original vectors, prepare only that
+targeted read-only collection for the author's CLI. Never infer an unaudited
+point's feasibility from another point's equal objective or residual.
 
-The four current medium parents are M0/M4/M7/M12. Six proposed additions are M5/M6/M9/M13/M20/M26, the six medium parents outside the admitted label-quality sample in the [fixed parent inventory](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/90b6f540cfb17aab9efeb06a5e49aa381262461e/docs/evidence/e0/pr85/parents.csv). Keep their original canonical folds/roles:
+Keep M4's existing limitations separate. Distinguish numerical restrictions
+from M7's time censoring and from the smaller M0 bound disagreement. Report
+eligible denominators for each metric; do not omit adverse or ineligible
+cells to improve a summary. Assess primal quality, dual progress, threshold
+coverage and cost separately. Logged work values are printed observations,
+not recovered terminal attributes or independently repeated measurements.
 
-| Candidate | Canonical fold/role | Proposed evaluation role | Exposure qualification |
-| --- | --- | --- | --- |
-| M5, M6 | 1 / validation | optimization test extension | Outside admitted 54; not asserted untouched |
-| M9, M20 | 0 / test | optimization test extension | Also observed in the earlier six-medium optimization study |
-| M13, M26 | 2 / train | optimization test extension | Outside actual admitted training; retain earlier audit exposure |
+Complete the final synthesis across the historical six-medium study,
+principal one-hour CPU matrix, four-medium CPU12h matrix and matched GPU
+training pair. Keep populations, clocks and stopping rules distinct. C2 concerns
+conditional optimization effects; C3 concerns computational economics.
+C1 remains a methodological obligation. No isolated architectural, class-aware
+or causal neural claim follows from these runs.
 
-These are candidates subject to source/model/numerical review, not qualified new observations. A canonical role remains a historical identity even where an excluded parent enters a later, explicitly defined evaluation. Do not claim an independent untouched generalization test, rewrite the old split, select replacements for favourable results, or silently drop M4/M12. If input preparation fails, retain the disposition and seek a specific decision.
+### Final audit, PDFs and review
 
-Six new qualified root/feature/Start bindings may be needed; reuse them if already available and compatible. No new training labels or six mandatory 12-hour reference solves are required merely to run a frozen predictor. If the current preparation code requires labels for an ancillary audit, separate that audit from prediction in the next implementation PR; never invent labels or use unqualified incumbents as ground truth.
+After integration, perform the full second audit passage:
+- repository/software: B/R/G, runners, dependencies, configurations, checkpoints,
+  provenance, relevant tests and reproducibility boundaries;
+- experiments: all attempts, identities, primal/dual values, gaps, censoring,
+  numerical dispositions, cost and GPU outcomes;
+- article: question, literature position, methods, results, discussion and
+  conclusions, with every numerical claim traceable;
+- appendices/editorial package: repeated numbers, figures/tables, links, hashes,
+  declarations, references and separate-document packaging.
 
-### Proposed matched solver-seed comparison
+Then generate the article and appendices PDFs from the same reviewed source
+commit, verify cross-references, numbering, equations, layout and hashes, and
+open the two documents in Codex tabs. The earlier independent audit never
+substitutes for this final check. PR93 is ready only when the scoped scientific
+limitations, final audit, documents and applicable checks are complete.
 
-Interpret three repeats as **one run for each solver seed 42, 43 and 44**, per parent/method/resource condition. Freeze the model, threshold, graph/Start, solver settings and stopping definition across these seeds. Three seeds describe sensitivity; they do not guarantee statistical power or constitute a neural-component ablation. GNN retraining, root-method changes and hyperparameter search remain outside MVP2.
+## Subsequent PRs and merge order
 
-Recommend a parsimonious extension at **one physical thread and a one-hour solver limit**, with B/R/G on all 16 parents. The [historical 210-row archive](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/90b6f540cfb17aab9efeb06a5e49aa381262461e/docs/evidence/pr86/final-210/campaign_results.csv) already contains 90 one-thread cells for the old ten parents at these three seeds. Reuse is conditional on exact protocol, input/Start, checkpoint, clocks and resource compatibility and metric eligibility. Historical seeds43/44 were excluded from the principal R3 analysis; any new secondary reanalysis must state that retrospective status and must not rewrite that original analysis.
+Future PR numbers are assigned when the PRs are opened. Do not reserve numbers
+or create separate PRs for trivial corrections.
 
-| Proposed matched design | Total solve cells | Potentially reusable | New solves | New optimizer-time ceiling including six 600-second roots |
-| --- | ---: | ---: | ---: | ---: |
-| One thread, all parents at 1 h | 144 | 90 | 54 | **55 h** |
-| Caps 1 and 16, all at 1 h | 288 | 120 | 168 | 169 h |
-| All five caps, all at 1 h | 720 | 210 | 510 | 511 h |
-| One thread, medium at 12 h and easy at 1 h | 144 | 66 | 78 | 937 h |
-
-These are upper bounds on optimizer time, not elapsed-calendar predictions or Slurm allocations. Preparation/inference, orchestration, job wall and queueing are additional scopes that the execution manifest must price explicitly. The [draft matrix](mvp2-proposed-job-matrix-20261031.csv) enumerates six root/preparation units and 54 new one-hour solves; every row is nonauthorized and has no assigned job ID. If reuse fails, do not automatically rerun the 90 historical cells: a fresh 144-cell, one-hour design would instead require up to 145 optimizer-hours including roots and its own decision. Do not combine 12-hour seed42 PR89 endpoints with one-hour seeds43/44 as matched repetitions.
-
-The primary proposed outcome is within-parent B/R/G terminal quality under the common one-hour stopping rule, recording actual follow-up, primal, dual and numerical eligibility; target attainment at 10% and 0.01% and time-to-target are separate outcomes. A time limit with no target crossing is right-censoring, never a solution time. PR89 remains a separate 12-hour seed42 study. This economical design cannot establish twelve-hour seed robustness.
-
-### Classifying the ten medium instances
-
-Call this **empirical computational difficulty**, not a change in theoretical problem complexity. The medium label does not establish homogeneous workloads. Use two complementary descriptions, following the distinction between structural features and observed solver performance in the [MIPLIB selection methodology](https://miplib.zib.de/Selection_Methodology.html):
-
-1. Before new outcomes, inventory variables/binaries/rows/nonzeros, sparsity and coefficient ranges from identified input models. Preserve the existing formulation; no generator or semantic re-certification is introduced. Report continuous features and per-instance profiles. With ten parents, do not fit a new difficulty predictor or force three equal-sized clusters. This stage is metadata extraction only; missing features stay unavailable.
-2. Report B's empirical target attainment, gap, primal/dual progress and runtime at the fixed cap/budget. Use transparent endpoint bands: attained 0.01%; attained 10% but not 0.01%; did not attain 10%; unavailable. These describe B at this protocol, not an intrinsic ordering of all CFL instances. For three seeds, report the counts in each band rather than forcing a parent into one stable class. M4/M12 numerical eligibility is an independent flag, not a difficulty class.
-
-Use structural profiles for explanatory comparisons. A band based on the same B runtime used as denominator in G/B is outcome-dependent and mathematically coupled to the contrast; it supports exploratory description, not confirmation that G works better on harder instances. If independent historical calibration is reused, disclose its exposure and provenance. Do not spend an unapproved pilot budget to invent independent labels. Six new cases cannot receive measured difficulty classes before their qualified observations exist.
-
-### Statistical presentation and Table 2
-
-Keep geometric means of positive, attained paired time ratios as a secondary descriptive summary. Different absolute difficulties do not invalidate the dimensionless ratio; it gives equal relative weight to parents, not the weighting implicit in total runtime. Table 2 currently concerns the six easy instances, not medium. Individual effects and final gaps must accompany the aggregate: the article now gives per-parent/method maximum final easy gaps over caps, and Appendix B gives all 90 final gaps and runtimes.
-
-For medium, lead with ten per-instance B/R/G contrasts, eligibility denominators, target coverage, censoring and primal/dual values. Use distributions/time-to-target profiles that retain nonattainment, rather than averaging time limits as solutions or silently discarding failed pairs. The [performance-profile method](https://doi.org/10.1007/s101070100263) motivates relative comparisons with explicit unsolved mass; it does not turn ten purposively selected parents into a representative population.
-
-The experimental unit is the parent, with solver seed nested within parent. Pair methods within parent/seed/cap; summarize seed variability before any across-parent inference. Do not treat 30 medium parent-seed observations or 144 method cells as independent instances. Small strata and only three seeds restrict distributional and interaction claims. Any intervals/resampling must preserve parent clusters and censoring; no automatic cell-level t-tests or causal class-aware claim. Gurobi's [comparison guidance](https://support.gurobi.com/hc/en-us/articles/26992650628369-How-can-I-make-accurate-comparisons) supports multiple seeds while stressing that an adequate count depends on variation and solving cost.
-
-### Sprint and PR sequence
-
-| Sprint | Work and review boundary | PR delivery |
+| Delivery | Scope and exit criterion | Dependency |
 | --- | --- | --- |
-| S1 | Record this proposed scope, exposure and conditional budget; preserve original campaign authority | Planning in PR93; execution protocol reviewed in the next substantive PR |
-| S2 | Finish independent methods/bibliography/appendix audit now; inventory six inputs and difficulty features offline where available | PR93 for reader-facing corrections; next PR for frozen-predictor preparation and exact manifest |
-| S3 | Receive/reconcile all 60 PR89 cells, record dispositions and metric eligibility, complete its scientific closeout | Existing PR89 evidence integrated in PR93; no changes to installed campaign |
-| S4 | First finish the current evidence synthesis; later analyze the proposed seed extension separately if executed | PR93 baseline synthesis; subsequent experimental-results PR after qualified receipts |
-| S5 | Finalize current article and separate appendices after PR89; audit all claims and historical cohorts | Review PR93, then request develop merge; use a distinct develop-to-main release PR and publication approval, verify Pages/PDFs |
-| S6 | Integrate approved extension results, complete final audit and December/January scientific-editorial review | Results/release scope as needed; explicit approval for every merge/publication/submission |
+| PR89 closeout | Record all 60 dispositions and the scientific closeout in the existing evidence/documentary record; retain installed source9ab unchanged | Tail return and qualification |
+| PR93 final synthesis | Complete current-study article, separate appendices, R2-D8, full audit and verified PDFs, including the M12 interpretation | Complete PR89 integration |
+| Current-study release PR | Synchronize reviewed develop into main, verify the published Pages version and document/PDF identities | Explicitly approved scientific merges and publication |
+| Next experimental protocol/tooling PR | Freeze the six candidate identities, reuse decision, predictor/preparation bindings, numerical checks, exact job manifest and complete resource accounting | Can be prepared now; execution release requires the finished manifest and author CLI |
+| Extension results and manuscript PR | Receive and qualify the approved seed-extension campaign; add difficulty profiles, paired seed analysis and the revised article/appendices | Qualified new receipts, without reopening PR89 |
+| Final editorial/release PR, if needed | Incorporate coauthor decisions, close final audit and deliver the exact publication/submission package | Scientific/editorial review and specific release/submission approval |
 
-A release of the qualified current study can precede the extension; it must not claim ten medium results before they exist. Later updates retain versioned provenance. Do not reserve PR numbers or create one PR per minor correction. January remains primarily editorial: complete manuscript to coauthors by 15 December, intended final approval 7 January, intended submission 10 January, maximum 14 January 2027. For the extension, aim for qualified receipts by 30 November and synthesis in early December; these dates depend on approved resources, queueing, numerical review and final scope. If the extension jeopardizes the dates, present the defensible current-study version and the explicit scope tradeoff to the authors rather than silently expanding resources or claims.
+Git inspection on 1 November shows that PR89's two commits are not ancestors
+of PR93 or develop; these branches have diverged. Prepare reconciliation
+without changing installed HPC source. The planned approval sequence is
+PR89 into develop, then PR93 into develop, then the current-study release to
+main. Resolve any source/document conflicts and check the combined result;
+do not assume merging PR93 alone integrates PR89's execution implementation.
+Every merge requires explicit approval. Preparation of later PRs can overlap;
+their experimental results must not be represented as part of PR93's baseline.
 
-The final audit remains mandatory: software and B/R/G identity, all experimental evidence and numerical dispositions, article claims/numbers, and appendices/editorial package. Earlier independent review does not substitute for this gate. The next operational priority is final receipt of PR89 jobs 3725–3734 once terminal; jobs3723/3724 were already included in the 50-cell ZIP and must not be collected again as new evidence. No agent HPC access, new solve, training, inference, submission, retry, merge or publication occurs through this planning revision.
+The first release may publish the qualified current study before the extension
+is complete. It must state the actual four-medium evidence base. A later
+reviewed release can incorporate the expanded cohort; neither publication is
+automatic.
 
+## Experimental extension: bounded design and resource gate
 
-## Approved scientific/editorial revision — 30 October 2026
+Freeze the admitted 54-parent learning corpus, 34/10/10 split, CPU checkpoint
+a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028 and validation
+threshold0.9991843104362488. The extension varies optimizer seeds, not neural
+weights. Preserve all parent IDs and original canonical folds.
 
-The author approved the detailed diagnostic and its implementation in PR93.
-The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
-Only C2 (conditional optimization effects) and C3 (computational economics)
-are scientific contribution claims; C1 is a methodological obligation.
-Earlier candidate C1–C3 framing below is superseded in this respect, without
-changing historical evidence or the installed experimental contract.
-See the [revision record](pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
-implementation and validation boundaries.
+The existing medium group is M0/M4/M7/M12. The proposed six additions remain
+M5/M6/M9/M13/M20/M26, subject to identified-input/preparation review. M5/M6 have
+validation/guidance exposure, M9/M20 historical optimization-test exposure,
+and M13/M26 earlier audit exposure despite exclusion from admitted training.
+Do not call this an untouched external generalization sample or change the
+old folds. Do not substitute instances according to favorable outcomes.
 
-S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
-resources and sequence remain intact; S3 requires its reconciled 60-cell
-return and metric-specific qualification. Further seeds, methods, models,
-training and ablations remain future work. The final audit, merge,
-publication and editorial submission retain their human gates.
-No coauthor communication or new experimental execution is authorized here.
+| Matched extension at one physical thread and one-hour solver limit | Count |
+| --- | ---: |
+| Parents: ten medium plus six easy | 16 |
+| B/R/G × solver seeds42/43/44 per parent | 9 |
+| Total evaluation cells | 144 |
+| Historical cells potentially reusable | 90 |
+| New solve cells if reuse is compatible | 54 |
+| New root preparations if none is reusable, at most600s each | 6 |
+| Conditional optimizer-time ceiling:54h solves plus1h roots | 55h |
 
+The [approved planning matrix](mvp2-proposed-job-matrix-20261031.csv) remains
+planning-approved with execution_authorized=false and no job IDs. Reuse of
+90 historical cells requires model/Start/checkpoint, settings, cap, stopping
+rule and clock compatibility. Historical seeds43/44 remain retrospective
+secondary evidence, not a rewrite of the original R3 principal analysis.
 
-28 October 2026 · revised after the author's conditional approval.
-This is the canonical delivery plan; the
-[accelerated-plan index](mvp2-20261028-accelerated-plan.md) points here rather
-than maintaining another timetable. Scientific scope remains R3.
+**Identity-compatible reuse and metric eligibility are different checks.**
+The M12 finding does not make a lower tolerance-accepted point an exact
+feasible control. Retain those records as numerical diagnostics where
+necessary; do not count them in an ineligible paired quality/time estimand.
+Publish coverage and exclusions by reason without dropping entire instances.
+A three-seed comparison does not itself repair a numerical feasibility issue.
 
-The earlier D0–D+10 structure was an estimate, not a guarantee. Scheduling is
-now expressed through Sprints, PRs and dated milestones. **D0 remains an
-evidence event**, as defined below; it is not silently redefined or moved
-to the date of later scientific qualification.
+The 55h value is conditional optimizer time, not a complete Slurm reservation,
+preparation/inference cost or calendar promise. The next protocol PR must
+include root/feature/inference/start time, memory/affinity, audit/export
+overhead, job wall, serial/dependency constraints and a no-retry disposition.
+If reuse changes the actual number of solves, report the revised manifest
+and resource impact. Do not automatically rerun the 90 old cells or combine
+12h seed42 PR89 endpoints with one-hour seeds43/44 as matched repetitions.
 
-## Delivery boundaries
+All new result vectors must have a documented model-bound feasibility screen,
+with exact/rounded diagnostics where needed and closed logs retained for
+numerical attribution. These are checks of existing outputs, not silent
+changes to IntFeasTol, Method or other experimental factors. Solver-tolerance,
+root-method, hyperparameter and neural-retraining experiments remain separate
+future work. A material new numerical block requires a specific decision,
+not an unapproved diagnostic solve.
 
-**PR92 closes the independent methods and preliminary-review stage.** It
-contains the readable methods and limitations, existing CPU/GPU exposition,
-claim provenance, the preliminary coauthor brief and the first-pass audit
-record. It can be ready for review while PR89 is running. It is not the final
-article, R2-D8 closeout or publication approval.
+## Difficulty and statistical analysis
 
-**[PR93](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93) carries final synthesis and article integration.** It
-can start immediately with existing-evidence synthesis and the audit items
-independent of the CPU campaign. Qualified PR89 results, final figures/tables,
-the final scientific supplement, R2-D8 and the second-pass audit belong there.
-PR92 was merged into develop with explicit author approval on 28 October,
-at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`. PR93 now targets develop.
-It remains a draft; its merge needs separate approval.
+Describe empirical computational difficulty, not a theoretical complexity
+classification of the ten medium parents. Before new outcomes, inventory
+variables/binaries, rows, nonzeros, sparsity and coefficient ranges from
+identified files. No new difficulty predictor, pilot solve or forced
+small-sample clustering is needed.
 
-**PR89 remains untouched during execution.** Its source, resources, seeds,
-models, parameters, sequence and collection contract remain frozen. The
-receiver retains exclusive operational responsibility. Human intervention is
-required for every HPC/PowerShell operation; no retry, cancellation or new
-preparation is implicit in this plan.
+After qualification, describe B's target attainment and progress under the
+fixed protocol:0.01% attained;10% but not0.01%;10% not attained; unavailable.
+Report counts across seeds rather than inventing an intrinsic difficulty
+label. Numerical eligibility is a separate axis. A B-outcome-based group is
+exploratory and coupled to G/B ratios, not independent proof of a difficulty
+interaction.
 
-A later release PR is justified only for an independently reviewable release/
-publication scope. Its identity will be determined then. Do not create a PR
-for every minor correction or invent future PR numbers.
+Pair B/R/G within parent/seed/resource condition. Seeds are nested within the
+parent;30 medium parent-seed records are not30 independent instances. Lead
+with per-parent primal/dual outcomes, gaps, coverage, censoring and seed
+variation. Geometric means of eligible positive paired time ratios may be
+secondary summaries; retain unsolved/censored mass and explain exclusions.
+Do not use a time limit as a completed time-to-target or run automatic
+cell-level significance tests.
 
-## Sprint-to-PR map
+## Sprint map and milestones
 
-| Sprint | Delivery and timing | PR responsibility | Exit criterion |
-| --- | --- | --- | --- |
-| S1 — governance and completion record | Close the independent planning/scope work now; maintain decisions through completion | PR92, then PR93 | One current plan, explicit supersessions and no confusion between a partial PR and MVP2 completion |
-| S2 — methods and independent audit | Consolidate methods/model/data/reproducibility now; preliminary author feedback sought by 15 November | PR92 supplies the brief and first-pass record; PR93 resolves further independent findings | Fixed choices, validation selection, B/R/G dependencies and known limitations are source-linked; no new experiment |
-| S3 — existing CPU campaign | Triggered by the authorized return, reconciliation and subsequent metric-specific qualification | Existing PR89 campaign; qualified evidence integrated in PR93 | All60 cells have explicit dispositions; failures, absences, censoring and M4/M12 eligibility remain visible |
-| S4 — scientific synthesis | Start now with existing CPU/GPU evidence; finish after PR89 qualification | Synthesis PR | R2-D8 and SO1–SO8/C1–C3 assessment distinguish findings, limitations and unachieved objectives |
-| S5 — article and scientific supplement | Preliminary brief now; complete manuscript to coauthors by 15 December | PR92 closes preliminary preparation; PR93 delivers the complete version | Consistent argument, all numbers traceable, figures interpreted, supplement explicitly packaged |
-| S6 — final review and submission | December revisions; final approval target 7 January; submission target 10 January; absolute deadline 14 January | Final integration/release scope, with separately approved merges/publication/submission | Author scientific/editorial decisions, closed final audit and verified submission package |
+| Sprint | Work now / remaining delivery | PRs and exit criterion |
+| --- | --- | --- |
+| S1 — governance | Maintain one plan, received-versus-reported inventory, supersessions and the PDF/merge gates | PR93, then each substantive protocol/release record |
+| S2 — methods and experimental readiness | Finish independent methods/appendix review; prepare six-input/exposure inventory, frozen-predictor interface, reuse/numerical screens and fully priced manifest | PR93 and next protocol PR; no new training or unreleased HPC preparation |
+| S3 — campaigns and qualification | Finish PR89 reception and all60 dispositions; later execute/collect only the separately released seed extension | PR89/PR93 baseline; next experiment/results PRs with qualified receipts |
+| S4 — scientific analysis | Finalize M12-aware baseline synthesis, then separate paired seed/difficulty analysis with per-metric eligibility | PR93 and extension results PR; no global-optimum or causal claims beyond evidence |
+| S5 — article and appendices | Complete current-study integration, then review PDFs in Codex; incorporate qualified extension and coauthor decisions | PR93 and later manuscript/results PR; reader-oriented argument and auditable numbers |
+| S6 — audit, release and submission | Full audit after PR89, renewed checks after any new evidence, coauthor/editorial approval and controlled releases | Release/editorial PRs; explicit merge, publication and submission approvals |
 
-S1, S2, S4 and S5 overlap; they do not wait for the campaign. Only the existing
-PR89 experiment is still running. The sensitivity document's options B–E
-and separate four-hour diagnostic design remain **limitations and future
-work outside S1–S6**. Option A means completing the existing study.
-No new training, model, seed, inference, solve or resource budget is introduced.
+S1/S2/S4/S5 overlap while PR89 runs. New experimental execution belongs to
+the later released protocol, not an incidental documentary task. Proportional
+T1/T2/T3 checks and CI support review; they are not scientific certification.
 
-## D0 and the subsequent scientific qualification gate
-
-D0 records reception of the final authorized return and reconciliation of
-the 60 planned cells, irrespective of favourable or adverse outcomes.
-It is not the date at which all metrics become eligible or all runs succeed.
-The original collection gate still applies; this document does not authorize
-premature collection while jobs remain active.
-
-The subsequent scientific closeout requires an explicit disposition for every
-cell and eligibility for each named metric. Keep scheduler state, solver
-status, primal/dual values, gap, observed follow-up, censoring, failure,
-missingness and numerical restrictions separate. Do not convert missing
-observations to zero, numeric ineligibility to ordinary censoring, or an
-observed crossing to an exact continuous first-hit time.
-
-If a cell has no return or a dependency is blocked, record the absence/block
-and the evidence available. Ask for a specific human decision. Preserve the
-recorded reception/reconciliation dates; do not silently reset D0 to conceal
-the problem or declare scientific qualification complete. No automatic retry
-or change to the queue, tolerances, source or protocol is allowed.
-
-M4/M12 remain in coverage and retain metric-specific restrictions. A
-COMPLETED scheduler state or a longer run does not certify exact optimality.
-Raw flags and historical receipts remain unchanged.
-
-## Audit in two passages
-
-**Passage 1 — independent review, before D0.** Reuse the completed R3 and
-implementation reviews for software structure, the accepted formulation,
-B/R/G interfaces, model/checkpoint provenance, bibliography, article structure,
-historical figures and supplements. The
-[coauthor brief](coauthor-review-brief.md) contains a compact
-evidence/disposition register. Its coverage and remaining limitations are
-stated; this is not blanket software or scientific certification.
-
-Continue any unfinished independent review in PR93. No generator
-certification or repeated experiment is reopened. Existing source reviews,
-manifests, numerical checks and previously inspected renders can be reused
-when their inputs are unchanged.
-
-**Passage 2 — integral final audit, after D0 and qualification.** Reconcile the
-integrated results, every table/figure and repeated number, scientific claims,
-repository documentation and editorial package. Check that the methods,
-artifacts and published version refer to the actual experiment, and that
-censoring, numerical restrictions and adverse findings remain visible.
-Inspect the final rendered article and supplied supplement.
-
-Passage 1 reduces late surprises; it **never replaces the final gate**.
-Use proportional source/link checks, affected numerical/manuscript/archive
-tests and final-head rendering/visual review. Passing CI confirms its checked
-properties, not scientific sufficiency.
-
-## Early coauthor review and milestones
-
-The preliminary set is now prepared in the
-[scientific brief](coauthor-review-brief.md): working title,
-research question, empirical gap, candidate C1–C3, methods, existing limitations
-and focused review questions. It is informed by chat 01.04's completed review
-and the implementation reconciliation. It does not reopen that investigation
-or claim originality from citation counts.
-
-| Milestone | Target and condition |
+| Milestone | Planning target and condition |
 | --- | --- |
-| Preliminary coauthor feedback | Seek a preliminary manifestation by 15 November 2026, through circulation authorized by the authors |
-| Complete manuscript to coauthors | 15 December 2026, conditional on receipt, qualification and audit capacity |
-| Scientific/editorial revisions | December 2026, continuing as needed toward final approval |
-| Final approval | Intended by 7 January 2027 |
-| Editorial submission | Intended by 10 January 2027 |
-| Maximum submission deadline | 14 January 2027 |
+| Preliminary coauthor feedback | Seek by15November through authorized circulation; do not imply material has been sent |
+| Qualified extension receipts | Aim for30November, conditional on exact manifest, resources, queueing and numerical eligibility |
+| Extension synthesis and integrated review | Early December, with scope/risk surfaced promptly |
+| Complete manuscript and separate appendices to coauthors | By15December2026 |
+| Scientific/editorial revisions | December; January principally reserved for approval and submission |
+| Final author approval | Intended by7January2027 |
+| Submission | Intended by10January2027 |
+| Absolute submission deadline | 14January2027 |
 
-No material or communication is sent on behalf of the authors without
-authorization. Preparing the brief does not establish that feedback was
-requested, received or approved. Final manuscript review remains necessary
-after the qualified CPU results.
+These dates are targets, not guaranteed job completion. If qualification or
+the extension threatens15December, present the impact and a bounded
+current-study alternative to the authors. Do not silently omit adverse
+results, add resources, alter the protocol or claim the expanded cohort
+before qualified evidence exists. Editorial acceptance is a later outcome,
+not an MVP2 sign-off condition.
 
-If reconciliation or audit reveals material risk, state the blocked deliverable,
-its effect on the dated milestones and the earliest defensible revised path.
-An editorial alternative may be a narrower claim supported by the qualified
-evidence, with all exclusions disclosed. It requires author scientific
-judgment; it cannot conceal failed cells or manufacture a successful answer.
-If a central claim remains unsupported, revise the claim or submission
-strategy rather than quietly adding experiments to a Sprint.
-
-## Scientific and editorial completion
-
-The synthesis must keep the historical six-medium study, principal one-hour
-CPU analysis, four-medium CPU12h campaign and matched GPU pair distinguishable.
-Parents, not method/cap cells or binary variables, are the comparison units.
-Historical seeds 43/44 do not become repetitions of the CPU12h design.
-Preparation costs, solver clocks and assigned resources retain their boundaries.
-
-The article must connect question, literature position, mechanism, evaluation
-and conclusions. Interpret displays rather than merely inventorying records.
-Keep label prediction distinct from solver utility; conditional observations
-distinct from seed robustness; fixed architecture distinct from an optimized
-one; and CI success distinct from scientific validity.
-
-The final PR must update the claim map for qualified CPU evidence, reconcile
-abstract/prose/captions/tables, and package the scientific supplement explicitly.
-The present repository working documents are not automatically included in
-the editable LaTeX ZIP or approved for journal submission. Verify availability,
-redistribution rights and declarations without inventing a deposit or DOI.
-
-The Human–AI register supports review. A full IIEA-S Appendix B is not a new
-MVP2 requirement; inclusion needs a clear purpose, agreed definition, adequate
-primary decision evidence and coauthor approval. Authorship and the agreed
-AI-use declaration remain unchanged absent explicit author revision.
-
-## Review, merge and sign-off
-
-Close PR92's revised stage when the brief, first-pass record, documentation
-and applicable final-head checks are complete. Mark it ready and request
-human merge authorization; do not close it as abandoned or merge it automatically.
-Its readiness does not mean the whole article is submission-ready.
-
-PR93 is prepared as a draft. Final readiness depends on qualified
-PR89 evidence, complete R2-D8, integrated article/supplement, the second-pass
-audit and the relevant author decisions. Any later PR89 scientific-closeout
-or release merge also needs explicit authorization. The installed execution
-source is not changed by documentary integration.
-
-MVP2 sign-off requires delivered R2-D1–D8 products, a consistent qualified
-evidence account, closed final audit, explicit availability limitations and
-author acceptance of the bounded interpretation. Negative/censored outcomes
-can be scientifically valid; acceptance by a journal is a later outcome.
-Publication and editorial submission remain specifically approved human gates.
+The immediate executable priority remains receiving the prepared six-job tail
+when terminal. The immediate independent documentary task is the M12-aware
+60-cell eligibility/claim register and the next protocol's compatibility
+inventory. No new review PDF is generated at this stage.
