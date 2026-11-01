@@ -7,6 +7,7 @@ import hashlib
 import io
 import json
 import math
+from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -14,6 +15,8 @@ SOURCE = Path("docs/evidence/pr89/partial-20261101")
 MANIFEST_SHA = "67916124db1d6b422cfc5a01399863b9de7e430902e9a6e4521bfac041b7d6fb"
 TABLES = ("partial_cpu_m0", "partial_cpu_m7", "partial_cpu_all")
 FIGURE = "partial_cpu_time_gap"
+M12_AUDIT = Path("docs/research/pr89-m12-raw-audit-20261101.json")
+M12_AUDIT_SHA = "c30fd518d4f7b216630864f4a5e7e7b36e20213bcd8550bfa25814d3f59804da"
 
 
 def require(ok, code):
@@ -23,6 +26,29 @@ def require(ok, code):
 
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
+
+
+def validate_m12_audit(value):
+    require(value["protocol"] == "pr89_m12_existing_raw_vector_exact_arithmetic_v1", "m12_audit_protocol")
+    require(value["exact_optimality_certified"] is False and value["scientific_reporting_eligible"] is False
+            and value["optimization_calls_added"] == 0 and value["campaign_modified"] is False, "m12_audit_scope")
+    rows = {row["job_id"]: row for row in value["rows"]}
+    require(len(rows) == 4 and set(rows) == {"3725", "3726", "3727", "3728"}, "m12_audit_cells")
+    for job, row in rows.items():
+        d = row["diagnostics"]
+        g = job == "3726"
+        require(d["exact_integer_primal_feasible_binary64_model"] is g
+                and d["exact_integer_primal_feasible_decimal_lp_model"] is g, "m12_primal_not_global")
+        require(d["nonintegral_binary_count"] == (0 if g else 1), "m12_integrality")
+        for key in ("exact_binary64_input_rows", "exact_decimal_lp_rows"):
+            require(d["stored"][key]["all_rows_exactly_satisfied"] is g, "m12_exact_row_scope")
+        if not g:
+            rounded = d["integer_rounded_copy"]["exact_decimal_lp_rows"]
+            require(Fraction(rounded["max_row_residual_rational"]) == Fraction(416587, 10**10), "m12_rounded_residual")
+            obstructions = d["fixed_rounded_integer_pattern_row_obstructions"]
+            require(len(obstructions) == 1 and obstructions[0]["continuous_completion_impossible_from_this_row"] is True,
+                    "m12_fixed_pattern_obstruction")
+    require(value["raw_variable_values_or_rows_exported"] is False, "m12_private_values")
 
 
 def load_sources(repository=ROOT):
@@ -161,6 +187,9 @@ def time_ratio(left, right, sensitive=False):
 def check_source(manuscript, repository=ROOT):
     try:
         sources = load_sources(repository)
+        raw_audit = (repository / M12_AUDIT).read_bytes()
+        require(digest(raw_audit) == M12_AUDIT_SHA, "m12_audit_source_hash")
+        validate_m12_audit(json.loads(raw_audit))
         rows = sources["cells.csv"]
         article = (manuscript / "index.qmd").read_text(encoding="utf-8")
         appendix = (manuscript / "supplement/extended-results.md").read_text(
@@ -214,8 +243,8 @@ def check_source(manuscript, repository=ROOT):
             require(value in appendix, "partial_appendix_value:" + value)
         require(
             "not certified speedups" in appendix
-            and "private models, solution vectors and solver logs were not reopened"
-            in appendix,
+            and "Exact primal feasibility does not certify global optimality" in appendix
+            and "every continuous completion with those rounded binaries fixed" in appendix,
             "partial_appendix_qualification",
         )
         for alias, low, high in (

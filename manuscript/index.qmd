@@ -223,7 +223,7 @@ A separate extension retains the four medium instances, starts, seed and five th
 
 On M0, G reached the reported target before B at four of five caps, but was slower than both comparators at two threads. All 15 M7 runs ended with the same reported primal value; only B at one thread and R at sixteen threads closed the terminal gap. Earlier progress therefore need not imply terminal attainment.
 
-Large runtime reductions on M12 remain numerical diagnostics: the G runs at one, two and four threads ended with slightly worse primals than B/R, and their reported bounds exceeded those feasible-objective reports. M4 also retained cross-run bound disagreement. These cases do not establish certified speedups. Appendix B provides values, censoring, provenance and the limits of this partial comparison.
+Large runtime reductions on M12 require a separate feasibility qualification. At four threads, G's reported objective is 0.009495% higher than B's, although all three methods report zero internal gap. Exact rational evaluation of the stored points confirms G's primal feasibility; each B/R point instead contains a tolerated nonintegral binary. Rounding that value produces an infeasible integer pattern that cannot be completed by adjusting continuous variables. Thus the lower control objectives do not demonstrate better feasible integer solutions. The logs also show substantially less search work for G, but neither this observation nor primal feasibility certifies a common global optimum or an isolated neural effect. M4 retains its separate restriction. These cases do not establish certified speedups. Appendix B provides the numerical evidence and the limits of this partial comparison.
 
 ## Efficiency after preparation costs {#sec-cost-results}
 

@@ -720,5 +720,14 @@
     "manifest_sha256": "d8f8e3fe7b95ad688cc6ab8e6218bdf133b16df88e28f39882dcb822426eec2b",
     "checker": "scripts/manuscript/build_partial_cpu_assets.py",
     "final_campaign_qualification": false
+  },
+  "partial_cpu_numerical_audit": {
+    "source": "docs/research/pr89-m12-raw-audit-20261101.json",
+    "source_commit": "79983e119aefb90f6a55d4bc5e76b8006830f439",
+    "sha256": "c30fd518d4f7b216630864f4a5e7e7b36e20213bcd8550bfa25814d3f59804da",
+    "scope": "Four stored M12 points; all original rows and domains under exact rational arithmetic, plus closed-log effort. G/4 primal feasibility only, no exact global optimum or causal speedup.",
+    "checker": "scripts/manuscript/build_partial_cpu_assets.py",
+    "new_optimization_calls": 0,
+    "original_campaign_flags_unchanged": true
   }
 }
