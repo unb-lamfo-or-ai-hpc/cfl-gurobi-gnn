@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "cohort.csv": "7d31af5edccf3920c5362123852a170bd10b119c2eaf7b1a0d8aea2999ebc687",
+    "historical-reuse.csv": "6c1c4b23112a4b5f71208d4aa894fc0b6d285f1227987bf9b428e7319da35e53",
+    "planned-cells.csv": "479f9ac9274f9602c9567d8edbc4841d38a418695bda9c039b564d8d2f4c445a",
+    "resources.json": "6ac946a071fc531ff417145134406d731cae56e158446ea20f59b50f57ce0327"
+  },
+  "author_approval_date": "2026-11-01",
+  "design": {
+    "easy": 6,
+    "evaluation_parents": 16,
+    "medium": 10,
+    "methods": [
+      "M0",
+      "M1",
+      "M2"
+    ],
+    "physical_thread_cap": 1,
+    "presentation": [
+      "B",
+      "R",
+      "G"
+    ],
+    "solver_seeds": [
+      42,
+      43,
+      44
+    ],
+    "time_limit_seconds": 3600
+  },
+  "execution_authorized": false,
+  "identified_reuse_cells": 90,
+  "identity_reuse_does_not_imply_metric_eligibility": true,
+  "learning": {
+    "admitted_parents": 54,
+    "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "frozen": true,
+    "new_training_calls": 0,
+    "split": [
+      34,
+      10,
+      10
+    ],
+    "threshold": "0.9991843104362488"
+  },
+  "new_preparation_candidates": [
+    {
+      "alias": "M5",
+      "model_sha256": null,
+      "parent": "CFL_medium_instance_5",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M6",
+      "model_sha256": null,
+      "parent": "CFL_medium_instance_6",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M9",
+      "model_sha256": null,
+      "parent": "CFL_medium_instance_9",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M13",
+      "model_sha256": null,
+      "parent": "CFL_medium_instance_13",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M20",
+      "model_sha256": null,
+      "parent": "CFL_medium_instance_20",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M26",
+      "model_sha256": null,
+      "parent": "CFL_medium_instance_26",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    }
+  ],
+  "new_solve_candidates": 54,
+  "no_dispatch_or_solver_commands_delivered": true,
+  "not_independent_untouched_generalization": true,
+  "numerical_screen": "original checks plus integer-rounded diagnostic under the existing tolerances; exact audit as required; original vectors preserved",
+  "numerically_sensitive_reuse_cells": 18,
+  "planning_approved": true,
+  "pr89_unchanged": true,
+  "protocol_id": "mvp2_solver_seed_extension_v1_draft",
+  "scientific_reporting_eligible": false,
+  "sources": [
+    {
+      "commit": "32be4435a80c9b8f308e2e317d642ef63ffaf2dc",
+      "path": "docs/evidence/pr86/final-210/campaign_results.csv",
+      "sha256": "e5fc92d75f2d26620a51a4e4d9b1d1f63befd7ec2680ad7a3b2c34cd781390b8"
+    },
+    {
+      "commit": "32be4435a80c9b8f308e2e317d642ef63ffaf2dc",
+      "path": "docs/evidence/e0/pr85/parents.csv",
+      "sha256": "541bdf5b716133ce0ae141feaf55f8b54f7c5498fb3c0c2753d93783f19af8b4"
+    },
+    {
+      "commit": "32be4435a80c9b8f308e2e317d642ef63ffaf2dc",
+      "path": "docs/research/mvp2-proposed-job-matrix-20261031.csv",
+      "sha256": "c25063c2d9b2d8c19d1c3857438d9aa8d640b93c904d6760084bbffd0dc2a45f"
+    }
+  ],
+  "status": "draft_not_executable"
+}

@@ -1,0 +1,69 @@
+{
+  "automatic_retry": false,
+  "conditional_design": {
+    "historical_reuse_candidates": 90,
+    "maximum_new_root_calls_if_needed": 6,
+    "new_optimizer_hours_ceiling": 55,
+    "new_optimizer_seconds_ceiling": 198000,
+    "new_solves_if_reuse_valid": 54,
+    "physical_thread_cap": 1,
+    "root_limit_seconds": 600,
+    "solve_cells": 144,
+    "solve_limit_seconds": 3600
+  },
+  "execution_authorized": false,
+  "gpu_allocations": 0,
+  "job_wall_seconds": null,
+  "jobs_submitted": 0,
+  "memory_mib_per_job": null,
+  "not_a_complete_reservation_budget": true,
+  "planning_approved": true,
+  "release_gates": {
+    "author_cli_release": false,
+    "executor_and_tests_reviewed": false,
+    "full_budget_closed": false,
+    "reuse_decision_complete": false,
+    "six_input_hashes_bound": false,
+    "starts_bound": false
+  },
+  "reserved_core_hours": null,
+  "slurm_reservation_hours": null,
+  "training_calls": 0,
+  "unresolved_budget_components": [
+    "input sizes and model binding for six candidates",
+    "graph/feature preparation",
+    "frozen inference and Start assembly",
+    "memory and physical/logical affinity admission",
+    "job wall and reservation core-hours",
+    "audit/export/orchestration overhead",
+    "reuse compatibility and metric admission"
+  ],
+  "prospective_solver_profile_for_review": {
+    "solver": "gurobipy",
+    "expected_version": "13.0.1",
+    "environment": "existing tfm_env; no package upgrade",
+    "effective_objective_sense": "MINIMIZE",
+    "parameters": {
+      "Cuts": -1,
+      "FeasibilityTol": 0.000001,
+      "Heuristics": 0.05,
+      "IntFeasTol": 0.00001,
+      "MIPFocus": 0,
+      "MIPGap": 0.0001,
+      "MIPGapAbs": 1e-10,
+      "Method": -1,
+      "Presolve": -1,
+      "Seed": [
+        42,
+        43,
+        44
+      ],
+      "SoftMemLimit": 48,
+      "StartNodeLimit": -1,
+      "SubMIPNodes": 500,
+      "Threads": 1,
+      "TimeLimit": 3600
+    },
+    "scope": "review profile derived from existing CPU contract; not a released execution manifest; Seed is the per-cell scalar at release"
+  }
+}
