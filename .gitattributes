@@ -50,3 +50,6 @@ docs/evidence/methodology-20261019/** -text
 docs/evidence/pr87/** -text -whitespace
 docs/evidence/pr88/gpu/** -text -whitespace
 manuscript/figures/gpu_bce_by_epoch_article_en.* -text -whitespace
+
+# Prospective protocol hashes use identical LF bytes on all test platforms.
+docs/research/solver-seed-extension-v1/** text eol=lf
