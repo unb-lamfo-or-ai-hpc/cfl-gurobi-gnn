@@ -47,7 +47,7 @@ but differ in binary/continuous composition and coefficient ranges. This is
 structural characterization, not an empirical hardness ranking, independent
 feasibility validation or root/graph/Start binding. Previous M13/M26 cache
 non-admission remains in force, without cache rescanning. Historical guidance
-used one GPU; preparation device/budget and full resources remain unresolved.
+used one GPU. The [preparation/resource proposal](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/edc8e1914556a81ffaf8b50bbd0d858f17475c9e/docs/research/solver-seed-extension-v1/preparation-and-resources.md) now specifies one V100 GPU-hour,75 sequential job-hours,78 physical-core-hours and64GiB RAM per job under the unchanged55 optimizer-hour ceiling. Fifteen offline tests validate the metadata compiler and conditional reservation arithmetic. The ten historical artifact chains are linked; the six new root/graph/Start chains remain ungenerated. The label-free encoder is the prospective mechanism, with adapter parity, full execution-source closure, private bindings and live resource/storage admission still pending.
 The input-identity subgate is closed; execution and per-metric qualification
 remain separate. PR89 coverage stays54/60 and its campaign is unchanged.
 

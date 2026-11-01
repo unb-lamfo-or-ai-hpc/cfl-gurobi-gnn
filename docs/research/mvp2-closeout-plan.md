@@ -11,7 +11,7 @@ The approved scientific contracts, identities and archived receipts remain intac
 PR93 is a draft targeting develop. PR89 remains open at frozen source
 9ab7823c6886d19e9ec865141a1cd35b3c3c16e5. There are 54 received and reconciled
 CPU12h cells out of 60. The author's latest snapshot, without a query timestamp,
-reports 3729 COMPLETED, 3730 RUNNING and 3731–3734 PENDING. A completed scheduler
+reports 3729–3731 COMPLETED, 3732 RUNNING and 3733–3734 PENDING. A completed scheduler
 job is not a received result. The [terminal-tail collector](runbooks/pr89-terminal-tail-collection.md)
 is ready for the author's CLI execution when the remaining jobs are terminal.
 
@@ -211,10 +211,9 @@ necessary; do not count them in an ineligible paired quality/time estimand.
 Publish coverage and exclusions by reason without dropping entire instances.
 A three-seed comparison does not itself repair a numerical feasibility issue.
 
-The 55h value is conditional optimizer time, not a complete Slurm reservation,
-preparation/inference cost or calendar promise. The next protocol PR must
-include root/feature/inference/start time, memory/affinity, audit/export
-overhead, job wall, serial/dependency constraints and a no-retry disposition.
+The [PR94 preparation/resource proposal](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/edc8e1914556a81ffaf8b50bbd0d858f17475c9e/docs/research/solver-seed-extension-v1/preparation-and-resources.md) now completes the conditional reservation account:20 jobs,75 serial reserved job-hours,78 physical-core-hours,one V100 GPU-hour and64GiB host RAM per job, with64GiB private working storage proposed. The unchanged55h ceiling is optimizer time, not job duration or utilization. Queue and human-review time are outside the reservation ceiling; financial/energy costs remain unmeasured. These ceilings assume90 legacy observations are retained for their admitted metrics and do not release execution.
+
+The package pins15 reference sources and ten historical artifact chains. The six original files have verified hashes; new root/graph/score/Start hashes remain null until actual preparation. The existing label-free encoder avoids requiring reference labels for these new inputs. The isolated PR94 adapter still needs feature parity/round-trip checks, complete execution-source/private bindings, live affinity/cgroup/device/storage admission, bounded collectors and the frozen CLI manifest. Historical PR86 wrappers/stages are not repurposed; PR89 is untouched.
 If reuse changes the actual number of solves, report the revised manifest
 and resource impact. Do not automatically rerun the 90 old cells or combine
 12h seed42 PR89 endpoints with one-hour seeds43/44 as matched repetitions.
@@ -255,7 +254,7 @@ cell-level significance tests.
 | Sprint | Work now / remaining delivery | PRs and exit criterion |
 | --- | --- | --- |
 | S1 — governance | Maintain one plan, received-versus-reported inventory, supersessions and the PDF/merge gates | PR93, then each substantive protocol/release record |
-| S2 — methods and experimental readiness | Finish independent methods/appendix review; prepare six-input/exposure inventory, frozen-predictor interface, reuse/numerical screens and fully priced manifest | PR93 and next protocol PR; no new training or unreleased HPC preparation |
+| S2 — methods and experimental readiness | Finish independent methods/appendix review; maintain the verified six-input inventory, prepare frozen-predictor/artifact interfaces, reuse/numerical screens and complete resource manifest | PR93 and next protocol PR; no new training or unreleased HPC preparation |
 | S3 — campaigns and qualification | Finish PR89 reception and all60 dispositions; later execute/collect only the separately released seed extension | PR89/PR93 baseline; next experiment/results PRs with qualified receipts |
 | S4 — scientific analysis | Finalize M12-aware baseline synthesis, then separate paired seed/difficulty analysis with per-metric eligibility | PR93 and extension results PR; no global-optimum or causal claims beyond evidence |
 | S5 — article and appendices | Complete current-study integration, then review PDFs in Codex; incorporate qualified extension and coauthor decisions | PR93 and later manuscript/results PR; reader-oriented argument and auditable numbers |
@@ -284,6 +283,4 @@ before qualified evidence exists. Editorial acceptance is a later outcome,
 not an MVP2 sign-off condition.
 
 The immediate executable priority remains receiving the prepared six-job tail
-when terminal. The immediate independent documentary task is the M12-aware
-60-cell eligibility/claim register and the next protocol's compatibility
-inventory. No new review PDF is generated at this stage.
+when terminal. The60-cell register,90-cell archival compatibility review and six-input preflight are prepared. The next independent tooling task is the isolated PR94 execution adapter, complete source/private bindings and feature-parity/resource admission against the prepared contracts. No new review PDF is generated at this stage.
