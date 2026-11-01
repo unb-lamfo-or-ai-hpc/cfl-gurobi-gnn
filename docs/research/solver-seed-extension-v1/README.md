@@ -123,7 +123,7 @@ observed10%,5%,1% and0.01% crossings, actual follow-up, censoring, start
 acceptance/abstention, Runtime, available printed work/iterations, memory,
 job elapsed and delimited preparation costs. Threshold times remain first
 observations with their brackets, not exact continuous hitting times.
-No crossing by a limit is censored, not a3600-second successful solve.
+A target unobserved at the time limit is right-censored, not a3600-second successful solve. Historical threshold coverage must be checked separately: a target absent from the old recorder remains unavailable. Do not reconstruct a missing crossing by interpolating a sparse trajectory or present a new four-target recorder as if it had run on the legacy cells.
 
 Do not borrow bounds between runs to improve a gap or count gap zero as an
 exact certificate. Retain all seeds, adverse outcomes, missingness and
