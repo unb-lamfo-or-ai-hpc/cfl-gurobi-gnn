@@ -1,0 +1,331 @@
+{
+  "Start": {
+    "absolute_cap": 20000,
+    "control_R_matches_G_support_and_positive_count": true,
+    "historical_methods": {
+      "B": "M0",
+      "G": "M2",
+      "R": "M1"
+    },
+    "preserve_abstention": true,
+    "seed_specific_reselection": false,
+    "support_fraction": 0.1,
+    "unselected_values": "undefined",
+    "variable_fixing": false
+  },
+  "execution_authorized": false,
+  "graph": {
+    "constraint_features": 5,
+    "edge_features": 1,
+    "existing_encoder_no_new_normalization_fit": true,
+    "implementation": "cfl_gnn.graph.label_free_gurobi.build_features",
+    "labels_loaded": false,
+    "new_adapter_feature_and_order_parity_tests_pending": true,
+    "remove_encoder_placeholder_targets_before_serialization": true,
+    "root_channel": 6,
+    "variable_features": 7
+  },
+  "inference": {
+    "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "device": "one_V100_32GB_proposal",
+    "eval_mode": true,
+    "gradients": false,
+    "hidden_dim": 32,
+    "load_once_process_six_graphs_serially": true,
+    "maximum_forwards": 6,
+    "model_version": "gasse_v2_alternating_prenorm",
+    "module_prefix_handling": "same_as_historical_qualified_loader",
+    "no_CPU_fallback": true,
+    "num_layers": 2,
+    "runtime_policy": {
+      "bitwise_reproducibility_claimed": false,
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "torch_num_threads": 1,
+      "torch_seed": 42
+    },
+    "threshold": "0.9991843104362488",
+    "training": false
+  },
+  "method_counterfactual_amortization_uses": 3,
+  "new_source_execution_commit": null,
+  "no_automatic_retry_or_parent_replacement": true,
+  "ordered_evaluation_groups": [
+    {
+      "cells": [
+        "extension-v1--M5-t1-s42-M0",
+        "extension-v1--M5-t1-s42-M1",
+        "extension-v1--M5-t1-s42-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_5",
+      "solver_seed": 42
+    },
+    {
+      "cells": [
+        "extension-v1--M5-t1-s43-M0",
+        "extension-v1--M5-t1-s43-M1",
+        "extension-v1--M5-t1-s43-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_5",
+      "solver_seed": 43
+    },
+    {
+      "cells": [
+        "extension-v1--M5-t1-s44-M0",
+        "extension-v1--M5-t1-s44-M1",
+        "extension-v1--M5-t1-s44-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_5",
+      "solver_seed": 44
+    },
+    {
+      "cells": [
+        "extension-v1--M6-t1-s42-M0",
+        "extension-v1--M6-t1-s42-M1",
+        "extension-v1--M6-t1-s42-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_6",
+      "solver_seed": 42
+    },
+    {
+      "cells": [
+        "extension-v1--M6-t1-s43-M0",
+        "extension-v1--M6-t1-s43-M1",
+        "extension-v1--M6-t1-s43-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_6",
+      "solver_seed": 43
+    },
+    {
+      "cells": [
+        "extension-v1--M6-t1-s44-M0",
+        "extension-v1--M6-t1-s44-M1",
+        "extension-v1--M6-t1-s44-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_6",
+      "solver_seed": 44
+    },
+    {
+      "cells": [
+        "extension-v1--M9-t1-s42-M0",
+        "extension-v1--M9-t1-s42-M1",
+        "extension-v1--M9-t1-s42-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_9",
+      "solver_seed": 42
+    },
+    {
+      "cells": [
+        "extension-v1--M9-t1-s43-M0",
+        "extension-v1--M9-t1-s43-M1",
+        "extension-v1--M9-t1-s43-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_9",
+      "solver_seed": 43
+    },
+    {
+      "cells": [
+        "extension-v1--M9-t1-s44-M0",
+        "extension-v1--M9-t1-s44-M1",
+        "extension-v1--M9-t1-s44-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_9",
+      "solver_seed": 44
+    },
+    {
+      "cells": [
+        "extension-v1--M13-t1-s42-M0",
+        "extension-v1--M13-t1-s42-M1",
+        "extension-v1--M13-t1-s42-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_13",
+      "solver_seed": 42
+    },
+    {
+      "cells": [
+        "extension-v1--M13-t1-s43-M0",
+        "extension-v1--M13-t1-s43-M1",
+        "extension-v1--M13-t1-s43-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_13",
+      "solver_seed": 43
+    },
+    {
+      "cells": [
+        "extension-v1--M13-t1-s44-M0",
+        "extension-v1--M13-t1-s44-M1",
+        "extension-v1--M13-t1-s44-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_13",
+      "solver_seed": 44
+    },
+    {
+      "cells": [
+        "extension-v1--M20-t1-s42-M0",
+        "extension-v1--M20-t1-s42-M1",
+        "extension-v1--M20-t1-s42-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_20",
+      "solver_seed": 42
+    },
+    {
+      "cells": [
+        "extension-v1--M20-t1-s43-M0",
+        "extension-v1--M20-t1-s43-M1",
+        "extension-v1--M20-t1-s43-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_20",
+      "solver_seed": 43
+    },
+    {
+      "cells": [
+        "extension-v1--M20-t1-s44-M0",
+        "extension-v1--M20-t1-s44-M1",
+        "extension-v1--M20-t1-s44-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_20",
+      "solver_seed": 44
+    },
+    {
+      "cells": [
+        "extension-v1--M26-t1-s42-M0",
+        "extension-v1--M26-t1-s42-M1",
+        "extension-v1--M26-t1-s42-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_26",
+      "solver_seed": 42
+    },
+    {
+      "cells": [
+        "extension-v1--M26-t1-s43-M0",
+        "extension-v1--M26-t1-s43-M1",
+        "extension-v1--M26-t1-s43-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_26",
+      "solver_seed": 43
+    },
+    {
+      "cells": [
+        "extension-v1--M26-t1-s44-M0",
+        "extension-v1--M26-t1-s44-M1",
+        "extension-v1--M26-t1-s44-M2"
+      ],
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "parent": "CFL_medium_instance_26",
+      "solver_seed": 44
+    }
+  ],
+  "pr89_source_or_artifacts_modified": false,
+  "protocol_id": "pr94_preparation_contract_v1",
+  "root": {
+    "capture": "first_OPTIMAL_MIPNODE_with_node_count_zero_then_terminate",
+    "effective_objective_sense": "MINIMIZE",
+    "maximum_calls": 6,
+    "parameters": {
+      "LogToConsole": 0,
+      "NodeLimit": 1,
+      "OutputFlag": 1,
+      "Presolve": 0,
+      "Seed": 42,
+      "SoftMemLimit": 48,
+      "Threads": 1,
+      "TimeLimit": 600
+    },
+    "preserve_model_and_variable_order": true,
+    "relax_or_zero_fallback": false
+  },
+  "scientific_reporting_eligible": false,
+  "shared_preparation_counted_once_per_parent": true,
+  "source_binding_sha256": "d144130bcf0a09c65c80bae0fc45c170ebdf349605314a2c3e39c50058963acf",
+  "stop_on_failed_or_unqualified_dependency": true
+}

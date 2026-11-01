@@ -1,5 +1,6 @@
 {
   "automatic_retry": false,
+  "complete_proposal_does_not_release_execution": true,
   "conditional_design": {
     "historical_reuse_candidates": 90,
     "maximum_new_root_calls_if_needed": 6,
@@ -12,7 +13,9 @@
     "solve_limit_seconds": 3600
   },
   "execution_authorized": false,
+  "free_space_admission_gib": 80,
   "gpu_allocations_performed": 0,
+  "gpu_reservation_hours": 1,
   "historical_guidance_scheduler_reference": {
     "gpus": 1,
     "memory_mib": 65536,
@@ -22,12 +25,13 @@
     "wall_seconds": 3600
   },
   "input_identity_gate_scope": "six_original_file_hashes_and_sizes_only_not_preparation_or_executor_release",
+  "job_wall_is_stage_specific": true,
   "job_wall_seconds": null,
   "jobs_submitted": 0,
-  "memory_mib_per_job": null,
-  "not_a_complete_reservation_budget": true,
+  "memory_mib_per_job": 65536,
+  "not_a_complete_reservation_budget": false,
   "planning_approved": true,
-  "prospective_frozen_inference_device_and_budget": "unresolved; prior reviewed guidance used_one_GPU; no_implicit_CPU_conversion",
+  "prospective_frozen_inference_device_and_budget": "proposed one V100 32GB, 1 GPU-hour; live device/allocation and executor remain unbound",
   "prospective_solver_profile_for_review": {
     "effective_objective_sense": "MINIMIZE",
     "environment": "existing tfm_env; no package upgrade",
@@ -67,21 +71,101 @@
   },
   "release_gates": {
     "author_cli_release": false,
+    "complete_budget_is_proposal_not_installed_admission": true,
     "executor_and_tests_reviewed": false,
-    "full_budget_closed": false,
+    "full_budget_closed": true,
     "reuse_decision_complete": false,
     "six_input_hashes_bound": true,
     "starts_bound": false
   },
-  "reserved_core_hours": null,
-  "slurm_reservation_hours": null,
+  "reserved_core_hours": 78.0,
+  "resource_reservation_proposal": {
+    "automatic_retries": 0,
+    "auxiliary_optimization_calls": 0,
+    "cgroup_sampled_interrupt_GiB": 56,
+    "concurrent_jobs": 1,
+    "execution_authorized": false,
+    "financial_or_energy_estimate": null,
+    "free_space_admission_required_GiB": 80,
+    "gpu_device_proposal": "one_Tesla_V100_32GB_same_historical_guidance_class",
+    "human_review_time_included": false,
+    "job_cgroup_limit_GiB": 64,
+    "jobs_ceiling": 20,
+    "logical_AllocCPU_hours_if_two_per_physical_core": 156.0,
+    "logical_AllocCPU_scenario_is_not_verified_billing": true,
+    "memory_gib_per_job": 64,
+    "optimization_calls_ceiling": 60,
+    "optimizer_hours_ceiling": 55.0,
+    "private_working_storage_allowance_GiB": 64,
+    "queue_time_included": false,
+    "reserved_gpu_hours_ceiling": 1,
+    "reserved_memory_gib_hours_ceiling": 4800.0,
+    "reserved_physical_core_hours_ceiling": 78.0,
+    "reuse_of_90_cells_required": true,
+    "serial_job_wall_hours_ceiling": 75.0,
+    "soft_memory_decimal_GB": 48,
+    "stages": [
+      {
+        "child_deadline_seconds": 1140,
+        "children_per_job": 6,
+        "forward_calls": 0,
+        "gpus_each": 0,
+        "jobs": 1,
+        "memory_mib_each": 65536,
+        "optimization_calls": 6,
+        "optimizer_seconds": 3600,
+        "physical_cores_each": 1,
+        "stage": "roots",
+        "wall_seconds_each": 7200
+      },
+      {
+        "child_deadline_seconds": 3540,
+        "children_per_job": 1,
+        "forward_calls": 6,
+        "gpus_each": 1,
+        "jobs": 1,
+        "memory_mib_each": 65536,
+        "optimization_calls": 0,
+        "optimizer_seconds": 0,
+        "physical_cores_each": 4,
+        "stage": "guidance",
+        "wall_seconds_each": 3600
+      },
+      {
+        "child_deadline_seconds": 3780,
+        "children_per_job": 3,
+        "forward_calls": 0,
+        "gpus_each": 0,
+        "jobs": 18,
+        "memory_mib_each": 65536,
+        "optimization_calls": 54,
+        "optimizer_seconds": 194400,
+        "physical_cores_each": 1,
+        "stage": "evaluation",
+        "wall_seconds_each": 14400
+      }
+    ],
+    "status": "complete_conditional_reservation_proposal_not_execution_release",
+    "storage_is_proposed_not_reserved_or_installed_guard": true,
+    "training_calls": 0
+  },
+  "resource_reservation_proposal_complete": true,
+  "slurm_reservation_hours": 75.0,
+  "stage_job_wall_seconds": {
+    "evaluation": 14400,
+    "guidance": 3600,
+    "roots": 7200
+  },
+  "storage_allowance_gib": 64,
   "training_calls": 0,
-  "unresolved_budget_components": [
-    "graph/feature preparation",
-    "frozen inference and Start assembly",
-    "memory and physical/logical affinity admission",
-    "job wall and reservation core-hours",
-    "audit/export/orchestration overhead",
-    "reuse compatibility and metric admission"
+  "unresolved_budget_components": [],
+  "unresolved_execution_admissions": [
+    "isolated PR94 executor and complete execution source closure",
+    "root/graph/Start receipts and actual checkpoint/private-path bindings",
+    "label-free feature parity and serialization tests",
+    "live physical affinity/cgroup/V100 allocation admission",
+    "bounded export and working-storage guard",
+    "per-metric legacy reuse and scientific qualification",
+    "concrete frozen manifest and author CLI execution"
   ]
 }

@@ -1,17 +1,34 @@
 {
   "artifacts": {
+    "README.md": "dc442b2557722a8e76a81429818a2703317ca50773a34fbf68d7734cce133758",
     "cohort.csv": "12b11d7a1caf55d44dd4e9d1d949b2e9844edc69124b58d92280197b668e2ab3",
-    "compatibility-review.json": "74bfe4a0fb3ec221b4be2f56db2806a1156154ba9ef8eafa0e1ff1e493bf4b25",
+    "compatibility-review.json": "da90b8e3d2d3eab8db2db8c9a700a5a0c5bfe0b4a3611f2909aad9f847df7586",
+    "historical-artifact-bindings.json": "ef5a98a62c338829f14ebedbe7f6d41bd7d48c4756e59e00d7522802bdd64ed4",
     "historical-reuse.csv": "4144622a05fea756f3c4ed9ac5b8edf09888e3b3cec05b8dffe84551069321b1",
+    "new-artifact-bindings.json": "5584a241ff7f8e25f22bc865b5c72bae8e8d48b8d18c0db5f872ee5d25f839e1",
     "planned-cells.csv": "c97c30283fd6b0a53fa49bc59426e3e03ac05beaec45639f5a6322d717987f1b",
-    "preflight-medium.md": "4ebc0c6062be4410f2529cc432c8bbb994a32dccd19802cb7eb5fa98c5d03165",
-    "preflight-return-20261101.json": "3039dc9548f1154dac1dce6d674349c9c813e81eb9425c6ccf128be478577574",
+    "preflight-medium.md": "de589e625a6d124834a9710e19f2ea5a26dc749adf39cb797e16272f370a7eb3",
+    "preflight-return-20261101.json": "f7e45b506e32b24571d155aa951267485e79ab459b1cd2aab84081945e3660f3",
     "preflight_medium_readonly.py": "8f811ad73eb7632a1b648d377a79b1a2b0ff967f61103ce0a1b3022d2341597e",
-    "resources.json": "c2a39c4a81624e361cb923598b1adf40b40f8859a626e7a8077d47a6fc00cfae",
-    "test_preflight_medium_readonly.py": "d78ebeb6fd876d890ee5a19fa30ea955d68a801f8b54441ff00be556f3a5595b",
-    "README.md": "cfc933a1a3717427190261bd7ad8536d409092bac945ceefeaba45da9febdcf8"
+    "preparation-and-resources.md": "43d360d0ab6b3da0ef1da5996ae394d6db901e19e84fc0b88d072a3658d14413",
+    "preparation-contract.json": "a0d39cba8c2cbebb461e37cc4f8163848690497339c84bdc73962e771952dcb4",
+    "reservation-budget.json": "41cf1281efa0a87989fbac107b8599b430f6ebee812bceeebb69d50d57a75d64",
+    "resources.json": "b2a51bbbb42f0d241ce12a35badc6d9aa5c85b2d86cbf84f95672c9c2cd6e3a5",
+    "source-bindings.json": "d144130bcf0a09c65c80bae0fc45c170ebdf349605314a2c3e39c50058963acf",
+    "test_preflight_medium_readonly.py": "d78ebeb6fd876d890ee5a19fa30ea955d68a801f8b54441ff00be556f3a5595b"
   },
   "author_approval_date": "2026-11-01",
+  "complete_reservation_proposal": {
+    "RAM_GiB_per_job": 64,
+    "execution_released": false,
+    "gpu_hours": 1,
+    "jobs": 20,
+    "optimizer_hours": 55,
+    "physical_core_hours": 78,
+    "serial_job_hours": 75,
+    "source": "reservation-budget.json",
+    "storage_GiB": 64
+  },
   "design": {
     "easy": 6,
     "evaluation_parents": 16,
@@ -134,6 +151,16 @@
   "numerically_sensitive_reuse_cells": 18,
   "planning_approved": true,
   "pr89_unchanged": true,
+  "preparation_contract": {
+    "contract": "preparation-contract.json",
+    "execution_authorized": false,
+    "execution_source_closure_complete": false,
+    "historical_artifacts": "historical-artifact-bindings.json",
+    "new_artifacts": "new-artifact-bindings.json",
+    "new_artifacts_generated": 0,
+    "prepared": true,
+    "source_registry": "source-bindings.json"
+  },
   "protocol_id": "mvp2_solver_seed_extension_v1_draft",
   "readonly_preflight": {
     "completed": 6,
