@@ -1,5 +1,10 @@
 # Internal sensitivity planning and scientific interpretation
 
+## Approved continuation — 1 November 2026
+
+The author approved the revised Sprint/PR plan. The [canonical plan](mvp2-closeout-plan.md) now governs autonomous preparation of the ten-medium/six-easy solver-seed extension, with the 54-parent learning split frozen. Do not request planning approval again. The exact manifest and resource accounting precede the author's CLI intervention; no new job was submitted. PR89 stays intact. The new human snapshot reports 3725–3728 COMPLETED, 3729 RUNNING and 3730–3734 PENDING; 50 result cells remain received, with four more awaiting transfer/verification. S1/S2/S4/S5 proceed independently; full qualification, merges, publication and submission keep their human gates.
+
+
 ## Latest proposed scope — 31 October 2026
 
 The author now proposes ten medium optimization parents and solver seeds42/43/44 while freezing the 54-parent learning corpus. The [canonical plan](mvp2-closeout-plan.md) distinguishes the proposed MVP2 solver-seed extension from GNN retraining/root-method/hyperparameter experiments, which remain future work. It records difficulty classification, historical exposure of M9/M20, reuse of 90 compatible one-hour cells, conditional resource ceilings and the separate execution gate. This supersedes earlier planning-only statements that every solver-seed extension was outside MVP2, but authorizes no execution. Do not duplicate the detailed protocol here.

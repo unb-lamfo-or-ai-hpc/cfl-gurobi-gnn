@@ -356,3 +356,14 @@ The canonical closeout plan now records a proposed16-parent evaluation(ten mediu
 Validation: regenerate static tables from hash-bound existing inputs; run publication source/claim checks, the manuscript suite including a gap-unit/evidence regression, and static article/appendix renders. Final PDF layout, exact-head checks and hashes are recorded in the PR checkpoint. PR89 source and campaign remain intact, and no new research execution or merge is performed.
 
 Local source/claim checks and93 manuscript tests pass. Prose was deduplicated to retain the added easy-gap table and bibliography discussion within the existing20-page body gate; evidence values, selectors and hashes are unchanged. Seven article-template strings in the claim index follow the revised wording. Current local article:24 pages including references, which begin on page20; appendices:42 pages. Exact-head CI and final file identities follow in the PR checkpoint.
+
+
+## Approved Sprint continuation and new terminal receipts — 1 November 2026
+
+The author approved the revised Sprint plan. The canonical closeout plan and portable context now record approval, with execution still requiring its complete manifest and the author's CLI intervention. The planning matrix records that distinction without changing any optimizer parameter or submitting jobs.
+
+The author's new dgx-dasci snapshot reports jobs 3725–3728 COMPLETED/0:0, 3729 RUNNING and 3730–3734 PENDING. The frozen map places the four new terminations on M12: B/two threads and G/B/R/four threads. Only the earlier 50 cells have been received; the four new receipts await transfer, integrity checks and metric review. Neither the article cutoff nor its numbers/eligibility flags change from scheduler output alone.
+
+The existing [delta runbook](runbooks/pr89-delta-20261101.md) is prepared for the human HPC/SCP intervention. Nine synthetic tests passed; only four requested terminal receipt sets are exported, common source/control/submission identities are checked, and running files/earlier receipt sets/installed source are not changed. A new archive is created exclusively in the existing data stage. No agent HPC access, new solve, training, inference, retry, merge or publication occurred.
+
+At the preceding source/test HEAD22ea282d, both Manuscript 57(run41246799289) and Public evidence 269(run41246799284) completed successfully, including Windows 3.10/3.12. The former checkpoint's pending Windows status is superseded. New documentary-head checks are tracked separately in the PR checkpoint.

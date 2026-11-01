@@ -1,5 +1,10 @@
 # CFL--GNN research context
 
+## Approved continuation — 1 November 2026
+
+The author approved the revised Sprint/PR plan. The [canonical plan](research/mvp2-closeout-plan.md) now governs autonomous preparation of the ten-medium/six-easy solver-seed extension, with the 54-parent learning split frozen. Do not request planning approval again. The exact manifest and resource accounting precede the author's CLI intervention; no new job was submitted. PR89 stays intact. The new human snapshot reports 3725–3728 COMPLETED, 3729 RUNNING and 3730–3734 PENDING; 50 result cells remain received, with four more awaiting transfer/verification. S1/S2/S4/S5 proceed independently; full qualification, merges, publication and submission keep their human gates.
+
+
 ## Latest planning direction — 31 October 2026
 
 The author proposes expanding optimization testing to ten medium parents, keeping six easy parents and the frozen54 learning split. Solver seeds42/43/44 and six added medium parents are a proposed next campaign, not submitted jobs or new execution authority. Neural retraining, root-method/hyperparameter experiments remain future work. The [canonical Sprint/PR plan](research/mvp2-closeout-plan.md) records conditional reuse, difficulty analysis, numerical/exposure limits and the publication sequence. PR89 stays frozen; current reader-facing results still use the original cohorts. The separate historical six-medium study uses M0/M4/M7/M9/M12/M20; the principal CPU/PR89 medium cohort is M0/M4/M7/M12.

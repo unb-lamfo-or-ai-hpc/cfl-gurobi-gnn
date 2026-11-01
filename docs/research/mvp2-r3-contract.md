@@ -1,5 +1,10 @@
 # MVP2 R3 — governing contract and completion plan
 
+## Approved continuation — 1 November 2026
+
+The author approved the revised Sprint/PR plan. The [canonical plan](mvp2-closeout-plan.md) now governs autonomous preparation of the ten-medium/six-easy solver-seed extension, with the 54-parent learning split frozen. Do not request planning approval again. The exact manifest and resource accounting precede the author's CLI intervention; no new job was submitted. PR89 stays intact. The new human snapshot reports 3725–3728 COMPLETED, 3729 RUNNING and 3730–3734 PENDING; 50 result cells remain received, with four more awaiting transfer/verification. S1/S2/S4/S5 proceed independently; full qualification, merges, publication and submission keep their human gates.
+
+
 ## Approved scientific/editorial revision — 30 October 2026
 
 The author approved the detailed diagnostic and its implementation in PR93.

@@ -1,5 +1,31 @@
 # MVP2 completion by Sprints and pull requests
 
+## Sprint plan approved — 1 November 2026
+
+The author approved the revised Sprint/PR plan and instructed autonomous continuation. The approved planning basis is ten medium plus six easy optimization parents; the 54-parent learning corpus, 34/10/10 split, CPU checkpoint and threshold stay frozen. Advance the recommended one-thread, one-hour solver-seed extension (42/43/44), including conditional reuse, preparation and empirical difficulty assessment, toward a concrete reviewable manifest. The wider-resource alternatives remain alternatives, not cumulative approved work.
+
+Planning approval is recorded and must not be requested again. It does not start jobs: finish the exact identities, compatibility checks, preparation/host-memory/job-wall accounting and applicable offline checks before the author's CLI intervention. The 55 optimizer-hour ceiling includes six 600-second roots and 54 one-hour solves if all 90 historical cells are reusable; it is not a complete reserved-resource budget. If reuse or numerical review changes that design materially, report the change and its impact rather than silently expanding execution. No new training, root-method/hyperparameter experiment, merge, publication or submission is authorized. PR89 remains governed by its original execution/collection authority.
+
+The [planning matrix](mvp2-proposed-job-matrix-20261031.csv) now records planning_approved=true with approval date 2026-11-01 while preserving execution_authorized=false, automatic_retry=false and empty job IDs. Its 60 units are six preparations plus 54 proposed solves, not another submission of PR89's 60 cells.
+
+### Current operational priority and evidence boundary
+
+The author supplied a dgx-dasci sacct snapshot on 1 November; its exact query time was not supplied. Relative to the already received 3675–3724 archive, jobs 3725–3728 are newly reported COMPLETED/0:0. Job 3729 is RUNNING (03:22:10); 3730–3734 are PENDING. This supports 54 jobs reported complete across the two snapshots, but **only 50 result cells have been received and checked**. No failure was reported in this snapshot. Scheduler state is not scientific qualification.
+
+| New terminal job | Instance | Physical thread cap | Method | Slurm elapsed |
+| --- | --- | ---: | --- | --- |
+| 3725 | M12 | 2 | B (M0) | 01:49:05 |
+| 3726 | M12 | 4 | G (M2) | 00:10:46 |
+| 3727 | M12 | 4 | B (M0) | 06:03:11 |
+| 3728 | M12 | 4 | R (M1) | 05:47:09 |
+
+The existing frozen map establishes these identities. Elapsed is the scheduler clock, not solver Runtime or a solution speedup. M12's numerical restrictions remain. The [delta collection runbook](runbooks/pr89-delta-20261101.md) prepares receipt of these four only; it neither reads running-result files nor recollects the earlier 50. Keep the 31 October article cutoff and sealed evidence unchanged until the delta ZIP is transferred, hashed and reconciled. The D0/full qualification gate still requires all 60 dispositions.
+
+### Work advancing before the next experimental PR
+
+S1 records this approval and operational handoff. S2 can prepare the next substantive PR's input/checkpoint manifest, structural-feature inventory and frozen-predictor preparation interface, with labels confined to their independent audit. Keep M5/M6 guidance-validation exposure, M9/M20 optimization-test exposure and M13/M26 audit exposure explicit; no candidate is declared untouched. S4/S5 integrate only receipt-checked observations, preserving both the historical and principal populations. S3 continues collection and metric-specific review of PR89. S6 retains the final audit and specific human release/submission gates. Complete the current article/appendices after PR89, obtain develop merge approval, then use the separately approved main release path. The 15 December coauthor target and 14 January maximum submission deadline remain unchanged.
+
+
 ## Proposed continuation and difficulty analysis — 31 October 2026
 
 This addendum records the author's new request and a concrete proposal for review. It supersedes the earlier interpretation that six new labelled training parents were required. It does **not** change the running PR89 contract or authorize new HPC execution. Earlier dates and no-new-experiment statements below describe the previously approved scope; the proposed extension must pass its own protocol/resource gate.
@@ -67,7 +93,7 @@ The experimental unit is the parent, with solver seed nested within parent. Pair
 
 A release of the qualified current study can precede the extension; it must not claim ten medium results before they exist. Later updates retain versioned provenance. Do not reserve PR numbers or create one PR per minor correction. January remains primarily editorial: complete manuscript to coauthors by 15 December, intended final approval 7 January, intended submission 10 January, maximum 14 January 2027. For the extension, aim for qualified receipts by 30 November and synthesis in early December; these dates depend on approved resources, queueing, numerical review and final scope. If the extension jeopardizes the dates, present the defensible current-study version and the explicit scope tradeoff to the authors rather than silently expanding resources or claims.
 
-The final audit remains mandatory: software and B/R/G identity, all experimental evidence and numerical dispositions, article claims/numbers, and appendices/editorial package. Earlier independent review does not substitute for this gate. The next operational priority is final receipt of PR89 jobs3725–3734 once terminal; jobs3723/3724 were already included in the 50-cell ZIP and must not be collected again as new evidence. No agent HPC access, new solve, training, inference, submission, retry, merge or publication occurs through this planning revision.
+The final audit remains mandatory: software and B/R/G identity, all experimental evidence and numerical dispositions, article claims/numbers, and appendices/editorial package. Earlier independent review does not substitute for this gate. The next operational priority is final receipt of PR89 jobs 3725–3734 once terminal; jobs3723/3724 were already included in the 50-cell ZIP and must not be collected again as new evidence. No agent HPC access, new solve, training, inference, submission, retry, merge or publication occurs through this planning revision.
 
 
 ## Approved scientific/editorial revision — 30 October 2026
