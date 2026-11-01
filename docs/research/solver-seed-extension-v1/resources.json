@@ -21,6 +21,7 @@
     "tasks": 1,
     "wall_seconds": 3600
   },
+  "input_identity_gate_scope": "six_original_file_hashes_and_sizes_only_not_preparation_or_executor_release",
   "job_wall_seconds": null,
   "jobs_submitted": 0,
   "memory_mib_per_job": null,
@@ -55,19 +56,27 @@
     "scope": "review profile derived from existing CPU contract; not a released execution manifest; Seed is the per-cell scalar at release",
     "solver": "gurobipy"
   },
+  "readonly_preflight_observed": {
+    "GPU_used_for_preflight": false,
+    "maximum_own_address_space_bytes": 1073741824,
+    "not_neural_preparation_or_future_reservation_estimate": true,
+    "original_compressed_bytes": 178390203,
+    "original_files": 6,
+    "scheduler_allocation_measured": false,
+    "wall_seconds": 125.83706857357174
+  },
   "release_gates": {
     "author_cli_release": false,
     "executor_and_tests_reviewed": false,
     "full_budget_closed": false,
     "reuse_decision_complete": false,
-    "six_input_hashes_bound": false,
+    "six_input_hashes_bound": true,
     "starts_bound": false
   },
   "reserved_core_hours": null,
   "slurm_reservation_hours": null,
   "training_calls": 0,
   "unresolved_budget_components": [
-    "input sizes and model binding for six candidates",
     "graph/feature preparation",
     "frozen inference and Start assembly",
     "memory and physical/logical affinity admission",

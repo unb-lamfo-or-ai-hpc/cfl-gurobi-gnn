@@ -77,7 +77,7 @@ reuse ledger. New order must be frozen in the final execution manifest,
 referencing the approved planning-matrix order; no randomization or
 counterbalancing is claimed by this draft.
 
-The parent inventory leaves six model hashes empty, but the broader historical E0 inventory already identifies original-file digests for M13 and M26. Those two historical digests are now retained in the cohort; their current bytes still require confirmation. Four other model digests remain unidentified in the reviewed records. The earlier inspection did not admit the M13/M26 root caches for inference; that finding is reused without rescanning caches. The [bounded read-only preflight](preflight-medium.md) checks only the six canonical original files, with no solver, inference or model generation.
+The original parent inventory leaves six hashes empty. The author-run [bounded read-only preflight](preflight-medium.md#received-return--1-november-2026) now identifies and verifies the current bytes of all six original compressed inputs; M13/M26 match their historical E0 hashes. The [sanitized receipt](preflight-return-20261101.json) binds the private return digest, member seals, timestamps, environment and structural observations. The cohort and54 new-cell candidates retain those source hashes. This closes original-file identity, not root/graph/Start or future solver admission. The earlier inspection did not admit the M13/M26 root caches for inference; that finding is reused without rescanning caches.
 
 If reuse fails, retain the reason and revise the resource accounting for a
 specific decision. Do not automatically rerun the90 legacy cells.
@@ -164,7 +164,7 @@ No energy or active-utilization estimate is invented. The previous prospective g
 The draft contains no scheduler script or dispatch/solve command. All assigned
 new job IDs are empty and execution flags are false. Before a concrete CLI
 release, finish:
-1. Six input identities/sizes and any reusable preparation inventory.
+1. Six original-file identities/sizes are now verified; bind any reusable preparation separately.
 2. Fixed preparation/Start bindings, abstention/failure handling and source.
 3. Ninety-cell metric-admission decisions using the completed documentary identity review.
 4. Complete memory/affinity/job-wall/resource accounting.

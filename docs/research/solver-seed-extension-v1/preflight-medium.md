@@ -72,3 +72,22 @@ separate release gates. Fourteen synthetic tests cover successful reading,
 unchanged inputs, missing/ambiguous files, historical mismatch, unsupported
 or corrupt input, bounds on reading, path scope, exclusive output and the
 absence of solver/ML/mutating APIs.
+
+## Received return — 1 November 2026
+
+The author-run preflight completed on dgx-dasci from23:06:06 to23:08:12 UTC (20:06:06–20:08:12 Fortaleza). All six originals were uniquely located and the bounded text inventory completed without reported issues. The private ZIP has2582 bytes and SHA256 c8c709a0f495baa0b1e060364544397c6d6c47f60421904b2f696212a304c8df. The receiver independently verified that digest, the archive CRCs and both member seals. Only the [sanitized receipt](preflight-return-20261101.json) is public; the private path map and archive are not uploaded.
+
+M13/M26 match their historical original-file hashes. M5/M6/M9/M20 now also have observed source hashes, propagated to the cohort and54 new-cell candidates. These are identities of the original compressed inputs, not a completed root/graph/Start or solver-model binding. The preflight took125.837 seconds and read356,780,406 bytes for hashing plus618,538,568 decoded bytes. This is observed metadata-process work, not optimizer time, active CPU utilization or a budget for future inference.
+
+| Parent | Variables observed | Declared binary variables | Continuous by difference | Rows observed | Matrix nonzero terms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| M5 | 1281600 | 1172800 | 108800 | 2400 | 2561600 |
+| M6 | 1281600 | 1184000 | 97600 | 2400 | 2561600 |
+| M9 | 1281600 | 1166400 | 115200 | 2400 | 2561600 |
+| M13 | 1281600 | 1155200 | 126400 | 2400 | 2561600 |
+| M20 | 1281600 | 1169600 | 112000 | 2400 | 2561600 |
+| M26 | 1281600 | 1148800 | 132800 | 2400 | 2561600 |
+
+All six share the observed total dimensions, but their binary/continuous composition and coefficient ranges differ. These structural observations do not establish a computational-difficulty ranking. Matrix terms are lexical counts; bounds and model feasibility were not independently validated by this text reader. All originals declare MAXIMIZE; the accepted runtime MINIMIZE correction remains unchanged. No new formulation certification is requested.
+
+The input-identity subgate is now closed. Preparation source, root/graph/Start bindings, inference device, complete resources and executor admission remain open. There were zero new optimization, inference or training calls and zero scheduler mutations. PR89's source head was observed unchanged; no claim about its current jobs or new result receipt follows.
