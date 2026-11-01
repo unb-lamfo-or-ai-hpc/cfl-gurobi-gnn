@@ -68,9 +68,7 @@ The prospective scalar parameter values are listed in resources.json for review,
 [historical-reuse.csv](historical-reuse.csv) identifies90 existing PR86
 one-thread cells from the210-row archive. Those are identified candidates,
 not90 newly admitted scientific comparisons. Eighteen concern M4/M12 and
-retain explicit numerical restrictions. Each needs parameter/Start/model,
-checkpoint, environment, hardware/affinity, stopping-rule and clock
-compatibility review before reuse is admitted for a named metric.
+retain explicit numerical restrictions. The [documentary compatibility review](compatibility-review.json) now confirms the recorded parameter hashes, model hashes, solver/Python versions and receipt/child links for all90. It identifies the prospective Start bindings from job3521, not the older E0 binding generation. The closed210-cell review is reused; no private vector or old experiment was rerun. This establishes archival identity compatibility, not admission for every metric or verification of a future deployment.
 
 The other54 cells are new-solve candidates for the six additional medium
 parents. [manifest.json](manifest.json) binds source hashes, planned outputs
@@ -79,11 +77,7 @@ reuse ledger. New order must be frozen in the final execution manifest,
 referencing the approved planning-matrix order; no randomization or
 counterbalancing is claimed by this draft.
 
-The public parent inventory currently leaves all six new model hashes empty.
-They are explicitly pending in the cohort/manifest. This is an input-identity
-gap, not evidence that files are unavailable on HPC or scientifically invalid.
-Identify existing input bytes and sizes through a later author-assisted
-read-only inventory; do not generate replacements to fill metadata.
+The parent inventory leaves six model hashes empty, but the broader historical E0 inventory already identifies original-file digests for M13 and M26. Those two historical digests are now retained in the cohort; their current bytes still require confirmation. Four other model digests remain unidentified in the reviewed records. The earlier inspection did not admit the M13/M26 root caches for inference; that finding is reused without rescanning caches. The [bounded read-only preflight](preflight-medium.md) checks only the six canonical original files, with no solver, inference or model generation.
 
 If reuse fails, retain the reason and revise the resource accounting for a
 specific decision. Do not automatically rerun the90 legacy cells.
@@ -111,6 +105,8 @@ arithmetic may diagnose existing points without another solve. It proves
 global optimality only if an actual sufficient proof is supplied; none is
 claimed here.
 
+Terminal return under a3600s setting is not exact common-time quality. Keep actual Runtime/follow-up and stopping status; do not truncate a recorded overrun or substitute first-observed crossing time for terminal return when pooling endpoint definitions.
+
 The primary question is within-parent/seed terminal primal quality under
 the common one-hour protocol and a stated numerical-eligibility screen.
 For finite nonzero B, report100(P_method-P_B)/abs(P_B); negative favors the
@@ -123,7 +119,7 @@ observed10%,5%,1% and0.01% crossings, actual follow-up, censoring, start
 acceptance/abstention, Runtime, available printed work/iterations, memory,
 job elapsed and delimited preparation costs. Threshold times remain first
 observations with their brackets, not exact continuous hitting times.
-A target unobserved at the time limit is right-censored, not a3600-second successful solve. Historical threshold coverage must be checked separately: a target absent from the old recorder remains unavailable. Do not reconstruct a missing crossing by interpolating a sparse trajectory or present a new four-target recorder as if it had run on the legacy cells.
+A target unobserved at the time limit is right-censored, not a3600-second successful solve. The current summary exposes recorded first-observed10% crossings for79/90 cells and1%/5% for57/90. The recorded terminal0.01% return is a different endpoint. Historical threshold coverage must be checked separately: a target absent from the old recorder remains unavailable. Do not reconstruct a missing crossing by interpolating a sparse trajectory or present a new four-target recorder as if it had run on the legacy cells.
 
 Do not borrow bounds between runs to improve a gap or count gap zero as an
 exact certificate. Retain all seeds, adverse outcomes, missingness and
@@ -161,7 +157,7 @@ Historical supervised attempts, amortized preparation scenarios and new job
 elapsed times have different boundaries. Reuse of solver observations does
 not make all cost scopes compatible. Keep incomparable cold/job costs separate;
 do not reinterpret old amortization as newly measured whole-job expenditure.
-No energy or active-utilization estimate is invented.
+No energy or active-utilization estimate is invented. The previous prospective guidance stage used one GPU; the new inference device and GPU reservation remain explicitly unpriced. Do not assume CPU-only preparation or silently port inference to another device. No GPU allocation has been performed for this extension.
 
 ## Exit gate and next implementation work
 
@@ -170,7 +166,7 @@ new job IDs are empty and execution flags are false. Before a concrete CLI
 release, finish:
 1. Six input identities/sizes and any reusable preparation inventory.
 2. Fixed preparation/Start bindings, abstention/failure handling and source.
-3. Ninety-cell reuse decisions by identity and by metric.
+3. Ninety-cell metric-admission decisions using the completed documentary identity review.
 4. Complete memory/affinity/job-wall/resource accounting.
 5. Executor/collector changes and proportional negative/admission tests.
 6. Explicit frozen manifest and the author's CLI intervention.

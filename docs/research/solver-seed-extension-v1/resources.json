@@ -12,12 +12,49 @@
     "solve_limit_seconds": 3600
   },
   "execution_authorized": false,
-  "gpu_allocations": 0,
+  "gpu_allocations_performed": 0,
+  "historical_guidance_scheduler_reference": {
+    "gpus": 1,
+    "memory_mib": 65536,
+    "nodes": 1,
+    "physical_cores": 4,
+    "tasks": 1,
+    "wall_seconds": 3600
+  },
   "job_wall_seconds": null,
   "jobs_submitted": 0,
   "memory_mib_per_job": null,
   "not_a_complete_reservation_budget": true,
   "planning_approved": true,
+  "prospective_frozen_inference_device_and_budget": "unresolved; prior reviewed guidance used_one_GPU; no_implicit_CPU_conversion",
+  "prospective_solver_profile_for_review": {
+    "effective_objective_sense": "MINIMIZE",
+    "environment": "existing tfm_env; no package upgrade",
+    "expected_version": "13.0.1",
+    "parameters": {
+      "Cuts": -1,
+      "FeasibilityTol": 1e-06,
+      "Heuristics": 0.05,
+      "IntFeasTol": 1e-05,
+      "MIPFocus": 0,
+      "MIPGap": 0.0001,
+      "MIPGapAbs": 1e-10,
+      "Method": -1,
+      "Presolve": -1,
+      "Seed": [
+        42,
+        43,
+        44
+      ],
+      "SoftMemLimit": 48,
+      "StartNodeLimit": -1,
+      "SubMIPNodes": 500,
+      "Threads": 1,
+      "TimeLimit": 3600
+    },
+    "scope": "review profile derived from existing CPU contract; not a released execution manifest; Seed is the per-cell scalar at release",
+    "solver": "gurobipy"
+  },
   "release_gates": {
     "author_cli_release": false,
     "executor_and_tests_reviewed": false,
@@ -37,33 +74,5 @@
     "job wall and reservation core-hours",
     "audit/export/orchestration overhead",
     "reuse compatibility and metric admission"
-  ],
-  "prospective_solver_profile_for_review": {
-    "solver": "gurobipy",
-    "expected_version": "13.0.1",
-    "environment": "existing tfm_env; no package upgrade",
-    "effective_objective_sense": "MINIMIZE",
-    "parameters": {
-      "Cuts": -1,
-      "FeasibilityTol": 0.000001,
-      "Heuristics": 0.05,
-      "IntFeasTol": 0.00001,
-      "MIPFocus": 0,
-      "MIPGap": 0.0001,
-      "MIPGapAbs": 1e-10,
-      "Method": -1,
-      "Presolve": -1,
-      "Seed": [
-        42,
-        43,
-        44
-      ],
-      "SoftMemLimit": 48,
-      "StartNodeLimit": -1,
-      "SubMIPNodes": 500,
-      "Threads": 1,
-      "TimeLimit": 3600
-    },
-    "scope": "review profile derived from existing CPU contract; not a released execution manifest; Seed is the per-cell scalar at release"
-  }
+  ]
 }

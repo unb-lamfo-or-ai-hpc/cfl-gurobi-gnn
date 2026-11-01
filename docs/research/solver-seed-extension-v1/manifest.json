@@ -1,9 +1,13 @@
 {
   "artifacts": {
-    "cohort.csv": "7d31af5edccf3920c5362123852a170bd10b119c2eaf7b1a0d8aea2999ebc687",
-    "historical-reuse.csv": "6c1c4b23112a4b5f71208d4aa894fc0b6d285f1227987bf9b428e7319da35e53",
-    "planned-cells.csv": "479f9ac9274f9602c9567d8edbc4841d38a418695bda9c039b564d8d2f4c445a",
-    "resources.json": "6ac946a071fc531ff417145134406d731cae56e158446ea20f59b50f57ce0327"
+    "cohort.csv": "32ac37cb26ec4be0ac436dc59c38c396519b08f5999e08e6e8486549fb694870",
+    "compatibility-review.json": "74bfe4a0fb3ec221b4be2f56db2806a1156154ba9ef8eafa0e1ff1e493bf4b25",
+    "historical-reuse.csv": "4144622a05fea756f3c4ed9ac5b8edf09888e3b3cec05b8dffe84551069321b1",
+    "planned-cells.csv": "ec1d3a9d949bb91b2208ef6a5e6bf3f12597ce638636381fab8aab316b292d63",
+    "resources.json": "b70f1bf2b09e9b32f6f5b8872a9ed6d6043025c49a66fe168f5b0b3af999e216",
+    "preflight-medium.md": "e230880856a9a6c724948b9a9e0fcef22f5a8c71203bdb15f101a6b95002dfb7",
+    "preflight_medium_readonly.py": "8f811ad73eb7632a1b648d377a79b1a2b0ff967f61103ce0a1b3022d2341597e",
+    "test_preflight_medium_readonly.py": "d78ebeb6fd876d890ee5a19fa30ea955d68a801f8b54441ff00be556f3a5595b"
   },
   "author_approval_date": "2026-11-01",
   "design": {
@@ -28,6 +32,14 @@
     ],
     "time_limit_seconds": 3600
   },
+  "documentary_compatibility_review": {
+    "archival_identity_compatible": 90,
+    "cells": 90,
+    "fully_admitted_for_reuse": 0,
+    "prospective_start_bindings_identified": 10,
+    "recorded_parameters_models_versions_and_links_match": 90,
+    "source": "compatibility-review.json"
+  },
   "execution_authorized": false,
   "identified_reuse_cells": 90,
   "identity_reuse_does_not_imply_metric_eligibility": true,
@@ -42,6 +54,12 @@
       10
     ],
     "threshold": "0.9991843104362488"
+  },
+  "new_model_hash_inventory": {
+    "current_private_bytes_rechecked": 0,
+    "empty_in_parent_table": 6,
+    "identified_in_broader_historical_inventory": 2,
+    "not_yet_identified_in_public_records": 4
   },
   "new_preparation_candidates": [
     {
@@ -73,7 +91,8 @@
     },
     {
       "alias": "M13",
-      "model_sha256": null,
+      "input_binding_state": "historical_digest_current_preflight_pending",
+      "model_sha256": "f219560e7ee07013152d4069af8585848e853d6d8bc213b248ba2ebcd0d8dde5",
       "parent": "CFL_medium_instance_13",
       "preparation_execution_authorized": false,
       "root_limit_seconds": 600,
@@ -91,7 +110,8 @@
     },
     {
       "alias": "M26",
-      "model_sha256": null,
+      "input_binding_state": "historical_digest_current_preflight_pending",
+      "model_sha256": "568bbff8df060b2de1df4d9bf3815d77e2e18ac73158fe676ba121182add70c8",
       "parent": "CFL_medium_instance_26",
       "preparation_execution_authorized": false,
       "root_limit_seconds": 600,
@@ -125,5 +145,13 @@
       "sha256": "c25063c2d9b2d8c19d1c3857438d9aa8d640b93c904d6760084bbffd0dc2a45f"
     }
   ],
-  "status": "draft_not_executable"
+  "status": "draft_not_executable",
+  "readonly_preflight": {
+    "prepared": true,
+    "executed": false,
+    "model_execution_imports": false,
+    "original_model_bodies_exported": false,
+    "tests_passed": 14,
+    "output_outside_pr89": true
+  }
 }
