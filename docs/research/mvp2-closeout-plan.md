@@ -29,7 +29,7 @@ root-method, tolerance and hyperparameter ablations remain future work, rather
 than implicit additions to the extension.
 
 **Do not generate or open new article/appendix review PDFs in Codex until the
-complete PR89 experiment has been integrated.** Completion means all 60 cells
+complete PR89 experiment has been integrated, unless the author explicitly requests an earlier review PDF.** Completion means all 60 cells
 have explicit reconciled dispositions and the scientific interpretation is
 updated; it does not mean every solve succeeded. If returns remain unavailable,
 record the evidence and obtain the specific human disposition before closing.
@@ -156,7 +156,7 @@ or create separate PRs for trivial corrections.
 | PR89 closeout | Record all 60 dispositions and the scientific closeout in the existing evidence/documentary record; retain installed source9ab unchanged | Tail return and qualification |
 | PR93 final synthesis | Complete current-study article, separate appendices, R2-D8, full audit and verified PDFs, including the M12 interpretation | Complete PR89 integration |
 | Current-study release PR | Synchronize reviewed develop into main, verify the published Pages version and document/PDF identities | Explicitly approved scientific merges and publication |
-| Next experimental protocol/tooling PR | Freeze the six candidate identities, reuse decision, predictor/preparation bindings, numerical checks, exact job manifest and complete resource accounting | Can be prepared now; execution release requires the finished manifest and author CLI |
+| [Draft PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/94): experimental protocol/tooling | Freeze the six candidate identities, reuse decision, predictor/preparation bindings, numerical checks, exact job manifest and complete resource accounting | Can be prepared now; execution release requires the finished manifest and author CLI |
 | Extension results and manuscript PR | Receive and qualify the approved seed-extension campaign; add difficulty profiles, paired seed analysis and the revised article/appendices | Qualified new receipts, without reopening PR89 |
 | Final editorial/release PR, if needed | Incorporate coauthor decisions, close final audit and deliver the exact publication/submission package | Scientific/editorial review and specific release/submission approval |
 

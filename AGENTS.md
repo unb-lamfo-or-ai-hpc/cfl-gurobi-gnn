@@ -1,5 +1,9 @@
 # Repository instructions
 
+## Approved autonomous continuation — 1 November 2026
+
+Continue PR93 source/claim reconciliation and prepare the next protocol under the already approved plan. Draft PR94, based on develop, contains that separate protocol and unreleased144-cell manifest; identity reuse is not metric eligibility. Preserve pending six input hashes, M4/M12 restrictions and the frozen54-parent learning split/checkpoint. The working60-cell register is a qualified-state overlay, not a replacement for raw receipts. Latest author snapshot:3729–3731 complete,3732 running,3733–3734 pending; only54 results received. Generate/open new review PDFs only after complete PR89 integration **or when explicitly requested by the author**. Ask for merge/CLI intervention only when necessary; no new experiment or source/queue change is implied here.
+
 ## PR93 completion and PDF gate — 1 November 2026
 
 The author requests the current PR/Sprint plan incorporating M12 and defers new article/appendix review PDFs in Codex until the complete PR89 experiment is integrated. Follow the [rewritten canonical plan](docs/research/mvp2-closeout-plan.md): finish independent source/claim work now; receive/reconcile all60 dispositions and per-metric eligibility; complete the final audit; only then generate/verify/open two separate review PDFs. Preserve the four-point scope of the exact M12 primal check, all numerical restrictions and the unchanged seed-extension planning approval. Git inspection shows PR89's two commits are not ancestors of PR93/develop; prepare the approval sequence PR89→develop, PR93→develop, then release→main. No merge, publication or new execution occurs through planning. Future PRs separate experimental protocol/tooling, qualified results and editorial release; do not reserve numbers.

@@ -1,0 +1,43 @@
+{
+  "author_elapsed_is_not_query_time": true,
+  "author_query_timestamp": null,
+  "csv_sha256": "35006b07963ae7b55b6887b247cd6e5332286d44c668b4dd3a990de93353517d",
+  "exact_primal_audit_scope": [
+    "3725",
+    "3726",
+    "3727",
+    "3728"
+  ],
+  "global_optimality_or_causal_speedup_certified": false,
+  "kind": "working_metric_qualification_register_not_new_experimental_results",
+  "last_author_snapshot_scope": [
+    "3729",
+    "3730",
+    "3731",
+    "3732",
+    "3733",
+    "3734"
+  ],
+  "numerical_restriction_is_not_time_censoring": true,
+  "original_receipts_and_flags_modified": false,
+  "planned_cells": 60,
+  "received_cells": 54,
+  "scientific_reporting_eligible": false,
+  "sources": [
+    {
+      "commit": "1d5a65a5fa06d58b612a5615563f627ae87aedbf",
+      "path": "docs/evidence/pr89/partial-20261101/cells.csv",
+      "sha256": "b398f7b9fc36abbd66a0639afee67c621068c440f248150bcbcdad1d7fc96e5b"
+    },
+    {
+      "commit": "1d5a65a5fa06d58b612a5615563f627ae87aedbf",
+      "path": "docs/evidence/pr89/partial-20261101/disposition.csv",
+      "sha256": "11c2133afd5041e40996a6e606371084f8b2b3ec6ab3fe7a9dfc8c027549fbbd"
+    },
+    {
+      "commit": "79983e119aefb90f6a55d4bc5e76b8006830f439",
+      "path": "docs/research/pr89-m12-raw-audit-20261101.json",
+      "sha256": "c30fd518d4f7b216630864f4a5e7e7b36e20213bcd8550bfa25814d3f59804da"
+    }
+  ]
+}

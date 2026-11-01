@@ -1,5 +1,42 @@
 # Working integrated assessment — R2-D8
 
+## Received evidence and M12 qualification — 1 November 2026
+
+The current CPU12h review covers54 of60 planned cells. It contains41
+solver-reported terminal-target attainments and13 time-limited cases, all on
+M7. The author's latest snapshot reports3729–3731COMPLETED,3732RUNNING and
+3733–3734PENDING; no query timestamp was supplied. Those scheduler states
+do not increase received coverage. The six-job terminal collector remains
+the next transfer step once the jobs are terminal.
+
+The [working60-cell qualification register](pr89-qualification-register-20261101.csv)
+keeps receipt state, state provenance, terminal-target reporting, numerical
+stratum, scoped exact-primal evidence, cost availability and pending final
+qualification separate. Its [source/hash record](pr89-qualification-register-20261101.json)
+does not replace or modify the archived receipts and eligibility flags.
+
+The [raw M12 audit](pr89-m12-raw-audit-20261101.md) establishes exact primal
+feasibility only for the stored G/four-thread point in its scope. B at two
+and four threads and R at four threads have a tolerated nonintegral binary;
+their rounded integer patterns violate an original row and admit no
+continuous completion with those binaries fixed. Their lower reported
+objectives therefore do not demonstrate better exactly feasible integer
+solutions. No exact global optimum follows. The smaller logged work and
+presolved model explain more of the runtime contrast, without isolating
+a causal contribution of the neural policy. Other M12 points retain
+their own unreviewed/qualified states; M4's limitation remains separate.
+
+The approved solver-seed extension is now prepared in [draft PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/94).
+Its90 historical reuse candidates include18 M4/M12-sensitive records.
+Six new input hashes are missing from the public inventory and remain
+pending identification. This is a separate planning-approved study, not
+a new result of PR89 or a permission to rerun legacy cells.
+
+The current assessment remains R2-D8 work in progress. Source/claim
+reconciliation can advance now. Review PDFs are deferred until the full
+campaign is integrated, unless explicitly requested by the author.
+The final scientific audit, merge and publication gates remain.
+
 ## Approved scientific/editorial revision — 30 October 2026
 
 The author approved the detailed diagnostic and its implementation in PR93.
@@ -61,7 +98,7 @@ campaign is still absent.
 | Principal CPU | 150 seed-42 rows: 97 reported targets, 53 censures; 30 sensitive M4/M12 rows are a subset | Coverage categories are not exact optimality certificates. [Main summary](../evidence/methodology-20261019/summary.json), [existing CPU review](pr86-final-analysis.md) |
 | Historical six-medium archive | Separate optimization cohort and figures | Retain original scope and adverse outcomes; do not substitute for the principal cohort. [Imported manifest](../../manuscript/results/current/pr60_scientific_evidence_manifest.json) |
 | Matched GPU pair | One seed; loop speedup 2.167, job speedup 1.831; selected F1 loss 0.032468 | Increased assigned GPU-hours and lower selected quality; no noninferiority or isolated GPU causality. [Completed review](pr87-completed-pair-review.md) |
-| CPU12h | 60 cells already submitted; final return pending | No result values or inferred outcome counts are inserted here. [Frozen R3 scope](mvp2-r3-contract.md) |
+| CPU12h | 54/60 received;41 reported terminal targets,13 time-limited cases; six returns pending | Descriptive subset with metric-specific numerical/censoring limits. [Sealed partial review](../evidence/pr89/partial-20261101/review.json) and [current qualification register](pr89-qualification-register-20261101.csv) |
 
 The principal CPU coverage and displayed matched-GPU values are bound by
 the [claim map](../../manuscript/supplement/claim-evidence.json). Data-admission
@@ -79,7 +116,7 @@ explicit, not a declaration that all software or conclusions have been verified.
 | SO1 — dataset construction | Admitted cohort, split and label-quality checks | Not full 90-parent/hard coverage; quality-selection bias remains |
 | SO2 — optimization efficacy | Historical and principal B/R/G comparisons | CPU12h conclusions need qualified cell outcomes and metric eligibility |
 | SO3 — computational efficiency | Eligible target/time comparisons and cost definitions | Censored or numerically restricted pairs cannot become certified speedups |
-| SO4 — robustness | Recorded configuration and historical repetitions | Principal study remains seed 42; no training-seed or broad configuration robustness |
+| SO4 — robustness | Recorded configuration and historical repetitions; approved solver-seed extension protocol prepared | Principal study remains seed42. New extension execution/reuse admission remains pending; no training-seed or broad configuration robustness |
 | SO5 — scalability | CPU caps and matched serial/DDP work | GPU and CPU resources scale together; one pair does not isolate GPU causality |
 | SO6 — economics | Bounded preparation scenarios, solver/job clocks and assigned GPU-hours | Missing cold costs, energy or money cannot be imputed |
 | SO7 — generalization | Parent roles and information boundaries are documented | Historically exposed tests do not establish independent generalization |
