@@ -26,11 +26,28 @@ presolved model explain more of the runtime contrast, without isolating
 a causal contribution of the neural policy. Other M12 points retain
 their own unreviewed/qualified states; M4's limitation remains separate.
 
-The approved solver-seed extension is now prepared in [draft PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/94).
-Its90 historical reuse candidates include18 M4/M12-sensitive records.
-Six new input hashes are missing from the public inventory and remain
-pending identification. This is a separate planning-approved study, not
-a new result of PR89 or a permission to rerun legacy cells.
+The approved solver-seed extension is prepared in [draft PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/94).
+The [archival compatibility review](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/2e4386b8535945be63975c03f8af2fe1f8f8cc99/docs/research/solver-seed-extension-v1/compatibility-review.json)
+checks90 one-thread cells against recorded parameters, model identities,
+versions and receipt/child links. All90 documentary identities match;
+metric eligibility remains separate, including18 M4/M12-sensitive rows.
+The prospective Start bindings are from job3521 rather than the older E0
+generation. The earlier completed210-cell review is reused, not repeated.
+
+Existing E0 records identify original-file hashes for M13/M26; current bytes
+are still unverified. Four other candidate hashes remain unidentified in
+reviewed public records. A bounded no-solver original-file preflight is
+prepared and tested for the author's CLI, outside PR89. No current preflight
+result or additional preparation has been received. The previous M13/M26
+cache non-admission is retained without cache rescanning. Historical guidance
+used one GPU; preparation device/budget must be bound before any later
+execution, not silently converted to CPU-only work.
+
+Terminal return under a3600s setting is not first-observed threshold time
+or exact common-time quality. Retain actual follow-up, missing crossings,
+censoring and numerical eligibility. No missing target crossing is inferred
+from Runtime. This separate planning-approved study does not add a PR89
+result or authorize rerunning the90 archived cells.
 
 The current assessment remains R2-D8 work in progress. Source/claim
 reconciliation can advance now. Review PDFs are deferred until the full
