@@ -71,12 +71,12 @@ class FullMatrixTests(unittest.TestCase):
         plan, _ = self.compile()
         for key in (
             "execution_released",
-            "dispatcher_implemented",
             "reporting_eligible",
             "all_16_current_private_byte_preflights_received",
             "all_Start_bindings_reviewed",
         ):
             self.assertIs(plan[key], False)
+        self.assertIs(plan["dispatcher_implemented"], True)
         self.assertEqual(plan["assigned_job_ids"], [])
         self.assertEqual(plan["preparation"]["source"], planner.PREPARATION_SOURCE)
         self.assertFalse(plan["preparation"]["installed_source_modified"])

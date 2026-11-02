@@ -39,10 +39,19 @@
   "guidance_job": {
     "job_id": "3784",
     "state": "RUNNING",
-    "elapsed": "00:00:25",
+    "elapsed": "00:05:34",
     "AllocCPUS": 8,
     "expected_physical_cores": 4,
     "CLI_exit_code": 0,
-    "query_timestamp_UTC": null
+    "query_timestamp_UTC": null,
+    "history": [
+      {
+        "state": "RUNNING",
+        "elapsed": "00:00:25",
+        "CLI_exit_code": 0,
+        "query_timestamp_UTC": null
+      }
+    ],
+    "source": "latest author-provided snapshot while pausing"
   }
 }

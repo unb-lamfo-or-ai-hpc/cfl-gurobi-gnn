@@ -8,7 +8,7 @@
   "cells_sha256": "4aa1bf5410098259bc35556201f2c56419c778c3336d45f0f12b14ff501b7bf3",
   "cohort_sha256": "82b15fc7ac3808bb5002054337e92523fd46c149a9c5a504c36f0401d89eb078",
   "design_decision": "fresh_144_replaces_conditional_90_reuse_plus_54_new",
-  "dispatcher_implemented": false,
+  "dispatcher_implemented": true,
   "easy": 6,
   "execution_released": false,
   "groups": [
@@ -1009,18 +1009,21 @@
     "evaluation_job_hours_each": 4,
     "evaluation_jobs": 48,
     "evaluation_physical_core_peak_ceiling": 4,
+    "full_matrix_storage_bound_implemented": true,
     "full_matrix_storage_bound_verified": false,
     "guidance_job_hours": 1,
     "guidance_jobs": 1,
     "optimizer_calls_maximum": 150,
     "optimizer_hours_ceiling": 145,
+    "per_file_output_limit_MiB": 256,
     "physical_core_hours_ceiling": 198,
     "previous_working_storage_allowance_GiB": 64,
     "reserved_V100_GPU_hours": 1,
     "roots_job_hours": 2,
     "roots_jobs": 1,
-    "storage_GiB_admission_floor": 80,
+    "storage_GiB_admission_floor": 320,
     "summed_reserved_job_hours": 195,
-    "total_jobs": 50
+    "total_jobs": 50,
+    "working_storage_allowance_GiB": 256
   }
 }
