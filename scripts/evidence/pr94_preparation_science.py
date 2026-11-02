@@ -13,8 +13,9 @@ import pr94_isolated_preparation as flow
 
 def api():
     import gurobipy as gp
-    from cfl_gnn.solvers.paired_partial_start import mathematical_signature
     from pr86_native_model import NativeModel
+
+    from cfl_gnn.solvers.paired_partial_start import mathematical_signature
 
     return SimpleNamespace(
         gp=gp, NativeModel=NativeModel, signature=mathematical_signature
@@ -175,6 +176,7 @@ def graph_checks(graph, root, binary_order):
 
 def checkpoint_model(path, device):
     import torch
+
     from cfl_gnn.models.versioning import model_class
 
     with path.open("rb") as stream:
@@ -199,6 +201,7 @@ def checkpoint_model(path, device):
 
 def guidance_one(parent, target, mip, root, model, device, folder, intent):
     import torch
+
     from cfl_gnn.experiments.pr58_guidance import (
         class_aware_gnn_assignments,
         matched_root_lp_assignments,
