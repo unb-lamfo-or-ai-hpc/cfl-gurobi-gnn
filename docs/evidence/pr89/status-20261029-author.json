@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "kind": "author_supplied_partial_scheduler_snapshot",
+  "reported_date": "2026-10-29",
+  "timezone": "America/Fortaleza",
+  "captured_at": null,
+  "source": "Human-supplied sacct text in the PR93 continuation chat; no agent SSH query",
+  "recording_method": "Structured transcription of supplied fields; not a byte-identical terminal capture",
+  "installed_source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+  "scope": {
+    "job_ids_first": 3713,
+    "job_ids_last": 3734,
+    "job_count": 22,
+    "full_campaign_jobs": 60,
+    "full_campaign_snapshot": false
+  },
+  "observed_counts": {
+    "COMPLETED": 3,
+    "RUNNING": 1,
+    "PENDING": 18,
+    "failed_in_this_subset": 0
+  },
+  "jobs": [
+    {
+      "job_id": 3713,
+      "state": "COMPLETED",
+      "elapsed": "12:01:05",
+      "exit_code": "0:0",
+      "alloc_cpus": 8,
+      "batch_max_rss": "16050788K",
+      "extern_elapsed": "12:01:05",
+      "extern_max_rss": "4192K"
+    },
+    {
+      "job_id": 3714,
+      "state": "COMPLETED",
+      "elapsed": "12:01:07",
+      "exit_code": "0:0",
+      "alloc_cpus": 16,
+      "batch_max_rss": "28830964K",
+      "extern_elapsed": "12:01:08",
+      "extern_max_rss": "9864K"
+    },
+    {
+      "job_id": 3715,
+      "state": "COMPLETED",
+      "elapsed": "12:01:08",
+      "exit_code": "0:0",
+      "alloc_cpus": 16,
+      "batch_max_rss": "24631392K",
+      "extern_elapsed": "12:01:08",
+      "extern_max_rss": "0"
+    },
+    {
+      "job_id": 3716,
+      "state": "RUNNING",
+      "elapsed": "07:26:20",
+      "exit_code": "0:0",
+      "alloc_cpus": 16,
+      "batch_max_rss": null,
+      "extern_elapsed": "07:26:20",
+      "extern_max_rss": null
+    },
+    {
+      "job_id": 3717,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 16
+    },
+    {
+      "job_id": 3718,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 16
+    },
+    {
+      "job_id": 3719,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 16
+    },
+    {
+      "job_id": 3720,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 1
+    },
+    {
+      "job_id": 3721,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 1
+    },
+    {
+      "job_id": 3722,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 1
+    },
+    {
+      "job_id": 3723,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 2
+    },
+    {
+      "job_id": 3724,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 2
+    },
+    {
+      "job_id": 3725,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 2
+    },
+    {
+      "job_id": 3726,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 4
+    },
+    {
+      "job_id": 3727,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 4
+    },
+    {
+      "job_id": 3728,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 4
+    },
+    {
+      "job_id": 3729,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 8
+    },
+    {
+      "job_id": 3730,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 8
+    },
+    {
+      "job_id": 3731,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 8
+    },
+    {
+      "job_id": 3732,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 16
+    },
+    {
+      "job_id": 3733,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 16
+    },
+    {
+      "job_id": 3734,
+      "state": "PENDING",
+      "elapsed": "00:00:00",
+      "exit_code": "0:0",
+      "alloc_cpus": 16
+    }
+  ],
+  "limitations": [
+    "No inference about jobs3675-3712 or any unreported state.",
+    "Running/pending ExitCode fields are not final success evidence.",
+    "AllocCPUS is scheduler accounting, not automatically the physical experimental cap.",
+    "Scheduler completion does not qualify solver outcomes, target attainment or numerical eligibility.",
+    "No new collection, reconciliation or HPC command was performed by the agent."
+  ],
+  "final_return_received": false,
+  "scientific_results_added": false
+}

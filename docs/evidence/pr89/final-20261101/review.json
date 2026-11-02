@@ -1,0 +1,143 @@
+{
+  "allocation_hours_are_not_billing_or_measured_utilization": true,
+  "by_parent": {
+    "M0": {
+      "cross_run_bound_excess": 2.4157097795907134e-05,
+      "cross_run_excess_percent": 0.0005242088967698068,
+      "maximum_dual_job": "3678",
+      "maximum_reported_dual": 4.60832019037079,
+      "primal_max": 4.608386913127561,
+      "primal_min": 4.608296033272994,
+      "primal_min_job": "3675",
+      "received": 15,
+      "reported_target": 15,
+      "runtime_hours": 37.752322976522976,
+      "time_limit": 0
+    },
+    "M12": {
+      "cross_run_bound_excess": 0.0004501492626403092,
+      "cross_run_excess_percent": 0.009494951533910447,
+      "maximum_dual_job": "3722",
+      "maximum_reported_dual": 4.741382854739205,
+      "primal_max": 4.741382854739205,
+      "primal_min": 4.740932705476565,
+      "primal_min_job": "3721",
+      "received": 15,
+      "reported_target": 15,
+      "runtime_hours": 46.48976644138495,
+      "time_limit": 0
+    },
+    "M4": {
+      "cross_run_bound_excess": 0.006489455438697611,
+      "cross_run_excess_percent": 0.1324171339900237,
+      "maximum_dual_job": "3699",
+      "maximum_reported_dual": 4.907256631978349,
+      "primal_max": 4.907256631978349,
+      "primal_min": 4.900767176539651,
+      "primal_min_job": "3693",
+      "received": 15,
+      "reported_target": 15,
+      "runtime_hours": 31.94120559944047,
+      "time_limit": 0
+    },
+    "M7": {
+      "cross_run_bound_excess": 0.0,
+      "cross_run_excess_percent": 0.0,
+      "maximum_dual_job": "3718",
+      "maximum_reported_dual": 5.428377599678637,
+      "primal_max": 5.428377599678637,
+      "primal_min": 5.428377599678637,
+      "primal_min_job": "3705",
+      "received": 15,
+      "reported_target": 2,
+      "runtime_hours": 177.73617933180597,
+      "time_limit": 13
+    }
+  },
+  "campaign_modified": false,
+  "exact_audits": {
+    "pr89-m12-raw-audit-20261101.json": "c30fd518d4f7b216630864f4a5e7e7b36e20213bcd8550bfa25814d3f59804da",
+    "pr89-m12-terminal-audit-20261101.json": "14b5fb05a8cee9442cdd518dcff15adf4be2a202e465828afd9b80ff377f3afa"
+  },
+  "exact_global_optimality_certified": false,
+  "final_campaign_receipt_complete": true,
+  "full_control_bytes_identical": true,
+  "input_archives": [
+    {
+      "received": 50,
+      "role": "baseline50",
+      "sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab"
+    },
+    {
+      "received": 4,
+      "role": "delta4",
+      "sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9"
+    },
+    {
+      "received": 6,
+      "role": "terminal_tail6",
+      "sha256": "12b07fce5b49dd7540bd5cd26be2a54cfad2cfccc5b42999373da5d7ae29f85f"
+    }
+  ],
+  "job_minus_solver_seconds_range": [
+    64.22826790809631,
+    82.92679905891418
+  ],
+  "kind": "complete_campaign_receipt_with_metric_specific_limits",
+  "m12_tail_job_minus_solver_seconds_range": [
+    65.14713311195374,
+    77.3272500038147
+  ],
+  "new6_parameters_temporal_cost_and_nested_triplets_verified": true,
+  "observed_logical_AllocCPU_hours": 3500.3694444444445,
+  "observed_physical_reserved_core_hours": 1750.1847222222223,
+  "offline_only": true,
+  "optimization_calls_added": 0,
+  "plan_sha256": "48fca37e2cc698f4d35e4850fdd48d8115b36d7f64b97438ded3b9e17dea3dd1",
+  "planned_cells": 60,
+  "previous_public_manifest_sha256": "67916124db1d6b422cfc5a01399863b9de7e430902e9a6e4521bfac041b7d6fb",
+  "prior54_review_reused": true,
+  "query_finished_utc": "2026-11-02T02:24:05.784312+00:00",
+  "query_scope": "all_sixty_campaign_jobs_and_reported_steps",
+  "query_started_utc": "2026-11-02T02:24:05.722194+00:00",
+  "received_cells": 60,
+  "reconciler_source_sha256": "17b066ba775581712ec16f4cd054fbfb8851e7328e3a99b5b3439aa9c9ac4c04",
+  "runtime_hours": 293.91947434915437,
+  "scientific_reporting_eligible": false,
+  "slurm_elapsed_hours": 295.07194444444445,
+  "solver_runtime_hours_by_method": {
+    "B": 106.96808103270001,
+    "G": 78.32566137903267,
+    "R": 108.62573193742169
+  },
+  "solver_statuses": {
+    "2": 47,
+    "9": 13
+  },
+  "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+  "start_statuses": {
+    "accepted": 40,
+    "not_submitted": 20
+  },
+  "tail_members_hash_verified": 78,
+  "tail_nested_seals_verified": 18,
+  "terminal_accounting_jobs": 60,
+  "terminal_accounting_rows": 180,
+  "threshold_states": {
+    "0.0001": {
+      "observed": 47,
+      "right_censored": 13
+    },
+    "0.01": {
+      "observed": 47,
+      "right_censored": 13
+    },
+    "0.05": {
+      "observed": 54,
+      "right_censored": 6
+    },
+    "0.1": {
+      "observed": 60
+    }
+  }
+}

@@ -1,0 +1,9 @@
+| Threads | B gap (%) | R gap (%) | G gap (%) |
+| --- | --- | --- | --- |
+| 1 | 0.009948 | 9.419980 C | 7.802097 C |
+| 2 | 7.425208 C | 8.670388 C | 6.070480 C |
+| 4 | 4.695977 C | 5.802534 C | 3.464868 C |
+| 8 | 2.178604 C | 1.653037 C | 1.838334 C |
+| 16 | 1.012658 C | 0.000000 | 1.448128 C |
+
+: M7: terminal reported gaps. C denotes terminal-target censoring. {#tbl-partial-cpu-m7}

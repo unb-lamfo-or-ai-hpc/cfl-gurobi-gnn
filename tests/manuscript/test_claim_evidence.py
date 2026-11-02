@@ -25,7 +25,10 @@ class ClaimEvidenceTests(unittest.TestCase):
         (self.manuscript / "supplement").mkdir(parents=True)
         self.manifest = json.loads(
             (ROOT / "manuscript/supplement/claim-evidence.json").read_text(encoding="utf-8"))
-        shutil.copyfile(ROOT / "manuscript/index.qmd", self.manuscript / "index.qmd")
+        for name in CHECK.CLAIM_DOCUMENTS:
+            destination = self.manuscript / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / "manuscript" / name, destination)
         for source in self.manifest["sources"]:
             path = self.repository / source["path"]
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -50,10 +53,10 @@ class ClaimEvidenceTests(unittest.TestCase):
         self.assertEqual(self.check(), [])
 
     def test_article_target_count_cannot_drift_from_summary(self):
-        path = self.manuscript / "index.qmd"
+        path = self.manuscript / "supplement/extended-results.md"
         text = path.read_text(encoding="utf-8")
-        self.assertIn("target attained |97|", text)
-        path.write_text(text.replace("target attained |97|", "target attained |98|"), encoding="utf-8")
+        self.assertIn("target attained | 97 |", text)
+        path.write_text(text.replace("target attained | 97 |", "target attained | 98 |"), encoding="utf-8")
         self.assertIn("claim_value_mismatch:cpu_reported_targets", self.check())
 
     def test_changed_evidence_bytes_are_rejected(self):
@@ -97,6 +100,25 @@ class ClaimEvidenceTests(unittest.TestCase):
     def test_pending_cpu_results_cannot_be_added_to_manifest(self):
         self.manifest["pending_cpu"]["result_claims"] = [{"speedup": 2}]
         self.assertIn("claim_evidence_pending_cpu_promoted", self.check())
+
+    def test_claim_document_cannot_escape_registered_scientific_text(self):
+        self.claim("cpu_reported_targets")["document"] = "../outside.md"
+        self.assertIn("claim_selector_invalid:cpu_reported_targets", self.check())
+
+    def test_cold_cost_cannot_be_replaced_by_amortization(self):
+        self.claim("cpu_cost_cold")["metrics"]["n"]["row"]["metric"] = (
+            "scoped_amortized_cost_scenario_seconds"
+        )
+        self.assertIn("claim_value_mismatch:cpu_cost_cold", self.check())
+
+    def test_abstract_cost_ratio_is_bound_to_the_same_source(self):
+        path = self.manuscript / "index.qmd"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("ratio is 0.843 for solver runtime", text)
+        path.write_text(text.replace("ratio is 0.843 for solver runtime",
+                                     "ratio is 0.777 for solver runtime"),
+                        encoding="utf-8")
+        self.assertIn("claim_value_mismatch:abstract_cpu_cost", self.check())
 
     def test_unavailable_value_cannot_be_formatted_as_a_number(self):
         source = self.source("gpu_review")

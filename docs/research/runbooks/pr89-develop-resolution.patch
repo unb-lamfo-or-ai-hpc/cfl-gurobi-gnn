@@ -1,0 +1,84 @@
+--- a/docs/article_plan.md
++++ b/docs/article_plan.md
+@@ -391,3 +391,15 @@
+ data. Figure generators must keep solver, supervised attempt and batch-level
+ scopes distinct, preserve stopped runs and avoid treating unknown preparation
+ or timing-tail writes as zero. The C–F roadmap and separate budgets are unchanged.
++
++## Historical PR89 addition — 20 October 2026
++
++The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
++
++20October post-merge continuation: PR88's manuscript/GPU/BCE integration is in
++develop at`e5804a8c`. [CPU12h](research/pr89-cpu12h.md) prepares the missing temporal
++quality evidence, not an observed result. The worst-case32.5days plus queues
++threatens15November: no completion date or convergence is promised. Writing and
++coauthor review proceed using already measured data. No additional GPU pair,
++architecture search or main synchronization is required now. Main release stays
++after article revision with separate approval.
+--- a/docs/current_status.md
++++ b/docs/current_status.md
+@@ -568,3 +568,25 @@
+ unapproved resource envelope. No solver, inference, training or job added.
+ PR85 evidence limitations, start binding, instrumentation and exact budget
+ approval remain execution gates. PR87 (1/4 GPUs) and PR88 remain on the roadmap.
++
++## Historical PR89 addition — 20 October 2026
++
++The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
++
++## Current — 20 October: PR88 merged; fresh CPU12h executor in preparation
++
++PR88 merged into develop at`e5804a8c6762c2e5f13447e5a16784e5824de801`
++from head`fcc50396f0869c3b972257fedfc9b53141c93418`. The GPU tradeoff and
++BCE assets are now integrated, not awaiting another PR88 merge. Next delivery:
++[CPU12h executor and read-only installation preflight](research/pr89-cpu12h.md).
++Reuse PR86's original checkpoint/starts; the PR87-trained models do not replace
++M2. Four exposed medium parents, three methods, five caps, seed42:60fresh solves,
++one per job,12hsolver/13hwall,64GiB. The author explicitly approved the complete
++CPU package20October:720solver-h/780serial-reserved-h/4836physical-reserved-core-h,
++conditional on installed preflight and exact-head CI. Plan false flags remain
++false; a separate runtime authorization records this decision before submission.
++No jobs, optimization, training, inference or main synchronization performed.
++The next user CLI integrates existing hashes/environment/current partition,
++separate authorization and serial submission, stopping if preflight fails.
++Allocation gates are checked only in actual approved jobs.
++Earlier entries below are dated history, not current merge/dispatch authority.
+--- a/docs/experiment_protocol.md
++++ b/docs/experiment_protocol.md
+@@ -391,3 +391,16 @@
+ the remaining matrix and is not treated as completed performance. The new core
+ has no default admitted launcher; installed memory/affinity, preparation and
+ authorization must be bound before any actual execution.
++
++## Historical PR89 addition — 20 October 2026
++
++The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
++
++20October: PR88 merged; prospective [CPU12h implementation](research/pr89-cpu12h.md)
++adds the four observed thresholds and four timestamped horizons in a versioned
++adapter. Historical solver behavior remains the default. Source-frozen reuse,
++separate CPU authorization, held resource checks and predecessor artifact checks
++precede one optimization per job. The specific720hsolver/780hreserved CPU budget
++was approved by the author20October, conditional on preflight and exact-head CI;
++current partition preparation does not qualify a future cgroup/affinity/license.
++No new GPU training or historical receipt promotion is authorized.
+--- a/docs/research_context.md
++++ b/docs/research_context.md
+@@ -210,3 +210,16 @@
+ explicitly sets the proposed caps/seeds instead of silently inheriting the
+ historical one-thread/seed-42 defaults. Synthetic tests are implementation
+ evidence only. The historical sources, results and eligibility flags are unchanged.
++
++## Historical PR89 addition — 20 October 2026
++
++The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
++
++20October continuation: PR88 is merged at`e5804a8c6762c2e5f13447e5a16784e5824de801`.
++The [fresh CPU12h operator](research/pr89-cpu12h.md) implements D1/D2 without
++changing source experiments, learning data, seeds, architectures or checkpoints.
++The old PR86 preparation is reused; more time is not a remedy for M4/M12
++numerical sensitivity. The author subsequently approved the specific CPU budget
++of720solver-h/780serial-reservation-h/4836physical-reserved-core-h on20October,
++conditional on installed preflight and exact-head CI. Older pending statements
++below describe prior proposals, not the current decision. No jobs submitted here.

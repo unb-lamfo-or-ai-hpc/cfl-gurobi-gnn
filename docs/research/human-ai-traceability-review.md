@@ -1,8 +1,22 @@
+<!-- Internal research record; excluded from article and journal supplements. -->
+
 # Human–AI traceability: Appendix B decision for coauthor review
 
 28 October 2026 · working material, not an approved journal appendix.
-Read with the [accelerated plan](../../docs/research/mvp2-20261028-accelerated-plan.md)
-and [GNN audit](gnn-methods-audit.md).
+Read with the [accelerated plan](mvp2-20261028-accelerated-plan.md)
+and [GNN audit](../../manuscript/supplement/gnn-methods-audit.md).
+
+## Why document Human–AI collaboration here?
+
+An AI assistant can propose code, interpretations or prose, but a plausible
+proposal is not itself scientific evidence. A reader needs to know what was
+checked, what the check established and who accepted the resulting claim.
+Traceability connects those steps to records that can be inspected.
+
+This is different from studying whether AI makes research faster or more
+reliable. Such a study would need its own question, comparison design and
+evidence. The present record concerns accountability within the CFL project;
+it does not measure a causal benefit of Human–AI collaboration.
 
 ## Decision and scientific scope
 
@@ -35,10 +49,10 @@ They are review candidates, not four completed case studies.
 
 | Episode | Existing primary repository evidence | What it may document | Missing acceptance / qualification |
 | --- | --- | --- | --- |
-| PR85 formulation and model bindings | [PR85 closure](../../docs/research/pr85-closure.md), mathematical signatures and source/model receipts | Detection, diagnosis and explicit preservation of model identity under the human MINIMIZE decision | Link exact dated human decision and its scope before attributing the decision to a collaboration stage |
-| PR86 M12 numerical sensitivity | [Final CPU analysis](../../docs/research/pr86-final-analysis.md), original and diagnostic-vector audits | Distinction between solver acceptance, rounded-vector feasibility and scientific metric eligibility | Explicit author acceptance of the final bounded interpretation; do not reopen formulation certification |
-| PR87 adverse GPU quality | [Completed-pair review](../../docs/research/pr87-completed-pair-review.md), histories, matched loss and returned metrics | Faster training with lower selected F1 retained visibly | Evidence of scientific review, not merely CI or a merged implementation |
-| PR88 methodological redirection | [D1 protocol](../../docs/research/methodology-20261019/D1-protocol.md), [D5 contributions](../../docs/research/methodology-20261019/D5-contributions.md), figure manifests | Separation of clocks, censoring, parent units and contribution limits | Bind the actual human decision that accepted each interpretation and show alternatives without rewriting history |
+| PR85 formulation and model bindings | [PR85 closure](pr85-closure.md), mathematical signatures and source/model receipts | Detection, diagnosis and explicit preservation of model identity under the human MINIMIZE decision | Link exact dated human decision and its scope before attributing the decision to a collaboration stage |
+| PR86 M12 numerical sensitivity | [Final CPU analysis](pr86-final-analysis.md), original and diagnostic-vector audits | Distinction between solver acceptance, rounded-vector feasibility and scientific metric eligibility | Explicit author acceptance of the final bounded interpretation; do not reopen formulation certification |
+| PR87 adverse GPU quality | [Completed-pair review](pr87-completed-pair-review.md), histories, matched loss and returned metrics | Faster training with lower selected F1 retained visibly | Evidence of scientific review, not merely CI or a merged implementation |
+| PR88 methodological redirection | [D1 protocol](methodology-20261019/D1-protocol.md), [D5 contributions](methodology-20261019/D5-contributions.md), figure manifests | Separation of clocks, censoring, parent units and contribution limits | Bind the actual human decision that accepted each interpretation and show alternatives without rewriting history |
 
 For an eventual appendix, each accepted row needs: date, trigger, original
 question, existing artifact identity, AI-assisted proposal, independent check,
@@ -47,7 +61,12 @@ for the article. Missing fields stay “not documented”. Do not export private
 chat histories, credentials, licenses, paths or coauthor communications.
 Public sanitized decisions can be referenced where already available.
 
-## Four validation levels, recorded separately
+## Four questions about validation
+
+A passing software test answers a narrower question than a scientific review.
+For example, a table can be generated correctly from a file while its comparison
+still uses an inappropriate population or endpoint. Separating the following
+questions helps make such gaps visible.
 
 | Level | Required question | Evidence boundary |
 | --- | --- | --- |

@@ -1,3 +1,9 @@
+# Approved scientific framing — 30 October 2026
+
+Title: Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems.
+C2/C3 are the two scientific contribution claims; C1 is methodological.
+The approved diagnostic is implemented in PR93. Scientific supplements are A (method), B (extended results) and C (settings/reproducibility); prospective experiments remain future research. All earlier editorial wording below is historical where it conflicts with this decision. Execution, raw evidence, checkpoints and author/declaration identities remain unchanged.
+
 # Author-review requirements
 
 This checklist records the 2 October 2026 review of the COR draft. It governs

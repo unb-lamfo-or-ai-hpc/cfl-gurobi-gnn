@@ -1,180 +1,62 @@
-# MVP2 completion by Sprints and pull requests
+# Encerramento do MVP 2.0 por Sprints e PRs
 
-28 October 2026 · revised after the author's conditional approval.
-This is the canonical delivery plan; the
-[accelerated-plan index](mvp2-20261028-accelerated-plan.md) points here rather
-than maintaining another timetable. Scientific scope remains R3.
+Atualizado em 2 de novembro de 2026 após a orientação de acelerar S1–S4. A [versão anterior](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/b52cc5ef0952529feb231491d4a6ee2bd9d47f6b/docs/research/mvp2-closeout-plan.md) preserva o planejamento anterior. Esta revisão amplia prospectivamente a PR94; não modifica a campanha PR89, seus arquivos nem os dados históricos.
 
-The earlier D0–D+10 structure was an estimate, not a guarantee. Scheduling is
-now expressed through Sprints, PRs and dated milestones. **D0 remains an
-evidence event**, as defined below; it is not silently redefined or moved
-to the date of later scientific qualification.
+## Evidências já disponíveis
 
-## Delivery boundaries
+A PR89 está encerrada em execução e recepção: 60/60 jobs COMPLETED/0:0, 47 atingimentos do critério terminal reportado e 13 censuras de M7. A consulta conjunta foi em 2/11 às 02:24:05 UTC, ou 1/11 às 23:24:05 em Fortaleza. D0 permanece esse recebimento/reconciliação, independentemente do sinal dos resultados; não é uma nova data de qualificação. [Recibos e disposições](../evidence/pr89/final-20261101/manifest.json) conservam as versões parciais e os flags originais.
 
-**PR92 closes the independent methods and preliminary-review stage.** It
-contains the readable methods and limitations, existing CPU/GPU exposition,
-claim provenance, the preliminary coauthor brief and the first-pass audit
-record. It can be ready for review while PR89 is running. It is not the final
-article, R2-D8 closeout or publication approval.
+O artigo e o Apêndice B incluem os 60 registros e a auditoria delimitada de dez pontos M12. M7 conserva suas 15 observações, 13 censuras terminais, gaps e figuras. Nesta revisão, o artigo aprofunda a discussão de M7, separando melhora primal, progresso dual e fechamento do alvo; o Apêndice B reúne a tabela de cobertura por instância, a figura de tempos M0/gaps M7 e os 60 registros. Nenhum timeout é convertido em sucesso. M4/M12 continuam sem certificado de ótimo comum ou speedup certificado; M0 mantém a ressalva de bound.
 
-**The next draft PR carries final synthesis and article integration.** It
-can start immediately with existing-evidence synthesis and the audit items
-independent of the CPU campaign. Qualified PR89 results, final figures/tables,
-the final scientific supplement, R2-D8 and the second-pass audit belong there.
-Its initial base is PR92's branch; after the author-approved PR92 merge,
-verify and retarget it to develop. No unapproved merge is needed to prepare it.
+A fonte 7acf74d462f98903931442caa668960a898cad24 da PR93 passou no CI Manuscript 41461449499 e na matriz completa Evidence 41461449424, incluindo os dois Windows. A proteção contra conversão de bytes selados resolveu a divergência de hash sem alterar evidências. Novas mudanças exigem seus próprios checks. Os PDFs anteriores, fonte 9453b823, continuam identificados como versões anteriores; não se afirma que contenham a revisão textual atual.
 
-**PR89 remains untouched during execution.** Its source, resources, seeds,
-models, parameters, sequence and collection contract remain frozen. The
-receiver retains exclusive operational responsibility. Human intervention is
-required for every HPC/PowerShell operation; no retry, cancellation or new
-preparation is implicit in this plan.
+As preparações 3783 e 3784 foram recebidas e revisadas: seis raízes em 340 s e seis forwards em 387 s, sem treino novo. Fonte c623fe858f62 e plano b41953a8 continuam congelados. A instalação isolada da avaliação, fonte 10fd1af20ff4/plano 44b443a1, passou no preflight das 16 cadeias de modelo/raiz/grafo/predições/Starts e reportou zero chamadas científicas e submissões. Os metadados foram reconciliados; vetores privados não foram reproduzidos independentemente.
 
-A later release PR is justified only for an independently reviewable release/
-publication scope. Its identity will be determined then. Do not create a PR
-for every minor correction or invent future PR numbers.
+A tentativa inicial, jobs 3785–3832, foi encerrada e preservada: quatro FAILED antes do worker Python e 44 CANCELLED, sem resultado científico. O coletor e a transferência foram conferidos, incluindo SHA256 e membros do arquivo de encerramento. A falha de resolução do estágio no script copiado pelo Slurm foi corrigida e coberta por regressões reais de spool no Linux.
 
-## Sprint-to-PR map
+A recuperação específica foi autorizada pelo autor. A fonte corrigida 81c829b66f6d passou nos cinco jobs da CI 41496227917 antes da instalação isolada. O roteiro comparou integralmente o plano novo ao plano científico já aceito e registrou o aceite antes de sbatch. O retorno do autor informa plan SHA256 92ac169c5ccb69962628dc0b91aab6afff183538da87f14e3ebf080b8cfe53fb, CLI exit0 e 48 novos IDs 3833–3880, para as mesmas 144 avaliações. O snapshot sem horário de consulta registra 3835/3836 COMPLETED, 3839/3840 RUNNING e 44 PENDING. São seis avaliações esperadas nos dois blocos concluídos, ainda sem resultados coletados ou qualificados. O ZIP de instalação 70360903 foi informado, mas não recebido localmente. O [recibo delimitado](pr94-recovery-launch-20261102.json) distingue essas verificações. Não repetir instalação, preparação, submissão ou cancelamento.
 
-| Sprint | Delivery and timing | PR responsibility | Exit criterion |
-| --- | --- | --- | --- |
-| S1 — governance and completion record | Close the independent planning/scope work now; maintain decisions through completion | PR92, then the synthesis PR | One current plan, explicit supersessions and no confusion between a partial PR and MVP2 completion |
-| S2 — methods and independent audit | Consolidate methods/model/data/reproducibility now; preliminary author feedback sought by 15 November | PR92 supplies the brief and first-pass record; synthesis PR resolves further independent findings | Fixed choices, validation selection, B/R/G dependencies and known limitations are source-linked; no new experiment |
-| S3 — existing CPU campaign | Triggered by the authorized return, reconciliation and subsequent metric-specific qualification | Existing PR89 campaign; qualified evidence integrated in the synthesis PR | All60 cells have explicit dispositions; failures, absences, censoring and M4/M12 eligibility remain visible |
-| S4 — scientific synthesis | Start now with existing CPU/GPU evidence; finish after PR89 qualification | Synthesis PR | R2-D8 and SO1–SO8/C1–C3 assessment distinguish findings, limitations and unachieved objectives |
-| S5 — article and scientific supplement | Preliminary brief now; complete manuscript to coauthors by 15 December | PR92 closes preliminary preparation; synthesis PR delivers the complete version | Consistent argument, all numbers traceable, figures interpreted, supplement explicitly packaged |
-| S6 — final review and submission | December revisions; final approval target 7 January; submission target 10 January; absolute deadline 14 January | Final integration/release scope, with separately approved merges/publication/submission | Author scientific/editorial decisions, closed final audit and verified submission package |
+## Sprints em paralelo e entregas
 
-S1, S2, S4 and S5 overlap; they do not wait for the campaign. Only the existing
-PR89 experiment is still running. The sensitivity document's options B–E
-and separate four-hour diagnostic design remain **limitations and future
-work outside S1–S6**. Option A means completing the existing study.
-No new training, model, seed, inference, solve or resource budget is introduced.
+| Sprint | Trabalho agora | PR e gate de conclusão |
+| --- | --- | --- |
+| S1 — contratos e integração | Registrar a nova matriz e recursos; preparar a resolução dos quatro conflitos documentais da PR89; preservar a fonte instalada | PR89: integração revisada, CI e merge em develop já autorizado |
+| S2 — software, métodos e preparação | Preparação e admissão recebidas; entrada batch corrigida/testada; recuperação autorizada e 48 blocos submetidos | PR94: acompanhar retornos pela CLI do autor, preservar ambas as tentativas e reconciliar somente resultados recebidos |
+| S3 — resultados CPU existentes | Concluir a leitura das 60 células, tabelas/figuras, M7 e limites M4/M12; conferir artigo/apêndices contra os recibos | PR93: auditoria da campanha completa, sem exigir um resultado favorável |
+| S4 — síntese e primeira publicação revisada | Preservar IDs/falhas da primeira tentativa; integrar somente o desenho prospectivo, sem desempenho novo; concluir curadoria GitHub/Zenodo | PR93 em develop; depois uma PR distinta develop→main, com aprovação de merge/publicação e verificação de Pages |
+| S5 — resultados novos | Após a PR94, reconciliar as 144 células, censuras/falhas/ausências, elegibilidade por métrica e custos; atualizar análise pareada por instância/seed | PR de resultados, sem misturar a campanha de 1 h com a de 12 h |
+| S6 — fechamento científico/editorial | Após a análise nova, auditoria final A–D, revisão integral de artigo/apêndices, depósito e declarações, versão final e submissão | Aprovações humanas específicas; não condicionar aceitação a obter ganho da GNN |
 
-## D0 and the subsequent scientific qualification gate
+## Integração de PR89 e PR93
 
-D0 records reception of the final authorized return and reconciliation of
-the 60 planned cells, irrespective of favourable or adverse outcomes.
-It is not the date at which all metrics become eligible or all runs succeed.
-The original collection gate still applies; this document does not authorize
-premature collection while jobs remain active.
+O autor autorizou especificamente o merge de PR89 e PR93 em develop após checks. Os quatro conflitos documentais foram resolvidos preservando o conteúdo atual e as adições históricas datadas. A árvore candidata contém os 17 caminhos da PR89; os 13 blobs sem sobreposição são idênticos aos originais. O commit de integração 94d909de incorpora develop como segundo pai sem rebase ou force-push, mantendo 9ab7823c na história e intacto no HPC. O inventário está em [pr89-integration-resolution.json](pr89-integration-resolution.json).
 
-The subsequent scientific closeout requires an explicit disposition for every
-cell and eligibility for each named metric. Keep scheduler state, solver
-status, primal/dual values, gap, observed follow-up, censoring, failure,
-missingness and numerical restrictions separate. Do not convert missing
-observations to zero, numeric ineligibility to ordinary censoring, or an
-observed crossing to an exact continuous first-hit time.
+A CI da integração deve concluir antes do merge de PR89. Em seguida, PR93 recebe a base integrada, conserva fontes/recibos e passa nos checks de evidências e na renderização/verificação dos dois PDFs. A autorização de develop não equivale à aprovação da promoção posterior a main. A PR95 já existente será reutilizada para essa promoção, sem PR duplicada.
 
-If a cell has no return or a dependency is blocked, record the absence/block
-and the evidence available. Ask for a specific human decision. Preserve the
-recorded reception/reconciliation dates; do not silently reset D0 to conceal
-the problem or declare scientific qualification complete. No automatic retry
-or change to the queue, tolerances, source or protocol is allowed.
+## PR94: matriz nova e lançamento limitado
 
-M4/M12 remain in coverage and retain metric-specific restrictions. A
-COMPLETED scheduler state or a longer run does not certify exact optimality.
-Raw flags and historical receipts remain unchanged.
+A [matriz v2 na PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/docs/mvp2-solver-seed-protocol/docs/research/solver-seed-extension-v2) define 144 avaliações novas: 6 easy + 10 medium, B/R/G e seeds 42/43/44, uma thread física e TimeLimit=3.600 s. Os 90 registros antigos permanecem como evidência histórica e não substituem células novas. M7 permanece; treino 54/34–10–10 e checkpoint original não mudam. A ordem B/R/G é balanceada por instância sem usar resultados.
 
-## Audit in two passages
+São 48 blocos de três solves sequenciais, distribuídos em quatro cadeias. A concorrência proposta é de no máximo quatro jobs de avaliação; os limites devem ser confirmados com a capacidade/licença reais. O teto do conjunto, incluindo preparação, é 50 jobs, 150 chamadas de otimização, 145 solver-h, 195 job-h somadas, 198 core-h físicos e 1 V100 GPU-h. O pico das avaliações é 4 núcleos físicos e 256 GiB. O mínimo idealizado de 48 h para avaliações não inclui fila, preparação, revisão ou falhas. O armazenamento foi dimensionado em 256 GiB de trabalho, admissão com 320 GiB livres, piso observado de 64 GiB e limites por arquivo/célula. O preflight passou nessa política; não é reserva de quota nem garantia de disponibilidade futura.
 
-**Passage 1 — independent review, before D0.** Reuse the completed R3 and
-implementation reviews for software structure, the accepted formulation,
-B/R/G interfaces, model/checkpoint provenance, bibliography, article structure,
-historical figures and supplements. The
-[coauthor brief](../../manuscript/coauthor-review-brief.md) contains a compact
-evidence/disposition register. Its coverage and remaining limitations are
-stated; this is not blanket software or scientific certification.
+O compilador e o dispatcher isolado estão implementados. A instalação original 10fd1af e o plano44b443a1 são preservados com seus claims. A recuperação81c829b6 usa outro estágio e claim específico, com equivalência integral dos campos científicos, entradas, ambiente, ordem e recursos. Todos os outros arquivos científicos permanecem iguais; os Starts são reutilizados. O novo plano92ac169c foi revisto automaticamente antes de qualquer sbatch, conforme o roteiro explicitamente autorizado.
 
-Continue any unfinished independent review in the synthesis PR. No generator
-certification or repeated experiment is reopened. Existing source reviews,
-manifests, numerical checks and previously inspected renders can be reused
-when their inputs are unchanged.
+A tentativa original conta48 IDs, a preparação2 e a substituta48:98 IDs históricos, não288 solves científicos. A matriz de avaliação continua limitada a144 novas chamadas, além das seis raízes já concluídas; os pedidos de reserva da tentativa abortada são contabilizados à parte do uso efetivo e do orçamento científico. Quatro falhas de entrada e44 cancelamentos não são tempos zero de otimização nem censura por TimeLimit. Os novos48 blocos foram submetidos; não há retry automático ou autorização para uma terceira tentativa.
 
-**Passage 2 — integral final audit, after D0 and qualification.** Reconcile the
-integrated results, every table/figure and repeated number, scientific claims,
-repository documentation and editorial package. Check that the methods,
-artifacts and published version refer to the actual experiment, and that
-censoring, numerical restrictions and adverse findings remain visible.
-Inspect the final rendered article and supplied supplement.
+A concorrência afeta a interpretação do tempo. Registrar sobreposição entre jobs e recursos reais, conservar B/R/G pareados por instância–seed e não apresentar as três seeds como três redes treinadas. Os resultados da PR89 não serão reclassificados segundo o protocolo novo.
 
-Passage 1 reduces late surprises; it **never replaces the final gate**.
-Use proportional source/link checks, affected numerical/manuscript/archive
-tests and final-head rendering/visual review. Passing CI confirms its checked
-properties, not scientific sufficiency.
+## Curadoria antes de concluir a PR93
 
-## Early coauthor review and milestones
+O [plano GitHub/Zenodo](mvp2-data-release-plan.md) define: código, contratos, inventários, recibos pequenos, CSVs e fontes de figuras no GitHub; snapshot fixo de software, artefatos redistribuíveis de modelos/preparação, evidências volumosas revisadas e produtos editoriais no depósito científico. Credenciais, temporários e ZIPs privados não se tornam públicos. Direito de redistribuição, inventário de membros, hashes, relação de versões e DOI devem ser conferidos; nenhum DOI novo ou upload é presumido.
 
-The preliminary set is now prepared in the
-[scientific brief](../../manuscript/coauthor-review-brief.md): working title,
-research question, empirical gap, candidate C1–C3, methods, existing limitations
-and focused review questions. It is informed by chat 01.04's completed review
-and the implementation reconciliation. It does not reopen that investigation
-or claim originality from citation counts.
+A primeira publicação revisada conterá PR89 completa e, após o lançamento real, o desenho prospectivo da PR94 sem antecipar resultados. S5/S6 produzirão a versão científica final após a campanha nova. O release de Pages intermediário será identificado pela versão, sem simular conclusão final do MVP2.
 
-| Milestone | Target and condition |
-| --- | --- |
-| Preliminary coauthor feedback | Seek a preliminary manifestation by 15 November 2026, through circulation authorized by the authors |
-| Complete manuscript to coauthors | 15 December 2026, conditional on receipt, qualification and audit capacity |
-| Scientific/editorial revisions | December 2026, continuing as needed toward final approval |
-| Final approval | Intended by 7 January 2027 |
-| Editorial submission | Intended by 10 January 2027 |
-| Maximum submission deadline | 14 January 2027 |
+## Sequência de merge e datas
 
-No material or communication is sent on behalf of the authors without
-authorization. Preparing the brief does not establish that feedback was
-requested, received or approved. Final manuscript review remains necessary
-after the qualified CPU results.
+1. Concluir os checks da integração e realizar o merge da PR89 em develop, já especificamente autorizado.
+2. Incorporar a base integrada na PR93, preservar bytes e história, executar os checks da combinação e concluir a auditoria científica/editorial.
+3. Preservar os recibos da tentativa inicial e da recuperação efetivamente submetida da PR94; incluir o desenho e seus limites no artigo/apêndices, sem antecipar resultados ou inserir instruções de fila. Fechar o plano de dados antes do pedido de merge da PR93.
+4. Concluir os checks e realizar o merge da PR93→develop, já especificamente autorizado. Atualizar a PR95 develop→main e solicitar sua aprovação de merge/publicação; verificar depois a versão realmente servida pelo Pages.
+5. Após os resultados da PR94, concluir S5/S6 por PRs coerentes de resultados e release final. Não reservar números nem gerar uma PR por correção trivial.
 
-If reconciliation or audit reveals material risk, state the blocked deliverable,
-its effect on the dated milestones and the earliest defensible revised path.
-An editorial alternative may be a narrower claim supported by the qualified
-evidence, with all exclusions disclosed. It requires author scientific
-judgment; it cannot conceal failed cells or manufacture a successful answer.
-If a central claim remains unsupported, revise the claim or submission
-strategy rather than quietly adding experiments to a Sprint.
-
-## Scientific and editorial completion
-
-The synthesis must keep the historical six-medium study, principal one-hour
-CPU analysis, four-medium CPU12h campaign and matched GPU pair distinguishable.
-Parents, not method/cap cells or binary variables, are the comparison units.
-Historical seeds 43/44 do not become repetitions of the CPU12h design.
-Preparation costs, solver clocks and assigned resources retain their boundaries.
-
-The article must connect question, literature position, mechanism, evaluation
-and conclusions. Interpret displays rather than merely inventorying records.
-Keep label prediction distinct from solver utility; conditional observations
-distinct from seed robustness; fixed architecture distinct from an optimized
-one; and CI success distinct from scientific validity.
-
-The final PR must update the claim map for qualified CPU evidence, reconcile
-abstract/prose/captions/tables, and package the scientific supplement explicitly.
-The present repository working documents are not automatically included in
-the editable LaTeX ZIP or approved for journal submission. Verify availability,
-redistribution rights and declarations without inventing a deposit or DOI.
-
-The Human–AI register supports review. A full IIEA-S Appendix B is not a new
-MVP2 requirement; inclusion needs a clear purpose, agreed definition, adequate
-primary decision evidence and coauthor approval. Authorship and the agreed
-AI-use declaration remain unchanged absent explicit author revision.
-
-## Review, merge and sign-off
-
-Close PR92's revised stage when the brief, first-pass record, documentation
-and applicable final-head checks are complete. Mark it ready and request
-human merge authorization; do not close it as abandoned or merge it automatically.
-Its readiness does not mean the whole article is submission-ready.
-
-Prepare the synthesis PR as a draft. Final readiness depends on qualified
-PR89 evidence, complete R2-D8, integrated article/supplement, the second-pass
-audit and the relevant author decisions. Any later PR89 scientific-closeout
-or release merge also needs explicit authorization. The installed execution
-source is not changed by documentary integration.
-
-MVP2 sign-off requires delivered R2-D1–D8 products, a consistent qualified
-evidence account, closed final audit, explicit availability limitations and
-author acceptance of the bounded interpretation. Negative/censored outcomes
-can be scientifically valid; acceptance by a journal is a later outcome.
-Publication and editorial submission remain specifically approved human gates.
+Metas: manuscrito completo aos coautores até 15/12/2026; revisão em dezembro; aprovação final pretendida em 7/1/2027; submissão pretendida em 10/1; limite de 14/1. Nenhuma comunicação é enviada em nome dos autores. Se filas, armazenamento, licença, preparação ou qualificação ameaçarem essas metas, registrar o impacto e submeter uma alternativa científica explícita, sem mudar silenciosamente o desenho ou o prazo. Não há novas sementes de treino, arquiteturas, métodos de raiz ou tolerâncias no MVP2.
