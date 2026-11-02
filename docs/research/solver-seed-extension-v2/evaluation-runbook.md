@@ -1,6 +1,6 @@
 # Avaliação completa: implementação e passagem para a CLI
 
-O adaptador de avaliação está isolado da preparação c623fe858f62 e de toda a PR89. A matriz conserva 144 chamadas novas, uma thread física por solve, TimeLimit=3.600 s e seeds 42/43/44. O corpus de aprendizado, o checkpoint CPU, os hiperparâmetros e a política de Starts não mudam. A instalação no HPC e a liberação de avaliações ainda não foram realizadas.
+O adaptador de avaliação está isolado da preparação c623fe858f62 e de toda a PR89. A matriz conserva 144 chamadas novas, uma thread física por solve, TimeLimit=3.600 s e seeds 42/43/44. O corpus de aprendizado, o checkpoint CPU, os hiperparâmetros e a política de Starts não mudam. A instalação e sua inspeção de zero chamadas já foram recebidas e revisadas. A submissão das avaliações ainda não foi realizada.
 
 ## Do retorno de guidance ao preflight das 16 instâncias
 
@@ -21,6 +21,12 @@ O núcleo de solução novo é uma derivação isolada do solver instalado na PR
 O mapa completo de parâmetros vem do recibo histórico selado do job 3522, incluindo Method, Presolve, tolerâncias, limites absolutos e demais controles. A política nova altera somente os campos previstos: Seed por célula, uma thread e orçamento de uma hora. Não confia em defaults possivelmente alterados por um ambiente. O resultado reconcilia o mapa efetivamente observado com esse mapa e conserva MINIMIZE, o modelo fresco e a assinatura matemática original.
 
 R e G têm a mesma **quantidade** de variáveis selecionadas e de positivos; seus rankings podem selecionar variáveis diferentes. Não se impõe artificialmente igualdade entre os conjuntos de nomes. O par de Starts é o mesmo nas três seeds. Uma abstenção válida gera dois Starts vazios, preservados como tal: executa-se o modelo original sem atribuições iniciais, mantendo o identificador M1/M2 e a abstenção registrada. Não há nova inferência, seleção de limiar ou troca de método para preencher a célula.
+
+## Instalação recebida e plano aceito
+
+A inspeção da fonte `10fd1af20ff40c43147331e7321adf10c151a6f5` terminou em 11,124 s e reportou 16 cadeias conferidas, zero otimizações, inferências, treinamentos e submissões. As projeções de todos os vínculos correspondem aos recibos históricos/novos e ao checkpoint congelado; o ambiente coincide com a preparação. O [recibo](../../evidence/pr94/evaluation-installation-10fd1af20ff4/installation-review.json) e a [revisão](../pr94-evaluation-installation-review-20261102.json) preservam o escopo e os hashes. Os vetores privados e o plano privado completo não foram transferidos nem reproduzidos a partir do ZIP; os checks de bytes/Starts foram feitos pelo preflight instalado.
+
+O hash do plano instalado, conferido no recibo e na saída da CLI, é **`44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600`**. O próximo comando é `submit` do operador existente com esse hash, mantendo a fonte testada. Os 48 blocos ainda não têm IDs recebidos. A configuração de batch/dgx-dasci admite o teto proposto, mas não reserva CPUs, RAM, armazenamento ou licenças. O operador verifica novamente a admissão e os perfis reais antes de liberar os holds.
 
 ## Submissão e concorrência
 

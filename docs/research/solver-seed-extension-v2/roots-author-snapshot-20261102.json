@@ -72,5 +72,18 @@
   },
   "evaluation_source_pinned": "10fd1af20ff40c43147331e7321adf10c151a6f5",
   "evaluation_source_CI": 41478889138,
-  "evaluation_installation_return_received": false
+  "evaluation_installation_return_received": true,
+  "evaluation_installation_review_passed": true,
+  "evaluation_installation": {
+    "source_commit": "10fd1af20ff40c43147331e7321adf10c151a6f5",
+    "plan_sha256": "44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600",
+    "archive_sha256": "25565d7e5348954117acd045c0621b01a3eea243691d793e35eb597c5e10e4ab",
+    "member_sha256": "1331ffa55d9543b429fa720dc332d8d8df5136f2b38bfd198ebce639a4610bcb",
+    "parents": 16,
+    "query_utc": "2026-11-02T16:37:34.858338+00:00",
+    "reported_optimizer_calls": 0,
+    "reported_forwards": 0,
+    "reported_training_calls": 0,
+    "reported_submissions": 0
+  }
 }

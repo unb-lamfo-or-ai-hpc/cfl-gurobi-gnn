@@ -1,10 +1,14 @@
 # Repository instructions
 
-## Recebimento de guidance — 2 November 2026
+## Evaluation installation received — 2 November 2026
 
-Guidance job 3784 is now received and reviewed: COMPLETED/0:0, 387 seconds, six reported forwards and zero optimization/training calls. The terminal accounting query is 2026-11-02T16:23:11.896930+00:00. Archive SHA256 73599b8eba57c8d9b9fa65bcff9e26151e241cf154cab6f1782a71deba134831 and metadata member SHA256 7722bacdbb308f7fe8a17c26504cde1f00989eac8d66c2ff68a321a17a73f5a4 passed review. Six nonempty frozen Starts report support 20,000 with parent/root/checkpoint bindings; private vectors were not independently replayed. Earlier RUNNING snapshots below are historical and superseded by this receipt.
+The zero-call evaluation installation/preflight is now received and reviewed: 16 model/root/graph/prediction/Start bindings match the ten historical and six new preparation receipts. Environment matches preparation; the partition/node configuration admits the proposed resources. Installation took 11.124 seconds and reports zero optimizer/forward/training calls and submissions.
 
-The evaluation source is pinned to 10fd1af20ff40c43147331e7321adf10c151a6f5, whose complete CI run 41478889138 passed all four environments and tensor checks. This receipt update is documentary only; do not reinstall/update preparation c623 or substitute a later documentary commit into the evaluation installer. The next author CLI installs that tested evaluation source into its own stage and performs a zero-call, 16-parent byte/Start/resource inspection. Receive and review its exact plan return before submission; no evaluation job is currently submitted. Full-matrix protocol/resources and all scientific constraints remain unchanged.
+Keep the installed evaluation source pinned to 10fd1af20ff40c43147331e7321adf10c151a6f5 (full CI 41478889138 passed). Accepted installed plan SHA256: 44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600. Archive SHA256: 25565d7e5348954117acd045c0621b01a3eea243691d793e35eb597c5e10e4ab; installation-review member SHA256: 1331ffa55d9543b429fa720dc332d8d8df5136f2b38bfd198ebce639a4610bcb.
+
+The next necessary author CLI invokes the existing operator's submit command with that exact plan hash. It can submit at most 48 held paired blocks, validate all owned resource/dependency profiles, then release four chains; at most144 evaluations, one physical core and3,600 solver seconds each. Existing full submission means status only; an ambiguous/partial claim means diagnosis, never resubmit/release/cancel automatically. No evaluation ID is received yet. Current free resources/license concurrency are not guaranteed; pending jobs are permitted.
+
+Do not reinstall/update the tested source, preparation c623 or PR89. Later documentary commits do not replace the installed commit. Guidance3784 was COMPLETED/0:0,387seconds with six forwards and zero solves/training; older RUNNING/awaiting-return snapshots below are historical. Private byte/Start checks were performed by the installed preflight; raw vectors and the full private plan were not independently replayed from this metadata packet. Review scope is recorded in docs/research/pr94-evaluation-installation-review-20261102.json. No scientific promotion, merge, publication or additional training is authorized.
 
 ## Evaluation implementation — 2 November 2026, author pause
 
