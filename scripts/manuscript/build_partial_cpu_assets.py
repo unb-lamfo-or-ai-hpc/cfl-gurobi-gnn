@@ -319,6 +319,11 @@ def check_source(manuscript, repository=ROOT):
             and "separately from the 150-observation" in section,
             "partial_article_scope",
         )
+        require(
+            "| Long-horizon CPU evaluation | 60 completed configurations on the same four medium instances |"
+            in appendix,
+            "complete_appendix_population",
+        )
         for value in (
             "5.428377599678637",
             "0.132417%",

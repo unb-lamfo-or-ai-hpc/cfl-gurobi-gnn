@@ -93,6 +93,21 @@ class PartialCpuTests(unittest.TestCase):
                 any("partial_article_scope" in e for e in P.check_source(root))
             )
 
+    def test_population_table_cannot_revert_to_partial_sample(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self.prose_fixture(d)
+            path = root / "supplement/extended-results.md"
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "60 completed configurations on the same four medium instances",
+                    "50 completed configurations on the same four medium instances",
+                ),
+                encoding="utf-8",
+            )
+            self.assertTrue(
+                any("complete_appendix_population" in e for e in P.check_source(root))
+            )
+
     def test_changed_bound_diagnostic_rejected(self):
         with tempfile.TemporaryDirectory() as d:
             root = self.prose_fixture(d)
