@@ -695,14 +695,14 @@
   ],
   "pending_cpu": {
     "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
-    "final_return_received": false,
+    "final_return_received": true,
     "result_claims": [],
-    "integration_requirement": "Final campaign claims require all 60 cells and metric qualification. The author separately requested a labelled descriptive 50-cell subset on 31 October 2026; its source and prose have independent checks."
+    "integration_requirement": "All60 receipts are reconciled. Complete descriptive reporting is bound to the final manifest and ten-point scoped primal evidence; final scientific/editorial audit remains pending."
   },
   "limits": [
     "Checks bind recorded public values and current article text; they do not independently rescore predictions or replay historical fits.",
     "No population-level significance, independent generalization, exact optimality, quality preservation or isolated GPU causality is certified.",
-    "Partial CPU numbers are labelled and source-bound; missing/censored values are never filled with zero and final campaign qualification remains false."
+    "Complete CPU numbers retain censoring and numerical restrictions. Raw reporting flags remain false; no exact-optimum or certified-speedup claim is admitted."
   ],
   "derived_assets": {
     "generator": "scripts/manuscript/build_principal_assets.py",
@@ -729,5 +729,18 @@
     "checker": "scripts/manuscript/build_partial_cpu_assets.py",
     "new_optimization_calls": 0,
     "original_campaign_flags_unchanged": true
+  },
+  "complete_cpu_descriptive": {
+    "source_directory": "docs/evidence/pr89/final-20261101",
+    "source_commit": "565d9146729c7f35f280d1ae37818beab71879ff",
+    "manifest_sha256": "6fb1728509eb6a140618882f78aa87300367db549c49adbf42393652f71c6941",
+    "received_cells": 60,
+    "reported_target": 47,
+    "right_censored": 13,
+    "checker": "scripts/manuscript/build_partial_cpu_assets.py",
+    "metric_dispositions": "docs/evidence/pr89/final-20261101/disposition.csv",
+    "tail_exact_audit_sha256": "14b5fb05a8cee9442cdd518dcff15adf4be2a202e465828afd9b80ff377f3afa",
+    "exact_global_optimality_certified": false,
+    "final_integrated_audit_complete": false
   }
 }

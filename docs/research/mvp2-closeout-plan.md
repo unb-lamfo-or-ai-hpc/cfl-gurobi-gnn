@@ -1,5 +1,15 @@
 # MVP2 completion by Sprints and pull requests
 
+## PR89 complete return — 1 November 2026
+
+All 60 cells are received and reconciled; the joint accounting query on 2November02:24:05UTC (1November23:24:05 Fortaleza) records 60 COMPLETED/0:0 jobs. There are 47 reported terminal-target attainments and 13 time-limited M7 cases. See the [complete reconciliation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/565d9146729c7f35f280d1ae37818beab71879ff/docs/research/pr89-complete-reconciliation-20261101.md). The three-archive chain, unchanged controls, six new parameter/temporal/cost/nested bindings and 180 accounting rows are checked. This closes reception/reconciliation, not the final integrated audit or unrestricted scientific qualification. Earlier running/missing-cell statements below are historical snapshots.
+
+The two M12 arithmetic audits now cover ten points: G/4,G/8,G/16 are exactly primal-feasible in their scope; seven controls have a fractional binary and an infeasible rounded pattern. The five other M12 points remain outside the independent exact-primal audit. Preserve M4 restrictions and M0 cross-run bound limits. One common exact optimum and certified M12 speedups are not established.
+
+M7 stays in the cohort: computational difficulty and terminal-target censoring are not infeasibility. No post-outcome exclusion or new nine-medium protocol was adopted. Removing M7 would change 144 to135 planned cells and 90 to81 archival candidates but leave 54 new calls unchanged; this is an evaluated alternative, not an approved protocol revision.
+
+The PR93 article/AppendixB and current assets now use all 60 observations, with a final scientific/editorial audit still pending. Original snapshots/raw flags remain unchanged. No PDF was rendered. The installed PR94 source remains c623fe8 and plan b41953a8; do not reinstall it to follow documentary commits. PR89 has finished, allowing preparation of the separate roots CLI. Live allocation and artifact-generation/review gates remain pending, and no new job, forward, solve, retry, merge or publication has occurred.
+
 Revised 1 November 2026. This is the current delivery plan, incorporating the
 author's PDF instruction and the completed four-point M12 audit. It replaces
 older operational schedules on this page; their rationale remains in the

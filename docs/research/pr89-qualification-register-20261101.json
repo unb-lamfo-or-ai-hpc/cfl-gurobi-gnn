@@ -1,16 +1,77 @@
 {
   "author_elapsed_is_not_query_time": true,
-  "author_query_timestamp": null,
-  "csv_sha256": "683ae06f58932e5b5c91536adc68b9ff51af05b05d63f6c61c18f5335964c769",
+  "author_query_timestamp": "2026-11-02T02:24:05.784312+00:00",
+  "complete_receipt_does_not_close_final_integrated_audit": true,
+  "csv_sha256": "fb8d9e098f721c641b429b05555d3022add4e31862302dd783dcd6cb35740841",
   "exact_primal_audit_scope": [
     "3725",
     "3726",
     "3727",
-    "3728"
+    "3728",
+    "3729",
+    "3730",
+    "3731",
+    "3732",
+    "3733",
+    "3734"
   ],
   "global_optimality_or_causal_speedup_certified": false,
   "kind": "working_metric_qualification_register_not_new_experimental_results",
   "last_author_snapshot_scope": [
+    "3675",
+    "3676",
+    "3677",
+    "3678",
+    "3679",
+    "3680",
+    "3681",
+    "3682",
+    "3683",
+    "3684",
+    "3685",
+    "3686",
+    "3687",
+    "3688",
+    "3689",
+    "3690",
+    "3691",
+    "3692",
+    "3693",
+    "3694",
+    "3695",
+    "3696",
+    "3697",
+    "3698",
+    "3699",
+    "3700",
+    "3701",
+    "3702",
+    "3703",
+    "3704",
+    "3705",
+    "3706",
+    "3707",
+    "3708",
+    "3709",
+    "3710",
+    "3711",
+    "3712",
+    "3713",
+    "3714",
+    "3715",
+    "3716",
+    "3717",
+    "3718",
+    "3719",
+    "3720",
+    "3721",
+    "3722",
+    "3723",
+    "3724",
+    "3725",
+    "3726",
+    "3727",
+    "3728",
     "3729",
     "3730",
     "3731",
@@ -19,67 +80,2536 @@
     "3734"
   ],
   "latest_author_snapshot": {
-    "elapsed_is_not_query_time": true,
     "jobs": [
       {
-        "AllocCPUS": 16,
-        "ExitCode": "0:0",
-        "batch_MaxRSS": "18321012K",
-        "elapsed": "04:31:25",
+        "job_id": "3675",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "20981",
+            "End": "2026-10-21T03:06:10",
+            "ExitCode": "0:0",
+            "JobID": "3675",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-20T21:16:29",
+            "State": "COMPLETED",
+            "TotalCPU": "05:49:38"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "20981",
+            "End": "2026-10-21T03:06:10",
+            "ExitCode": "0:0",
+            "JobID": "3675.batch",
+            "MaxRSS": "3568144K",
+            "ReqMem": "",
+            "Start": "2026-10-20T21:16:29",
+            "State": "COMPLETED",
+            "TotalCPU": "05:49:38"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "20981",
+            "End": "2026-10-21T03:06:10",
+            "ExitCode": "0:0",
+            "JobID": "3675.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-20T21:16:29",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3676",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "9582",
+            "End": "2026-10-21T05:45:52",
+            "ExitCode": "0:0",
+            "JobID": "3676",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T03:06:10",
+            "State": "COMPLETED",
+            "TotalCPU": "02:39:41"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "9582",
+            "End": "2026-10-21T05:45:52",
+            "ExitCode": "0:0",
+            "JobID": "3676.batch",
+            "MaxRSS": "3316548K",
+            "ReqMem": "",
+            "Start": "2026-10-21T03:06:10",
+            "State": "COMPLETED",
+            "TotalCPU": "02:39:41"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "9582",
+            "End": "2026-10-21T05:45:52",
+            "ExitCode": "0:0",
+            "JobID": "3676.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-21T03:06:10",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3677",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "10220",
+            "End": "2026-10-21T08:36:12",
+            "ExitCode": "0:0",
+            "JobID": "3677",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T05:45:52",
+            "State": "COMPLETED",
+            "TotalCPU": "02:50:18"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "10220",
+            "End": "2026-10-21T08:36:12",
+            "ExitCode": "0:0",
+            "JobID": "3677.batch",
+            "MaxRSS": "3939308K",
+            "ReqMem": "",
+            "Start": "2026-10-21T05:45:52",
+            "State": "COMPLETED",
+            "TotalCPU": "02:50:18"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "10220",
+            "End": "2026-10-21T08:36:12",
+            "ExitCode": "0:0",
+            "JobID": "3677.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-21T05:45:52",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3678",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "7616",
+            "End": "2026-10-21T10:43:08",
+            "ExitCode": "0:0",
+            "JobID": "3678",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T08:36:12",
+            "State": "COMPLETED",
+            "TotalCPU": "03:31:55"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "7616",
+            "End": "2026-10-21T10:43:08",
+            "ExitCode": "0:0",
+            "JobID": "3678.batch",
+            "MaxRSS": "6017432K",
+            "ReqMem": "",
+            "Start": "2026-10-21T08:36:12",
+            "State": "COMPLETED",
+            "TotalCPU": "03:31:55"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "7616",
+            "End": "2026-10-21T10:43:08",
+            "ExitCode": "0:0",
+            "JobID": "3678.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-21T08:36:12",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3679",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "9849",
+            "End": "2026-10-21T13:27:17",
+            "ExitCode": "0:0",
+            "JobID": "3679",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T10:43:08",
+            "State": "COMPLETED",
+            "TotalCPU": "04:36:38"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "9849",
+            "End": "2026-10-21T13:27:17",
+            "ExitCode": "0:0",
+            "JobID": "3679.batch",
+            "MaxRSS": "4823680K",
+            "ReqMem": "",
+            "Start": "2026-10-21T10:43:08",
+            "State": "COMPLETED",
+            "TotalCPU": "04:36:36"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "9850",
+            "End": "2026-10-21T13:27:18",
+            "ExitCode": "0:0",
+            "JobID": "3679.extern",
+            "MaxRSS": "4100K",
+            "ReqMem": "",
+            "Start": "2026-10-21T10:43:08",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3680",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "7428",
+            "End": "2026-10-21T15:31:07",
+            "ExitCode": "0:0",
+            "JobID": "3680",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T13:27:19",
+            "State": "COMPLETED",
+            "TotalCPU": "03:21:03"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "7428",
+            "End": "2026-10-21T15:31:07",
+            "ExitCode": "0:0",
+            "JobID": "3680.batch",
+            "MaxRSS": "6283384K",
+            "ReqMem": "",
+            "Start": "2026-10-21T13:27:19",
+            "State": "COMPLETED",
+            "TotalCPU": "03:21:03"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "7428",
+            "End": "2026-10-21T15:31:07",
+            "ExitCode": "0:0",
+            "JobID": "3680.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-21T13:27:19",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3681",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "4835",
+            "End": "2026-10-21T16:51:42",
+            "ExitCode": "0:0",
+            "JobID": "3681",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T15:31:07",
+            "State": "COMPLETED",
+            "TotalCPU": "04:29:34"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "4835",
+            "End": "2026-10-21T16:51:42",
+            "ExitCode": "0:0",
+            "JobID": "3681.batch",
+            "MaxRSS": "6767004K",
+            "ReqMem": "",
+            "Start": "2026-10-21T15:31:07",
+            "State": "COMPLETED",
+            "TotalCPU": "04:29:34"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "4835",
+            "End": "2026-10-21T16:51:42",
+            "ExitCode": "0:0",
+            "JobID": "3681.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-21T15:31:07",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3682",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "10231",
+            "End": "2026-10-21T19:42:13",
+            "ExitCode": "0:0",
+            "JobID": "3682",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T16:51:42",
+            "State": "COMPLETED",
+            "TotalCPU": "09:43:04"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "10231",
+            "End": "2026-10-21T19:42:13",
+            "ExitCode": "0:0",
+            "JobID": "3682.batch",
+            "MaxRSS": "10469544K",
+            "ReqMem": "",
+            "Start": "2026-10-21T16:51:42",
+            "State": "COMPLETED",
+            "TotalCPU": "09:43:02"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "10232",
+            "End": "2026-10-21T19:42:14",
+            "ExitCode": "0:0",
+            "JobID": "3682.extern",
+            "MaxRSS": "4184K",
+            "ReqMem": "",
+            "Start": "2026-10-21T16:51:42",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3683",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "14338",
+            "End": "2026-10-21T23:41:13",
+            "ExitCode": "0:0",
+            "JobID": "3683",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T19:42:15",
+            "State": "COMPLETED",
+            "TotalCPU": "13:42:03"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "14338",
+            "End": "2026-10-21T23:41:13",
+            "ExitCode": "0:0",
+            "JobID": "3683.batch",
+            "MaxRSS": "11388228K",
+            "ReqMem": "",
+            "Start": "2026-10-21T19:42:15",
+            "State": "COMPLETED",
+            "TotalCPU": "13:42:03"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "14338",
+            "End": "2026-10-21T23:41:13",
+            "ExitCode": "0:0",
+            "JobID": "3683.extern",
+            "MaxRSS": "4448K",
+            "ReqMem": "",
+            "Start": "2026-10-21T19:42:15",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3684",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "8415",
+            "End": "2026-10-22T02:01:28",
+            "ExitCode": "0:0",
+            "JobID": "3684",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-21T23:41:13",
+            "State": "COMPLETED",
+            "TotalCPU": "09:45:51"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "8415",
+            "End": "2026-10-22T02:01:28",
+            "ExitCode": "0:0",
+            "JobID": "3684.batch",
+            "MaxRSS": "17448708K",
+            "ReqMem": "",
+            "Start": "2026-10-21T23:41:13",
+            "State": "COMPLETED",
+            "TotalCPU": "09:45:51"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "8415",
+            "End": "2026-10-22T02:01:28",
+            "ExitCode": "0:0",
+            "JobID": "3684.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-21T23:41:13",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3685",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "8890",
+            "End": "2026-10-22T04:29:38",
+            "ExitCode": "0:0",
+            "JobID": "3685",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T02:01:28",
+            "State": "COMPLETED",
+            "TotalCPU": "12:02:31"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "8890",
+            "End": "2026-10-22T04:29:38",
+            "ExitCode": "0:0",
+            "JobID": "3685.batch",
+            "MaxRSS": "17596232K",
+            "ReqMem": "",
+            "Start": "2026-10-22T02:01:28",
+            "State": "COMPLETED",
+            "TotalCPU": "12:02:31"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "8890",
+            "End": "2026-10-22T04:29:38",
+            "ExitCode": "0:0",
+            "JobID": "3685.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T02:01:28",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3686",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "3932",
+            "End": "2026-10-22T05:35:10",
+            "ExitCode": "0:0",
+            "JobID": "3686",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T04:29:38",
+            "State": "COMPLETED",
+            "TotalCPU": "05:28:51"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "3932",
+            "End": "2026-10-22T05:35:10",
+            "ExitCode": "0:0",
+            "JobID": "3686.batch",
+            "MaxRSS": "9707656K",
+            "ReqMem": "",
+            "Start": "2026-10-22T04:29:38",
+            "State": "COMPLETED",
+            "TotalCPU": "05:28:51"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "3932",
+            "End": "2026-10-22T05:35:10",
+            "ExitCode": "0:0",
+            "JobID": "3686.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T04:29:38",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3687",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "8921",
+            "End": "2026-10-22T08:03:51",
+            "ExitCode": "0:0",
+            "JobID": "3687",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T05:35:10",
+            "State": "COMPLETED",
+            "TotalCPU": "14:27:55"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "8921",
+            "End": "2026-10-22T08:03:51",
+            "ExitCode": "0:0",
+            "JobID": "3687.batch",
+            "MaxRSS": "31860568K",
+            "ReqMem": "",
+            "Start": "2026-10-22T05:35:10",
+            "State": "COMPLETED",
+            "TotalCPU": "14:27:55"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "8921",
+            "End": "2026-10-22T08:03:51",
+            "ExitCode": "0:0",
+            "JobID": "3687.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T05:35:10",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3688",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "3227",
+            "End": "2026-10-22T08:57:39",
+            "ExitCode": "0:0",
+            "JobID": "3688",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T08:03:52",
+            "State": "COMPLETED",
+            "TotalCPU": "06:56:51"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "3227",
+            "End": "2026-10-22T08:57:39",
+            "ExitCode": "0:0",
+            "JobID": "3688.batch",
+            "MaxRSS": "16039120K",
+            "ReqMem": "",
+            "Start": "2026-10-22T08:03:52",
+            "State": "COMPLETED",
+            "TotalCPU": "06:56:51"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "3227",
+            "End": "2026-10-22T08:57:39",
+            "ExitCode": "0:0",
+            "JobID": "3688.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T08:03:52",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3689",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "8465",
+            "End": "2026-10-22T11:18:44",
+            "ExitCode": "0:0",
+            "JobID": "3689",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T08:57:39",
+            "State": "COMPLETED",
+            "TotalCPU": "14:59:01"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "8465",
+            "End": "2026-10-22T11:18:44",
+            "ExitCode": "0:0",
+            "JobID": "3689.batch",
+            "MaxRSS": "31974888K",
+            "ReqMem": "",
+            "Start": "2026-10-22T08:57:39",
+            "State": "COMPLETED",
+            "TotalCPU": "14:59:01"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "8465",
+            "End": "2026-10-22T11:18:44",
+            "ExitCode": "0:0",
+            "JobID": "3689.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T08:57:39",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3690",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "10453",
+            "End": "2026-10-22T14:12:57",
+            "ExitCode": "0:0",
+            "JobID": "3690",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T11:18:44",
+            "State": "COMPLETED",
+            "TotalCPU": "02:54:13"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "10453",
+            "End": "2026-10-22T14:12:57",
+            "ExitCode": "0:0",
+            "JobID": "3690.batch",
+            "MaxRSS": "3867132K",
+            "ReqMem": "",
+            "Start": "2026-10-22T11:18:44",
+            "State": "COMPLETED",
+            "TotalCPU": "02:54:13"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "10453",
+            "End": "2026-10-22T14:12:57",
+            "ExitCode": "0:0",
+            "JobID": "3690.extern",
+            "MaxRSS": "2548K",
+            "ReqMem": "",
+            "Start": "2026-10-22T11:18:44",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.002"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3691",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "9451",
+            "End": "2026-10-22T16:50:28",
+            "ExitCode": "0:0",
+            "JobID": "3691",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T14:12:57",
+            "State": "COMPLETED",
+            "TotalCPU": "02:37:32"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "9451",
+            "End": "2026-10-22T16:50:28",
+            "ExitCode": "0:0",
+            "JobID": "3691.batch",
+            "MaxRSS": "3370044K",
+            "ReqMem": "",
+            "Start": "2026-10-22T14:12:57",
+            "State": "COMPLETED",
+            "TotalCPU": "02:37:30"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "9452",
+            "End": "2026-10-22T16:50:29",
+            "ExitCode": "0:0",
+            "JobID": "3691.extern",
+            "MaxRSS": "3192K",
+            "ReqMem": "",
+            "Start": "2026-10-22T14:12:57",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.002"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3692",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "5341",
+            "End": "2026-10-22T18:19:31",
+            "ExitCode": "0:0",
+            "JobID": "3692",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T16:50:30",
+            "State": "COMPLETED",
+            "TotalCPU": "01:29:00"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "5341",
+            "End": "2026-10-22T18:19:31",
+            "ExitCode": "0:0",
+            "JobID": "3692.batch",
+            "MaxRSS": "3126724K",
+            "ReqMem": "",
+            "Start": "2026-10-22T16:50:30",
+            "State": "COMPLETED",
+            "TotalCPU": "01:29:00"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "5341",
+            "End": "2026-10-22T18:19:31",
+            "ExitCode": "0:0",
+            "JobID": "3692.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T16:50:30",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3693",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "6759",
+            "End": "2026-10-22T20:12:10",
+            "ExitCode": "0:0",
+            "JobID": "3693",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T18:19:31",
+            "State": "COMPLETED",
+            "TotalCPU": "02:46:05"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "6759",
+            "End": "2026-10-22T20:12:10",
+            "ExitCode": "0:0",
+            "JobID": "3693.batch",
+            "MaxRSS": "4869748K",
+            "ReqMem": "",
+            "Start": "2026-10-22T18:19:31",
+            "State": "COMPLETED",
+            "TotalCPU": "02:46:05"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "6760",
+            "End": "2026-10-22T20:12:11",
+            "ExitCode": "0:0",
+            "JobID": "3693.extern",
+            "MaxRSS": "4460K",
+            "ReqMem": "",
+            "Start": "2026-10-22T18:19:31",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3694",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "10387",
+            "End": "2026-10-22T23:05:18",
+            "ExitCode": "0:0",
+            "JobID": "3694",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T20:12:11",
+            "State": "COMPLETED",
+            "TotalCPU": "04:44:42"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "10387",
+            "End": "2026-10-22T23:05:18",
+            "ExitCode": "0:0",
+            "JobID": "3694.batch",
+            "MaxRSS": "5908872K",
+            "ReqMem": "",
+            "Start": "2026-10-22T20:12:11",
+            "State": "COMPLETED",
+            "TotalCPU": "04:44:42"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "10387",
+            "End": "2026-10-22T23:05:18",
+            "ExitCode": "0:0",
+            "JobID": "3694.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T20:12:11",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3695",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "8631",
+            "End": "2026-10-23T01:29:09",
+            "ExitCode": "0:0",
+            "JobID": "3695",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-22T23:05:18",
+            "State": "COMPLETED",
+            "TotalCPU": "03:49:30"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "8631",
+            "End": "2026-10-23T01:29:09",
+            "ExitCode": "0:0",
+            "JobID": "3695.batch",
+            "MaxRSS": "6254484K",
+            "ReqMem": "",
+            "Start": "2026-10-22T23:05:18",
+            "State": "COMPLETED",
+            "TotalCPU": "03:49:30"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "8631",
+            "End": "2026-10-23T01:29:09",
+            "ExitCode": "0:0",
+            "JobID": "3695.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-22T23:05:18",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3696",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "9080",
+            "End": "2026-10-23T04:00:29",
+            "ExitCode": "0:0",
+            "JobID": "3696",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T01:29:09",
+            "State": "COMPLETED",
+            "TotalCPU": "08:20:36"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "9080",
+            "End": "2026-10-23T04:00:29",
+            "ExitCode": "0:0",
+            "JobID": "3696.batch",
+            "MaxRSS": "9891836K",
+            "ReqMem": "",
+            "Start": "2026-10-23T01:29:09",
+            "State": "COMPLETED",
+            "TotalCPU": "08:20:36"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "9080",
+            "End": "2026-10-23T04:00:29",
+            "ExitCode": "0:0",
+            "JobID": "3696.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T01:29:09",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3697",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "9680",
+            "End": "2026-10-23T06:41:49",
+            "ExitCode": "0:0",
+            "JobID": "3697",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T04:00:29",
+            "State": "COMPLETED",
+            "TotalCPU": "08:54:18"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "9680",
+            "End": "2026-10-23T06:41:49",
+            "ExitCode": "0:0",
+            "JobID": "3697.batch",
+            "MaxRSS": "10485764K",
+            "ReqMem": "",
+            "Start": "2026-10-23T04:00:29",
+            "State": "COMPLETED",
+            "TotalCPU": "08:54:18"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "9680",
+            "End": "2026-10-23T06:41:49",
+            "ExitCode": "0:0",
+            "JobID": "3697.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T04:00:29",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3698",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "7092",
+            "End": "2026-10-23T08:40:01",
+            "ExitCode": "0:0",
+            "JobID": "3698",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T06:41:49",
+            "State": "COMPLETED",
+            "TotalCPU": "06:44:17"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "7092",
+            "End": "2026-10-23T08:40:01",
+            "ExitCode": "0:0",
+            "JobID": "3698.batch",
+            "MaxRSS": "6741780K",
+            "ReqMem": "",
+            "Start": "2026-10-23T06:41:49",
+            "State": "COMPLETED",
+            "TotalCPU": "06:44:17"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "7092",
+            "End": "2026-10-23T08:40:01",
+            "ExitCode": "0:0",
+            "JobID": "3698.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T06:41:49",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3699",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "6295",
+            "End": "2026-10-23T10:24:56",
+            "ExitCode": "0:0",
+            "JobID": "3699",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T08:40:01",
+            "State": "COMPLETED",
+            "TotalCPU": "07:03:06"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "6295",
+            "End": "2026-10-23T10:24:56",
+            "ExitCode": "0:0",
+            "JobID": "3699.batch",
+            "MaxRSS": "17005148K",
+            "ReqMem": "",
+            "Start": "2026-10-23T08:40:01",
+            "State": "COMPLETED",
+            "TotalCPU": "07:03:06"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "6295",
+            "End": "2026-10-23T10:24:56",
+            "ExitCode": "0:0",
+            "JobID": "3699.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T08:40:01",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3700",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "3772",
+            "End": "2026-10-23T11:27:48",
+            "ExitCode": "0:0",
+            "JobID": "3700",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T10:24:56",
+            "State": "COMPLETED",
+            "TotalCPU": "05:00:10"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "3772",
+            "End": "2026-10-23T11:27:48",
+            "ExitCode": "0:0",
+            "JobID": "3700.batch",
+            "MaxRSS": "9882416K",
+            "ReqMem": "",
+            "Start": "2026-10-23T10:24:56",
+            "State": "COMPLETED",
+            "TotalCPU": "05:00:10"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "3772",
+            "End": "2026-10-23T11:27:48",
+            "ExitCode": "0:0",
+            "JobID": "3700.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T10:24:56",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3701",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "7741",
+            "End": "2026-10-23T13:36:50",
+            "ExitCode": "0:0",
+            "JobID": "3701",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T11:27:49",
+            "State": "COMPLETED",
+            "TotalCPU": "10:02:06"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "7741",
+            "End": "2026-10-23T13:36:50",
+            "ExitCode": "0:0",
+            "JobID": "3701.batch",
+            "MaxRSS": "18143572K",
+            "ReqMem": "",
+            "Start": "2026-10-23T11:27:49",
+            "State": "COMPLETED",
+            "TotalCPU": "10:02:04"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "7742",
+            "End": "2026-10-23T13:36:51",
+            "ExitCode": "0:0",
+            "JobID": "3701.extern",
+            "MaxRSS": "16504K",
+            "ReqMem": "",
+            "Start": "2026-10-23T11:27:49",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.002"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3702",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "4331",
+            "End": "2026-10-23T14:49:02",
+            "ExitCode": "0:0",
+            "JobID": "3702",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T13:36:51",
+            "State": "COMPLETED",
+            "TotalCPU": "09:54:52"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "4331",
+            "End": "2026-10-23T14:49:02",
+            "ExitCode": "0:0",
+            "JobID": "3702.batch",
+            "MaxRSS": "18441436K",
+            "ReqMem": "",
+            "Start": "2026-10-23T13:36:51",
+            "State": "COMPLETED",
+            "TotalCPU": "09:54:52"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "4331",
+            "End": "2026-10-23T14:49:02",
+            "ExitCode": "0:0",
+            "JobID": "3702.extern",
+            "MaxRSS": "4216K",
+            "ReqMem": "",
+            "Start": "2026-10-23T13:36:51",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3703",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "7762",
+            "End": "2026-10-23T16:58:24",
+            "ExitCode": "0:0",
+            "JobID": "3703",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T14:49:02",
+            "State": "COMPLETED",
+            "TotalCPU": "12:36:21"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "7762",
+            "End": "2026-10-23T16:58:24",
+            "ExitCode": "0:0",
+            "JobID": "3703.batch",
+            "MaxRSS": "33249472K",
+            "ReqMem": "",
+            "Start": "2026-10-23T14:49:02",
+            "State": "COMPLETED",
+            "TotalCPU": "12:36:21"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "7762",
+            "End": "2026-10-23T16:58:24",
+            "ExitCode": "0:0",
+            "JobID": "3703.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T14:49:02",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3704",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "9292",
+            "End": "2026-10-23T19:33:16",
+            "ExitCode": "0:0",
+            "JobID": "3704",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T16:58:24",
+            "State": "COMPLETED",
+            "TotalCPU": "16:00:32"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "9292",
+            "End": "2026-10-23T19:33:16",
+            "ExitCode": "0:0",
+            "JobID": "3704.batch",
+            "MaxRSS": "33588132K",
+            "ReqMem": "",
+            "Start": "2026-10-23T16:58:24",
+            "State": "COMPLETED",
+            "TotalCPU": "16:00:32"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "9292",
+            "End": "2026-10-23T19:33:16",
+            "ExitCode": "0:0",
+            "JobID": "3704.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T16:58:24",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3705",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "43277",
+            "End": "2026-10-24T07:34:33",
+            "ExitCode": "0:0",
+            "JobID": "3705",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-23T19:33:16",
+            "State": "COMPLETED",
+            "TotalCPU": "12:01:20"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "43277",
+            "End": "2026-10-24T07:34:33",
+            "ExitCode": "0:0",
+            "JobID": "3705.batch",
+            "MaxRSS": "8895720K",
+            "ReqMem": "",
+            "Start": "2026-10-23T19:33:16",
+            "State": "COMPLETED",
+            "TotalCPU": "12:01:20"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "43277",
+            "End": "2026-10-24T07:34:33",
+            "ExitCode": "0:0",
+            "JobID": "3705.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-23T19:33:16",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3706",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "39334",
+            "End": "2026-10-24T18:30:07",
+            "ExitCode": "0:0",
+            "JobID": "3706",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-24T07:34:33",
+            "State": "COMPLETED",
+            "TotalCPU": "10:55:35"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "39334",
+            "End": "2026-10-24T18:30:07",
+            "ExitCode": "0:0",
+            "JobID": "3706.batch",
+            "MaxRSS": "4263972K",
+            "ReqMem": "",
+            "Start": "2026-10-24T07:34:33",
+            "State": "COMPLETED",
+            "TotalCPU": "10:55:35"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "39334",
+            "End": "2026-10-24T18:30:07",
+            "ExitCode": "0:0",
+            "JobID": "3706.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-24T07:34:33",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3707",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "43274",
+            "End": "2026-10-25T05:31:21",
+            "ExitCode": "0:0",
+            "JobID": "3707",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-24T18:30:07",
+            "State": "COMPLETED",
+            "TotalCPU": "12:01:16"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "43274",
+            "End": "2026-10-25T05:31:21",
+            "ExitCode": "0:0",
+            "JobID": "3707.batch",
+            "MaxRSS": "5359124K",
+            "ReqMem": "",
+            "Start": "2026-10-24T18:30:07",
+            "State": "COMPLETED",
+            "TotalCPU": "12:01:16"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "43274",
+            "End": "2026-10-25T05:31:21",
+            "ExitCode": "0:0",
+            "JobID": "3707.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-24T18:30:07",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3708",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-25T17:32:29",
+            "ExitCode": "0:0",
+            "JobID": "3708",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-25T05:31:21",
+            "State": "COMPLETED",
+            "TotalCPU": "21:25:29"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-25T17:32:29",
+            "ExitCode": "0:0",
+            "JobID": "3708.batch",
+            "MaxRSS": "15363912K",
+            "ReqMem": "",
+            "Start": "2026-10-25T05:31:21",
+            "State": "COMPLETED",
+            "TotalCPU": "21:25:29"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-25T17:32:29",
+            "ExitCode": "0:0",
+            "JobID": "3708.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-25T05:31:21",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3709",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43271",
+            "End": "2026-10-26T05:33:40",
+            "ExitCode": "0:0",
+            "JobID": "3709",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-25T17:32:29",
+            "State": "COMPLETED",
+            "TotalCPU": "21:13:57"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43271",
+            "End": "2026-10-26T05:33:40",
+            "ExitCode": "0:0",
+            "JobID": "3709.batch",
+            "MaxRSS": "16834100K",
+            "ReqMem": "",
+            "Start": "2026-10-25T17:32:29",
+            "State": "COMPLETED",
+            "TotalCPU": "21:13:57"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43271",
+            "End": "2026-10-26T05:33:40",
+            "ExitCode": "0:0",
+            "JobID": "3709.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-25T17:32:29",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3710",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43270",
+            "End": "2026-10-26T17:34:50",
+            "ExitCode": "0:0",
+            "JobID": "3710",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-26T05:33:40",
+            "State": "COMPLETED",
+            "TotalCPU": "21:47:49"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43270",
+            "End": "2026-10-26T17:34:50",
+            "ExitCode": "0:0",
+            "JobID": "3710.batch",
+            "MaxRSS": "17533468K",
+            "ReqMem": "",
+            "Start": "2026-10-26T05:33:40",
+            "State": "COMPLETED",
+            "TotalCPU": "21:47:18"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "43271",
+            "End": "2026-10-26T17:34:51",
+            "ExitCode": "0:0",
+            "JobID": "3710.extern",
+            "MaxRSS": "4576K",
+            "ReqMem": "",
+            "Start": "2026-10-26T05:33:40",
+            "State": "COMPLETED",
+            "TotalCPU": "00:31.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3711",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43265",
+            "End": "2026-10-27T05:35:57",
+            "ExitCode": "0:0",
+            "JobID": "3711",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-26T17:34:52",
+            "State": "COMPLETED",
+            "TotalCPU": "1-17:56:50"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43265",
+            "End": "2026-10-27T05:35:57",
+            "ExitCode": "0:0",
+            "JobID": "3711.batch",
+            "MaxRSS": "20946692K",
+            "ReqMem": "",
+            "Start": "2026-10-26T17:34:52",
+            "State": "COMPLETED",
+            "TotalCPU": "1-17:56:50"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43265",
+            "End": "2026-10-27T05:35:57",
+            "ExitCode": "0:0",
+            "JobID": "3711.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-26T17:34:52",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3712",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43270",
+            "End": "2026-10-27T17:37:07",
+            "ExitCode": "0:0",
+            "JobID": "3712",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-27T05:35:57",
+            "State": "COMPLETED",
+            "TotalCPU": "1-19:38:52"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43270",
+            "End": "2026-10-27T17:37:07",
+            "ExitCode": "0:0",
+            "JobID": "3712.batch",
+            "MaxRSS": "22172344K",
+            "ReqMem": "",
+            "Start": "2026-10-27T05:35:57",
+            "State": "COMPLETED",
+            "TotalCPU": "1-19:38:52"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43270",
+            "End": "2026-10-27T17:37:07",
+            "ExitCode": "0:0",
+            "JobID": "3712.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-27T05:35:57",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3713",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43265",
+            "End": "2026-10-28T05:38:12",
+            "ExitCode": "0:0",
+            "JobID": "3713",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-27T17:37:07",
+            "State": "COMPLETED",
+            "TotalCPU": "1-18:16:32"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43265",
+            "End": "2026-10-28T05:38:12",
+            "ExitCode": "0:0",
+            "JobID": "3713.batch",
+            "MaxRSS": "16050788K",
+            "ReqMem": "",
+            "Start": "2026-10-27T17:37:07",
+            "State": "COMPLETED",
+            "TotalCPU": "1-18:16:30"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "43265",
+            "End": "2026-10-28T05:38:12",
+            "ExitCode": "0:0",
+            "JobID": "3713.extern",
+            "MaxRSS": "4192K",
+            "ReqMem": "",
+            "Start": "2026-10-27T17:37:07",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:02"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3714",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43267",
+            "End": "2026-10-28T17:39:19",
+            "ExitCode": "0:0",
+            "JobID": "3714",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-28T05:38:12",
+            "State": "COMPLETED",
+            "TotalCPU": "3-09:49:07"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43267",
+            "End": "2026-10-28T17:39:19",
+            "ExitCode": "0:0",
+            "JobID": "3714.batch",
+            "MaxRSS": "28830964K",
+            "ReqMem": "",
+            "Start": "2026-10-28T05:38:12",
+            "State": "COMPLETED",
+            "TotalCPU": "3-09:48:32"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-28T17:39:20",
+            "ExitCode": "0:0",
+            "JobID": "3714.extern",
+            "MaxRSS": "9864K",
+            "ReqMem": "",
+            "Start": "2026-10-28T05:38:12",
+            "State": "COMPLETED",
+            "TotalCPU": "00:35.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3715",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-29T05:40:29",
+            "ExitCode": "0:0",
+            "JobID": "3715",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-28T17:39:21",
+            "State": "COMPLETED",
+            "TotalCPU": "2-23:27:37"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-29T05:40:29",
+            "ExitCode": "0:0",
+            "JobID": "3715.batch",
+            "MaxRSS": "24631392K",
+            "ReqMem": "",
+            "Start": "2026-10-28T17:39:21",
+            "State": "COMPLETED",
+            "TotalCPU": "2-23:27:37"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-29T05:40:29",
+            "ExitCode": "0:0",
+            "JobID": "3715.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-28T17:39:21",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3716",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-29T17:41:37",
+            "ExitCode": "0:0",
+            "JobID": "3716",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-29T05:40:29",
+            "State": "COMPLETED",
+            "TotalCPU": "2-21:30:44"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-29T17:41:37",
+            "ExitCode": "0:0",
+            "JobID": "3716.batch",
+            "MaxRSS": "20999936K",
+            "ReqMem": "",
+            "Start": "2026-10-29T05:40:29",
+            "State": "COMPLETED",
+            "TotalCPU": "2-21:30:42"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-29T17:41:37",
+            "ExitCode": "0:0",
+            "JobID": "3716.extern",
+            "MaxRSS": "4552K",
+            "ReqMem": "",
+            "Start": "2026-10-29T05:40:29",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3717",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "43266",
+            "End": "2026-10-30T05:42:43",
+            "ExitCode": "0:0",
+            "JobID": "3717",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-29T17:41:37",
+            "State": "COMPLETED",
+            "TotalCPU": "5-09:10:05"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "43266",
+            "End": "2026-10-30T05:42:43",
+            "ExitCode": "0:0",
+            "JobID": "3717.batch",
+            "MaxRSS": "35587084K",
+            "ReqMem": "",
+            "Start": "2026-10-29T17:41:37",
+            "State": "COMPLETED",
+            "TotalCPU": "5-09:10:03"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "43266",
+            "End": "2026-10-30T05:42:43",
+            "ExitCode": "0:0",
+            "JobID": "3717.extern",
+            "MaxRSS": "4088K",
+            "ReqMem": "",
+            "Start": "2026-10-29T17:41:37",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:02"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3718",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "39044",
+            "End": "2026-10-30T16:33:27",
+            "ExitCode": "0:0",
+            "JobID": "3718",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-30T05:42:43",
+            "State": "COMPLETED",
+            "TotalCPU": "4-20:47:39"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "39044",
+            "End": "2026-10-30T16:33:27",
+            "ExitCode": "0:0",
+            "JobID": "3718.batch",
+            "MaxRSS": "31613760K",
+            "ReqMem": "",
+            "Start": "2026-10-30T05:42:43",
+            "State": "COMPLETED",
+            "TotalCPU": "4-20:47:34"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "39045",
+            "End": "2026-10-30T16:33:28",
+            "ExitCode": "0:0",
+            "JobID": "3718.extern",
+            "MaxRSS": "4220K",
+            "ReqMem": "",
+            "Start": "2026-10-30T05:42:43",
+            "State": "COMPLETED",
+            "TotalCPU": "00:05.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3719",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-31T04:34:36",
+            "ExitCode": "0:0",
+            "JobID": "3719",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-30T16:33:28",
+            "State": "COMPLETED",
+            "TotalCPU": "6-13:35:36"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-31T04:34:36",
+            "ExitCode": "0:0",
+            "JobID": "3719.batch",
+            "MaxRSS": "43624M",
+            "ReqMem": "",
+            "Start": "2026-10-30T16:33:28",
+            "State": "COMPLETED",
+            "TotalCPU": "6-13:35:36"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "43268",
+            "End": "2026-10-31T04:34:36",
+            "ExitCode": "0:0",
+            "JobID": "3719.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-30T16:33:28",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3720",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "20448",
+            "End": "2026-10-31T10:15:24",
+            "ExitCode": "0:0",
+            "JobID": "3720",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T04:34:36",
+            "State": "COMPLETED",
+            "TotalCPU": "05:40:49"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "20448",
+            "End": "2026-10-31T10:15:24",
+            "ExitCode": "0:0",
+            "JobID": "3720.batch",
+            "MaxRSS": "4366192K",
+            "ReqMem": "",
+            "Start": "2026-10-31T04:34:36",
+            "State": "COMPLETED",
+            "TotalCPU": "05:40:49"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "20448",
+            "End": "2026-10-31T10:15:24",
+            "ExitCode": "0:0",
+            "JobID": "3720.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-31T04:34:36",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3721",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "30911",
+            "End": "2026-10-31T18:50:35",
+            "ExitCode": "0:0",
+            "JobID": "3721",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T10:15:24",
+            "State": "COMPLETED",
+            "TotalCPU": "08:35:15"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "30911",
+            "End": "2026-10-31T18:50:35",
+            "ExitCode": "0:0",
+            "JobID": "3721.batch",
+            "MaxRSS": "4738532K",
+            "ReqMem": "",
+            "Start": "2026-10-31T10:15:24",
+            "State": "COMPLETED",
+            "TotalCPU": "08:35:13"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "30911",
+            "End": "2026-10-31T18:50:35",
+            "ExitCode": "0:0",
+            "JobID": "3721.extern",
+            "MaxRSS": "4492K",
+            "ReqMem": "",
+            "Start": "2026-10-31T10:15:24",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3722",
+        "rows": [
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "717",
+            "End": "2026-10-31T19:02:32",
+            "ExitCode": "0:0",
+            "JobID": "3722",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T18:50:35",
+            "State": "COMPLETED",
+            "TotalCPU": "11:55.750"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "717",
+            "End": "2026-10-31T19:02:32",
+            "ExitCode": "0:0",
+            "JobID": "3722.batch",
+            "MaxRSS": "3243000K",
+            "ReqMem": "",
+            "Start": "2026-10-31T18:50:35",
+            "State": "COMPLETED",
+            "TotalCPU": "11:55.749"
+          },
+          {
+            "AllocCPUS": "2",
+            "ElapsedRaw": "717",
+            "End": "2026-10-31T19:02:32",
+            "ExitCode": "0:0",
+            "JobID": "3722.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-31T18:50:35",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3723",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "5247",
+            "End": "2026-10-31T20:29:59",
+            "ExitCode": "0:0",
+            "JobID": "3723",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T19:02:32",
+            "State": "COMPLETED",
+            "TotalCPU": "02:01:05"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "5247",
+            "End": "2026-10-31T20:29:59",
+            "ExitCode": "0:0",
+            "JobID": "3723.batch",
+            "MaxRSS": "5992480K",
+            "ReqMem": "",
+            "Start": "2026-10-31T19:02:32",
+            "State": "COMPLETED",
+            "TotalCPU": "02:01:05"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "5247",
+            "End": "2026-10-31T20:29:59",
+            "ExitCode": "0:0",
+            "JobID": "3723.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-31T19:02:32",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3724",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "643",
+            "End": "2026-10-31T20:40:42",
+            "ExitCode": "0:0",
+            "JobID": "3724",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T20:29:59",
+            "State": "COMPLETED",
+            "TotalCPU": "14:34.507"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "643",
+            "End": "2026-10-31T20:40:42",
+            "ExitCode": "0:0",
+            "JobID": "3724.batch",
+            "MaxRSS": "4097036K",
+            "ReqMem": "",
+            "Start": "2026-10-31T20:29:59",
+            "State": "COMPLETED",
+            "TotalCPU": "14:34.506"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "644",
+            "End": "2026-10-31T20:40:43",
+            "ExitCode": "0:0",
+            "JobID": "3724.extern",
+            "MaxRSS": "4392K",
+            "ReqMem": "",
+            "Start": "2026-10-31T20:29:59",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3725",
+        "rows": [
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "6545",
+            "End": "2026-10-31T22:29:49",
+            "ExitCode": "0:0",
+            "JobID": "3725",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T20:40:44",
+            "State": "COMPLETED",
+            "TotalCPU": "02:48:24"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "6545",
+            "End": "2026-10-31T22:29:49",
+            "ExitCode": "0:0",
+            "JobID": "3725.batch",
+            "MaxRSS": "5951152K",
+            "ReqMem": "",
+            "Start": "2026-10-31T20:40:44",
+            "State": "COMPLETED",
+            "TotalCPU": "02:48:19"
+          },
+          {
+            "AllocCPUS": "4",
+            "ElapsedRaw": "6546",
+            "End": "2026-10-31T22:29:50",
+            "ExitCode": "0:0",
+            "JobID": "3725.extern",
+            "MaxRSS": "4924K",
+            "ReqMem": "",
+            "Start": "2026-10-31T20:40:44",
+            "State": "COMPLETED",
+            "TotalCPU": "00:05.001"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3726",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "646",
+            "End": "2026-10-31T22:40:36",
+            "ExitCode": "0:0",
+            "JobID": "3726",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T22:29:50",
+            "State": "COMPLETED",
+            "TotalCPU": "22:21.674"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "646",
+            "End": "2026-10-31T22:40:36",
+            "ExitCode": "0:0",
+            "JobID": "3726.batch",
+            "MaxRSS": "6298916K",
+            "ReqMem": "",
+            "Start": "2026-10-31T22:29:50",
+            "State": "COMPLETED",
+            "TotalCPU": "22:21.673"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "646",
+            "End": "2026-10-31T22:40:36",
+            "ExitCode": "0:0",
+            "JobID": "3726.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-31T22:29:50",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3727",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "21791",
+            "End": "2026-11-01T04:43:47",
+            "ExitCode": "0:0",
+            "JobID": "3727",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-10-31T22:40:36",
+            "State": "COMPLETED",
+            "TotalCPU": "20:55:27"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "21791",
+            "End": "2026-11-01T04:43:47",
+            "ExitCode": "0:0",
+            "JobID": "3727.batch",
+            "MaxRSS": "10217476K",
+            "ReqMem": "",
+            "Start": "2026-10-31T22:40:36",
+            "State": "COMPLETED",
+            "TotalCPU": "20:55:27"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "21791",
+            "End": "2026-11-01T04:43:47",
+            "ExitCode": "0:0",
+            "JobID": "3727.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-10-31T22:40:36",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
+        "job_id": "3728",
+        "rows": [
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "20829",
+            "End": "2026-11-01T10:30:56",
+            "ExitCode": "0:0",
+            "JobID": "3728",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T04:43:47",
+            "State": "COMPLETED",
+            "TotalCPU": "19:46:34"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "20829",
+            "End": "2026-11-01T10:30:56",
+            "ExitCode": "0:0",
+            "JobID": "3728.batch",
+            "MaxRSS": "11214864K",
+            "ReqMem": "",
+            "Start": "2026-11-01T04:43:47",
+            "State": "COMPLETED",
+            "TotalCPU": "19:46:34"
+          },
+          {
+            "AllocCPUS": "8",
+            "ElapsedRaw": "20829",
+            "End": "2026-11-01T10:30:56",
+            "ExitCode": "0:0",
+            "JobID": "3728.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-11-01T04:43:47",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
+        "state": "COMPLETED"
+      },
+      {
         "job_id": "3729",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "16285",
+            "End": "2026-11-01T15:02:21",
+            "ExitCode": "0:0",
+            "JobID": "3729",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T10:30:56",
+            "State": "COMPLETED",
+            "TotalCPU": "21:43:42"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "16285",
+            "End": "2026-11-01T15:02:21",
+            "ExitCode": "0:0",
+            "JobID": "3729.batch",
+            "MaxRSS": "18321012K",
+            "ReqMem": "",
+            "Start": "2026-11-01T10:30:56",
+            "State": "COMPLETED",
+            "TotalCPU": "21:43:42"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "16286",
+            "End": "2026-11-01T15:02:22",
+            "ExitCode": "0:0",
+            "JobID": "3729.extern",
+            "MaxRSS": "4264K",
+            "ReqMem": "",
+            "Start": "2026-11-01T10:30:56",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00.001"
+          }
+        ],
         "state": "COMPLETED"
       },
       {
-        "AllocCPUS": 16,
-        "ExitCode": "0:0",
-        "batch_MaxRSS": "17525912K",
-        "elapsed": "03:45:56",
         "job_id": "3730",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "13556",
+            "End": "2026-11-01T18:48:19",
+            "ExitCode": "0:0",
+            "JobID": "3730",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T15:02:23",
+            "State": "COMPLETED",
+            "TotalCPU": "18:21:42"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "13556",
+            "End": "2026-11-01T18:48:19",
+            "ExitCode": "0:0",
+            "JobID": "3730.batch",
+            "MaxRSS": "17525912K",
+            "ReqMem": "",
+            "Start": "2026-11-01T15:02:23",
+            "State": "COMPLETED",
+            "TotalCPU": "18:21:25"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "13556",
+            "End": "2026-11-01T18:48:19",
+            "ExitCode": "0:0",
+            "JobID": "3730.extern",
+            "MaxRSS": "9264K",
+            "ReqMem": "",
+            "Start": "2026-11-01T15:02:23",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:17"
+          }
+        ],
         "state": "COMPLETED"
       },
       {
-        "AllocCPUS": 16,
-        "ExitCode": "0:0",
-        "batch_MaxRSS": "10032116K",
-        "elapsed": "00:11:24",
         "job_id": "3731",
+        "rows": [
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "684",
+            "End": "2026-11-01T18:59:43",
+            "ExitCode": "0:0",
+            "JobID": "3731",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T18:48:19",
+            "State": "COMPLETED",
+            "TotalCPU": "35:42.550"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "684",
+            "End": "2026-11-01T18:59:43",
+            "ExitCode": "0:0",
+            "JobID": "3731.batch",
+            "MaxRSS": "10032116K",
+            "ReqMem": "",
+            "Start": "2026-11-01T18:48:19",
+            "State": "COMPLETED",
+            "TotalCPU": "35:42.549"
+          },
+          {
+            "AllocCPUS": "16",
+            "ElapsedRaw": "684",
+            "End": "2026-11-01T18:59:43",
+            "ExitCode": "0:0",
+            "JobID": "3731.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-11-01T18:48:19",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
         "state": "COMPLETED"
       },
       {
-        "AllocCPUS": 32,
-        "ExitCode": "0:0",
-        "batch_MaxRSS": "33091684K",
-        "elapsed": "04:27:59",
         "job_id": "3732",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "16079",
+            "End": "2026-11-01T23:27:42",
+            "ExitCode": "0:0",
+            "JobID": "3732",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T18:59:43",
+            "State": "COMPLETED",
+            "TotalCPU": "1-17:55:24"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "16079",
+            "End": "2026-11-01T23:27:42",
+            "ExitCode": "0:0",
+            "JobID": "3732.batch",
+            "MaxRSS": "33091684K",
+            "ReqMem": "",
+            "Start": "2026-11-01T18:59:43",
+            "State": "COMPLETED",
+            "TotalCPU": "1-17:55:22"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "16080",
+            "End": "2026-11-01T23:27:43",
+            "ExitCode": "0:0",
+            "JobID": "3732.extern",
+            "MaxRSS": "4440K",
+            "ReqMem": "",
+            "Start": "2026-11-01T18:59:43",
+            "State": "COMPLETED",
+            "TotalCPU": "00:02.001"
+          }
+        ],
         "state": "COMPLETED"
       },
       {
-        "AllocCPUS": 32,
-        "ExitCode": "0:0",
-        "batch_MaxRSS": "18670576K",
-        "elapsed": "00:14:29",
         "job_id": "3733",
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "869",
+            "End": "2026-11-01T23:42:13",
+            "ExitCode": "0:0",
+            "JobID": "3733",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T23:27:44",
+            "State": "COMPLETED",
+            "TotalCPU": "01:37:02"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "869",
+            "End": "2026-11-01T23:42:13",
+            "ExitCode": "0:0",
+            "JobID": "3733.batch",
+            "MaxRSS": "18670576K",
+            "ReqMem": "",
+            "Start": "2026-11-01T23:27:44",
+            "State": "COMPLETED",
+            "TotalCPU": "01:37:02"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "869",
+            "End": "2026-11-01T23:42:13",
+            "ExitCode": "0:0",
+            "JobID": "3733.extern",
+            "MaxRSS": "0",
+            "ReqMem": "",
+            "Start": "2026-11-01T23:27:44",
+            "State": "COMPLETED",
+            "TotalCPU": "00:00:00"
+          }
+        ],
         "state": "COMPLETED"
       },
       {
-        "AllocCPUS": 32,
-        "ExitCode": "0:0",
-        "batch_MaxRSS": null,
-        "elapsed": "03:08:51",
         "job_id": "3734",
-        "state": "RUNNING"
+        "rows": [
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "13137",
+            "End": "2026-11-02T03:21:10",
+            "ExitCode": "0:0",
+            "JobID": "3734",
+            "MaxRSS": "",
+            "ReqMem": "64G",
+            "Start": "2026-11-01T23:42:13",
+            "State": "COMPLETED",
+            "TotalCPU": "1-07:30:53"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "13137",
+            "End": "2026-11-02T03:21:10",
+            "ExitCode": "0:0",
+            "JobID": "3734.batch",
+            "MaxRSS": "32491208K",
+            "ReqMem": "",
+            "Start": "2026-11-01T23:42:13",
+            "State": "COMPLETED",
+            "TotalCPU": "1-07:10:47"
+          },
+          {
+            "AllocCPUS": "32",
+            "ElapsedRaw": "13138",
+            "End": "2026-11-02T03:21:11",
+            "ExitCode": "0:0",
+            "JobID": "3734.extern",
+            "MaxRSS": "18904K",
+            "ReqMem": "",
+            "Start": "2026-11-01T23:42:13",
+            "State": "COMPLETED",
+            "TotalCPU": "20:06.001"
+          }
+        ],
+        "state": "COMPLETED"
       }
     ],
-    "new_solver_results_received": 0,
-    "query_timestamp": null,
-    "running_exitcode_is_not_completion": true,
-    "scope": "six_remaining_job_roots_only_not_a_fresh_60_job_query",
-    "source": "author_pasted_sacct"
+    "query_finished_utc": "2026-11-02T02:24:05.784312+00:00",
+    "query_scope": "all_sixty_campaign_jobs_and_reported_steps",
+    "query_started_utc": "2026-11-02T02:24:05.722194+00:00"
   },
   "numerical_restriction_is_not_time_censoring": true,
   "original_receipts_and_flags_modified": false,
   "planned_cells": 60,
-  "received_cells": 54,
+  "received_cells": 60,
   "scientific_reporting_eligible": false,
   "sources": [
     {
@@ -96,6 +2626,11 @@
       "commit": "79983e119aefb90f6a55d4bc5e76b8006830f439",
       "path": "docs/research/pr89-m12-raw-audit-20261101.json",
       "sha256": "c30fd518d4f7b216630864f4a5e7e7b36e20213bcd8550bfa25814d3f59804da"
+    },
+    {
+      "commit": "565d9146729c7f35f280d1ae37818beab71879ff",
+      "path": "docs/evidence/pr89/final-20261101/manifest.json",
+      "sha256": "6fb1728509eb6a140618882f78aa87300367db549c49adbf42393652f71c6941"
     }
   ]
 }

@@ -153,11 +153,11 @@ The terminal records in @tbl-medium-quality distinguish feasible objective, solv
 
 Censoring here concerns the terminal target, not every earlier descriptive threshold. Terminal observations have their actual recorded runtimes rather than an imposed common endpoint. M4 and M12 remain visible with numerical restrictions; solver acceptance of original floating-point vectors does not certify rounded copies or exact feasibility. Their rows are not used to establish certified solution speedups.
 
-The [principal rows](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/methodology-20261019/seed42_main.csv) retain method identifiers, exact values, censoring flags and receipt/child hashes. The [existing paired summaries](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/pr86/final-210/paired_uncertainty.csv) distinguish the seed42 view from historical repeats. Their intervals are exploratory under an exchangeable-instance model, not a guarantee of population coverage.
+The [principal rows](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/methodology-20261019/seed 42_main.csv) retain method identifiers, exact values, censoring flags and receipt/child hashes. The [existing paired summaries](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/pr86/final-210/paired_uncertainty.csv) distinguish the seed 42 view from historical repeats. Their intervals are exploratory under an exchangeable-instance model, not a guarantee of population coverage.
 
 ## B.9. Preparation and cost interpretation
 
-The article's cost table uses the six easy instances at sixteen threads and seed42. Solver Runtime, supervised attempt time and preparation are separate quantities. The delimited cold scenario adds recorded preparation to the attempt, while the broader allocation also apportions documented preparation overhead. The seven-use scenario spreads that preparation across seven assumed uses; it does not remove expenditure from campaign accounting.
+The article's cost table uses the six easy instances at sixteen threads and seed 42. Solver Runtime, supervised attempt time and preparation are separate quantities. The delimited cold scenario adds recorded preparation to the attempt, while the broader allocation also apportions documented preparation overhead. The seven-use scenario spreads that preparation across seven assumed uses; it does not remove expenditure from campaign accounting.
 
 A five-use allocation appears in a different derived table and must retain that assumption. Neither scenario is a newly measured complete application. Components included within larger intervals, such as a forward pass within inference, are not added twice. R retains the cost of G-dependent matching.
 
@@ -177,7 +177,7 @@ Precision and recall are 0.6923 and 0.7064; pooled F1 is 0.6993 and parent-macro
 
 ## B.11. Preliminary six-medium optimization study {#sec-historical-six-medium}
 
-This study uses **M0, M4, M7, M9, M12 and M20** for optimization testing, separately from its six-medium guidance-validation cohort. The later principal CPU matrix and long-horizon extension use only **M0, M4, M7 and M12** as their medium instances. M9 and M20 belong to this earlier study; their presence here does not redefine the later split or add observations to the principal matrix. Its single-thread, seed42, 3,600-second runs retain their original policy and method-order protocol. Historical exposure precludes presenting M9/M20 as entirely untouched instances in a later evaluation.
+This study uses **M0, M4, M7, M9, M12 and M20** for optimization testing, separately from its six-medium guidance-validation cohort. The later principal CPU matrix and long-horizon extension use only **M0, M4, M7 and M12** as their medium instances. M9 and M20 belong to this earlier study; their presence here does not redefine the later split or add observations to the principal matrix. Its single-thread, seed 42, 3,600-second runs retain their original policy and method-order protocol. Historical exposure precludes presenting M9/M20 as entirely untouched instances in a later evaluation.
 
 ### B.11.1. Guidance qualification and frozen testing
 
@@ -218,15 +218,15 @@ The GNN runs on medium instances 12 and 20 use approximately 702 and 1,585 solve
 The [historical manifest](../results/current/pr60_scientific_evidence_manifest.json) binds the original tables and figures. The later principal CPU matrix and GPU pair have their own sources. None of these records turns historical exposure into an independent generalization test.
 
 
-## B.12. Exploratory long-horizon CPU subset {#sec-partial-cpu-evidence}
+## B.12. Long-horizon CPU evaluation {#sec-partial-cpu-evidence}
 
-This separate extension reuses the four medium instances, original prediction-to-Start bindings and seed 42, with the five physical-thread limits and a 43,200-second solver budget. The 1 November 2026 cutoff contains 54 completed configurations of 60 planned. M0, M4 and M7 contribute all 15 combinations each; M12 contributes all three methods at one, two and four threads. The missing six configurations are not treated as failures or zero outcomes. This completion-based subset is kept separate from the earlier 150 observations.
+This separate evaluation reuses the four medium instances, original prediction-to-Start bindings and seed 42, with five physical-thread limits and a 43,200-second solver budget. All 60 planned configurations were completed and received, with 15 combinations for each instance. The complete campaign is kept separate from the earlier150 observations; it does not enlarge the number of independent instances or solver seeds.
 
-The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/1d5a65a5fa06d58b612a5615563f627ae87aedbf/docs/evidence/pr89/partial-20261101) identifies the source commit, two input archives, cells, threshold observations, horizon brackets and metric dispositions. The first 50 reviewed cells are retained; the four subsequent receipts have matching common controls and independently checked parameter bindings, nested seals, temporal records and cost arithmetic. The scheduler inventory combines dated sources rather than one simultaneous query of all 60 jobs. A separate offline audit examines the original M12 model and four stored points: B at two and four threads, and R/G at four threads. This scoped audit checks primal feasibility and search effort; it does not certify exact optima or repeated-run performance. Other private vectors are outside its scope.
+The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) binds the source, three input archives, all 60 cells, threshold observations, horizon brackets and metric dispositions. The sealed54-cell review was retained, and the six final receipts were independently checked for controls, parameter bindings, nested seals, temporal records and cost arithmetic. A joint accounting query recorded all 60 jobs and 180 job/step rows as completed. These transport and execution checks establish receipt coverage, rather than exact optimality or scientific validity. The original four-point M12 audit is complemented by a [six-point extension](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/565d9146729c7f35f280d1ae37818beab71879ff/docs/research/pr89-m12-terminal-audit-20261101.json); the other five M12 stored vectors have not undergone this independent exact-primal check.
 
 ### B.12.1. Target attainment, censoring and thread limits
 
-Of the 54 received configurations, 41 report the terminal 0.01% criterion and 13 stop at the 12-hour limit. All time-limited cases concern M7. Technical completion of a job is therefore different from attainment of its optimization target [@gurobi2026]. A first observed threshold crossing retains its previous observation and does not identify an exact continuous hitting time.
+Of the 60 received configurations, 47 report the terminal 0.01% criterion and 13 stop at the 12-hour limit. All time-limited cases concern M7. Technical completion of a job is therefore different from attainment of its optimization target [@gurobi2026]. A first observed threshold crossing retains its previous observation and does not identify an exact continuous hitting time.
 
 @tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. Ratios describe individual fixed-seed configurations, not replicated or population-level effects.
 
@@ -236,7 +236,7 @@ G is earlier than B at four of five caps, but at two threads both B and R are ea
 
 @fig-partial-cpu compares these M0 observations with the terminal gaps of M7.
 
-![Long-horizon subset: M0 first observed terminal-target times and M7 terminal gaps.](../figures/partial_cpu_time_gap.pdf){#fig-partial-cpu width=100%}
+![Long-horizon evaluation: M0 first observed terminal-target times and M7 terminal gaps.](../figures/partial_cpu_time_gap.pdf){#fig-partial-cpu width=100%}
 
 Each point represents one configuration. In the right panel, crosses mark 12-hour terminal-target censoring and circles indicate reported attainment. Lines connect observed thread caps and do not interpolate a solution-time distribution.
 
@@ -244,7 +244,7 @@ All M7 runs end with primal 5.428377599678637, but their dual bounds differ. @tb
 
 {{< include ../tables/partial_cpu_m7.qmd >}}
 
-The ranking also depends on the target. With four threads, G first observes 10% gap at 2.795 hours, versus 7.881 for B and 6.365 for R, yet none reaches 0.01% in that configuration. With eight threads, R reaches 10% before G, while G reaches 5% before R. Across the received records, the observed/censored counts are 54/0 at 10%, 48/6 at 5%, and 41/13 at both 1% and 0.01%. These counts preserve reported coverage, not numerical certification.
+The ranking also depends on the target. With four threads, G first observes 10% gap at 2.795 hours, versus 7.881 for B and 6.365 for R, yet none reaches 0.01% in that configuration. With eight threads, R reaches 10% before G, while G reaches 5% before R. Across the received records, the observed/censored counts are 60/0 at 10%,54/6 at 5%, and 47/13 at both 1% and 0.01%. These counts preserve reported coverage, not numerical certification.
 
 The four quality horizons retain their actual before/after timestamps and staleness. A run ending before a horizon remains labelled terminated_before_horizon; its trajectory is neither extended nor interpolated. Bounds from another execution are not substituted into a censored run.
 
@@ -268,14 +268,18 @@ The affected linking row contains a coefficient of $-800$ for that binary. The s
 
 G and each control differ in only three coordinates: the fractional component and two integral binary switches; their continuous coordinates agree. The direct objective contribution removed by rounding is approximately $1.54\times10^{-7}$ for B and $1.67\times10^{-7}$ for R. The larger objective difference also reflects the distinct binary choices; it is not a display-rounding error. G's reported value is 0.009495% above B's and 0.009388% above R's, but these percentages do not measure loss relative to better feasible integer solutions. Exact primal feasibility does not certify global optimality: no exact dual or search-tree proof is supplied. The observed runtime quotients remain numerically qualified.
 
+The six final runs extend this diagnosis to eight and sixteen threads. All six report zero internal gap. At eight threads B/R/G use 16,219.853/13,488.320/617.228 seconds, and at sixteen they use 13,071.843/16,005.814/791.673 seconds. The G points satisfy every original row, bound and binary domain under both exact arithmetic interpretations. Each of these four new control points contains one nonintegral binary; its rounded pattern has the same0.0000416587 violation, and the row interval excludes every continuous completion with those rounded binaries fixed. Together, the two audits cover ten stored points: three G points and seven controls. This is a statement about those vectors, not an exact dual proof or a classification of the five unaudited M12 points.
+
+With eight threads, the printed G/B/R work counts are 558.47/14139.09/12019.86 and the simplex iterations are 79943/4785572/5509499. With sixteen threads, the corresponding figures are 721.35/10209.34/12749.97 and 103045/8847763/13452114. The same G-versus-control presolved dimensions recur. All six root logs explicitly name deterministic concurrent LP optimization; the algorithm used here is therefore observed rather than inferred from Method=-1. Timing, work and presolve differences support a heterogeneous-search interpretation without proving which starting assignments caused it. A partial Start leaves all original domains free, so this behaviour should not be interpreted as trapping MILP optimization in a local optimum.
+
 M4 also retains its numerical restriction. Its smallest reported feasible objective is 4.900767176540, while the largest reported bound is 4.907256631978: a difference of 0.006489455439, or 0.132417%. Identical input identities and a passed feasibility report do not make these bounds mutually exact. M4/M12 remain visible in descriptive quality and cost accounting but are excluded from exact-optimum and certified-speedup claims.
 
 M0 has a smaller disagreement: the largest bound, 4.608320190371, exceeds the smallest feasible-objective report, 4.608296033273, by approximately 0.000524%. Although below the configured relative target, this still precludes an exact-certificate interpretation. Its time contrasts remain conditional on the reported tolerance-based criterion.
 
 ### B.12.3. Measurement and interpretation boundaries
 
-The 54 completed records contain 277.199 hours of summed solver Runtime and 278.236 hours of summed job elapsed time. The latter exceeds Runtime by 64.23--82.93 seconds per job. Thus loading, checking and export do not alone explain contrasts of several hours. These completed-job totals exclude queueing, unreceived executions and historical preparation expenditure.
+The60 completed records contain 293.919 hours of summed solver Runtime and 295.072 hours of summed job elapsed time. The latter exceeds Runtime by 64.23--82.93 seconds per job. Thus loading, checking and export do not alone explain contrasts of several hours. These complete-campaign totals exclude queueing and historical preparation expenditure. Observed allocation products are 1,750.185 physical core-hours and 3,500.369 logical AllocCPU-hours; they are neither measured utilization nor energy or financial charges.
 
 Preparation is reused from the earlier campaign rather than measured anew. Cold and five-use allocations retain their scenario definitions, including the G-dependent preparation charged to R. They are not complete new cold-deployment measurements.
 
-The subset supports a bounded interpretation: benefits in some M0 configurations, earlier intermediate progress without terminal attainment by G on M7, and large time contrasts on M12 that remain numerically qualified. One seed and one execution per configuration do not establish repeatability, seed-averaged superiority or independent generalization. A later prospective study could use these observations to separate numerical comparability, solver-seed stability and endpoint choice, without treating thread caps as replications.
+The complete evaluation supports a bounded interpretation: benefits in some M0 configurations, earlier intermediate progress without terminal attainment by G on M7, and large time contrasts on M12 that remain numerically qualified. One seed and one execution per configuration do not establish repeatability, seed-averaged superiority or independent generalization. A later prospective study could use these observations to separate numerical comparability, solver-seed stability and endpoint choice, without treating thread caps as replications.

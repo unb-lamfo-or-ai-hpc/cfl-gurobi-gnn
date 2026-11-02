@@ -77,7 +77,7 @@ A CFL model couples facility-opening and customer-service decisions through capa
 
 $$
 \begin{aligned}
-z_p^\star&=\min_x\;c_p^\top x+c_{p,0},\\
+z_p^\star&=\min_x\; c_p^\top x+c_{p,0},\\
 A_px&\mathrel{\bowtie_p}b_p,\\
 \ell_p\leq x&\leq u_p,\qquad x_j\in\mathbb Z\quad(j\in I_p).
 \end{aligned}
@@ -217,13 +217,13 @@ On medium instance 0 at one thread, G improves the primal (4.6556 versus B's 4.6
 
 Medium instance 0 with G at sixteen threads reports zero terminal gap after approximately 3204 seconds, while both comparators are censored for the terminal target. This is a solver-reported outcome under tolerances, not an exact certificate. M4 and M12 retain metric-specific numerical limits: acceptance of original floating-point vectors does not establish feasibility of rounded diagnostic copies. Their observations cannot be promoted to certified speedups.
 
-## Exploratory long-horizon CPU observations {#sec-cpu-long-partial}
+## Long-horizon CPU observations {#sec-cpu-long-partial}
 
-A separate extension retains the four medium instances, starts, seed and five thread caps, while increasing the solver limit to 12 hours. At the 1 November 2026 data cutoff, 54 of 60 planned configurations had completed: 15 each for M0, M4 and M7, and nine for M12. Forty-one reached the solver-reported 0.01% terminal criterion; 13 were time-limited, all on M7. This completion-based subset is analyzed separately from the 150-observation retrospective comparison.
+A separate long-horizon evaluation retains the four medium instances, starts, seed and five thread caps, while increasing the solver limit to 12 hours. All 60 configurations were completed and reconciled, with 15 per instance. Forty-seven reached the solver-reported 0.01% terminal criterion; 13 were time-limited, all on M7. This evaluation is analyzed separately from the 150-observation retrospective comparison; the extra time budget does not create independent instances or seed replications.
 
-On M0, G reached the reported target before B at four of five caps, but was slower than both comparators at two threads. All 15 M7 runs ended with the same reported primal value; only B at one thread and R at sixteen threads closed the terminal gap. Earlier progress therefore need not imply terminal attainment.
+On M0, G reached the reported target before B at four of five caps, but was slower than both comparators at two threads. All 15 M7 runs ended with the same reported primal value; only B at one thread and R at sixteen threads closed the terminal gap. Earlier progress therefore need not imply terminal attainment. All 60 runs reached a reported 10% gap, whereas13 remained censored at 1% and 0.01%.
 
-Large runtime reductions on M12 require a separate feasibility qualification. At four threads, G's reported objective is 0.009495% higher than B's, although all three methods report zero internal gap. Exact rational evaluation of the stored points confirms G's primal feasibility; each B/R point instead contains a tolerated nonintegral binary. Rounding that value produces an infeasible integer pattern that cannot be completed by adjusting continuous variables. Thus the lower control objectives do not demonstrate better feasible integer solutions. The logs also show substantially less search work for G, but neither this observation nor primal feasibility certifies a common global optimum or an isolated neural effect. M4 retains its separate restriction. These cases do not establish certified speedups. Appendix B provides the numerical evidence and the limits of this partial comparison.
+Large runtime reductions on M12 require a separate feasibility qualification. With eight threads, B/R/G use 16,219.853/13,488.320/617.228 solver seconds; with sixteen, they use 13,071.843/16,005.814/791.673 seconds. Although these six runs report zero internal gaps, G's objective is approximately 0.009388% or 0.009495% higher than the control reports, respectively. Exact rational evaluation confirms primal feasibility of the stored G points at four, eight and sixteen threads. The seven examined B/R points instead contain a tolerated nonintegral binary; rounding it produces an integer pattern that cannot satisfy an original linking row, even after continuous variables are adjusted. The lower control reports therefore do not demonstrate better exactly feasible integer solutions. The logs substantiate much less search work and a smaller presolved model for G, but do not isolate a neural mechanism or certify a common global optimum. M4 retains its separate restriction. These cases do not establish certified speedups. Appendix B provides all 60 records, the scoped arithmetic checks and the accounting boundaries.
 
 ## Efficiency after preparation costs {#sec-cost-results}
 
@@ -237,7 +237,7 @@ These are conditional cost scenarios, not complete deployment measurements. The 
 
 ## Complementary matched GPU training {#sec-gpu-matched}
 
-The matched seed42 pair compares serial one-V100 training with four-V100 distributed data parallel (DDP) training. Serial denotes one training process; it does not imply sequential arithmetic within the GPU. DDP replicates the model across processes and synchronizes their gradients [@li2020ddp]. Both arms use the same learning split, train-fitted initialization and global batch of four. Each update averages four graph losses: accumulated serially in one arm, one per rank in the other. Both complete 100 epochs, 13,600 graph presentations and 3,400 updates. Validation selects checkpoints independently.
+The matched seed 42 pair compares serial one-V100 training with four-V100 distributed data parallel (DDP) training. Serial denotes one training process; it does not imply sequential arithmetic within the GPU. DDP replicates the model across processes and synchronizes their gradients [@li2020ddp]. Both arms use the same learning split, train-fitted initialization and global batch of four. Each update averages four graph losses: accumulated serially in one arm, one per rank in the other. Both complete 100 epochs, 13,600 graph presentations and 3,400 updates. Validation selects checkpoints independently.
 
 | Measure | Serial 1 V100 | DDP 4 V100s |
 |:--|--:|--:|
@@ -262,7 +262,7 @@ Equal global batches control one source of optimization differences, but do not 
 
 ## Preliminary six-medium evidence
 
-This earlier study evaluates M0, M4, M7, M9, M12 and M20 using its own single-thread, seed42, 3,600-second protocol. It is a separate historical optimization cohort: the principal CPU comparison and long-horizon extension use only M0, M4, M7 and M12. The two additional historical cases do not enlarge that four-medium evaluation or its learning split.
+This earlier study evaluates M0, M4, M7, M9, M12 and M20 using its own single-thread, seed 42, 3,600-second protocol. It is a separate historical optimization cohort: the principal CPU comparison and long-horizon extension use only M0, M4, M7 and M12. The two additional historical cases do not enlarge that four-medium evaluation or its learning split.
 
 GNN terminal gaps are smaller on five of the six historical instances, with median guided-minus-control difference -1.164 percentage points. M12 and M20 influence the mean. GNN reaches the observed 10% threshold on four instances, versus three per comparator; an earlier crossing can coexist with terminal censoring. Appendix B retains all values and influence diagnostics.
 
@@ -282,7 +282,7 @@ Quality-selected labels, historical exposure, few instances, one principal seed,
 
 # Conclusions and Future Research
 
-We compared GNN-generated partial starts with unguided and relaxation-ranked starts on CFL while preserving the original feasible region. Benefits depend on instance, thread cap, quality target and cost boundary; stronger primal values need not yield stronger dual bounds. The retrospective, preliminary and partial long-horizon studies retain separate populations and support conditional rather than universal conclusions.
+We compared GNN-generated partial starts with unguided and relaxation-ranked starts on CFL while preserving the original feasible region. Benefits depend on instance, thread cap, quality target and cost boundary; stronger primal values need not yield stronger dual bounds. The retrospective, preliminary and long-horizon studies retain separate populations and support conditional rather than universal conclusions.
 
 Solver gains can disappear with cold preparation, while reuse changes their economics. Faster distributed training can also reduce selected predictive quality and increase allocated GPU-hours. The accounting remains delimited rather than a complete deployment estimate.
 

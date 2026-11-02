@@ -110,7 +110,7 @@ def check_claim_evidence(manuscript: Path, repository: Path) -> list[str]:
             return ["claim_evidence_coverage_invalid"]
         pending = manifest["pending_cpu"]
         if (pending["source_commit"] != "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5"
-                or pending["final_return_received"] is not False
+                or pending["final_return_received"] is not True
                 or pending["result_claims"] != []):
             failures.append("claim_evidence_pending_cpu_promoted")
         documents = {}

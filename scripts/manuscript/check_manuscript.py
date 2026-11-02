@@ -144,10 +144,10 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
         "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
         "execution_authorized_date": "2026-10-20", "jobs_already_submitted": 60,
-        "execution_state": "in_progress_partial_snapshot",
-        "partial_descriptive_results_included": True,
-        "partial_received_cells": 54,
-        "final_return_received": False, "scientific_results_included": False,
+        "execution_state": "completed_all60_receipts_reconciled",
+        "complete_descriptive_results_included": True,
+        "complete_received_cells": 60,
+        "final_return_received": True, "scientific_results_included": False,
         "new_execution_authorized_by_this_revision": False,
     }
     if (evidence.get("current_protocol_scope")
@@ -160,7 +160,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if (continuation.get("governing_contract") != "CFL-GNN-SCI-2026-10-22-R3"
             or continuation.get("pr89") != pending_cpu
             or continuation.get("editorial_state")
-            != "partial_integration_for_review_pr89_closeout_pending"
+            != "complete_cpu_integration_final_audit_pending"
             or continuation.get("final_coauthor_approval") is not False
             or continuation.get("submission_authorized") is not False):
         failures.append("pending_cpu_campaign_misrepresented")

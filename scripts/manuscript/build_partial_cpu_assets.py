@@ -1,4 +1,4 @@
-"""Static, descriptive assets for the sealed partial CPU subset. No solver."""
+"""Static, descriptive assets for the sealed complete long-horizon CPU campaign. No solver."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = Path("docs/evidence/pr89/partial-20261101")
-MANIFEST_SHA = "67916124db1d6b422cfc5a01399863b9de7e430902e9a6e4521bfac041b7d6fb"
+SOURCE = Path("docs/evidence/pr89/final-20261101")
+MANIFEST_SHA = "6fb1728509eb6a140618882f78aa87300367db549c49adbf42393652f71c6941"
 TABLES = ("partial_cpu_m0", "partial_cpu_m7", "partial_cpu_all")
 FIGURE = "partial_cpu_time_gap"
 M12_AUDIT = Path("docs/research/pr89-m12-raw-audit-20261101.json")
@@ -29,26 +29,53 @@ def digest(raw):
 
 
 def validate_m12_audit(value):
-    require(value["protocol"] == "pr89_m12_existing_raw_vector_exact_arithmetic_v1", "m12_audit_protocol")
-    require(value["exact_optimality_certified"] is False and value["scientific_reporting_eligible"] is False
-            and value["optimization_calls_added"] == 0 and value["campaign_modified"] is False, "m12_audit_scope")
+    require(
+        value["protocol"] == "pr89_m12_existing_raw_vector_exact_arithmetic_v1",
+        "m12_audit_protocol",
+    )
+    require(
+        value["exact_optimality_certified"] is False
+        and value["scientific_reporting_eligible"] is False
+        and value["optimization_calls_added"] == 0
+        and value["campaign_modified"] is False,
+        "m12_audit_scope",
+    )
     rows = {row["job_id"]: row for row in value["rows"]}
-    require(len(rows) == 4 and set(rows) == {"3725", "3726", "3727", "3728"}, "m12_audit_cells")
+    require(
+        len(rows) == 4 and set(rows) == {"3725", "3726", "3727", "3728"},
+        "m12_audit_cells",
+    )
     for job, row in rows.items():
         d = row["diagnostics"]
         g = job == "3726"
-        require(d["exact_integer_primal_feasible_binary64_model"] is g
-                and d["exact_integer_primal_feasible_decimal_lp_model"] is g, "m12_primal_not_global")
+        require(
+            d["exact_integer_primal_feasible_binary64_model"] is g
+            and d["exact_integer_primal_feasible_decimal_lp_model"] is g,
+            "m12_primal_not_global",
+        )
         require(d["nonintegral_binary_count"] == (0 if g else 1), "m12_integrality")
         for key in ("exact_binary64_input_rows", "exact_decimal_lp_rows"):
-            require(d["stored"][key]["all_rows_exactly_satisfied"] is g, "m12_exact_row_scope")
+            require(
+                d["stored"][key]["all_rows_exactly_satisfied"] is g,
+                "m12_exact_row_scope",
+            )
         if not g:
             rounded = d["integer_rounded_copy"]["exact_decimal_lp_rows"]
-            require(Fraction(rounded["max_row_residual_rational"]) == Fraction(416587, 10**10), "m12_rounded_residual")
+            require(
+                Fraction(rounded["max_row_residual_rational"])
+                == Fraction(416587, 10**10),
+                "m12_rounded_residual",
+            )
             obstructions = d["fixed_rounded_integer_pattern_row_obstructions"]
-            require(len(obstructions) == 1 and obstructions[0]["continuous_completion_impossible_from_this_row"] is True,
-                    "m12_fixed_pattern_obstruction")
-    require(value["raw_variable_values_or_rows_exported"] is False, "m12_private_values")
+            require(
+                len(obstructions) == 1
+                and obstructions[0]["continuous_completion_impossible_from_this_row"]
+                is True,
+                "m12_fixed_pattern_obstruction",
+            )
+    require(
+        value["raw_variable_values_or_rows_exported"] is False, "m12_private_values"
+    )
 
 
 def load_sources(repository=ROOT):
@@ -57,17 +84,31 @@ def load_sources(repository=ROOT):
     require(digest(raw) == MANIFEST_SHA, "partial_manifest_hash")
     m = json.loads(raw)
     require(
-        m["schema_version"] == 2
-        and m["input_archives"] == [
-            {"role": "baseline50", "sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab", "received": 50},
-            {"role": "delta4", "sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9", "received": 4},
+        m["schema_version"] == 3
+        and m["input_archives"]
+        == [
+            {
+                "role": "baseline50",
+                "sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab",
+                "received": 50,
+            },
+            {
+                "role": "delta4",
+                "sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9",
+                "received": 4,
+            },
+            {
+                "role": "terminal_tail6",
+                "sha256": "12b07fce5b49dd7540bd5cd26be2a54cfad2cfccc5b42999373da5d7ae29f85f",
+                "received": 6,
+            },
         ],
         "partial_archive_chain",
     )
     require(
         m["scientific_reporting_eligible"] is False
-        and m["final_campaign_return"] is False
-        and m["received_cells"] == 54
+        and m["final_campaign_return"] is True
+        and m["received_cells"] == 60
         and m["planned_cells"] == 60,
         "partial_scope",
     )
@@ -81,6 +122,8 @@ def load_sources(repository=ROOT):
                 "horizons.csv",
                 "disposition.csv",
                 "review.json",
+                "paired-observations.csv",
+                "scheduler-snapshot.json",
             ),
             "partial_source_name",
         )
@@ -95,12 +138,12 @@ def load_sources(repository=ROOT):
         )
     rows = sources["cells.csv"]
     require(
-        len(rows) == 54
-        and [r["job_id"] for r in rows] == [str(j) for j in range(3675, 3729)],
+        len(rows) == 60
+        and [r["job_id"] for r in rows] == [str(j) for j in range(3675, 3735)],
         "partial_cells",
     )
     require(
-        len({(r["alias"], r["threads"], r["method"]) for r in rows}) == 54,
+        len({(r["alias"], r["threads"], r["method"]) for r in rows}) == 60,
         "partial_duplicate_cell",
     )
     require(
@@ -112,7 +155,7 @@ def load_sources(repository=ROOT):
         "partial_promotion",
     )
     require(
-        sum(r["status"] == "2" for r in rows) == 41
+        sum(r["status"] == "2" for r in rows) == 47
         and sum(r["status"] == "9" for r in rows) == 13,
         "partial_stops",
     )
@@ -140,13 +183,13 @@ def load_sources(repository=ROOT):
         )
     ts = sources["thresholds.csv"]
     require(
-        len(ts) == 216
-        and len(sources["horizons.csv"]) == 216
+        len(ts) == 240
+        and len(sources["horizons.csv"]) == 240
         and len(sources["disposition.csv"]) == 60,
         "partial_temporal_coverage",
     )
     require(
-        len({(r["job_id"], float(r["threshold"])) for r in ts}) == 216,
+        len({(r["job_id"], float(r["threshold"])) for r in ts}) == 240,
         "partial_threshold_duplicate",
     )
     require(
@@ -154,12 +197,59 @@ def load_sources(repository=ROOT):
         "partial_threshold_state",
     )
     require(
-        sources["review.json"]["nested_triplets_verified"] == 54
-        and sources["review.json"]["previous_nested_triplets_reused"] == 50
-        and sources["review.json"]["delta_nested_seals_verified"] == 12
+        sources["review.json"]["prior54_review_reused"] is True
+        and sources["review.json"]["tail_nested_seals_verified"] == 18
+        and sources["review.json"]["terminal_accounting_jobs"] == 60
+        and sources["review.json"][
+            "new6_parameters_temporal_cost_and_nested_triplets_verified"
+        ]
+        is True
         and sources["review.json"]["scientific_reporting_eligible"] is False,
         "partial_review_scope",
     )
+    tail_path = repository / "docs/research/pr89-m12-terminal-audit-20261101.json"
+    tail_raw = tail_path.read_bytes()
+    require(
+        digest(tail_raw)
+        == "14b5fb05a8cee9442cdd518dcff15adf4be2a202e465828afd9b80ff377f3afa",
+        "tail_exact_audit_hash",
+    )
+    tail = json.loads(tail_raw)
+    require(
+        tail["optimization_calls_added"] == 0
+        and tail["exact_global_optimality_certified"] is False,
+        "tail_exact_audit_scope",
+    )
+    require(
+        {r["job_id"] for r in tail["rows"]} == {str(j) for j in range(3729, 3735)},
+        "tail_exact_audit_jobs",
+    )
+    for row in tail["rows"]:
+        d = row["diagnostics"]
+        g = row["method"] == "M2"
+        require(
+            d["exact_integer_primal_feasible_decimal_lp_model"] is g
+            and d["exact_integer_primal_feasible_binary64_model"] is g,
+            "tail_primal_scope",
+        )
+        if not g:
+            require(
+                d["nonintegral_binary_count"] == 1
+                and Fraction(
+                    d["integer_rounded_copy"]["exact_decimal_lp_rows"][
+                        "max_row_residual_rational"
+                    ]
+                )
+                == Fraction(416587, 10**10),
+                "tail_control_integrality",
+            )
+            require(
+                all(
+                    o["continuous_completion_impossible_from_this_row"]
+                    for o in d["fixed_rounded_integer_pattern_row_obstructions"]
+                ),
+                "tail_row_obstruction",
+            )
     return sources
 
 
@@ -195,12 +285,12 @@ def check_source(manuscript, repository=ROOT):
         appendix = (manuscript / "supplement/extended-results.md").read_text(
             encoding="utf-8"
         )
-        section = article.split("## Exploratory long-horizon CPU observations", 1)[
-            1
-        ].split("\n## ", 1)[0]
+        section = article.split("## Long-horizon CPU observations", 1)[1].split(
+            "\n## ", 1
+        )[0]
         require(
-            "54 of 60 planned configurations" in section
-            and "Forty-one" in section
+            "All 60 configurations were completed and reconciled" in section
+            and "Forty-seven" in section
             and "13 were time-limited, all on M7" in section,
             "partial_article_counts",
         )
@@ -225,7 +315,7 @@ def check_source(manuscript, repository=ROOT):
         )
         require(
             "do not establish certified speedups" in section
-            and "completion-based subset" in section
+            and "All 60 configurations" in section
             and "separately from the 150-observation" in section,
             "partial_article_scope",
         )
@@ -243,8 +333,10 @@ def check_source(manuscript, repository=ROOT):
             require(value in appendix, "partial_appendix_value:" + value)
         require(
             "not certified speedups" in appendix
-            and "Exact primal feasibility does not certify global optimality" in appendix
-            and "every continuous completion with those rounded binaries fixed" in appendix,
+            and "Exact primal feasibility does not certify global optimality"
+            in appendix
+            and "every continuous completion with those rounded binaries fixed"
+            in appendix,
             "partial_appendix_qualification",
         )
         for alias, low, high in (
@@ -373,7 +465,7 @@ def build(manuscript=None):
                 "Target",
             ],
             all_rows,
-            "All 54 received terminal records. M4/M12 retain numerical restrictions; no exact certificates are asserted.",
+            "All 60 received terminal records. M4/M12 retain numerical restrictions; no exact certificates are asserted.",
             "tbl-partial-cpu-all",
             small=True,
         ),
@@ -466,9 +558,9 @@ def build(manuscript=None):
         figures / (FIGURE + "." + ext) for ext in ("pdf", "svg", "png")
     ]
     receipt = {
-        "kind": "partial_descriptive_assets",
+        "kind": "complete_long_horizon_descriptive_assets",
         "manifest_sha256": MANIFEST_SHA,
-        "received_cells": 54,
+        "received_cells": 60,
         "planned_cells": 60,
         "research_execution_performed": False,
         "scientific_reporting_eligible": False,
@@ -488,7 +580,7 @@ def check_outputs(manuscript, output):
         record = json.loads((output / "tables/partial_cpu_assets.json").read_text())
         require(
             record["manifest_sha256"] == MANIFEST_SHA
-            and record["received_cells"] == 54
+            and record["received_cells"] == 60
             and record["planned_cells"] == 60
             and record["research_execution_performed"] is False
             and record["scientific_reporting_eligible"] is False,

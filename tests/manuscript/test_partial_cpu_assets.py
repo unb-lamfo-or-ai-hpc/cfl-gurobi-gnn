@@ -1,7 +1,7 @@
 """Boundary tests for partial evidence and endpoint-specific interpretation."""
 
-import importlib.util
 import csv
+import importlib.util
 import shutil
 import tempfile
 import unittest
@@ -16,9 +16,9 @@ SPEC.loader.exec_module(P)
 
 
 class PartialCpuTests(unittest.TestCase):
-    def test_sealed_subset_remains_fifty_four_of_sixty(self):
+    def test_complete_campaign_has_sixty_sealed_cells(self):
         sources = P.load_sources()
-        self.assertEqual(len(sources["cells.csv"]), 54)
+        self.assertEqual(len(sources["cells.csv"]), 60)
         self.assertEqual(len(sources["disposition.csv"]), 60)
         self.assertFalse(sources["review.json"]["scientific_reporting_eligible"])
 
@@ -28,7 +28,7 @@ class PartialCpuTests(unittest.TestCase):
         for name in ("cells.csv", "thresholds.csv", "horizons.csv"):
             with (prior / name).open(encoding="utf-8", newline="") as stream:
                 original = list(csv.DictReader(stream))
-            self.assertEqual(sources[name][:len(original)], original)
+            self.assertEqual(sources[name][: len(original)], original)
 
     def test_new_zero_gap_does_not_resolve_cross_run_m12_disagreement(self):
         sources = P.load_sources()
@@ -38,8 +38,13 @@ class PartialCpuTests(unittest.TestCase):
         self.assertGreater(float(g["dual"]), float(b["primal"]))
         self.assertLess(float(g["runtime_seconds"]), float(b["runtime_seconds"]))
         self.assertEqual(g["scientific_reporting_eligible"], "False")
-        self.assertIsNone(P.time_ratio(P.threshold(sources, "3727"),
-                                     P.threshold(sources, "3726"), sensitive=True))
+        self.assertIsNone(
+            P.time_ratio(
+                P.threshold(sources, "3727"),
+                P.threshold(sources, "3726"),
+                sensitive=True,
+            )
+        )
 
     def test_terminal_censoring_does_not_censor_every_threshold(self):
         sources = P.load_sources()
@@ -79,7 +84,8 @@ class PartialCpuTests(unittest.TestCase):
             path = root / "index.qmd"
             path.write_text(
                 path.read_text(encoding="utf-8").replace(
-                    "completion-based subset", "complete experiment"
+                    "do not establish certified speedups",
+                    "establish certified speedups",
                 ),
                 encoding="utf-8",
             )

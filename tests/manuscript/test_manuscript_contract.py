@@ -134,10 +134,10 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
 
-    def test_pending_cpu_cannot_be_promoted_to_received_results(self):
+    def test_complete_cpu_receipt_cannot_be_silently_removed(self):
         path = self.root / "evidence-status.json"
         data = json.loads(path.read_text())
-        data["mvp2_continuation"]["pr89"]["final_return_received"] = True
+        data["mvp2_continuation"]["pr89"]["final_return_received"] = False
         path.write_text(json.dumps(data))
         self.assertIn("pending_cpu_campaign_misrepresented", CHECK.check_source(self.root))
 

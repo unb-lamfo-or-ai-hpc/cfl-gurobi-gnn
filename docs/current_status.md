@@ -1,5 +1,15 @@
 # Current status
 
+## PR89 complete return — 1 November 2026
+
+All 60 cells are received and reconciled; the joint accounting query on 2November02:24:05UTC (1November23:24:05 Fortaleza) records 60 COMPLETED/0:0 jobs. There are 47 reported terminal-target attainments and 13 time-limited M7 cases. See the [complete reconciliation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/565d9146729c7f35f280d1ae37818beab71879ff/docs/research/pr89-complete-reconciliation-20261101.md). The three-archive chain, unchanged controls, six new parameter/temporal/cost/nested bindings and 180 accounting rows are checked. This closes reception/reconciliation, not the final integrated audit or unrestricted scientific qualification. Earlier running/missing-cell statements below are historical snapshots.
+
+The two M12 arithmetic audits now cover ten points: G/4,G/8,G/16 are exactly primal-feasible in their scope; seven controls have a fractional binary and an infeasible rounded pattern. The five other M12 points remain outside the independent exact-primal audit. Preserve M4 restrictions and M0 cross-run bound limits. One common exact optimum and certified M12 speedups are not established.
+
+M7 stays in the cohort: computational difficulty and terminal-target censoring are not infeasibility. No post-outcome exclusion or new nine-medium protocol was adopted. Removing M7 would change 144 to135 planned cells and 90 to81 archival candidates but leave 54 new calls unchanged; this is an evaluated alternative, not an approved protocol revision.
+
+The PR93 article/AppendixB and current assets now use all 60 observations, with a final scientific/editorial audit still pending. Original snapshots/raw flags remain unchanged. No PDF was rendered. The installed PR94 source remains c623fe8 and plan b41953a8; do not reinstall it to follow documentary commits. PR89 has finished, allowing preparation of the separate roots CLI. Live allocation and artifact-generation/review gates remain pending, and no new job, forward, solve, retry, merge or publication has occurred.
+
 ## PR94 installation received and final-head CI passed — 1 November 2026
 
 The [zero-call installation receipt](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/264b29246b785bbfa7e1038c12aedde7c64f1599/docs/research/pr94-installation-return-20261101.json) has been checked: the1709-byte ZIP, CRCs and member SHA agree; all six current input hashes match the earlier preflight; the conditional reservation budget is unchanged. Source c623fe858f62d8fa2a70eebf6f3aeee5692e8f90 and plan b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77 are frozen in the isolated stage. Do not update that installed source when documentation advances. The inspected controller enforces the original checkpoint hash; the private plan/weights were not independently replayed. The return adds zero optimizations, forwards, training calls or submissions and reports424 bound source files and313877160 working bytes.

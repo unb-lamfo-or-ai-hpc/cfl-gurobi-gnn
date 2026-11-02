@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "as_of": "2026-10-31",
+  "as_of": "2026-11-01",
   "manuscript_status": "controlled_development_study_for_author_review",
   "development_only": true,
   "scientific_reporting_eligible": false,
@@ -66,14 +66,14 @@
       "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
       "execution_authorized_date": "2026-10-20",
       "jobs_already_submitted": 60,
-      "execution_state": "in_progress_partial_snapshot",
-      "final_return_received": false,
+      "execution_state": "completed_all60_receipts_reconciled",
+      "final_return_received": true,
       "scientific_results_included": false,
       "new_execution_authorized_by_this_revision": false,
-      "partial_descriptive_results_included": true,
-      "partial_received_cells": 54
+      "complete_descriptive_results_included": true,
+      "complete_received_cells": 60
     },
-    "editorial_state": "partial_integration_for_review_pr89_closeout_pending",
+    "editorial_state": "complete_cpu_integration_final_audit_pending",
     "final_coauthor_approval": false,
     "submission_authorized": false
   },
@@ -121,5 +121,18 @@
         "sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9"
       }
     ]
+  },
+  "complete_cpu_descriptive_snapshot": {
+    "source_directory": "docs/evidence/pr89/final-20261101",
+    "source_commit": "565d9146729c7f35f280d1ae37818beab71879ff",
+    "manifest_sha256": "6fb1728509eb6a140618882f78aa87300367db549c49adbf42393652f71c6941",
+    "received_cells": 60,
+    "reported_target": 47,
+    "right_censored": 13,
+    "checker": "scripts/manuscript/build_partial_cpu_assets.py",
+    "metric_dispositions": "docs/evidence/pr89/final-20261101/disposition.csv",
+    "tail_exact_audit_sha256": "14b5fb05a8cee9442cdd518dcff15adf4be2a202e465828afd9b80ff377f3afa",
+    "exact_global_optimality_certified": false,
+    "final_integrated_audit_complete": false
   }
 }
