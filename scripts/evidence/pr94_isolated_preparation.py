@@ -966,6 +966,25 @@ def collect(stage, kind):
             r["State"] == "COMPLETED" and r["ExitCode"] == "0:0" for r in state["rows"]
         )
     )
+    category = "optimize" if kind == "roots" else "forward"
+    intents = []
+    for parent in PARENTS:
+        path = stage / "claims" / (category + "-" + parent + ".json")
+        if path.exists():
+            record = read(path)
+            need(
+                record
+                == {
+                    "parent": parent,
+                    "category": category,
+                    "maximum_calls": 1,
+                    "plan_sha256": file_sha(stage / "plan.json"),
+                },
+                "call_intent_changed",
+            )
+            intents.append(
+                {"parent": parent, "category": category, "sha256": file_sha(path)}
+            )
     value = {
         "protocol_id": plan["protocol_id"],
         "kind": kind,
@@ -976,6 +995,8 @@ def collect(stage, kind):
         "accounting": state,
         "summary": summary,
         "closed_artifact_seals": seals,
+        "durable_call_intents": intents,
+        "intent_is_not_proof_of_completed_call": True,
         "ready_for_review": ready,
         "raw_artifacts_included": False,
         "private_paths_included": False,

@@ -322,6 +322,7 @@ class AdapterTests(unittest.TestCase):
             "job_id": "123",
             "rows": [{"State": "FAILED", "ExitCode": "2:0"}],
         }
+        flow.claim(self.stage, "optimize", flow.PARENTS[0])
         with (
             patch.object(flow, "load", return_value=self.plan),
             patch.object(flow, "accounting", return_value=state),
@@ -330,6 +331,9 @@ class AdapterTests(unittest.TestCase):
         self.assertFalse(
             flow.read(self.stage / "roots-public-return.json")["ready_for_review"]
         )
+        receipt = flow.read(self.stage / "roots-public-return.json")
+        self.assertEqual(len(receipt["durable_call_intents"]), 1)
+        self.assertTrue(receipt["intent_is_not_proof_of_completed_call"])
 
     def starts(self, abstain=False):
         from copy import deepcopy
