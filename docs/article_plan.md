@@ -1,5 +1,145 @@
 # Article plan
 
+## Integration and recovery update — 2 November 2026
+
+This section supersedes the dated pending snapshots below. PR89 has60 received/reconciled cells:47 solver-reported terminal targets and13 time-limit censures, all M7. All15 M7 observations remain; M4/M12 restrictions and the scoped exact-primal audits do not establish certified speedups or a common exact optimum. Installed9ab7823c and original receipts remain unchanged.
+
+The specifically authorized PR94 recovery launched48 blocks3833–3880 with source81c829b6 and reviewed plan92ac169c, retaining the same144 evaluations and preparation. The untimed author snapshot reports2 COMPLETED,2 RUNNING,44 PENDING; no new evaluation result has been received/qualified. The original attempt is4 FAILED+44 CANCELLED. See the [launch receipt](research/pr94-recovery-launch-20261102.json) and [canonical Sprint/PR plan](research/mvp2-closeout-plan.md). Three solver seeds do not represent three trained networks or independent parent replicates.
+
+The author specifically authorizes89/93 merges into develop after checks. Existing PR95 carries later main promotion and separate publication approval. S1–S4 advance; S5/S6 await qualified returns. Reader prose contains scientific methods and limitations, while queue/incident/approval records remain here. No retraining, automatic retry, deployment mutation or new preparation accompanies Git integration.
+
+## Reviewed partial return — 1 November 2026
+
+The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
+
+The four new M12 cells retain numerical restrictions and all scientific eligibility flags remain false. At four threads, G/B/R solver runtimes are 578.430/21726.307/20762.970 seconds. G's primal/dual 4.741382854739 exceeds the smaller B/R primal reports; zero internal gaps therefore do not establish the same exact optimum. No certified-speedup or causal-mechanism claim follows. Private models, vectors and solver logs were not independently replayed.
+
+The article and AppendixB now use the [separate 54-cell data snapshot](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/1d5a65a5fa06d58b612a5615563f627ae87aedbf/docs/evidence/pr89/partial-20261101). PR89 source 9ab7823c, its plan, starts, parameters, resources and sequence are unchanged. Next new receipts concern 3729–3734 when terminal. New experimentation, retries, merges and publication are not executed by this receipt.
+
+
+## Approved continuation — 1 November 2026
+
+The author approved the revised Sprint/PR plan. The [canonical plan](research/mvp2-closeout-plan.md) now governs autonomous preparation of the ten-medium/six-easy solver-seed extension, with the 54-parent learning split frozen. Do not request planning approval again. The exact manifest and resource accounting precede the author's CLI intervention; no new job was submitted. PR89 stays intact. The new human snapshot reports 3725–3728 COMPLETED, 3729 RUNNING and 3730–3734 PENDING; 50 result cells remain received, with four more awaiting transfer/verification. S1/S2/S4/S5 proceed independently; full qualification, merges, publication and submission keep their human gates.
+
+
+## Latest planning direction — 31 October 2026
+
+The author proposes expanding optimization testing to ten medium parents, keeping six easy parents and the frozen54 learning split. Solver seeds42/43/44 and six added medium parents are a proposed next campaign, not submitted jobs or new execution authority. Neural retraining, root-method/hyperparameter experiments remain future work. The [canonical Sprint/PR plan](research/mvp2-closeout-plan.md) records conditional reuse, difficulty analysis, numerical/exposure limits and the publication sequence. PR89 stays frozen; current reader-facing results still use the original cohorts. The separate historical six-medium study uses M0/M4/M7/M9/M12/M20; the principal CPU/PR89 medium cohort is M0/M4/M7/M12.
+
+
+## Author-directed descriptive CPU subset — 31 October 2026
+
+The author requested the 50-cell partial CPU return be included as a labelled exploratory subset in the article and Appendix B. This supersedes the earlier no-numerical-CPU-placeholder wording only for these received, receipt-checked descriptive observations. It does not qualify the full 60-cell campaign, change any original eligibility flag or authorize further execution. Sources are frozen in docs/evidence/pr89/partial-20261031; missing cells, endpoint-specific censoring, M4/M12 restrictions and the smaller M0 bound disagreement remain explicit. The AI disclosure now names Codex models 6.1 Sol and 6.0 Astra, as corrected by the author.
+
+
+## Separate appendices and determinism clarification — 30 October 2026
+
+The author requested separate article/appendices PDFs, recovery of the historical 39-instance descriptive material in Appendix B, and an expanded documented comparison of solver engines/interfaces in Appendix C. The 39-instance PCA is a projection of fixed structural descriptors, not learned GNN embeddings. No current cohort, result, protocol or PR89 setting changes. See the [canonical revision record](research/pr93-editorial-revision-20261030.md) for the technical diagnosis, provenance and implementation.
+
+
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](research/pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
+## Backmatter accepted for PR93 — 28 October 2026
+
+Use numbered Acknowledgements, then the numbered AI declaration and numbered
+References. Thank UJA and DaSCI for access to dgx-dasci HPC; preserve the
+approved disclosure text. The [editorial plan](../manuscript/editorial-plan.md)
+records the requirement and validation. No new review PDF is requested.
+
+## Current Sprint/PR delivery — 28 October 2026
+
+The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
+PR92 delivered the independent methods and preliminary-review stage and was
+merged with explicit author approval at `ac2dccb8bd56af6b03b866db5199d19944b7a28b`.
+PR93 now targets develop and carries synthesis and final CPU integration.
+Its [supplement guide](../manuscript/supplement/README.md) records the independent
+claim reconciliation and reader-oriented explanations. PR93 remains a draft;
+the qualified return and final audit are still required.
+
+The [coauthor brief](research/coauthor-review-brief.md) is prepared for
+author-controlled circulation and preliminary feedback by 15 November.
+It includes the first-pass audit record. The complete post-qualification
+audit remains mandatory. Targets are manuscript 15 December, final approval
+7 January, intended submission 10 January and absolute deadline 14 January.
+
+D0 remains reception/reconciliation of 60 planned cells, not the later metric
+qualification date. Missing returns or blocks require a recorded human
+decision, not a silent date change or retry. Additional experiments stay
+outside the current Sprints.
+
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 continue in PR93 after PR92’s independent-stage delivery;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](research/human-ai-traceability-review.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+
+
+## Current completion plan — 26 October 2026, R3
+
+The [R3 contract and S1–S6 plan](research/mvp2-r3-contract.md) supersedes older
+calendar and transfer requirements. Deadline: **14 January 2027** for MVP2
+completion and author-approved article submission. Methods and writing proceed
+in parallel with the still-running PR89 campaign; no pending results are filled.
+
+Next coherent PR: contract, B/R/G formalization, dataset/model provenance and
+metrics/reproducibility, reusing PR80/85/86/87/88. Close the existing PR89 after
+its authorized return/review. Then integrate CPU/GPU synthesis, R2-D8, manuscript
+and supplements in one editorial delivery, followed by an explicitly approved
+develop-to-main scientific release. Do not reserve PR numbers or create
+separate PRs per helper or result wave.
+
+| Sprint | Target window | Product / acceptance |
+| --- | --- | --- |
+| S1 | 26–31 October | Transfer/contract/plan; R2-D1/D7, one operational owner |
+| S2 | 1–15 November, anticipatable | R2-D2/D3/D4, source-linked methods/provenance/reproducibility |
+| S3 | 16–30 November, anticipatable | PR89 and R2-D5/D6, all 60 cells explained with metric eligibility |
+| S4 | 1–15 December | CPU/GPU synthesis, SO/C evidence matrix, R2-D8 |
+| S5 | 16–31 December, writing now | Complete manuscript/supplements for coauthor review |
+| S6 | 1–14 January 2027 | Final corrections, approved release and submission |
+
+Reuse the PR90 Pages review version and PR88 figures. PR90 does not include
+future PR89 results or authorize later publication. Keep the GPU speed/quality
+tradeoff, small historically exposed sample, numerical limits and bounded
+costs explicit. Claims need traceable evidence and verified literature.
+IA assistance transparency is separate from the optional Human–AI study.
+
+Internal targets are full text by 31 December, approval by 7 January and
+submission by 10 January, with 11–14 January contingency. Queue/failure risks
+and coauthor turnaround remain uncertain; no old 78h23m ETA is reused.
+No new seeds, hard instances, checkpoint search or corrective training is
+required. Post-MVP P1–P5 remain planned, not authorized.
+See the [evidence index](research/mvp2-r3-evidence-index.json) for pending products.
+
+## Historical editorial plans — original dated text preserved
+
+Dated proposals below are retained, including superseded December deadlines,
+CPU approval holds and final-before-transfer conditions. The R3 plan governs
+current scheduling and ownership; it does not rewrite their original evidence.
+
+
 ## Current editorial contract — PR88, D1–D6, updated 20 October
 
 Use [D3 figures](research/methodology-20261019/D3-figures.md),
@@ -18,7 +158,7 @@ The proposedCPU780hserial reservation plus queues is a critical calendar risk,
 not a promised completion date. Write in parallel, escalate prospective scope
 choices before execution; main synchronization after article review only.
 PR87 completed GPU delivery: [review](research/pr87-completed-pair-review.md)
-and [seven tables/four vector figures](evidence/pr87/jobs3673-3674/) supply the
+and [seven tables/four vector figures](evidence/pr87/jobs3673-3674) supply the
 mandatory full-training serial1GPU/DDP4 comparison. Report seed42 matched work,
 2.167x loop/1.831x job speedup, increased assigned GPU-h and selected macro F1
 loss0.032468 beyond the frozen margin. Do not claim quality preservation,
@@ -53,7 +193,7 @@ PR88 manuscript proceeds alongside GPU; release/main only after article review.
 
 19 October [CPU closeout](research/pr86-final-analysis.md): the planned210/70
 are collected and analytically consolidated. Use the [final source tables and
-six figures](evidence/pr86/final-210/) instead of partial-wave plots for final
+six figures](evidence/pr86/final-210) instead of partial-wave plots for final
 CPU claims. Preserve earlier figures as dated evidence. Main takeaways:
 heterogeneous GNN effects; compareLP too; preparation accounting can reverse a
 solver-only benefit; pointwise exploratory uncertainty and numerical sensitivity
@@ -317,3 +457,15 @@ adds the parameter and timing contracts for future CPU/cost figures, not their
 data. Figure generators must keep solver, supervised attempt and batch-level
 scopes distinct, preserve stopped runs and avoid treating unknown preparation
 or timing-tail writes as zero. The C–F roadmap and separate budgets are unchanged.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October post-merge continuation: PR88's manuscript/GPU/BCE integration is in
+develop at`e5804a8c`. [CPU12h](research/pr89-cpu12h.md) prepares the missing temporal
+quality evidence, not an observed result. The worst-case32.5days plus queues
+threatens15November: no completion date or convergence is promised. Writing and
+coauthor review proceed using already measured data. No additional GPU pair,
+architecture search or main synchronization is required now. Main release stays
+after article revision with separate approval.

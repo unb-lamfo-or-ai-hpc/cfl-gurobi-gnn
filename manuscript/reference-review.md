@@ -1,4 +1,50 @@
+# Reference reconciliation — 30 October 2026
+
+The author approved the diagnosis and C2/C3 framing in PR93. This update uses the existing literature review, with targeted checks of primary metadata and solver interfaces; it is not a new broad survey or Zotero-library modification. The bibliography retains Harvard/elsarticle-harv. Repeated DOI URLs are removed from display fields without changing source identities; undated benchmark/software pages use n.d. rather than an invented publication year. GraphSAGE pagination 1024–1034 is verified in the NeurIPS primary metadata, and the 2024 branching paper's volume37/DOI is verified on its proceedings page. Missing pagination in unpaginated conference records is not filled with guessed values. A failed Guide for Authors fetch does not constitute complete current-guide verification.
+
+Primary metadata: https://proceedings.neurips.cc/paper_files/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9-Metadata.json ; https://proceedings.neurips.cc/paper_files/paper/2024/hash/dff528ce3e1390c88f10bbf5e722a241-Abstract-Conference.html .
+
+Earlier verification records follow; their dates and access limits remain historical.
+
 # Reference selection and Zotero collection
+
+## Hyperparameter rationale and benchmarking — reader revision
+
+Three references now support specific methodological statements:
+Kingma and Ba (ICLR 2015, author version 9) for Adam's conventional 0.001 rate;
+Pascanu, Mikolov and Bengio (ICML 2013, pages 1310–1318) for gradient-norm
+clipping as a stabilization principle; and Beiranvand, Hare and Lucet
+(Optimization and Engineering 18, 815–848, 2017;
+DOI 10.1007/s11081-017-9366-1) for transparent benchmarking settings.
+
+The Adam algorithm and clipping discussion were checked in primary full texts.
+The benchmarking discussion uses the author full-text version; publisher
+metadata were checked separately. The Gurobi bibliography entry now identifies
+the full version 13.0 reference manual, so it supports root-method parameters
+as well as native Start attributes.
+
+None of these sources establishes the best depth, width, clipping threshold,
+seed count or study sufficiency for CFL. The methods text makes those limits
+explicit. No Zotero record or collection was modified.
+
+
+## Critical foundation update — 28 October 2026
+
+The [source-linked GNN audit](supplement/gnn-methods-audit.md) records the
+scope and limitations of five additions: Kipf–Welling GCN, Hamilton et al.
+GraphSAGE, Veličković et al. GAT, Brody et al. GATv2, and Vargas-Pérez et al.
+opinion-dynamics regression (DOI10.1109/TCSS.2024.3508452).
+Primary author full-text versions support the four operator distinctions.
+The Vargas-Pérez full13-page PDF was read from existing Zotero item4CUKK54F;
+TablesIII–V were checked visually. It supplies a reporting example, not
+evidence that GraphSAGE wins on CFL or an obligation to repeat288runs.
+
+The references are cited in the article and have one bibliography record
+per work; conference year and later author-version dates are distinguished.
+They are manuscript-local additions. No Zotero collection, membership or
+metadata was edited. Other missing collection items remain optional and
+require a specific claim, critical relevance check and verified metadata.
+Earlier dated selection/access statements below remain historical.
 
 ## Current article update, 2 October 2026
 

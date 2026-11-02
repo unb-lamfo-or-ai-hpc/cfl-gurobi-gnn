@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "kind": "sealed_partial_cpu_descriptive_evidence",
+  "input_zip_sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab",
+  "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+  "plan_sha256": "48fca37e2cc698f4d35e4850fdd48d8115b36d7f64b97438ded3b9e17dea3dd1",
+  "files": {
+    "cells.csv": "618f537f1abc661e02171b5b9aac39f1e3610e079d354ef5d28ef0c969764475",
+    "thresholds.csv": "375e9df79af58a9b15297dbd312dcb45babcccfd45e6859df31328db593dfb22",
+    "horizons.csv": "01172502629ee9f9ebc47617f186bac89defb4cd9e31a78e4f0ba475e4878d7c",
+    "disposition.csv": "9d7271b672f8d978dc62430525671e6d3e16e2020b1d366691bf7c7ccf8cd506",
+    "review.json": "5c34643506b337b31e54d3d76259b7032dc2b58ba5856f680ae1f1e575b64ebf"
+  },
+  "received_cells": 50,
+  "planned_cells": 60,
+  "scientific_reporting_eligible": false,
+  "final_campaign_return": false,
+  "raw_logs_included": false,
+  "raw_model_and_vectors_reaudited": false
+}

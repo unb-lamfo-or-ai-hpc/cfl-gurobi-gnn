@@ -1,5 +1,5 @@
-Class-aware GNN predictions become nonbinding partial MIP starts for CFL.
-A root-LP comparator matches GNN support size and positive-assignment count.
-The principal retrospective analysis retains 150 seed42 solver observations.
-Censoring, numerical sensitivity and preparation costs bound speedup claims.
-Separate CPU and GPU proposals preserve pending results as pending.
+Partial warm-start effects vary with instance, thread cap and endpoint.
+Paired CFL comparisons separate primal quality, dual bounds and solve time.
+Preparation costs can reverse an observed solver-level advantage.
+Reuse scenarios change cost comparisons without removing preparation.
+Faster distributed training accompanies lower F1 and higher GPU-hours.

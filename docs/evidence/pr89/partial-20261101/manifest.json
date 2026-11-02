@@ -1,0 +1,32 @@
+{
+  "files": {
+    "cells.csv": "b398f7b9fc36abbd66a0639afee67c621068c440f248150bcbcdad1d7fc96e5b",
+    "disposition.csv": "11c2133afd5041e40996a6e606371084f8b2b3ec6ab3fe7a9dfc8c027549fbbd",
+    "horizons.csv": "f2ca05f72198e23be7f464dcf42ead308cd23a0a71a72be68a15546495fd2ced",
+    "review.json": "62adbf8958057e2470223f5c2ff15aa47c5be5b1295ad42b14fde02647901ce2",
+    "thresholds.csv": "541620601fa27f9de7ee44e897a255431737121503147feb1027cf7756a18028"
+  },
+  "final_campaign_return": false,
+  "input_archives": [
+    {
+      "received": 50,
+      "role": "baseline50",
+      "sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab"
+    },
+    {
+      "received": 4,
+      "role": "delta4",
+      "sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9"
+    }
+  ],
+  "kind": "sealed_partial_cpu_descriptive_evidence",
+  "plan_sha256": "48fca37e2cc698f4d35e4850fdd48d8115b36d7f64b97438ded3b9e17dea3dd1",
+  "planned_cells": 60,
+  "previous_public_manifest_sha256": "d8f8e3fe7b95ad688cc6ab8e6218bdf133b16df88e28f39882dcb822426eec2b",
+  "raw_logs_included": false,
+  "raw_model_and_vectors_reaudited": false,
+  "received_cells": 54,
+  "schema_version": 2,
+  "scientific_reporting_eligible": false,
+  "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5"
+}

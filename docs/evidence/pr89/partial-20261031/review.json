@@ -1,0 +1,333 @@
+{
+  "archive_members": 256,
+  "arithmetic_reference_sha256": {
+    "pr86_cost_accounting.py": "aca359b7d1f1d4e29a096ede808695757fcfa4c29d5d7868b7f54ac2c3b0d92f",
+    "pr86_supervised_costs.py": "e5798ae394d61e0e63840c9cdbf61a9b66fb6f2324ed20722df6419dba0b6334",
+    "pr89_cpu_temporal.py": "042644aa2d4f5b6492184fd7a6ac810599fea5f490060c9526b0d38a8b437886"
+  },
+  "by_parent": {
+    "M0": {
+      "cross_run_bound_excess": 0.000024157097795907134,
+      "cross_run_excess_percent": 0.0005242088967698068,
+      "maximum_dual_job": "3678",
+      "maximum_reported_dual": 4.60832019037079,
+      "optimal_reported": 15,
+      "primal_max": 4.608386913127561,
+      "primal_min": 4.608296033272994,
+      "primal_min_job": "3675",
+      "rows": 15,
+      "runtime_hours": 37.752322976522976,
+      "time_limit": 0
+    },
+    "M12": {
+      "cross_run_bound_excess": 0.0004501492626403092,
+      "cross_run_excess_percent": 0.009494951533910447,
+      "maximum_dual_job": "3722",
+      "maximum_reported_dual": 4.741382854739205,
+      "optimal_reported": 5,
+      "primal_max": 4.741382854739205,
+      "primal_min": 4.740932705476565,
+      "primal_min_job": "3721",
+      "rows": 5,
+      "runtime_hours": 16.00596076561345,
+      "time_limit": 0
+    },
+    "M4": {
+      "cross_run_bound_excess": 0.006489455438697611,
+      "cross_run_excess_percent": 0.1324171339900237,
+      "maximum_dual_job": "3699",
+      "maximum_reported_dual": 4.907256631978349,
+      "optimal_reported": 15,
+      "primal_max": 4.907256631978349,
+      "primal_min": 4.900767176539651,
+      "primal_min_job": "3693",
+      "rows": 15,
+      "runtime_hours": 31.94120559944047,
+      "time_limit": 0
+    },
+    "M7": {
+      "cross_run_bound_excess": 0,
+      "cross_run_excess_percent": 0,
+      "maximum_dual_job": "3718",
+      "maximum_reported_dual": 5.428377599678637,
+      "optimal_reported": 2,
+      "primal_max": 5.428377599678637,
+      "primal_min": 5.428377599678637,
+      "primal_min_job": "3705",
+      "rows": 15,
+      "runtime_hours": 177.73617933180597,
+      "time_limit": 13
+    }
+  },
+  "campaign_modified": false,
+  "clock_overhead_seconds": [
+    64.22826790809631,
+    82.92679905891418
+  ],
+  "costs_recomputed": 50,
+  "hpc_accessed": false,
+  "member_hashes_verified": 255,
+  "nested_triplets_verified": 50,
+  "parameter_bindings_verified": 50,
+  "plan_sha256": "48fca37e2cc698f4d35e4850fdd48d8115b36d7f64b97438ded3b9e17dea3dd1",
+  "remaining": [
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads2-seed42-M0",
+        "checkpoint_sha256": "",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads2-seed42",
+        "method": "M0",
+        "method_order_position": 3,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 2,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3725",
+      "state": "RUNNING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads4-seed42-M2",
+        "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads4-seed42",
+        "method": "M2",
+        "method_order_position": 1,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 4,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3726",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads4-seed42-M0",
+        "checkpoint_sha256": "",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads4-seed42",
+        "method": "M0",
+        "method_order_position": 2,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 4,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3727",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads4-seed42-M1",
+        "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads4-seed42",
+        "method": "M1",
+        "method_order_position": 3,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 4,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3728",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads8-seed42-M0",
+        "checkpoint_sha256": "",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads8-seed42",
+        "method": "M0",
+        "method_order_position": 1,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 8,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3729",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads8-seed42-M1",
+        "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads8-seed42",
+        "method": "M1",
+        "method_order_position": 2,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 8,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3730",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads8-seed42-M2",
+        "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads8-seed42",
+        "method": "M2",
+        "method_order_position": 3,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 8,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3731",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads16-seed42-M1",
+        "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads16-seed42",
+        "method": "M1",
+        "method_order_position": 1,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 16,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3732",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads16-seed42-M2",
+        "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads16-seed42",
+        "method": "M2",
+        "method_order_position": 2,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 16,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3733",
+      "state": "PENDING"
+    },
+    {
+      "cell": {
+        "alias": "M12",
+        "cell_id": "M12-threads16-seed42-M0",
+        "checkpoint_sha256": "",
+        "difficulty": "medium",
+        "effective_objective_sense": "MINIMIZE",
+        "group_id": "M12-threads16-seed42",
+        "method": "M0",
+        "method_order_position": 3,
+        "mip_gap_fraction": 0.0001,
+        "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+        "parent": "CFL_medium_instance_12",
+        "seed": 42,
+        "state": "planned_not_executed",
+        "threads": 16,
+        "time_limit_seconds": 43200
+      },
+      "job_id": "3734",
+      "state": "PENDING"
+    }
+  ],
+  "runtime_hours": 263.43566867338285,
+  "scheduler_states": {
+    "COMPLETED": 50,
+    "PENDING": 9,
+    "RUNNING": 1
+  },
+  "scientific_reporting_eligible": false,
+  "scope_limits": [
+    "Public report/seal review only: no raw model, solution-vector or private-log re-audit.",
+    "No optimization intent, affinity/cgroup trace or source-working-tree verification from this ZIP.",
+    "All official scientific_reporting_eligible=false flags preserved; this is a partial descriptive analysis.",
+    "M4/M12 excluded from certified speedups/exact-optimum claims; small M0 cross-run discrepancy also recorded.",
+    "Single seed and one run per cell; thread caps are not independent repetitions. No population or causal claim."
+  ],
+  "slurm_hours": 264.39944444444444,
+  "snapshot_finished_utc": "2026-10-31T19:50:06.406275+00:00",
+  "snapshot_started_utc": "2026-10-31T19:50:06.316709+00:00",
+  "solver_statuses": {
+    "2": 37,
+    "9": 13
+  },
+  "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+  "start_statuses": {
+    "accepted": 34,
+    "not_submitted": 16
+  },
+  "temporal_records_validated": 50,
+  "threshold_states": {
+    "0.0001": {
+      "observed": 37,
+      "right_censored": 13
+    },
+    "0.01": {
+      "observed": 37,
+      "right_censored": 13
+    },
+    "0.05": {
+      "observed": 44,
+      "right_censored": 6
+    },
+    "0.1": {
+      "observed": 50
+    }
+  },
+  "zip_sha256": "111ca062008ff92896a22c8266050ba544f7ad5fb5c048c1d1b0a4539038d0ab",
+  "authorized_descriptive_manuscript_inclusion_date": "2026-10-31",
+  "metric_scope": "partial_descriptive_not_final_qualification",
+  "confirmatory_result": false
+}

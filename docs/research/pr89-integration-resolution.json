@@ -1,0 +1,221 @@
+{
+  "date": "2026-11-02",
+  "pr89_source": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+  "develop": "ac2dccb8bd56af6b03b866db5199d19944b7a28b",
+  "merge_base": "e5804a8c6762c2e5f13447e5a16784e5824de801",
+  "merge_executed": false,
+  "branch_refs_modified": false,
+  "installed_source_modified": false,
+  "policy": "Keep current develop text and append the entire PR89-only historical prefix under a dated historical heading; no scientific code conflict or source edit.",
+  "all_pr89_changed_files": [
+    {
+      "path": ".gitattributes",
+      "base_sha": "05d6759bdfe873411d60da68a0789dca1d51a599",
+      "develop_sha": "05d6759bdfe873411d60da68a0789dca1d51a599",
+      "pr89_sha": "53267bff6067bbc0142d6356d8ca852d59ec666c"
+    },
+    {
+      "path": ".github/workflows/evidence.yml",
+      "base_sha": "3aece688f7fad7f0e5642c103f77dcac97dcdf41",
+      "develop_sha": "3aece688f7fad7f0e5642c103f77dcac97dcdf41",
+      "pr89_sha": "9fc563fccd2f0e19187519980cb0102a603b433b"
+    },
+    {
+      "path": "docs/article_plan.md",
+      "base_sha": "e644f2a2fb6e17b8ebaaf81cf64b35a2b997867d",
+      "develop_sha": "abb4d1e6672ba76cb6c90f5f79366f0893310c04",
+      "pr89_sha": "cc86c1f5684914d3794cbba6c362a890076267c1"
+    },
+    {
+      "path": "docs/current_status.md",
+      "base_sha": "232c06bc11995f0ce109a3f367dca0d27b251ce9",
+      "develop_sha": "b72170ffff4e094404c637cfb667249142809c6e",
+      "pr89_sha": "4dc8f15438ca9aa8dd07b49dad3203db72f2dc01"
+    },
+    {
+      "path": "docs/evidence/pr89/cpu_author_decision.json",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "786b142ef41e19ae76367ed2da9099fc22d213cb"
+    },
+    {
+      "path": "docs/experiment_protocol.md",
+      "base_sha": "9f2be81fef6706e27bdc505dfc167127b0a6aaf0",
+      "develop_sha": "61263b251604075e5624d4528a760641562fd975",
+      "pr89_sha": "691142c6a4e2aeb14fc4ec6abe27a2b37de758e3"
+    },
+    {
+      "path": "docs/research/methodology-20261019/D2-cpu-budget.md",
+      "base_sha": "08ef9b389f5b0b3a64928c902a3d036e89a65324",
+      "develop_sha": "08ef9b389f5b0b3a64928c902a3d036e89a65324",
+      "pr89_sha": "51c3db0abaf8c96559fa3b197e61163bb3bb139e"
+    },
+    {
+      "path": "docs/research/pr89-cpu12h.md",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "1fc84aead5bbd0eec054d0465ed74aa273ec5a56"
+    },
+    {
+      "path": "docs/research_context.md",
+      "base_sha": "a0c76381438344c0ff3ba35d1d9284b66c58583d",
+      "develop_sha": "e5415c04f21627a4e52d0150ec86e0b498025389",
+      "pr89_sha": "7fdc922efa60d00890044e2589c10f162d49a52d"
+    },
+    {
+      "path": "scripts/evidence/operate_pr89_cpu.sh",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "35858bc76102551abad7d3a875949f382a98a6ba"
+    },
+    {
+      "path": "scripts/evidence/pr86_solver.py",
+      "base_sha": "77cf7cbe80a872991d139005b87055509ec392b0",
+      "develop_sha": "77cf7cbe80a872991d139005b87055509ec392b0",
+      "pr89_sha": "69ed7dee563ed31583f3ea6dbc9a911fd6a62b36"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_contract.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "12d1c44499988c9f56ac98520534535cd4c52cf4"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_temporal.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "a3e031cdd34e14141e1a968333364ef8c2d0d521"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_workflow.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "6e0e020caa65c10a5265a2e0fdd11692fa9c8832"
+    },
+    {
+      "path": "scripts/evidence/receive_pr89_cpu.ps1",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "039cacce084992d9b2d07af2fc2335ed9171606c"
+    },
+    {
+      "path": "tests/evidence/test_pr86_prospective_executor.py",
+      "base_sha": "11c696539d2e98b2787568fc1e21a201c10fddd0",
+      "develop_sha": "11c696539d2e98b2787568fc1e21a201c10fddd0",
+      "pr89_sha": "317f337dcbbd0206928ccaac8df4ac3c1c699d55"
+    },
+    {
+      "path": "tests/evidence/test_pr89_cpu.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "0fc076e00876e84a45e9183b98e1b585cf442ec8"
+    }
+  ],
+  "manual_document_resolutions": [
+    {
+      "path": "docs/article_plan.md",
+      "resolution": "append dated PR89-only historical prefix to unchanged develop document",
+      "resolved_blob_sha": "686ea0dd4d81d0a4912e3adadf7b4e0c76935ca1",
+      "resolved_sha256": "b468811b4d0b3ab8b204963f827ce3a0be9e5f94b397ab1f2b42ca1321d83297"
+    },
+    {
+      "path": "docs/current_status.md",
+      "resolution": "append dated PR89-only historical prefix to unchanged develop document",
+      "resolved_blob_sha": "085243f67c146b9ed4c8e3fd2f6a5283c047f1de",
+      "resolved_sha256": "3d7e0bae63827d3bc54df4c3fee16cbaf009556b5d0bf3a520b5c7368cc29cb7"
+    },
+    {
+      "path": "docs/experiment_protocol.md",
+      "resolution": "append dated PR89-only historical prefix to unchanged develop document",
+      "resolved_blob_sha": "898fd93f2acb3b137b86131eda359a7ad3ae066b",
+      "resolved_sha256": "9a618a7e98eae8771dee780c7d6f28b1e3166ad0a10a1ce3126252a3cb37eb11"
+    },
+    {
+      "path": "docs/research_context.md",
+      "resolution": "append dated PR89-only historical prefix to unchanged develop document",
+      "resolved_blob_sha": "fb8db10fc40ca8a391f9944632c4b79fc3448c3a",
+      "resolved_sha256": "ef615f435c537ef9996b1a90383629d41de0c6b7dc25d4fa40064d3b826c8854"
+    }
+  ],
+  "patch": "runbooks/pr89-develop-resolution.patch",
+  "checks": {
+    "focused_pr89_tests": "Local partial mirror could not run: frozen PR78 qualification receipts absent. No test or admission was weakened; complete repository CI will exercise imported PR89 tests.",
+    "actual_combined_tree_CI": "required_before_merge",
+    "manuscript_tests": "101 passed on updated manuscript/appendix sources",
+    "original_imported_blob_comparison": "11 of 11 Git blob SHAs match PR89 frozen source"
+  },
+  "remaining_gates": [
+    "Review the prepared resolution against the unchanged two heads",
+    "Specific approval before any branch merge/rebase/reference mutation",
+    "Recheck actual integration with PR93 .gitattributes and Evidence T1/bash syntax gates"
+  ],
+  "no_retry_or_new_solve": true,
+  "original_PR89_blobs_imported_into_PR93_for_combined_CI": [
+    {
+      "path": "docs/evidence/pr89/cpu_author_decision.json",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "786b142ef41e19ae76367ed2da9099fc22d213cb"
+    },
+    {
+      "path": "docs/research/methodology-20261019/D2-cpu-budget.md",
+      "base_sha": "08ef9b389f5b0b3a64928c902a3d036e89a65324",
+      "develop_sha": "08ef9b389f5b0b3a64928c902a3d036e89a65324",
+      "pr89_sha": "51c3db0abaf8c96559fa3b197e61163bb3bb139e"
+    },
+    {
+      "path": "docs/research/pr89-cpu12h.md",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "1fc84aead5bbd0eec054d0465ed74aa273ec5a56"
+    },
+    {
+      "path": "scripts/evidence/operate_pr89_cpu.sh",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "35858bc76102551abad7d3a875949f382a98a6ba"
+    },
+    {
+      "path": "scripts/evidence/pr86_solver.py",
+      "base_sha": "77cf7cbe80a872991d139005b87055509ec392b0",
+      "develop_sha": "77cf7cbe80a872991d139005b87055509ec392b0",
+      "pr89_sha": "69ed7dee563ed31583f3ea6dbc9a911fd6a62b36"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_contract.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "12d1c44499988c9f56ac98520534535cd4c52cf4"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_temporal.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "a3e031cdd34e14141e1a968333364ef8c2d0d521"
+    },
+    {
+      "path": "scripts/evidence/pr89_cpu_workflow.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "6e0e020caa65c10a5265a2e0fdd11692fa9c8832"
+    },
+    {
+      "path": "scripts/evidence/receive_pr89_cpu.ps1",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "039cacce084992d9b2d07af2fc2335ed9171606c"
+    },
+    {
+      "path": "tests/evidence/test_pr86_prospective_executor.py",
+      "base_sha": "11c696539d2e98b2787568fc1e21a201c10fddd0",
+      "develop_sha": "11c696539d2e98b2787568fc1e21a201c10fddd0",
+      "pr89_sha": "317f337dcbbd0206928ccaac8df4ac3c1c699d55"
+    },
+    {
+      "path": "tests/evidence/test_pr89_cpu.py",
+      "base_sha": null,
+      "develop_sha": null,
+      "pr89_sha": "0fc076e00876e84a45e9183b98e1b585cf442ec8"
+    }
+  ]
+}

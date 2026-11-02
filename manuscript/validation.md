@@ -1,5 +1,42 @@
 # Manuscript validation
 
+## Current R3 editorial continuation — 27 October 2026
+
+This revision aligns the article and mutable editorial metadata with PR91:
+B/R/G, root capture, R's matched counts, original CPU checkpoint, historical
+batch1 versus later GPU globalbatch4, and the CPU campaign authorized and
+still in progress. Raw imported files and PR86/87/88 evidence remain unchanged.
+
+Four new targeted regressions reject promoting the pending return, substituting
+the CPU checkpoint, treating all210 rows as the principal sample, or restoring
+the obsolete unapproved/unexecuted claim. Existing authorship, AI disclosure,
+citation, evidence, layout and scientific-scope checks remain in force.
+The validator now distinguishes the legacy six-medium archive metadata from
+the current ten-parent principal view; this is not changed experimental data.
+
+Validation status at source preparation: JSON/aliases/citation/include/abstract
+checks reviewed; final-head manuscript/archive test and render outcomes will
+be recorded in the PR. Do not read an older PDF/hash below as verification of
+this new source. The editorial PR stays draft while PR89 and integrated
+scientific review are pending. No claim of successful new rendering is made
+by this paragraph.
+
+## Additional numerical traceability — 27 October 2026
+
+The working supplement binds 17 existing principal CPU/GPU claim groups to four
+public source files. The standard source check now validates their hashes,
+unique JSON/CSV selectors, scope, rounding and article values. New targeted
+regressions cover numeric drift, omitted negative evidence, altered source
+bytes, clock/averaging substitution, loss direction, ambiguous rows, unsafe
+source paths, unavailable values and pending-result invention.
+This does not rescore predictions or certify scientific eligibility. Final-head
+CI outcomes are recorded in PR92. The article/render inputs remain unchanged
+in this traceability step, so earlier preview receipts identify the preceding
+source revision rather than a new rendering.
+
+## Historical validation receipts — original text preserved
+
+
 ## Current PR88 GPU integration — 20 October 2026
 
 PR87 merged from the explicitly authorized337ff5dd head at32be9821. PR88
