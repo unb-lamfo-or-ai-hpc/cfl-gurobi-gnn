@@ -1,11 +1,19 @@
 # Working integrated assessment — R2-D8
 
+## Preparation tooling checkpoint — 1 November 2026
+
+PR94 now implements the isolated root/label-free graph/frozen-Start operator.
+Its initial CLI performs source/input/checkpoint/environment binding only;
+scientific preparation is separated into later reviewed CLI stages. Offline
+fault checks and synthetic CPU parity tests are implementation evidence, not
+new optimization outcomes or generated artifact identities. No additional
+PR89 result is received; final qualification and PDFs remain pending.
+
 ## Received evidence and M12 qualification — 1 November 2026
 
 The current CPU12h review covers54 of60 planned cells. It contains41
 solver-reported terminal-target attainments and13 time-limited cases, all on
-M7. The author's latest snapshot reports3729–3731COMPLETED,3732RUNNING and
-3733–3734PENDING; no query timestamp was supplied. Those scheduler states
+M7. The author's latest snapshot reports3729–3733COMPLETED and3734RUNNING (00:51:30); no query timestamp was supplied. Those scheduler states
 do not increase received coverage. The six-job terminal collector remains
 the next transfer step once the jobs are terminal.
 

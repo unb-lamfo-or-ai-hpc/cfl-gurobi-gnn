@@ -11,7 +11,7 @@ The approved scientific contracts, identities and archived receipts remain intac
 PR93 is a draft targeting develop. PR89 remains open at frozen source
 9ab7823c6886d19e9ec865141a1cd35b3c3c16e5. There are 54 received and reconciled
 CPU12h cells out of 60. The author's latest snapshot, without a query timestamp,
-reports 3729–3731 COMPLETED, 3732 RUNNING and 3733–3734 PENDING. A completed scheduler
+reports 3729–3733 COMPLETED and 3734 RUNNING at00:51:30. A completed scheduler
 job is not a received result. The [terminal-tail collector](runbooks/pr89-terminal-tail-collection.md)
 is ready for the author's CLI execution when the remaining jobs are terminal.
 

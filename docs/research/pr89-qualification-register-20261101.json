@@ -1,7 +1,7 @@
 {
   "author_elapsed_is_not_query_time": true,
   "author_query_timestamp": null,
-  "csv_sha256": "35006b07963ae7b55b6887b247cd6e5332286d44c668b4dd3a990de93353517d",
+  "csv_sha256": "af10b0bc789d19b46fad1c1765f680a9946d2f3226f42fbe41859ac7f7b1e13f",
   "exact_primal_audit_scope": [
     "3725",
     "3726",
@@ -18,6 +18,64 @@
     "3733",
     "3734"
   ],
+  "latest_author_snapshot": {
+    "elapsed_is_not_query_time": true,
+    "jobs": [
+      {
+        "AllocCPUS": 16,
+        "ExitCode": "0:0",
+        "batch_MaxRSS": "18321012K",
+        "elapsed": "04:31:25",
+        "job_id": "3729",
+        "state": "COMPLETED"
+      },
+      {
+        "AllocCPUS": 16,
+        "ExitCode": "0:0",
+        "batch_MaxRSS": "17525912K",
+        "elapsed": "03:45:56",
+        "job_id": "3730",
+        "state": "COMPLETED"
+      },
+      {
+        "AllocCPUS": 16,
+        "ExitCode": "0:0",
+        "batch_MaxRSS": "10032116K",
+        "elapsed": "00:11:24",
+        "job_id": "3731",
+        "state": "COMPLETED"
+      },
+      {
+        "AllocCPUS": 32,
+        "ExitCode": "0:0",
+        "batch_MaxRSS": "33091684K",
+        "elapsed": "04:27:59",
+        "job_id": "3732",
+        "state": "COMPLETED"
+      },
+      {
+        "AllocCPUS": 32,
+        "ExitCode": "0:0",
+        "batch_MaxRSS": "18670576K",
+        "elapsed": "00:14:29",
+        "job_id": "3733",
+        "state": "COMPLETED"
+      },
+      {
+        "AllocCPUS": 32,
+        "ExitCode": "0:0",
+        "batch_MaxRSS": null,
+        "elapsed": "00:51:30",
+        "job_id": "3734",
+        "state": "RUNNING"
+      }
+    ],
+    "new_solver_results_received": 0,
+    "query_timestamp": null,
+    "running_exitcode_is_not_completion": true,
+    "scope": "six_remaining_job_roots_only_not_a_fresh_60_job_query",
+    "source": "author_pasted_sacct"
+  },
   "numerical_restriction_is_not_time_censoring": true,
   "original_receipts_and_flags_modified": false,
   "planned_cells": 60,
