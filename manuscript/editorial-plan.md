@@ -1,5 +1,146 @@
 # Scientific and editorial revision
 
+## Current delivery split — 28 October 2026
+
+The author requests completion of PR92 now and preparation of the next PR.
+PR92 closes the independent methods, evidence provenance and preliminary
+coauthor-review stage. The [completion plan](../docs/research/mvp2-closeout-plan.md)
+is organized by Sprints and PRs and supersedes the earlier requirement that
+this PR wait for the final CPU return.
+
+The [coauthor brief](coauthor-review-brief.md) is the immediate independent
+deliverable: working title, question, empirical gap, C1–C3, methods and
+limitations, informed by chat 01.04. Preliminary feedback is sought by
+15 November through circulation controlled by the authors. No material has
+been sent. Its first-pass audit register reuses completed source reviews;
+it is not the final scientific gate.
+
+The next draft PR begins the existing-evidence synthesis and any unfinished
+independent audit work. Its final CPU integration, R2-D8, article/supplement
+and second-pass integral audit await the authorized return and qualification.
+The complete manuscript target is 15 December; final approval is intended
+by 7 January, submission by 10 January and no later than 14 January.
+
+## Reader-oriented revision and sensitivity decisions
+
+The methods text is now organized around the reader's questions rather than
+internal deliverable identifiers. It explains why bipartite messages fit
+the MILP structure, separates fixed values from validation-selected choices,
+and gives the limits of literature-based hyperparameter justification.
+Adam and gradient clipping are supported by their primary references without
+claiming that those references validate the exact CFL settings.
+
+The solver discussion corrects an overly broad interpretation of Method=−1:
+automatic selection alone does not imply a non-deterministic MIP algorithm.
+The manuscript distinguishes observed conditional comparisons from
+across-seed robustness. Its conclusions now describe targeted sensitivity
+work without presenting it as completed evidence or promising reviewer acceptance.
+
+See the [prospective assessment](supplement/sensitivity-review-plan.md) for
+incremental counts, cost boundaries and the conditions for deferral.
+A narrow seed study would take priority over a broad architecture grid if
+the final claim requires robustness evidence. No new experiment accompanies
+this revision, and the CPU-dependent synthesis remains pending.
+
+
+## Accelerated scientific preparation — 28 October 2026
+
+The [updated S1–S6 plan](../docs/research/mvp2-20261028-accelerated-plan.md)
+sets15December2026 as the target for a complete coauthor-review version,
+retaining14January2027 for submission. S1/S2/S4/S5 advance concurrently;
+S3 waits the qualified return of the existing campaign, and final S4/S5
+synthesis remains dependent on it. Keep PR92 as the integrated editorial PR.
+
+The [GNN audit](supplement/gnn-methods-audit.md) supplies source-linked
+architecture, hyperparameter, serial/DDP and solver-interface reconciliation.
+The article now includes actual message equations and concise distinctions
+between GCN, GraphSAGE and GAT/GATv2, plus the task-specific value and limits
+of the coauthors' opinion-dynamics paper. Five references are added because
+they support these statements, not because every Zotero item must be cited.
+
+The [IIEA-S decision register](supplement/human-ai-traceability.md) recommends
+a bounded traceability account; a full Appendix B remains conditional on
+a stable definition, primary decision evidence and coauthor approval.
+The agreed AI declaration and author identities remain unchanged.
+
+An early review pack uses the current manuscript preview, existing claim map,
+methods audit, figures and explicit author decisions. Preparing it does not
+authorize sending it to coauthors. CPU12h numbers remain pending.
+The scientific priority is explaining the fixed model and defensible claims,
+not proposing an unapproved architecture search. See the plan's mandatory
+A–D audit and T1/T2/T3 exit criteria.
+
+## Current integrated manuscript — 27 October 2026
+
+PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.
+The [R3 contract](../docs/research/mvp2-r3-contract.md) governs completion by
+14 January 2027. This editorial branch begins the integrated manuscript while
+PR89 remains in progress. It is not the final specialist report or a
+submission-ready article.
+
+Current changes reconcile B/R/G presentation with historical M0/M1/M2,
+first optimal root-node capture, G-dependent R support/one counts, historical
+batch1 versus matched GPU globalbatch4, and the authorized pending CPU campaign.
+The immutable historical publication archive, PR86/87/88 receipts and existing
+figures are reused. No pending PR89 quality or time result is inserted.
+
+### Working claim-to-evidence map
+
+| Claim / article location | Existing evidence | Qualification and next dependency |
+| --- | --- | --- |
+| B/R/G partial Start; Proposed method | [R3 methods](../docs/research/mvp2-r3-methods-and-models.md), [selection source](../src/cfl_gnn/experiments/pr58_guidance.py) | Implemented mechanism; not a causal class-aware ablation |
+| Root capture and original checkpoint; Offline graph learning | [Root preparation](../scripts/evidence/pr86_root_preparation.py), [checkpoint table](../docs/evidence/e0/pr85/checkpoints.csv) | First optimal root-node event; original mixed CPU weights, not later GPU weights |
+| Admission and partitions; Instances / Design | [PR85 closure](../docs/research/pr85-closure.md), [R3 model/data audit](../docs/research/mvp2-r3-methods-and-models.md) | 90 candidates, 54 admitted, 34/10/10; label-quality selection and exposed tests |
+| Main CPU coverage; MVP2 principal analysis | [Main summary](../docs/evidence/methodology-20261019/summary.json), [PR86 final review](../docs/research/pr86-final-analysis.md) | 150 seed42 rows, 97 reported targets/53 censures, 30 sensitive M4/M12; not exact certificates |
+| CPU scaling and preparation costs; MVP2 / Discussion | [D1 metrics](../docs/research/methodology-20261019/D1-protocol.md), [PR86 final assets](../docs/evidence/pr86/final-210/README.md) | Eligible matched targets and stated cost boundaries; no complete cold job cost |
+| GPU speed/quality; Matched training | [PR87 review](../docs/research/pr87-completed-pair-review.md), [PR88 figure manifest](../docs/evidence/pr88/gpu/manifest.json) | One seed; loop2.167x/job1.831x, F1 loss0.032468, increased assigned GPU-h |
+| Historical six-medium figures/tables | [Imported archive manifest](results/current/pr60_scientific_evidence_manifest.json) | Preserve all original outcomes/labels and historical scope; not the ten-parent principal cohort |
+| Authorized CPU12h; Pending campaign paragraph | [R3 source index](../docs/research/mvp2-r3-evidence-index.json), [operational checkpoint](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6450594964) | In progress; final return, 60-cell reconciliation and named metric review pending |
+| C1/C2/C3 and SO1–SO8; Discussion / synthesis | [R3 coverage](../docs/research/mvp2-r3-contract.md), [D5 matrix](../docs/research/methodology-20261019/D5-contributions.md) | Mechanism, conditional regimes and bounded economics; original literature positioning and final synthesis pending |
+
+This map is an editorial work product reusing prior audits, not eight new
+reports or a new scientific promotion. R2-D8 remains pending integrated
+results, specialist questions and human review.
+
+### Independent work completed while PR89 runs
+
+The [working supplement](supplement/README.md) separates population/evidence
+chains, clock/cost conventions and remaining integration decisions. Its
+[machine-readable claim map](supplement/claim-evidence.json) binds 17 existing
+principal CPU/GPU claim groups to four public source files with hashes and
+unambiguous selectors. The source gate verifies the corresponding displayed
+values and rejects missing claims, clock/averaging substitutions and invented
+pending results. Coverage is stated explicitly; this is not complete scientific
+review or a final journal supplement. Article prose, figures, raw evidence and
+the installed PR89 source are unchanged by this additional step.
+
+### Completion criteria for PR92's independent stage
+
+1. Provide the readable fixed-model methods, implementation-linked caveats
+   and existing-evidence claim map without promoting pending CPU results.
+2. Complete the preliminary coauthor brief and record the first-pass audit
+   coverage, limitations and unresolved human questions.
+3. Keep one current Sprint/PR plan with D0 separate from metric qualification,
+   two audit passages and all additional experiments outside current Sprints.
+4. Pass applicable final-head source/manuscript/archive checks and rendering;
+   reuse earlier visual review only where the render inputs remain unchanged.
+5. Prepare the next draft integration PR with explicit dependency on PR92.
+   Mark PR92 ready and request merge authorization; no merge or publication
+   is included in this stage.
+
+The final manuscript integration criteria move to the next PR: qualify the
+60-cell return, finish the principal CPU/GPU interpretation, reconcile SO/C
+coverage and all repeated numbers, package the scientific supplement, perform
+the complete audit and obtain the necessary author/editorial decisions.
+These are not declared complete by PR92's readiness.
+
+## Historical editorial plan — original text preserved
+
+The dated text below describes the earlier six-medium archive and its
+selection/metrics. Its population and checkpoint are not substituted for
+the later PR86/87/89 cohorts or checkpoints.
+
+
 Target: **Computers & Operations Research**. The alternatives considered were
 **European Journal of Operational Research** and **Expert Systems with Applications**.
 Journal suitability is an editorial judgment, not an acceptance prediction.

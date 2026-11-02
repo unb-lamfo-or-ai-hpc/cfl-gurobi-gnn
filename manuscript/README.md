@@ -1,5 +1,33 @@
 # Class-aware GNN partial-start manuscript
 
+## Current PR92 review scope — 28 October 2026
+
+PR92 delivers the independent R3 methods, provenance and preliminary review
+stage while the authorized CPU campaign continues. Its
+[coauthor brief](coauthor-review-brief.md) contains the scientific argument,
+known limitations and a first-pass audit register. The
+[editorial plan](editorial-plan.md) defines this PR's completion criteria;
+the [Sprint/PR plan](../docs/research/mvp2-closeout-plan.md) separates it from
+the final article integration.
+
+A subsequent draft PR carries synthesis, the qualified CPU return, R2-D8,
+the final scientific supplement and complete audit. PR92 can therefore be
+ready for review without claiming that the article is submission-ready.
+No final CPU results, coauthor approval or publication authorization are asserted.
+
+B/R/G remain presentation aliases for archived M0/M1/M2. The historical
+six-medium archive, principal 150-row seed42 view and pending CPU12h campaign
+retain separate populations and provenance in evidence-status.json.
+The [working supplement](supplement/README.md) includes the numerical
+claim map; missing pending results are not filled with synthetic values.
+
+The existing Manuscript workflow checks sources, regressions and HTML/PDF.
+It does not execute research or deploy a pull request to Pages. Additional
+experiments remain limitations/future work outside the current Sprints.
+
+## Earlier build and archive instructions
+
+
 The current article targets **Computers & Operations Research**. It reports
 the 54-parent, 100-epoch predictor; six-parent validation qualification; and
 a distinct six-parent frozen optimization benchmark. The earlier 39-parent

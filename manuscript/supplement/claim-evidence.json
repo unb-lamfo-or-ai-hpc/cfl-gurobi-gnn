@@ -1,0 +1,361 @@
+{
+  "schema_version": 1,
+  "kind": "editorial_claim_evidence_not_scientific_certification",
+  "as_of": "2026-10-27",
+  "governing_contract": "CFL-GNN-SCI-2026-10-22-R3",
+  "scope": "Existing principal CPU and matched GPU numerical claims only; historical six-medium assets retain their own manifests.",
+  "sources": [
+    {
+      "id": "cpu_main",
+      "path": "docs/evidence/methodology-20261019/summary.json",
+      "format": "json",
+      "sha256": "545560f7e0775c227fd6e532d58269648e89a7c4e65dec4bbac70f9f1619a7cc",
+      "commit": "a12d90c1eee0a1eeb1ccc42c0d3ff64aa7e48d24",
+      "git_blob_sha1": "a853f4599db4689a4d86f05f6e0bbd7d32fe555b"
+    },
+    {
+      "id": "gpu_review",
+      "path": "docs/evidence/pr87/jobs3673-3674/review.json",
+      "format": "json",
+      "sha256": "1067414126bb6cc8d8f5b2a8f1266be9020fbfcaa57551b1083547cfe6efe795",
+      "commit": "a12d90c1eee0a1eeb1ccc42c0d3ff64aa7e48d24",
+      "git_blob_sha1": "261304d8664524d2c715f5262e4be132ce44b676"
+    },
+    {
+      "id": "gpu_timings",
+      "path": "docs/evidence/pr87/jobs3673-3674/timings.csv",
+      "format": "csv",
+      "sha256": "ba9fd3d1a5964145158c0c6620a3a2682c00d2ddf2b04f8bac8c5c9f9ec017a3",
+      "commit": "a12d90c1eee0a1eeb1ccc42c0d3ff64aa7e48d24",
+      "git_blob_sha1": "38d7bfeb3801b97c439a80ae6f63ca5f32b15e7c"
+    },
+    {
+      "id": "gpu_metrics",
+      "path": "docs/evidence/pr87/jobs3673-3674/aggregates.csv",
+      "format": "csv",
+      "sha256": "918e70402a298d0fe9b1af02a3db5c15a43d3c7fb24299c803dbf8d2f6d84cce",
+      "commit": "a12d90c1eee0a1eeb1ccc42c0d3ff64aa7e48d24",
+      "git_blob_sha1": "a14c97c94b62ea5f1649d73b5925d21fa06b181d"
+    }
+  ],
+  "claims": [
+    {
+      "id": "cpu_preserved_rows",
+      "section": "sec-mvp2-current",
+      "article_template": "preserved as {n} records",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/historical_rows_preserved",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Archive coverage; not independent experimental units."
+    },
+    {
+      "id": "cpu_principal_rows",
+      "section": "sec-mvp2-current",
+      "article_template": "{n} seed42 records",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/main_seed42_rows",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Principal retrospective view; ten historically exposed parents."
+    },
+    {
+      "id": "cpu_historical_rows",
+      "section": "sec-mvp2-current",
+      "article_template": "The other {n} records",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/historical_only_seed43_44_rows",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Seeds 43/44 remain historical only."
+    },
+    {
+      "id": "cpu_easy_rows",
+      "section": "sec-mvp2-current",
+      "article_template": "| Easy parents |{n}|",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/easy_main_rows",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Rows are method/cap observations, not 90 independent parents."
+    },
+    {
+      "id": "cpu_medium_rows",
+      "section": "sec-mvp2-current",
+      "article_template": "| Medium parents |{n}|",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/medium_main_rows",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Four historically exposed medium parents."
+    },
+    {
+      "id": "cpu_reported_targets",
+      "section": "sec-mvp2-current",
+      "article_template": "| Solver-reported terminal target attained |{n}|",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/solver_reported_terminal_target",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Reported terminal targets, not exact optimality certificates."
+    },
+    {
+      "id": "cpu_censored_targets",
+      "section": "sec-mvp2-current",
+      "article_template": "| Terminal target right-censored |{n}|",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/right_censored_terminal_target",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Censored observations, not solution times at timeout."
+    },
+    {
+      "id": "cpu_sensitive_rows",
+      "section": "sec-mvp2-current",
+      "article_template": "| Numerically sensitive M4/M12 rows |{n}|",
+      "metrics": {
+        "n": {
+          "source": "cpu_main",
+          "json_pointer": "/numerically_sensitive_main_rows",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Subset of the same sample; retain metric-specific numerical restrictions."
+    },
+    {
+      "id": "gpu_loop_speedup",
+      "section": "sec-gpu-matched",
+      "article_template": "Loop speedup is {n}",
+      "metrics": {
+        "n": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "training_loop_seconds"
+          },
+          "column": "speedup",
+          "format": ".3f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Serial/DDP4 loop ratio; not a whole-job or downstream solver benefit."
+    },
+    {
+      "id": "gpu_job_speedup",
+      "section": "sec-gpu-matched",
+      "article_template": "whole-job speedup is {n}",
+      "metrics": {
+        "n": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "job_elapsed_seconds"
+          },
+          "column": "speedup",
+          "format": ".3f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Slurm job elapsed ratio, distinct from supervisor/process/loop clocks."
+    },
+    {
+      "id": "gpu_loop_efficiency",
+      "section": "sec-gpu-matched",
+      "article_template": "with {n}% efficiency",
+      "metrics": {
+        "n": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "training_loop_seconds"
+          },
+          "column": "parallel_efficiency",
+          "format": ".2f",
+          "scale": 100
+        }
+      },
+      "interpretation": "Loop speedup divided by four allocated GPUs; scaled CPU resources accompany the pair."
+    },
+    {
+      "id": "gpu_f1_loss",
+      "section": "sec-gpu-matched",
+      "article_template": "Selected F1 falls {n}",
+      "metrics": {
+        "n": {
+          "source": "gpu_review",
+          "json_pointer": "/selected_macro_ddp4_minus_serial/f1_score",
+          "format": ".6f",
+          "scale": -1
+        }
+      },
+      "interpretation": "Positive loss is the negative of DDP4-minus-serial; selected checkpoints only."
+    },
+    {
+      "id": "gpu_auc_loss",
+      "section": "sec-gpu-matched",
+      "article_template": "PR-AUC falls {n}",
+      "metrics": {
+        "n": {
+          "source": "gpu_review",
+          "json_pointer": "/selected_macro_ddp4_minus_serial/pr_auc",
+          "format": ".6f",
+          "scale": -1
+        }
+      },
+      "interpretation": "Trapezoidal PR-AUC, not AP; not statistical noninferiority."
+    },
+    {
+      "id": "gpu_selected_f1",
+      "section": "sec-gpu-matched",
+      "article_template": "| Selected parent-macro F1 |{serial}|{ddp4}|",
+      "metrics": {
+        "serial": {
+          "source": "gpu_metrics",
+          "row": {
+            "arm": "serial1",
+            "checkpoint": "selected",
+            "scope": "all",
+            "averaging": "parent_macro"
+          },
+          "column": "f1_score",
+          "format": ".6f",
+          "scale": 1
+        },
+        "ddp4": {
+          "source": "gpu_metrics",
+          "row": {
+            "arm": "ddp4",
+            "checkpoint": "selected",
+            "scope": "all",
+            "averaging": "parent_macro"
+          },
+          "column": "f1_score",
+          "format": ".6f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Same ten exposed parents, selected checkpoints and parent-macro averaging; terminal or pooled values are not substitutes."
+    },
+    {
+      "id": "gpu_selected_auc",
+      "section": "sec-gpu-matched",
+      "article_template": "| Selected parent-macro PR-AUC |{serial}|{ddp4}|",
+      "metrics": {
+        "serial": {
+          "source": "gpu_metrics",
+          "row": {
+            "arm": "serial1",
+            "checkpoint": "selected",
+            "scope": "all",
+            "averaging": "parent_macro"
+          },
+          "column": "pr_auc",
+          "format": ".6f",
+          "scale": 1
+        },
+        "ddp4": {
+          "source": "gpu_metrics",
+          "row": {
+            "arm": "ddp4",
+            "checkpoint": "selected",
+            "scope": "all",
+            "averaging": "parent_macro"
+          },
+          "column": "pr_auc",
+          "format": ".6f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Same ten exposed parents, selected checkpoints and parent-macro averaging; terminal or pooled values are not substitutes."
+    },
+    {
+      "id": "gpu_loop_seconds",
+      "section": "sec-gpu-matched",
+      "article_template": "| Training loop (s) |{serial}|{ddp4}|",
+      "metrics": {
+        "serial": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "training_loop_seconds"
+          },
+          "column": "serial_seconds",
+          "format": ".3f",
+          "scale": 1
+        },
+        "ddp4": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "training_loop_seconds"
+          },
+          "column": "ddp4_seconds",
+          "format": ".3f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Keep clock scope and serial/DDP4 column orientation."
+    },
+    {
+      "id": "gpu_job_seconds",
+      "section": "sec-gpu-matched",
+      "article_template": "| Slurm job elapsed (s) |{serial}|{ddp4}|",
+      "metrics": {
+        "serial": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "job_elapsed_seconds"
+          },
+          "column": "serial_seconds",
+          "format": ".0f",
+          "scale": 1
+        },
+        "ddp4": {
+          "source": "gpu_timings",
+          "row": {
+            "scope": "job_elapsed_seconds"
+          },
+          "column": "ddp4_seconds",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Keep clock scope and serial/DDP4 column orientation."
+    }
+  ],
+  "pending_cpu": {
+    "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+    "final_return_received": false,
+    "result_claims": [],
+    "integration_requirement": "Reconcile all 60 planned cells and review named metrics, clocks, censoring and M4/M12 limitations before adding result claims."
+  },
+  "limits": [
+    "Checks bind recorded public values and current article text; they do not independently rescore predictions or replay historical fits.",
+    "No population-level significance, independent generalization, exact optimality, quality preservation or isolated GPU causality is certified.",
+    "PR89 pending state has no numerical result placeholder; missing or censored values must never be filled with zero."
+  ]
+}

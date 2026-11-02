@@ -1,13 +1,80 @@
 # Experiment protocol
 
-20October: PR88 merged; prospective [CPU12h implementation](research/pr89-cpu12h.md)
-adds the four observed thresholds and four timestamped horizons in a versioned
-adapter. Historical solver behavior remains the default. Source-frozen reuse,
-separate CPU authorization, held resource checks and predecessor artifact checks
-precede one optimization per job. The specific720hsolver/780hreserved CPU budget
-was approved by the author20October, conditional on preflight and exact-head CI;
-current partition preparation does not qualify a future cgroup/affinity/license.
-No new GPU training or historical receipt promotion is authorized.
+## Campaign closeout — 2 November 2026
+
+PR89 has completed execution and receipt: all 60 cells/jobs 3675–3734 are reconciled, with 47 solver-reported terminal targets and 13 time-limit censures on M7. M7 is retained; M4/M12 keep their numerical restrictions. See the [complete receipt and dispositions](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) and [scientific synthesis](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93). Installed source `9ab7823c`, its models, Starts, parameters, sequence and resources remain unchanged. No collection or solve is repeated by this integration.
+
+The [current Sprint/PR plan](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/7acf74d462f98903931442caa668960a898cad24/docs/research/mvp2-closeout-plan.md) supersedes earlier scheduling/pending statements below. A distinct 144-cell solver-seed extension is being prepared in PR94, with the 54-parent learning corpus/checkpoint frozen. Actual evaluation admission/submission and its results remain separate from this CPU12h closeout. Merge, Pages publication and editorial submission retain specific human approval. Earlier dated preparation/running entries are historical records.
+
+
+## Current Sprint/PR delivery — 28 October 2026
+
+The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
+PR92 closes the independent methods and preliminary-review stage; the next
+draft PR carries synthesis and final CPU integration. This scope split
+supersedes the earlier condition that PR92 itself await the CPU campaign.
+
+The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+author-controlled circulation and preliminary feedback by 15 November.
+It includes the first-pass audit record. The complete post-qualification
+audit remains mandatory. Targets are manuscript 15 December, final approval
+7 January, intended submission 10 January and absolute deadline 14 January.
+
+D0 remains reception/reconciliation of 60 planned cells, not the later metric
+qualification date. Missing returns or blocks require a recorded human
+decision, not a silent date change or retry. Additional experiments stay
+outside the current Sprints.
+
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+
+
+## Governing interpretation — 26 October 2026, R3
+
+The [R3 contract](research/mvp2-r3-contract.md) and
+[metrics/reproducibility assessment](research/mvp2-r3-metrics-and-reproducibility.md)
+reconcile current authority and measurement boundaries. The original
+[D1 dictionary](research/methodology-20261019/D1-protocol.md) remains dated evidence.
+
+PR89 is already authorized/submitted: 60 fresh single-solve CPU jobs, four
+medium parents × B/R/G × physical caps 1/2/4/8/16, seed42, 12h solver/13h wall,
+64GiB/job, no GPU, strictly serial. No repeat of installed preflight,
+prepare/authorize/submit, roots, inference or training; no retry/extension,
+cancellation, parameter/resource/source/environment change.
+The frozen installed source is `9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`;
+this documentation does not install or alter it.
+
+Preserve MINIMIZE, model identity/feasible region, original starts/checkpoint
+and M4/M12 numerical limits. B/R/G are presentation aliases; raw IDs/flags stay
+unchanged. R's support size and one-count depend on G. Seed42 is principal;
+seed43/44 are historical, and WorkLimit is not substituted for TimeLimit.
+
+Compare actual observations at 10/5/1/0.01% and 1/4/8/12h using their clocks,
+brackets, censoring and missingness; no interpolation or certified runtime
+from a timeout. PR89 gap null encoding is not a zero gap.
+Every cell and named metric requires separate qualification after collection.
+COMPLETED and successful software checks are not scientific certification.
+
+All HPC/SCP access has human intervention; local files are temporary and
+remote writes use existing data storage, preferably existing directories.
+The final collector runs only once all known jobs are terminal and reuses an
+already existing return. Failure does not authorize replacement experiments.
+
+## Historical protocols — original dated text preserved
+
+Earlier budget/dispatch proposals, callback thresholds and acceptance holds
+below describe their own dates. They do not revoke later approved authority,
+reopen the generator gate, or authorize repeating any completed preparation.
+
 
 ## Current protocol — seed42; GPU completed, separate CPU package unapproved
 
@@ -331,3 +398,16 @@ this scoped interval as whole-job end-to-end time. A SoftMemLimit return pauses
 the remaining matrix and is not treated as completed performance. The new core
 has no default admitted launcher; installed memory/affinity, preparation and
 authorization must be bound before any actual execution.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October: PR88 merged; prospective [CPU12h implementation](research/pr89-cpu12h.md)
+adds the four observed thresholds and four timestamped horizons in a versioned
+adapter. Historical solver behavior remains the default. Source-frozen reuse,
+separate CPU authorization, held resource checks and predecessor artifact checks
+precede one optimization per job. The specific720hsolver/780hreserved CPU budget
+was approved by the author20October, conditional on preflight and exact-head CI;
+current partition preparation does not qualify a future cgroup/affinity/license.
+No new GPU training or historical receipt promotion is authorized.

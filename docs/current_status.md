@@ -1,22 +1,113 @@
 # Current status
 
-## Current — 20 October: PR88 merged; fresh CPU12h executor in preparation
+## Campaign closeout — 2 November 2026
 
-PR88 merged into develop at`e5804a8c6762c2e5f13447e5a16784e5824de801`
-from head`fcc50396f0869c3b972257fedfc9b53141c93418`. The GPU tradeoff and
-BCE assets are now integrated, not awaiting another PR88 merge. Next delivery:
-[CPU12h executor and read-only installation preflight](research/pr89-cpu12h.md).
-Reuse PR86's original checkpoint/starts; the PR87-trained models do not replace
-M2. Four exposed medium parents, three methods, five caps, seed42:60fresh solves,
-one per job,12hsolver/13hwall,64GiB. The author explicitly approved the complete
-CPU package20October:720solver-h/780serial-reserved-h/4836physical-reserved-core-h,
-conditional on installed preflight and exact-head CI. Plan false flags remain
-false; a separate runtime authorization records this decision before submission.
-No jobs, optimization, training, inference or main synchronization performed.
-The next user CLI integrates existing hashes/environment/current partition,
-separate authorization and serial submission, stopping if preflight fails.
-Allocation gates are checked only in actual approved jobs.
-Earlier entries below are dated history, not current merge/dispatch authority.
+PR89 has completed execution and receipt: all 60 cells/jobs 3675–3734 are reconciled, with 47 solver-reported terminal targets and 13 time-limit censures on M7. M7 is retained; M4/M12 keep their numerical restrictions. See the [complete receipt and dispositions](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) and [scientific synthesis](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93). Installed source `9ab7823c`, its models, Starts, parameters, sequence and resources remain unchanged. No collection or solve is repeated by this integration.
+
+The [current Sprint/PR plan](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/7acf74d462f98903931442caa668960a898cad24/docs/research/mvp2-closeout-plan.md) supersedes earlier scheduling/pending statements below. A distinct 144-cell solver-seed extension is being prepared in PR94, with the 54-parent learning corpus/checkpoint frozen. Actual evaluation admission/submission and its results remain separate from this CPU12h closeout. Merge, Pages publication and editorial submission retain specific human approval. Earlier dated preparation/running entries are historical records.
+
+
+## Current Sprint/PR delivery — 28 October 2026
+
+The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
+PR92 closes the independent methods and preliminary-review stage; the next
+draft PR carries synthesis and final CPU integration. This scope split
+supersedes the earlier condition that PR92 itself await the CPU campaign.
+
+The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+author-controlled circulation and preliminary feedback by 15 November.
+It includes the first-pass audit record. The complete post-qualification
+audit remains mandatory. Targets are manuscript 15 December, final approval
+7 January, intended submission 10 January and absolute deadline 14 January.
+
+D0 remains reception/reconciliation of 60 planned cells, not the later metric
+qualification date. Missing returns or blocks require a recorded human
+decision, not a silent date change or retry. Additional experiments stay
+outside the current Sprints.
+
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+Latest human partial report,28October; exact capture time unavailable:
+3713 COMPLETED12:01:05, ExitCode0:0, AllocCPUS8, batch MaxRSS16050788K;
+3714 RUNNING08:03:49, AllocCPUS16; author reports3715–3734 PENDING.
+This is not a fresh agent query or a complete60-job snapshot. No final
+return has been received or qualified. Earlier job states are not inferred
+by subtraction; scheduler completion does not establish solver quality.
+The receiver retains exclusive campaign reconciliation responsibility and
+the original source9ab7823c remains frozen.
+
+
+
+## Current — 27 October: PR91 merged; integrated editorial draft
+
+PR91 is merged in develop at `6bb374aae5a5ab8a388af946bdf73a4141e32abe`.
+The [integrated manuscript plan](../manuscript/editorial-plan.md) advances
+independent writing and existing-evidence synthesis while PR89 remains active.
+The installed PR89 source remains `9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`.
+
+The [working evidence supplement](../manuscript/supplement/README.md) and its
+machine-readable map now bind 17 existing principal CPU/GPU claim groups to
+four public files. The manuscript source gate checks hashes, unique selectors,
+clock/averaging scope and displayed values. This is independent editorial work
+in draft PR92; the article inputs and installed campaign remain unchanged by
+this additional step. Final-head CI results are recorded in the PR.
+
+The author's selected squeue report for3713–3734 records3713 RUNNING at01:57:23
+and3714–3734 PENDING/Dependency (21jobs). It does not establish the states of
+3675–3712 or a new total of COMPLETED jobs; no final return is received.
+
+Read-only diagnostics supplied by the author show NumNodes=1-1, NumTasks=1,
+TimeLimit13:00:00 and Requeue0 for pending3714 (8CPUs) and3720 (1CPU), with
+their afterok predecessors and NodeList(null). This supports those requests,
+not a future allocation or all-job resource certification. The differing
+squeue NODES display is not proof of allocation on two nodes; its specific
+display cause was not determined. No queue/source/resource change follows.
+See the [27 October checkpoint](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/89#issuecomment-6450594964).
+
+
+## Current — 26 October: R3 handoff accepted; PR89 still running
+
+The [R3 contract and plan](research/mvp2-r3-contract.md) is the governing
+continuation checkpoint. PR89 remains open/draft at installed source
+`9ab7823c6886d19e9ec865141a1cd35b3c3c16e5`; 60 jobs were already submitted.
+The author-assisted full status capture records 35 COMPLETED/0:0,
+3710 RUNNING at 11:27:18, and 24 PENDING; terminal=false. This is a dated
+snapshot, not a live assertion or scientific result. No final return received.
+
+The receiving Codex accepted exclusive responsibility; no parallel operator.
+The author-approved transfer supersedes the old requirement to close PR89 on
+the original machine. Do not repeat prepare/authorize/submit or request the
+same CPU budget. Preserve seed42, MINIMIZE, the original PR86 starts/checkpoint,
+source and resource limits. Failure needs diagnosis and a specific human decision.
+
+PR87/88 are merged; PR90 is merged in main at `4e1ac7b6` for manuscript review.
+Develop remains `e5804a8c`; their different commits need no reset.
+Deadline: **14 January 2027**, with overlapping S1–S6 and R2-D1–R2-D8.
+Methods/provenance/metric documentation can advance now; PR89 scientific
+closeout and manuscript integration await qualified evidence.
+
+Work on GitHub/Codex, local files temporary only. Every HPC access requires
+the author's intervention; use discodatos, preferably existing directories,
+without further home writes or changes to the installed campaign.
+See [methods/models](research/mvp2-r3-methods-and-models.md),
+[metrics/reproducibility](research/mvp2-r3-metrics-and-reproducibility.md)
+and the [evidence index](research/mvp2-r3-evidence-index.json).
+
+## Historical checkpoints — original dated text preserved
+
+Earlier operational holds, proposals, deadlines and transfer conditions below
+are historical. Apply the 26 October R3 supersessions above, not an old
+prepare/submit instruction or an obsolete completion forecast.
+
 
 ## Current — 20 October: PR87 merged; PR88 GPU manuscript integration
 
@@ -484,3 +575,25 @@ PR86 now has a [regenerable offline proposal](research/pr86-controlled-compariso
 unapproved resource envelope. No solver, inference, training or job added.
 PR85 evidence limitations, start binding, instrumentation and exact budget
 approval remain execution gates. PR87 (1/4 GPUs) and PR88 remain on the roadmap.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+## Current — 20 October: PR88 merged; fresh CPU12h executor in preparation
+
+PR88 merged into develop at`e5804a8c6762c2e5f13447e5a16784e5824de801`
+from head`fcc50396f0869c3b972257fedfc9b53141c93418`. The GPU tradeoff and
+BCE assets are now integrated, not awaiting another PR88 merge. Next delivery:
+[CPU12h executor and read-only installation preflight](research/pr89-cpu12h.md).
+Reuse PR86's original checkpoint/starts; the PR87-trained models do not replace
+M2. Four exposed medium parents, three methods, five caps, seed42:60fresh solves,
+one per job,12hsolver/13hwall,64GiB. The author explicitly approved the complete
+CPU package20October:720solver-h/780serial-reserved-h/4836physical-reserved-core-h,
+conditional on installed preflight and exact-head CI. Plan false flags remain
+false; a separate runtime authorization records this decision before submission.
+No jobs, optimization, training, inference or main synchronization performed.
+The next user CLI integrates existing hashes/environment/current partition,
+separate authorization and serial submission, stopping if preflight fails.
+Allocation gates are checked only in actual approved jobs.
+Earlier entries below are dated history, not current merge/dispatch authority.

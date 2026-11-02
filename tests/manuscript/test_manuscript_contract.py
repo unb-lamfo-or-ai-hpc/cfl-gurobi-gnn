@@ -99,6 +99,33 @@ class ManuscriptContractTests(unittest.TestCase):
         self.change("index.qmd", "150 seed42 records", "210 multiseed records")
         self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
+
+    def test_pending_cpu_cannot_be_promoted_to_received_results(self):
+        path = self.root / "evidence-status.json"
+        data = json.loads(path.read_text())
+        data["mvp2_continuation"]["pr89"]["final_return_received"] = True
+        path.write_text(json.dumps(data))
+        self.assertIn("pending_cpu_campaign_misrepresented", CHECK.check_source(self.root))
+
+    def test_cpu_checkpoint_cannot_be_replaced_by_gpu_weights(self):
+        path = self.root / "evidence-status.json"
+        data = json.loads(path.read_text())
+        data["mvp2_continuation"]["cpu_checkpoint_sha256"] = "0" * 64
+        path.write_text(json.dumps(data))
+        self.assertIn("mvp2_principal_provenance_drift", CHECK.check_source(self.root))
+
+    def test_historical_210_rows_cannot_become_principal_sample(self):
+        path = self.root / "evidence-status.json"
+        data = json.loads(path.read_text())
+        data["mvp2_continuation"]["principal_analysis"]["rows"] = 210
+        path.write_text(json.dumps(data))
+        self.assertIn("mvp2_principal_provenance_drift", CHECK.check_source(self.root))
+
+    def test_obsolete_unexecuted_cpu_claim_is_rejected(self):
+        self.change("index.qmd", "# Introduction",
+                    "# Introduction\n\nThe campaign is unapproved and unexecuted.")
+        self.assertIn("obsolete_cpu_campaign_authority", CHECK.check_source(self.root))
+
     def test_article_has_no_bold_emphasis(self):
         self.change("index.qmd", "# Introduction", "# Introduction\n\n**Emphasis**")
         self.assertIn("bold_article_emphasis_not_permitted", CHECK.check_source(self.root))

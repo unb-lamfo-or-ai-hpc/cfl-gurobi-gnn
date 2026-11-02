@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "as_of": "2026-10-02",
+  "as_of": "2026-10-27",
   "manuscript_status": "controlled_development_study_for_author_review",
   "development_only": true,
   "scientific_reporting_eligible": false,
@@ -36,5 +36,43 @@
     "matched_synthetic_augmentation_benefit_demonstrated": false,
     "full_90_parent_experiment_completed": false,
     "published_zenodo_doi_verified": false
+  },
+  "legacy_import_as_of": "2026-10-02",
+  "current_protocol_scope": "historical_six_medium_publication_archive_not_the_pr86_pr89_solver_cohort",
+  "mvp2_continuation": {
+    "governing_contract": "CFL-GNN-SCI-2026-10-22-R3",
+    "contract_merge_commit": "6bb374aae5a5ab8a388af946bdf73a4141e32abe",
+    "method_aliases": {
+      "B": "M0",
+      "R": "M1",
+      "G": "M2"
+    },
+    "principal_analysis": {
+      "source": "docs/evidence/methodology-20261019",
+      "seed": 42,
+      "rows": 150,
+      "easy_rows": 90,
+      "medium_rows": 60,
+      "exposed_test_parents": 10,
+      "preserved_historical_rows": 210,
+      "historical_only_seed43_44_rows": 60,
+      "reported_terminal_targets": 97,
+      "right_censored_targets": 53,
+      "numerically_sensitive_rows": 30
+    },
+    "cpu_checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "pr89": {
+      "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+      "protocol_id": "fresh_cpu12h_seed42_sixty_single_solve_jobs_v1",
+      "execution_authorized_date": "2026-10-20",
+      "jobs_already_submitted": 60,
+      "execution_state": "in_progress_author_reported",
+      "final_return_received": false,
+      "scientific_results_included": false,
+      "new_execution_authorized_by_this_revision": false
+    },
+    "editorial_state": "partial_integration_for_review_pr89_closeout_pending",
+    "final_coauthor_approval": false,
+    "submission_authorized": false
   }
 }

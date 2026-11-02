@@ -1,13 +1,73 @@
 # CFL--GNN research context
 
-20October continuation: PR88 is merged at`e5804a8c6762c2e5f13447e5a16784e5824de801`.
-The [fresh CPU12h operator](research/pr89-cpu12h.md) implements D1/D2 without
-changing source experiments, learning data, seeds, architectures or checkpoints.
-The old PR86 preparation is reused; more time is not a remedy for M4/M12
-numerical sensitivity. The author subsequently approved the specific CPU budget
-of720solver-h/780serial-reservation-h/4836physical-reserved-core-h on20October,
-conditional on installed preflight and exact-head CI. Older pending statements
-below describe prior proposals, not the current decision. No jobs submitted here.
+## Campaign closeout — 2 November 2026
+
+PR89 has completed execution and receipt: all 60 cells/jobs 3675–3734 are reconciled, with 47 solver-reported terminal targets and 13 time-limit censures on M7. M7 is retained; M4/M12 keep their numerical restrictions. See the [complete receipt and dispositions](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) and [scientific synthesis](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93). Installed source `9ab7823c`, its models, Starts, parameters, sequence and resources remain unchanged. No collection or solve is repeated by this integration.
+
+The [current Sprint/PR plan](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/7acf74d462f98903931442caa668960a898cad24/docs/research/mvp2-closeout-plan.md) supersedes earlier scheduling/pending statements below. A distinct 144-cell solver-seed extension is being prepared in PR94, with the 54-parent learning corpus/checkpoint frozen. Actual evaluation admission/submission and its results remain separate from this CPU12h closeout. Merge, Pages publication and editorial submission retain specific human approval. Earlier dated preparation/running entries are historical records.
+
+
+## Current Sprint/PR delivery — 28 October 2026
+
+The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
+PR92 closes the independent methods and preliminary-review stage; the next
+draft PR carries synthesis and final CPU integration. This scope split
+supersedes the earlier condition that PR92 itself await the CPU campaign.
+
+The [coauthor brief](../manuscript/coauthor-review-brief.md) is prepared for
+author-controlled circulation and preliminary feedback by 15 November.
+It includes the first-pass audit record. The complete post-qualification
+audit remains mandatory. Targets are manuscript 15 December, final approval
+7 January, intended submission 10 January and absolute deadline 14 January.
+
+D0 remains reception/reconciliation of 60 planned cells, not the later metric
+qualification date. Missing returns or blocks require a recorded human
+decision, not a silent date change or retry. Additional experiments stay
+outside the current Sprints.
+
+## Documentary continuation — 28 October 2026
+
+The [accelerated S1–S6 plan](research/mvp2-20261028-accelerated-plan.md)
+targets a complete coauthor-review version by15December2026 and preserves
+the14January2027 submission deadline. S1/S2/S4/S5 advance now in PR92;
+the CPU-dependent S3 closeout and mandatory final A–D audit remain gated.
+The [GNN audit](../manuscript/supplement/gnn-methods-audit.md) and
+[conditional Appendix B register](../manuscript/supplement/human-ai-traceability.md)
+record actual methods, critical references and evidence gaps. No experiment,
+checkpoint, campaign parameter or raw result is changed.
+
+
+
+## Governing continuation — 26 October 2026, R3
+
+Read the [R3 contract](research/mvp2-r3-contract.md),
+[methods and models](research/mvp2-r3-methods-and-models.md), and
+[metrics/reproducibility assessment](research/mvp2-r3-metrics-and-reproducibility.md).
+They consolidate the prior audits and the author-approved ongoing PR89 handoff.
+
+B/R/G are aliases for historical M0/M1/M2, not renamed receipts. R ranks stored
+root-LP scores, matching G's cardinality and one-count, not necessarily indices.
+G uses the original mixed PR86 checkpoint; newer PR87 models do not replace it.
+MINIMIZE and the accepted formulation remain frozen; M4/M12 limitations persist.
+
+The principal analysis remains 150 seed42 rows, with all 210 originals retained.
+Ten historically exposed test parents support retrospective comparisons, not
+independent generalization. GPU matched training is already complete, with
+measured speedup and F1 loss 0.032468; no corrective training is needed.
+The CPU budget was separately approved on 20 October and 60 jobs submitted.
+PR89 remains active, with no final scientific return yet received.
+
+R2-D1–R2-D8 and overlapping S1–S6 lead to the 14 January 2027 deadline.
+Class-aware causal benefit, multiseed robustness and independent generalization
+are not established or automatically required for MVP2.
+The [evidence index](research/mvp2-r3-evidence-index.json) separates documentary
+coverage, existing scoped results and pending CPU closeout.
+
+## Historical context — original dated text preserved
+
+The following dated descriptions retain their provenance. Their old CPU-budget,
+transfer and scheduling holds are superseded by the governing R3 contract.
+
 
 ## Governing revision — 19 October 2026
 
@@ -157,3 +217,16 @@ The [prospective solver/instrumentation core](research/pr86-prospective-instrume
 explicitly sets the proposed caps/seeds instead of silently inheriting the
 historical one-thread/seed-42 defaults. Synthetic tests are implementation
 evidence only. The historical sources, results and eligibility flags are unchanged.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October continuation: PR88 is merged at`e5804a8c6762c2e5f13447e5a16784e5824de801`.
+The [fresh CPU12h operator](research/pr89-cpu12h.md) implements D1/D2 without
+changing source experiments, learning data, seeds, architectures or checkpoints.
+The old PR86 preparation is reused; more time is not a remedy for M4/M12
+numerical sensitivity. The author subsequently approved the specific CPU budget
+of720solver-h/780serial-reservation-h/4836physical-reserved-core-h on20October,
+conditional on installed preflight and exact-head CI. Older pending statements
+below describe prior proposals, not the current decision. No jobs submitted here.
