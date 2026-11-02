@@ -62,7 +62,7 @@ class GPUFigureTests(unittest.TestCase):
                 self.assertIn("#888888", svg)
                 self.assertNotIn("DejaVuSans-Bold", svg)
 
-    def test_article_keeps_negative_quality_and_no_new_cpu_results(self):
+    def test_article_keeps_negative_quality_and_qualified_cpu_boundaries(self):
         article = (ROOT / "manuscript/index.qmd").read_text(encoding="utf-8")
         for text in (
             "#sec-gpu-matched",
@@ -84,7 +84,21 @@ class GPUFigureTests(unittest.TestCase):
         metadata = json.loads(
             (ROOT / "manuscript/evidence-status.json").read_text(encoding="utf-8")
         )["mvp2_continuation"]["pr89"]
-        self.assertIs(metadata["final_return_received"], False)
+        self.assertIs(metadata["final_return_received"], True)
+        self.assertEqual(metadata["complete_received_cells"], 60)
+        self.assertEqual(
+            metadata["execution_state"], "completed_all60_receipts_reconciled"
+        )
+        final_manifest = ROOT / "docs/evidence/pr89/final-20261101/manifest.json"
+        sealed = final_manifest.read_bytes()
+        self.assertEqual(
+            hashlib.sha256(sealed).hexdigest(),
+            "6fb1728509eb6a140618882f78aa87300367db549c49adbf42393652f71c6941",
+        )
+        complete = json.loads(sealed)
+        self.assertEqual(complete["received_cells"], 60)
+        self.assertIs(complete["final_campaign_return"], True)
+        self.assertIs(complete["scientific_reporting_eligible"], False)
         self.assertIs(metadata["scientific_results_included"], False)
         self.assertIs(metadata["new_execution_authorized_by_this_revision"], False)
         self.assertNotIn("separate resource approval", article)
