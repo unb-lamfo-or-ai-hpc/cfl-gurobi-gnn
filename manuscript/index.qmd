@@ -225,20 +225,20 @@ On M0, G reached the reported target before B at four of five caps, but was slow
 
 @tbl-cpu-long-coverage summarizes the disposition of every instance; @fig-cpu-long-attainment contrasts observed target times with terminal quality.
 
-| Instance | Configurations | Reported terminal target attained | Time-limited | Interpretation |
-|:--|--:|--:|--:|:--|
-| M0 | 15 | 15 | 0 | Time contrasts at the same reported tolerance-based target |
-| M4 | 15 | 15 | 0 | Numerical restriction; no certified speedup |
-| M7 | 15 | 2 | 13 | Target-specific censoring; retained in the analysis |
-| M12 | 15 | 15 | 0 | Scoped primal audit; no common exact-optimum certificate |
+| Instance | Configurations | Reported target attained | Time-limited |
+|:--|--:|--:|--:|
+| M0 | 15 | 15 | 0 |
+| M4 | 15 | 15 | 0 |
+| M7 | 15 | 2 | 13 |
+| M12 | 15 | 15 | 0 |
 
-: Coverage and disposition of the complete long-horizon evaluation. Attainment is a solver report and does not remove numerical qualifications. {#tbl-cpu-long-coverage}
+: Complete long-horizon coverage. Attainment does not remove numerical qualifications. {#tbl-cpu-long-coverage}
 
-![Long-horizon outcomes: observed terminal-target times on M0 and terminal gaps on M7. Crosses in the right panel mark the 12-hour target censoring; circles mark reported attainment. Lines connect thread configurations, which are not independent replications.](figures/partial_cpu_time_gap.pdf){#fig-cpu-long-attainment width=100%}
+![Observed terminal-target times on M0 and terminal gaps on M7. Crosses mark target censoring; circles mark attainment. Thread configurations are not independent replications.](figures/partial_cpu_time_gap.pdf){#fig-cpu-long-attainment width=85%}
 
-M7 illustrates why both quality and target attainment are needed. Its common reported terminal incumbent is 5.428377599678637, so differences in terminal gaps reflect different dual bounds, rather than better terminal primal solutions. At eight threads, R ends with a 1.653% gap and G with 1.838%; at sixteen, R closes the reported gap while G remains at 1.448%. G attains neither the terminal criterion nor uniform dominance across thread limits. These observations are consistent with difficulty in closing the remaining bound, but do not identify the responsible cuts, branching decisions or presolve reductions. A time limit is an observation of unfinished proof under a finite budget, not evidence that the instance is infeasible. Excluding M7 after observing its difficulty would remove precisely this adverse regime.
+M7 separates finding an incumbent from proving its quality. All runs report the same terminal primal value, 5.428377599678637; their terminal gaps therefore differ through their dual bounds. At eight threads R ends at 1.653% and G at 1.838%; at sixteen R closes the reported gap while G remains at 1.448%. G does not uniformly dominate. Retaining this adverse case also avoids selecting instances after observing performance; a timeout is not evidence of infeasibility.
 
-Large runtime reductions on M12 require a separate feasibility qualification. With eight threads, B/R/G use 16,219.853/13,488.320/617.228 solver seconds; with sixteen, they use 13,071.843/16,005.814/791.673 seconds. Although these six runs report zero internal gaps, G's objective is approximately 0.009388% or 0.009495% higher than the control reports, respectively. Exact rational evaluation confirms primal feasibility of the stored G points at four, eight and sixteen threads. The seven examined B/R points instead contain a tolerated nonintegral binary; rounding it produces an integer pattern that cannot satisfy an original linking row, even after continuous variables are adjusted. The lower control reports therefore do not demonstrate better exactly feasible integer solutions. The logs substantiate much less search work and a smaller presolved model for G, but do not isolate a neural mechanism or certify a common global optimum. M4 retains its separate restriction. These cases do not establish certified speedups. Appendix B provides all 60 records, the scoped arithmetic checks and the accounting boundaries.
+M12 requires a different qualification. B/R/G use 16,219.853/13,488.320/617.228 seconds at eight threads and 13,071.843/16,005.814/791.673 seconds at sixteen. All report zero internal gap, yet G's objective is approximately 0.009388% or 0.009495% higher than the controls. Exact rational checks establish primal feasibility of G's stored points at four, eight and sixteen threads. Seven examined controls instead contain a tolerated fractional binary; their rounded patterns cannot satisfy an original linking row, even with adjusted continuous variables. Their lower objective reports therefore do not establish better exactly feasible integer solutions. Logs show less work and a smaller presolved model for G, without certifying a common global optimum or isolating a neural cause. M4 retains its separate restriction. Appendix B gives all 60 records and the scoped audits; these contrasts are not certified speedups.
 
 ## Efficiency after preparation costs {#sec-cost-results}
 
