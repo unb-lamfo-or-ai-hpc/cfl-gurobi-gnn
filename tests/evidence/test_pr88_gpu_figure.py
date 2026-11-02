@@ -102,6 +102,13 @@ class GPUFigureTests(unittest.TestCase):
         self.assertIs(metadata["scientific_results_included"], False)
         self.assertIs(metadata["new_execution_authorized_by_this_revision"], False)
         self.assertNotIn("separate resource approval", article)
+        # Resource authority belongs to its immutable campaign record, not prose.
+        decision = json.loads(
+            (ROOT / "docs/evidence/pr89/cpu_author_decision.json").read_bytes()
+        )
+        self.assertEqual(decision["maximum_fresh_solves"], 60)
+        self.assertIs(decision["automatic_retry"], False)
+        self.assertIs(decision["scientific_reporting_eligible"], False)
         raw = json.loads((ROOT / gpu.SOURCE / "public_return.json").read_bytes())
         self.assertIs(raw["scientific_reporting_eligible"], False)
 

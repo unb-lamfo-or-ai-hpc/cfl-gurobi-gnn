@@ -1,5 +1,13 @@
 # Article plan
 
+## Integration and recovery update — 2 November 2026
+
+This section supersedes the dated pending snapshots below. PR89 has60 received/reconciled cells:47 solver-reported terminal targets and13 time-limit censures, all M7. All15 M7 observations remain; M4/M12 restrictions and the scoped exact-primal audits do not establish certified speedups or a common exact optimum. Installed9ab7823c and original receipts remain unchanged.
+
+The specifically authorized PR94 recovery launched48 blocks3833–3880 with source81c829b6 and reviewed plan92ac169c, retaining the same144 evaluations and preparation. The untimed author snapshot reports2 COMPLETED,2 RUNNING,44 PENDING; no new evaluation result has been received/qualified. The original attempt is4 FAILED+44 CANCELLED. See the [launch receipt](research/pr94-recovery-launch-20261102.json) and [canonical Sprint/PR plan](research/mvp2-closeout-plan.md). Three solver seeds do not represent three trained networks or independent parent replicates.
+
+The author specifically authorizes89/93 merges into develop after checks. Existing PR95 carries later main promotion and separate publication approval. S1–S4 advance; S5/S6 await qualified returns. Reader prose contains scientific methods and limitations, while queue/incident/approval records remain here. No retraining, automatic retry, deployment mutation or new preparation accompanies Git integration.
+
 ## Reviewed partial return — 1 November 2026
 
 The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
@@ -449,3 +457,15 @@ adds the parameter and timing contracts for future CPU/cost figures, not their
 data. Figure generators must keep solver, supervised attempt and batch-level
 scopes distinct, preserve stopped runs and avoid treating unknown preparation
 or timing-tail writes as zero. The C–F roadmap and separate budgets are unchanged.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October post-merge continuation: PR88's manuscript/GPU/BCE integration is in
+develop at`e5804a8c`. [CPU12h](research/pr89-cpu12h.md) prepares the missing temporal
+quality evidence, not an observed result. The worst-case32.5days plus queues
+threatens15November: no completion date or convergence is promised. Writing and
+coauthor review proceed using already measured data. No additional GPU pair,
+architecture search or main synchronization is required now. Main release stays
+after article revision with separate approval.

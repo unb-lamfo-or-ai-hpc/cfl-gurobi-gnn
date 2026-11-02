@@ -1,5 +1,13 @@
 # CFL--GNN research context
 
+## Integration and recovery update — 2 November 2026
+
+This section supersedes the dated pending snapshots below. PR89 has60 received/reconciled cells:47 solver-reported terminal targets and13 time-limit censures, all M7. All15 M7 observations remain; M4/M12 restrictions and the scoped exact-primal audits do not establish certified speedups or a common exact optimum. Installed9ab7823c and original receipts remain unchanged.
+
+The specifically authorized PR94 recovery launched48 blocks3833–3880 with source81c829b6 and reviewed plan92ac169c, retaining the same144 evaluations and preparation. The untimed author snapshot reports2 COMPLETED,2 RUNNING,44 PENDING; no new evaluation result has been received/qualified. The original attempt is4 FAILED+44 CANCELLED. See the [launch receipt](research/pr94-recovery-launch-20261102.json) and [canonical Sprint/PR plan](research/mvp2-closeout-plan.md). Three solver seeds do not represent three trained networks or independent parent replicates.
+
+The author specifically authorizes89/93 merges into develop after checks. Existing PR95 carries later main promotion and separate publication approval. S1–S4 advance; S5/S6 await qualified returns. Reader prose contains scientific methods and limitations, while queue/incident/approval records remain here. No retraining, automatic retry, deployment mutation or new preparation accompanies Git integration.
+
 ## Reviewed partial return — 1 November 2026
 
 The four-job delta ZIP has been transferred and verified (SHA256 a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9). The new reviewed population is 54/60 cells: 41 solver-reported terminal targets and 13 censored cases, all on M7. The original sealed 50-cell snapshot stays unchanged; its review was reused and the four new cells independently reconciled. The delta accounting query was 1 November 14:08:59 UTC (11:08:59 Fortaleza), scoped to those four jobs only. Remaining states use the earlier author-provided snapshot, not a live query of the remaining six.
@@ -261,3 +269,16 @@ The [prospective solver/instrumentation core](research/pr86-prospective-instrume
 explicitly sets the proposed caps/seeds instead of silently inheriting the
 historical one-thread/seed-42 defaults. Synthetic tests are implementation
 evidence only. The historical sources, results and eligibility flags are unchanged.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October continuation: PR88 is merged at`e5804a8c6762c2e5f13447e5a16784e5824de801`.
+The [fresh CPU12h operator](research/pr89-cpu12h.md) implements D1/D2 without
+changing source experiments, learning data, seeds, architectures or checkpoints.
+The old PR86 preparation is reused; more time is not a remedy for M4/M12
+numerical sensitivity. The author subsequently approved the specific CPU budget
+of720solver-h/780serial-reservation-h/4836physical-reserved-core-h on20October,
+conditional on installed preflight and exact-head CI. Older pending statements
+below describe prior proposals, not the current decision. No jobs submitted here.
