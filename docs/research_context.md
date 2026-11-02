@@ -1,5 +1,12 @@
 # CFL--GNN research context
 
+## Campaign closeout — 2 November 2026
+
+PR89 has completed execution and receipt: all 60 cells/jobs 3675–3734 are reconciled, with 47 solver-reported terminal targets and 13 time-limit censures on M7. M7 is retained; M4/M12 keep their numerical restrictions. See the [complete receipt and dispositions](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) and [scientific synthesis](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93). Installed source `9ab7823c`, its models, Starts, parameters, sequence and resources remain unchanged. No collection or solve is repeated by this integration.
+
+The [current Sprint/PR plan](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/7acf74d462f98903931442caa668960a898cad24/docs/research/mvp2-closeout-plan.md) supersedes earlier scheduling/pending statements below. A distinct 144-cell solver-seed extension is being prepared in PR94, with the 54-parent learning corpus/checkpoint frozen. Actual evaluation admission/submission and its results remain separate from this CPU12h closeout. Merge, Pages publication and editorial submission retain specific human approval. Earlier dated preparation/running entries are historical records.
+
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
@@ -210,3 +217,16 @@ The [prospective solver/instrumentation core](research/pr86-prospective-instrume
 explicitly sets the proposed caps/seeds instead of silently inheriting the
 historical one-thread/seed-42 defaults. Synthetic tests are implementation
 evidence only. The historical sources, results and eligibility flags are unchanged.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October continuation: PR88 is merged at`e5804a8c6762c2e5f13447e5a16784e5824de801`.
+The [fresh CPU12h operator](research/pr89-cpu12h.md) implements D1/D2 without
+changing source experiments, learning data, seeds, architectures or checkpoints.
+The old PR86 preparation is reused; more time is not a remedy for M4/M12
+numerical sensitivity. The author subsequently approved the specific CPU budget
+of720solver-h/780serial-reservation-h/4836physical-reserved-core-h on20October,
+conditional on installed preflight and exact-head CI. Older pending statements
+below describe prior proposals, not the current decision. No jobs submitted here.

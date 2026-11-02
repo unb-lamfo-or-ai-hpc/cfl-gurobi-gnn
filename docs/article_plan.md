@@ -1,5 +1,12 @@
 # Article plan
 
+## Campaign closeout — 2 November 2026
+
+PR89 has completed execution and receipt: all 60 cells/jobs 3675–3734 are reconciled, with 47 solver-reported terminal targets and 13 time-limit censures on M7. M7 is retained; M4/M12 keep their numerical restrictions. See the [complete receipt and dispositions](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) and [scientific synthesis](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93). Installed source `9ab7823c`, its models, Starts, parameters, sequence and resources remain unchanged. No collection or solve is repeated by this integration.
+
+The [current Sprint/PR plan](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/7acf74d462f98903931442caa668960a898cad24/docs/research/mvp2-closeout-plan.md) supersedes earlier scheduling/pending statements below. A distinct 144-cell solver-seed extension is being prepared in PR94, with the 54-parent learning corpus/checkpoint frozen. Actual evaluation admission/submission and its results remain separate from this CPU12h closeout. Merge, Pages publication and editorial submission retain specific human approval. Earlier dated preparation/running entries are historical records.
+
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
@@ -391,3 +398,15 @@ adds the parameter and timing contracts for future CPU/cost figures, not their
 data. Figure generators must keep solver, supervised attempt and batch-level
 scopes distinct, preserve stopped runs and avoid treating unknown preparation
 or timing-tail writes as zero. The C–F roadmap and separate budgets are unchanged.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+20October post-merge continuation: PR88's manuscript/GPU/BCE integration is in
+develop at`e5804a8c`. [CPU12h](research/pr89-cpu12h.md) prepares the missing temporal
+quality evidence, not an observed result. The worst-case32.5days plus queues
+threatens15November: no completion date or convergence is promised. Writing and
+coauthor review proceed using already measured data. No additional GPU pair,
+architecture search or main synchronization is required now. Main release stays
+after article revision with separate approval.
