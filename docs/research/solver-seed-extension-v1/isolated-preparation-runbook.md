@@ -112,5 +112,9 @@ publication test now checks resource release in protocol metadata instead of
 requiring an operational approval phrase in the journal article. GPU result
 numbers, negative quality findings and history hashes remain checked.
 
-CLI delivery is tied to the reviewed final source commit and passing CI.
+The zero-call installation CLI is tied to the reviewed source commit, passing
+focused PR94 checks on Windows/Linux and CPU tensor parity. The full T3 matrix
+is mandatory before either scientific preparation submission or merge. This
+allows installed metadata binding while the broader regressions finish; it
+does not release roots or forwards.
 Merges and publication remain separately controlled. PDFs remain deferred.

@@ -105,6 +105,8 @@ jobs:
           bash -n scripts/evidence/operate_pr87_training.sh
           bash -n scripts/evidence/operate_pr94_preparation.sh
           bash -n scripts/evidence/install_pr94_preparation.template.sh
+      - name: T1 PR94 installation and preparation admission (no scientific calls)
+        run: python -B -m unittest discover -s tests/evidence -p "test_pr94*.py" -v
       - name: T3 evidence regression (single discovery, no solver or training)
         shell: bash
         run: python -B -m unittest discover -s tests/evidence -v 2>&1 | tee evidence-tests.log

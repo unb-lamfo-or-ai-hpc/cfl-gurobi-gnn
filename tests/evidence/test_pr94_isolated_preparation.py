@@ -134,7 +134,7 @@ class AdapterTests(unittest.TestCase):
             patch.dict(sys.modules, {"torch": None, "gurobipy": None}),
         ):
             result, receipt = flow.find_checkpoint(self.base)
-            self.assertEqual(result, checkpoint)
+            self.assertEqual(result, checkpoint.resolve())
             self.assertEqual(receipt["tensor_deserialization_calls"], 0)
             with self.assertRaisesRegex(ValueError, "checkpoint_lookup_entries"):
                 flow.find_checkpoint(self.base, entries_limit=0)
@@ -173,7 +173,7 @@ class AdapterTests(unittest.TestCase):
         inside.mkdir()
         p = inside / "model"
         p.write_bytes(b"x")
-        self.assertEqual(flow.safe_file(p, inside), p)
+        self.assertEqual(flow.safe_file(p, inside), p.resolve())
         with self.assertRaisesRegex(ValueError, "private_path"):
             flow.safe_file(self.mip, inside)
 
