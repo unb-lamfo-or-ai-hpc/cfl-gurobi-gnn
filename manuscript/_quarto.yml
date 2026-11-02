@@ -25,6 +25,15 @@ format:
     theme: cosmo
     toc: true
     number-sections: true
+    include-after-body:
+      text: |
+        <nav aria-label="Research materials" class="border-top mt-4 pt-3 small">
+          <p>Research materials:
+            <a href="index.pdf">Article PDF</a> ·
+            <a href="appendices/appendices.pdf">Appendices PDF</a> ·
+            <a href="https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/main/docs/research/mvp2-data-release-plan.md">Preservation plan (GitHub/Zenodo)</a>
+          </p>
+        </nav>
   pdf:
     template: _extensions/elsevier/template.tex
     cite-method: natbib
