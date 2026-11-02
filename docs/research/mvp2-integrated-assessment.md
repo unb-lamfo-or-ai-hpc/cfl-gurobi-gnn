@@ -1,295 +1,70 @@
-# Working integrated assessment — R2-D8
+# R2-D8 — Síntese científica e auditoria de integração
 
-## PR89 complete return — 1 November 2026
+Revisão de 2 de novembro de 2026. Este relatório atualiza a síntese com as 60 células da PR89. Ele reutiliza os exames já concluídos cujas fontes permanecem idênticas e registra o que ainda depende de integração ou decisão humana. Não equivale a uma certificação universal do software, dos ótimos ou da generalização. A [versão anterior](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9453b82314a4ca5ffaf1850d26e5eac5dbc3d98f/docs/research/mvp2-integrated-assessment.md) conserva os diagnósticos intermediários. O [plano por Sprints e PRs](mvp2-closeout-plan.md) governa a continuidade.
 
-All 60 cells are received and reconciled; the joint accounting query on 2November02:24:05UTC (1November23:24:05 Fortaleza) records 60 COMPLETED/0:0 jobs. There are 47 reported terminal-target attainments and 13 time-limited M7 cases. See the [complete reconciliation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/565d9146729c7f35f280d1ae37818beab71879ff/docs/research/pr89-complete-reconciliation-20261101.md). The three-archive chain, unchanged controls, six new parameter/temporal/cost/nested bindings and 180 accounting rows are checked. This closes reception/reconciliation, not the final integrated audit or unrestricted scientific qualification. Earlier running/missing-cell statements below are historical snapshots.
+## Conclusão sustentada pelas evidências
 
-The two M12 arithmetic audits now cover ten points: G/4,G/8,G/16 are exactly primal-feasible in their scope; seven controls have a fractional binary and an infeasible rounded pattern. The five other M12 points remain outside the independent exact-primal audit. Preserve M4 restrictions and M0 cross-run bound limits. One common exact optimum and certified M12 speedups are not established.
+O projeto demonstra uma implementação rastreável de GNN→Start parcial e uma avaliação empírica de seus efeitos condicionais. Os valores sugeridos não fixam variáveis nem alteram a região viável. O benefício depende da instância, do cap de threads, do alvo de qualidade e da fronteira de custo. A evidência não demonstra superioridade geral, efeito causal da seleção class-aware, ótimo global comum nos casos numericamente sensíveis ou generalização independente.
 
-M7 stays in the cohort: computational difficulty and terminal-target censoring are not infeasibility. No post-outcome exclusion or new nine-medium protocol was adopted. Removing M7 would change 144 to135 planned cells and 90 to81 archival candidates but leave 54 new calls unchanged; this is an evaluated alternative, not an approved protocol revision.
+A contribuição C2 é a caracterização desses regimes favoráveis/adversos e das diferenças entre qualidade primal, progresso dual, atingimento e censura. C3 é a análise de custo dentro de fronteiras explícitas, incluindo preparação histórica, execução, amortização e treinamento. C1 permanece uma obrigação metodológica de implementação/proveniência, não uma terceira novidade algorítmica. A revisão de literatura já realizada no chat 01.04 é reutilizada; não houve nova campanha bibliográfica nem experimento.
 
-The PR93 article/AppendixB and current assets now use all 60 observations, with a final scientific/editorial audit still pending. Original snapshots/raw flags remain unchanged. No PDF was rendered. The installed PR94 source remains c623fe8 and plan b41953a8; do not reinstall it to follow documentary commits. PR89 has finished, allowing preparation of the separate roots CLI. Live allocation and artifact-generation/review gates remain pending, and no new job, forward, solve, retry, merge or publication has occurred.
+## Evidências reconciliadas
 
-## Preparation tooling checkpoint — 1 November 2026
-
-The [PR94 installation return](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/264b29246b785bbfa7e1038c12aedde7c64f1599/docs/research/pr94-installation-return-20261101.json) is received and accepted for its zero-scientific-call scope. Its archive/member seals, six input hashes and unchanged reservation budget agree. Installed source c623fe8 and plan b41953a8 stay frozen; no new roots, graphs or Starts exist. All four final-head evidence matrices and the CPU tensor job passed. These checks do not establish live allocation/graph admission, scientific qualification or metric eligibility of archival results. PR89 completion remains the gate before a separate author CLI begins preparation. No additional PR89 solver result or PDF is produced.
-
-## Received evidence and M12 qualification — 1 November 2026
-
-The current CPU12h review covers54 of60 planned cells. It contains41
-solver-reported terminal-target attainments and13 time-limited cases, all on
-M7. The author's latest snapshot reports3729–3733COMPLETED and3734RUNNING (03:08:51); no query timestamp was supplied. Those scheduler states
-do not increase received coverage. The six-job terminal collector remains
-the next transfer step once the jobs are terminal.
-
-The [working60-cell qualification register](pr89-qualification-register-20261101.csv)
-keeps receipt state, state provenance, terminal-target reporting, numerical
-stratum, scoped exact-primal evidence, cost availability and pending final
-qualification separate. Its [source/hash record](pr89-qualification-register-20261101.json)
-does not replace or modify the archived receipts and eligibility flags.
-
-The [raw M12 audit](pr89-m12-raw-audit-20261101.md) establishes exact primal
-feasibility only for the stored G/four-thread point in its scope. B at two
-and four threads and R at four threads have a tolerated nonintegral binary;
-their rounded integer patterns violate an original row and admit no
-continuous completion with those binaries fixed. Their lower reported
-objectives therefore do not demonstrate better exactly feasible integer
-solutions. No exact global optimum follows. The smaller logged work and
-presolved model explain more of the runtime contrast, without isolating
-a causal contribution of the neural policy. Other M12 points retain
-their own unreviewed/qualified states; M4's limitation remains separate.
-
-The approved solver-seed extension is prepared in [draft PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/94).
-The [archival compatibility review](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/2e4386b8535945be63975c03f8af2fe1f8f8cc99/docs/research/solver-seed-extension-v1/compatibility-review.json)
-checks90 one-thread cells against recorded parameters, model identities,
-versions and receipt/child links. All90 documentary identities match;
-metric eligibility remains separate, including18 M4/M12-sensitive rows.
-The prospective Start bindings are from job3521 rather than the older E0
-generation. The earlier completed210-cell review is reused, not repeated.
-
-The author-run [six-medium input preflight](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/a140a2e4833b80e461477c5397b1f76c71c6af45/docs/research/solver-seed-extension-v1/preflight-return-20261101.json) is now received.
-The receiver independently verified the archive digest, CRCs and two member
-seals. All six original files were uniquely located and completed the bounded
-text inventory without reported issues; M13/M26 match historical E0 hashes.
-All six current source hashes now bind the cohort and54 new-cell candidates.
-The reading took125.837 seconds, with no solver, inference, training or
-scheduler-mutation calls. The private path map/archive remain local.
-
-The six inputs share the observed total variables/rows/matrix-term counts,
-but differ in binary/continuous composition and coefficient ranges. This is
-structural characterization, not an empirical hardness ranking, independent
-feasibility validation or root/graph/Start binding. Previous M13/M26 cache
-non-admission remains in force, without cache rescanning. Historical guidance
-used one GPU. The [preparation/resource proposal](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/edc8e1914556a81ffaf8b50bbd0d858f17475c9e/docs/research/solver-seed-extension-v1/preparation-and-resources.md) now specifies one V100 GPU-hour,75 sequential job-hours,78 physical-core-hours and64GiB RAM per job under the unchanged55 optimizer-hour ceiling. Fifteen offline tests validate the metadata compiler and conditional reservation arithmetic. The ten historical artifact chains are linked; the six new root/graph/Start chains remain ungenerated. The label-free encoder is the prospective mechanism, with adapter parity, full execution-source closure, private bindings and live resource/storage admission still pending.
-The input-identity subgate is closed; execution and per-metric qualification
-remain separate. PR89 coverage stays54/60 and its campaign is unchanged.
-
-Terminal return under a3600s setting is not first-observed threshold time
-or exact common-time quality. Retain actual follow-up, missing crossings,
-censoring and numerical eligibility. No missing target crossing is inferred
-from Runtime. This separate planning-approved study does not add a PR89
-result or authorize rerunning the90 archived cells.
-
-The current assessment remains R2-D8 work in progress. Source/claim
-reconciliation can advance now. Review PDFs are deferred until the full
-campaign is integrated, unless explicitly requested by the author.
-The final scientific audit, merge and publication gates remain.
-
-## Approved scientific/editorial revision — 30 October 2026
-
-The author approved the detailed diagnostic and its implementation in PR93.
-The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
-Only C2 (conditional optimization effects) and C3 (computational economics)
-are scientific contribution claims; C1 is a methodological obligation.
-Earlier candidate C1–C3 framing below is superseded in this respect, without
-changing historical evidence or the installed experimental contract.
-See the [revision record](pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
-implementation and validation boundaries.
-
-S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
-resources and sequence remain intact; S3 requires its reconciled 60-cell
-return and metric-specific qualification. Further seeds, methods, models,
-training and ablations remain future work. The final audit, merge,
-publication and editorial submission retain their human gates.
-No coauthor communication or new experimental execution is authorized here.
-
-
-28 October 2026 · draft for the final synthesis PR.
-This document begins the synthesis of existing evidence. It is **not** the
-final R2-D8 report, a qualified CPU12h return or a submission-ready conclusion.
-The [Sprint/PR plan](mvp2-closeout-plan.md) governs completion.
-
-The [preliminary coauthor brief](coauthor-review-brief.md)
-states the approved title, question, literature position and C2/C3 framing.
-This assessment does not repeat that review. It asks what the available
-evidence can support and what must remain unresolved until qualification.
-
-## Present scientific assessment
-
-The fixed prediction-to-Start pipeline is documented. It preserves the
-optimization model while offering Gurobi selected binary values to complete
-or repair. That mechanism is not evidence that every start helps, that
-class-aware ordering has a causal advantage, or that the architecture is novel.
-
-The existing CPU evidence is retrospective and instance-dependent. The
-principal population contains ten historically exposed parents, so neither
-its number of method/cap rows nor its binary targets enlarges the independent
-problem count. The longer-horizon campaign adds observations on four exposed
-medium parents, not independent new test instances.
-
-The completed GPU comparison has a clear limitation for a positive narrative:
-training becomes faster, but selected parent-macro F1 decreases and assigned
-GPU-hours increase. Timing, quality and resource outcomes must remain distinct.
-The CPU starts still use the original checkpoint; the later GPU weights have
-not demonstrated downstream solver utility.
-
-The appropriate current conclusion is therefore bounded: this implementation
-permits an auditable study of when learned starting information helps or harms
-under stated conditions. The final evidence-based answer about the CPU12h
-campaign is still absent.
-
-## Evidence available now
-
-| Evidence chain | Recorded scope | Current interpretation and source |
+| Bloco | Escopo verificável | Interpretação e limite |
 | --- | --- | --- |
-| Data and model | 54 admitted parents from 90 candidates; 34/10/10 split | Quality-selected, potentially approximate labels; no independent generalization. [Methods/data record](mvp2-r3-methods-and-models.md) |
-| Principal CPU | 150 seed-42 rows: 97 reported targets, 53 censures; 30 sensitive M4/M12 rows are a subset | Coverage categories are not exact optimality certificates. [Main summary](../evidence/methodology-20261019/summary.json), [existing CPU review](pr86-final-analysis.md) |
-| Historical six-medium archive | Separate optimization cohort and figures | Retain original scope and adverse outcomes; do not substitute for the principal cohort. [Imported manifest](../../manuscript/results/current/pr60_scientific_evidence_manifest.json) |
-| Matched GPU pair | One seed; loop speedup 2.167, job speedup 1.831; selected F1 loss 0.032468 | Increased assigned GPU-hours and lower selected quality; no noninferiority or isolated GPU causality. [Completed review](pr87-completed-pair-review.md) |
-| CPU12h | 54/60 received;41 reported terminal targets,13 time-limited cases; six returns pending | Descriptive subset with metric-specific numerical/censoring limits. [Sealed partial review](../evidence/pr89/partial-20261101/review.json) and [current qualification register](pr89-qualification-register-20261101.csv) |
+| Dados e modelo |54 pais admitidos de 90 candidatos; split 34/10/10; checkpoint CPU original | Admissão por qualidade de labels e exposição histórica; sem nova aprendizagem ou prova de generalização |
+| CPU principal |150 observações seed 42 em seis easy e quatro medium; 97 alvos reportados e 53 censuras; 30 linhas M4/M12 sensíveis incluídas na amostra | Fonte e números conferidos pelo mapa afirmação–evidência; linhas/caps não são novos pais |
+| CPU 12 h |60/60 recibos,60 COMPLETED/0:0 e 180 linhas de accounting; 47 alvos reportados e 13 censuras M7 | Recepção fechada; cada métrica conserva seus limites. [Manifesto](../evidence/pr89/final-20261101/manifest.json), [disposições](../evidence/pr89/final-20261101/disposition.csv) |
+| M12, exame primal |Dois laudos, dez pontos: G/4, G/8, G/16 exatos no escopo; sete controles com uma binária fracionária e padrão arredondado inviável | Aritmética racional de todas as linhas/bounds/domínios e objetivo; cinco outros pontos não examinados; nenhum certificado dual exato |
+| CPU 12 h, custos |293,919 h somadas de Runtime e 295,072 h de elapsed; 1750,185 core-h físicos observados | Alocação×duração não é utilização, energia ou cobrança; preparação histórica e fila são outros escopos |
+| GPU pareada |Uma comparação seed 42: speedup de loop 2,167 e de job 1,831; perda F1 absoluta 0,032468; mais GPU-h alocadas | O ganho de tempo não preserva a qualidade selecionada nem isola causalidade da GPU; esses pesos não substituem o predictor CPU |
+| Materiais históricos |Coortes antigas de 39 instâncias e de seis medium, com seus próprios protocolos | Mantidas separadas dos 150 registros principais e das 60 novas observações de horizonte longo; PCA de descritores, não embeddings aprendidos |
 
-The principal CPU coverage and displayed matched-GPU values are bound by
-the [claim map](../../manuscript/supplement/claim-evidence.json). Data-admission
-and partition counts use the R3 methods record; historical figures retain
-their imported manifest. The numerical gate does not claim coverage of every
-quantity in this report. This document introduces no new estimator, pooled
-dataset or experiment.
-The first-pass audit record remains in the coauthor brief; its reuse is
-explicit, not a declaration that all software or conclusions have been verified.
+A [reconciliação completa](pr89-complete-reconciliation-20261101.md) valida os controles e os seis novos retornos, reutilizando o exame selado das 54 células anteriores. Os arquivos dos snapshots 50/54, seus parâmetros e flags não foram alterados. O job 3734 está incluído com resultado, vetor, log, supervisão e custos; o SHA 256 do ZIP local é igual ao que o autor voltou a conferir no HPC.
 
-## Objectives: current coverage and remaining qualification
+## Qualificação por métrica e por instância
 
-| Objective | What existing evidence contributes | Remaining boundary |
+| Instância | Resultado terminal | Uso permitido no relato | O que não decorre dele |
+| --- | --- | --- | --- |
+| M0 |15 alvos reportados; G antes de B em quatro caps e depois de ambos controles com dois threads | Contrastes descritivos no mesmo critério tolerado; preservar pequena discrepância cruzada de 0,000524% | Um ótimo exato comum ou aceleração uniforme |
+| M4 |15 alvos reportados; discrepância cruzada de 0,132417% | Qualidade/custo/tempo com restrição numérica explícita | Speedup certificado ou remoção da restrição por gap zero |
+| M7 |Dois alvos reportados e 13 censuras; primal terminal reportado comum | Comparar progresso dual, gaps, alvos efetivamente observados e custos; reter massa censurada | Inviabilidade ou exclusão por dificuldade pós-resultado |
+| M12 |15 alvos reportados; grande diferença de esforço e tempo | Separar aceitação sob tolerâncias, primal exato auditado e custos observados | Que o Start prendeu a árvore em ótimo local, que controles fracionários são melhores soluções inteiras ou que os quocientes de tempo provam speedup para um mesmo ótimo |
+
+Nas comparações de M12 a 8/16 threads, o Gurobi reporta gap interno zero em todos seis runs. Os vetores G satisfazem os exames primais exatos; os controles contêm uma binária fracionária tolerada, cuja projeção inteira viola uma linha por 0,0000416587. Uma obstrução por intervalos exclui todo complemento contínuo desse padrão. O custo de busca, as iterações e o modelo presolvido diferem substancialmente. Isso dá suporte a uma interpretação de trajetórias distintas, não a um mecanismo causal isolado.
+
+Censura depende do alvo. Todos 60 runs observaram 10% de gap,54 observaram 5%, e 47 observaram 1%/0,01%. Runtime de timeout não é tempo de sucesso; observações de callbacks são cruzamentos registrados, não tempos contínuos exatos. Não misturar esse horizonte de 12 h com as observações históricas de 1 h usadas na futura extensão.
+
+## Auditoria em duas passagens: o que foi conferido e o que permanece aberto
+
+| Área | Verificações já sustentadas | Limite ou gate restante |
 | --- | --- | --- |
-| SO1 — dataset construction | Admitted cohort, split and label-quality checks | Not full 90-parent/hard coverage; quality-selection bias remains |
-| SO2 — optimization efficacy | Historical and principal B/R/G comparisons | CPU12h conclusions need qualified cell outcomes and metric eligibility |
-| SO3 — computational efficiency | Eligible target/time comparisons and cost definitions | Censored or numerically restricted pairs cannot become certified speedups |
-| SO4 — robustness | Recorded configuration and historical repetitions; approved solver-seed extension protocol prepared | Principal study remains seed42. New extension execution/reuse admission remains pending; no training-seed or broad configuration robustness |
-| SO5 — scalability | CPU caps and matched serial/DDP work | GPU and CPU resources scale together; one pair does not isolate GPU causality |
-| SO6 — economics | Bounded preparation scenarios, solver/job clocks and assigned GPU-hours | Missing cold costs, energy or money cannot be imputed |
-| SO7 — generalization | Parent roles and information boundaries are documented | Historically exposed tests do not establish independent generalization |
-| SO8 — integrated assessment | Existing source-linked synthesis begins here | Final qualified CPU integration, full audit and human scientific judgment remain pending |
+| A — software científico | Fluxo B/R/G, identidade de modelo/Start, implementação da relaxação, fonte instalada 9ab7823c, normalização/checkpoint e parâmetros documentados; exames anteriores reutilizados | Os pesos/grafos históricos não foram novamente carregados nem o treinamento reproduzido. A combinação real PR89+PR93 deve passar CI após integração autorizada |
+| B — evidência experimental | Matriz 60 única, arquivos e controles, estados/códigos, métricas temporais, custos e escopo dos dez pontos M12; 210 registros históricos e GPU preservados | Limites M4/M12/M0 e uma seed principal permanecem científicos. Nenhum flag bruto foi promovido e nenhum retry foi realizado |
+| C — artigo | Pergunta/contribuições C2/C3, métodos, populações separadas, resultados adversos, referências e limites compatíveis com as fontes; 101 testes do manuscrito passaram | Revisão científica final dos coautores e aceite da interpretação, sem circulação automática pelo agente |
+| D — apêndices e pacote | Tabela completa 60, restauração histórica, parâmetros/hiperparâmetros, comparação documental de interfaces, links, números e fontes; dois PDFs inspecionados em 68 páginas, sem referências não resolvidas ou texto fora da página | Revisar o pacote resultante de qualquer nova evidência e a release efetiva; publicação/submissão dependem de aprovação |
 
-An unmet objective stays unmet or explicitly limited in the final report.
-Project completion does not require claiming that every objective was achieved.
+A auditoria de integração ainda não é declarada integralmente encerrada. Existe uma falha de checkout Windows identificada: a conversão LF→CRLF do manifesto muda seu SHA 256 de 6fb17285… para b5150502…, exatamente como no CI. A correção preparada desabilita conversão de texto nos recibos selados; ela não normaliza, altera ou dispensa os hashes. Cinco testes rápidos cobrem os três snapshots, sua continuidade, as disposições, a divergência de finais de linha e a rejeição de adulteração. O novo CI deve confirmar a correção nos quatro ambientes antes de Ready.
 
-## What the CPU return must resolve
+Os PDFs da fonte 9453b823 foram entregues: artigo 24 p, referências na 20ª, apêndices 44 p. Numeração de acknowledgements/declaração de IA/referências, agradecimento à UJA/DaSCI e declaração dos modelos 6.1 Sol/6.0 Astra estão preservados. CI aprovado valida implementação e integridade editorial; não certifica validade científica por si só.
 
-For every planned cell, bind the recorded outcome to its parent, method,
-physical cap, original source and supplied artifacts. Preserve any absence,
-failure or blocked condition. D0 is the reception/reconciliation event;
-later scientific qualification must not silently redefine it.
+## Cobertura dos produtos R2-D1–D8
 
-The final assessment must then separate:
+| Produto | Situação atual |
+| --- | --- |
+| D1 — contrato | R3 e decisões/supersessões documentados; mandato científico inalterado |
+| D2 — métodos | B/R/G, relaxação, inferência, Starts, modelos e hiperparâmetros explicados e ligados às fontes |
+| D3 — dados/modelos | Coortes e partições reconciliadas, histórico 39 separado, checkpoint CPU e limitações de proveniência explícitos |
+| D4 — determinismo | Semente, paralelismo, Method=-1, TimeLimit/WorkLimit e interfaces distinguidos; evidência de raiz concorrente determinística apenas nos logs efetivamente examinados |
+| D5 — eficácia | Resultados principal/GPU/histórico e CPU 12 h recebidos; efeitos condicionais, censura e numerics delimitados; revisão científica final pendente |
+| D6 — desempenho/economia | Fronteiras de relógio, preparação, reutilização, amortização e alocação reconciliadas; sem energia/preço/utilização ou cold end-to-end completo inventados |
+| D7 — planejamento | Plano único por Sprints/PRs atualizado com os gates de merge, CLI, publicação e submissão |
+| D8 — síntese especializada | Este relatório incorpora o retorno completo e os laudos; aguarda CI de integração e revisão final, sem reivindicar certificação universal |
 
-- primal feasibility under the stated checks from exact mathematical proof;
-- primal improvement from dual-bound progress and relative-gap change;
-- terminal target reporting from first observed threshold crossing;
-- observed follow-up from an exact common-time measurement;
-- numerical restriction from censoring and missingness;
-- solver Runtime from job elapsed and preparation/training boundaries.
+## Continuidade da PR94 e decisões humanas
 
-M4/M12 require metric-specific treatment. Recorded horizon brackets keep
-their real timestamps and staleness; no interpolation or extension of terminated
-trajectories is introduced. More runtime is not a numerical repair.
+A instalação zero-call está conferida em c623fe8, plano b41953a8. Raízes, grafos, predições e Starts novos ainda não foram recebidos. O job de raízes depende da CLI já entregue ao autor. O bloco histórico de uma hora contém 57 términos no critério reportado e 33 interrupções por tempo entre as 90 candidatas. Há 79 registros com cruzamento de 10% disponível e 57 com cruzamento de 5%/1%; ausência de cruzamento não é preenchida com Runtime. Todas as nove linhas históricas de M7 são time-limited e não têm cruzamento de 10% registrado nesse orçamento. Isso não contradiz os dois atingimentos posteriores na PR89 de 12 h. Esses totais descrevem disponibilidade e estados arquivados, não admissão irrestrita de reutilização. O retorno deve confirmar o job e todos steps terminais, identidades dos seis modelos, plano/fonte/ambiente, seis resultados e claims compatíveis, supervisão sem parada e selos fechados. Claims não provam chamadas concluídas; um retorno parcial deve ser preservado para diagnóstico.
 
-Do not treat the CPU12h campaign as a continuation prefix of earlier solves.
-Cross-campaign comparison must retain the separate time-limit settings,
-measurement conditions, exposures and eligibility. Historical seed 43/44
-observations remain historical and are not CPU12h replications.
+Somente depois da revisão desse retorno e de sua aceitação por hash haverá CLI separada para guidance. O uso de uma V100 de 32 GB, o checkpoint original, a ausência de labels no forward e os Starts R/G pareados permanecem fixos. As 54 avaliações novas ainda não têm dispatcher liberado; as 90 identidades históricas conservam qualificação por métrica, com 18 linhas M4/M12 restritas.
 
-## Methodological readiness and the final C2/C3 assessment
-
-| Candidate contribution | Evidence needed in the final integrated account | Claim that must not be inferred |
-| --- | --- | --- |
-| C1 — methodological mechanism, not an independent contribution | Consistent model/variable/Start identities and a clear explanation of the dependent R comparator | First GNN warm start, architecture novelty or causal selector superiority |
-| C2 — conditional effects | All planned parent/cap outcomes, eligible comparisons, regressions, censoring and influence of restricted cases | Uniform acceleration, stable seed-averaged gain or independent population inference |
-| C3 — bounded economics | Explicit clocks, measured versus scenario preparation, training quality and assigned resources | Energy savings, monetary savings or complete cold cost without measurements |
-
-The preliminary literature position is an input to coauthor judgment,
-not a completed originality verdict. If the qualified evidence cannot
-support a central claim, revise that claim or the editorial strategy.
-The additional experiments in the sensitivity document remain future work
-outside the current Sprints.
-
-## Independent work advanced before the CPU return
-
-The following separation is now made for the final editorial package.
-It can be reviewed without running the solver or training a model.
-
-| Material | Intended role | Current disposition |
-| --- | --- | --- |
-| Main article and essential method/results displays | Scientific argument for OR readers | Existing integrated draft; final CPU synthesis pending |
-| Readable methods explanation and qualified result/provenance tables | Candidate scientific supplement | Select and package explicitly; current Markdown working files are not automatically in the LaTeX ZIP |
-| Claim manifest, source/asset identities and reproducible generators | Verifiable supporting provenance | Reuse existing checks; extend only to the qualified CPU return |
-| Coauthor brief, planning and review decisions | Internal scientific review | Prepared for author-controlled circulation; no communication sent |
-| Prospective sensitivity counts/designs | Limitations and possible future work | Not current experiments or results |
-| Human–AI traceability register | Support the Appendix B decision | Not an approved journal appendix; definition/evidence/relevance remain author decisions |
-| Private operational captures, credentials and licensed material | Restricted operational evidence | Do not package or publish indiscriminately; availability/rights must be explicit |
-
-This avoids presenting planning or hypothetical resource ceilings as
-experimental findings. It also identifies the packaging gap without claiming
-that the journal supplement is already complete.
-
-## First-pass finding: distinct historical endpoints
-
-The independent review traced Start acceptance and censoring through the
-recorder, historical CSV, archival analysis and display generator.
-Loaded Start messages support the acceptance statement; they do not prove
-an optimal solution or a subsequent benefit. The historical terminal
-`right_censored` flag differs from the censoring of a 10% gap crossing.
-Medium0 with G demonstrates why: its crossing is observed before a later
-time-limit termination.
-
-The [metric reconciliation](mvp2-r3-metrics-and-reproducibility.md#historical-endpoint-reconciliation--28-october)
-records the source chain and example. Existing tables and figures already use
-the appropriate crossing field. Only the article's interpretation required
-correction, including the phrase “time to optimality”. No raw evidence,
-numerical display, scientific eligibility decision or PR89 source is changed.
-This closes one independent wording finding, not the final results audit.
-
-## Reader-oriented supplement reconciliation
-
-The methods supplement now introduces the prediction-to-optimization stages
-and their vocabulary before the message equations. It explains weighted
-learning versus calibrated probabilities, the support cap and dependent R
-comparison, then separates prediction metrics, Start acceptance, gap crossings
-and terminal solver outcomes. The schematic assignment example is explicitly
-illustrative, not a new experimental observation.
-
-The [supplement guide](../../manuscript/supplement/README.md#interpreting-prediction-and-optimization-evidence)
-records the independent claim boundaries and source links.
-The sensitivity discussion distinguishes robustness questions from component
-ablations; its options remain future work. The Human–AI register explains
-accountability separately from a scientific study of collaboration, preserving
-the conditional Appendix B decision and existing author declaration.
-
-The [configuration reference](../../manuscript/supplement/configuration-reference.md)
-adds an appendix-ready account of data inputs, feature encoding, fixed and
-validation-selected hyperparameters, the recorded Gurobi map and the separate
-GPU settings. Fixed-revision source links retain provenance. Preparation
-Presolve=0 is distinguished from the recorded solve setting Presolve=-1;
-missing effective fields are not filled from assumed defaults.
-
-This is a source-based editorial reconciliation, not a replay of training,
-a robustness result or the completed scientific supplement. The numerical
-claim manifest, historical data and article rendering inputs remain unchanged.
-Qualified CPU results and the final integral audit are still required.
-
-## Publication text and internal records — 29 October
-
-The author requested a full reader-oriented revision. The article and registered
-supplements now contain scientific scope, methods, configuration provenance,
-interpretation and limitations. Campaign progress and review directions are
-removed from that corpus. The coauthor brief and Human–AI decision register
-are in docs/research; the original prospective sensitivity budgets are
-preserved separately from the reader-facing future-work discussion.
-
-The [editorial checkpoint](../../manuscript/editorial-plan.md#reader-only-publication-boundary--29-october-2026)
-records the disposition, local-only temporary-file policy, sandbox observations
-and the separate human-supplied scheduler snapshot. This editorial pass does
-not complete R2-D8, qualify CPU12h outcomes or replace the final integral audit.
-
-## Finalization conditions for this PR
-
-Complete the qualified CPU integration and source-linked interpretation;
-extend the numerical claim map and reconcile every repeated number.
-Perform the integral second-pass audit of repository, evidence, article,
-supplement and editorial package. Independent reviews reduce that work,
-but do not replace it.
-
-Document the final SO/C assessment and scientific limitations in R2-D8.
-Verify final-head tests, rendering and visual quality, then seek human
-approval for the relevant merge. Coauthor scientific/editorial decisions,
-publication and submission remain separate gates. No new experiment or
-change to PR89 accompanies this draft.
+M7 continua na coorte por decisão do autor. A discussão de nove medium não alterou o protocolo 144/90/54. Não há novos treinamentos ou ablações implícitos. As decisões humanas necessárias continuam sendo as execuções na CLI, eventuais falhas com disposição específica, os merges, a interpretação científica final e a publicação/submissão. Nenhuma comunicação foi enviada em nome dos autores. A meta permanece manuscrito completo até 15/12/2026 e submissão até 14/1/2027.

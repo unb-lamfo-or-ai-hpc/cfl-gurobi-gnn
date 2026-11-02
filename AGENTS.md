@@ -1,5 +1,17 @@
 # Repository instructions
 
+## Current continuation — 2 November 2026
+
+Use docs/current_status.md and docs/research/mvp2-closeout-plan.md for the current operational state; dated pending/running statements below are historical. PR89 is complete:60/60 receipts,47 reported targets,13 M7 censures, no missing tail. Job3734 is received. Do not recreate its ZIP or repeat its campaign. Source9ab7823c and all original bytes, flags, models, parameters, Starts and resources remain frozen.
+
+PR93 scientific source9453b823 and two separate PDFs are delivered; 101 manuscript tests and source/render/text gates passed. Current fixes affect checkout integrity and governance only, so do not regenerate scientific PDFs unnecessarily. Windows converted the sealed PR89 manifest to CRLF; retain exact hashes and use -text attributes for sealed returns, never normalize the evidence to fit a test. Full new CI and actual PR89+PR93 integration remain gates before Ready/merge.
+
+The R2-D8 synthesis and Sprint/PR plan now describe the complete return, scoped ten-point M12 audit, M4/M0 limits, and M7 retention. No exact dual/global-optimum or causal speedup claim is admitted. Do not repeat closed audits with unchanged inputs or duplicate the completed literature review. Coauthor review, merge, publication and submission retain their human gates.
+
+PR94 installed sourcec623fe858f62 and planb41953a8 remain fixed; do not reinstall/update them for documentation changes. Root CLI is awaiting author job_id/exit; no submission or artifact is presumed. Review terminal six-root metadata before a separate guidance CLI. Keep the current144/90/54 design, frozen learning corpus/checkpoint and18 sensitive historical candidates; there is no evaluation dispatcher or new training authority.
+
+Every HPC/SCP/PowerShell access remains author-controlled. Use existing RAID data directories, no home writes. Local scratch only in authorized Codex paths; no cloud/blob temporary storage or external desktop apps. Ask only for necessary CLI intervention or specific merge/publication approval; never retry/requeue/cancel or expand a scientific design automatically.
+
 ## Complete PR89 return — 1 November 2026
 
 All 60 cells are received and reconciled; the joint accounting query on 2November02:24:05UTC (1November23:24:05 Fortaleza) records 60 COMPLETED/0:0 jobs. There are 47 reported terminal-target attainments and 13 time-limited M7 cases. See the [complete reconciliation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/565d9146729c7f35f280d1ae37818beab71879ff/docs/research/pr89-complete-reconciliation-20261101.md). The three-archive chain, unchanged controls, six new parameter/temporal/cost/nested bindings and 180 accounting rows are checked. This closes reception/reconciliation, not the final integrated audit or unrestricted scientific qualification. Earlier running/missing-cell statements below are historical snapshots.
