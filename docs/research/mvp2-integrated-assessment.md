@@ -2,18 +2,13 @@
 
 ## Preparation tooling checkpoint — 1 November 2026
 
-PR94 now implements the isolated root/label-free graph/frozen-Start operator.
-Its initial CLI performs source/input/checkpoint/environment binding only;
-scientific preparation is separated into later reviewed CLI stages. Offline
-fault checks and synthetic CPU parity tests are implementation evidence, not
-new optimization outcomes or generated artifact identities. No additional
-PR89 result is received; final qualification and PDFs remain pending.
+The [PR94 installation return](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/264b29246b785bbfa7e1038c12aedde7c64f1599/docs/research/pr94-installation-return-20261101.json) is received and accepted for its zero-scientific-call scope. Its archive/member seals, six input hashes and unchanged reservation budget agree. Installed source c623fe8 and plan b41953a8 stay frozen; no new roots, graphs or Starts exist. All four final-head evidence matrices and the CPU tensor job passed. These checks do not establish live allocation/graph admission, scientific qualification or metric eligibility of archival results. PR89 completion remains the gate before a separate author CLI begins preparation. No additional PR89 solver result or PDF is produced.
 
 ## Received evidence and M12 qualification — 1 November 2026
 
 The current CPU12h review covers54 of60 planned cells. It contains41
 solver-reported terminal-target attainments and13 time-limited cases, all on
-M7. The author's latest snapshot reports3729–3733COMPLETED and3734RUNNING (00:51:30); no query timestamp was supplied. Those scheduler states
+M7. The author's latest snapshot reports3729–3733COMPLETED and3734RUNNING (03:08:51); no query timestamp was supplied. Those scheduler states
 do not increase received coverage. The six-job terminal collector remains
 the next transfer step once the jobs are terminal.
 

@@ -11,7 +11,7 @@ The approved scientific contracts, identities and archived receipts remain intac
 PR93 is a draft targeting develop. PR89 remains open at frozen source
 9ab7823c6886d19e9ec865141a1cd35b3c3c16e5. There are 54 received and reconciled
 CPU12h cells out of 60. The author's latest snapshot, without a query timestamp,
-reports 3729–3733 COMPLETED and 3734 RUNNING at00:51:30. A completed scheduler
+reports 3729–3733 COMPLETED and 3734 RUNNING at03:08:51. A completed scheduler
 job is not a received result. The [terminal-tail collector](runbooks/pr89-terminal-tail-collection.md)
 is ready for the author's CLI execution when the remaining jobs are terminal.
 
@@ -213,7 +213,7 @@ A three-seed comparison does not itself repair a numerical feasibility issue.
 
 The [PR94 preparation/resource proposal](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/edc8e1914556a81ffaf8b50bbd0d858f17475c9e/docs/research/solver-seed-extension-v1/preparation-and-resources.md) now completes the conditional reservation account:20 jobs,75 serial reserved job-hours,78 physical-core-hours,one V100 GPU-hour and64GiB host RAM per job, with64GiB private working storage proposed. The unchanged55h ceiling is optimizer time, not job duration or utilization. Queue and human-review time are outside the reservation ceiling; financial/energy costs remain unmeasured. These ceilings assume90 legacy observations are retained for their admitted metrics and do not release execution.
 
-The package pins15 reference sources and ten historical artifact chains. The six original files have verified hashes; new root/graph/score/Start hashes remain null until actual preparation. The existing label-free encoder avoids requiring reference labels for these new inputs. The isolated PR94 adapter still needs feature parity/round-trip checks, complete execution-source/private bindings, live affinity/cgroup/device/storage admission, bounded collectors and the frozen CLI manifest. Historical PR86 wrappers/stages are not repurposed; PR89 is untouched.
+The package pins15 reference sources and ten historical artifact chains. Six original-file hashes and the installed source/private input bindings are now checked by the [zero-call installation return](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/264b29246b785bbfa7e1038c12aedde7c64f1599/docs/research/pr94-installation-return-20261101.json). Installed source c623fe8 and plan b41953a8 remain frozen even as documentation advances. All four final-head T3 matrices and the synthetic CPU tensor job passed. New root/graph/score/Start hashes remain null until actual preparation. Real HPC feature/round-trip parity, affinity/cgroup/device/storage admission and the six-root return review remain future gates. The isolated adapter includes bounded collectors, but does not dispatch the54 evaluations. Historical PR86 wrappers/stages are not repurposed; PR89 is untouched.
 If reuse changes the actual number of solves, report the revised manifest
 and resource impact. Do not automatically rerun the 90 old cells or combine
 12h seed42 PR89 endpoints with one-hour seeds43/44 as matched repetitions.
@@ -282,5 +282,4 @@ results, add resources, alter the protocol or claim the expanded cohort
 before qualified evidence exists. Editorial acceptance is a later outcome,
 not an MVP2 sign-off condition.
 
-The immediate executable priority remains receiving the prepared six-job tail
-when terminal. The60-cell register,90-cell archival compatibility review and six-input preflight are prepared. The next independent tooling task is the isolated PR94 execution adapter, complete source/private bindings and feature-parity/resource admission against the prepared contracts. No new review PDF is generated at this stage.
+The immediate operational priority remains receiving the prepared six-job tail when terminal. PR94 installation receipt review and complete source-commit CI are now closed for their stated scope. The next preparation stage uses the existing isolated source and reviewed plan through a separate author CLI after PR89 finishes; it does not reinstall or alter that campaign. New graph/Start identities, live allocation admission and evaluation release remain pending. No new review PDF is generated at this stage.
