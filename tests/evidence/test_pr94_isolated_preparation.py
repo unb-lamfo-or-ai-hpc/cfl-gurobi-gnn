@@ -54,6 +54,12 @@ class AdapterTests(unittest.TestCase):
             & methods
         )
         self.assertNotIn("sbatch ", source)
+        wrapper = (ROOT / "scripts/evidence/operate_pr94_preparation.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('CUDA_CACHE_PATH="$STAGE/runtime/cuda"', wrapper)
+        self.assertIn('TMPDIR="$STAGE/runtime/tmp"', wrapper)
+        self.assertNotIn("/home/", wrapper)
 
     def test_freeze_and_inspect_import_no_solver_or_torch(self):
         stage = self.base / ("pr94-preparation-" + "a" * 12)
@@ -100,6 +106,8 @@ class AdapterTests(unittest.TestCase):
         ):
             frozen = flow.freeze(stage, config_path)
             self.assertEqual(frozen["new_scientific_calls"], 0)
+            self.assertTrue((stage / "runtime/cuda").is_dir())
+            self.assertTrue((stage / "runtime/tmp").is_dir())
             result = flow.inspect(stage)
             self.assertTrue(Path(result["ARQUIVO_HPC"]).is_file())
             with self.assertRaisesRegex(ValueError, "already_frozen"):

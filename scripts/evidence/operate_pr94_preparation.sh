@@ -18,7 +18,13 @@ SOURCE="$STAGE/source"
 test "$(hostname -s)" = dgx-dasci
 test "${CONDA_DEFAULT_ENV:-}" = tfm_env
 test -d "$SOURCE"
-export PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1
+umask 077
+ulimit -c 0
+export PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 GIT_OPTIONAL_LOCKS=0
+export TMPDIR="$STAGE/runtime/tmp" TMP="$STAGE/runtime/tmp" TEMP="$STAGE/runtime/tmp"
+export XDG_CACHE_HOME="$STAGE/runtime/cache" CUDA_CACHE_PATH="$STAGE/runtime/cuda"
+export TORCH_HOME="$STAGE/runtime/torch" TORCH_EXTENSIONS_DIR="$STAGE/runtime/extensions"
+export MPLCONFIGDIR="$STAGE/runtime/matplotlib"
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
 unset PYTHONHOME PYTHONPATH
 if [[ -z ${GRB_LICENSE_FILE:-} ]]; then

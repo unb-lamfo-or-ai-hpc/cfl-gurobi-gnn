@@ -203,8 +203,8 @@ def stage_path(stage, commit=None):
 def storage(stage, admission=False):
     # Source checkout included in workspace accounting; no traversal into input data.
     need(shutil.disk_usage(stage).free >= (80 if admission else 16) * GIB, "free_space")
-    total, count = 0, 0
-    for parent in (stage / "run", stage / "claims"):
+    total, count = sum(p.stat().st_size for p in stage.iterdir() if p.is_file()), 0
+    for parent in (stage / "run", stage / "claims", stage / "runtime"):
         if not parent.exists():
             continue
         for p in parent.rglob("*"):
@@ -327,14 +327,18 @@ def freeze(stage, config_path):
     parents = derived["new-artifact-bindings.json"]["parents"]
     config = read(config_path)
     private_inputs(config, parents)
-    runtime = versions()  # Distribution metadata only; no Gurobi/Torch import.
+    observed_environment = versions()  # Metadata only; no Gurobi/Torch import.
     private_sha = write_once(stage / "inputs.private.json", config)
     (stage / "claims").mkdir(exist_ok=False)
     (stage / "run").mkdir(exist_ok=False)
+    runtime_dir = stage / "runtime"
+    runtime_dir.mkdir(exist_ok=False)
+    for name in ("tmp", "cache", "cuda", "torch", "extensions", "matplotlib"):
+        (runtime_dir / name).mkdir(exist_ok=False)
     value = {
         "protocol_id": "pr94_isolated_preparation_v1",
         "source": snapshot,
-        "environment": runtime,
+        "environment": observed_environment,
         "package_manifest_sha256": file_sha(package / "manifest.json"),
         "preparation_contract": derived["preparation-contract.json"],
         "reservation_budget": derived["reservation-budget.json"],
