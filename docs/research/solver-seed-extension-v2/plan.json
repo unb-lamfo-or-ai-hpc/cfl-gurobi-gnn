@@ -1,0 +1,1026 @@
+{
+  "M4_M12_numerical_restrictions_retained": true,
+  "M7_retained": true,
+  "all_16_current_private_byte_preflights_received": false,
+  "all_Start_bindings_reviewed": false,
+  "assigned_job_ids": [],
+  "author_direction_date": "2026-11-02",
+  "cells_sha256": "4aa1bf5410098259bc35556201f2c56419c778c3336d45f0f12b14ff501b7bf3",
+  "cohort_sha256": "82b15fc7ac3808bb5002054337e92523fd46c149a9c5a504c36f0401d89eb078",
+  "design_decision": "fresh_144_replaces_conditional_90_reuse_plus_54_new",
+  "dispatcher_implemented": false,
+  "easy": 6,
+  "execution_released": false,
+  "groups": [
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F0-t1-s42-M0",
+        "pr94-full-v2--F0-t1-s42-M1",
+        "pr94-full-v2--F0-t1-s42-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F0-t1-s42",
+      "lane": 0,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_0",
+      "predecessor_group_id": null,
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F3-t1-s42-M1",
+        "pr94-full-v2--F3-t1-s42-M2",
+        "pr94-full-v2--F3-t1-s42-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F3-t1-s42",
+      "lane": 1,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_3",
+      "predecessor_group_id": null,
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F6-t1-s42-M2",
+        "pr94-full-v2--F6-t1-s42-M0",
+        "pr94-full-v2--F6-t1-s42-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F6-t1-s42",
+      "lane": 2,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_6",
+      "predecessor_group_id": null,
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F14-t1-s42-M0",
+        "pr94-full-v2--F14-t1-s42-M1",
+        "pr94-full-v2--F14-t1-s42-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F14-t1-s42",
+      "lane": 3,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_14",
+      "predecessor_group_id": null,
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F27-t1-s42-M1",
+        "pr94-full-v2--F27-t1-s42-M2",
+        "pr94-full-v2--F27-t1-s42-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F27-t1-s42",
+      "lane": 0,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_27",
+      "predecessor_group_id": "pr94-full-v2--F0-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F29-t1-s42-M2",
+        "pr94-full-v2--F29-t1-s42-M0",
+        "pr94-full-v2--F29-t1-s42-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F29-t1-s42",
+      "lane": 1,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_29",
+      "predecessor_group_id": "pr94-full-v2--F3-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M0-t1-s42-M0",
+        "pr94-full-v2--M0-t1-s42-M1",
+        "pr94-full-v2--M0-t1-s42-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M0-t1-s42",
+      "lane": 2,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_0",
+      "predecessor_group_id": "pr94-full-v2--F6-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M4-t1-s42-M1",
+        "pr94-full-v2--M4-t1-s42-M2",
+        "pr94-full-v2--M4-t1-s42-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M4-t1-s42",
+      "lane": 3,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_4",
+      "predecessor_group_id": "pr94-full-v2--F14-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M7-t1-s42-M2",
+        "pr94-full-v2--M7-t1-s42-M0",
+        "pr94-full-v2--M7-t1-s42-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M7-t1-s42",
+      "lane": 0,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_7",
+      "predecessor_group_id": "pr94-full-v2--F27-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M12-t1-s42-M0",
+        "pr94-full-v2--M12-t1-s42-M1",
+        "pr94-full-v2--M12-t1-s42-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M12-t1-s42",
+      "lane": 1,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_12",
+      "predecessor_group_id": "pr94-full-v2--F29-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M5-t1-s42-M1",
+        "pr94-full-v2--M5-t1-s42-M2",
+        "pr94-full-v2--M5-t1-s42-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M5-t1-s42",
+      "lane": 2,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_5",
+      "predecessor_group_id": "pr94-full-v2--M0-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M6-t1-s42-M2",
+        "pr94-full-v2--M6-t1-s42-M0",
+        "pr94-full-v2--M6-t1-s42-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M6-t1-s42",
+      "lane": 3,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_6",
+      "predecessor_group_id": "pr94-full-v2--M4-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M9-t1-s42-M0",
+        "pr94-full-v2--M9-t1-s42-M1",
+        "pr94-full-v2--M9-t1-s42-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M9-t1-s42",
+      "lane": 0,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_9",
+      "predecessor_group_id": "pr94-full-v2--M7-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M13-t1-s42-M1",
+        "pr94-full-v2--M13-t1-s42-M2",
+        "pr94-full-v2--M13-t1-s42-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M13-t1-s42",
+      "lane": 1,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_13",
+      "predecessor_group_id": "pr94-full-v2--M12-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M20-t1-s42-M2",
+        "pr94-full-v2--M20-t1-s42-M0",
+        "pr94-full-v2--M20-t1-s42-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M20-t1-s42",
+      "lane": 2,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_20",
+      "predecessor_group_id": "pr94-full-v2--M5-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M26-t1-s42-M0",
+        "pr94-full-v2--M26-t1-s42-M1",
+        "pr94-full-v2--M26-t1-s42-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M26-t1-s42",
+      "lane": 3,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_26",
+      "predecessor_group_id": "pr94-full-v2--M6-t1-s42",
+      "seed": 42
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F0-t1-s43-M1",
+        "pr94-full-v2--F0-t1-s43-M2",
+        "pr94-full-v2--F0-t1-s43-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F0-t1-s43",
+      "lane": 0,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_0",
+      "predecessor_group_id": "pr94-full-v2--M9-t1-s42",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F3-t1-s43-M2",
+        "pr94-full-v2--F3-t1-s43-M0",
+        "pr94-full-v2--F3-t1-s43-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F3-t1-s43",
+      "lane": 1,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_3",
+      "predecessor_group_id": "pr94-full-v2--M13-t1-s42",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F6-t1-s43-M0",
+        "pr94-full-v2--F6-t1-s43-M1",
+        "pr94-full-v2--F6-t1-s43-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F6-t1-s43",
+      "lane": 2,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_6",
+      "predecessor_group_id": "pr94-full-v2--M20-t1-s42",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F14-t1-s43-M1",
+        "pr94-full-v2--F14-t1-s43-M2",
+        "pr94-full-v2--F14-t1-s43-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F14-t1-s43",
+      "lane": 3,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_14",
+      "predecessor_group_id": "pr94-full-v2--M26-t1-s42",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F27-t1-s43-M2",
+        "pr94-full-v2--F27-t1-s43-M0",
+        "pr94-full-v2--F27-t1-s43-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F27-t1-s43",
+      "lane": 0,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_27",
+      "predecessor_group_id": "pr94-full-v2--F0-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F29-t1-s43-M0",
+        "pr94-full-v2--F29-t1-s43-M1",
+        "pr94-full-v2--F29-t1-s43-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F29-t1-s43",
+      "lane": 1,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_29",
+      "predecessor_group_id": "pr94-full-v2--F3-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M0-t1-s43-M1",
+        "pr94-full-v2--M0-t1-s43-M2",
+        "pr94-full-v2--M0-t1-s43-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M0-t1-s43",
+      "lane": 2,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_0",
+      "predecessor_group_id": "pr94-full-v2--F6-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M4-t1-s43-M2",
+        "pr94-full-v2--M4-t1-s43-M0",
+        "pr94-full-v2--M4-t1-s43-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M4-t1-s43",
+      "lane": 3,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_4",
+      "predecessor_group_id": "pr94-full-v2--F14-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M7-t1-s43-M0",
+        "pr94-full-v2--M7-t1-s43-M1",
+        "pr94-full-v2--M7-t1-s43-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M7-t1-s43",
+      "lane": 0,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_7",
+      "predecessor_group_id": "pr94-full-v2--F27-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M12-t1-s43-M1",
+        "pr94-full-v2--M12-t1-s43-M2",
+        "pr94-full-v2--M12-t1-s43-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M12-t1-s43",
+      "lane": 1,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_12",
+      "predecessor_group_id": "pr94-full-v2--F29-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M5-t1-s43-M2",
+        "pr94-full-v2--M5-t1-s43-M0",
+        "pr94-full-v2--M5-t1-s43-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M5-t1-s43",
+      "lane": 2,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_5",
+      "predecessor_group_id": "pr94-full-v2--M0-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M6-t1-s43-M0",
+        "pr94-full-v2--M6-t1-s43-M1",
+        "pr94-full-v2--M6-t1-s43-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M6-t1-s43",
+      "lane": 3,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_6",
+      "predecessor_group_id": "pr94-full-v2--M4-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M9-t1-s43-M1",
+        "pr94-full-v2--M9-t1-s43-M2",
+        "pr94-full-v2--M9-t1-s43-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M9-t1-s43",
+      "lane": 0,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_9",
+      "predecessor_group_id": "pr94-full-v2--M7-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M13-t1-s43-M2",
+        "pr94-full-v2--M13-t1-s43-M0",
+        "pr94-full-v2--M13-t1-s43-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M13-t1-s43",
+      "lane": 1,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_13",
+      "predecessor_group_id": "pr94-full-v2--M12-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M20-t1-s43-M0",
+        "pr94-full-v2--M20-t1-s43-M1",
+        "pr94-full-v2--M20-t1-s43-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M20-t1-s43",
+      "lane": 2,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_20",
+      "predecessor_group_id": "pr94-full-v2--M5-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M26-t1-s43-M1",
+        "pr94-full-v2--M26-t1-s43-M2",
+        "pr94-full-v2--M26-t1-s43-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M26-t1-s43",
+      "lane": 3,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_26",
+      "predecessor_group_id": "pr94-full-v2--M6-t1-s43",
+      "seed": 43
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F0-t1-s44-M2",
+        "pr94-full-v2--F0-t1-s44-M0",
+        "pr94-full-v2--F0-t1-s44-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F0-t1-s44",
+      "lane": 0,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_0",
+      "predecessor_group_id": "pr94-full-v2--M9-t1-s43",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F3-t1-s44-M0",
+        "pr94-full-v2--F3-t1-s44-M1",
+        "pr94-full-v2--F3-t1-s44-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F3-t1-s44",
+      "lane": 1,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_3",
+      "predecessor_group_id": "pr94-full-v2--M13-t1-s43",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F6-t1-s44-M1",
+        "pr94-full-v2--F6-t1-s44-M2",
+        "pr94-full-v2--F6-t1-s44-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F6-t1-s44",
+      "lane": 2,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_6",
+      "predecessor_group_id": "pr94-full-v2--M20-t1-s43",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F14-t1-s44-M2",
+        "pr94-full-v2--F14-t1-s44-M0",
+        "pr94-full-v2--F14-t1-s44-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F14-t1-s44",
+      "lane": 3,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_14",
+      "predecessor_group_id": "pr94-full-v2--M26-t1-s43",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F27-t1-s44-M0",
+        "pr94-full-v2--F27-t1-s44-M1",
+        "pr94-full-v2--F27-t1-s44-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F27-t1-s44",
+      "lane": 0,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_27",
+      "predecessor_group_id": "pr94-full-v2--F0-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--F29-t1-s44-M1",
+        "pr94-full-v2--F29-t1-s44-M2",
+        "pr94-full-v2--F29-t1-s44-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--F29-t1-s44",
+      "lane": 1,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_easy_instance_29",
+      "predecessor_group_id": "pr94-full-v2--F3-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M0-t1-s44-M2",
+        "pr94-full-v2--M0-t1-s44-M0",
+        "pr94-full-v2--M0-t1-s44-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M0-t1-s44",
+      "lane": 2,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_0",
+      "predecessor_group_id": "pr94-full-v2--F6-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M4-t1-s44-M0",
+        "pr94-full-v2--M4-t1-s44-M1",
+        "pr94-full-v2--M4-t1-s44-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M4-t1-s44",
+      "lane": 3,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_4",
+      "predecessor_group_id": "pr94-full-v2--F14-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M7-t1-s44-M1",
+        "pr94-full-v2--M7-t1-s44-M2",
+        "pr94-full-v2--M7-t1-s44-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M7-t1-s44",
+      "lane": 0,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_7",
+      "predecessor_group_id": "pr94-full-v2--F27-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M12-t1-s44-M2",
+        "pr94-full-v2--M12-t1-s44-M0",
+        "pr94-full-v2--M12-t1-s44-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M12-t1-s44",
+      "lane": 1,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": false,
+      "parent": "CFL_medium_instance_12",
+      "predecessor_group_id": "pr94-full-v2--F29-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M5-t1-s44-M0",
+        "pr94-full-v2--M5-t1-s44-M1",
+        "pr94-full-v2--M5-t1-s44-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M5-t1-s44",
+      "lane": 2,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_5",
+      "predecessor_group_id": "pr94-full-v2--M0-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M6-t1-s44-M1",
+        "pr94-full-v2--M6-t1-s44-M2",
+        "pr94-full-v2--M6-t1-s44-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M6-t1-s44",
+      "lane": 3,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_6",
+      "predecessor_group_id": "pr94-full-v2--M4-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M9-t1-s44-M2",
+        "pr94-full-v2--M9-t1-s44-M0",
+        "pr94-full-v2--M9-t1-s44-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M9-t1-s44",
+      "lane": 0,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_9",
+      "predecessor_group_id": "pr94-full-v2--M7-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M13-t1-s44-M0",
+        "pr94-full-v2--M13-t1-s44-M1",
+        "pr94-full-v2--M13-t1-s44-M2"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M13-t1-s44",
+      "lane": 1,
+      "methods": [
+        "M0",
+        "M1",
+        "M2"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_13",
+      "predecessor_group_id": "pr94-full-v2--M12-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M20-t1-s44-M1",
+        "pr94-full-v2--M20-t1-s44-M2",
+        "pr94-full-v2--M20-t1-s44-M0"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M20-t1-s44",
+      "lane": 2,
+      "methods": [
+        "M1",
+        "M2",
+        "M0"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_20",
+      "predecessor_group_id": "pr94-full-v2--M5-t1-s44",
+      "seed": 44
+    },
+    {
+      "assigned_job_id": null,
+      "cells": [
+        "pr94-full-v2--M26-t1-s44-M2",
+        "pr94-full-v2--M26-t1-s44-M0",
+        "pr94-full-v2--M26-t1-s44-M1"
+      ],
+      "dependency": "afterok_and_closed_predecessor_receipt",
+      "group_id": "pr94-full-v2--M26-t1-s44",
+      "lane": 3,
+      "methods": [
+        "M2",
+        "M0",
+        "M1"
+      ],
+      "new_preparation_required": true,
+      "parent": "CFL_medium_instance_26",
+      "predecessor_group_id": "pr94-full-v2--M6-t1-s44",
+      "seed": 44
+    }
+  ],
+  "historical_bindings_sha256": "caf2d3ec4bec49c1a669a99e11ec21626fa6cbd81d6360570dc05f38d128618a",
+  "historical_rows_counted_as_new": 0,
+  "learning": {
+    "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "parents": 54,
+    "split": [
+      34,
+      10,
+      10
+    ],
+    "threshold": "0.9991843104362488",
+    "training_calls": 0
+  },
+  "medium": 10,
+  "new_evaluations": 144,
+  "no_automatic_retry_or_cancel": true,
+  "parents": 16,
+  "preparation": {
+    "installed_source_modified": false,
+    "new_forwards_maximum": 6,
+    "new_roots_maximum": 6,
+    "plan_sha256": "b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77",
+    "source": "c623fe858f62d8fa2a70eebf6f3aeee5692e8f90"
+  },
+  "protocol_id": "pr94_full_matrix_v2_prospective",
+  "reporting_eligible": false,
+  "resources": {
+    "RAM_GiB_each": 64,
+    "RAM_GiB_hours": 12480,
+    "evaluation_RAM_GiB_peak_ceiling": 256,
+    "evaluation_child_deadline_seconds": 3780,
+    "evaluation_concurrency_ceiling": 4,
+    "evaluation_ideal_packed_hours_excluding_queue_and_reviews": 48,
+    "evaluation_job_hours_each": 4,
+    "evaluation_jobs": 48,
+    "evaluation_physical_core_peak_ceiling": 4,
+    "full_matrix_storage_bound_verified": false,
+    "guidance_job_hours": 1,
+    "guidance_jobs": 1,
+    "optimizer_calls_maximum": 150,
+    "optimizer_hours_ceiling": 145,
+    "physical_core_hours_ceiling": 198,
+    "previous_working_storage_allowance_GiB": 64,
+    "reserved_V100_GPU_hours": 1,
+    "roots_job_hours": 2,
+    "roots_jobs": 1,
+    "storage_GiB_admission_floor": 80,
+    "summed_reserved_job_hours": 195,
+    "total_jobs": 50
+  }
+}

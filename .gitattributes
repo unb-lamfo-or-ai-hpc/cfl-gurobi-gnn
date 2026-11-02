@@ -53,3 +53,9 @@ manuscript/figures/gpu_bce_by_epoch_article_en.* -text -whitespace
 
 # Prospective protocol hashes use identical LF bytes on all test platforms.
 docs/research/solver-seed-extension-v1/** text eol=lf
+
+# Fresh full-matrix plan bytes must be reproducible on all platforms.
+docs/research/solver-seed-extension-v2/** text eol=lf
+
+# Collected public root metadata preserves its sealed original bytes.
+docs/evidence/pr94/** -text

@@ -1,0 +1,48 @@
+{
+  "schema": "pr94_author_cli_snapshot_v1",
+  "date_received": "2026-11-02",
+  "source": "author-provided Bash output from dgx-dasci, tfm_env",
+  "query_timestamp_UTC": null,
+  "job_id": "3783",
+  "kind": "roots",
+  "automatic_retry": false,
+  "CLI_exit_code": 0,
+  "job_state": "COMPLETED",
+  "elapsed": "00:05:40",
+  "AllocCPUS": 2,
+  "expected_physical_cores": 1,
+  "accounting_rows": [
+    "3783",
+    "3783.batch",
+    "3783.extern"
+  ],
+  "source_commit": "c623fe858f62d8fa2a70eebf6f3aeee5692e8f90",
+  "plan_sha256": "b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77",
+  "terminal_return_received": true,
+  "closed_root_results_received": 6,
+  "guidance_submitted": true,
+  "evaluation_jobs_submitted": 0,
+  "scientific_reporting_eligible": false,
+  "history": [
+    {
+      "state": "RUNNING",
+      "elapsed": "00:00:42",
+      "CLI_exit_code": 0
+    }
+  ],
+  "exit_code": "0:0",
+  "batch_MaxRSS": "2048256K",
+  "all_three_rows_COMPLETED_0_0": true,
+  "metadata_review_passed": true,
+  "accepted_root_return_sha256": "8655247f4ced68275c2553397f9653d0ef34619f96aa054d3207ad4312d359d5",
+  "root_review_record_sha256": "84b429d0599bf01c07a67af6a5252bd74b268d5479440802bc63e516d0bbbdf7",
+  "guidance_job": {
+    "job_id": "3784",
+    "state": "RUNNING",
+    "elapsed": "00:00:25",
+    "AllocCPUS": 8,
+    "expected_physical_cores": 4,
+    "CLI_exit_code": 0,
+    "query_timestamp_UTC": null
+  }
+}
