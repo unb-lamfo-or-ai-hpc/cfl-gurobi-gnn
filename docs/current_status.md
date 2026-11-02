@@ -1,5 +1,12 @@
 # Current status
 
+## Campaign closeout — 2 November 2026
+
+PR89 has completed execution and receipt: all60 cells/jobs3675–3734 are reconciled, with47 solver-reported terminal targets and13 time-limit censures on M7. M7 is retained; M4/M12 keep their numerical restrictions. See the [complete receipt and dispositions](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) and [scientific synthesis](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/93). Installed source9ab7823c, its models, Starts, parameters, sequence and resources remain unchanged. No collection or solve is repeated by this integration.
+
+The [current Sprint/PR plan](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/7acf74d462f98903931442caa668960a898cad24/docs/research/mvp2-closeout-plan.md) supersedes earlier scheduling/pending statements below. A distinct144-cell solver-seed extension is being prepared in PR94, with the54-parent learning corpus/checkpoint frozen. Actual evaluation admission/submission and its results remain separate from this CPU12h closeout. Merge, Pages publication and editorial submission retain specific human approval. Earlier dated preparation/running entries are historical records.
+
+
 ## Current Sprint/PR delivery — 28 October 2026
 
 The [canonical plan](research/mvp2-closeout-plan.md) now uses Sprints and PRs.
@@ -568,3 +575,25 @@ PR86 now has a [regenerable offline proposal](research/pr86-controlled-compariso
 unapproved resource envelope. No solver, inference, training or job added.
 PR85 evidence limitations, start binding, instrumentation and exact budget
 approval remain execution gates. PR87 (1/4 GPUs) and PR88 remain on the roadmap.
+
+## Historical PR89 addition — 20 October 2026
+
+The following text preserves the branch's original preparation-stage record. It is historical; the current completion record is maintained in the PR93 synthesis and does not authorize another campaign.
+
+## Current — 20 October: PR88 merged; fresh CPU12h executor in preparation
+
+PR88 merged into develop at`e5804a8c6762c2e5f13447e5a16784e5824de801`
+from head`fcc50396f0869c3b972257fedfc9b53141c93418`. The GPU tradeoff and
+BCE assets are now integrated, not awaiting another PR88 merge. Next delivery:
+[CPU12h executor and read-only installation preflight](research/pr89-cpu12h.md).
+Reuse PR86's original checkpoint/starts; the PR87-trained models do not replace
+M2. Four exposed medium parents, three methods, five caps, seed42:60fresh solves,
+one per job,12hsolver/13hwall,64GiB. The author explicitly approved the complete
+CPU package20October:720solver-h/780serial-reserved-h/4836physical-reserved-core-h,
+conditional on installed preflight and exact-head CI. Plan false flags remain
+false; a separate runtime authorization records this decision before submission.
+No jobs, optimization, training, inference or main synchronization performed.
+The next user CLI integrates existing hashes/environment/current partition,
+separate authorization and serial submission, stopping if preflight fails.
+Allocation gates are checked only in actual approved jobs.
+Earlier entries below are dated history, not current merge/dispatch authority.
