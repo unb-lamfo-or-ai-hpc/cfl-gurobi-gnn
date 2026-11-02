@@ -1,5 +1,6 @@
 """Offline PR94 admission/fault tests; no scheduler, solver, GPU or training."""
 
+import ast
 import gzip
 import importlib
 import json
@@ -35,6 +36,24 @@ class AdapterTests(unittest.TestCase):
         flow.write_once(self.stage / "inputs.private.json", {"private": "never_export"})
         self.mip = self.base / "model.lp"
         self.mip.write_bytes(b"synthetic-model")
+
+    def test_installation_template_has_no_scientific_dispatch(self):
+        source = (
+            ROOT / "scripts/evidence/install_pr94_preparation.template.sh"
+        ).read_text(encoding="utf-8")
+        body = source.split("<<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+        tree = ast.parse(body)
+        methods = {
+            n.func.attr
+            for n in ast.walk(tree)
+            if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+        }
+        self.assertTrue({"freeze", "inspect", "find_checkpoint"} <= methods)
+        self.assertFalse(
+            {"submit", "run", "root_child", "guidance_child", "capture", "optimize"}
+            & methods
+        )
+        self.assertNotIn("sbatch ", source)
 
     def test_freeze_and_inspect_import_no_solver_or_torch(self):
         stage = self.base / ("pr94-preparation-" + "a" * 12)
