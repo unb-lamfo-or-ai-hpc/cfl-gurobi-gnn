@@ -14,8 +14,8 @@ architectures, a training-seed ablation or evidence of a new graph architecture.
 Its contributions remain conditional optimization effects and computational
 cost within stated measurement boundaries.
 
-The existing R3 principal study, PR89 CPU12h campaign and this extension
-retain separate identities. In particular, PR89's 12h seed42 endpoints cannot
+The existing R3 principal study, PR89 CPU12 h campaign and this extension
+retain separate identities. In particular, PR89's 12 h seed42 endpoints cannot
 serve as matched one-hour repetitions with seeds43/44. PR89 stays untouched.
 
 The design has 16 evaluation parents: six easy and ten medium. The six easy
@@ -53,7 +53,7 @@ If G abstains, record the abstention rather than altering the threshold,
 forcing a positive assignment or choosing another instance.
 
 One identified graph/root/Start binding per parent is fixed across solver
-seeds42/43/44. Record model, graph, root, checkpoint, score and assignment hashes.
+seeds 42/43/44. Record model, graph, root, checkpoint, score and assignment hashes.
 A failed preparation blocks its dependent operations and receives a disposition;
 it does not authorize retries, replacements or an improvised B-only campaign.
 
@@ -105,7 +105,7 @@ arithmetic may diagnose existing points without another solve. It proves
 global optimality only if an actual sufficient proof is supplied; none is
 claimed here.
 
-Terminal return under a3600s setting is not exact common-time quality. Keep actual Runtime/follow-up and stopping status; do not truncate a recorded overrun or substitute first-observed crossing time for terminal return when pooling endpoint definitions.
+Terminal return under a3600 s setting is not exact common-time quality. Keep actual Runtime/follow-up and stopping status; do not truncate a recorded overrun or substitute first-observed crossing time for terminal return when pooling endpoint definitions.
 
 The primary question is within-parent/seed terminal primal quality under
 the common one-hour protocol and a stated numerical-eligibility screen.
@@ -161,7 +161,7 @@ Historical supervised attempts, amortized preparation scenarios and new job
 elapsed times have different boundaries. Reuse of solver observations does
 not make all cost scopes compatible. Keep incomparable cold/job costs separate;
 do not reinterpret old amortization as newly measured whole-job expenditure.
-No energy or active-utilization estimate is invented. The proposal retains one V100 32GB GPU and the historical evaluation settings. Live device/allocation remains unverified; there is no CPU fallback. No GPU allocation has been performed for this extension.
+No energy or active-utilization estimate is invented. The proposal retains one V100 32 GB GPU and the historical evaluation settings. Live device/allocation remains unverified; there is no CPU fallback. No GPU allocation has been performed for this extension.
 
 ## Exit gate and next implementation work
 
@@ -169,10 +169,10 @@ The draft contains no scheduler script or dispatch/solve command. All assigned
 new job IDs are empty and execution flags are false. Before a concrete CLI
 release, finish:
 1. Six original-file identities/sizes are now verified; bind any reusable preparation separately.
-2. Implement the prepared root/label-free graph/frozen-inference/Start contract in an isolated PR94 executor; bind actual artifacts and full execution source.
+2. Install and inspect the implemented isolated preparation adapter; bind its actual source/private inputs and later generated artifacts.
 3. Ninety-cell metric-admission decisions using the completed documentary identity review.
 4. Admit the proposed memory/affinity/job-wall/storage/GPU resources on the actual allocation; reservation arithmetic is complete.
-5. Executor/collector changes and proportional negative/admission tests.
+5. Review final-head offline/CPU tensor checks; the preparation operator is implemented, while the 54-cell evaluation dispatcher remains separate.
 6. Explicit frozen manifest and the author's CLI intervention.
 
 No further general planning approval is requested. A material change in
@@ -189,3 +189,14 @@ pin the reusable mechanisms; [historical artifact bindings](historical-artifact-
 join ten existing root/guidance chains without rerunning them. New artifact hashes
 remain null until actual preparation and review. Fifteen offline admission tests
 passed; feature parity, complete executor admission and HPC execution remain pending.
+
+## Isolated preparation operator
+
+The [staged CLI runbook](isolated-preparation-runbook.md) describes the implemented
+root/label-free graph/frozen-forward/Start adapter. Its first installation CLI
+checks the isolated source, six inputs, selected checkpoint and environment, then
+exports metadata with zero scientific calls. Root and guidance submissions are
+separate later commands, with exclusive claims, held-profile validation and root
+review between them. The operator never dispatches the 54 evaluations or modifies
+PR89. Synthetic fault and CPU tensor tests verify the implementation; live
+allocation/artifact admission still requires the author's CLI and actual returns.

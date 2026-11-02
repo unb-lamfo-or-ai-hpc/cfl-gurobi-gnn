@@ -16,13 +16,15 @@
   "execution_authorized": false,
   "graph": {
     "constraint_features": 5,
+    "each_new_graph_round_trip_required_at_execution": true,
     "edge_features": 1,
     "existing_encoder_no_new_normalization_fit": true,
     "implementation": "cfl_gnn.graph.label_free_gurobi.build_features",
     "labels_loaded": false,
-    "new_adapter_feature_and_order_parity_tests_pending": true,
+    "new_adapter_feature_and_order_parity_checks_implemented": true,
     "remove_encoder_placeholder_targets_before_serialization": true,
     "root_channel": 6,
+    "synthetic_CPU_parity_CI_required_before_CLI_handover": true,
     "variable_features": 7
   },
   "inference": {

@@ -48,9 +48,9 @@ hashes and define the following sequence.
    constraint and one edge channels. Variable channel 6 must encode the same
    ordered root values. The current encoder supplies the feature transforms;
    the checkpoint supplies its trained normalization state. Neither is refitted.
-   The adapter still needs a synthetic parity test against the historical
-   feature path and a serialized round-trip check. The schema-level code review
-   is not evidence that new graphs have already passed these checks.
+   The adapter now has synthetic parity tests against the production feature
+   encoder and runtime serialized round-trip checks. Passing synthetic CI does
+   not certify graphs that have not yet been generated on the HPC.
 5. Load the original CPU-study checkpoint once on one V100 GPU, preserve its
    architecture, validation-selected threshold and evaluation settings, and
    perform at most one forward per parent, sequentially. Preserve the
@@ -149,15 +149,15 @@ can be claimed from these proposed reservations.
 
 The metadata planner has no solver, GPU or scheduler interface. It validates
 source hashes, input/cell identities and unreleased flags, then emits JSON.
-Fifteen offline tests cover adulterated bytes, changed checkpoint/model
+Offline tests cover adulterated bytes, changed checkpoint/model
 hashes, incomplete returns, duplicate methods, unsafe source references and
 attempted release. Local style checks use the installed Ruff 0.16.6; the
 repository CI uses its pinned 0.16.8 and remains a separate final-head check.
 
-The next implementation must adapt an isolated PR94 stage, not rewrite PR86
-or PR89. It must close the source/dependency set, checkpoint/private paths,
-feature parity, graph round-trip, source/parameter receipts, one-time submission
-claims, cgroup/affinity/storage gates and bounded collectors. Only then can a
-concrete execution manifest and CLI be presented. Planning approval persists;
+The implemented isolated PR94 adapter covers source/dependency hashes,
+checkpoint/private paths, feature/round-trip checks, one-time submission claims,
+qualified memory supervision, affinity/storage gates and bounded collectors.
+The first CLI binds the actual installation without scientific calls; later
+root and guidance commands require their own reviewed plan/return hashes. Planning approval persists;
 no renewed general planning approval is requested. No execution, merge,
 publication or PDF generation is granted by this resource proposal.

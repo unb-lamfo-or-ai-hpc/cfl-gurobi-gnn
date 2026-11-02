@@ -210,6 +210,13 @@ def compile_plan(package, source_root=None):
         require(row["readonly_preflight_complete"] and not row["issues"], "preflight")
         if row["expected_historical_sha256"]:
             require(row["historical_digest_match"] is True, "historical_hash")
+    cohort = read_csv(package / "cohort.csv")
+    new_cohort = [row for row in cohort if row["parent"] in PARENTS]
+    require(
+        len(new_cohort) == 6
+        and all(row["admitted_learning_corpus"] == "False" for row in new_cohort),
+        "extension_training_overlap",
+    )
     cells = read_csv(package / "planned-cells.csv")
     require(len(cells) == 144, "cell_count")
     require(len({r["evaluation_unit_id"] for r in cells}) == 144, "duplicate_cell")
@@ -297,7 +304,9 @@ def compile_plan(package, source_root=None):
             "labels_loaded": False,
             "remove_encoder_placeholder_targets_before_serialization": True,
             "existing_encoder_no_new_normalization_fit": True,
-            "new_adapter_feature_and_order_parity_tests_pending": True,
+            "new_adapter_feature_and_order_parity_checks_implemented": True,
+            "synthetic_CPU_parity_CI_required_before_CLI_handover": True,
+            "each_new_graph_round_trip_required_at_execution": True,
         },
         "inference": {
             "maximum_forwards": 6,

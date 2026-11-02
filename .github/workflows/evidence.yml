@@ -26,6 +26,7 @@ on:
       - 'tests/smoke/test_pr87_matched_gpu.py'
       - 'configs/quality/pr64-ruff.toml'
       - '.github/workflows/evidence.yml'
+      - 'tests/smoke/test_pr94_features.py'
       - '.gitattributes'
   push:
     branches: [develop]
@@ -102,6 +103,7 @@ jobs:
           bash -n scripts/evidence/operate_pr86_wave61.sh
           bash -n scripts/evidence/operate_pr86_wave67.sh
           bash -n scripts/evidence/operate_pr87_training.sh
+          bash -n scripts/evidence/operate_pr94_preparation.sh
       - name: T3 evidence regression (single discovery, no solver or training)
         shell: bash
         run: python -B -m unittest discover -s tests/evidence -v 2>&1 | tee evidence-tests.log
@@ -132,9 +134,17 @@ jobs:
           python -m pip install torch==2.1.2+cpu --index-url https://download.pytorch.org/whl/cpu
           # models/__init__.py imports Liang as well as Gasse; use the HPC PyG version.
           python -m pip install torch-geometric==2.7.0
+          # ETL imports used by the production encoder parity fixture; CI only.
+          python -m pip install pandas==2.3.3 pyarrow==21.0.0 tqdm==4.67.1
       - name: PR87 source and tensor test style
         run: |
           python -m ruff check --config configs/quality/pr64-ruff.toml src/cfl_gnn/training/matched_gpu.py tests/smoke/test_pr87_matched_gpu.py
           python -m ruff format --check --config configs/quality/pr64-ruff.toml src/cfl_gnn/training/matched_gpu.py tests/smoke/test_pr87_matched_gpu.py
+      - name: PR94 tensor fixture style
+        run: |
+          python -m ruff check --config configs/quality/pr64-ruff.toml tests/smoke/test_pr94_features.py
+          python -m ruff format --check --config configs/quality/pr64-ruff.toml tests/smoke/test_pr94_features.py
+      - name: PR94 label-free feature parity and serialization (synthetic CPU only)
+        run: python -B -m unittest discover -s tests/smoke -p test_pr94_features.py -v
       - name: T2 actual gradient averaging and unequal-size graph checks
         run: python -B -m unittest discover -s tests/smoke -p test_pr87_matched_gpu.py -v

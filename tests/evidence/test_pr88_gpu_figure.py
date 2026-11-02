@@ -75,11 +75,15 @@ class GPUFigureTests(unittest.TestCase):
             "cause is unproven",
             "historically exposed",
             "not replace",
-            "separate resource approval",
         ):
             self.assertIn(text, article)
         self.assertNotIn("Neither its speedup nor", article)
         self.assertNotIn("GPU training remain pending", article)
+        # Resource release belongs to the protocol, not reader-facing prose.
+        protocol = json.loads(
+            (ROOT / "docs/research/solver-seed-extension-v1/manifest.json").read_bytes()
+        )
+        self.assertIs(protocol["execution_authorized"], False)
         raw = json.loads((ROOT / gpu.SOURCE / "public_return.json").read_bytes())
         self.assertIs(raw["scientific_reporting_eligible"], False)
 

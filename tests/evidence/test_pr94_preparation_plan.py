@@ -104,6 +104,20 @@ class PreparationPlanTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "input_hash"):
             PLAN.compile_plan(self.package)
 
+    def test_canonical_train_fold_does_not_silently_admit_training_overlap(self):
+        path = self.package / "cohort.csv"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(
+            text.replace(
+                "CFL_medium_instance_13,M13,medium,2,train,False",
+                "CFL_medium_instance_13,M13,medium,2,train,True",
+            ),
+            encoding="utf-8",
+        )
+        self.reseal("cohort.csv")
+        with self.assertRaisesRegex(ValueError, "extension_training_overlap"):
+            PLAN.compile_plan(self.package)
+
     def test_checkpoint_cannot_be_replaced_by_gpu_training_weights(self):
         self.json_change(
             "manifest.json",

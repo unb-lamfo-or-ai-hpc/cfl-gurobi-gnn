@@ -74,6 +74,7 @@
     "complete_budget_is_proposal_not_installed_admission": true,
     "executor_and_tests_reviewed": false,
     "full_budget_closed": true,
+    "preparation_adapter_implemented": true,
     "reuse_decision_complete": false,
     "six_input_hashes_bound": true,
     "starts_bound": false
@@ -160,12 +161,10 @@
   "training_calls": 0,
   "unresolved_budget_components": [],
   "unresolved_execution_admissions": [
-    "isolated PR94 executor and complete execution source closure",
-    "root/graph/Start receipts and actual checkpoint/private-path bindings",
-    "label-free feature parity and serialization tests",
-    "live physical affinity/cgroup/V100 allocation admission",
-    "bounded export and working-storage guard",
-    "per-metric legacy reuse and scientific qualification",
-    "concrete frozen manifest and author CLI execution"
+    "author-run isolated installation and immutable source/private bindings",
+    "live physical affinity/cgroup/V100/storage gates",
+    "root/graph/Start receipts and metric-specific review",
+    "evaluation dispatcher/admission and legacy per-metric eligibility",
+    "explicit subsequent author CLI for scientific jobs"
   ]
 }
