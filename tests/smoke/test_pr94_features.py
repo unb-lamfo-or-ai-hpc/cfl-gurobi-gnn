@@ -21,7 +21,6 @@ from cfl_gnn.artifacts.schemas import (  # noqa: E402
     ModelFeatures,
     VariableFeatures,
 )
-
 from cfl_gnn.graph.build_dataset import build_heterodata  # noqa: E402
 from cfl_gnn.graph.label_free_gurobi import build_features  # noqa: E402
 from cfl_gnn.models.versioning import model_class  # noqa: E402
