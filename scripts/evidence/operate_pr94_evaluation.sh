@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # Author-operated, isolated evaluation stage. Never change PR89 or PR94 preparation.
 set -euo pipefail
-SOURCE=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)
-STAGE=$(dirname "$SOURCE")
+if [[ ${1:-} == batch ]]; then
+    STAGE=${PR94_EVALUATION_STAGE:?}
+else
+    SOURCE=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)
+    STAGE=$(dirname "$SOURCE")
+fi
 case "$STAGE" in
     /raid/vrcelestino/data/cfl-mvp2-evidence/pr94-evaluation-????????????) ;;
     *) echo PR94_EVALUATION_INVALID_STAGE >&2; exit 2 ;;
 esac
+SOURCE="$STAGE/source"
 test "$(hostname -s)" = dgx-dasci
 test "$(id -un)" = vrcelestino
 test "${CONDA_DEFAULT_ENV:-}" = tfm_env

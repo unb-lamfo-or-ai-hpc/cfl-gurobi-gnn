@@ -1,6 +1,6 @@
 # Avaliação completa: implementação e passagem para a CLI
 
-O adaptador de avaliação está isolado da preparação c623fe858f62 e de toda a PR89. A matriz conserva 144 chamadas novas, uma thread física por solve, TimeLimit=3.600 s e seeds 42/43/44. O corpus de aprendizado, o checkpoint CPU, os hiperparâmetros e a política de Starts não mudam. A instalação e sua inspeção de zero chamadas já foram recebidas e revisadas. A submissão das avaliações ainda não foi realizada.
+O adaptador de avaliação está isolado da preparação c623fe858f62 e de toda a PR89. A matriz conserva 144 chamadas novas, uma thread física por solve, TimeLimit=3.600 s e seeds 42/43/44. O corpus de aprendizado, o checkpoint CPU, os hiperparâmetros e a política de Starts não mudam. A instalação e sua inspeção de zero chamadas já foram recebidas e revisadas. A submissão dos 48 jobs foi realizada, mas as quatro cabeças falharam antes do worker e os 44 sucessores permanecem PENDING no último snapshot recebido. Nenhum resultado de avaliação foi recebido. Ver o [incidente confirmado](../pr94-entry-failure-20261102.md); os passos genéricos abaixo não autorizam repetição ou recuperação automática.
 
 ## Do retorno de guidance ao preflight das 16 instâncias
 
@@ -26,7 +26,7 @@ R e G têm a mesma **quantidade** de variáveis selecionadas e de positivos; seu
 
 A inspeção da fonte `10fd1af20ff40c43147331e7321adf10c151a6f5` terminou em 11,124 s e reportou 16 cadeias conferidas, zero otimizações, inferências, treinamentos e submissões. As projeções de todos os vínculos correspondem aos recibos históricos/novos e ao checkpoint congelado; o ambiente coincide com a preparação. O [recibo](../../evidence/pr94/evaluation-installation-10fd1af20ff4/installation-review.json) e a [revisão](../pr94-evaluation-installation-review-20261102.json) preservam o escopo e os hashes. Os vetores privados e o plano privado completo não foram transferidos nem reproduzidos a partir do ZIP; os checks de bytes/Starts foram feitos pelo preflight instalado.
 
-O hash do plano instalado, conferido no recibo e na saída da CLI, é **`44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600`**. O próximo comando é `submit` do operador existente com esse hash, mantendo a fonte testada. Os 48 blocos ainda não têm IDs recebidos. A configuração de batch/dgx-dasci admite o teto proposto, mas não reserva CPUs, RAM, armazenamento ou licenças. O operador verifica novamente a admissão e os perfis reais antes de liberar os holds.
+O hash do plano instalado, conferido no recibo e na saída da CLI, é **`44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600`**. O comando `submit` foi executado com esse hash e registrou os jobs 3785–3832. Os quatro primeiros falharam no guarda de estágio; as quatro cadeias não avançam por `afterok`. Não repetir o comando nem alterar dependências. A fonte instalada e os claims devem ser preservados até a decisão específica de recuperação. A configuração de batch/dgx-dasci admite o teto proposto, mas não reserva CPUs, RAM, armazenamento ou licenças. O operador verifica novamente a admissão e os perfis reais antes de liberar os holds.
 
 ## Submissão e concorrência
 
