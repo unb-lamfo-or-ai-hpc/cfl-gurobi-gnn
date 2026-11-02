@@ -722,9 +722,14 @@ def run(stage, index):
 
     class Gate:
         storage_failure = None
+        affinity_failure = None
 
         def sample(self):
-            verify_affinity(allocation_receipt)
+            try:
+                verify_affinity(allocation_receipt)
+            except (ValueError, OSError):
+                self.affinity_failure = "affinity_observation_lost"
+                raise
             try:
                 sample_storage_floor(stage)
             except (ValueError, OSError) as exc:
@@ -766,6 +771,7 @@ def run(stage, index):
                 observed_gate,
             )
             observation["storage_failure"] = observed_gate.storage_failure
+            observation["affinity_failure"] = observed_gate.affinity_failure
             write(cell_folder / "supervision.json", observation)
             cell_storage(cell_folder)
             storage(stage)
@@ -949,29 +955,67 @@ def collect(stage):
     for cell_id, cell in policy.matrix()[1].items():
         path = stage / "run" / cell_id / "child.json"
         closed = cell_id in closed_cells
-        result = read(path, maximum=16 * 1024**2) if closed and path.is_file() else None
-        if result:
-            need(
-                result["cell"] == cell
-                and result["plan_sha256"] == file_sha(stage / "plan.json"),
-                "collected_cell",
-            )
-            policy.validate_result(
-                cell, result["result"], plan["bindings"][cell["parent"]]
-            )
+        invalid = []
+
+        def closed_record(p):
+            if not closed or not p.is_file():
+                return None
+            need(not p.is_symlink(), "return_symlink")
+            try:
+                value = read(p, maximum=16 * 1024**2)
+                need(isinstance(value, dict), "closed_record_object")
+                if p.name == "raw-result.json":
+                    need(
+                        value.get("cell") == cell
+                        and value.get("plan_sha256") == file_sha(stage / "plan.json")
+                        and isinstance(value.get("result"), dict),
+                        "raw_result_context",
+                    )
+                return value
+            except (ValueError, OSError, UnicodeError) as exc:
+                invalid.append(
+                    {
+                        "relative_file": p.relative_to(stage).as_posix(),
+                        "reason": type(exc).__name__,
+                        "private_text_included": False,
+                    }
+                )
+                return None
+
+        result = closed_record(path)
+        if result is not None:
+            try:
+                need(
+                    result["cell"] == cell
+                    and result["plan_sha256"] == file_sha(stage / "plan.json"),
+                    "collected_cell",
+                )
+                policy.validate_result(
+                    cell, result["result"], plan["bindings"][cell["parent"]]
+                )
+            except (ValueError, KeyError, TypeError) as exc:
+                invalid.append(
+                    {
+                        "relative_file": path.relative_to(stage).as_posix(),
+                        "reason": type(exc).__name__,
+                        "private_text_included": False,
+                    }
+                )
+                result = None
         unqualified = path.parent / "raw-result.json"
         row = {
             "cell": cell,
             "received": result is not None,
             "value": result,
             "group_accounting_closed": closed,
-            "raw_unqualified_value": read(unqualified, maximum=16 * 1024**2)
-            if closed and result is None and unqualified.is_file()
+            "raw_unqualified_value": closed_record(unqualified)
+            if result is None
             else None,
+            "invalid_records": invalid,
         }
         for name in ("supervision.json", "costs.json"):
             p = path.parent / name
-            row[name] = read(p) if closed and p.is_file() else None
+            row[name] = closed_record(p)
         rows.append(row)
         if closed and path.parent.exists():
             for p in path.parent.iterdir():
@@ -998,6 +1042,10 @@ def collect(stage):
         "cells": rows,
         "closed_artifact_seals": seals,
         "received": sum(r["received"] for r in rows),
+        "raw_unqualified_reports": sum(
+            r["raw_unqualified_value"] is not None for r in rows
+        ),
+        "invalid_record_count": sum(len(r["invalid_records"]) for r in rows),
         "expected": 144,
         "terminal_groups_collected": len(closed_groups),
         "complete_campaign_accounting": len(closed_groups) == 48,

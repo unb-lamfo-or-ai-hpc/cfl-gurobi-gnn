@@ -768,6 +768,28 @@ class AccountingTests(unittest.TestCase):
             value = flow.collect(self.stage)
         self.assertTrue(value["no_return_created"])
 
+    def test_terminal_truncated_JSON_is_sealed_and_reported_without_losing_other_cells(
+        self,
+    ):
+        cell_id = self.plan["groups"][0]["cells"][0]
+        path = self.stage / "run" / cell_id / "child.json"
+        path.parent.mkdir()
+        path.write_text("{interrupted")
+        with (
+            patch.object(flow, "load", return_value=self.plan),
+            patch.object(flow, "accounting", return_value=self.state()),
+            patch.object(flow, "export", side_effect=lambda stage, members: members),
+        ):
+            value = flow.collect(self.stage)
+        returned = json.loads(next(iter(value.values())))
+        self.assertEqual(returned["received"], 0)
+        self.assertEqual(returned["invalid_record_count"], 1)
+        self.assertIn(
+            path.relative_to(self.stage).as_posix(), returned["closed_artifact_seals"]
+        )
+        self.assertEqual(len(returned["cells"]), 144)
+        self.assertEqual(path.read_text(), "{interrupted")
+
     def test_final_missing_results_stay_missing_and_return_cannot_be_overwritten(self):
         with (
             patch.object(flow, "load", return_value=self.plan),
