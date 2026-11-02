@@ -4,7 +4,9 @@ O adaptador de avaliação está isolado da preparação c623fe858f62 e de toda 
 
 ## Do retorno de guidance ao preflight das 16 instâncias
 
-O último snapshot fornecido pelo autor registra guidance job 3784 RUNNING em 5min34s, com oito AllocCPUS. O job de raízes 3783 já foi recebido e conferido. A coleta terminal de guidance permanece necessária; não se presume que seis grafos e Starts existam apenas porque um job está em execução ou terminou tecnicamente.
+O retorno terminal de guidance **3784** foi recebido e conferido: COMPLETED/0:0 em 387 s, oito AllocCPUS, seis inferências e nenhuma otimização ou treinamento adicional reportados. Os seis suportes são não vazios, com 20.000 variáveis cada; hashes de modelos, raízes, checkpoint e selos de artefatos correspondem aos vínculos esperados. A [revisão](../pr94-guidance-review-20261102.json) descreve o escopo: os vetores privados não foram transferidos nem reproduzidos aqui. A inspeção seguinte verificará seus bytes e os Starts das 16 instâncias.
+
+A fonte fixada para avaliação é `10fd1af20ff40c43147331e7321adf10c151a6f5`, com CI completa `41478889138` aprovada nos quatro ambientes e em tensores. O instalador usa esse commit e o hash **do membro** `guidance-public-return.json` revisado, `7722bacdbb308f7fe8a17c26504cde1f00989eac8d66c2ff68a321a17a73f5a4`. O hash do ZIP, `73599b8eba57c8d9b9fa65bcff9e26151e241cf154cab6f1782a71deba134831`, identifica a transferência e não substitui o hash do membro nesse argumento. A atualização dos recibos e da documentação não muda a fonte de execução fixada.
 
 Após a revisão do retorno de guidance, o autor executará um instalador com dois argumentos explícitos: commit da avaliação aprovado pelos checks e SHA256 do membro de metadados de guidance revisado. O instalador cria somente um novo estágio `pr94-evaluation-<commit12>` dentro do diretório de dados/evidências existente, sem alterar o estágio de preparação. Se o destino já existir, interrompe e preserva seu conteúdo. Não faz limpeza, reinstalação sobre a fonte anterior, treinamento, inferência ou submissão.
 

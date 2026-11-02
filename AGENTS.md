@@ -1,5 +1,11 @@
 # Repository instructions
 
+## Recebimento de guidance — 2 November 2026
+
+Guidance job 3784 is now received and reviewed: COMPLETED/0:0, 387 seconds, six reported forwards and zero optimization/training calls. The terminal accounting query is 2026-11-02T16:23:11.896930+00:00. Archive SHA256 73599b8eba57c8d9b9fa65bcff9e26151e241cf154cab6f1782a71deba134831 and metadata member SHA256 7722bacdbb308f7fe8a17c26504cde1f00989eac8d66c2ff68a321a17a73f5a4 passed review. Six nonempty frozen Starts report support 20,000 with parent/root/checkpoint bindings; private vectors were not independently replayed. Earlier RUNNING snapshots below are historical and superseded by this receipt.
+
+The evaluation source is pinned to 10fd1af20ff40c43147331e7321adf10c151a6f5, whose complete CI run 41478889138 passed all four environments and tensor checks. This receipt update is documentary only; do not reinstall/update preparation c623 or substitute a later documentary commit into the evaluation installer. The next author CLI installs that tested evaluation source into its own stage and performs a zero-call, 16-parent byte/Start/resource inspection. Receive and review its exact plan return before submission; no evaluation job is currently submitted. Full-matrix protocol/resources and all scientific constraints remain unchanged.
+
 ## Evaluation implementation — 2 November 2026, author pause
 
 Continue all independent work without new prompts. The author will supply HPC/PowerShell and merge interventions when available. Latest guidance3784 snapshot is RUNNING05:34; no terminal return is received. Do not infer success/failure or poll HPC directly. Root/guidance source c623 and its plan stay unchanged.

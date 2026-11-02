@@ -38,20 +38,39 @@
   "root_review_record_sha256": "84b429d0599bf01c07a67af6a5252bd74b268d5479440802bc63e516d0bbbdf7",
   "guidance_job": {
     "job_id": "3784",
-    "state": "RUNNING",
-    "elapsed": "00:05:34",
+    "state": "COMPLETED",
+    "elapsed": "00:06:27",
     "AllocCPUS": 8,
     "expected_physical_cores": 4,
     "CLI_exit_code": 0,
-    "query_timestamp_UTC": null,
+    "query_timestamp_UTC": "2026-11-02T16:23:11.896930+00:00",
     "history": [
       {
         "state": "RUNNING",
         "elapsed": "00:00:25",
         "CLI_exit_code": 0,
         "query_timestamp_UTC": null
+      },
+      {
+        "state": "RUNNING",
+        "elapsed": "00:05:34",
+        "AllocCPUS": 8,
+        "query_timestamp_UTC": null,
+        "source": "latest author-provided snapshot while pausing"
       }
     ],
-    "source": "latest author-provided snapshot while pausing"
-  }
+    "source": "received terminal guidance metadata, archive/member checks passed",
+    "terminal_return_received": true,
+    "metadata_review_passed": true,
+    "accepted_guidance_return_sha256": "7722bacdbb308f7fe8a17c26504cde1f00989eac8d66c2ff68a321a17a73f5a4",
+    "archive_sha256": "73599b8eba57c8d9b9fa65bcff9e26151e241cf154cab6f1782a71deba134831",
+    "all_three_rows_COMPLETED_0_0": true,
+    "reported_forward_calls": 6,
+    "reported_optimization_calls": 0,
+    "reported_training_calls": 0,
+    "raw_private_artifacts_independently_replayed": false
+  },
+  "evaluation_source_pinned": "10fd1af20ff40c43147331e7321adf10c151a6f5",
+  "evaluation_source_CI": 41478889138,
+  "evaluation_installation_return_received": false
 }
