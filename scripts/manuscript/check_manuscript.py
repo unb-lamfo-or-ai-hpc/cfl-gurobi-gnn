@@ -44,6 +44,16 @@ QUESTION = (
     "as warm starts for a deterministic MILP solver and improve its performance "
     "when solving Capacitated Facility Location (CFL) problems?"
 )
+PUBLIC_MATERIAL_LINKS = (
+    "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn",
+    "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/index.pdf",
+    "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/index.html",
+    "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/appendices.pdf",
+    "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/cfl-cor-latex-project.zip",
+    "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/index.tex",
+    "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/appendices.tex",
+    "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/main/docs/research/mvp2-data-release-plan.md",
+)
 INCLUDES = {"tables/principal_ratios.qmd", "tables/principal_easy_gaps.qmd",
             "tables/principal_costs.qmd"}
 SUPPLEMENT_INCLUDES = {
@@ -200,8 +210,13 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
                                    "configuration-reference.md"]
             or re.search(r"```\s*\{", reader_prose)):
         failures.append("executable_or_unreviewed_included_content")
-    if any(x not in config for x in ("enabled: false", "code-links: false", "meca-bundle: false")):
+    if any(x not in config for x in ("enabled: false", "freeze: true",
+                                     "notebooks: []", "meca-bundle: false")):
         failures.append("static_publication_boundary_missing")
+    code_links = re.search(r"(?ms)^  code-links:\n(.*?)(?=^  [a-z-]+:|\Z)", config)
+    destinations = tuple(re.findall(r"(?m)^      href: (.+)$", code_links.group(1))) if code_links else ()
+    if destinations != PUBLIC_MATERIAL_LINKS:
+        failures.append("reviewed_publication_links_missing_or_changed")
     front = article.split("---", 2)[1]
     records = re.findall(r"  - name: (.+)\n    orcid: (.+)\n    email: (.+)", front)
     if tuple(records) != AUTHORS or evidence.get("authorship_confirmed") is not True:
@@ -327,6 +342,13 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
         return ["html_or_pdf_missing"]
     failures = []
     content = html.read_text(encoding="utf-8")
+    keywords_at = content.find('<div class="keywords">')
+    links_at = content.find('<div class="quarto-code-links">')
+    title_end = content.find("</header>", links_at) if links_at >= 0 else -1
+    menu = content[links_at:title_end] if title_end >= 0 else ""
+    if not (0 <= keywords_at < links_at < title_end) or any(
+            url not in menu for url in PUBLIC_MATERIAL_LINKS):
+        failures.append("rendered_publication_links_missing_or_misplaced")
     for _, orcid, email in AUTHORS:
         if orcid not in content or email not in content:
             failures.append("rendered_author_identity_missing")

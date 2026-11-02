@@ -30,6 +30,14 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_sources_pass_without_generated_assets(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
+    def test_material_links_do_not_authorize_document_execution(self):
+        self.change("_quarto.yml", "enabled: false", "enabled: true")
+        self.assertIn("static_publication_boundary_missing", CHECK.check_source(self.root))
+
+    def test_material_link_destinations_must_remain_reviewed(self):
+        self.change("_quarto.yml", "cfl-gurobi-gnn/index.tex", "cfl-gurobi-gnn/unreviewed.tex")
+        self.assertIn("reviewed_publication_links_missing_or_changed", CHECK.check_source(self.root))
+
     def test_coauthor_instructions_do_not_belong_in_article(self):
         self.change("index.qmd", "# Introduction", "# Introduction\n\nFor coauthor review only.")
         self.assertIn("internal_note_in_reader_text:index.qmd", CHECK.check_source(self.root))
