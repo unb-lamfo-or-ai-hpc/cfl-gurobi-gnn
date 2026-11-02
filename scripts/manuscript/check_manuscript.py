@@ -213,7 +213,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if any(x not in config for x in ("enabled: false", "freeze: true",
                                      "notebooks: []", "meca-bundle: false")):
         failures.append("static_publication_boundary_missing")
-    code_links = re.search(r"(?ms)^  code-links:\n(.*?)(?=^  [a-z-]+:|\\Z)", config)
+    code_links = re.search(r"(?ms)^  code-links:\n(.*?)(?=^  [a-z-]+:|\Z)", config)
     destinations = tuple(re.findall(r"(?m)^      href: (.+)$", code_links.group(1))) if code_links else ()
     if destinations != PUBLIC_MATERIAL_LINKS:
         failures.append("reviewed_publication_links_missing_or_changed")
