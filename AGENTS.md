@@ -1,5 +1,14 @@
 # Repository instructions
 
+## Accelerated continuation — 2 November 2026
+
+The author's latest direction advances S1–S4 concurrently and leaves final S5/S6 synthesis after PR94. PR89 is complete (60 receipts, 47 reported terminal targets, 13 M7 censures); preserve installed source 9ab7823c and all original evidence. The complete manuscript retains M7 and scoped numerical limits. Prepare the four documentary integration resolutions and actual combined-tree checks; merge remains separately approved.
+
+PR94 v2 prospectively defines 144 fresh evaluations, 16 parents × B/R/G × solver seeds42/43/44, instead of filling 90 positions with historical rows. See solver-seed-extension-v2 in the PR94 branch. Its four-lane/48-block proposal and new resource ceilings must not be confused with the installed six-root plan or an already implemented dispatcher. Keep preparation source c623fe858f62 and plan b41953a8 unchanged. The author reports roots job3783 COMPLETED/0:0 after5min40s; the six-root metadata return has now passed archive/member, input/parameter/result/summary and supervision checks. Raw vectors were not independently replayed. The author submitted guidance job3784, RUNNING at25s/CLI exit0; wait for its terminal return before admitting evaluations. No evaluation job is inferred.
+
+Complete the data-release plan before PR93 closeout: small source/receipts/tables on GitHub, reviewed redistributable preservation artifacts in Zenodo, no temporary cloud/blob storage. Do not claim a DOI or public deposit not verified. After actual PR94 launch, integrate its prospective methods/objectives into PR93 without inventing results or placing scheduler instructions in reader-facing text. Merges and publication remain specific human decisions; HPC/SSH/SCP remains author CLI only. No retraining, tolerance change or automatic retry.
+
+
 ## Current continuation — 2 November 2026
 
 Use docs/current_status.md and docs/research/mvp2-closeout-plan.md for the current operational state; dated pending/running statements below are historical. PR89 is complete:60/60 receipts,47 reported targets,13 M7 censures, no missing tail. Job3734 is received. Do not recreate its ZIP or repeat its campaign. Source9ab7823c and all original bytes, flags, models, parameters, Starts and resources remain frozen.

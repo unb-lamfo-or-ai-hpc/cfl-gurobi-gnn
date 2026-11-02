@@ -1,68 +1,58 @@
 # Encerramento do MVP 2.0 por Sprints e PRs
 
-Atualizado em 2 de novembro de 2026. Este é o planejamento operacional vigente. A [versão anterior](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9453b82314a4ca5ffaf1850d26e5eac5dbc3d98f/docs/research/mvp2-closeout-plan.md) conserva a evolução das decisões; nenhum recibo, contrato científico ou parâmetro experimental foi substituído por esta atualização.
+Atualizado em 2 de novembro de 2026 após a orientação de acelerar S1–S4. A [versão anterior](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/b52cc5ef0952529feb231491d4a6ee2bd9d47f6b/docs/research/mvp2-closeout-plan.md) preserva o planejamento anterior. Esta revisão amplia prospectivamente a PR94; não modifica a campanha PR89, seus arquivos nem os dados históricos.
 
-## Situação de partida
+## Evidências já disponíveis
 
-A campanha da PR89 terminou: 60 jobs COMPLETED/0:0 e 60 resultados reconciliados, sem ausências. O [retorno completo](../evidence/pr89/final-20261101/manifest.json) e a [reconciliação](pr89-complete-reconciliation-20261101.md) registram 47 atingimentos do alvo terminal reportado e 13 censuras, todas em M7. A consulta conjunta foi em 2/11 às 02:24:05 UTC, equivalente a 1/11 às 23:24:05 em Fortaleza. A recepção/reconciliação está fechada, independentemente de o resultado ser favorável. Ela não foi adiada até a qualificação científica.
+A PR89 está encerrada em execução e recepção: 60/60 jobs COMPLETED/0:0, 47 atingimentos do critério terminal reportado e 13 censuras de M7. A consulta conjunta foi em 2/11 às 02:24:05 UTC, ou 1/11 às 23:24:05 em Fortaleza. D0 permanece esse recebimento/reconciliação, independentemente do sinal dos resultados; não é uma nova data de qualificação. [Recibos e disposições](../evidence/pr89/final-20261101/manifest.json) conservam as versões parciais e os flags originais.
 
-A PR93 integra toda a campanha no artigo e nos apêndices separados. Os PDFs de revisão da fonte 9453b823 foram entregues em 2/11: artigo com 24 páginas, referências a partir da 20ª; apêndices com 44 páginas. Os 101 testes do manuscrito e os gates de fontes/renderização/texto passaram. A inspeção visual cobriu todas as 68 páginas. Não é necessário renderizar novamente para mudanças apenas de governança ou testes.
+O artigo e o Apêndice B incluem os 60 registros e a auditoria delimitada de dez pontos M12. M7 conserva suas 15 observações, 13 censuras terminais, gaps e figuras. Nesta revisão, o artigo ganha uma tabela de cobertura por instância e a figura de tempos M0/gaps M7; a discussão separa melhora primal, progresso dual e fechamento do alvo. Nenhum timeout é convertido em sucesso. M4/M12 continuam sem certificado de ótimo comum ou speedup certificado; M0 mantém a ressalva de bound.
 
-A PR94 contém o protocolo e o adaptador isolado de preparação. A instalação zero-call está conferida. Nenhum retorno de submissão das raízes foi recebido; não se presume que exista novo job.
+A fonte b52cc5ef da PR93 passou no CI Manuscript 41450074164 e na matriz completa Evidence 41450074141, incluindo os dois Windows. A proteção contra conversão de bytes selados resolveu a divergência de hash sem alterar evidências. Novas mudanças exigem seus próprios checks. Os PDFs anteriores, fonte 9453b823, continuam identificados como versões anteriores; não se afirma que contenham a revisão textual atual.
 
-## Sequência de entregas e decisões
+O autor informou submissão das seis raízes na PR94: job 3783, CLI exit 0, inicialmente RUNNING a 42 s e depois COMPLETED/0:0 em 5min40s, com 2 AllocCPUS. Não forneceu timestamp da consulta. O retorno terminal das seis raízes já foi recebido e conferido: ZIP 7f6e2be4…84024a, metadados 8655247f…359d5, seis capturas, zero inferências/treinos. A revisão é de metadados e selos, sem reprodução dos vetores privados. O autor aceitou esse hash e submeteu guidance job 3784, RUNNING a 25 s/CLI exit 0; seu retorno é a próxima dependência. Fonte instalada c623fe858f62 e plano b41953a8 permanecem congelados.
 
-| Etapa | Entrega concreta | Condição para avançar |
+## Sprints em paralelo e entregas
+
+| Sprint | Trabalho agora | PR e gate de conclusão |
 | --- | --- | --- |
-| PR89 — encerramento da campanha existente | Preservar fonte 9ab7823c; manter o retorno 60 e as disposições por métrica | Recepção fechada; revisão de encerramento e aprovação específica de merge |
-| PR93 — síntese do estudo atual | Finalizar a auditoria integrada, corrigir divergências documentais e apresentar artigo/apêndices consistentes | CI da integração aprovado, limites científicos visíveis e revisão humana do texto |
-| PR94 — raízes | Um jobCPU de 2 h, um core físico,64 GiB e até seis chamadas de raiz de 600 s | CLI do autor; coletar somente após estado terminal e revisar o retorno |
-| PR94 — grafos/predições/Starts | Um job de 1 h, quatro cores físicos,64 GiB e uma V100 de 32 GB; até seis forwards congelados | Aceitação por hash das seis raízes, seguida de CLI separada; nenhuma avaliação MILP nesta etapa |
-| Próxima entrega experimental | Dispatcher isolado das 54 novas células, com manifesto e recursos aprovados e 90 reaproveitamentos dispostos por métrica | Artefatos reais conferidos, testes/CI do dispatcher e intervenção específica na CLI |
-| Resultados da extensão | Reconciliar resultados existentes e novos; analisar pares dentro de instância/seed/configuração | Sem completar ausências com zero, sem retries automáticos e sem misturar horizontes diferentes |
-| Revisão final e publicação | Atualizar o manuscrito somente com evidência qualificada; auditoria editorial e sincronização controlada | Aprovações específicas de merge, publicação e submissão |
+| S1 — contratos e integração | Registrar a nova matriz e recursos; preparar a resolução dos quatro conflitos documentais da PR89; preservar a fonte instalada | PR89 pode ser concluída após a revisão da integração e aprovação específica do merge |
+| S2 — software, métodos e preparação | Coletar/revisar raízes 3783; executar guidance por CLI separada; conferir os 16 modelos e Starts; concluir o dispatcher e a CI | PR94: preflight real, recursos e bindings aceitos antes de submeter as avaliações |
+| S3 — resultados CPU existentes | Concluir a leitura das 60 células, tabelas/figuras, M7 e limites M4/M12; conferir artigo/apêndices contra os recibos | PR93: auditoria da campanha completa, sem exigir um resultado favorável |
+| S4 — síntese e primeira publicação revisada | Registrar o lançamento efetivo da PR94 quando houver IDs; integrar somente seu desenho prospectivo ao texto; concluir curadoria GitHub/Zenodo | PR93 em develop; depois uma PR distinta develop→main, com aprovação de merge/publicação e verificação de Pages |
+| S5 — resultados novos | Após a PR94, reconciliar as 144 células, censuras/falhas/ausências, elegibilidade por métrica e custos; atualizar análise pareada por instância/seed | PR de resultados, sem misturar a campanha de 1 h com a de 12 h |
+| S6 — fechamento científico/editorial | Após a análise nova, auditoria final A–D, revisão integral de artigo/apêndices, depósito e declarações, versão final e submissão | Aprovações humanas específicas; não condicionar aceitação a obter ganho da GNN |
 
-A integração prevista continua PR89→develop, PR93→develop e depois uma release develop→main. Os commits da PR89 não são ancestrais da PR93; após a integração autorizada, o CI deve validar a combinação efetiva antes do merge seguinte. Não simular essa aprovação mudando a fonte instalada ou a história Git.
+## PR89: resolução preparada, merge ainda não realizado
 
-## Regras científicas de encerramento
+A PR89 está divergente de develop: dois commits próprios e quinze commits posteriores em develop. A comparação em três vias identifica quatro sobreposições textuais: docs/article_plan.md, docs/current_status.md, docs/experiment_protocol.md e docs/research_context.md. Os demais acréscimos de código/testes da PR89 não têm sobreposição de blobs com develop nessa comparação. Um status dirty não é falha de experimento.
 
-Cada uma das 60 células tem uma disposição em [disposition.csv](../evidence/pr89/final-20261101/disposition.csv). Separar aceitação sob tolerâncias, primal exato auditado, bound/gap reportado, alvo observado, censura e custo. Os flags brutos permanecem falsos; a documentação não os promove silenciosamente.
+A resolução deverá conservar a documentação atual de develop e a adição histórica de 20/10 da PR89, explicitamente datada, sem restaurar antigos estados de preparação como atuais. O conjunto de código da PR89 precisa entrar integralmente: executor temporal, contrato, workflow, operador, coletor e testes, além das alterações do solver e recursos. Nenhuma resolução poderá editar a instalação 9ab7823c, seu plano, os Starts ou os recibos. O inventário e as resoluções propostas estão em [pr89-integration-resolution.json](pr89-integration-resolution.json).
 
-Os dois laudos de M12 cobrem dez pontos. G/4, G/8, G/16 satisfazem os testes primais exatos no escopo declarado; sete controles contêm uma binária fracionária e um padrão arredondado inviável. Cinco pontos de M12 continuam fora desse exame independente. Nenhuma prova dual exata, ótimo global comum ou speedup certificado foi estabelecido. M4 mantém sua restrição própria, e M0 conserva a pequena discrepância cruzada de bounds. Não extrapolar o resultado de um vetor para outro por terem objetivos iguais.
+Preparar e testar a árvore resolvida antes de solicitar a aprovação específica do merge. Não criar automaticamente um merge commit, rebase ou force-push para contornar o conflito. A combinação efetiva PR89+PR93 precisará manter tanto o bash -n do operador PR89 como o T1 de selos da PR93. A aprovação de uma dessas branches não equivale à aprovação da outra.
 
-M7 permanece entre as dez medium. Treze interrupções pelo limite e dois atingimentos do alvo não demonstram inviabilidade. Excluir a instância depois de observar a dificuldade introduziria seleção por resultado. A alternativa discutida de nove medium não foi adotada: mudaria 144→135 células e 90→81 candidatas históricas, sem reduzir as 54 novas avaliações.
+## PR94: matriz nova e lançamento limitado
 
-O orçamento de 12 h da PR89 não é intercambiável com o de 1 h do bloco histórico da extensão. Um timeout não é tempo observado de sucesso. Conservar cruzamentos efetivamente registrados e a censura específica de cada alvo; não interpolar trajetórias ou substituir tempos ausentes por Runtime.
+A [matriz v2 na PR94](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/docs/mvp2-solver-seed-protocol/docs/research/solver-seed-extension-v2) define 144 avaliações novas: 6 easy + 10 medium, B/R/G e seeds 42/43/44, uma thread física e TimeLimit=3.600 s. Os 90 registros antigos permanecem como evidência histórica e não substituem células novas. M7 permanece; treino 54/34–10–10 e checkpoint original não mudam. A ordem B/R/G é balanceada por instância sem usar resultados.
 
-## Protocolo e recursos da PR94
+São 48 blocos de três solves sequenciais, distribuídos em quatro cadeias. A concorrência proposta é de no máximo quatro jobs de avaliação; os limites devem ser confirmados com a capacidade/licença reais. O teto do conjunto, incluindo preparação, é 50 jobs, 150 chamadas de otimização, 145 solver-h, 195 job-h somadas, 198 core-h físicos e 1 V100 GPU-h. O pico das avaliações é 4 núcleos físicos e 256 GiB. O mínimo idealizado de 48 h para avaliações não inclui fila, preparação, revisão ou falhas. O dimensionamento completo de armazenamento está pendente; a reserva antiga não é presumida suficiente.
 
-A coorte aprovada continua com seis easy e dez medium, solver seeds 42/43/44 e 144 células no manifesto de comparação de um core físico: 90 candidatas históricas e 54 novas. Os dez pais históricos e os seis novos não ampliam nem recompõem o split de aprendizagem 54/34/10/10. O checkpoint CPU original, sua normalização e seu threshold permanecem congelados. A identidade documental das 90 células não equivale à admissão de todas as métricas; 18 células M4/M12 continuam restritas.
+O compilador offline e os nove testes da matriz estão implementados. Falta o dispatcher isolado e seu fechamento de admissão/coleta. O executor PR86 não admite as seis medium adicionais; não será chamado com identidades falsas. Não há 144 jobs lançados: há um job de raízes efetivamente informado. Após retorno terminal revisado, aceitar o hash de raízes e emitir a CLI de guidance; depois revisar grafos/Starts e o preflight dos 16 pais antes da CLI de avaliação. Todos os blocos podem ser submetidos no mesmo lançamento como RUNNING/PENDING, mas as cadeias e dependências devem impedir ultrapassar quatro ativos ou executar com preparação não qualificada. Falhas preservam evidências e pedem diagnóstico, sem retry automático.
 
-A fonte instalada é c623fe858f62d8fa2a70eebf6f3aeee5692e8f90 e o plano b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77. Não atualizar/reinstalar essa cópia para acompanhar commits documentais. O adaptador não contém dispatcher das 54 avaliações.
+A concorrência afeta a interpretação do tempo. Registrar sobreposição entre jobs e recursos reais, conservar B/R/G pareados por instância–seed e não apresentar as três seeds como três redes treinadas. Os resultados da PR89 não serão reclassificados segundo o protocolo novo.
 
-A proposta condicional completa permanece 20 jobs: uma preparação de raízes, uma de guidance e 18 grupos de avaliação. Tetos: 6 chamadas de raiz+54 avaliações,55 h de solver,75 h sequenciais reservadas,78 core-h físicos, uma V100 GPU-h,64 GiB de RAM por job e 64 GiB de trabalho, com 80 GiB livres na admissão. Fila, revisão humana, energia e preço não estão incluídos. Não somar cenários alternativos como consumo adicional nem usar horas de alocação como utilização medida.
+## Curadoria antes de concluir a PR93
 
-Não reexecutar automaticamente uma célula histórica cuja reutilização falhar. Registrar a célula e o impacto no manifesto/orçamento para decisão específica. Preservar a fonte da PR89, seus checkpoints, MINIMIZE, seed 42, parâmetros, recursos e ordem. Novos treinamentos, métodos de raiz, tolerâncias, arquiteturas e hiperparâmetros permanecem trabalhos futuros. A extensão aprovada varia as seeds do solver, não a seed de treinamento.
+O [plano GitHub/Zenodo](mvp2-data-release-plan.md) define: código, contratos, inventários, recibos pequenos, CSVs e fontes de figuras no GitHub; snapshot fixo de software, artefatos redistribuíveis de modelos/preparação, evidências volumosas revisadas e produtos editoriais no depósito científico. Credenciais, temporários e ZIPs privados não se tornam públicos. Direito de redistribuição, inventário de membros, hashes, relação de versões e DOI devem ser conferidos; nenhum DOI novo ou upload é presumido.
 
-## Dificuldade e análise estatística
+A primeira publicação revisada conterá PR89 completa e, após o lançamento real, o desenho prospectivo da PR94 sem antecipar resultados. S5/S6 produzirão a versão científica final após a campanha nova. O release de Pages intermediário será identificado pela versão, sem simular conclusão final do MVP2.
 
-Caracterizar primeiro tamanho, composição dos domínios, sparsity e escalas dos coeficientes, preservando os identificadores. As seis novas instâncias têm inventários de leitura conferidos; isso não prova dificuldade nem viabilidade. Não acrescentar piloto, novo preditor ou clustering compulsório para classificá-las.
+## Sequência de merge e datas
 
-Depois dos resultados, descrever dificuldade computacional empírica pelo progresso e pelos alvos de B sob o protocolo fixado, distinguindo alvos atingidos, censurados e ausentes. Uma classificação baseada no resultado de B é exploratória e relacionada ao próprio quociente G/B; não constitui uma característica independente para provar interação.
+1. Concluir a resolução/revisão da PR89 e obter aprovação do merge em develop.
+2. Incorporar a base integrada na PR93, preservar bytes e história, executar os checks da combinação e concluir a auditoria científica/editorial.
+3. Confirmar o lançamento da PR94 por recibos; incluir seu protocolo e limites no artigo/apêndices, sem resultados futuros. Fechar o plano de dados antes do pedido de merge da PR93.
+4. Solicitar aprovação específica da PR93→develop. Preparar outra PR develop→main e solicitar sua aprovação de merge/publicação; verificar a versão realmente servida pelo Pages.
+5. Após os resultados da PR94, concluir S5/S6 por PRs coerentes de resultados e release final. Não reservar números nem gerar uma PR por correção trivial.
 
-Parear B/R/G dentro de pai/seed/configuração. As seeds são repetições dentro da instância, não novos pais: 30 combinações medium/seed continuam sendo dez instâncias. Priorizar qualidade primal/dual, gaps, cobertura, censura e variação por pai. Médias geométricas de razões positivas elegíveis podem ser secundárias, com massa censurada e exclusões explícitas; não usar testes automáticos por célula ou inferir superioridade populacional.
-
-## Sprints e marcos
-
-| Sprint | Próxima entrega | Estado atual |
-| --- | --- | --- |
-| S1 — governança | Manter este plano, decisões e recibos rastreáveis | Coorte/M7 e responsabilidade preservadas; aprovações de merge/publicação separadas |
-| S2 — métodos e prontidão | Revisão de software/proveniência e preparação isolada root→graph→Start | Instalação conferida; raízes/guidance aguardam CLI e retornos |
-| S3 — execução e qualificação | Disposição 60 da PR89; depois extensão separadamente liberada | Recepção 89 fechada; nenhuma nova avaliação da extensão recebida |
-| S4 — síntese científica | Concluir R2-D8 e análise por métrica; incorporar extensão quando qualificada | Síntese do estudo atual atualizada, sem ótima exatidão ou causalidade indevidas |
-| S5 — artigo e apêndices | Revisão humana dos dois PDFs e reconciliação de cada mudança | Versão completa entregue; sem circulação em nome dos autores |
-| S6 — auditoria e release | Rever integração real, pacote editorial e aprovações finais | Gate final continua obrigatório, inclusive após nova evidência |
-
-As Sprints podem se sobrepor; nenhuma exige repetir preparação já concluída. Metas preservadas: manifestação preliminar dos coautores até 15/11 por circulação autorizada; extensão qualificada pretendida até 30/11; manuscrito completo aos coautores até 15/12/2026; revisão científica/editorial em dezembro; aprovação final pretendida em 7/1/2027; submissão pretendida em 10/1, com prazo máximo 14/1/2027. São metas, não garantias de fila ou conclusão.
-
-Se a extensão ou a auditoria ameaçar 15/12, apresentar o impacto e uma alternativa limitada ao estudo atual, preservando resultados adversos e censurados. O próximo passo operacional é receber o job_id e o código de saída da CLI de raízes já entregue ao autor; se ainda não executada, ela deve ser executada uma única vez. Não há mais coleta pendente da PR89.
+Metas: manuscrito completo aos coautores até 15/12/2026; revisão em dezembro; aprovação final pretendida em 7/1/2027; submissão pretendida em 10/1; limite de 14/1. Nenhuma comunicação é enviada em nome dos autores. Se filas, armazenamento, licença, preparação ou qualificação ameaçarem essas metas, registrar o impacto e submeter uma alternativa científica explícita, sem mudar silenciosamente o desenho ou o prazo. Não há novas sementes de treino, arquiteturas, métodos de raiz ou tolerâncias no MVP2.

@@ -248,6 +248,10 @@ The ranking also depends on the target. With four threads, G first observes 10% 
 
 The four quality horizons retain their actual before/after timestamps and staleness. A run ending before a horizon remains labelled terminated_before_horizon; its trajectory is neither extended nor interpolated. Bounds from another execution are not substituted into a censored run.
 
+The common terminal incumbent makes M7 particularly informative about the distinction between finding a solution and proving its quality. Its terminal gap ranking is a dual-bound ranking conditional on that incumbent. At eight threads R has a smaller terminal gap than G, whereas at four threads G has the smaller gap but all three arms remain censored for the terminal target. At sixteen threads R attains the reported target and G does not. Neither a favorable intermediate crossing nor a smaller terminal gap should be relabelled as faster completion of the MILP proof.
+
+For a time-to-target comparison, a censored observation supplies a lower bound on the unobserved attainment time; it is not an attainment at 43,200 seconds. A ratio obtained by dividing a completed time by that limit is consequently not a measured speedup. Restricting analysis to completed runs would also remove 13 of the 15 M7 observations. We therefore retain the full instance and report target attainment, terminal quality and resource expenditure separately. The five thread configurations share an instance, seed and Start, and cannot provide five independent replications for a significance test.
+
 ### B.12.2. Numerical qualifications and the large M12 time contrast
 
 @tbl-partial-cpu-all lists all received terminal records. Runtime is the solver clock; it excludes preparation and differs from job elapsed time. C denotes a terminal target censored at the recorded limit.

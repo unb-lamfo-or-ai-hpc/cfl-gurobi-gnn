@@ -1,0 +1,23 @@
+{
+  "decision_date": "2026-10-20",
+  "decision_source": "explicit author reply in the task preparing the post-PR88 CPU campaign",
+  "author_reply_verbatim_pt_br": "Aprovar o pacote CPU completo",
+  "approved_package": "CPU12h four exposed medium parents, three methods, five caps, seed42",
+  "maximum_fresh_solves": 60,
+  "maximum_single_solve_jobs": 60,
+  "maximum_concurrent_jobs": 1,
+  "solver_seconds_per_job": 43200,
+  "wall_seconds_per_job": 46800,
+  "memory_mib_per_job": 65536,
+  "gpu_count": 0,
+  "solver_hours_ceiling": 720,
+  "sequential_reserved_hours_ceiling": 780,
+  "physical_reserved_core_hours_ceiling": 4836,
+  "queue_time_included_in_ceiling": false,
+  "automatic_retry": false,
+  "m4_m12_numerical_limits_preserved": true,
+  "conditions": ["installed preflight", "exact final HEAD CI passed", "all submission and allocation gates"],
+  "runtime_plan_authorization_recorded": false,
+  "hpc_jobs_submitted_by_this_delivery": 0,
+  "scientific_reporting_eligible": false
+}

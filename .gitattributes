@@ -52,7 +52,7 @@ docs/evidence/pr88/gpu/** -text -whitespace
 manuscript/figures/gpu_bce_by_epoch_article_en.* -text -whitespace
 
 # Sealed PR89 receipts bind raw bytes, including mixed CSV record terminators.
-docs/evidence/pr89/** -text
+docs/evidence/pr89/** -text -whitespace
 docs/research/pr89-m12-*.json -text
 docs/research/pr89-qualification-register-*.csv -text
 docs/research/pr89-qualification-register-*.json -text

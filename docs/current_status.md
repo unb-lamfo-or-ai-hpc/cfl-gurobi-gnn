@@ -1,33 +1,27 @@
-# Estado atual do CFL-GNN
+# Current status — 2 November 2026
 
-Atualizado em 2 de novembro de 2026. Este resumo substitui os estados operacionais antigos; a [versão anterior](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/9453b82314a4ca5ffaf1850d26e5eac5dbc3d98f/docs/current_status.md) preserva a cronologia. Contrato científico, decisões humanas e recibos originais continuam vigentes.
+## PR89: complete execution and receipt
 
-## Campanha CPU existente — PR89
+All 60 jobs (3675–3734) and 60 result cells are received, with no missing result. Joint accounting at 2026-11-02T02:24:05 UTC records COMPLETED/0:0; the same instant is 1 November23:24:05 in Fortaleza. There are47 solver-reported terminal-target attainments and13 time-limit censures, all M7. Scheduler completion is not a scientific certificate. Installed9ab7823c, its plan, starts, parameters, order and receipts remain frozen.
 
-Concluída e recebida: 60 jobs COMPLETED/0:0, 60 resultados e nenhuma ausência. O job 3734 está no retorno final, com duração 03:38:57, resultado, vetor, log, custos e supervisão. O autor voltou a verificar no HPC o mesmo ZIP 12b07fce… recebido e analisado; não há coleta 89 pendente.
+The article/AppendixB retain all15 M7 observations, not just successful runs. M4/M12 numerical restrictions and the scoped ten-point M12 primal audit remain explicit. The six final jobs, including3734, are received; do not repeat their collection.
 
-O [retorno completo](evidence/pr89/final-20261101/manifest.json) resulta da união selada 50+4+6 e da consulta conjunta de 2/11,02:24:05 UTC (1/11,23:24:05 Fortaleza). São 47 alvos terminais reportados e 13 censuras M7. A fonte 9ab7823c, MINIMIZE, seed 42, cinco caps, checkpoint, Starts, parâmetros e sequência permanecem intactos. A [reconciliação](research/pr89-complete-reconciliation-20261101.md) e o [registro por métrica](research/pr89-qualification-register-20261101.csv) preservam os limites de M4/M12/M0. A recepção completa não é um certificado de ótimo exato.
+## PR93: integrated evidence and merge preparation
 
-## Artigo e apêndices — PR93
+The previous head b52cc5ef passed Manuscript41450074164 and all four Evidence41450074141 matrices. Exact-byte checkout protection fixed the Windows hash discrepancy without changing evidence. The new revision strengthens the article's four-instance coverage table and M7 figure/discussion, with101 manuscript tests passed locally.
 
-A versão científica 9453b823 integra as 60 células e mantém M7 na amostra. Foram entregues dois PDFs separados em abas do Codex: artigo 24 páginas, referências a partir da 20ª; apêndices 44 páginas. Todas as 68 páginas foram inspecionadas, sem referências não resolvidas ou caracteres fora da página. Os 101 testes do manuscrito, os gates de fonte/renderização/texto e o CI Manuscript 41381562593 passaram.
+Eleven original PR89 blobs, including its solver extension, temporal controller and tests, are imported unchanged into PR93 so its next CI exercises the actual combination. The PR89 operator syntax check and PR93 receipt T1 are both retained. The local partial mirror lacks frozen PR78 qualification receipts and could not execute the PR89-focused tests; no admission was bypassed. Full repository CI remains the test of this combination. The four overlapping documentation resolutions and all17 PR89 changed-file identities are recorded in [the integration inventory](research/pr89-integration-resolution.json).
 
-O CI geral passou no Linux e falhou no Windows por conversão LF→CRLF do novo manifesto. O digest convertido reproduz exatamente o erro do runner. A correção corrente protege os bytes dos recibos com `-text`; não altera os dados nem relaxa seus hashes. Cinco testes rápidos verificam os snapshots 50/54/60, sua continuidade, as disposições e a rejeição de adulteração. A execução desses testes foi antecipada no CI para detectar problemas de checkout antes da regressão longa. O novo CI completo ainda precisa concluir com sucesso.
+PR89 itself still has four documentation conflicts against develop. No reference, installation or merge has been changed to bypass them. Apply only a reviewed, approved integration; then finish PR93 against develop. After its own approval, prepare a separate develop→main release and verify Pages. No ready/merge/publication state is inferred from passing tests.
 
-A [síntese R2-D8](research/mvp2-integrated-assessment.md) e o [plano por Sprints/PRs](research/mvp2-closeout-plan.md) estão atualizados. A auditoria final continua aberta para o CI e a combinação efetiva PR89+PR93, a revisão científica humana e a release editorial. Nenhum merge, publicação ou envio a coautores foi realizado. Mudanças apenas de governança/testes não exigem regenerar os PDFs científicos já entregues.
+The [data-release plan](research/mvp2-data-release-plan.md) assigns small source/receipts/tables to GitHub and fixed reviewed preservation artifacts to Zenodo. Rights, inventory coverage, metadata and DOI association remain deposit gates. No upload is performed and the article does not claim a deposit that is unverified.
 
-## Preparação da extensão — PR94
+## PR94: active preparation and full prospective matrix
 
-Instalação zero-call conferida: fonte c623fe858f62d8fa2a70eebf6f3aeee5692e8f90, plano b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77. Não atualizar essa cópia para seguir commits documentais. Seu CI e recibo de instalação foram revistos.
+The author submitted root job3783. Its terminal return is received: ZIP SHA2567f6e2be4…84024a, metadata SHA2568655247f…359d5, all six parent/input/parameter bindings and result/summary seals reconciled. The job took340s and reports6 root calls,0 forwards and0 training. Raw vectors were not included for independent replay. The author accepted that exact metadata hash and submitted guidance job3784, RUNNING25s/CLI exit0,8 AllocCPUS, no explicit query timestamp. Await its terminal return before evaluating graphs/Starts. These are author-assisted observations, not agent SSH access.
 
-Aguarda-se o job_id e o código de saída da CLI de raízes entregue ao autor. Sem esse retorno não se presume submissão. O job previsto usa 2 h, um core físico,64 GiB e até seis chamadas 600 s para M5/M6/M9/M13/M20/M26. Após terminalidade e coleta, o retorno deve ser conferido antes da aceitação por hash e de uma CLI separada de guidance. Esse segundo job tem 1 h, quatro cores físicos,64 GiB e uma V100 de 32 GB, com até seis forwards; não faz treinamento.
+Preparation sourcec623fe858f62 and planb41953a8 remain unchanged. [PR94 v2](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/docs/mvp2-solver-seed-protocol/docs/research/solver-seed-extension-v2) now defines144 new comparisons on6easy+10medium, B/R/G, solver seeds42/43/44 and one physical thread. Ninety archival candidates stay separate. The nine offline matrix tests passed; this is not an evaluation dispatcher or admission of absent jobs. Implement and test that dispatcher, finish all16 private-byte/artifact preflights and storage/resource admission, then request author CLI for48 paired blocks in at most4 concurrent chains. No evaluation job has been received.
 
-O protocolo continua 144 células: 90 candidatas históricas e 54 novas, seis easy/dez medium e solver seeds 42/43/44, sem alterar o split 54/34/10/10, o modelo ou o threshold. Identidade de arquivo não equivale a elegibilidade por métrica; 18 candidatas M4/M12 continuam restritas. O adaptador instalado não despacha as 54 avaliações. Não há novo job, raiz, grafo, predição ou Start recebido nesta etapa.
+## Priorities and boundaries
 
-## Próximas decisões
-
-1. Fechar o CI da correção Windows e a revisão integrada do estudo atual.
-2. Receber a submissão e, depois, o retorno terminal das seis raízes pela CLI do autor; não repetir a coleta da PR89.
-3. Qualificar os artefatos e só então liberar, por CLI separada, a preparação graph/prediction/Start.
-4. Preparar o dispatcher das novas avaliações após a conferência dos artefatos, sem retries automáticos ou ampliação do orçamento.
-5. Solicitar aprovações específicas de PR89→develop, PR93→develop e da release→main conforme os gates. Preservar 15/12/2026 para a versão completa aos coautores e 14/1/2027 como prazo máximo de submissão.
+Advance S1–S4: integration, methods/tooling, full CPU89 analysis, synthesis and reviewed public release. Complete S5/S6 after PR94 results. The [canonical plan](research/mvp2-closeout-plan.md) retains15December manuscript and14January submission deadlines, without a runtime promise. Fixed54-parent learning corpus, original checkpoint, MINIMIZE and all historical identifiers remain intact. No retraining, tolerance/root-policy changes, retries, new PDF delivery, merge, deposit or publication by this revision. HPC/SCP remains author CLI only; local scratch stays in authorized Codex paths.
