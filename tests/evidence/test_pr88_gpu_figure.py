@@ -75,11 +75,17 @@ class GPUFigureTests(unittest.TestCase):
             "cause is unproven",
             "historically exposed",
             "not replace",
-            "separate resource approval",
         ):
             self.assertIn(text, article)
         self.assertNotIn("Neither its speedup nor", article)
         self.assertNotIn("GPU training remain pending", article)
+        # Resource authority belongs to its immutable campaign record, not prose.
+        decision = json.loads(
+            (ROOT / "docs/evidence/pr89/cpu_author_decision.json").read_bytes()
+        )
+        self.assertEqual(decision["maximum_fresh_solves"], 60)
+        self.assertIs(decision["automatic_retry"], False)
+        self.assertIs(decision["scientific_reporting_eligible"], False)
         raw = json.loads((ROOT / gpu.SOURCE / "public_return.json").read_bytes())
         self.assertIs(raw["scientific_reporting_eligible"], False)
 
