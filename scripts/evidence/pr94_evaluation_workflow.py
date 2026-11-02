@@ -12,6 +12,7 @@ import zipfile
 from pathlib import Path
 
 import pr94_evaluation_contract as policy
+import pr94_evaluation_recovery as recovery
 import pr94_isolated_preparation as prep
 
 need, read, command = policy.need, prep.read, prep.command
@@ -24,7 +25,7 @@ encoded, digest, file_sha, write = (
 SOURCE, EVIDENCE, DATA, GIB = prep.SOURCE, prep.EVIDENCE, prep.DATA, prep.GIB
 PREPARATION = EVIDENCE / "pr94-preparation-c623fe858f62"
 PREPARATION_PLAN = "b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77"
-CLAIM = EVIDENCE / "pr94-full-v2-evaluations.claim.json"
+CLAIM = recovery.CLAIM
 HISTORICAL_INPUTS = (
     EVIDENCE / "pr86/bindings-46802675ff99/prepared/private/input_paths.json"
 )
@@ -286,6 +287,8 @@ def freeze(stage, accepted_guidance_sha):
     need(stage.name.endswith(snapshot["commit"][:12]), "stage_commit")
     capacity = storage(stage, admission=True)
     site = site_preflight()
+    recovery_record = recovery.record()
+    recovery_validation = recovery.validate_current(command)
     public, private = discover_inputs(accepted_guidance_sha)
     verify_inputs(public, private)
     matrix, cells = policy.matrix()
@@ -298,6 +301,8 @@ def freeze(stage, accepted_guidance_sha):
     private_sha = write(stage / "inputs.private.json", private)
     plan = {
         "protocol_id": policy.PROTOCOL,
+        "recovery_record": recovery_record,
+        "recovery_validation": recovery_validation,
         "source": snapshot,
         "public_matrix_sha256": file_sha(policy.PACKAGE / "plan.json"),
         "cells_csv_sha256": file_sha(policy.PACKAGE / "planned-cells.csv"),
@@ -326,12 +331,15 @@ def freeze(stage, accepted_guidance_sha):
         "scientific_reporting_eligible": False,
         "licensed_concurrency_guaranteed": False,
     }
+    recovery.equivalence(plan)
     plan_sha = write(stage / "plan.json", plan)
     return export(
         stage,
         {
             "installation-review.json": encoded(
                 {
+                    "recovery_record": recovery_record,
+                    "recovery_validation": recovery_validation,
                     "source_commit": snapshot["commit"],
                     "plan_sha256": plan_sha,
                     "private_model_and_artifact_chains_verified": 16,
@@ -412,6 +420,8 @@ def expected_claim(stage, plan):
         "concurrency_ceiling": 4,
         "automatic_retry": False,
         "explicit_author_CLI": True,
+        "recovery_parent_plan_sha256": recovery.PARENT_PLAN,
+        "recovery_parent_archive_sha256": recovery.ARCHIVE_SHA,
     }
 
 
@@ -468,6 +478,8 @@ def submit(stage, accepted_plan_sha):
     prep.host()
     plan = load(stage)
     need(file_sha(stage / "plan.json") == accepted_plan_sha, "accepted_evaluation_plan")
+    recovery.require_review(stage, plan)
+    recovery.validate_current(command)
     storage(stage, admission=True)
     verify_inputs(plan["bindings"], read(stage / "inputs.private.json"))
     site = site_preflight()

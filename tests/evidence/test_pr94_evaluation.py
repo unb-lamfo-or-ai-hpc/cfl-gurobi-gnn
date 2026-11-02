@@ -182,6 +182,10 @@ class SubmissionTests(unittest.TestCase):
         self.stack.enter_context(
             patch.object(flow, "CLAIM", self.stage.parent / "global.claim.json")
         )
+        self.stack.enter_context(patch.object(flow.recovery, "require_review"))
+        self.stack.enter_context(
+            patch.object(flow.recovery, "validate_current", return_value={})
+        )
         self.commands, self.events = [], []
 
     def scheduler(self, args, **kwargs):
@@ -219,6 +223,20 @@ class SubmissionTests(unittest.TestCase):
                 self.assertFalse(any(x.startswith("--dependency") for x in args))
             else:
                 self.assertIn("--dependency=afterok:" + str(8000 + index - 4), args)
+
+    def test_recovery_review_and_closed_parent_gate_before_any_new_claim(self):
+        for name in ("require_review", "validate_current"):
+            with self.subTest(name=name):
+                with (
+                    patch.object(
+                        flow.recovery, name, side_effect=ValueError("recovery_gate")
+                    ),
+                    self.assertRaisesRegex(ValueError, "recovery_gate"),
+                ):
+                    flow.submit(self.stage, self.plan_sha)
+                self.assertFalse(flow.CLAIM.exists())
+                self.assertFalse((self.stage / "approval.json").exists())
+                self.assertEqual(self.commands, [])
 
     def test_injected_SBATCH_SLURM_and_python_environment_are_removed(self):
         injected = {
@@ -1020,6 +1038,9 @@ class InspectionTests(unittest.TestCase):
                 patch.object(flow, "site_preflight", return_value={}),
                 patch.object(flow, "discover_inputs", return_value=(public, private)),
                 patch.object(flow, "verify_inputs") as verify,
+                patch.object(flow.recovery, "record", return_value={"synthetic": True}),
+                patch.object(flow.recovery, "validate_current", return_value={}),
+                patch.object(flow.recovery, "equivalence", return_value={}),
                 patch.object(flow.prep, "versions", return_value={"synthetic": True}),
             ):
                 exported = flow.freeze(stage, "b" * 64)

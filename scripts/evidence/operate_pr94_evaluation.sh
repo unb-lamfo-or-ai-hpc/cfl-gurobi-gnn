@@ -34,6 +34,9 @@ case "${1:-}" in
         [[ $SHA =~ ^[0-9a-f]{64}$ ]]
         exec "$PYTHON" -B "$SOURCE/scripts/evidence/pr94_evaluation_workflow.py" freeze \
             --stage "$STAGE" --accepted-guidance-sha256 "$SHA" ;;
+    recover-submit)
+        exec "$PYTHON" -B "$SOURCE/scripts/evidence/pr94_evaluation_recovery.py" \
+            --stage "$STAGE" ;;
     submit)
         SHA=${2:?Reviewed evaluation installation plan SHA256 required}
         [[ $SHA =~ ^[0-9a-f]{64}$ ]]
@@ -41,7 +44,7 @@ case "${1:-}" in
             echo PR94_EVALUATION_EXISTING_SUBMISSION_STATUS_ONLY
             exec "$PYTHON" -B "$SOURCE/scripts/evidence/pr94_evaluation_workflow.py" status --stage "$STAGE"
         fi
-        if test -e /raid/vrcelestino/data/cfl-mvp2-evidence/pr94-full-v2-evaluations.claim.json; then
+        if test -e /raid/vrcelestino/data/cfl-mvp2-evidence/pr94-full-v2-entry-recovery-1.claim.json; then
             echo PR94_EVALUATION_CLAIM_EXISTS_PRESERVE_DIAGNOSE >&2
             exit 3
         fi

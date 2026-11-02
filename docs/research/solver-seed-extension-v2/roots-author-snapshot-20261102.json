@@ -141,13 +141,35 @@
       "3832"
     ],
     "author_reported_FAILED": 4,
-    "author_reported_PENDING": 44,
+    "author_reported_PENDING": 0,
     "query_timestamp_UTC": null,
     "terminal_error_marker": "PR94_EVALUATION_INVALID_STAGE",
     "worker_run_files_received_or_reported": 0,
     "durable_optimize_intents_reported": 0,
     "valid_scientific_evaluation_results_received": 0,
-    "recovery_authorized": false,
-    "installed_source_changed": false
+    "recovery_authorized": true,
+    "installed_source_changed": false,
+    "history": [
+      {
+        "snapshot": "author original submission/accounting",
+        "FAILED": 4,
+        "PENDING": 44,
+        "query_timestamp_UTC": null
+      }
+    ],
+    "confirmed_CANCELLED": 44,
+    "confirmed_FAILED": 4,
+    "all_48_terminal": true,
+    "closure_archive_sha256": "e8755224290ad952846689701b1513a1d4f9d845aa53d8f9703d7830f48b7e89",
+    "closure_query_UTC": "2026-11-02T17:26:46.443807+00:00"
+  },
+  "recovery": {
+    "authorized": true,
+    "attempt": "entry-recovery-1",
+    "new_claim": "pr94-full-v2-entry-recovery-1.claim.json",
+    "original_claim_preserved": true,
+    "replacement_job_IDs_received": [],
+    "scientific_changes": false,
+    "new_preparation_or_training": false
   }
 }

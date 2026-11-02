@@ -25,11 +25,23 @@ class ReferenceTests(unittest.TestCase):
             "9eb631ee51d90c2e95a405c5725cde51b32aaba7706a9be2ae08dfa90c46ffe9",
         )
 
-    def test_worker_resource_and_submission_body_are_unchanged(self):
+    def test_worker_body_changes_only_the_explicit_recovery_claim_namespace(self):
         boundary = 'test "$(hostname -s)"'
         self.assertEqual(
-            OPERATOR.read_text().split(boundary, 1)[1],
-            REFERENCE.read_text().split(boundary, 1)[1],
+            OPERATOR.read_text()
+            .split(boundary, 1)[1]
+            .replace(
+                "    recover-submit)\n"
+                '        exec "$PYTHON" -B "$SOURCE/scripts/evidence/pr94_evaluation_recovery.py" \\\n'
+                '            --stage "$STAGE" ;;\n',
+                "",
+            ),
+            REFERENCE.read_text()
+            .split(boundary, 1)[1]
+            .replace(
+                "pr94-full-v2-evaluations.claim.json",
+                "pr94-full-v2-entry-recovery-1.claim.json",
+            ),
         )
 
 
