@@ -223,7 +223,7 @@ A separate long-horizon evaluation retains the four medium instances, starts, se
 
 On M0, G reached the reported target before B at four of five caps, but was slower than both comparators at two threads. All 15 M7 runs ended with the same reported primal value; only B at one thread and R at sixteen threads closed the terminal gap. Earlier progress therefore need not imply terminal attainment. All 60 runs reached a reported 10% gap, whereas 13 remained censored at 1% and 0.01%.
 
-@tbl-cpu-long-coverage summarizes the disposition of every instance; @fig-cpu-long-attainment contrasts observed target times with terminal quality.
+@tbl-cpu-long-coverage summarizes every instance. Appendix B plots M0 target times and M7 terminal gaps, distinguishing attainment from censoring.
 
 | Instance | Configurations | Reported target attained | Time-limited |
 |:--|--:|--:|--:|
@@ -233,8 +233,6 @@ On M0, G reached the reported target before B at four of five caps, but was slow
 | M12 | 15 | 15 | 0 |
 
 : Complete long-horizon coverage. Attainment does not remove numerical qualifications. {#tbl-cpu-long-coverage}
-
-![Observed terminal-target times on M0 and terminal gaps on M7. Crosses mark target censoring; circles mark attainment. Thread configurations are not independent replications.](figures/partial_cpu_time_gap.pdf){#fig-cpu-long-attainment width=85%}
 
 M7 separates finding an incumbent from proving its quality. All runs report the same terminal primal value, 5.428377599678637; their terminal gaps therefore differ through their dual bounds. At eight threads R ends at 1.653% and G at 1.838%; at sixteen R closes the reported gap while G remains at 1.448%. G does not uniformly dominate. Retaining this adverse case also avoids selecting instances after observing performance; a timeout is not evidence of infeasibility.
 
