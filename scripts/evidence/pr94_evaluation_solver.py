@@ -12,6 +12,8 @@ import platform
 from time import perf_counter
 
 import pr86_attempt_instrumentation as instrumentation
+from pr86_native_model import NativeModel
+
 from cfl_gnn.experiments.neural_guidance_policy import (
     guidance_directives,
     rank_predictions,
@@ -21,7 +23,6 @@ from cfl_gnn.graph.instance_provenance import sha256_file
 from cfl_gnn.solvers.neural_guidance import _finite
 from cfl_gnn.solvers.paired_partial_start import mathematical_signature, start_evidence
 from cfl_gnn.validation.mathematical import audit_gurobi_solution, common_gap
-from pr86_native_model import NativeModel
 
 METHODS = ("unguided_control", "partial_mip_start")
 GAPS = (0.01, 0.05, 0.06, 0.1)
