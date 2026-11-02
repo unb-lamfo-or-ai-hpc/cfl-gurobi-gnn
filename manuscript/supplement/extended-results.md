@@ -228,6 +228,18 @@ The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cf
 
 Of the 60 received configurations, 47 report the terminal 0.01% criterion and 13 stop at the 12-hour limit. All time-limited cases concern M7. Technical completion of a job is therefore different from attainment of its optimization target [@gurobi2026]. A first observed threshold crossing retains its previous observation and does not identify an exact continuous hitting time.
 
+
+The coverage table retains every instance, including censored and numerically restricted cases.
+
+| Instance | Configurations | Reported target attained | Time-limited |
+|:--|--:|--:|--:|
+| M0 | 15 | 15 | 0 |
+| M4 | 15 | 15 | 0 |
+| M7 | 15 | 2 | 13 |
+| M12 | 15 | 15 | 0 |
+
+: Complete long-horizon coverage at the reported 0.01% target. Attainment does not remove numerical qualifications. {#tbl-cpu-long-coverage}
+
 @tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. Ratios describe individual fixed-seed configurations, not replicated or population-level effects.
 
 {{< include ../tables/partial_cpu_m0.qmd >}}

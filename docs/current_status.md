@@ -8,7 +8,7 @@ The article/AppendixB retain all15 M7 observations, not just successful runs. M4
 
 ## PR93: integrated evidence and merge preparation
 
-The previous head b52cc5ef passed Manuscript41450074164 and all four Evidence41450074141 matrices. Exact-byte checkout protection fixed the Windows hash discrepancy without changing evidence. The new revision strengthens the article's four-instance coverage table and M7 figure/discussion, with101 manuscript tests passed locally.
+The previous head b52cc5ef passed Manuscript41450074164 and all four Evidence41450074141 matrices. Exact-byte checkout protection fixed the Windows hash discrepancy without changing evidence. The new revision strengthens the article's M7 discussion; Appendix B retains the four-instance coverage table, the M0/M7 figure and all60 records. The body-page gate is preserved; the final render remains required.
 
 Eleven original PR89 blobs, including its solver extension, temporal controller and tests, are imported unchanged into PR93 so its next CI exercises the actual combination. The PR89 operator syntax check and PR93 receipt T1 are both retained. The local partial mirror lacks frozen PR78 qualification receipts and could not execute the PR89-focused tests; no admission was bypassed. Full repository CI remains the test of this combination. The four overlapping documentation resolutions and all17 PR89 changed-file identities are recorded in [the integration inventory](research/pr89-integration-resolution.json).
 
