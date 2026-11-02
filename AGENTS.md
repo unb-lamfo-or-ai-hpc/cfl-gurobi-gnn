@@ -1,5 +1,13 @@
 # Repository instructions
 
+## PR94 entry incident — 2 November 2026
+
+Current evidence supersedes earlier root/guidance/dispatcher pending snapshots: roots 3783, guidance 3784 and the 16-parent zero-call installation were received and reviewed. The author submitted 48 evaluation jobs 3785–3832. Four heads FAILED with PR94_EVALUATION_INVALID_STAGE before Python dispatch; 44 successors remain PENDING in the latest author snapshot. No worker files or durable optimize intents were found. No scientific evaluation result is received.
+
+The installed 10fd1af script derived SOURCE from BASH_SOURCE under Slurm's copied batch script. Correction candidate 41beb21c in PR94 uses the exported stage for batch and preserves the worker/resource/submission body. New synthetic spool tests passed T1 Linux; full CI 41489069293 remains under verification. This GitHub correction is not installed or authority for retry.
+
+Preserve all jobs, claims, original source/plan and preparation; no cancel/requeue/dependency change/retry without the mandate's specific human recovery decision. Proposed replacement would reuse all preparation for the same 144 cells, with separate stage/CI/preflight/accepted plan, and preserve the failed attempt. The proposal is not authorized. See the updated closeout/data-release plans and PR94 incident receipts. Keep operational incident/queue instructions outside article and appendices; do not call infrastructure failure optimization censoring. PR89 remains intact. S1–S4 independent work continues, S5/S6 await qualified new results. No merge/publication/new PDF.
+
 ## Accelerated continuation — 2 November 2026
 
 The author's latest direction advances S1–S4 concurrently and leaves final S5/S6 synthesis after PR94. PR89 is complete (60 receipts, 47 reported terminal targets, 13 M7 censures); preserve installed source 9ab7823c and all original evidence. The complete manuscript retains M7 and scoped numerical limits. Prepare the four documentary integration resolutions and actual combined-tree checks; merge remains separately approved.

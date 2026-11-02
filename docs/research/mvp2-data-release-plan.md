@@ -20,6 +20,8 @@ Plano de curadoria de 2 de novembro de 2026. Esta decisão de organização não
 
 O conjunto completo da PR89 inclui 60 células, inclusive as 15 de M7, suas 13 censuras terminais e as restrições de M4/M12. A curadoria não seleciona somente sucessos. As versões parciais de 50/54 células conservam seu papel histórico e não são somadas novamente à versão de 60. Os resultados da PR94 formarão outro conjunto: 144 avaliações novas planejadas não equivalem a 144 resultados recebidos. Os 90 registros históricos permanecem separados e não preenchem células novas.
 
+A tentativa inicial da PR94 também será preservada como evidência operacional: IDs 3785–3832, quatro falhas antes do worker e 44 pendências no último snapshot recebido, logs, diagnóstico e fonte instalada. Não entra como 144 resultados científicos, censuras do solver ou observações de tempo zero. Se houver recuperação autorizada, o catálogo ligará explicitamente tentativa original e substituta, seus planos, fontes, jobs e disposições, sem sobrescrever recibos nem somar novamente artefatos de preparação reutilizados. Cancelamentos só serão registrados após seu retorno efetivo. Os ZIPs privados de transferência continuam sem autorização de publicação.
+
 ## Pacote e rastreabilidade
 
 Preparar partes por função: software; metadados e inventários; modelos e preparação; evidências de otimização; evidências GPU; fontes e produtos editoriais. Cada parte terá inventário de membros, tamanho, SHA256 e descrição. Um catálogo superior deverá ligar campanha, fonte instalada, ambiente, célula, preparação, parâmetros, resultado, custos, accounting e disposição científica. Ele também enumerará materiais retidos, ausentes ou não redistribuíveis, com a consequência para reprodução.
