@@ -1,0 +1,113 @@
+{
+  "record_type": "author_supplied_launch_and_accounting_receipt",
+  "date_received": "2026-11-02",
+  "snapshot_query_timestamp": null,
+  "independent_HPC_access": false,
+  "source_commit": "81c829b66f6dacf703da388e34501d9df0980f45",
+  "plan_sha256": "92ac169c5ccb69962628dc0b91aab6afff183538da87f14e3ebf080b8cfe53fb",
+  "metadata_export": {
+    "sha256": "703609030229554ba663242fdc183d788d43a7555ba35b0270357dc84e0a977d",
+    "bytes": 7496,
+    "local_archive_received": false,
+    "independently_verified": false
+  },
+  "CLI_exit": 0,
+  "jobs": [
+    "3833",
+    "3834",
+    "3835",
+    "3836",
+    "3837",
+    "3838",
+    "3839",
+    "3840",
+    "3841",
+    "3842",
+    "3843",
+    "3844",
+    "3845",
+    "3846",
+    "3847",
+    "3848",
+    "3849",
+    "3850",
+    "3851",
+    "3852",
+    "3853",
+    "3854",
+    "3855",
+    "3856",
+    "3857",
+    "3858",
+    "3859",
+    "3860",
+    "3861",
+    "3862",
+    "3863",
+    "3864",
+    "3865",
+    "3866",
+    "3867",
+    "3868",
+    "3869",
+    "3870",
+    "3871",
+    "3872",
+    "3873",
+    "3874",
+    "3875",
+    "3876",
+    "3877",
+    "3878",
+    "3879",
+    "3880"
+  ],
+  "groups": 48,
+  "maximum_evaluations": 144,
+  "concurrency_ceiling": 4,
+  "automatic_retry": false,
+  "snapshot": {
+    "completed": [
+      {
+        "job": "3835",
+        "elapsed": "00:04:39",
+        "exit": "0:0",
+        "AllocCPUS": 2,
+        "MaxRSS_batch": "380152K"
+      },
+      {
+        "job": "3836",
+        "elapsed": "00:04:41",
+        "exit": "0:0",
+        "AllocCPUS": 2,
+        "MaxRSS_batch": "402008K"
+      }
+    ],
+    "running": [
+      {
+        "job": "3839",
+        "elapsed": "00:11:45",
+        "AllocCPUS": 2
+      },
+      {
+        "job": "3840",
+        "elapsed": "00:11:45",
+        "AllocCPUS": 2
+      }
+    ],
+    "pending": 44,
+    "reported_failed": 0
+  },
+  "expected_cells_in_completed_groups": 6,
+  "collected_scientific_results": 0,
+  "qualification": "Scheduler completion does not establish solver target, feasibility, completion of all three children or metric eligibility; terminal returns remain to be received.",
+  "original_attempt": {
+    "jobs": "3785–3832",
+    "FAILED": 4,
+    "CANCELLED": 44,
+    "archive_sha256": "e8755224290ad952846689701b1513a1d4f9d845aa53d8f9703d7830f48b7e89",
+    "preserved": true
+  },
+  "total_PR94_historical_job_IDs_including_preparation": 98,
+  "no_repeat_of_roots_guidance_training": true
+}

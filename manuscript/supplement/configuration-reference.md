@@ -314,7 +314,7 @@ recorded runtime values. Neither establishes values that were not exported.
 
 The available records do not independently replay the historical training
 fit or resolve every legacy summary discrepancy. Numerical restrictions on
-M4/M12 remain specific to the affected metrics. Solver-seed, root-method and neural-component sensitivities remain future research, as described in the article's conclusion. They are not additional completed observations.
+M4/M12 remain specific to the affected metrics. The prospective solver-seed extension below is separate from these completed observations. Root-method and neural-component sensitivities, including repeated training, remain future research.
 
 
 ## C.9. Environments, model identities and access
@@ -337,3 +337,24 @@ The [public checkpoint ledger](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi
 The repository makes source code, partitions, public outcome tables, figure generators and numerical provenance available. The original benchmark inputs are obtained from their upstream source. Raw checkpoints, original model files and private intermediate artifacts are not implied to be redistributed by the code's MIT license. Access and redistribution terms remain specific to each artifact.
 
 Reproducing the tables and figures from public records is different from rerunning model preparation, learning or optimization. The static publication path reads fixed tables and does not execute those scientific stages. A documented default, a missing timer or a hash identifier is not an observed runtime value, a zero cost or an independently replayed training fit.
+
+## C.10. Prospective solver-seed extension
+
+The extension asks whether the conditional effects of partial Starts persist across solver seeds and a broader set of instance sizes and structures. It holds the learned predictor fixed so that changes in optimization outcomes can be studied without simultaneously changing the network. Its [versioned protocol](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/81c829b66f6dacf703da388e34501d9df0980f45/docs/research/solver-seed-extension-v2/README.md) and [cell manifest](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/81c829b66f6dacf703da388e34501d9df0980f45/docs/research/solver-seed-extension-v2/planned-cells.csv) specify 144 new evaluations. These are prospective methodological specifications, not additional results in this article.
+
+| Component | Fixed specification |
+| --- | --- |
+| Easy instances | F0, F3, F6, F14, F27, F29 |
+| Medium instances | M0, M4, M7, M12, M5, M6, M9, M13, M20, M26 |
+| Experimental factors | B/R/G × solver seeds 42, 43, 44 for each instance |
+| Solve budget | One physical thread, 3,600-second TimeLimit, relative MIPGap 0.0001 |
+| Learned component | Original CPU checkpoint, normalization and validation-selected threshold; 54-instance learning corpus and 34/10/10 split unchanged |
+| Starting information | One frozen G/R Start pair per instance, reused across solver seeds; B has no supplied Start |
+| Execution order | Three fresh solver models per instance–seed block; method order rotates so that every method occupies each position once across seeds |
+| Resource regime | Up to four blocks run concurrently; each reserves one physical core and 64 GiB; no evaluation GPU |
+
+The six additional medium instances extend optimization coverage without redefining the learning split. They are not asserted to be previously unexposed test data. M7 remains in the cohort; the numerical qualifications of M4/M12 are retained rather than removed by a new reported gap. Structural descriptors characterize the medium instances before method outcomes are compared. Baseline runtime may describe empirical difficulty, but does not define an outcome-independent complexity class.
+
+The three seeds perturb Gurobi while leaving training and starting information fixed. They do not represent three independently trained networks or triple the number of independent instances. Comparisons pair B/R/G within instance and seed, report instance-level heterogeneity, and preserve instance clustering in any resampling or statistical model. With only six easy and ten medium instances, external inference remains limited.
+
+For each quality target, analysis distinguishes observed attainment, time censoring, numerical restrictions, infrastructure failure and missing evidence. Terminal primal values, dual bounds and gaps accompany elapsed times. A one-hour timeout is not a time-to-target observation at 3,600 seconds. Time ratios require comparable eligible endpoints; they are not formed by replacing censored times with the limit. The one-hour extension and the serial twelve-hour experiment remain separate datasets. Concurrent resource contention and wall-time stopping can affect observed endpoints, so allocation, overlap and preparation costs remain part of the interpretation. Additional solver seeds address sensitivity, not guaranteed repeatability or the uncertainty of training.

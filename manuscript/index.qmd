@@ -286,7 +286,7 @@ We compared GNN-generated partial starts with unguided and relaxation-ranked sta
 
 Solver gains can disappear with cold preparation, while reuse changes their economics. Faster distributed training can also reduce selected predictive quality and increase allocated GPU-hours. The accounting remains delimited rather than a complete deployment estimate.
 
-Future research should examine solver-seed variability, work-based stopping, root-method contrasts, neural hyperparameters and mechanism ablations under matched validation rules. Independent instances and fuller cost measurements would strengthen external interpretation. These experiments are outside the reported evaluation.
+A separate prospective extension evaluates six easy and ten medium instances with the fixed predictor and Starts, B/R/G, solver seeds 42/43/44, one physical thread and a 3,600-second limit. It examines solver-seed sensitivity and broader instance coverage; Appendix C specifies the paired design. Its results are not part of the evidence reported here. Work-based stopping, root-method contrasts, neural hyperparameters, retraining and mechanism ablations remain future research.
 
 The repository provides code, partitions and versioned evidence. Project-owned material uses MIT; model and benchmark redistribution retain their respective rights and access conditions.
 

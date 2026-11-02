@@ -1,5 +1,13 @@
 # Repository instructions
 
+## Current authority and recovery launch — 2 November 2026
+
+This section supersedes the older pending/unauthorized snapshots below. The author specifically authorized merging PR89 and PR93 into develop after checks; main/PR95 merge and publication still need a separate decision. PR89 integration must preserve installed source9ab7823c and all historical evidence. No HPC mutation accompanies Git integration.
+
+The first PR94 evaluation attempt is closed:4 FAILED before the worker and44 CANCELLED, with the closure archive independently verified. The specifically authorized replacement ran source81c829b6 with reviewed plan92ac169c and submitted jobs3833–3880 (48 blocks,144 maximum solves,four chains,no automatic retry). The author reports2 COMPLETED,2 RUNNING,44 PENDING; no query timestamp was supplied. Six solves are expected in the completed blocks, but zero new evaluation results have been received/qualified. The installation metadata export70360903 is author-reported and not locally transferred. See [launch receipt](docs/research/pr94-recovery-launch-20261102.json). Preserve both attempts and fixed sources/plans; do not retry, reinstall or change preparation to follow documentary commits.
+
+Continue S1–S4, integrating only the prospective extension's methods/objectives into reader prose. S5/S6 await qualified returns. Article and appendices contain no scheduler/incident/coauthor instructions. HPC access remains exclusively through the author's CLI; local scratch only, no temporary cloud/blob storage. Reuse existing PR95 for later develop→main promotion; do not duplicate it.
+
 ## PR94 entry incident — 2 November 2026
 
 Current evidence supersedes earlier root/guidance/dispatcher pending snapshots: roots 3783, guidance 3784 and the 16-parent zero-call installation were received and reviewed. The author submitted 48 evaluation jobs 3785–3832. Four heads FAILED with PR94_EVALUATION_INVALID_STAGE before Python dispatch; 44 successors remain PENDING in the latest author snapshot. No worker files or durable optimize intents were found. No scientific evaluation result is received.
