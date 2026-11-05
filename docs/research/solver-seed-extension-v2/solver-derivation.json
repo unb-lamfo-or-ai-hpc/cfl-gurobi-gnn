@@ -1,0 +1,18 @@
+{
+  "schema": "pr94_evaluation_solver_derivation_v1",
+  "reference_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5",
+  "reference_path": "scripts/evidence/pr86_solver.py",
+  "reference_git_blob_sha": "69ed7dee563ed31583f3ea6dbc9a911fd6a62b36",
+  "reference_sha256": "36f6a225f198266d9ec18b7fd76deca3252b9b43ef7d0f286763af2e57d86444",
+  "derived_path": "scripts/evidence/pr94_evaluation_solver.py",
+  "derived_sha256": "7ac2f24b0a2bd90190504adc5e4513eb3cb65d0c67ebce0f14e84b35092502d3",
+  "allowed_differences": [
+    "module description",
+    "import grouping",
+    "explicit allowance of a frozen empty Start under the evaluation policy"
+  ],
+  "historical_solver_modified": false,
+  "installed_preparation_modified": false,
+  "source_AST_equivalence_test": "tests/evidence/test_pr94_evaluation.py",
+  "execution_or_scientific_release": false
+}

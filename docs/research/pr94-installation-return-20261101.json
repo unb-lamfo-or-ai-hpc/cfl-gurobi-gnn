@@ -1,0 +1,182 @@
+{
+  "kind": "author_run_zero_scientific_call_installation_receipt",
+  "record_date": "2026-11-01",
+  "query_timestamp": null,
+  "archive_sha256": "e0514419b723c5999bb5f22a3caa0b414bd38d578e7b844b3e5942f77a9eb4ac",
+  "archive_bytes": 1709,
+  "report_sha256": "c2a24ddae3b86c1f5a653e5d065ab7e2866adfb8abee9b601f7625017a2373d8",
+  "validation": {
+    "archive_sha256_CRC_and_member_hash_verified": true,
+    "exact_archive_members": [
+      "installation-preflight.json",
+      "manifest.json"
+    ],
+    "six_model_hashes_match_prior_readonly_preflight": true,
+    "reservation_budget_matches_published_proposal": true,
+    "source_and_plan_digests_match_author_return": true,
+    "full_private_plan_in_archive": false,
+    "plan_sha256_independently_recomputed": false,
+    "checkpoint_digest_enforced_by_reviewed_inspect_code": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "checkpoint_bytes_not_received_or_deserialized": true
+  },
+  "report": {
+    "environment": {
+      "feature_imports": {
+        "packaging": "26.0",
+        "pandas": "2.3.3",
+        "pyarrow": "24.0.0",
+        "scipy": "1.15.3",
+        "tqdm": "4.67.3"
+      },
+      "gurobipy": "13.0.1",
+      "numpy": "1.26.4",
+      "python": "3.10.20",
+      "torch": "2.1.2+cu121",
+      "torch-geometric": "2.7.0"
+    },
+    "execution_submitted": false,
+    "inference_calls_added": 0,
+    "optimization_calls_added": 0,
+    "parents": [
+      {
+        "model_sha256": "9adf7a5ee5303f75576adebdfde999c160cd9603aa68a95bbc1d98da52b4fe17",
+        "parent": "CFL_medium_instance_5"
+      },
+      {
+        "model_sha256": "08c54891c1d202176f88cfe38c720957bf6a3e1b3ebde4995c03fb5cec717e48",
+        "parent": "CFL_medium_instance_6"
+      },
+      {
+        "model_sha256": "57820cdc613ed5349954fad5c34fdc233117270ba75138b1646b2a8fcd145532",
+        "parent": "CFL_medium_instance_9"
+      },
+      {
+        "model_sha256": "f219560e7ee07013152d4069af8585848e853d6d8bc213b248ba2ebcd0d8dde5",
+        "parent": "CFL_medium_instance_13"
+      },
+      {
+        "model_sha256": "26598f6e365c8bf7da383802accd9cf768103a6ffa6b36acf056b4168e2c8870",
+        "parent": "CFL_medium_instance_20"
+      },
+      {
+        "model_sha256": "568bbff8df060b2de1df4d9bf3815d77e2e18ac73158fe676ba121182add70c8",
+        "parent": "CFL_medium_instance_26"
+      }
+    ],
+    "plan_sha256": "b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77",
+    "protocol_id": "pr94_isolated_preparation_v1",
+    "raw_paths_included": false,
+    "reservation_budget": {
+      "automatic_retries": 0,
+      "auxiliary_optimization_calls": 0,
+      "cgroup_sampled_interrupt_GiB": 56,
+      "concurrent_jobs": 1,
+      "execution_authorized": false,
+      "financial_or_energy_estimate": null,
+      "free_space_admission_required_GiB": 80,
+      "gpu_device_proposal": "one_Tesla_V100_32GB_same_historical_guidance_class",
+      "human_review_time_included": false,
+      "job_cgroup_limit_GiB": 64,
+      "jobs_ceiling": 20,
+      "logical_AllocCPU_hours_if_two_per_physical_core": 156,
+      "logical_AllocCPU_scenario_is_not_verified_billing": true,
+      "memory_gib_per_job": 64,
+      "optimization_calls_ceiling": 60,
+      "optimizer_hours_ceiling": 55,
+      "private_working_storage_allowance_GiB": 64,
+      "queue_time_included": false,
+      "reserved_gpu_hours_ceiling": 1,
+      "reserved_memory_gib_hours_ceiling": 4800,
+      "reserved_physical_core_hours_ceiling": 78,
+      "reuse_of_90_cells_required": true,
+      "serial_job_wall_hours_ceiling": 75,
+      "soft_memory_decimal_GB": 48,
+      "stages": [
+        {
+          "child_deadline_seconds": 1140,
+          "children_per_job": 6,
+          "forward_calls": 0,
+          "gpus_each": 0,
+          "jobs": 1,
+          "memory_mib_each": 65536,
+          "optimization_calls": 6,
+          "optimizer_seconds": 3600,
+          "physical_cores_each": 1,
+          "stage": "roots",
+          "wall_seconds_each": 7200
+        },
+        {
+          "child_deadline_seconds": 3540,
+          "children_per_job": 1,
+          "forward_calls": 6,
+          "gpus_each": 1,
+          "jobs": 1,
+          "memory_mib_each": 65536,
+          "optimization_calls": 0,
+          "optimizer_seconds": 0,
+          "physical_cores_each": 4,
+          "stage": "guidance",
+          "wall_seconds_each": 3600
+        },
+        {
+          "child_deadline_seconds": 3780,
+          "children_per_job": 3,
+          "forward_calls": 0,
+          "gpus_each": 0,
+          "jobs": 18,
+          "memory_mib_each": 65536,
+          "optimization_calls": 54,
+          "optimizer_seconds": 194400,
+          "physical_cores_each": 1,
+          "stage": "evaluation",
+          "wall_seconds_each": 14400
+        }
+      ],
+      "status": "complete_conditional_reservation_proposal_not_execution_release",
+      "storage_is_proposed_not_reserved_or_installed_guard": true,
+      "training_calls": 0
+    },
+    "source_commit": "c623fe858f62d8fa2a70eebf6f3aeee5692e8f90",
+    "source_files_bound": 424,
+    "storage": {
+      "free_space_checked": true,
+      "working_bytes_observed": 313877160
+    },
+    "training_calls_added": 0
+  },
+  "CI": {
+    "source_commit": "c623fe858f62d8fa2a70eebf6f3aeee5692e8f90",
+    "run_id": 41368451031,
+    "url": "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/actions/runs/41368451031",
+    "all_five_jobs_passed": true,
+    "evidence_matrix": [
+      "ubuntu-latest Python3.10",
+      "ubuntu-latest Python3.12",
+      "windows-latest Python3.10",
+      "windows-latest Python3.12"
+    ],
+    "focused_T1_tests_each": 45,
+    "T3_tests_each": 1071,
+    "synthetic_CPU_tensor_tests": 5,
+    "scientific_validity_certified": false
+  },
+  "disposition": {
+    "zero_call_installation_receipt_accepted": true,
+    "installed_source_must_remain_at": "c623fe858f62d8fa2a70eebf6f3aeee5692e8f90",
+    "installed_plan_must_remain_at": "b41953a81f48a91d73c8112bb6794ccce78e72c41ce6ddef7a28ff7e4c098a77",
+    "root_graph_Start_artifacts_generated": false,
+    "root_submission_released": false,
+    "guidance_submission_released": false,
+    "evaluation_dispatch_implemented": false,
+    "live_allocation_affinity_cgroup_GPU_and_graph_admission_pending": true,
+    "PR89_source_or_campaign_changed": false,
+    "PDF_generated": false,
+    "merge_performed": false,
+    "next_gate": "Finish PR89, receive its terminal tail, then use separately reviewed author CLI with the frozen installed source and plan; no reinstall or automatic retry."
+  },
+  "limitations": [
+    "The exported report was verified against the author digest, reviewed code and published metadata; the private plan and weights were not independently replayed.",
+    "Auxiliary packages are recorded as installed; CI uses pyarrow21.0.0 and tqdm4.67.1 whereas HPC reports24.0.0 and4.67.3. Current HPC graph serialization/inference parity remains a live-stage gate; no package upgrade is requested.",
+    "A zero-call installation and passing CI do not certify scientific results, current batch allocation, or metric eligibility of90 archival cells."
+  ]
+}
