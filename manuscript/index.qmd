@@ -127,7 +127,7 @@ Each method uses a fresh copy of the same model. Selected values enter the Start
 
 @fig-pipeline summarizes the offline learning and application stages. The detailed R/G matching rules and a schematic example are in Appendix A.
 
-![Learning a predictor and supplying candidate information to an unchanged MILP. R matches G's assignment count k and positive count q.](figures/figure_pipeline.pdf){#fig-pipeline width=90% fig-pos="H"}
+![Learning a predictor and supplying candidate information to an unchanged MILP. R matches G's assignment count k and positive count q.](figures/figure_pipeline.pdf){#fig-pipeline width=87% fig-pos="!htbp"}
 
 The frozen predictor and validation-selected rule transfer to application. Preparation supplies aligned model/root information; it does not transfer the new instance's solution. All methods retain the original feasible region.
 
