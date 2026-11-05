@@ -183,20 +183,25 @@ class PreparationPlanTests(unittest.TestCase):
             PLAN.compile_plan(self.package)
 
     def test_source_hashes_are_checked_without_importing_their_code(self):
-        self.assertIsNone(
-            PLAN.verify_sources(
-                PLAN.read_json(self.package / "source-bindings.json"), ROOT
-            )
+        binding = PLAN.read_json(self.package / "source-bindings.json")
+        reference = Path(self.temp.name) / "reference"
+        for item in binding["sources"]:
+            relative = Path(item["path"])
+            source = ROOT / relative
+            if item["path"] == "scripts/evidence/pr86_solver.py":
+                # The plan binds the pre-PR89 blob. Develop carries the PR89
+                # implementation at the same path, which is tested separately.
+                source = ROOT / "tests/evidence/fixtures/pr94/pr86_solver.py.txt"
+            dest = reference / relative
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, dest)
+
+        PLAN.verify_sources(binding, reference)
+        (reference / binding["sources"][0]["path"]).write_text(
+            "changed source", encoding="utf-8"
         )
-        fake_source = Path(self.temp.name) / "source"
-        first = PLAN.read_json(self.package / "source-bindings.json")["sources"][0]
-        dest = fake_source / first["path"]
-        dest.parent.mkdir(parents=True)
-        dest.write_text("changed source", encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "source_bytes"):
-            PLAN.verify_sources(
-                PLAN.read_json(self.package / "source-bindings.json"), fake_source
-            )
+            PLAN.verify_sources(binding, reference)
 
     def test_historical_artifact_chains_are_preserved_separately(self):
         value = PLAN.read_json(self.package / "historical-artifact-bindings.json")
