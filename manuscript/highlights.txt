@@ -1,5 +1,5 @@
-Partial warm-start effects vary with instance, thread cap and endpoint.
-Paired CFL comparisons separate primal quality, dual bounds and solve time.
-Preparation costs can reverse an observed solver-level advantage.
-Reuse scenarios change cost comparisons without removing preparation.
-Faster distributed training accompanies lower F1 and higher GPU-hours.
+Relaxation and neural starts match support and positive counts.
+Warm-start benefits vary by instance, quality target and thread setting.
+Solver-time gains can reverse once cold preparation is counted.
+Paired solver seeds expose a medium-instance attainment advantage.
+Distributed training trades lower elapsed time for lower selected F1.

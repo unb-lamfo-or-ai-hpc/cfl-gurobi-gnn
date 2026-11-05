@@ -213,32 +213,7 @@ The live manual and Help Center were consulted on 30 October 2026. Their stateme
 
 ## C.5. Solver engine, modeling interface and reproducibility {#sec-solver-interfaces}
 
-The evaluated CPU path reads the original model and supplies Starts through gurobipy. Gurobipy is Gurobi's Python API; Pyomo is a modeling framework that can call Gurobi or other engines. Changing a Python interface is therefore different from replacing the optimization algorithm. The comparisons below explain reproducibility requirements; they are not additional experimental arms or performance rankings.
-
-### C.5.1. Gurobipy and Pyomo with Gurobi
-
-Pyomo offers file-based, direct and persistent Gurobi interfaces. Direct interfaces translate a model to gurobipy without an intermediate model file; persistent interfaces retain the solver model and require model updates to be synchronized. Interface capabilities and environment handling differ [@pyomogurobi2026]. Consequently, the name "Gurobi" and the same seed do not establish that two interfaces supplied identical solver inputs.
-
-For algorithmic comparisons, the relevant object is the model actually received by Gurobi, together with its row/column order, coefficients, bounds, domains, objective convention, starts, parameter map and retained solver state. Equivalent algebra written in two systems may produce a different matrix ordering or preprocessing path. A persistent model may also carry state that a fresh model does not. If these effective inputs and the execution conditions are identical, the engine's documented determinism applies; Pyomo neither adds a separate determinism guarantee nor inherently makes Gurobi stochastic.
-
-Pyomo's LP writer provides file_determinism controls and explicit row/column ordering options. Symbolic labels aid identification; stable serialization does not establish identical branch-and-bound trajectories or repeated wall-time endpoints [@pyomowriter2026]. Reproducible model construction and reproducible optimization are separate requirements. The present native Gurobi results do not validate a Pyomo reimplementation.
-
-### C.5.2. SCIP and HiGHS
-
-SCIP's documented parallel/mode distinguishes deterministic (1) from opportunistic (0) concurrent solving. Activating its concurrent solver requires a threading-enabled build and a concurrent solve call; setting a thread maximum alone does not establish the executed mode. Reproduction also depends on the SCIP/LP-solver build, randomization controls and clock definition [@scipdocs2026; @scipconcurrent2026]. Its time and node limits describe different effort boundaries; neither is assigned an artificial equivalence to Gurobi work units.
-
-HiGHS exposes random_seed, threads, parallel and time_limit controls. Its stable documentation distinguishes parallel LP routines from parallel MIP search, with MIP search enabled through the parallel setting [@highsoptions2026; @highsparallel2026]. A thread request alone is not evidence of the number of active search workers. Reproducibility should therefore identify the exact release, build, options, active algorithm and recorded stopping condition. A fixed random_seed is not, by itself, an empirical demonstration of repeatable terminal states.
-
-For context, the consulted SCIP parameter page identifies version 10.1.0 and the Pyomo writer page version 6.10.1; the HiGHS links refer to its stable documentation as accessed on 30 October 2026. These are documentation versions, not software versions installed for the reported CPU comparison.
-
-| Route | Where the relevant controls reside | What cannot be inferred from the interface name |
-|:--|:--|:--|
-| Native gurobipy | Gurobi model, attributes, parameter map and environment | Complete exported settings or repeatable elapsed-time endpoints |
-| Pyomo with Gurobi | Pyomo translation/state plus the underlying Gurobi configuration | Input identity with a native model or immunity to wall-time effects |
-| SCIP | SCIP and LP backend, randomization, parallel mode, build and clock | That deterministic concurrent mode was actually invoked |
-| HiGHS | Exact release/build, random seed, selected algorithm, parallel/thread and limit options | Active search concurrency or empirically established repeatability |
-
-The common methodological lesson is to compare identified solver inputs and endpoints, rather than labels such as "Python", "parallel" or "deterministic solver". Equal numeric seeds across engines do not represent matched random choices. A future cross-engine comparison would also need compatible start semantics, model identity checks, common quality definitions and explicit cost boundaries. It is not part of the reported B/R/G evaluation.
+The evaluated CPU path uses native gurobipy. A Pyomo front end may call the same engine, but translation and persistent state can change the effective model, row order, starts and parameters [@pyomogurobi2026; @pyomowriter2026]. SCIP and HiGHS document their own parallel modes, randomization and stopping controls [@scipdocs2026; @scipconcurrent2026; @highsoptions2026; @highsparallel2026]. These interfaces and engines are contextual examples. The reported comparisons all use Gurobi and identified inputs.
 
 ## C.6. Observations and resource limits
 
@@ -259,6 +234,40 @@ define these controls. A threshold, reporting cadence and memory guard are
 not interchangeable with solver stopping criteria. Missing data remain missing.
 These specifications alone establish neither attained targets nor the
 quality or cost of an individual run.
+
+### C.6.1. Performance, efficiency and scalability {#sec-computational-terms}
+
+The timing boundary and the resources used belong to each measurement. @tbl-computational-terms links the definitions to the evidence from this study [@silva2025pascal; @cornellscaling].
+
+| Concept | Definition and interpretation here |
+|:--|:--|
+| Computational performance | Solver runtime, application elapsed time including in-scope construction and transfer, memory and attained primal/dual quality. Each clock covers named phases. |
+| Speedup | Reference execution time divided by comparison time for comparable work, termination and clock. The B/R/G time-to-target ratios use a common observed target. |
+| Parallel efficiency | Speedup divided by the resource ratio. Thread-cap or GPU-count normalization does not estimate utilization or energy. |
+| Strong scaling | Vary resources at fixed problem size. The CPU thread sweep describes this within method and instance for comparable endpoints. |
+| Weak scaling | Increase problem size and resources together while keeping work per resource approximately fixed. The experiments do not follow this design. |
+| Problem-size scale-up | Observe behavior on progressively larger problems, without requiring constant work per resource. Easy and medium cohorts differ in structure and do not define a controlled size ladder. |
+| Throughput | Specified completed work divided by elapsed time for a stated workload, allocation and observation window. Concurrent jobs can affect batch throughput independently of within-solve scaling. |
+
+: Computational terms and their measurement boundaries. {#tbl-computational-terms}
+
+The one-versus-four-GPU pair provides a point speedup and GPU-count-normalized efficiency for matched training work. The CPU allocation also changes, and the selected models differ in predictive quality. This pair supplies two resource settings rather than an empirical scaling curve. The one-hour evaluation records up to two overlapping independent blocks. Its elapsed campaign time and allocated CPU-hours describe a workload schedule.
+
+### C.6.2. Recorded infrastructure and allocation {#sec-hpc-environment}
+
+@tbl-hpc-environment distinguishes inventory, requests and observations. The 6 Gb/s storage interface is an inventory specification. CPU model and frequency, installed node model, OS release, Slurm version and firmware are unverified in the cited records.
+
+| Scope | Inventory or request | Recorded allocation or measurement |
+|:--|:--|:--|
+| Node | Two 20-core CPUs, 512 GB RAM, eight 32-GB V100s | Slurm site inspection for the one-hour campaign lists 80 configured logical CPUs and 490,042 MiB configured memory. This is consistent with two logical CPUs per physical core at node level; it does not establish the SMT policy of every job. |
+| CPU 12 h | Five physical thread caps, 64 GiB per job, no GPU | Solver Runtime, callback timestamps and sampled memory are distinct; see the per-job records in Appendix B. |
+| CPU 1 h, three seeds | One physical core, 64 GiB per block, no GPU | 89.62 summed job-hours and 179.23 allocated logical CPU-hours; two blocks at peak overlap. Gurobi 13.0.1, Python 3.10.20, PyTorch 2.1.2+cu121 and PyG 2.7.0 in the installation record. |
+| GPU serial | One GPU, four physical CPU cores and 128 GiB host RAM | Tesla V100-SXM2-32GB; job elapsed 2,021 s, sampled host cgroup peak 5.731 GiB. |
+| GPU DDP | Four GPUs, sixteen physical CPU cores and 128 GiB host RAM | Tesla V100-SXM2-32GB per GPU; job elapsed 1,104 s, sampled host cgroup peak 15.524 GiB. |
+
+: Inventory and campaign resource accounting. {#tbl-hpc-environment}
+
+The GPU-hours are allocation products. The sampled host cgroup peaks describe the observed job processes. The receipts do not measure energy, instantaneous peak memory or the division of time among communication and device computation.
 
 ## C.7. Matched GPU training is a separate configuration
 
@@ -314,7 +323,7 @@ recorded runtime values. Neither establishes values that were not exported.
 
 The available records do not independently replay the historical training
 fit or resolve every legacy summary discrepancy. Numerical restrictions on
-M4/M12 remain specific to the affected metrics. The prospective solver-seed extension below is separate from these completed observations. Root-method and neural-component sensitivities, including repeated training, remain future research.
+M4/M12 remain specific to the affected metrics. The one-hour solver-seed comparison below uses a separate protocol. Root-method and neural-component sensitivities, including repeated training, remain future research.
 
 
 ## C.9. Environments, model identities and access
@@ -338,9 +347,9 @@ The repository makes source code, partitions, public outcome tables, figure gene
 
 Reproducing the tables and figures from public records is different from rerunning model preparation, learning or optimization. The static publication path reads fixed tables and does not execute those scientific stages. A documented default, a missing timer or a hash identifier is not an observed runtime value, a zero cost or an independently replayed training fit.
 
-## C.10. Prospective solver-seed extension
+## C.10. One-hour solver-seed comparison {#sec-pr94-protocol}
 
-The extension asks whether the conditional effects of partial Starts persist across solver seeds and a broader set of instance sizes and structures. It holds the learned predictor fixed so that changes in optimization outcomes can be studied without simultaneously changing the network. Its [versioned protocol](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/81c829b66f6dacf703da388e34501d9df0980f45/docs/research/solver-seed-extension-v2/README.md) and [cell manifest](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/81c829b66f6dacf703da388e34501d9df0980f45/docs/research/solver-seed-extension-v2/planned-cells.csv) specify 144 new evaluations. These are prospective methodological specifications, not additional results in this article.
+The extension asks whether the conditional effects of partial Starts persist across solver seeds and a broader set of instance sizes and structures. It holds the learned predictor fixed so that changes in optimization outcomes can be studied without simultaneously changing the network. Its [versioned protocol](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/81c829b66f6dacf703da388e34501d9df0980f45/docs/research/solver-seed-extension-v2/README.md) and [cell manifest](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/81c829b66f6dacf703da388e34501d9df0980f45/docs/research/solver-seed-extension-v2/planned-cells.csv) specify the 144 evaluations reconciled in Appendix B.
 
 | Component | Fixed specification |
 | --- | --- |
@@ -351,10 +360,17 @@ The extension asks whether the conditional effects of partial Starts persist acr
 | Learned component | Original CPU checkpoint, normalization and validation-selected threshold; 54-instance learning corpus and 34/10/10 split unchanged |
 | Starting information | One frozen G/R Start pair per instance, reused across solver seeds; B has no supplied Start |
 | Execution order | Three fresh solver models per instance–seed block; method order rotates so that every method occupies each position once across seeds |
-| Resource regime | Up to four blocks run concurrently; each reserves one physical core and 64 GiB; no evaluation GPU |
+| Resource regime | Four execution chains with a ceiling of four concurrent blocks; two observed at peak; one physical core and 64 GiB reserved per block; no evaluation GPU |
 
-The six additional medium instances extend optimization coverage without redefining the learning split. They are not asserted to be previously unexposed test data. M7 remains in the cohort; the numerical qualifications of M4/M12 are retained rather than removed by a new reported gap. Structural descriptors characterize the medium instances before method outcomes are compared. Baseline runtime may describe empirical difficulty, but does not define an outcome-independent complexity class.
+The six additional medium instances extend optimization coverage without redefining the learning split. They are not asserted to be previously unexposed test data. M7 remains in the cohort; the numerical qualifications of M4/M12 are retained rather than removed by a new reported gap. The easy and medium designations are inherited from the benchmark. A baseline runtime can describe empirical difficulty under the specified budget.
 
 The three seeds perturb Gurobi while leaving training and starting information fixed. They do not represent three independently trained networks or triple the number of independent instances. Comparisons pair B/R/G within instance and seed, report instance-level heterogeneity, and preserve instance clustering in any resampling or statistical model. With only six easy and ten medium instances, external inference remains limited.
 
-For each quality target, analysis distinguishes observed attainment, time censoring, numerical restrictions, infrastructure failure and missing evidence. Terminal primal values, dual bounds and gaps accompany elapsed times. A one-hour timeout is not a time-to-target observation at 3,600 seconds. Time ratios require comparable eligible endpoints; they are not formed by replacing censored times with the limit. The one-hour extension and the serial twelve-hour experiment remain separate datasets. Concurrent resource contention and wall-time stopping can affect observed endpoints, so allocation, overlap and preparation costs remain part of the interpretation. Additional solver seeds address sensitivity, not guaranteed repeatability or the uncertainty of training.
+For each quality target, analysis distinguishes observed attainment, time censoring, numerical restrictions, infrastructure failure and missing evidence. Terminal primal values, dual bounds and gaps accompany the fixed-horizon records. We use the last callback at or before 3,600 seconds, or the terminal record if the solver ended sooner. The event time is the first observed crossing within budget. Time ratios use paired, observed, eligible crossings only. The one-hour extension and the serial twelve-hour experiment remain separate datasets. Concurrent resource contention and wall-time stopping can affect observed endpoints, so allocation, overlap and preparation costs remain part of the interpretation. Additional solver seeds address sensitivity, not guaranteed repeatability or the uncertainty of training.
+
+
+## C.11. What can be reproduced from the released materials? {#sec-reproduction-levels}
+
+Analytical reproduction uses the derived CSV/JSON records and static figure and table builders. The one-hour return supplies 144 derived records and a reconciler for the sealed archives. Raw solution vectors were reviewed for a delimited subset of the twelve-hour campaign and are separate from these public summaries.
+
+Reproducing the predictions additionally requires the original models, aligned root values, normalization state and checkpoint bytes. Repeating training and optimization also requires the labels, folds, software and hardware environment, solver access and the original controls. The repository records these inputs and identities. Some inputs and intermediate bytes have separate access and redistribution conditions, and neither the prediction chain nor the full experiment has been independently replayed for this release.

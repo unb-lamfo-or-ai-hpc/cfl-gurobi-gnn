@@ -28,18 +28,17 @@ author:
       - id: uja
         name: Data Science and Computer Intelligence Institute, University of Jaén
 keywords:
-  - Mixed-Integer Linear Programming
-  - Capacitated facility location
+  - Mixed-integer programming
+  - Facility location
   - Graph neural networks
-  - Learning to optimize
-  - Partial MIP starts
+  - Learned warm starts
   - Computational reproducibility
 abstract: |
-  Capacitated Facility Location (CFL) problems are commonly formulated using Mixed-Integer Linear Programming (MILP), whose solution requires both finding feasible decisions and assessing their quality. A Graph Neural Network (GNN) can propose partial warm starts, but their usefulness depends on the solver response and the cost of preparing them. We evaluate these two aspects by comparing optimization without an external start, a root-relaxation-based start, and a GNN-generated start. The principal retrospective comparison comprises six easy and four medium benchmark instances, one fixed solver seed, and five thread configurations. For the six easy instances, geometric-mean GNN-to-baseline solver-time ratios indicate longer runtimes at one and two threads and shorter runtimes at four, eight, and sixteen threads. At sixteen threads, the GNN-to-baseline ratio is 0.843 for solver runtime and 1.046 for supervised execution with delimited cold preparation, illustrating how overhead can reverse a solver-level advantage. Medium-instance outcomes are interpreted with endpoint-specific censoring and numerical qualifications. A complementary one-versus-four-GPU training comparison yields a 1.831-fold whole-job speedup, accompanied by lower selected predictive quality and higher allocated GPU-hours. These observations show that the practical value of GNN-generated partial starts depends on instance characteristics, resource settings, and the scope and reuse of preparation work. Predictive accuracy and training speed therefore need to be evaluated alongside optimization outcomes and computational costs.
+  We study whether Graph Neural Network (GNN) partial starts improve Mixed-Integer Linear Programming (MILP) for the Capacitated Facility Location (CFL) problem. We compare no external start, a start based on the root relaxation, and a neural start with matched assignment counts. On six easy instances at sixteen threads, the GNN-to-baseline time ratio is 0.843 for solver runtime and 1.046 for supervised execution with delimited cold preparation. In the twelve-hour comparison, the neural start reached the target sooner than the baseline on four of five thread settings for one medium instance, while another medium instance remained censored with the neural start at every setting. In a separate one-hour comparison across three solver seeds, the neural start alone attained the reported 0.01% gap on two of ten medium instances. One of those cases retains a numerical restriction. A separate training comparison yielded a 1.831-fold whole-job speedup with four graphics processing units, alongside lower selected predictive quality. The findings identify conditions under which partial starts can improve search and show how preparation cost and reuse affect their practical value.
 ---
 # Introduction
 
-Capacitated Facility Location (CFL) concerns which facilities to open and how to serve customer demand while respecting capacity and minimizing cost. Mixed-Integer Linear Programming (MILP) expresses the discrete decisions and their interactions in a common mathematical model. Solving that model requires both finding feasible solutions and assessing how far their cost may be from the optimum. Good initial information may help either task, but its usefulness must be established through the solver's outcomes.
+Capacitated Facility Location (CFL) asks which facilities to open and how to serve customers within capacity at minimum cost. A Mixed-Integer Linear Programming (MILP) solver searches for feasible decisions and bounds their cost.
 
 A Graph Neural Network (GNN) can learn patterns in related instances and propose values for some binary decisions. These values are partial warm-start candidates: they need not form a complete or feasible solution. The solver attempts to complete them and may repair or reject them. Supplying a candidate leaves the original constraints and variable domains unchanged.
 
@@ -97,7 +96,7 @@ The relaxation values are captured during a separate preparation stage. Gurobi r
 
 ## Predictor, training and validation
 
-The Gasse-inspired network alternates constraint and variable updates. A constraint combines messages from its incident variables; a variable then receives information from its incident constraints, including the newly updated constraint state. Two such cycles use width-32 embeddings, coefficient-aware multilayer perceptrons, sum aggregation and ReLU activations. Fixed affine prenormalization is fitted on training graphs only. The final head produces binary-variable logits $s_j$ and sigmoid scores $q_j=\sigma(s_j)$.
+The Gasse-inspired network alternates constraint and variable updates. A constraint combines messages from its incident variables; a variable then receives information from its incident constraints, including the newly updated constraint state. The fitted configuration uses two propagation cycles and 32-dimensional embeddings, with 26,753 trainable parameters. Each direction has separate message and update perceptrons with a ReLU hidden activation. Messages are summed and normalized with fixed statistics fitted on training graphs. The final head produces binary-variable logits $s_j$ and sigmoid scores $q_j=\sigma(s_j)$.
 
 This is one fixed architecture, not the result of a comparative architecture search. Its typed propagation is appropriate to the variable--constraint representation. Two cycles and modest width define the evaluated capacity; their numerical values are not claimed to be optimal. Appendix A gives the equations and distinguishes this implementation from the upstream branching network and other GNN families.
 
@@ -127,7 +126,7 @@ Each method uses a fresh copy of the same model. Selected values enter the Start
 
 @fig-pipeline summarizes the offline learning and application stages. The detailed R/G matching rules and a schematic example are in Appendix A.
 
-![Learning a predictor and supplying candidate information to an unchanged MILP. R matches G's assignment count k and positive count q.](figures/figure_pipeline.pdf){#fig-pipeline width=100%}
+![Learning a predictor and supplying candidate information to an unchanged MILP. R matches G's assignment count k and positive count q.](figures/figure_pipeline.pdf){#fig-pipeline width=87% fig-pos="!htbp"}
 
 The frozen predictor and validation-selected rule transfer to application. Preparation supplies aligned model/root information; it does not transfer the new instance's solution. All methods retain the original feasible region.
 
@@ -140,13 +139,14 @@ The benchmark contains 90 candidates divided equally among easy, medium and hard
 | Evidence | Instances and design | Interpretation |
 |:--|:--|:--|
 | Predictor fitting and selection | 34 train / 10 validation / 10 predictive test | Quality-selected labels; fixed original-instance roles |
-| Principal CPU comparison | Six easy + four medium; B/R/G; five thread caps; seed 42 | 150 method/resource observations on ten previously exposed instances |
-| Preliminary optimization study | Six medium test instances; separate six-medium validation cohort | Historical protocol and population; descriptive supporting evidence |
-| Matched GPU training | Serial one GPU versus distributed four GPUs; same learning split | One matched-work training pair, separate from the CPU predictor |
+| Principal CPU comparison | Six easy, four medium; five thread caps; seed 42 | 150 observations; ten exposed instances |
+| One-hour solver-seed comparison | Six easy, ten medium; one thread; seeds 42–44 | 144 runs paired by instance and seed |
+| Preliminary CPU study | Six medium test and six validation instances | Separate historical protocol |
+| Matched GPU training | One versus four GPUs; same split | One matched-work pair |
 
 : Populations and purposes of the reported comparisons. {#tbl-populations}
 
-An original instance is called a parent only when identifying data lineage. It is the comparison unit; binary targets, methods and thread caps are not additional independent instances. The predictive tests and principal CPU instances were historically exposed. These results do not constitute independent generalization. The separate historical optimization test uses medium instances 0, 4, 7, 9, 12 and 20; the principal CPU comparison uses medium 0, 4, 7 and 12. Their budgets and observations are not pooled.
+The instance is the comparison unit. Binary targets, methods, thread caps and seeds supply measurements within it. The predictive tests and principal CPU instances were historically exposed. The historical optimization test and the 12-hour CPU campaign retain their own populations and clocks, as detailed in Appendix B.
 
 ## Solver protocols and repeatability
 
@@ -156,7 +156,7 @@ Gurobi is designed for deterministic search under controlled inputs, version and
 
 Method=-1 delegates continuous/root algorithm selection to Gurobi; Method=1 explicitly requests dual simplex. Automatic selection commonly chooses dual simplex for MIP roots, and may choose deterministic concurrent methods for larger roots [@gurobi2026]. Neither an actual root algorithm nor an undocumented parameter value is inferred from a default.
 
-TimeLimit can interrupt otherwise repeatable search at different amounts of work as machine conditions vary. WorkLimit instead limits algorithmic work under otherwise deterministic conditions; its units are not universal seconds [@gurobiwork2026]. It is a different budget, not a replacement for the adopted protocol. The data therefore describe configuration-specific observed outcomes, not identical B/R/G trajectories, repeatability distributions or across-seed expected performance. Appendix C develops these distinctions.
+TimeLimit can interrupt otherwise repeatable search at different amounts of work as machine conditions vary. WorkLimit instead limits algorithmic work under otherwise deterministic conditions; its units are not universal seconds [@gurobiwork2026]. It is a different budget, not a replacement for the adopted protocol. The separate solver-seed comparison keeps one physical thread, the 3,600-second solver limit and fixed starts, and rotates method order within each instance across seeds 42, 43 and 44. These seeds perturb search with the same predictor. Appendix C details the execution and measurement conditions.
 
 ## Endpoints and comparison rules {#sec-metrics}
 
@@ -164,19 +164,19 @@ For minimization, a checked feasible incumbent supplies an upper bound $z^P$, wh
 
 We distinguish terminal primal, dual and gap, reported terminal-target attainment, and first observed time to a common quality threshold. A target that is unobserved during adequate follow-up is right-censored, not attained at the time limit. Missing observations and numerical restrictions are separate from censoring. Callback times are observed crossing times, not exact continuous first hits. A run may reach 10% gap yet remain censored for the much tighter terminal criterion.
 
-Between-method speedup is $T_B/T_G$ or $T_R/T_G$ for eligible common targets; values above one favour G. Where cost comparisons use the reciprocal time ratio $T_G/T_B$, values below one favour G. Within-method CPU scaling is $T_m(1)/T_m(r)$ and parallel efficiency divides by cap $r$. These quantities are not interchangeable. Runtime ratios of two timeouts are not certified solution speedups. Descriptive summaries of attained pairs do not represent omitted censored pairs.
+Speedup divides reference time by comparison time for comparable work and termination. For B versus G or R versus G at an eligible common target, $T_B/T_G$ or $T_R/T_G$ above one favours G. The reciprocal cost ratio $T_G/T_B$ favours G below one. Within-method strong scaling holds the problem fixed and varies resources. For a thread cap $r$ relative to one, speedup is $T_m(1)/T_m(r)$ and parallel efficiency divides it by $r$. This uses the configured cap, whereas CPU utilization requires a separate measurement. Censored runs contribute coverage without observed time ratios.
 
-The statistical analysis is descriptive and retrospective. Paired comparisons preserve the instance and configuration; intervals supplied with the archive are exploratory, not confirmatory significance tests or proof of a method-by-resource interaction. Six easy instances and four medium instances cannot be treated as 150 independent replications.
+The comparisons are descriptive. For the solver-seed comparison, we pair by instance and seed, take the latest observation at or before 3,600 seconds, and use the terminal point when the solve ends earlier. We summarize seed contrasts within each instance before comparing across instances. The 48 blocks comprise repeated observations of 16 instances. Archive intervals for the retrospective comparison are exploratory.
 
 Predictive metrics measure reference-label agreement separately. Precision is TP/(TP+FP), recall is TP/(TP+FN), and F1 is their harmonic mean. Average precision (AP) is the noninterpolated sum of precision weighted by recall increments, following @sklearnap; it differs from trapezoidal PR-AUC. Rare-positive assessment uses precision--recall measures alongside ROC-AUC [@saito2015]. The Brier score averages squared score error [@brier1950]. Expected calibration error (ECE) uses ten equal-width positive-score bins [@guo2017]. Variable-pooled metrics combine targets; parent-macro metrics average the individually computed instance values.
 
 ## Preparation, execution and resource costs
 
-Solver Runtime measures optimization, whereas supervised execution also includes the recorded attempt overhead. Preparation can include root capture, graph construction, model loading, inference and Start construction. These intervals are charged according to their measured scope; nested components are not summed twice. R also pays its G-dependent matching preparation. Offline training, queueing and orchestration are separate.
+Computational performance includes attained solution quality, native solver Runtime, application elapsed time and memory. The application clock may include root capture, construction and transfer of inputs, model loading, inference and Start integration [@silva2025pascal]. The supervised attempt includes recorded process overhead. Preparation intervals are charged once, including R's dependence on G for matching. Training, queueing and orchestration have separate clocks.
 
 Cold-use and amortization calculations are scenarios, not independent end-to-end trials; missing components remain unavailable. Seven-use and five-use allocations are distinct assumptions. Campaign accounting counts shared work once, rather than summing alternative method scenarios as repeated expenditure.
 
-Experiments use UJA's dgx-dasci infrastructure: the supplied inventory describes eight 32-GB V100 GPUs, two 20-core CPUs and 512 GB memory. This is not a runtime hardware probe or an allocation of all eight GPUs. Recorded allocations determine each comparison. The 6 Gb/s interface is not measured throughput. CPU allocation, logical CPU accounting and process memory are distinct quantities. Assigned GPU-hours equal allocation times job duration; they measure neither energy nor active utilization.
+UJA's dgx-dasci inventory lists eight 32-GB V100 GPUs, two 20-core CPUs and 512 GB of memory. It is not a runtime hardware probe or an allocation of all eight GPUs. The 6 Gb/s interface is an inventory specification. Appendix C separates requested, allocated and measured resources.
 
 # Computational Results
 
@@ -223,7 +223,7 @@ The long-horizon evaluation retains M0, M4, M7 and M12, their original starts, s
 
 On M0, G reached the target before B at four of five caps, but was slower than both comparators at two threads. All 15 M7 runs ended with the same reported primal value, 5.428377599678637; their terminal gaps therefore differ through their dual bounds. Only B at one thread and R at sixteen threads closed the terminal gap. At eight threads, R ended at 1.653% and G at 1.838%; at sixteen, G remained at 1.448%. Earlier intermediate progress does not imply terminal attainment or uniform dominance. Retaining M7 preserves this adverse regime: a timeout is not evidence of infeasibility.
 
-M12 requires numerical qualification. B/R/G use 16,219.853/13,488.320/617.228 seconds at eight threads and 13,071.843/16,005.814/791.673 seconds at sixteen. All report zero internal gap, yet G's objective is approximately 0.009388% or 0.009495% higher than the controls. Exact rational checks establish primal feasibility of G's stored points at four, eight and sixteen threads. Seven examined controls contain a tolerated fractional binary; their rounded patterns cannot satisfy an original linking row, even with adjusted continuous variables. Their lower reports therefore do not establish better exactly feasible integer solutions. Logs show less work and a smaller presolved model for G, without certifying a common optimum or isolating a neural cause. M4 retains its separate restriction. These contrasts do not establish certified speedups. Appendix B provides the coverage table, M0/M7 figure, all 60 records and scoped audits.
+On M12 at eight and sixteen threads, G finished much earlier than B and R. All three reported zero internal gap, but G reported a slightly higher objective. The exact primal audit established feasibility for three stored G points. Seven examined control points contained a tolerated fractional binary, and their rounded patterns cannot satisfy an original linking constraint for any continuous completion. The reported times do not establish certified speedups or a common optimum. M4 retains its separate restriction. Appendix B gives the complete records and audit.
 
 ## Efficiency after preparation costs {#sec-cost-results}
 
@@ -254,23 +254,21 @@ The matched seed 42 pair compares serial one-V100 training with four-V100 distri
 
 Loop speedup is 2.167 with 54.17% efficiency; whole-job speedup is 1.831. Assigned GPU-hours increase. Selected F1 falls 0.032468 (3.247 percentage points), exceeding the predeclared descriptive 0.02 loss margin; PR-AUC falls 0.013850. The smaller PR-AUC loss does not establish preserved predictive quality or statistical noninferiority. @fig-gpu-bce shows the unmodified loss trajectories.
 
-![Training and validation weighted BCE for the matched serial/distributed comparison.](figures/gpu_bce_by_epoch_article_en.pdf){#fig-gpu-bce width=100%}
+![Training and validation weighted BCE for the matched serial/distributed comparison.](figures/gpu_bce_by_epoch_article_en.pdf){#fig-gpu-bce width=90% fig-pos="!htbp"}
 
-The unsmoothed curves retain validation minima at epochs 99 and 92. Sublinear speedup is compatible with DDP's communication and synchronization costs [@li2020ddp]. GNN systems also face irregular graph workloads and data movement: DistDGL addresses these through partitioning and load balancing [@zheng2020distdgl]. That system distributes a large graph; here, ranks process separate complete instance graphs. Its results therefore provide context, not a directly comparable speedup benchmark. Without component profiling, the contribution of each overhead remains unknown.
+Communication and gradient synchronization can contribute to sublinear DDP speedup [@li2020ddp]. GNN workloads can also involve irregular data movement [@zheng2020distdgl]; here each rank processes complete instance graphs. Matched global batches do not establish identical floating-point trajectories [@pytorch21numerical]. CPU and GPU allocations change together. The single pair shows an F1 loss, but does not identify its cause. These weights do not replace the CPU predictor.
 
-Equal global batches control one source of optimization differences, but do not establish identical floating-point trajectories [@pytorch21numerical]. The observed F1 loss is not an intrinsic consequence of DDP, and this one pair does not identify its cause. One seed, fixed execution order and CPU scaling from four to sixteen cores limit attribution. These weights neither replace the CPU predictor nor establish downstream solver benefit.
+## One-hour paired solver-seed comparison {#sec-pr94-results}
 
-## Preliminary six-medium evidence
+All 144 runs yielded terminal records. On the six easy instances, every method attained the observed 0.01% gap in all 18 instance–seed pairs. At that target, geometric mean time ratios R/B, G/B and G/R were 1.038, 1.083 and 1.043, respectively. G was faster than B in ten of the 18 pairs, but the larger slowdowns on F0 and F29 raised the geometric mean.
 
-This earlier study evaluates M0, M4, M7, M9, M12 and M20 using its own single-thread, seed 42, 3,600-second protocol. It is a separate historical optimization cohort: the principal CPU comparison and long-horizon extension use only M0, M4, M7 and M12. The two additional historical cases do not enlarge that four-medium evaluation or its learning split.
+For the ten medium instances, B, R and G attained a 10% gap in 9, 8 and 12 of 30 runs per method, respectively. At 0.01%, only G attained the target, on M12 and M20 across all three seeds. M12 remains numerically restricted. Across the eight medium instances outside M4 and M12, the median of the instance-level paired gap differences was -2.11 percentage points for G versus B and -2.52 for G versus R. These fixed-budget differences include censored runs with observed incumbents and bounds. Appendix B details the pair counts, numerical restrictions and supervised costs.
 
-GNN terminal gaps are smaller on five of the six historical instances, with median guided-minus-control difference -1.164 percentage points. M12 and M20 influence the mean. GNN reaches the observed 10% threshold on four instances, versus three per comparator; an earlier crossing can coexist with terminal censoring. Appendix B retains all values and influence diagnostics.
-
-Its distinct population and worker clock, which excludes neural preparation, limit inference about generalization or complete cold-use savings.
+The separate historical six-medium comparison is reported in Appendix B. It uses its own cohort, worker clock and seed-42 protocol.
 
 # Discussion
 
-Partial starts can help or hinder depending on the instance, thread cap and endpoint. The easy-instance aggregate changes direction across caps; the medium comparisons distinguish primal improvements from dual progress and terminal attainment. Consequently, predictive accuracy, elapsed time and reported gap answer different questions and should be evaluated together.
+Label agreement describes the predictions. Their effect on the MILP depends on the solver's completion, incumbent use and remaining search. The easy-instance ratios change direction across thread caps, and the medium results show that primal gains can coexist with weaker dual progress. The usefulness of a Start therefore depends on the quality target and budget as well as on predictive accuracy.
 
 The unchanged feasible region distinguishes these starts from the restricted searches of Neural Diving, Predict-and-Search and uncertainty-based reductions [@nair2020; @han2023; @canturk2024]. Following the warm-start precedent of MIP-GNN [@khalil2022], our contribution is a conditional CFL assessment, not evidence of superiority over those algorithms.
 
@@ -278,7 +276,7 @@ R controls assignment counts and class composition but depends on G's preparatio
 
 At sixteen threads, the easy-instance solver estimate favours G, whereas cold-use scenarios do not; reuse changes that conclusion. Likewise, shorter GPU training accompanies lower F1 and higher allocated GPU-hours. These outcomes describe distinct trade-offs.
 
-Quality-selected labels, historical exposure, few instances, one principal seed, fixed architecture and incomplete costs limit inference. Starting information, search, resources and time-based interruption may all contribute to heterogeneity; none is causally isolated. Single runs do not establish repeatability, and M4/M12 restrictions apply regardless of runtime.
+Quality-selected labels, prior exposure and small cohorts constrain generalization. The one-hour study varies solver seeds with fixed starts and predictor weights. Wall-time stopping and resource conditions may contribute to the observed heterogeneity. M4 and M12 retain their numerical restrictions.
 
 # Conclusions and Future Research
 
@@ -286,9 +284,9 @@ We compared GNN-generated partial starts with unguided and relaxation-ranked sta
 
 Solver gains can disappear with cold preparation, while reuse changes their economics. Faster distributed training can also reduce selected predictive quality and increase allocated GPU-hours. The accounting remains delimited rather than a complete deployment estimate.
 
-A separate prospective extension evaluates six easy and ten medium instances with the fixed predictor and Starts, B/R/G, solver seeds 42/43/44, one physical thread and a 3,600-second limit. It examines solver-seed sensitivity and broader instance coverage; Appendix C specifies the paired design. Its results are not part of the evidence reported here. Work-based stopping, root-method contrasts, neural hyperparameters, retraining and mechanism ablations remain future research.
+Across three solver seeds, G's earlier progress on some easy runs did not consistently carry through to the tight target. The one-hour medium comparison shows better reported gaps on most instances and an instance-specific attainment advantage on M20 outside the numerically restricted cases. Work-based stopping, root-method contrasts, neural hyperparameters, retraining and mechanism ablations remain future research.
 
-The repository provides code, partitions and versioned evidence. Project-owned material uses MIT; model and benchmark redistribution retain their respective rights and access conditions.
+Data and code availability. The [project repository](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn) provides code, partitions, derived outcomes and scripts for tables and figures. Original models are obtained from MILPBench. Access to intermediate data and checkpoint bytes depends on their artifact-specific availability and redistribution terms. Appendix C identifies which steps can be reproduced from public material.
 
 # Acknowledgements
 

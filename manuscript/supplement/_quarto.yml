@@ -15,7 +15,7 @@ format:
   pdf:
     output-file: appendices.pdf
     toc: true
-    toc-depth: 2
+    toc-depth: 1
     documentclass: article
     papersize: a4
     fontsize: 11pt
