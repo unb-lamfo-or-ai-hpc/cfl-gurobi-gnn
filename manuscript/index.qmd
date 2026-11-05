@@ -28,11 +28,10 @@ author:
       - id: uja
         name: Data Science and Computer Intelligence Institute, University of Jaén
 keywords:
-  - Mixed-Integer Linear Programming
-  - Capacitated facility location
+  - Mixed-integer programming
+  - Facility location
   - Graph neural networks
-  - Learning to optimize
-  - Partial MIP starts
+  - Learned warm starts
   - Computational reproducibility
 abstract: |
   We study whether Graph Neural Network (GNN) partial starts improve Mixed-Integer Linear Programming (MILP) for the Capacitated Facility Location (CFL) problem. We compare no external start, a start based on the root relaxation, and a neural start with matched assignment counts. On six easy instances at sixteen threads, the GNN-to-baseline time ratio is 0.843 for solver runtime and 1.046 for supervised execution with delimited cold preparation. In the twelve-hour comparison, the neural start reached the target sooner than the baseline on four of five thread settings for one medium instance, while another medium instance remained censored with the neural start at every setting. In a separate one-hour comparison across three solver seeds, the neural start alone attained the reported 0.01% gap on two of ten medium instances. One of those cases retains a numerical restriction. A separate training comparison yielded a 1.831-fold whole-job speedup with four graphics processing units, alongside lower selected predictive quality. The findings identify conditions under which partial starts can improve search and show how preparation cost and reuse affect their practical value.

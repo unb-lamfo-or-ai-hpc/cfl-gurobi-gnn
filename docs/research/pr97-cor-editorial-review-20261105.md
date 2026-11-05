@@ -9,7 +9,7 @@ Categorias: CONFORME, AJUSTAR, PENDENTE DE AUTOR, NÃO VERIFICADO e NÃO APLICÁ
 | Requisito e natureza | Situação | Evidência | Correção ou verificação final | Responsável |
 |:--|:--|:--|:--|:--|
 | Resumo factual e autônomo, até 250 palavras (obrigatório, p. 9) | CONFORME | Objetivo, B/R/G em palavras, C2/C3, campanhas separadas e acrônimos definidos | Conferir contagem no HEAD; manter o treinamento GPU como contexto secundário | Codex |
-| 1–7 keywords em inglês (obrigatório, p. 10) | CONFORME | Seis termos no front matter | Revisar termos com o texto final | Codex |
+| 1–7 keywords em inglês (obrigatório, p. 10) | CONFORME | Cinco termos no front matter | Revisar termos com o texto final | Codex |
 | Highlights editáveis, 3–5, até 85 caracteres (obrigatório, p. 10) | CONFORME | Cinco frases em `manuscript/highlights.txt` | Entregar como arquivo separado no sistema | Codex / autor correspondente |
 | Graphical abstract (recomendado, p. 10) | NÃO VERIFICADO | A figura do pipeline pode orientar um resumo gráfico; direitos e legibilidade a 13 cm ainda precisam de avaliação | Só preparar se for escolhido; a guia indica largura mínima de 1328 px e formato preferido PDF, EPS, TIFF ou MS Office | Autores |
 | Fonte editável e equações/tabelas editáveis (obrigatório, pp. 9–11) | CONFORME para a prévia | Quarto gera TeX do artigo e suplemento, bibliografia e pacote de dependências. Tabelas e equações são texto | Usar o pacote do mesmo commit dos PDFs aceitos; verificar novamente no pacote final | Codex |
@@ -54,5 +54,5 @@ Uma campanha hard não é necessária para essas duas alegações. Testar hard r
 
 - Resumo reequilibrado entre campanhas, discussão liga qualidade preditiva, busca e custos. Termos de desempenho e escalabilidade incorporam a distinção usada no [Model Agrologistic PR151](https://github.com/unb-lamfo-or-ai-hpc/model-agrologistic/pull/151) e citam [PaScal](https://doi.org/10.1109/ACCESS.2025.3639388) e [Cornell](https://cvw.cac.cornell.edu/parallel/efficiency/scaling).
 - Contagem estática de 26.753 parâmetros e 256 entradas de buffers usando a configuração 7/5/1, largura 32, dois ciclos e o blob do modelo indicado pelo plano de treino. A contagem descreve a arquitetura. Reutiliza-se a identidade do checkpoint no ledger.
-- A PR94 integra os quatro arquivos divergentes com ambas as proteções de bytes e testes. O commit executado é pai da integração, com os arquivos de execução preservados.
+- A PR94 integra os quatro arquivos divergentes com ambas as proteções de bytes e testes. O commit executado é pai da integração, com os arquivos de execução preservados. O teste de preparação usa o blob histórico exato de pr86_solver.py como fixture, pois develop conserva no caminho ativo a versão posterior da PR89.
 - Validar fontes, reivindicações numéricas, renderização e pacote TeX. A CI da árvore combinada valida código/proveniência e usa dados sintéticos nas verificações de tensores. Execução científica e ensaios adicionais ficam fora desta revisão.
