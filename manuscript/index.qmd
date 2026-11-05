@@ -35,7 +35,7 @@ keywords:
   - Partial MIP starts
   - Computational reproducibility
 abstract: |
-  Capacitated Facility Location (CFL) problems are commonly formulated using Mixed-Integer Linear Programming (MILP), whose solution requires both finding feasible decisions and assessing their quality. A Graph Neural Network (GNN) can propose partial warm starts, but their usefulness depends on the solver response and the cost of preparing them. We evaluate these two aspects by comparing optimization without an external start, a root-relaxation-based start, and a GNN-generated start. The principal retrospective comparison comprises six easy and four medium benchmark instances, one fixed solver seed, and five thread configurations. For the six easy instances, geometric-mean GNN-to-baseline solver-time ratios indicate longer runtimes at one and two threads and shorter runtimes at four, eight, and sixteen threads. At sixteen threads, the GNN-to-baseline ratio is 0.843 for solver runtime and 1.046 for supervised execution with delimited cold preparation, illustrating how overhead can reverse a solver-level advantage. Medium-instance outcomes are interpreted with endpoint-specific censoring and numerical qualifications. A complementary one-versus-four-GPU training comparison yields a 1.831-fold whole-job speedup, accompanied by lower selected predictive quality and higher allocated GPU-hours. These observations show that the practical value of GNN-generated partial starts depends on instance characteristics, resource settings, and the scope and reuse of preparation work. Predictive accuracy and training speed therefore need to be evaluated alongside optimization outcomes and computational costs.
+  Capacitated Facility Location (CFL) problems are commonly formulated using Mixed-Integer Linear Programming (MILP), whose solution requires both finding feasible decisions and assessing their quality. A Graph Neural Network (GNN) can propose partial warm starts, but their usefulness depends on the solver response and the cost of preparing them. We evaluate these two aspects by comparing optimization without an external start, a root-relaxation-based start, and a GNN-generated start. The principal retrospective comparison comprises six easy and four medium benchmark instances, one fixed solver seed, and five thread configurations. For the six easy instances, geometric-mean GNN-to-baseline solver-time ratios indicate longer runtimes at one and two threads and shorter runtimes at four, eight, and sixteen threads. At sixteen threads, the GNN-to-baseline ratio is 0.843 for solver runtime and 1.046 for supervised execution with delimited cold preparation, illustrating how overhead can reverse a solver-level advantage. In a separate one-hour comparison across three solver seeds, the GNN start alone attained the reported 0.01% gap on two of ten medium instances. One of those two cases has a numerical qualification. A complementary one-versus-four-GPU training comparison yields a 1.831-fold whole-job speedup, accompanied by lower selected predictive quality and higher allocated GPU-hours. These observations show that the practical value of GNN-generated partial starts depends on instance characteristics, resource settings, and the scope and reuse of preparation work. Predictive accuracy and training speed therefore need to be evaluated alongside optimization outcomes and computational costs.
 ---
 # Introduction
 
@@ -141,6 +141,7 @@ The benchmark contains 90 candidates divided equally among easy, medium and hard
 |:--|:--|:--|
 | Predictor fitting and selection | 34 train / 10 validation / 10 predictive test | Quality-selected labels; fixed original-instance roles |
 | Principal CPU comparison | Six easy + four medium; B/R/G; five thread caps; seed 42 | 150 method/resource observations on ten previously exposed instances |
+| One-hour solver-seed comparison | Six easy + ten medium; B/R/G; one thread; seeds 42–44 | 144 fresh runs, paired by instance and solver seed |
 | Preliminary optimization study | Six medium test instances; separate six-medium validation cohort | Historical protocol and population; descriptive supporting evidence |
 | Matched GPU training | Serial one GPU versus distributed four GPUs; same learning split | One matched-work training pair, separate from the CPU predictor |
 
@@ -156,7 +157,7 @@ Gurobi is designed for deterministic search under controlled inputs, version and
 
 Method=-1 delegates continuous/root algorithm selection to Gurobi; Method=1 explicitly requests dual simplex. Automatic selection commonly chooses dual simplex for MIP roots, and may choose deterministic concurrent methods for larger roots [@gurobi2026]. Neither an actual root algorithm nor an undocumented parameter value is inferred from a default.
 
-TimeLimit can interrupt otherwise repeatable search at different amounts of work as machine conditions vary. WorkLimit instead limits algorithmic work under otherwise deterministic conditions; its units are not universal seconds [@gurobiwork2026]. It is a different budget, not a replacement for the adopted protocol. The data therefore describe configuration-specific observed outcomes, not identical B/R/G trajectories, repeatability distributions or across-seed expected performance. Appendix C develops these distinctions.
+TimeLimit can interrupt otherwise repeatable search at different amounts of work as machine conditions vary. WorkLimit instead limits algorithmic work under otherwise deterministic conditions; its units are not universal seconds [@gurobiwork2026]. It is a different budget, not a replacement for the adopted protocol. The separate solver-seed comparison keeps one physical thread, the 3,600-second solver limit and fixed starts, and rotates method order within each instance across seeds 42, 43 and 44. These seeds perturb search with the same predictor. Appendix C details the execution and measurement conditions.
 
 ## Endpoints and comparison rules {#sec-metrics}
 
@@ -166,7 +167,7 @@ We distinguish terminal primal, dual and gap, reported terminal-target attainmen
 
 Between-method speedup is $T_B/T_G$ or $T_R/T_G$ for eligible common targets; values above one favour G. Where cost comparisons use the reciprocal time ratio $T_G/T_B$, values below one favour G. Within-method CPU scaling is $T_m(1)/T_m(r)$ and parallel efficiency divides by cap $r$. These quantities are not interchangeable. Runtime ratios of two timeouts are not certified solution speedups. Descriptive summaries of attained pairs do not represent omitted censored pairs.
 
-The statistical analysis is descriptive and retrospective. Paired comparisons preserve the instance and configuration; intervals supplied with the archive are exploratory, not confirmatory significance tests or proof of a method-by-resource interaction. Six easy instances and four medium instances cannot be treated as 150 independent replications.
+The comparisons are descriptive. For the solver-seed comparison, we pair by instance and seed, take the latest observation at or before 3,600 seconds, and use the terminal point when the solve ends earlier. We summarize seed contrasts within each instance before comparing across instances. The 48 blocks comprise repeated observations of 16 instances. Archive intervals for the retrospective comparison are exploratory.
 
 Predictive metrics measure reference-label agreement separately. Precision is TP/(TP+FP), recall is TP/(TP+FN), and F1 is their harmonic mean. Average precision (AP) is the noninterpolated sum of precision weighted by recall increments, following @sklearnap; it differs from trapezoidal PR-AUC. Rare-positive assessment uses precision--recall measures alongside ROC-AUC [@saito2015]. The Brier score averages squared score error [@brier1950]. Expected calibration error (ECE) uses ten equal-width positive-score bins [@guo2017]. Variable-pooled metrics combine targets; parent-macro metrics average the individually computed instance values.
 
@@ -260,13 +261,13 @@ The unsmoothed curves retain validation minima at epochs 99 and 92. Sublinear sp
 
 Equal global batches control one source of optimization differences, but do not establish identical floating-point trajectories [@pytorch21numerical]. The observed F1 loss is not an intrinsic consequence of DDP, and this one pair does not identify its cause. One seed, fixed execution order and CPU scaling from four to sixteen cores limit attribution. These weights neither replace the CPU predictor nor establish downstream solver benefit.
 
-## Preliminary six-medium evidence
+## One-hour paired solver-seed comparison {#sec-pr94-results}
 
-This earlier study evaluates M0, M4, M7, M9, M12 and M20 using its own single-thread, seed 42, 3,600-second protocol. It is a separate historical optimization cohort: the principal CPU comparison and long-horizon extension use only M0, M4, M7 and M12. The two additional historical cases do not enlarge that four-medium evaluation or its learning split.
+All 144 runs yielded terminal records. On the six easy instances, every method attained the observed 0.01% gap in all 18 instance–seed pairs. At that target, geometric mean time ratios R/B, G/B and G/R were 1.038, 1.083 and 1.043, respectively. G was faster than B in ten of the 18 pairs, but the larger slowdowns on F0 and F29 raised the geometric mean.
 
-GNN terminal gaps are smaller on five of the six historical instances, with median guided-minus-control difference -1.164 percentage points. M12 and M20 influence the mean. GNN reaches the observed 10% threshold on four instances, versus three per comparator; an earlier crossing can coexist with terminal censoring. Appendix B retains all values and influence diagnostics.
+For the ten medium instances, B, R and G attained a 10% gap in 9, 8 and 12 of 30 runs per method, respectively. At 0.01%, only G attained the target, on M12 and M20 across all three seeds. M12 remains numerically restricted. Across the eight medium instances outside M4 and M12, the median of the instance-level paired gap differences was −2.11 percentage points for G versus B and −2.52 for G versus R. These fixed-budget differences include censored runs with observed incumbents and bounds. Appendix B details the pair counts, numerical restrictions and supervised costs.
 
-Its distinct population and worker clock, which excludes neural preparation, limit inference about generalization or complete cold-use savings.
+The separate historical six-medium comparison is reported in Appendix B. It uses its own cohort, worker clock and seed-42 protocol.
 
 # Discussion
 
@@ -278,7 +279,7 @@ R controls assignment counts and class composition but depends on G's preparatio
 
 At sixteen threads, the easy-instance solver estimate favours G, whereas cold-use scenarios do not; reuse changes that conclusion. Likewise, shorter GPU training accompanies lower F1 and higher allocated GPU-hours. These outcomes describe distinct trade-offs.
 
-Quality-selected labels, historical exposure, few instances, one principal seed, fixed architecture and incomplete costs limit inference. Starting information, search, resources and time-based interruption may all contribute to heterogeneity; none is causally isolated. Single runs do not establish repeatability, and M4/M12 restrictions apply regardless of runtime.
+Quality-selected labels, prior exposure, small instance cohorts and incomplete costs limit inference. The one-hour comparison measures sensitivity to solver seeds with fixed starts and a fixed predictor. Search, resources and time-based interruption may all contribute to heterogeneity. M4 and M12 retain their numerical restrictions.
 
 # Conclusions and Future Research
 
@@ -286,7 +287,7 @@ We compared GNN-generated partial starts with unguided and relaxation-ranked sta
 
 Solver gains can disappear with cold preparation, while reuse changes their economics. Faster distributed training can also reduce selected predictive quality and increase allocated GPU-hours. The accounting remains delimited rather than a complete deployment estimate.
 
-A separate prospective extension evaluates six easy and ten medium instances with the fixed predictor and Starts, B/R/G, solver seeds 42/43/44, one physical thread and a 3,600-second limit. It examines solver-seed sensitivity and broader instance coverage; Appendix C specifies the paired design. Its results are not part of the evidence reported here. Work-based stopping, root-method contrasts, neural hyperparameters, retraining and mechanism ablations remain future research.
+Across three solver seeds, G's earlier progress on some easy runs did not consistently carry through to the tight target. The one-hour medium comparison shows better reported gaps on most instances and an instance-specific attainment advantage on M20 outside the numerically restricted cases. Work-based stopping, root-method contrasts, neural hyperparameters, retraining and mechanism ablations remain future research.
 
 The repository provides code, partitions and versioned evidence. Project-owned material uses MIT; model and benchmark redistribution retain their respective rights and access conditions.
 

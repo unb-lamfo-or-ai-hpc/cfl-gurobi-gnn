@@ -299,3 +299,49 @@ The 60 completed records contain 293.919 hours of summed solver Runtime and 295.
 Preparation is reused from the earlier campaign rather than measured anew. Cold and five-use allocations retain their scenario definitions, including the G-dependent preparation charged to R. They are not complete new cold-deployment measurements.
 
 The complete evaluation supports a bounded interpretation: benefits in some M0 configurations, earlier intermediate progress without terminal attainment by G on M7, and large time contrasts on M12 that remain numerically qualified. One seed and one execution per configuration do not establish repeatability, seed-averaged superiority or independent generalization. A later prospective study could use these observations to separate numerical comparability, solver-seed stability and endpoint choice, without treating thread caps as replications.
+
+## B.13. One-hour paired solver-seed results {#sec-pr94-appendix}
+
+The one-hour comparison comprises 144 runs in 48 instance–seed blocks. All blocks yielded three reconciled terminal records. All 96 supplied R and G starts were accepted by the solver. The solver ended at the time limit on 84 medium runs. The other six medium runs and all 54 easy runs attained the reported 0.01% criterion within the observation window. Each terminal incumbent passed the recorded checks at the applicable numerical tolerances.
+
+### Easy instances
+
+All 18 easy blocks attained 0.01% with all three methods. The table reports the median observed time across the three seeds, and the median of the seed-paired ratios for each instance. The ratio columns use paired times directly, so dividing two columns of median times can give a different value.
+
+| Instance | B (s) | R (s) | G (s) | R/B | G/B | G/R |
+|:--|--:|--:|--:|--:|--:|--:|
+| F0 | 104.2 | 110.0 | 235.3 | 1.070 | 2.234 | 2.266 |
+| F3 | 71.0 | 71.8 | 42.8 | 1.022 | 0.603 | 0.609 |
+| F6 | 67.7 | 69.7 | 52.8 | 1.031 | 0.751 | 0.734 |
+| F14 | 83.9 | 80.9 | 75.7 | 1.027 | 0.833 | 0.936 |
+| F27 | 65.6 | 68.5 | 54.9 | 1.044 | 0.806 | 0.764 |
+| F29 | 89.6 | 91.0 | 129.3 | 0.981 | 1.482 | 1.569 |
+
+Across the 18 paired observations, geometric mean time ratios were 1.038 for R/B, 1.083 for G/B and 1.043 for G/R at 0.01%. At 10%, the G/B ratio was 0.752, compared with 1.083 at 0.01%. Thus an advantage at a looser target can reverse at a tighter target. All three methods have the same terminal primal values within floating-point rounding on these six instances.
+
+### Medium instances
+
+The table reports median gaps over the three seeds and counts of observed target crossings within 3,600 seconds. At 5% and 1%, the attainment counts equal those at 0.01%. The common-horizon outcomes use the last observation at or before one hour, including the terminal result of early finishes. Late callback or terminal observations do not replace the fixed-horizon records.
+
+| Instance | B gap (%) | R gap (%) | G gap (%) | 10% hits (B/R/G) | 0.01% hits (B/R/G) |
+|:--|--:|--:|--:|:--:|:--:|
+| M0 | 7.400 | 7.321 | 8.762 | 3/3/3 | 0/0/0 |
+| M4 (restricted) | 8.562 | 9.029 | 8.232 | 3/3/3 | 0/0/0 |
+| M5 | 15.336 | 15.985 | 13.960 | 0/0/0 | 0/0/0 |
+| M6 | 18.595 | 18.973 | 16.501 | 0/0/0 | 0/0/0 |
+| M7 | 16.917 | 19.868 | 14.795 | 0/0/0 | 0/0/0 |
+| M9 | 19.095 | 18.270 | 18.417 | 0/0/0 | 0/0/0 |
+| M12 (restricted) | 6.511 | 6.904 | 0.000 | 3/2/3 | 0/0/3 |
+| M13 | 19.266 | 16.351 | 13.105 | 0/0/0 | 0/0/0 |
+| M20 | 24.913 | 19.048 | 0.010 | 0/0/3 | 0/0/3 |
+| M26 | 27.838 | 24.473 | 19.235 | 0/0/0 | 0/0/0 |
+
+At 10%, G and B both attained in nine pairs, G alone in three, and neither in 18. For G and R, the corresponding counts were eight, four and 18. R and B both attained in eight, B alone in one, and neither in 21. After restricting the eligible time comparison to cases outside M4 and M12, only the three M0 seeds offer common 10% crossings for these contrasts. At 0.01% there are no pairs with common observed attainment. The exclusive G attainments on M20 therefore inform coverage under the fixed budget, with no observed time ratio against B or R. The nine M7 runs remained censored even at 10% in this one-hour study.
+
+For each seed we calculate the relative primal and dual differences and the gap difference in percentage points, then take the median across seeds within each instance. Across the ten instance medians, the reported primal differences were −0.42% for G versus B and −0.92% for G versus R, the dual differences were +1.05% and +1.15%, and the gap differences were −2.11 and −2.52 percentage points. The gap medians remain −2.11 and −2.52 percentage points in the eight-instance sensitivity summary outside M4 and M12. R versus B gives +0.06 percentage points in that sensitivity summary. A smaller gap can coexist with a worse primal, as on M6 in G versus B.
+
+### Numerical and cost scope {#sec-pr94-numerics-costs}
+
+At M12 seed 42, G reports a bound of 4.741382855, above R's latest in-budget primal of 4.740933499. This cross-run difference of approximately 0.000449355 is retained as a numerical warning. It is consistent with the need for the separate M12 feasibility qualification in the longer experiment. The one-hour metadata document tolerance checks and solution hashes. Establishing exact feasibility for these new points would require examining the underlying vectors. Both M4 and M12 remain in the descriptive tables and outside the eligible time contrasts.
+
+Total solver runtime was 87.61 hours and supervised attempt time was 89.60 hours, summed over runs. Slurm recorded 89.62 job-hours and 179.23 allocated logical CPU-hours, with two jobs overlapping at peak. These are separate accounting boundaries. The measured attempt includes model loading, optimization, audit and export. The return has no qualified cold or three-use amortized preparation totals for R or G. The times therefore support comparisons of the recorded attempts, while the cost of deploying and reusing the starting-information pipeline remains a separate question.

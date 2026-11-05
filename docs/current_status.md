@@ -1,4 +1,6 @@
-# Current status — 2 November 2026
+# Current status — 5 November 2026
+
+The [PR94 recovery return](evidence/pr94/final-20261105/README.md) closes all 48 jobs and reconciles all 144 cells against the frozen plan. The editorial reconciliation targets develop and keeps one-hour results separate from the earlier CPU/GPU evidence. The [closeout plan](research/mvp2-closeout-plan.md) records the remaining scientific, release and submission gates. The dated sections below preserve the earlier operational history.
 
 ## Integration and recovery update — 2 November 2026
 
