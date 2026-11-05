@@ -265,7 +265,7 @@ Equal global batches control one source of optimization differences, but do not 
 
 All 144 runs yielded terminal records. On the six easy instances, every method attained the observed 0.01% gap in all 18 instance–seed pairs. At that target, geometric mean time ratios R/B, G/B and G/R were 1.038, 1.083 and 1.043, respectively. G was faster than B in ten of the 18 pairs, but the larger slowdowns on F0 and F29 raised the geometric mean.
 
-For the ten medium instances, B, R and G attained a 10% gap in 9, 8 and 12 of 30 runs per method, respectively. At 0.01%, only G attained the target, on M12 and M20 across all three seeds. M12 remains numerically restricted. Across the eight medium instances outside M4 and M12, the median of the instance-level paired gap differences was −2.11 percentage points for G versus B and −2.52 for G versus R. These fixed-budget differences include censored runs with observed incumbents and bounds. Appendix B details the pair counts, numerical restrictions and supervised costs.
+For the ten medium instances, B, R and G attained a 10% gap in 9, 8 and 12 of 30 runs per method, respectively. At 0.01%, only G attained the target, on M12 and M20 across all three seeds. M12 remains numerically restricted. Across the eight medium instances outside M4 and M12, the median of the instance-level paired gap differences was -2.11 percentage points for G versus B and -2.52 for G versus R. These fixed-budget differences include censored runs with observed incumbents and bounds. Appendix B details the pair counts, numerical restrictions and supervised costs.
 
 The separate historical six-medium comparison is reported in Appendix B. It uses its own cohort, worker clock and seed-42 protocol.
 

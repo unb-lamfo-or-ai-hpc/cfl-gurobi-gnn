@@ -777,7 +777,7 @@
       "id": "pr94_medium_gap",
       "document": "index.qmd",
       "section": "sec-pr94-results",
-      "article_template": "was −{gb} percentage points for G versus B and −{gr} for G versus R.",
+      "article_template": "was -{gb} percentage points for G versus B and -{gr} for G versus R.",
       "metrics": {
         "gb": {
           "source": "pr94_pairs",
