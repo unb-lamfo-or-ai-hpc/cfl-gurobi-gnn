@@ -137,8 +137,8 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if any(term not in article for term in (
         "150 seed42 observations", "numerical",
         "not an independent LP-only heuristic",
-        "## Preliminary six-medium evidence",
-    )):
+        "The separate historical six-medium comparison is reported in Appendix B.",
+    )) or "## B.11. Preliminary six-medium optimization study" not in readers["supplement/extended-results.md"]:
         failures.append("mvp2_seed42_methodological_scope_missing")
     continuation = evidence.get("mvp2_continuation", {})
     if not isinstance(continuation, dict):
