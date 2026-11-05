@@ -26,7 +26,21 @@ $$
 
 Here $N$ denotes neighbours, $e_{ij}$ an encoded coefficient and $\Vert$ concatenation. Each message or update function is a small feed-forward network with two learned linear transformations and a ReLU between them. ReLU replaces negative values by zero. The sums aggregate incoming messages. Each $P$ is a fixed affine prenormalization fitted on training graphs. The second equation uses the newly updated constraints, allowing information from other incident variables to reach a variable within the same cycle.
 
-The implementation uses two cycles and width 32. Two cycles permit propagation over up to four bipartite edges; that is not evidence that this neighbourhood suffices for all CFL decisions. Sharing message functions permits inputs of different sizes, but architectural applicability is distinct from statistical generalization.
+The implementation uses two cycles and width 32. A cycle contains one constraint update and one variable update. Each message or update MLP has two affine maps and a ReLU between them. ReLU also follows each node encoder and node update; the head returns one raw logit per eligible binary variable. Two cycles permit propagation over up to four bipartite edges; that is not evidence that this neighbourhood suffices for all CFL decisions. Sharing message functions permits inputs of different sizes, but architectural applicability is distinct from statistical generalization.
+
+The frozen mixed predictor's architecture has 26,753 trainable parameters. @tbl-gnn-parameters counts the weights and biases of each affine map using $(d_{in}+1)d_{out}$. The input dimensions are 7, 5 and 1 for variables, constraints and edges.
+
+| Block | Dimensions and multiplicity | Trainable parameters |
+|:--|:--|--:|
+| Variable and constraint encoders | $7\to32$ and $5\to32$ | 448 |
+| Directional message MLPs | $65\to32\to32$, two per cycle over two cycles | 12,672 |
+| Directional update MLPs | $64\to32\to32$, two per cycle over two cycles | 12,544 |
+| Binary classification head | $32\to32\to1$ | 1,089 |
+| Total | Weights and biases | 26,753 |
+
+: Static trainable parameter count for the frozen architecture. {#tbl-gnn-parameters}
+
+Four prenormalization modules hold two width-32 vectors each, for 256 nontrainable buffer entries. The calibrated implementation changes how these statistics are fitted while inheriting the same affine maps. This is a source/configuration count for the named architecture, with no checkpoint reload.
 
 ## A.2. Architectural context and fixed hyperparameters
 

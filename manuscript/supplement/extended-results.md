@@ -306,7 +306,7 @@ The one-hour comparison comprises 144 runs in 48 instance–seed blocks. All blo
 
 ### Easy instances
 
-All 18 easy blocks attained 0.01% with all three methods. The table reports the median observed time across the three seeds, and the median of the seed-paired ratios for each instance. The ratio columns use paired times directly, so dividing two columns of median times can give a different value.
+All 18 easy blocks attained 0.01% with all three methods. @tbl-pr94-easy reports the median observed time across the three seeds, and the median of the seed-paired ratios for each instance. The ratio columns use paired times directly, so dividing two columns of median times can give a different value.
 
 | Instance | B (s) | R (s) | G (s) | R/B | G/B | G/R |
 |:--|--:|--:|--:|--:|--:|--:|
@@ -317,11 +317,13 @@ All 18 easy blocks attained 0.01% with all three methods. The table reports the 
 | F27 | 65.6 | 68.5 | 54.9 | 1.044 | 0.806 | 0.764 |
 | F29 | 89.6 | 91.0 | 129.3 | 0.981 | 1.482 | 1.569 |
 
+: Paired time to the first observed 0.01% gap on easy instances. {#tbl-pr94-easy}
+
 Across the 18 paired observations, geometric mean time ratios were 1.038 for R/B, 1.083 for G/B and 1.043 for G/R at 0.01%. At 10%, the G/B ratio was 0.752, compared with 1.083 at 0.01%. Thus an advantage at a looser target can reverse at a tighter target. All three methods have the same terminal primal values within floating-point rounding on these six instances.
 
 ### Medium instances
 
-The table reports median gaps over the three seeds and counts of observed target crossings within 3,600 seconds. At 5% and 1%, the attainment counts equal those at 0.01%. The common-horizon outcomes use the last observation at or before one hour, including the terminal result of early finishes. Late callback or terminal observations do not replace the fixed-horizon records.
+@tbl-pr94-medium reports median gaps over the three seeds and counts of observed target crossings within 3,600 seconds. At 5% and 1%, the attainment counts equal those at 0.01%. The common-horizon outcomes use the last observation at or before one hour, including the terminal result of early finishes. Late callback or terminal observations do not replace the fixed-horizon records.
 
 | Instance | B gap (%) | R gap (%) | G gap (%) | 10% hits (B/R/G) | 0.01% hits (B/R/G) |
 |:--|--:|--:|--:|:--:|:--:|
@@ -335,6 +337,8 @@ The table reports median gaps over the three seeds and counts of observed target
 | M13 | 19.266 | 16.351 | 13.105 | 0/0/0 | 0/0/0 |
 | M20 | 24.913 | 19.048 | 0.010 | 0/0/3 | 0/0/3 |
 | M26 | 27.838 | 24.473 | 19.235 | 0/0/0 | 0/0/0 |
+
+: One-hour medium gaps and observed attainment counts by method. {#tbl-pr94-medium}
 
 At 10%, G and B both attained in nine pairs, G alone in three, and neither in 18. For G and R, the corresponding counts were eight, four and 18. R and B both attained in eight, B alone in one, and neither in 21. After restricting the eligible time comparison to cases outside M4 and M12, only the three M0 seeds offer common 10% crossings for these contrasts. At 0.01% there are no pairs with common observed attainment. The exclusive G attainments on M20 therefore inform coverage under the fixed budget, with no observed time ratio against B or R. The nine M7 runs remained censored even at 10% in this one-hour study.
 
