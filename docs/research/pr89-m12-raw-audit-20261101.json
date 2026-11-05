@@ -1,0 +1,477 @@
+{
+  "B_two_and_four_thread_numeric_vectors_equal": true,
+  "archive_sha256": "bf5f13a9d6e34de77312c10e613f8b677e7b2548eec97e2a3c03cb9cae4105c2",
+  "auditor_source_sha256": "c586f3e1307b8c140f9eff25ad287fc2183a8fdfb1f814d8bb9e51ad2eea0854",
+  "campaign_modified": false,
+  "date": "2026-11-01",
+  "exact_arithmetic_scope": "all original rows, domains and objective for the four stored points and their in-memory integer-rounded copies; binary64 input and decimal LP coefficient interpretations; no dual proof",
+  "exact_optimality_certified": false,
+  "member_hashes_checked": 41,
+  "model": {
+    "binary_variables": 1156800,
+    "continuous_variables": 124800,
+    "max_abs_matrix_coefficient": 800.0,
+    "min_nonzero_abs_matrix_coefficient": 4.16587e-05,
+    "nonzeros": 2561600,
+    "original_file_sense": "MAXIMIZE",
+    "rows": 2400,
+    "runtime_contract_sense": "MINIMIZE",
+    "variables": 1281600
+  },
+  "model_sha256": "c93c8862e4819d1a2b62e721d907afe07b79039d12b953cdb881525c7d251801",
+  "no_solver_import_or_optimization": true,
+  "objective_contrasts": [
+    {
+      "G_minus_control_exact_binary64_objective": 0.00045014926264074623,
+      "G_minus_control_percent": 0.009494951533919667,
+      "G_minus_rounded_control_objective": 0.0004503030987302092,
+      "control_job_id": "3725",
+      "different_continuous_coordinate_count": 0,
+      "different_coordinate_count": 3,
+      "different_rounded_binary_count": 2
+    },
+    {
+      "G_minus_control_exact_binary64_objective": 0.00045014926264074623,
+      "G_minus_control_percent": 0.009494951533919667,
+      "G_minus_rounded_control_objective": 0.0004503030987302092,
+      "control_job_id": "3727",
+      "different_continuous_coordinate_count": 0,
+      "different_coordinate_count": 3,
+      "different_rounded_binary_count": 2
+    },
+    {
+      "G_minus_control_exact_binary64_objective": 0.0004450888381489619,
+      "G_minus_control_percent": 0.009388202506057763,
+      "G_minus_rounded_control_objective": 0.0004452562154919514,
+      "control_job_id": "3728",
+      "different_continuous_coordinate_count": 0,
+      "different_coordinate_count": 3,
+      "different_rounded_binary_count": 2
+    }
+  ],
+  "offline_environment": {
+    "arithmetic": "fractions.Fraction; exact integer ratios, not extended-precision approximation",
+    "numpy": "2.3.5",
+    "python": "3.12.14"
+  },
+  "optimization_calls_added": 0,
+  "protocol": "pr89_m12_existing_raw_vector_exact_arithmetic_v1",
+  "raw_variable_values_or_rows_exported": false,
+  "rows": [
+    {
+      "child_sha256": "d1705c90f7c7c1d1c350a201a1199ca506caff4c3e89deb966fe3cb6608dc09b",
+      "diagnostics": {
+        "exact_integer_primal_feasible_binary64_model": false,
+        "exact_integer_primal_feasible_decimal_lp_model": false,
+        "fixed_rounded_integer_pattern_row_obstructions": [
+          {
+            "continuous_completion_impossible_from_this_row": true,
+            "violation_margin": 4.16587e-05,
+            "violation_margin_rational_decimal_lp": "416587/10000000000"
+          }
+        ],
+        "integer_rounded_copy": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 4.16587e-05,
+            "max_row_residual_rational": "6147739018747553/147573952589676412928",
+            "rows_exceeding_frozen_1e_minus6": 1,
+            "rows_with_positive_exact_residual": 1
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 4.16587e-05,
+            "max_row_residual_rational": "416587/10000000000",
+            "rows_exceeding_frozen_1e_minus6": 1,
+            "rows_with_positive_exact_residual": 1
+          },
+          "objective_exact_binary64_inputs": 4.7409325516404754,
+          "objective_exact_decimal_lp_inputs": 4.7409325516404754,
+          "objective_rational_binary64": "2798552622426580411581/590295810358705651712",
+          "objective_rational_decimal_lp": "474093255164047515727/100000000000000000000",
+          "reported_objective_minus_exact_binary64": 1.538360899340775e-07
+        },
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 5.207335889175255e-08,
+        "nonintegral_binary_count": 1,
+        "nonzero_continuous_values": 78,
+        "nonzero_values": 825,
+        "rounded_objective_minus_stored_exact": -1.538360894629502e-07,
+        "stored": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 1.2886597962430912e-11,
+            "max_row_residual_rational": "7606904787/590295810358705651712",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 1
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 1.2886597960962113e-11,
+            "max_row_residual_rational": "74286179552079831/5764607523034234880000000000",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 1
+          },
+          "objective_exact_binary64_inputs": 4.740932705476564,
+          "objective_exact_decimal_lp_inputs": 4.740932705476564,
+          "objective_rational_binary64": "201656975304056730901326023354257020827/42535295865117307932921825928971026432",
+          "objective_rational_decimal_lp": "139927635661768975217546269860978476327937/29514790517935282585600000000000000000000",
+          "reported_objective_minus_exact_binary64": 4.711273007455759e-16
+        }
+      },
+      "historically_sealed_log_sha256": "4da4fbb327e7ae77c6b103f8c077703e9ad94609f733bc0ebe0a3e17dd5e477e",
+      "job_id": "3725",
+      "log": {
+        "callback_calls": 576571,
+        "callback_seconds": 3.1,
+        "cuts": {
+          "Clique": 3066,
+          "Cover": 5815,
+          "Flow cover": 509,
+          "Gomory": 7,
+          "Implied bound": 940,
+          "MIR": 593,
+          "RLT": 7,
+          "Relax-and-lift": 47,
+          "StrongCG": 1
+        },
+        "final_bound_printed": 4.740932705477,
+        "final_gap_percent_printed": 0.0,
+        "final_objective_printed": 4.740932705477,
+        "loaded_start_objective_printed": null,
+        "nodes": 39157,
+        "numerical_warning_flags": {
+          "large_matrix": false,
+          "numerical_trouble": false,
+          "unscaled_dual": false,
+          "unscaled_primal": false
+        },
+        "presolve_seconds": 13.97,
+        "presolved_columns": 1153162,
+        "presolved_nonzeros": 2304724,
+        "presolved_rows": 2400,
+        "printed_work_units": 8176.2,
+        "reported_seconds": 6479.25,
+        "root_concurrency": "Deterministic concurrent LP optimizer: dual simplex and barrier",
+        "root_iterations": 1600,
+        "root_objective_printed": 0.8763416,
+        "root_seconds": 3.16,
+        "root_winner": "dual simplex",
+        "root_work_units_printed": 2.01,
+        "simplex_iterations": 1794657,
+        "start_processing_seconds_printed": null
+      },
+      "method": "M0",
+      "solution_sha256_observed_at_collection": "5767e06c02d4054fb98ebb93f513eed271c15aae090ddced01e578c9934c8c3f",
+      "threads": 2
+    },
+    {
+      "child_sha256": "ecefa1c2c925041ad703649fbb38359d65c231dcfe8c025e0b2de5c79b32f65a",
+      "diagnostics": {
+        "exact_integer_primal_feasible_binary64_model": true,
+        "exact_integer_primal_feasible_decimal_lp_model": true,
+        "fixed_rounded_integer_pattern_row_obstructions": [],
+        "integer_rounded_copy": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": true,
+            "max_row_residual": 0.0,
+            "max_row_residual_rational": "0",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 0
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": true,
+            "max_row_residual": 0.0,
+            "max_row_residual_rational": "0",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 0
+          },
+          "objective_exact_binary64_inputs": 4.741382854739205,
+          "objective_exact_decimal_lp_inputs": 4.741382854739205,
+          "objective_rational_binary64": "2798818434459152396653/590295810358705651712",
+          "objective_rational_decimal_lp": "237069142736960268323/50000000000000000000",
+          "reported_objective_minus_exact_binary64": 3.40761354680405e-17
+        },
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 0.0,
+        "nonintegral_binary_count": 0,
+        "nonzero_continuous_values": 78,
+        "nonzero_values": 824,
+        "rounded_objective_minus_stored_exact": 0.0,
+        "stored": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": true,
+            "max_row_residual": 0.0,
+            "max_row_residual_rational": "0",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 0
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": true,
+            "max_row_residual": 0.0,
+            "max_row_residual_rational": "0",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 0
+          },
+          "objective_exact_binary64_inputs": 4.741382854739205,
+          "objective_exact_decimal_lp_inputs": 4.741382854739205,
+          "objective_rational_binary64": "2798818434459152396653/590295810358705651712",
+          "objective_rational_decimal_lp": "237069142736960268323/50000000000000000000",
+          "reported_objective_minus_exact_binary64": 3.40761354680405e-17
+        }
+      },
+      "historically_sealed_log_sha256": "efc1db2b744c55d83ab55818dc1350ff182603332cb64d006dcd08512b9262e6",
+      "job_id": "3726",
+      "log": {
+        "callback_calls": 54985,
+        "callback_seconds": 0.32,
+        "cuts": {
+          "Flow cover": 16,
+          "Gomory": 4,
+          "Zero half": 88
+        },
+        "final_bound_printed": 4.741382854739,
+        "final_gap_percent_printed": 0.0,
+        "final_objective_printed": 4.741382854739,
+        "loaded_start_objective_printed": 5.91168,
+        "nodes": 1738,
+        "numerical_warning_flags": {
+          "large_matrix": false,
+          "numerical_trouble": false,
+          "unscaled_dual": false,
+          "unscaled_primal": false
+        },
+        "presolve_seconds": 18.92,
+        "presolved_columns": 661125,
+        "presolved_nonzeros": 1321321,
+        "presolved_rows": 1729,
+        "printed_work_units": 583.73,
+        "reported_seconds": 578.41,
+        "root_concurrency": "Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier",
+        "root_iterations": 800,
+        "root_objective_printed": 0.8767402,
+        "root_seconds": 1.63,
+        "root_winner": "primal simplex",
+        "root_work_units_printed": 1.05,
+        "simplex_iterations": 72551,
+        "start_processing_seconds_printed": 3.49
+      },
+      "method": "M2",
+      "solution_sha256_observed_at_collection": "fcc80784fb19680bf49f4889efbecee7b5e3f13d89426f07519f46993a0930cf",
+      "threads": 4
+    },
+    {
+      "child_sha256": "4c708a4c980a4269d5aea8e96bb419614cd382bde4541b7ac868e33bdbdb177e",
+      "diagnostics": {
+        "exact_integer_primal_feasible_binary64_model": false,
+        "exact_integer_primal_feasible_decimal_lp_model": false,
+        "fixed_rounded_integer_pattern_row_obstructions": [
+          {
+            "continuous_completion_impossible_from_this_row": true,
+            "violation_margin": 4.16587e-05,
+            "violation_margin_rational_decimal_lp": "416587/10000000000"
+          }
+        ],
+        "integer_rounded_copy": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 4.16587e-05,
+            "max_row_residual_rational": "6147739018747553/147573952589676412928",
+            "rows_exceeding_frozen_1e_minus6": 1,
+            "rows_with_positive_exact_residual": 1
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 4.16587e-05,
+            "max_row_residual_rational": "416587/10000000000",
+            "rows_exceeding_frozen_1e_minus6": 1,
+            "rows_with_positive_exact_residual": 1
+          },
+          "objective_exact_binary64_inputs": 4.7409325516404754,
+          "objective_exact_decimal_lp_inputs": 4.7409325516404754,
+          "objective_rational_binary64": "2798552622426580411581/590295810358705651712",
+          "objective_rational_decimal_lp": "474093255164047515727/100000000000000000000",
+          "reported_objective_minus_exact_binary64": 1.538360899340775e-07
+        },
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 5.207335889175255e-08,
+        "nonintegral_binary_count": 1,
+        "nonzero_continuous_values": 78,
+        "nonzero_values": 825,
+        "rounded_objective_minus_stored_exact": -1.538360894629502e-07,
+        "stored": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 1.2886597962430912e-11,
+            "max_row_residual_rational": "7606904787/590295810358705651712",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 1
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 1.2886597960962113e-11,
+            "max_row_residual_rational": "74286179552079831/5764607523034234880000000000",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 1
+          },
+          "objective_exact_binary64_inputs": 4.740932705476564,
+          "objective_exact_decimal_lp_inputs": 4.740932705476564,
+          "objective_rational_binary64": "201656975304056730901326023354257020827/42535295865117307932921825928971026432",
+          "objective_rational_decimal_lp": "139927635661768975217546269860978476327937/29514790517935282585600000000000000000000",
+          "reported_objective_minus_exact_binary64": 4.711273007455759e-16
+        }
+      },
+      "historically_sealed_log_sha256": "84137baad5ec8a1cb658303bc4ec6ec8413432199daacf65faf8061ac1d99e14",
+      "job_id": "3727",
+      "log": {
+        "callback_calls": 2994243,
+        "callback_seconds": 18.76,
+        "cuts": {
+          "Clique": 3174,
+          "Cover": 6516,
+          "Flow cover": 532,
+          "Gomory": 44,
+          "Implied bound": 1051,
+          "MIR": 565,
+          "Mixing": 3,
+          "Relax-and-lift": 66,
+          "StrongCG": 1
+        },
+        "final_bound_printed": 4.740932705477,
+        "final_gap_percent_printed": 0.0,
+        "final_objective_printed": 4.740932705477,
+        "loaded_start_objective_printed": null,
+        "nodes": 266765,
+        "numerical_warning_flags": {
+          "large_matrix": false,
+          "numerical_trouble": false,
+          "unscaled_dual": false,
+          "unscaled_primal": false
+        },
+        "presolve_seconds": 13.83,
+        "presolved_columns": 1153162,
+        "presolved_nonzeros": 2304724,
+        "presolved_rows": 2400,
+        "printed_work_units": 29427.31,
+        "reported_seconds": 21726.27,
+        "root_concurrency": "Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier",
+        "root_iterations": 800,
+        "root_objective_printed": 0.8763416,
+        "root_seconds": 3.16,
+        "root_winner": "primal simplex",
+        "root_work_units_printed": 1.9,
+        "simplex_iterations": 13553138,
+        "start_processing_seconds_printed": null
+      },
+      "method": "M0",
+      "solution_sha256_observed_at_collection": "d25f8edecbcc95ed09f88ed6287e0eb69f1adbba709050171d162f213000d30e",
+      "threads": 4
+    },
+    {
+      "child_sha256": "d23c4faefcaa89e66dfd5e69ff52ebac2cf98457fb2d04273219d51501f3f4b5",
+      "diagnostics": {
+        "exact_integer_primal_feasible_binary64_model": false,
+        "exact_integer_primal_feasible_decimal_lp_model": false,
+        "fixed_rounded_integer_pattern_row_obstructions": [
+          {
+            "continuous_completion_impossible_from_this_row": true,
+            "violation_margin": 4.16587e-05,
+            "violation_margin_rational_decimal_lp": "416587/10000000000"
+          }
+        ],
+        "integer_rounded_copy": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 4.16587e-05,
+            "max_row_residual_rational": "6147739018747553/147573952589676412928",
+            "rows_exceeding_frozen_1e_minus6": 1,
+            "rows_with_positive_exact_residual": 1
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 4.16587e-05,
+            "max_row_residual_rational": "416587/10000000000",
+            "rows_exceeding_frozen_1e_minus6": 1,
+            "rows_with_positive_exact_residual": 1
+          },
+          "objective_exact_binary64_inputs": 4.740937598523713,
+          "objective_exact_decimal_lp_inputs": 4.740937598523713,
+          "objective_rational_binary64": "2798555601580611324701/590295810358705651712",
+          "objective_rational_decimal_lp": "948187519704742683/200000000000000000",
+          "reported_objective_minus_exact_binary64": 1.6737734356360043e-07
+        },
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 5.20733593161857e-08,
+        "nonintegral_binary_count": 1,
+        "nonzero_continuous_values": 78,
+        "nonzero_values": 825,
+        "rounded_objective_minus_stored_exact": -1.6737734298951368e-07,
+        "stored": {
+          "exact_binary64_input_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 1.2547051443579282e-11,
+            "max_row_residual_rational": "14812943799/1180591620717411303424",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 1
+          },
+          "exact_decimal_lp_rows": {
+            "all_rows_exactly_satisfied": false,
+            "max_row_residual": 1.2547051442110484e-11,
+            "max_row_residual_rational": "144657654270175287/11529215046068469760000000000",
+            "rows_exceeding_frozen_1e_minus6": 0,
+            "rows_with_positive_exact_residual": 1
+          },
+          "objective_exact_binary64_inputs": 4.740937765901056,
+          "objective_exact_decimal_lp_inputs": 4.740937765901056,
+          "objective_rational_binary64": "403314381101419384064960522234600691117/85070591730234615865843651857942052864",
+          "objective_rational_decimal_lp": "4477689120612409025922651671507116777993/944473296573929042739200000000000000000",
+          "reported_objective_minus_exact_binary64": 5.740867511870191e-16
+        }
+      },
+      "historically_sealed_log_sha256": "5acb2c8009cb6ffc2af82019e5cdb634a889ec15bb74bf020495ee1d304db0cd",
+      "job_id": "3728",
+      "log": {
+        "callback_calls": 2922095,
+        "callback_seconds": 17.52,
+        "cuts": {
+          "Clique": 3098,
+          "Cover": 6687,
+          "Flow cover": 572,
+          "Gomory": 37,
+          "Implied bound": 1100,
+          "MIR": 629,
+          "Relax-and-lift": 53
+        },
+        "final_bound_printed": 4.740937765901,
+        "final_gap_percent_printed": 0.0,
+        "final_objective_printed": 4.740937765901,
+        "loaded_start_objective_printed": 377.207,
+        "nodes": 217149,
+        "numerical_warning_flags": {
+          "large_matrix": false,
+          "numerical_trouble": false,
+          "unscaled_dual": false,
+          "unscaled_primal": false
+        },
+        "presolve_seconds": 14.49,
+        "presolved_columns": 1153162,
+        "presolved_nonzeros": 2304724,
+        "presolved_rows": 2400,
+        "printed_work_units": 27105.65,
+        "reported_seconds": 20762.96,
+        "root_concurrency": "Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier",
+        "root_iterations": 800,
+        "root_objective_printed": 0.8763416,
+        "root_seconds": 3.21,
+        "root_winner": "primal simplex",
+        "root_work_units_printed": 1.9,
+        "simplex_iterations": 10831133,
+        "start_processing_seconds_printed": 2.2
+      },
+      "method": "M1",
+      "solution_sha256_observed_at_collection": "a5ea2128c4cf7a716cc37608bc5b8fd673d26f083bafd23c6a0dd58b1b9b9817",
+      "threads": 4
+    }
+  ],
+  "scientific_reporting_eligible": false
+}

@@ -103,11 +103,14 @@ jobs:
           bash -n scripts/evidence/operate_pr86_wave61.sh
           bash -n scripts/evidence/operate_pr86_wave67.sh
           bash -n scripts/evidence/operate_pr87_training.sh
+          bash -n scripts/evidence/operate_pr89_cpu.sh
           bash -n scripts/evidence/operate_pr94_preparation.sh
           bash -n scripts/evidence/install_pr94_preparation.template.sh
           bash -n scripts/evidence/operate_pr94_evaluation.sh
           bash -n scripts/evidence/install_pr94_evaluation.template.sh
           bash -n docs/research/solver-seed-extension-v2/recovery-launch.template.sh
+      - name: T1 PR89 sealed receipt integrity (no scientific calls)
+        run: python -B -m unittest discover -s tests/evidence -p test_pr89_sealed_receipts.py -v
       - name: T1 PR94 installation, preparation and evaluation admission (no scientific calls)
         run: python -B -m unittest discover -s tests/evidence -p "test_pr94*.py" -v
       - name: T3 evidence regression (single discovery, no solver or training)

@@ -1,0 +1,251 @@
+{
+  "campaign_modified": false,
+  "comparisons": {
+    "G_minus_B": {
+      "percent_relative_to_control": "0.009494951533903925856767687567",
+      "reported_objective_delta": "0.000450149262640"
+    },
+    "G_minus_R": {
+      "percent_relative_to_control": "0.009388202506037472612660924276",
+      "reported_objective_delta": "0.000445088838148"
+    }
+  },
+  "date": "2026-11-01",
+  "exact_optimum_certified": false,
+  "node_reduction_percent_vs_B": 99.34849024422245,
+  "node_reduction_percent_vs_R": 99.19962790526321,
+  "optimization_calls_added": 0,
+  "protocol": "pr89_m12_gap_search_desk_audit_v1",
+  "raw_vectors_reviewed": false,
+  "receipt_sha256": "a43ed259666bf3f29306891192c061a54db157bd314561c23641aecd2066bae9",
+  "rows": [
+    {
+      "child_sha256": "d1705c90f7c7c1d1c350a201a1199ca506caff4c3e89deb966fe3cb6608dc09b",
+      "dual": 4.740932705476565,
+      "elapsed_seconds": 6545.0,
+      "gurobi_gap": 0.0,
+      "independent_feasibility": {
+        "checks": {
+          "bounds": true,
+          "integrality": true,
+          "objective": true,
+          "rows": true
+        },
+        "feasibility_tolerance": 1e-06,
+        "integrality_tolerance": 1e-05,
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 5.207335889175255e-08,
+        "max_row_residual": 1.2886597964124977e-11,
+        "recomputed_objective": 4.740932705476565,
+        "valid": true
+      },
+      "index": 50,
+      "job_id": "3725",
+      "last_saved_points": [
+        {
+          "common_gap_relative": 0.0025118784170001895,
+          "dual": 4.729024478179887,
+          "event": "MIP",
+          "primal": 4.740933125774962,
+          "seconds": 6423.210187217221
+        },
+        {
+          "common_gap_relative": 0.0014103120790340182,
+          "dual": 4.734246930521789,
+          "event": "MIP",
+          "primal": 4.740933125774962,
+          "seconds": 6459.613920257427
+        },
+        {
+          "common_gap_relative": 0.0,
+          "dual": 4.740932705476565,
+          "event": "terminal",
+          "primal": 4.740932705476565,
+          "seconds": 6479.262389191426
+        }
+      ],
+      "method": "M0",
+      "nodes": 39157.0,
+      "outside_runtime_seconds": 65.73799514770508,
+      "primal": 4.740932705476565,
+      "recomputed_gap": 0.0,
+      "runtime_seconds": 6479.262004852295,
+      "t10_seconds": 2046.0612998176366,
+      "t1_seconds": 5979.507514807396,
+      "t5_seconds": 3827.787163944915,
+      "threads": 2
+    },
+    {
+      "child_sha256": "ecefa1c2c925041ad703649fbb38359d65c231dcfe8c025e0b2de5c79b32f65a",
+      "dual": 4.741382854739205,
+      "elapsed_seconds": 646.0,
+      "gurobi_gap": 0.0,
+      "independent_feasibility": {
+        "checks": {
+          "bounds": true,
+          "integrality": true,
+          "objective": true,
+          "rows": true
+        },
+        "feasibility_tolerance": 1e-06,
+        "integrality_tolerance": 1e-05,
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 0.0,
+        "max_row_residual": 0.0,
+        "recomputed_objective": 4.741382854739205,
+        "valid": true
+      },
+      "index": 51,
+      "job_id": "3726",
+      "last_saved_points": [
+        {
+          "common_gap_relative": 0.4504141595802435,
+          "dual": 2.9626130738091345,
+          "event": "MIP",
+          "primal": 5.390628462236915,
+          "seconds": 545.9356975425035
+        },
+        {
+          "common_gap_relative": 0.010743578856494088,
+          "dual": 4.710215708932156,
+          "event": "MIP",
+          "primal": 4.761369861504161,
+          "seconds": 576.1361856395379
+        },
+        {
+          "common_gap_relative": 0.0,
+          "dual": 4.741382854739205,
+          "event": "terminal",
+          "primal": 4.741382854739205,
+          "seconds": 578.4306258345023
+        }
+      ],
+      "method": "M2",
+      "nodes": 1738.0,
+      "outside_runtime_seconds": 67.5699348449707,
+      "primal": 4.741382854739205,
+      "recomputed_gap": 0.0,
+      "runtime_seconds": 578.4300651550293,
+      "t10_seconds": 566.7820089152083,
+      "t1_seconds": 576.5876161390916,
+      "t5_seconds": 566.8791477549821,
+      "threads": 4
+    },
+    {
+      "child_sha256": "4c708a4c980a4269d5aea8e96bb419614cd382bde4541b7ac868e33bdbdb177e",
+      "dual": 4.740932705476565,
+      "elapsed_seconds": 21791.0,
+      "gurobi_gap": 0.0,
+      "independent_feasibility": {
+        "checks": {
+          "bounds": true,
+          "integrality": true,
+          "objective": true,
+          "rows": true
+        },
+        "feasibility_tolerance": 1e-06,
+        "integrality_tolerance": 1e-05,
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 5.207335889175255e-08,
+        "max_row_residual": 1.2886597964124977e-11,
+        "recomputed_objective": 4.740932705476565,
+        "valid": true
+      },
+      "index": 52,
+      "job_id": "3727",
+      "last_saved_points": [
+        {
+          "common_gap_relative": 0.0006126476979836369,
+          "dual": 4.738028529294831,
+          "event": "MIP",
+          "primal": 4.74093305101483,
+          "seconds": 21693.073905725963
+        },
+        {
+          "common_gap_relative": 0.00016586668542757323,
+          "dual": 4.740146688163824,
+          "event": "MIP",
+          "primal": 4.74093305101483,
+          "seconds": 21725.506912613288
+        },
+        {
+          "common_gap_relative": 0.0,
+          "dual": 4.740932705476565,
+          "event": "terminal",
+          "primal": 4.740932705476565,
+          "seconds": 21726.30780237727
+        }
+      ],
+      "method": "M0",
+      "nodes": 266765.0,
+      "outside_runtime_seconds": 64.69261598587036,
+      "primal": 4.740932705476565,
+      "recomputed_gap": 0.0,
+      "runtime_seconds": 21726.30738401413,
+      "t10_seconds": 3631.3886826448143,
+      "t1_seconds": 19722.885934565216,
+      "t5_seconds": 10446.647611015476,
+      "threads": 4
+    },
+    {
+      "child_sha256": "d23c4faefcaa89e66dfd5e69ff52ebac2cf98457fb2d04273219d51501f3f4b5",
+      "dual": 4.740937765901057,
+      "elapsed_seconds": 20829.0,
+      "gurobi_gap": 0.0,
+      "independent_feasibility": {
+        "checks": {
+          "bounds": true,
+          "integrality": true,
+          "objective": true,
+          "rows": true
+        },
+        "feasibility_tolerance": 1e-06,
+        "integrality_tolerance": 1e-05,
+        "max_bound_residual": 0.0,
+        "max_integrality_residual": 5.20733593161857e-08,
+        "max_row_residual": 1.2547051444426315e-11,
+        "recomputed_objective": 4.740937765901057,
+        "valid": true
+      },
+      "index": 53,
+      "job_id": "3728",
+      "last_saved_points": [
+        {
+          "common_gap_relative": 0.0007406518469508577,
+          "dual": 4.737426795012907,
+          "event": "MIP",
+          "primal": 4.740938179631931,
+          "seconds": 20722.791678989306
+        },
+        {
+          "common_gap_relative": 0.00026891515207832546,
+          "dual": 4.739663269520362,
+          "event": "MIP",
+          "primal": 4.740938179631931,
+          "seconds": 20762.219436059706
+        },
+        {
+          "common_gap_relative": 0.0,
+          "dual": 4.740937765901057,
+          "event": "terminal",
+          "primal": 4.740937765901057,
+          "seconds": 20762.970476049
+        }
+      ],
+      "method": "M1",
+      "nodes": 217149.0,
+      "outside_runtime_seconds": 66.02992701530457,
+      "primal": 4.740937765901057,
+      "recomputed_gap": 0.0,
+      "runtime_seconds": 20762.970072984695,
+      "t10_seconds": 5054.358747572638,
+      "t1_seconds": 19221.221672458574,
+      "t5_seconds": 11225.811634659767,
+      "threads": 4
+    }
+  ],
+  "runtime_quotient_B_over_G": 37.56081969596636,
+  "runtime_quotient_R_over_G": 35.895385326175706,
+  "scientific_reporting_eligible": false,
+  "source_commit": "9ab7823c6886d19e9ec865141a1cd35b3c3c16e5"
+}

@@ -1,5 +1,29 @@
 # MVP2 R3 — governing contract and completion plan
 
+## Approved continuation — 1 November 2026
+
+The author approved the revised Sprint/PR plan. The [canonical plan](mvp2-closeout-plan.md) now governs autonomous preparation of the ten-medium/six-easy solver-seed extension, with the 54-parent learning split frozen. Do not request planning approval again. The exact manifest and resource accounting precede the author's CLI intervention; no new job was submitted. PR89 stays intact. The new human snapshot reports 3725–3728 COMPLETED, 3729 RUNNING and 3730–3734 PENDING; 50 result cells remain received, with four more awaiting transfer/verification. S1/S2/S4/S5 proceed independently; full qualification, merges, publication and submission keep their human gates.
+
+
+## Approved scientific/editorial revision — 30 October 2026
+
+The author approved the detailed diagnostic and its implementation in PR93.
+The approved title is **Evaluating Graph Neural Network-Based Partial Warm Starts for Capacitated Facility Location Problems**.
+Only C2 (conditional optimization effects) and C3 (computational economics)
+are scientific contribution claims; C1 is a methodological obligation.
+Earlier candidate C1–C3 framing below is superseded in this respect, without
+changing historical evidence or the installed experimental contract.
+See the [revision record](pr93-editorial-revision-20261030.md) for the approved diagnostic, locations,
+implementation and validation boundaries.
+
+S1/S2/S4/S5 advance with existing evidence. PR89, its source, settings,
+resources and sequence remain intact; S3 requires its reconciled 60-cell
+return and metric-specific qualification. Further seeds, methods, models,
+training and ablations remain future work. The final audit, merge,
+publication and editorial submission retain their human gates.
+No coauthor communication or new experimental execution is authorized here.
+
+
 ## Latest delivery decision — 28 October 2026
 
 The author approves the completion structure with D0 unchanged as the
@@ -14,7 +38,7 @@ This supersedes the earlier requirement that PR92 itself await the campaign,
 without changing the scientific or installed execution contract.
 
 An independent audit passage begins now and a complete final passage follows
-the qualified return. The [coauthor brief](../../manuscript/coauthor-review-brief.md)
+the qualified return. The [coauthor brief](coauthor-review-brief.md)
 supports preliminary feedback by 15 November, without unauthorized circulation.
 Targets are complete manuscript 15 December, final approval 7 January,
 submission 10 January and absolute deadline 14 January. Earlier schedule

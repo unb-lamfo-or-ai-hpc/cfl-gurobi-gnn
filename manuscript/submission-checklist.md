@@ -8,6 +8,14 @@ before submission; this checklist is not publisher approval.
 
 ## Prepared
 
+- Exact author-approved title and C2/C3 scientific framing from 30 October; C1
+  is methodological. Article and supplements retain their separate evidence scopes.
+- Scientific supplements A/B/C cover methods, extended results and reproducibility;
+  prospective execution designs and Human–AI decisions remain internal.
+
+- Article and registered supplements address journal readers; coauthor instructions,
+  operational status and scheduling belong only in internal repository records.
+
 - English article organized around a research question and method, not an audit diary.
 - Elsevier author-year preprint layout and editable LaTeX source.
 - Abstract at most 250 words; six keywords.
@@ -17,7 +25,10 @@ before submission; this checklist is not publisher approval.
 - Explicit development scope, regressions, censoring, influence sensitivity,
   label selection, missing measurements, and unachieved objectives.
 - Original material MIT; publisher class/style retain LPPL notices.
-- Generative-AI declaration immediately before References.
+- Numbered Acknowledgements thanking UJA and DaSCI for access to dgx-dasci HPC,
+  immediately before the numbered generative-AI declaration.
+- Numbered generative-AI declaration immediately before numbered References;
+  author-approved disclosure wording preserved.
 
 ## Author and evidence actions before journal submission
 
