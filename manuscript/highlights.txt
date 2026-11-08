@@ -1,5 +1,5 @@
-Partial warm-start effects vary with instance, thread cap and endpoint.
-Paired CFL comparisons separate primal quality, dual bounds and solve time.
-Preparation costs can reverse an observed solver-level advantage.
-Reuse scenarios change cost comparisons without removing preparation.
-Faster distributed training accompanies lower F1 and higher GPU-hours.
+Neural starts show no consistent advantage over either comparator.
+On easy instances, relative solver time depends on the gap target.
+On M20, only the neural start reaches the tight target within one hour.
+Four-GPU training reduces elapsed time and increases allocated GPU-hours.
+Distributed training yields lower selected F1 in the matched pair.

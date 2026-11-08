@@ -1,10 +1,16 @@
 # Appendix B: Descriptive Analyses and Extended Experimental Results {#sec-supp-results}
 
+```{=latex}
+\AppendixDisplayNumbers{B}
+```
+
 The descriptive analyses and extended results retain their original populations, measurement boundaries and numerical qualifications. Repeated method/resource observations are not independent instances. Presentation rounding does not change the public source records.
 
 ## B.1. Populations and the role of historical material {#sec-appendix-populations}
 
 The analyses below answer different questions and retain their original populations. In particular, the earlier development cohort is not the later predictor cohort, and a predictive test is not an optimization benchmark. This distinction prevents a descriptive figure or a large number of binary targets from being mistaken for independent experimental replication.
+
+@tbl-study-populations identifies the populations and their roles.
 
 | Evidence block | Population and role | Appropriate interpretation |
 |:--|:--|:--|
@@ -14,6 +20,8 @@ The analyses below answer different questions and retain their original populati
 | Preliminary optimization study | Separate six-medium validation and six-medium test cohorts | Supporting optimization evidence under its own protocol |
 | Matched GPU training pair | Same later learning split, one versus four GPUs | Training time, selected quality and allocated resources |
 | Long-horizon CPU evaluation | 60 completed configurations on the same four medium instances | Separate 12-hour evaluation, kept distinct from the retrospective comparison |
+
+: Study populations and their roles. {#tbl-study-populations}
 
 The following sections restore the earlier development material alongside the later results. They preserve its scientific role rather than replace the current data partition, predictor or optimization population.
 
@@ -131,6 +139,8 @@ The archived predictive test contains 3,222,800 binary targets and 3,773 positiv
 
 The principal comparison contains 150 seed42 records on six easy and four medium instances. Their three methods and five thread caps account for the rows below. The thirty sensitive observations are part of the same sample, not an additional population.
 
+@tbl-cpu-coverage gives the dispositions for the historical CPU cohort.
+
 | Principal comparison | Records | Interpretation |
 |:--|--:|:--|
 | Easy instances | 90 | Six instances, three methods, five caps |
@@ -141,11 +151,11 @@ The principal comparison contains 150 seed42 records on six easy and four medium
 
 : Scope and recorded dispositions of the principal CPU comparison. {#tbl-cpu-coverage}
 
-Every easy instance attains the reported 0.01% gap criterion in each configuration. @tbl-easy-times lists both runtime and final MIP gap for all 90 observations; gaps are percentages, not fractions. Twelve gaps are nonzero, and the largest is approximately 0.009687%, for F14 with G at eight threads. A zero under solver tolerances does not establish exact optimality. F denotes an easy instance; M denotes a medium instance.
+Every easy instance attains the reported 0.01% gap criterion in each configuration. @tbl-easy-times lists both runtime and final MIP gap for all 90 observations; gaps are percentages, not fractions. Twelve gaps are nonzero, and the largest is approximately 0.009687%, for E14 with G at eight threads. A zero under solver tolerances does not establish exact optimality. F denotes an easy instance; M denotes a medium instance.
 
 {{< include ../tables/principal_easy_times.qmd >}}
 
-## B.8. Medium instances: primal, dual and gap
+## B.8. Medium instances: primal, dual and gap {#sec-mvp2-current}
 
 The terminal records in @tbl-medium-quality distinguish feasible objective, solver bound, relative gap and terminal-target disposition. A smaller primal is better for minimization; a larger valid lower bound indicates stronger dual progress. These can change in opposite directions, so the gap must be interpreted with both components.
 
@@ -155,15 +165,31 @@ Censoring here concerns the terminal target, not every earlier descriptive thres
 
 The [principal rows](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/methodology-20261019/seed 42_main.csv) retain method identifiers, exact values, censoring flags and receipt/child hashes. The [existing paired summaries](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/pr86/final-210/paired_uncertainty.csv) distinguish the seed 42 view from historical repeats. Their intervals are exploratory under an exchangeable-instance model, not a guarantee of population coverage.
 
-## B.9. Preparation and cost interpretation
+On medium instance 0 at one thread, G improves the primal (4.6556 versus B's 4.6664) but weakens the dual (4.3230 versus 4.3504), leaving a larger terminal gap. On medium instance 7 at eight threads, G's much better primal (5.4337 versus 10.7283) yields a smaller gap despite a weaker dual (4.7261 versus 4.7750). Appendix B retains all configurations and adverse outcomes. Primal and dual changes therefore require joint interpretation.
 
-The article's cost table uses the six easy instances at sixteen threads and seed 42. Solver Runtime, supervised attempt time and preparation are separate quantities. The delimited cold scenario adds recorded preparation to the attempt, while the broader allocation also apportions documented preparation overhead. The seven-use scenario spreads that preparation across seven assumed uses; it does not remove expenditure from campaign accounting.
+Medium instance 0 with G at sixteen threads reports zero terminal gap after approximately 3204 seconds, while both comparators are censored for the terminal target. This is a solver-reported outcome under tolerances, not an exact certificate. M4 and M12 retain metric-specific numerical limits: acceptance of original floating-point vectors does not establish feasibility of rounded diagnostic copies. Their observations cannot be promoted to certified speedups.
+
+## B.9. Preparation and cost interpretation {#sec-cost-results}
+
+The historical cost comparison uses the six easy instances at sixteen threads and seed 42. Solver Runtime, supervised attempt time and preparation are separate quantities. The delimited cold scenario adds recorded preparation to the attempt, while the broader allocation also apportions documented preparation overhead. The seven-use scenario spreads that preparation across seven assumed uses; it does not remove expenditure from campaign accounting.
 
 A five-use allocation appears in a different derived table and must retain that assumption. Neither scenario is a newly measured complete application. Components included within larger intervals, such as a forward pass within inference, are not added twice. R retains the cost of G-dependent matching.
 
 The [cost scenarios](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f/docs/evidence/pr86/final-210/cost_scenarios.csv) identify these scopes by instance and configuration. Missing cold-use components remain unavailable rather than zero. CPU accounting, physical reservation and allocated GPU-hours are different resource measures.
 
-## B.10. Historical predictor and learning dynamics {#sec-historical-predictive}
+A solver-level advantage is not necessarily an application-level advantage. @tbl-principal-costs compares five already documented cost boundaries for the six easy instances at sixteen threads.
+
+{{< include ../tables/principal_costs.qmd >}}
+
+The solver-only G/B ratio of 0.8435 becomes 1.0461 with delimited cold preparation, or 1.0692 with broader allocation. The corresponding seven-use scenarios yield 0.8935 and 0.8969. Accounting scope and reuse thus reverse the direction of the estimate.
+
+These are conditional cost scenarios, not complete deployment measurements. The exploratory intervals around the sixteen-thread solver and cold-use ratios both include one. The observation is useful for accounting decisions on this sample, without establishing a universal break-even rule. It also does not remove preparation from the measured campaign expenditure or imply that missing operational costs are zero.
+
+## B.10. Predictor history and matched GPU training {#sec-historical-predictive}
+
+The historical predictor and the matched GPU training runs have distinct roles. The former supplies the fixed weights used to generate solver starts. The latter compares execution modes at matched training work.
+
+### B.10.1. Historical predictor and learning dynamics
 
 The archived predictive assessment uses ten test graphs and is distinct from the six-medium optimization population below. @fig-loss shows the complete original 100-epoch history; @tbl-predictive reports the validation-selected checkpoint rather than the terminal model.
 
@@ -174,6 +200,31 @@ Training BCE decreases from 1.5877 to 0.0275. Validation BCE reaches its minimum
 {{< include ../tables/current_predictive.qmd >}}
 
 Precision and recall are 0.6923 and 0.7064; pooled F1 is 0.6993 and parent-macro F1 is 0.7027. AP 0.7745 and trapezoidal PR-AUC 0.7747 are distinct ranking summaries. The test contains 5,536,400 binary targets and 5,265 positives, approximately 0.0951%. Those targets are not independent problem instances.
+
+### B.10.2. Matched serial and distributed GPU training {#sec-gpu-appendix}
+
+The matched comparison asks how much elapsed time changes when the same graph-level training schedule runs on one V100 or on four V100s using distributed data parallelism (DDP). The fixed split comprises 34 training, ten validation and ten test instances. Each global update averages four per-graph weighted binary cross-entropies. The serial process accumulates four scaled gradients. In DDP, each rank processes one complete graph, then the ranks average their gradients before clipping and the optimizer step [@li2020ddp]. Both arms used seed 42, the same initial state and graph schedule, and completed 100 epochs, 13,600 graph presentations and 3,400 updates. Validation selects the checkpoint separately for each arm. Appendix C.7 records the full configuration.
+
+@tbl-gpu-pair-appendix separates training time, scheduler elapsed time, allocated GPU-hours and the selected checkpoints' predictive quality.
+
+| Measure | Serial 1 V100 | DDP 4 V100s |
+|:--|--:|--:|
+| Physical CPU cores |4|16|
+| Training loop (s) |1724.128|795.637|
+| Slurm job elapsed (s) |2021|1104|
+| Assigned GPU-hours |0.5614|1.2267|
+| Selected epoch |99|92|
+| Minimum validation BCE |0.045286|0.048772|
+| Selected parent-macro F1 |0.723065|0.690597|
+| Selected parent-macro PR-AUC |0.783809|0.769959|
+
+: Matched GPU training time, allocation and selected quality. {#tbl-gpu-pair-appendix}
+
+The training loop is 2.167 times faster, corresponding to 54.17% efficiency relative to the fourfold GPU allocation. Slurm elapsed time falls from 2,021 to 1,104 seconds (1.831×, 45.77% GPU-normalized efficiency), while allocated GPU-hours rise by a factor of 2.185. Selected F1 falls 0.032468 (3.247 percentage points), exceeding the predeclared descriptive 0.02 loss margin; PR-AUC falls 0.013850. The smaller PR-AUC loss does not establish preserved predictive quality or statistical noninferiority. @fig-gpu-bce-appendix shows the unmodified loss trajectories.
+
+![Training and validation weighted BCE for the matched serial/distributed comparison.](../figures/gpu_bce_by_epoch_article_en.pdf){#fig-gpu-bce-appendix width=90% fig-pos="htbp"}
+
+The loss curves compare training and validation at the same epoch, with the selected checkpoint read from each run's validation curve. Communication and gradient synchronization can contribute to sublinear DDP speedup [@li2020ddp]. GNN workloads can also involve irregular data movement [@zheng2020distdgl]; here each rank processes complete instance graphs. Matched global batches do not establish identical floating-point trajectories [@pytorch21numerical]. CPU and GPU allocations change together. The single pair shows an F1 loss, but does not identify its cause. These weights do not replace the CPU predictor.
 
 ## B.11. Preliminary six-medium optimization study {#sec-historical-six-medium}
 
@@ -220,6 +271,8 @@ The [historical manifest](../results/current/pr60_scientific_evidence_manifest.j
 
 ## B.12. Long-horizon CPU evaluation {#sec-partial-cpu-evidence}
 
+All 60 configurations were completed and reconciled. Forty-seven reached the reported 0.01% criterion and 13 were time-limited, all on M7. This historical evaluation is analyzed separately from the 150-observation retrospective comparison. On M0, G reached the target before B at four of five caps. On M7, all methods ended with the same reported primal value. The reported times do not establish certified speedups.
+
 This separate evaluation reuses the four medium instances, original prediction-to-Start bindings and seed 42, with five physical-thread limits and a 43,200-second solver budget. All 60 planned configurations were completed and received, with 15 combinations for each instance. The complete campaign is kept separate from the earlier 150 observations; it does not enlarge the number of independent instances or solver seeds.
 
 The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/565d9146729c7f35f280d1ae37818beab71879ff/docs/evidence/pr89/final-20261101) binds the source, three input archives, all 60 cells, threshold observations, horizon brackets and metric dispositions. The sealed 54-cell review was retained, and the six final receipts were independently checked for controls, parameter bindings, nested seals, temporal records and cost arithmetic. A joint accounting query recorded all 60 jobs and 180 job/step rows as completed. These transport and execution checks establish receipt coverage, rather than exact optimality or scientific validity. The original four-point M12 audit is complemented by a [six-point extension](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/565d9146729c7f35f280d1ae37818beab71879ff/docs/research/pr89-m12-terminal-audit-20261101.json); the other five M12 stored vectors have not undergone this independent exact-primal check.
@@ -229,7 +282,7 @@ The versioned [data and review record](https://github.com/unb-lamfo-or-ai-hpc/cf
 Of the 60 received configurations, 47 report the terminal 0.01% criterion and 13 stop at the 12-hour limit. All time-limited cases concern M7. Technical completion of a job is therefore different from attainment of its optimization target [@gurobi2026]. A first observed threshold crossing retains its previous observation and does not identify an exact continuous hitting time.
 
 
-The coverage table retains every instance, including censored and numerically restricted cases.
+@tbl-cpu-long-coverage retains every instance, including censored and numerically restricted cases.
 
 | Instance | Configurations | Reported target attained | Time-limited |
 |:--|--:|--:|--:|
@@ -299,3 +352,53 @@ The 60 completed records contain 293.919 hours of summed solver Runtime and 295.
 Preparation is reused from the earlier campaign rather than measured anew. Cold and five-use allocations retain their scenario definitions, including the G-dependent preparation charged to R. They are not complete new cold-deployment measurements.
 
 The complete evaluation supports a bounded interpretation: benefits in some M0 configurations, earlier intermediate progress without terminal attainment by G on M7, and large time contrasts on M12 that remain numerically qualified. One seed and one execution per configuration do not establish repeatability, seed-averaged superiority or independent generalization. A later prospective study could use these observations to separate numerical comparability, solver-seed stability and endpoint choice, without treating thread caps as replications.
+
+## B.13. One-hour paired solver-seed results {#sec-pr94-appendix}
+
+The one-hour comparison comprises 144 runs in 48 instance–seed blocks. Each run uses one physical solver thread. The design varies solver seed with fixed starts. It provides neither a thread-scaling comparison nor a comparison of concurrent MIP configurations. All blocks yielded three reconciled terminal records. All 96 supplied R and G starts were accepted by the solver. The solver ended at the time limit on 84 medium runs. The other six medium runs and all 54 easy runs attained the reported 0.01% criterion within the observation window. Each terminal incumbent passed the recorded checks at the applicable numerical tolerances.
+
+### B.13.1. Easy instances
+
+All 18 easy blocks attained 0.01% with all three methods. @tbl-pr94-easy reports the median observed time across the three seeds, and the median of the seed-paired ratios for each instance. The ratio columns use paired times directly, so dividing two columns of median times can give a different value.
+
+| Instance | B (s) | R (s) | G (s) | R/B | G/B | G/R |
+|:--|--:|--:|--:|--:|--:|--:|
+| E0 | 104.2 | 110.0 | 235.3 | 1.070 | 2.234 | 2.266 |
+| E3 | 71.0 | 71.8 | 42.8 | 1.022 | 0.603 | 0.609 |
+| E6 | 67.7 | 69.7 | 52.8 | 1.031 | 0.751 | 0.734 |
+| E14 | 83.9 | 80.9 | 75.7 | 1.027 | 0.833 | 0.936 |
+| E27 | 65.6 | 68.5 | 54.9 | 1.044 | 0.806 | 0.764 |
+| E29 | 89.6 | 91.0 | 129.3 | 0.981 | 1.482 | 1.569 |
+
+: Easy-instance times to the 0.01% gap target. {#tbl-pr94-easy}
+
+Across the 18 paired observations, geometric mean time ratios were 1.038 for R/B, 1.083 for G/B and 1.043 for G/R at 0.01%. At 10%, the G/B ratio was 0.752, compared with 1.083 at 0.01%. G was faster than B in ten of the 18 pairs at the tight target, but the larger slowdowns on E0 and E29 raised the geometric mean above one. Thus the balance between wins and losses and the size of those differences tell different parts of the story. All three methods have the same terminal primal values within floating-point rounding on these six instances.
+
+### B.13.2. Medium instances
+
+@tbl-pr94-medium reports median gaps over the three seeds and counts of observed target crossings within 3,600 seconds. At 5% and 1%, the attainment counts equal those at 0.01%. The common-horizon outcomes use the last observation at or before one hour, including the terminal result of early finishes. Late callback or terminal observations do not replace the fixed-horizon records.
+
+| Instance | B gap (%) | R gap (%) | G gap (%) | 10% hits (B/R/G) | 0.01% hits (B/R/G) |
+|:--|--:|--:|--:|:--:|:--:|
+| M0 | 7.400 | 7.321 | 8.762 | 3/3/3 | 0/0/0 |
+| M4 (restricted) | 8.562 | 9.029 | 8.232 | 3/3/3 | 0/0/0 |
+| M5 | 15.336 | 15.985 | 13.960 | 0/0/0 | 0/0/0 |
+| M6 | 18.595 | 18.973 | 16.501 | 0/0/0 | 0/0/0 |
+| M7 | 16.917 | 19.868 | 14.795 | 0/0/0 | 0/0/0 |
+| M9 | 19.095 | 18.270 | 18.417 | 0/0/0 | 0/0/0 |
+| M12 (restricted) | 6.511 | 6.904 | 0.000 | 3/2/3 | 0/0/3 |
+| M13 | 19.266 | 16.351 | 13.105 | 0/0/0 | 0/0/0 |
+| M20 | 24.913 | 19.048 | 0.010 | 0/0/3 | 0/0/3 |
+| M26 | 27.838 | 24.473 | 19.235 | 0/0/0 | 0/0/0 |
+
+: Medium-instance gaps and target attainment at one hour. {#tbl-pr94-medium}
+
+At 10%, G and B both attained in nine pairs, G alone in three, and neither in 18. For G and R, the corresponding counts were eight, four and 18. R and B both attained in eight, B alone in one, and neither in 21. After restricting the eligible time comparison to cases outside M4 and M12, only the three M0 seeds offer common 10% crossings for these contrasts. At 0.01% there are no pairs with common observed attainment. The exclusive G attainments on M20 therefore inform coverage under the fixed budget, with no observed time ratio against B or R. The nine M7 runs remained censored even at 10% in this one-hour study.
+
+For each seed we calculate the relative primal and dual differences and the gap difference in percentage points, then take the median across seeds within each instance. Across the ten instance medians, the reported primal differences were -0.42% for G versus B and -0.92% for G versus R, the dual differences were +1.05% and +1.15%, and the gap differences were -2.11 and -2.52 percentage points. The gap medians remain -2.11 and -2.52 percentage points in the eight-instance sensitivity summary outside M4 and M12. R versus B gives +0.06 percentage points in that sensitivity summary. A smaller gap can coexist with a worse primal, as on M6 in G versus R. M20 contributes one instance-level attainment advantage, even though it recurs across three solver seeds. The results do not establish that G generally outperforms B or R.
+
+### B.13.3. Numerical and cost scope {#sec-pr94-numerics-costs}
+
+At M12 seed 42, G reports a bound of 4.741382855, above R's latest in-budget primal of 4.740933499. This cross-run difference of approximately 0.000449355 is retained as a numerical warning. It is consistent with the need for the separate M12 feasibility qualification in the longer experiment. The one-hour metadata document tolerance checks and solution hashes. Establishing exact feasibility for these new points would require examining the underlying vectors. Both M4 and M12 remain in the descriptive tables and outside the eligible time contrasts.
+
+Total solver runtime was 87.61 hours and supervised attempt time was 89.60 hours, summed over runs. Slurm recorded 89.62 job-hours and 179.23 allocated logical CPU-hours, with two jobs overlapping at peak. These are separate accounting boundaries. The measured attempt includes model loading, optimization, audit and export. The return has no qualified cold or three-use amortized preparation totals for R or G. The times therefore support comparisons of the recorded attempts, while the cost of deploying and reusing the starting-information pipeline remains a separate question.

@@ -30,6 +30,14 @@ class ManuscriptContractTests(unittest.TestCase):
     def test_sources_pass_without_generated_assets(self):
         self.assertEqual(CHECK.check_source(self.root), [])
 
+    def test_material_links_do_not_authorize_document_execution(self):
+        self.change("_quarto.yml", "enabled: false", "enabled: true")
+        self.assertIn("static_publication_boundary_missing", CHECK.check_source(self.root))
+
+    def test_material_link_destinations_must_remain_reviewed(self):
+        self.change("_quarto.yml", "cfl-gurobi-gnn/index.tex", "cfl-gurobi-gnn/unreviewed.tex")
+        self.assertIn("reviewed_publication_links_missing_or_changed", CHECK.check_source(self.root))
+
     def test_coauthor_instructions_do_not_belong_in_article(self):
         self.change("index.qmd", "# Introduction", "# Introduction\n\nFor coauthor review only.")
         self.assertIn("internal_note_in_reader_text:index.qmd", CHECK.check_source(self.root))
@@ -129,8 +137,8 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("approved_scientific_communication_drift",
                       CHECK.check_source(self.root))
 
-    def test_current_seed42_scope_cannot_be_silently_removed(self):
-        self.change("index.qmd", "150 seed42 observations", "210 multiseed observations")
+    def test_one_hour_thread_scope_cannot_be_silently_removed(self):
+        self.change("index.qmd", "one physical thread", "multiple physical threads")
         self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
 
@@ -189,7 +197,8 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
 
     def test_unapproved_include_fails(self):
-        self.change("index.qmd", "tables/principal_ratios.qmd", "../../private.qmd")
+        self.change("supplement/extended-results.md", "../tables/principal_costs.qmd",
+                    "../../private.qmd")
         self.assertIn("executable_or_unreviewed_included_content", CHECK.check_source(self.root))
 
     def test_executable_chunk_fails(self):

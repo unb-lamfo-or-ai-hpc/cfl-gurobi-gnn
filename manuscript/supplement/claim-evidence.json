@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "kind": "editorial_claim_evidence_not_scientific_certification",
-  "as_of": "2026-10-30",
+  "as_of": "2026-11-08",
   "governing_contract": "CFL-GNN-SCI-2026-10-22-R3",
-  "scope": "Existing CPU and matched GPU claims in article and scientific supplements; generated tables/figures additionally retain source/output receipts.",
+  "scope": "The main article reports the matched GPU training pair and the one-hour paired solver-seed comparison. Historical claims remain scoped to their appendix populations and measurement boundaries.",
   "sources": [
     {
       "id": "cpu_main",
@@ -60,6 +60,12 @@
       "sha256": "6a34a3b87a7a1681c6c58f2055649d2e462e46e18051c0a1bdb3aa90c16a8fc8",
       "commit": "3f5789fe34fe1dc9f80f84e3e2c46d3bdea3f30f",
       "git_blob_sha1": "babd1d8472778921fd3b2442e411b75bc46efc3f"
+    },
+    {
+      "id": "pr94_pairs",
+      "path": "docs/evidence/pr94/final-20261105/summary.json",
+      "format": "json",
+      "sha256": "9efb8e71c6dd70cfa7cf9cb145128f54c3f7164b05a95b72ed5146aa287e0026"
     }
   ],
   "claims": [
@@ -389,7 +395,7 @@
     },
     {
       "id": "cpu_cost_solver",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-cost-results",
       "article_template": "The solver-only G/B ratio of {n}",
       "metrics": {
@@ -412,7 +418,7 @@
     },
     {
       "id": "cpu_cost_cold",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-cost-results",
       "article_template": "becomes {n} with delimited cold preparation",
       "metrics": {
@@ -435,7 +441,7 @@
     },
     {
       "id": "cpu_cost_allocated_cold",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-cost-results",
       "article_template": "or {n} with broader allocation",
       "metrics": {
@@ -458,7 +464,7 @@
     },
     {
       "id": "cpu_cost_amortized",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-cost-results",
       "article_template": "seven-use scenarios yield {n}",
       "metrics": {
@@ -481,7 +487,7 @@
     },
     {
       "id": "cpu_cost_allocated_amortized",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-cost-results",
       "article_template": "and {n}. Accounting scope",
       "metrics": {
@@ -504,7 +510,7 @@
     },
     {
       "id": "cpu_m0_one_primal_dual",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-mvp2-current",
       "article_template": "On medium instance 0 at one thread, G improves the primal ({gp} versus B's {bp}) but weakens the dual ({gd} versus {bd}), leaving a larger terminal gap.",
       "metrics": {
@@ -561,7 +567,7 @@
     },
     {
       "id": "cpu_m7_eight_primal_dual",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-mvp2-current",
       "article_template": "On medium instance 7 at eight threads, G's much better primal ({gp} versus {bp}) yields a smaller gap despite a weaker dual ({gd} versus {bd}).",
       "metrics": {
@@ -618,7 +624,7 @@
     },
     {
       "id": "cpu_m0_sixteen_runtime",
-      "document": "index.qmd",
+      "document": "supplement/extended-results.md",
       "section": "sec-mvp2-current",
       "article_template": "reports zero terminal gap after approximately {n} seconds",
       "metrics": {
@@ -638,43 +644,6 @@
       "interpretation": "Solver-reported tolerance outcome; zero gap is not an exact certificate."
     },
     {
-      "id": "abstract_cpu_cost",
-      "document": "index.qmd",
-      "section": "abstract",
-      "article_template": "ratio is {solver} for solver runtime and {cold} for supervised execution with delimited cold preparation",
-      "metrics": {
-        "solver": {
-          "source": "cpu_pairs",
-          "row": {
-            "threads": "16",
-            "seed_scope": "seed42",
-            "numerator": "M2",
-            "denominator": "M0",
-            "metric": "solver_seconds",
-            "parents": "6"
-          },
-          "column": "geometric_mean_ratio",
-          "format": ".3f",
-          "scale": 1
-        },
-        "cold": {
-          "source": "cpu_pairs",
-          "row": {
-            "threads": "16",
-            "seed_scope": "seed42",
-            "numerator": "M2",
-            "denominator": "M0",
-            "metric": "scoped_cold_cost_scenario_seconds",
-            "parents": "6"
-          },
-          "column": "geometric_mean_ratio",
-          "format": ".3f",
-          "scale": 1
-        }
-      },
-      "interpretation": "Provisional abstract uses existing six-easy, sixteen-thread point summaries only."
-    },
-    {
       "id": "abstract_gpu_job",
       "document": "index.qmd",
       "section": "abstract",
@@ -691,6 +660,144 @@
         }
       },
       "interpretation": "Matched training-job time, not isolated GPU causality or downstream optimization benefit."
+    },
+    {
+      "id": "pr94_cells",
+      "document": "index.qmd",
+      "section": "sec-pr94-results",
+      "article_template": "All {cells} runs yielded terminal records.",
+      "metrics": {
+        "cells": {
+          "source": "pr94_pairs",
+          "json_pointer": "/cells",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Verified complete return for the recovery matrix."
+    },
+    {
+      "id": "pr94_easy_time",
+      "document": "index.qmd",
+      "section": "sec-pr94-results",
+      "article_template": "geometric mean time ratios R/B, G/B and G/R were {rb}, {gb} and {gr}, respectively.",
+      "metrics": {
+        "rb": {
+          "source": "pr94_pairs",
+          "json_pointer": "/contrasts/easy/001/R~1B/paired_time_geomean_ratio",
+          "format": ".3f",
+          "scale": 1
+        },
+        "gb": {
+          "source": "pr94_pairs",
+          "json_pointer": "/contrasts/easy/001/G~1B/paired_time_geomean_ratio",
+          "format": ".3f",
+          "scale": 1
+        },
+        "gr": {
+          "source": "pr94_pairs",
+          "json_pointer": "/contrasts/easy/001/G~1R/paired_time_geomean_ratio",
+          "format": ".3f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Time-to-0.01% ratios of the 18 jointly observed easy pairs."
+    },
+    {
+      "id": "pr94_medium_10",
+      "document": "index.qmd",
+      "section": "sec-pr94-results",
+      "article_template": "attained a 10% gap in {b}, {r} and {g} of {n} runs per method",
+      "metrics": {
+        "b": {
+          "source": "pr94_pairs",
+          "json_pointer": "/targets/medium/B/hits/10",
+          "format": ".0f",
+          "scale": 1
+        },
+        "r": {
+          "source": "pr94_pairs",
+          "json_pointer": "/targets/medium/R/hits/10",
+          "format": ".0f",
+          "scale": 1
+        },
+        "g": {
+          "source": "pr94_pairs",
+          "json_pointer": "/targets/medium/G/hits/10",
+          "format": ".0f",
+          "scale": 1
+        },
+        "n": {
+          "source": "pr94_pairs",
+          "json_pointer": "/targets/medium/G/n",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Reported attainment including numerically restricted cases."
+    },
+    {
+      "id": "pr94_medium_gap",
+      "document": "index.qmd",
+      "section": "sec-pr94-results",
+      "article_template": "was -{gb} percentage points for G versus B and -{gr} for G versus R.",
+      "metrics": {
+        "gb": {
+          "source": "pr94_pairs",
+          "json_pointer": "/contrasts/medium_sensitivity/001/G~1B/median_instance_gap_difference_pp",
+          "format": ".2f",
+          "scale": -1
+        },
+        "gr": {
+          "source": "pr94_pairs",
+          "json_pointer": "/contrasts/medium_sensitivity/001/G~1R/median_instance_gap_difference_pp",
+          "format": ".2f",
+          "scale": -1
+        }
+      },
+      "interpretation": "Median of instance-level medians of within-seed differences, outside M4/M12."
+    },
+    {
+      "id": "pr94_coverage",
+      "document": "supplement/extended-results.md",
+      "section": "sec-pr94-appendix",
+      "article_template": "comprises {n} runs in {blocks} instance–seed blocks.",
+      "metrics": {
+        "n": {
+          "source": "pr94_pairs",
+          "json_pointer": "/cells",
+          "format": ".0f",
+          "scale": 1
+        },
+        "blocks": {
+          "source": "pr94_pairs",
+          "json_pointer": "/blocks",
+          "format": ".0f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Full scheduled matrix."
+    },
+    {
+      "id": "pr94_resources",
+      "document": "supplement/extended-results.md",
+      "section": "sec-pr94-numerics-costs",
+      "article_template": "Total solver runtime was {solver} hours and supervised attempt time was {supervised} hours",
+      "metrics": {
+        "solver": {
+          "source": "pr94_pairs",
+          "json_pointer": "/resources/solver_hours",
+          "format": ".2f",
+          "scale": 1
+        },
+        "supervised": {
+          "source": "pr94_pairs",
+          "json_pointer": "/resources/supervised_hours",
+          "format": ".2f",
+          "scale": 1
+        }
+      },
+      "interpretation": "Summed, separate timing boundaries."
     }
   ],
   "pending_cpu": {

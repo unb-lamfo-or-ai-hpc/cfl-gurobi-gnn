@@ -12,7 +12,24 @@ project:
 manuscript:
   article: index.qmd
   notebooks: []
-  code-links: false
+  code-links:
+    - text: Source repository
+      icon: github
+      href: https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn
+    - text: Article (PDF)
+      href: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/index.pdf
+    - text: Appendices (HTML)
+      href: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/index.html
+    - text: Appendices (PDF)
+      href: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/appendices.pdf
+    - text: Editable LaTeX project (ZIP)
+      href: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/cfl-cor-latex-project.zip
+    - text: Article TeX (dependencies in ZIP)
+      href: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/index.tex
+    - text: Appendices TeX (dependencies in ZIP)
+      href: https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/appendices.tex
+    - text: Preservation plan (GitHub/Zenodo)
+      href: https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/main/docs/research/mvp2-data-release-plan.md
   meca-bundle: false
 execute:
   enabled: false

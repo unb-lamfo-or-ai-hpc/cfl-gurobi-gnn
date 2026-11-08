@@ -36,10 +36,15 @@ REQUIRED_CLAIMS = {
     "cpu_m0_one_primal_dual",
     "cpu_m7_eight_primal_dual",
     "cpu_m0_sixteen_runtime",
-    "abstract_cpu_cost",
     "abstract_gpu_job",
+    "pr94_cells",
+    "pr94_easy_time",
+    "pr94_medium_10",
+    "pr94_medium_gap",
+    "pr94_coverage",
+    "pr94_resources",
 }
-REQUIRED_SOURCES = {"cpu_main", "gpu_review", "gpu_timings", "gpu_metrics", "cpu_rows", "cpu_scaling", "cpu_pairs"}
+REQUIRED_SOURCES = {"cpu_main", "gpu_review", "gpu_timings", "gpu_metrics", "cpu_rows", "cpu_scaling", "cpu_pairs", "pr94_pairs"}
 CLAIM_DOCUMENTS = {"index.qmd", "supplement/extended-results.md",
                    "supplement/configuration-reference.md"}
 
