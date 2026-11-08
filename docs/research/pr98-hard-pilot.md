@@ -17,6 +17,20 @@ The PaScal handoff inventory (2026-10-26, evidence archive v2.0.0, source `fbbf7
 
 Preflight uses exactly two canonical dataset layouts under the existing data root. It reports original file and decoded LP digests, rejects conflicting decoded copies and requires the archived gzip digest before admitting H25. The H0 observed digest is a fingerprint for comparison with an independently acquired original. The bounded LP envelope check is not an optimization or a full structural or feasibility audit. The preflight also checks the exact checkpoint bytes at the existing PR94 preparation binding without deserializing it. For safety, an input mismatch stops the pilot and an incomplete preflight does not authorize a second attempt.
 
+### Independently checked local PaScal LP exports
+
+The existing local uncompressed LP exports were read and hashed on 8 November 2026. Compare these values with the dgx-dasci decoded SHA-256 and size as a second byte check. The local pickle for H0 matches the historical pickle fingerprint `30877729a1449214f9f4e87cf4ebb26debbd6432b4c09f255d82198a887a5c49` and was not deserialized. H0 still requires an independent LP reference from the [official CFL_hard distribution](https://github.com/thuiar/MILPBench/blob/main/Benchmark%20Datasets/README.md#benchmark-datasets).
+
+| Parent | Local LP bytes | Local LP SHA-256 |
+| --- | ---: | --- |
+| H5 | 425851766 | `9c4923a2c3da283aa079c06347aa1bf324e76be6e64bf29529a1890b82f95c6a` |
+| H10 | 425778787 | `19e0f0a8262b09521cb911f32af054333986242e539532465fb81023fc7e191f` |
+| H15 | 425597797 | `8e7c528a6b894512fa1a82c84036fb86146d90385977919684a1427372ba1ad5` |
+| H20 | 425988486 | `26f0d26b6a9c6b68536664af45d6e7d9de816918c83234ea4816fd3d5dec5076` |
+| H25 | 425712450 | `bf8661803fa708d1e829ffa44fd69d69e95b228572c12310ba6e43d7d934cb38` |
+
+The preflight command can stay at the initial pinned commit while review continues. A subsequent commit limited to tests and documentation can validate that executable tree by blob identity. A change to any executed source requires a new reviewed installation.
+
 ## Pilot and controls
 
 H25 was fixed before the cluster inspection. It is the largest compressed workload among the five archived PaScal gzip files, a transparent way to pick one case. Compressed size does not establish the worst memory or runtime among the hard cases.
