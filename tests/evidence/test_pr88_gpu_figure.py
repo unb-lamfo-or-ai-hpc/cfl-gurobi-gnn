@@ -109,6 +109,11 @@ class GPUFigureTests(unittest.TestCase):
         self.assertEqual(decision["maximum_fresh_solves"], 60)
         self.assertIs(decision["automatic_retry"], False)
         self.assertIs(decision["scientific_reporting_eligible"], False)
+        # Resource release belongs to the protocol, not reader-facing prose.
+        protocol = json.loads(
+            (ROOT / "docs/research/solver-seed-extension-v1/manifest.json").read_bytes()
+        )
+        self.assertIs(protocol["execution_authorized"], False)
         raw = json.loads((ROOT / gpu.SOURCE / "public_return.json").read_bytes())
         self.assertIs(raw["scientific_reporting_eligible"], False)
 

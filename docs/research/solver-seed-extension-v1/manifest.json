@@ -1,0 +1,212 @@
+{
+  "artifacts": {
+    "README.md": "1656b63cfed6edcdfd7a471554822dace4af49b553595b2d3ec1ef4ab36aaadc",
+    "cohort.csv": "12b11d7a1caf55d44dd4e9d1d949b2e9844edc69124b58d92280197b668e2ab3",
+    "compatibility-review.json": "da90b8e3d2d3eab8db2db8c9a700a5a0c5bfe0b4a3611f2909aad9f847df7586",
+    "historical-artifact-bindings.json": "ef5a98a62c338829f14ebedbe7f6d41bd7d48c4756e59e00d7522802bdd64ed4",
+    "historical-reuse.csv": "4144622a05fea756f3c4ed9ac5b8edf09888e3b3cec05b8dffe84551069321b1",
+    "isolated-preparation-runbook.md": "6c1609c78c088114df5b95667de472351c7f362c47904843f8791503a08c2de1",
+    "new-artifact-bindings.json": "5584a241ff7f8e25f22bc865b5c72bae8e8d48b8d18c0db5f872ee5d25f839e1",
+    "planned-cells.csv": "c97c30283fd6b0a53fa49bc59426e3e03ac05beaec45639f5a6322d717987f1b",
+    "preflight-medium.md": "de589e625a6d124834a9710e19f2ea5a26dc749adf39cb797e16272f370a7eb3",
+    "preflight-return-20261101.json": "f7e45b506e32b24571d155aa951267485e79ab459b1cd2aab84081945e3660f3",
+    "preflight_medium_readonly.py": "8f811ad73eb7632a1b648d377a79b1a2b0ff967f61103ce0a1b3022d2341597e",
+    "preparation-and-resources.md": "2c0c285efeae26741158e0845b42bb5de1b70b1175e855a650ce64739f27a485",
+    "preparation-contract.json": "2f0b4135eee94cdb781e474261b0538da6f07d7a79c4eb906bfb4ba75e5a4e54",
+    "reservation-budget.json": "41cf1281efa0a87989fbac107b8599b430f6ebee812bceeebb69d50d57a75d64",
+    "resources.json": "b659df1fd76d999b6ba81635638f942e891493debaaed56323d6367a88bcde13",
+    "source-bindings.json": "d144130bcf0a09c65c80bae0fc45c170ebdf349605314a2c3e39c50058963acf",
+    "test_preflight_medium_readonly.py": "d78ebeb6fd876d890ee5a19fa30ea955d68a801f8b54441ff00be556f3a5595b"
+  },
+  "author_approval_date": "2026-11-01",
+  "complete_reservation_proposal": {
+    "RAM_GiB_per_job": 64,
+    "execution_released": false,
+    "gpu_hours": 1,
+    "jobs": 20,
+    "optimizer_hours": 55,
+    "physical_core_hours": 78,
+    "serial_job_hours": 75,
+    "source": "reservation-budget.json",
+    "storage_GiB": 64
+  },
+  "design": {
+    "easy": 6,
+    "evaluation_parents": 16,
+    "medium": 10,
+    "methods": [
+      "M0",
+      "M1",
+      "M2"
+    ],
+    "physical_thread_cap": 1,
+    "presentation": [
+      "B",
+      "R",
+      "G"
+    ],
+    "solver_seeds": [
+      42,
+      43,
+      44
+    ],
+    "time_limit_seconds": 3600
+  },
+  "documentary_compatibility_review": {
+    "archival_identity_compatible": 90,
+    "cells": 90,
+    "fully_admitted_for_reuse": 0,
+    "prospective_start_bindings_identified": 10,
+    "recorded_parameters_models_versions_and_links_match": 90,
+    "source": "compatibility-review.json"
+  },
+  "execution_authorized": false,
+  "identified_reuse_cells": 90,
+  "identity_reuse_does_not_imply_metric_eligibility": true,
+  "isolated_adapter": {
+    "CI_tensor_parity_required": true,
+    "HPC_installation_not_yet_run": true,
+    "controller": "scripts/evidence/pr94_isolated_preparation.py",
+    "evaluation_dispatch_available": false,
+    "full_source_closure_bound_at_installation": true,
+    "implemented": true,
+    "installation_CLI_scientific_calls": 0,
+    "new_preparation_artifacts_generated": 0,
+    "operator": "scripts/evidence/operate_pr94_preparation.sh",
+    "science": "scripts/evidence/pr94_preparation_science.py"
+  },
+  "learning": {
+    "admitted_parents": 54,
+    "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+    "frozen": true,
+    "new_training_calls": 0,
+    "split": [
+      34,
+      10,
+      10
+    ],
+    "threshold": "0.9991843104362488"
+  },
+  "new_model_hash_inventory": {
+    "current_private_bytes_rechecked": 6,
+    "currently_unidentified": 0,
+    "empty_in_original_parent_table": 6,
+    "identified_in_broader_historical_inventory": 2,
+    "model_hash_field_scope": "compressed_original_file_identity_not_root_graph_or_Start_binding",
+    "source": "preflight-return-20261101.json"
+  },
+  "new_preparation_candidates": [
+    {
+      "alias": "M5",
+      "input_binding_state": "current_original_file_bytes_verified_root_graph_Start_pending",
+      "model_sha256": "9adf7a5ee5303f75576adebdfde999c160cd9603aa68a95bbc1d98da52b4fe17",
+      "parent": "CFL_medium_instance_5",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M6",
+      "input_binding_state": "current_original_file_bytes_verified_root_graph_Start_pending",
+      "model_sha256": "08c54891c1d202176f88cfe38c720957bf6a3e1b3ebde4995c03fb5cec717e48",
+      "parent": "CFL_medium_instance_6",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M9",
+      "input_binding_state": "current_original_file_bytes_verified_root_graph_Start_pending",
+      "model_sha256": "57820cdc613ed5349954fad5c34fdc233117270ba75138b1646b2a8fcd145532",
+      "parent": "CFL_medium_instance_9",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M13",
+      "input_binding_state": "current_original_file_bytes_verified_root_graph_Start_pending",
+      "model_sha256": "f219560e7ee07013152d4069af8585848e853d6d8bc213b248ba2ebcd0d8dde5",
+      "parent": "CFL_medium_instance_13",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M20",
+      "input_binding_state": "current_original_file_bytes_verified_root_graph_Start_pending",
+      "model_sha256": "26598f6e365c8bf7da383802accd9cf768103a6ffa6b36acf056b4168e2c8870",
+      "parent": "CFL_medium_instance_20",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    },
+    {
+      "alias": "M26",
+      "input_binding_state": "current_original_file_bytes_verified_root_graph_Start_pending",
+      "model_sha256": "568bbff8df060b2de1df4d9bf3815d77e2e18ac73158fe676ba121182add70c8",
+      "parent": "CFL_medium_instance_26",
+      "preparation_execution_authorized": false,
+      "root_limit_seconds": 600,
+      "root_seed": 42,
+      "start_bindings": null
+    }
+  ],
+  "new_solve_candidates": 54,
+  "no_dispatch_or_solver_commands_delivered": true,
+  "not_independent_untouched_generalization": true,
+  "numerical_screen": "original checks plus integer-rounded diagnostic under the existing tolerances; exact audit as required; original vectors preserved",
+  "numerically_sensitive_reuse_cells": 18,
+  "planning_approved": true,
+  "pr89_unchanged": true,
+  "preparation_contract": {
+    "contract": "preparation-contract.json",
+    "execution_authorized": false,
+    "execution_source_closure_complete": false,
+    "historical_artifacts": "historical-artifact-bindings.json",
+    "isolated_adapter_implemented": true,
+    "new_artifacts": "new-artifact-bindings.json",
+    "new_artifacts_generated": 0,
+    "prepared": true,
+    "source_registry": "source-bindings.json"
+  },
+  "protocol_id": "mvp2_solver_seed_extension_v1_draft",
+  "readonly_preflight": {
+    "completed": 6,
+    "executed": true,
+    "executed_by": "author_CLI",
+    "issues": 0,
+    "model_execution_imports": false,
+    "original_model_bodies_exported": false,
+    "output_outside_pr89": true,
+    "prepared": true,
+    "received_archive_sha256": "c8c709a0f495baa0b1e060364544397c6d6c47f60421904b2f696212a304c8df",
+    "source": "preflight-return-20261101.json",
+    "tests_passed": 14,
+    "wall_seconds": 125.83706857357174
+  },
+  "scientific_reporting_eligible": false,
+  "sources": [
+    {
+      "commit": "32be4435a80c9b8f308e2e317d642ef63ffaf2dc",
+      "path": "docs/evidence/pr86/final-210/campaign_results.csv",
+      "sha256": "e5fc92d75f2d26620a51a4e4d9b1d1f63befd7ec2680ad7a3b2c34cd781390b8"
+    },
+    {
+      "commit": "32be4435a80c9b8f308e2e317d642ef63ffaf2dc",
+      "path": "docs/evidence/e0/pr85/parents.csv",
+      "sha256": "541bdf5b716133ce0ae141feaf55f8b54f7c5498fb3c0c2753d93783f19af8b4"
+    },
+    {
+      "commit": "32be4435a80c9b8f308e2e317d642ef63ffaf2dc",
+      "path": "docs/research/mvp2-proposed-job-matrix-20261031.csv",
+      "sha256": "c25063c2d9b2d8c19d1c3857438d9aa8d640b93c904d6760084bbffd0dc2a45f"
+    }
+  ],
+  "status": "draft_not_executable"
+}

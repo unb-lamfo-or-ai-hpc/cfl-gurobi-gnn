@@ -1,6 +1,40 @@
 # Repository instructions
 
-## Current authority and recovery launch — 2 November 2026
+## Current review and integration — 5 November 2026
+
+The authorized PR94 recovery at source `81c829b66f6dacf703da388e34501d9df0980f45` and plan `92ac169c5ccb69962628dc0b91aab6afff183538da87f14e3ebf080b8cfe53fb` has completed. The author transferred both ZIPs, and the independent offline reconciliation matched all 48 blocks and 144 cells. The [editorial PR](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/97) contains the evidence, scoped comparisons and updated article. The PR94 integration preserves the executed commit and both attempts. Preserve all original evidence and private artifacts. PR89/93 were merged into develop and PR95/96 published the previous version. Further merges and releases require their own author approval.
+
+The current scientific and editorial review applies the 5 November mandate and the journal guide. It retains C2/C3, B/R/G, the original checkpoint, partitions and numerically restricted records. The author runs any HPC/SSH/SCP commands. Keep local scratch private. Any further scientific campaign requires its own approved protocol and resource envelope.
+
+## Authorized, closed-parent entry recovery — 2 November 2026
+
+The author explicitly approved the proposed recovery and then cancelled the pending jobs on dgx-dasci. The received archive e8755224…48b7e89 confirms all 48 original jobs terminal: 4 FAILED / 44 CANCELLED, no worker files or durable optimize intents. Full parent plan 44b443a1, original source 10fd1af and both original approval/globalclaim bytes have been verified and preserved. There is no eligible evaluation result from that attempt.
+
+Recovery is exactly one new stage and fixed claim pr94-full-v2-entry-recovery-1.claim.json; the original globalclaim is never deleted, moved or overwritten. Keep the scientific 144 cells, source data/Starts/checkpoint, parameter map, groups, environment and resources identical to the complete accepted parent plan. The module pr94_evaluation_recovery performs a strict canonical JSON review of ALL scientific/resource/input fields, permits only named reviewed technical source changes and query/workspace metadata, and writes an exclusive exact-plan review before sbatch. Fresh parent closure and original-byte checks run at admission and submission.
+
+The latest author asks for a single whole-campaign command before a long pause. Prepare the reviewed template with the exact new commit and CIrun. It waits at most 30 minutes for all five exact-source CI jobs before any stage creation or submission; CI/network failure or expiry aborts. Then zero-call admission, durable equivalence review and 48 held-block submission/release can execute in the author's CLI without an intervening metadata-transfer cycle. This is review against the already accepted full plan, not automatic approval of scientific changes or a new budget. Do not fake a human signature on the new hash.
+
+83 targeted local tests passed with 5 POSIX cases skipped on local Windows; Linux CI must execute them, including frozen-old spool reproduction and corrected routing. New recovery tests cover archive/claim tampering, original activity, source/parameter/resource/order drift, review-before-submission, CI identity and all-five-success gates. All CI must pass before the wrapper proceeds. No agent HPC access, no re-preparation/training, no further retry, merge, publication or PDF. See docs/research/pr94-entry-recovery-20261102.md. Earlier PENDING/not-authorized snapshots are historical.
+
+## Evaluation implementation — 2 November 2026, author pause
+
+Continue all independent work without new prompts. The author will supply HPC/PowerShell and merge interventions when available. Latest guidance3784 snapshot is RUNNING05:34; no terminal return is received. Do not infer success/failure or poll HPC directly. Root/guidance source c623 and its plan stay unchanged.
+
+Evaluation v2 now implements 144 fresh cells in48 paired blocks/four chains, with owned held-job checks, one-time claims, qualified memory supervision, affine core observation, partial terminal collection and no retry. Preserve old solver files: the new solver's AST is checked against a separate frozen reference, with only explicit abstention handling. R/G match support cardinality and positives; their selected names may differ.
+
+The full parameter map is bound to the sealed historical3522 receipt. No Method, tolerance, checkpoint, architecture or training change is authorized. Working storage for144 outputs is proposed at256GiB with320GiB free admission and observed runtime guards, not a filesystem reservation. Review guidance, exact-head CI and actual zero-call16-parent installation return before an evaluation CLI. These gates do not require repeating scientific preparation or the general planning approval.
+
+
+## Accelerated continuation — 2 November 2026
+
+The author's latest direction advances S1–S4 concurrently and leaves final S5/S6 synthesis after PR94. PR89 is complete (60 receipts, 47 reported terminal targets, 13 M7 censures); preserve installed source 9ab7823c and all original evidence. The complete manuscript retains M7 and scoped numerical limits. Prepare the four documentary integration resolutions and actual combined-tree checks; merge remains separately approved.
+
+PR94 v2 prospectively defines 144 fresh evaluations, 16 parents × B/R/G × solver seeds42/43/44, instead of filling 90 positions with historical rows. See solver-seed-extension-v2 in the PR94 branch. Its four-lane/48-block proposal and new resource ceilings must not be confused with the installed six-root plan or execution release. The isolated v2 evaluation dispatcher is now implemented; its exact-head CI and real 16-parent installation/preflight remain gates. Keep preparation source c623fe858f62 and plan b41953a8 unchanged. The author reports roots job3783 COMPLETED/0:0 after5min40s; the six-root metadata return has now passed archive/member, input/parameter/result/summary and supervision checks. Raw vectors were not independently replayed. The author submitted guidance job3784, last reported RUNNING at5min34s/CLI exit0; wait for its terminal return before admitting evaluations. No evaluation job is inferred.
+
+Complete the data-release plan before PR93 closeout: small source/receipts/tables on GitHub, reviewed redistributable preservation artifacts in Zenodo, no temporary cloud/blob storage. Do not claim a DOI or public deposit not verified. After actual PR94 launch, integrate its prospective methods/objectives into PR93 without inventing results or placing scheduler instructions in reader-facing text. Merges and publication remain specific human decisions; HPC/SSH/SCP remains author CLI only. No retraining, tolerance change or automatic retry.
+
+
+## Historical authority and recovery launch — 2 November 2026
 
 This section supersedes the older pending/unauthorized snapshots below. The author specifically authorized merging PR89 and PR93 into develop after checks; main/PR95 merge and publication still need a separate decision. PR89 integration must preserve installed source9ab7823c and all historical evidence. No HPC mutation accompanies Git integration.
 

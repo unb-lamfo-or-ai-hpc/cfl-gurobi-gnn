@@ -1,0 +1,84 @@
+{
+  "reference_commit": "a140a2e4833b80e461477c5397b1f76c71c6af45",
+  "scope": "reviewed_reusable_mechanisms_not_installed_PR94_execution_source",
+  "historical_sources_preserved": true,
+  "execution_adapter_pending": true,
+  "sources": [
+    {
+      "path": "scripts/evidence/pr86_root_preparation.py",
+      "git_blob_sha1": "1a1be6b23046bee3fbe0ff5a1541c7e0802dffb1",
+      "sha256_lf": "b782c30c35fdfdfbbd3b60945d63b32fd8671c8eb42b23c8095ef62fa7d28240"
+    },
+    {
+      "path": "scripts/evidence/pr86_native_model.py",
+      "git_blob_sha1": "d51f54950cc4a55a9f2bff41777b32d859293063",
+      "sha256_lf": "959bee874038f44ad8b414bfd191bc0f8ce68a6796eb14e19ab9df025dbca8f9"
+    },
+    {
+      "path": "scripts/evidence/pr86_guidance_preparation.py",
+      "git_blob_sha1": "044e16e5b1c15768d6af88876513cc6e64cb58ed",
+      "sha256_lf": "3a0e55def8a6f970e54022059bef175c005b875ed78febd5f887458471d5d352"
+    },
+    {
+      "path": "scripts/evidence/pr86_main_first_group.py",
+      "git_blob_sha1": "0824dfc0bf009c7411542754e7325c989028c543",
+      "sha256_lf": "8959decb6590ccabf48561ae5026331c6cd8c98f56c536ee2336c536ac67e02e"
+    },
+    {
+      "path": "scripts/evidence/pr86_cost_accounting.py",
+      "git_blob_sha1": "3910cc3867a2511d17672182d48cb6a53998dc81",
+      "sha256_lf": "aca359b7d1f1d4e29a096ede808695757fcfa4c29d5d7868b7f54ac2c3b0d92f"
+    },
+    {
+      "path": "scripts/evidence/pr86_solver.py",
+      "git_blob_sha1": "77cf7cbe80a872991d139005b87055509ec392b0",
+      "sha256_lf": "4a6e938f97f3b74e4fc7ffa5eb77fcadd2fc00314fa784e77ad4bfac64d93643"
+    },
+    {
+      "path": "scripts/evidence/paired_memory_guard.py",
+      "git_blob_sha1": "0c9174f2281467c49a0ef9828e4939b5d9a1a863",
+      "sha256_lf": "8f99b5bdaa8c4722618787b4409af56b95f25c8df2f1b284074fef860ec12186"
+    },
+    {
+      "path": "scripts/evidence/paired_memory_runtime_v2.py",
+      "git_blob_sha1": "c036e887597abd521f1ff7771992da23d84ff1a5",
+      "sha256_lf": "9a3cd168498d3eff417814925e272b6ca0fc5209f5e656116964d8fc699fe781"
+    },
+    {
+      "path": "src/cfl_gnn/graph/label_free_gurobi.py",
+      "git_blob_sha1": "6937a2f3540da55cfebe58ef8cc843ffcd744e05",
+      "sha256_lf": "7109a7a27610fb06cb1368ef32ed267cb425d09c99d4b372f33b52d058ed57a7"
+    },
+    {
+      "path": "src/cfl_gnn/graph/gurobi_graph_artifact.py",
+      "git_blob_sha1": "de45610a7c29553381e55a13df045c2005eaff6d",
+      "sha256_lf": "c5eda3eb2b3c1c5116411977bfd63ace06afcd8a2ce6ca1e58fbab522b0b2952"
+    },
+    {
+      "path": "src/cfl_gnn/graph/build_dataset.py",
+      "git_blob_sha1": "8347815d3cdbf1d7f29e53e4803c5a3eb2b4d776",
+      "sha256_lf": "94b384de3a6dfe3e1176044d7d4e094edb480ca992af6f59a86473fc99980ec8"
+    },
+    {
+      "path": "src/cfl_gnn/experiments/pr58_guidance.py",
+      "git_blob_sha1": "a0c71de58180cc555f580fec7b492579f427a611",
+      "sha256_lf": "6aff7bd43f44a02134e6999b23c0cbb8ccbd7b73aff2a7d8b439c8e505d3c00b"
+    },
+    {
+      "path": "src/cfl_gnn/models/versioning.py",
+      "git_blob_sha1": "24d615a29ad42dadb3c2e3ad3f14974fe0228379",
+      "sha256_lf": "8cd368137cb7dce73d2eb5145f99d4c67c18dc092d541454daa1f77fc88dcb4b"
+    },
+    {
+      "path": "src/cfl_gnn/models/gasse_calibrated.py",
+      "git_blob_sha1": "ee5051829dc85bc4bac88bcc035afc3b95dbb286",
+      "sha256_lf": "9ad688b085a28c6a0e5cdd063fbaac60214a3214e2cbf10394b82608a9265eab"
+    },
+    {
+      "path": "src/cfl_gnn/solvers/paired_partial_start.py",
+      "git_blob_sha1": "e1cf6aa335628141949ebc2b07b74a750180aea0",
+      "sha256_lf": "e45c5d7db4e1ede999c2c8612653f316ad5af8c8aa395a9eadaeef1729164208"
+    }
+  ],
+  "complete_transitive_execution_dependency_closure": false
+}

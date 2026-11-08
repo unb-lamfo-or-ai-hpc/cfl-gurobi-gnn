@@ -1,5 +1,9 @@
 # Appendix A: Model and Method Details {#sec-supp-methods}
 
+```{=latex}
+\AppendixDisplayNumbers{A}
+```
+
 This appendix follows the information supplied to the solver: mathematical coefficients and a root-relaxation vector become graph features, neural scores and selected binary values. The distinction matters because a prediction, a partial candidate and an accepted feasible incumbent are different objects. The numerical settings and their sources are collected in Appendix C.
 
 ## A.1. Representation and information exchange
@@ -38,7 +42,7 @@ The frozen mixed predictor's architecture has 26,753 trainable parameters. @tbl-
 | Binary classification head | $32\to32\to1$ | 1,089 |
 | Total | Weights and biases | 26,753 |
 
-: Static trainable parameter count for the frozen architecture. {#tbl-gnn-parameters}
+: Trainable parameters of the frozen GNN. {#tbl-gnn-parameters}
 
 Four prenormalization modules hold two width-32 vectors each, for 256 nontrainable buffer entries. The calibrated implementation changes how these statistics are fitted while inheriting the same affine maps. This is a source/configuration count for the named architecture, with no checkpoint reload.
 
@@ -50,7 +54,9 @@ Other graph-based optimization tasks include search-node comparison [@labassi202
 
 A recorded value, a methodological rationale and evidence of comparative performance have different roles. The configuration establishes what was used. Task structure and literature can explain why it is reasonable to consider a choice. Only a relevant comparison could establish that it is preferable.
 
-The upstream branching baseline uses one cycle and width 64. The two-cycle, width-32 adaptation exchanges information over a longer local path with smaller embeddings. For this implementation, the leading dense-message cost scales approximately as $L(E+N)d^2$, with cycles $L$, edge/node counts $E,N$ and width $d$. This analytical argument motivates a modest fixed capacity; it is not a measured comparison with the different upstream implementation or evidence of optimality.
+In this study, the upstream branching baseline uses one cycle and width 64. The two-cycle, width-32 adaptation exchanges information over a longer local path with smaller embeddings. For this implementation, the leading dense-message cost scales approximately as $L(E+N)d^2$, with cycles $L$, edge/node counts $E,N$ and width $d$. This analytical argument motivates a modest fixed capacity; it is not a measured comparison with the different upstream implementation or evidence of optimality.
+
+@tbl-gnn-hyperparameters lists the architecture, optimizer and validation choices.
 
 | Choice | Value or rule | Rationale and evidential scope |
 |:--|:--|:--|
@@ -63,6 +69,8 @@ The upstream branching baseline uses one cycle and width 64. The two-cycle, widt
 | Training budget | At most 100 historical epochs; patience 100 | Fixed ceiling; validation loss, rather than the last epoch, selects the retained checkpoint |
 | Classification threshold | Maximum pooled validation F1 | Validation-selected decision rule, not probability calibration |
 | Start support | At most 10% and 20,000 values, with ones first | Limits supplied information; no support-fraction or selector ablation |
+
+: GNN architecture and hyperparameters. {#tbl-gnn-hyperparameters}
 
 Sum aggregation depends on node degree, which motivates prenormalization of activation scale. In the version used here, variable-side fitting follows the corresponding constraint update and uses training graphs only. A source filename containing “calibrated” describes this versioned internal normalization, not calibrated output probabilities. Legacy fitted buffers are not interchangeable with this state.
 
@@ -91,7 +99,7 @@ $K=\min\{n,20000,\max(1,\lfloor0.10n\rfloor)\}$. Support means the variables for
 
 G selects predicted ones in descending score order, then fills remaining positions with predicted zeros in descending zero-confidence order. Variable names resolve ties. If there is no predicted one, it abstains. Let $k$ be the actual number of assignments and $q$ the number assigned one. R clips LP scores to $[0,1]$, assigns one to the $q$ largest, and zero to the $k-q$ lowest remaining values.
 
-For example, G might supply $x_a=1,x_b=0,x_c=0$ while R supplies $x_d=1,x_e=0,x_c=0$. Both have three assignments and one positive, but different supports. This schematic example illustrates matching only; it is not an experimental result or an application of the support formula.
+@tbl-brg-steps follows the information supplied by each method.
 
 | Step | B | R | G |
 |:--|:--|:--|:--|
@@ -101,11 +109,15 @@ For example, G might supply $x_a=1,x_b=0,x_c=0$ while R supplies $x_d=1,x_e=0,x_
 | Unselected variables | Original domains | Original domains; Start unspecified | Original domains; Start unspecified |
 | Interpretation | Internal solver heuristics remain available | LP-ranked, G-dependent matched control | Full learned starting information |
 
+: Steps in the B, R and G methods. {#tbl-brg-steps}
+
+For example, G might supply $x_a=1,x_b=0,x_c=0$ while R supplies $x_d=1,x_e=0,x_c=0$. Both have three assignments and one positive, but different supports. This schematic example illustrates matching only; it is not an experimental result or an application of the support formula.
+
 A fresh model receives the assignments through Start, with GRB.UNDEFINED elsewhere. A supplied one is a starting value, not a constraint fixing the final solution. A loaded-start message records acceptance under the solver's numerical conventions; it does not prove exact feasibility, optimality or later performance. R's dependence on G is also a computational dependency: its comparison is not the cost of an independently prepared LP heuristic.
 
 ## A.5. Position among related solver interfaces
 
-The table distinguishes how information is supplied, not a replicated performance ranking. The problems and endpoint definitions of the cited papers differ from this study.
+@tbl-related-solver-interfaces shows how the cited approaches supply information to the solver.
 
 | Work and problem scope | Predicted information | Solver interface and feasible-region treatment |
 |:--|:--|:--|
@@ -115,6 +127,8 @@ The table distinguishes how information is supplied, not a replicated performanc
 | @han2023: MILP benchmarks | Variable predictions | Search within a ball around predicted values, rather than unrestricted native Start completion |
 | @canturk2024: learned primal MILP heuristics | Predictions with uncertainty | Reduction and guided subproblem search; different restriction/selection mechanisms |
 | Present CFL study | Scores for binary incumbent labels | One partial candidate per G condition; original full feasible region retained |
+
+: Solver interfaces in related studies. {#tbl-related-solver-interfaces}
 
 Primal solution quality, primal-dual gap and computation time must be interpreted within each work's solver, stopping rule and dataset. Neural Diving combines diving and branching components in its evaluated solver; Predict-and-Search reports its own search procedure. Their aggregate improvements cannot be attributed to the interface alone or imported as CFL effect sizes.
 

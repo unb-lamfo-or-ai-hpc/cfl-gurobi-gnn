@@ -57,5 +57,12 @@ docs/research/pr89-m12-*.json -text
 docs/research/pr89-qualification-register-*.csv -text
 docs/research/pr89-qualification-register-*.json -text
 docs/research/runbooks/*.py text eol=lf
-# PR94 reconciliation sources are bound by SHA-256.
-docs/evidence/pr94/final-20261105/** -text
+
+# Prospective protocol hashes use identical LF bytes on all test platforms.
+docs/research/solver-seed-extension-v1/** text eol=lf
+
+# Fresh full-matrix plan bytes must be reproducible on all platforms.
+docs/research/solver-seed-extension-v2/** text eol=lf
+
+# Collected public root metadata preserves its sealed original bytes.
+docs/evidence/pr94/** -text

@@ -1,5 +1,9 @@
 # Current status — 5 November 2026
 
+## Adjustment sprint — 8 November 2026
+
+The article draft reports the matched serial/DDP comparison and the 144-cell one-hour solver-seed comparison. Earlier CPU and predictive results are historical Appendix B evidence. The current data establish no consistent advantage of G over B or R. E/M/H are the publication prefixes; evidence IDs and hashes remain unchanged. The separate proposed concurrent MIP campaign is tracked in PR #98. Its hard-input preparation and site, resource and execution gates remain open. Author revision of the article is ongoing.
+
 The [PR94 recovery return](evidence/pr94/final-20261105/README.md) closes all 48 jobs and reconciles all 144 cells against the frozen plan. The editorial reconciliation targets develop and keeps one-hour results separate from the earlier CPU/GPU evidence. The [closeout plan](research/mvp2-closeout-plan.md) records the remaining scientific, release and submission gates. The dated sections below preserve the earlier operational history.
 
 ## Integration and recovery update — 2 November 2026
