@@ -26,3 +26,7 @@ The primary contrast is B versus G, which measures the effect of supplying the c
 6. Reconcile all planned cells with Slurm and the private per-cell result or intent files. Seal the returns and qualify metrics before promoting claims. Keep the campaign separate from the one-hour study. The next PR will integrate qualified results and record the final MVP 2.0 limits.
 
 The matrix and worker are review code. Real hard preparation, site/solver admission and full end-to-end collection validation precede an execution decision.
+
+## Hard input and pilot adapter
+
+The [hard input and H25 pilot runbook](pr98-hard-pilot.md) records the five archived PaScal gzip digests, H0's independent LP reference requirement and the isolated technical checks. The pilot has a separate budget and contributes no observations to the 990-cell matrix.
