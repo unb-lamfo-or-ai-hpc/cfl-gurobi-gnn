@@ -169,6 +169,8 @@ def solve(
             )
         }
         params["SoftMemLimit"] = m.Params.SoftMemLimit
+        if "ConcurrentMIP" in requested:
+            params["ConcurrentMIP"] = m.Params.ConcurrentMIP
         if any(params[key] != value for key, value in requested.items()):
             raise ValueError("parameters_before_optimize")
         build_seconds = perf_counter() - t
@@ -208,6 +210,8 @@ def solve(
                 )
                 last_record = seconds
 
+        record_progress = getattr(execution_policy, "RECORD_PROGRESS", True)
+
         def callback(model, where):
             try:
                 if where == GRB.Callback.MESSAGE:
@@ -221,13 +225,13 @@ def solve(
                     )
                     if message.startswith(prefixes) and len(messages) < 50:
                         messages.append(message)
-                elif where == GRB.Callback.MIP:
+                elif record_progress and where == GRB.Callback.MIP:
                     record(
                         model.cbGet(GRB.Callback.MIP_OBJBST),
                         model.cbGet(GRB.Callback.MIP_OBJBND),
                         "MIP",
                     )
-                elif where == GRB.Callback.MIPSOL:
+                elif record_progress and where == GRB.Callback.MIPSOL:
                     record(
                         min(
                             model.cbGet(GRB.Callback.MIPSOL_OBJ),
