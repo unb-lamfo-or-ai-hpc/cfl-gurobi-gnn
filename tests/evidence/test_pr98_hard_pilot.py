@@ -30,7 +30,7 @@ class HardInputTests(unittest.TestCase):
             with patch.object(inputs, "ARCHIVE", archive):
                 records, bound = inputs.inspect_models(data, time.monotonic() + 10)
                 self.assertEqual(records["H25"]["status"], "PaScal_model_bytes_matched")
-                self.assertEqual(Path(bound["H25"]["model"]), model)
+                self.assertEqual(Path(bound["H25"]["model"]), model.resolve())
                 model.unlink()
                 records, bound = inputs.inspect_models(data, time.monotonic() + 10)
                 self.assertEqual(
