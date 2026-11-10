@@ -41,6 +41,10 @@ One held Slurm job is proposed with four physical cores, 64 GiB, one 32-GB V100 
 - Six fresh CPU solver calls at up to 120 seconds each, with four physical cores, seed 42, and B/R/G under `ConcurrentMIP=1` and `2`. The worker hides the GPU for evaluation, checks effective parameters and unchanged model signatures, and audits any terminal incumbent. Terminal outcomes are technical diagnostics. Start messages and callback progress from the first concurrent racer do not identify the winner's path. These observations remain outside the scientific campaign.
 - Any failed gate stops further pilot steps. No retry, solver tuning or submission of the 990-cell matrix follows automatically. The raw and partial outputs stay on the data filesystem. Only sanitized receipts are copied into the PR.
 
+## Checkout integrity incident
+
+The first dgx-dasci preflight stopped at `source_changed`, before the model and checkpoint inspection or either preflight receipt. A read-only diagnostic identified four CRLF files under `manuscript/tables`. Their archived blob bytes and the PR89 asset receipt are preserved. The attributes now disable line-ending conversion for those four paths only. The recovery reuses the isolated stage, checks that each affected worktree file has its original raw blob identity, checks that the index is unchanged, and advances to the pinned repair commit with a normal detached checkout. Keep the failed stage and diagnostics if any check diverges.
+
 ## CLI sequence
 
 Install the exact reviewed commit into an isolated `pr98-hard.*` stage within the existing evidence directory on dgx-dasci. Run the following with the author's active `tfm_env`. `STAGE`, `COMMIT` and `PREFLIGHT_SHA` are reviewed concrete values. Never use a moving branch to replace that checkout.
