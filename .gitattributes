@@ -4,6 +4,11 @@
 
 # Preserve byte-stable manuscript sources across Windows and Linux checkouts.
 manuscript/** text eol=lf
+# These four committed PR89 assets use CRLF. Keep their original bytes and receipt.
+manuscript/tables/partial_cpu_all.qmd -text !eol
+manuscript/tables/partial_cpu_assets.json -text !eol
+manuscript/tables/partial_cpu_m0.qmd -text !eol
+manuscript/tables/partial_cpu_m7.qmd -text !eol
 # Evidence CSV hashes bind their original bytes, including record terminators.
 manuscript/results/*.csv -text
 # Current publication receipts bind exact bytes for every imported asset.
@@ -66,3 +71,7 @@ docs/research/solver-seed-extension-v2/** text eol=lf
 
 # Collected public root metadata preserves its sealed original bytes.
 docs/evidence/pr94/** -text
+
+# Preserve the author-verified hard preflight receipt bytes.
+docs/evidence/pr98/preflight-20261110/hard-preflight-v1.json -text
+docs/evidence/pr98/preflight-20261110/hard-preflight-v2.json -text
