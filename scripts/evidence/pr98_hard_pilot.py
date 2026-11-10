@@ -59,10 +59,16 @@ def admitted(stage, accepted):
     row = config["models"][inputs.PILOT]
     need(row["parent"] == "CFL_hard_instance_25", "pilot_parent")
     model = inputs.data_file(Path(row["model"]), inputs.DATA)
-    archive_size, archive_hash = inputs.ARCHIVE[inputs.PILOT]
     need(
-        model.stat().st_size == archive_size
-        and inputs.digest(model) == row["model_sha256"] == archive_hash,
+        report["admission_rule"] == "independent_decoded_LP_SHA256_and_size"
+        and report["rows"][inputs.PILOT]["status"] == "PaScal_LP_bytes_matched"
+        and (row["decoded_bytes"], row["decoded_sha256"])
+        == inputs.LP_REFERENCE[inputs.PILOT],
+        "pilot_decoded_model_identity",
+    )
+    need(
+        model.stat().st_size == row["model_bytes"]
+        and inputs.digest(model) == row["model_sha256"],
         "pilot_model_hash",
     )
     checkpoint = inputs.data_file(Path(config["checkpoint"]), inputs.DATA)

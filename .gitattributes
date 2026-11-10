@@ -71,3 +71,6 @@ docs/research/solver-seed-extension-v2/** text eol=lf
 
 # Collected public root metadata preserves its sealed original bytes.
 docs/evidence/pr94/** -text
+
+# Preserve the author-verified hard preflight receipt bytes.
+docs/evidence/pr98/preflight-20261110/hard-preflight-v1.json -text

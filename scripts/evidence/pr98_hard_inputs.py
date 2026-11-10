@@ -45,6 +45,31 @@ ARCHIVE = {
     ),
 }
 
+# Independent PaScal uncompressed LP exports hashed on 8 November 2026.
+LP_REFERENCE = {
+    "H0": None,
+    "H5": (
+        425851766,
+        "9c4923a2c3da283aa079c06347aa1bf324e76be6e64bf29529a1890b82f95c6a",
+    ),
+    "H10": (
+        425778787,
+        "19e0f0a8262b09521cb911f32af054333986242e539532465fb81023fc7e191f",
+    ),
+    "H15": (
+        425597797,
+        "8e7c528a6b894512fa1a82c84036fb86146d90385977919684a1427372ba1ad5",
+    ),
+    "H20": (
+        425988486,
+        "26f0d26b6a9c6b68536664af45d6e7d9de816918c83234ea4816fd3d5dec5076",
+    ),
+    "H25": (
+        425712450,
+        "bf8661803fa708d1e829ffa44fd69d69e95b228572c12310ba6e43d7d934cb38",
+    ),
+}
+
 
 def require(condition, code):
     if not condition:
@@ -172,9 +197,11 @@ def inspect_models(data, deadline):
     rows, bindings = {}, {}
     for alias, archived in ARCHIVE.items():
         parent = "CFL_hard_instance_" + alias[1:]
+        reference = LP_REFERENCE[alias]
         row = {
             "parent": parent,
             "archived_gzip_sha256": archived[1] if archived else None,
+            "reference_decoded_sha256": reference[1] if reference else None,
             "status": "model_missing",
         }
         rows[alias] = row
@@ -185,29 +212,36 @@ def inspect_models(data, deadline):
             row["candidates"] = [value for _, value in candidates]
             if not candidates:
                 continue
-            if len({value["decoded_sha256"] for _, value in candidates}) != 1:
+            identities = {
+                (value["decoded_bytes"], value["decoded_sha256"])
+                for _, value in candidates
+            }
+            if len(identities) != 1:
                 row["status"] = "conflicting_LP_bytes"
                 continue
-            matches = [
+            if reference is None:
+                row["status"] = "independent_LP_reference_required"
+                continue
+            if reference not in identities:
+                row["status"] = "PaScal_LP_digest_not_matched"
+                continue
+            archived_matches = [
                 (p, value)
                 for p, value in candidates
                 if archived
                 and value["format"] == "lp.gz"
                 and (value["bytes"], value["sha256"]) == archived
             ]
-            if not matches:
-                row["status"] = (
-                    "independent_LP_reference_required"
-                    if archived is None
-                    else "PaScal_gzip_digest_not_matched"
-                )
-                continue
-            path, identity = matches[0]
-            row["status"] = "PaScal_model_bytes_matched"
+            path, identity = (archived_matches or candidates)[0]
+            row["status"] = "PaScal_LP_bytes_matched"
+            row["archived_gzip_matched"] = bool(archived_matches)
             bindings[alias] = {
                 "parent": parent,
                 "model": str(path),
+                "model_bytes": identity["bytes"],
                 "model_sha256": identity["sha256"],
+                "decoded_bytes": identity["decoded_bytes"],
+                "decoded_sha256": identity["decoded_sha256"],
             }
         except (OSError, EOFError, ValueError, IndexError) as exc:
             row["status"] = "inspection_failed"
@@ -235,6 +269,7 @@ def inspect(stage, expected_commit):
     )
     report = {
         "source_commit": expected_commit,
+        "admission_rule": "independent_decoded_LP_SHA256_and_size",
         "rows": rows,
         "checkpoint_sha256": CHECKPOINT,
         "private_inputs_sha256": digest(stage / "inputs.private.json"),

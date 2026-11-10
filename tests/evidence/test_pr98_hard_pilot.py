@@ -17,24 +17,36 @@ LP = b"\\ synthetic fixture\nMaximize\n obj: x0\nSubject To\n c: x0 <= 1\nBinari
 
 
 class HardInputTests(unittest.TestCase):
-    def test_same_decoded_bytes_do_not_replace_the_archived_gzip_identity(self):
+    def test_decoded_LP_identity_admits_different_gzip_and_seals_its_bytes(self):
         with tempfile.TemporaryDirectory() as tmp:
             data = Path(tmp)
             folder = data / "raw/MILPBench/CFL/CFL_hard_instance/LP"
             folder.mkdir(parents=True)
             model = folder / "CFL_hard_instance_25.lp.gz"
             original = gzip.compress(LP, mtime=0)
-            model.write_bytes(original)
+            repacked = gzip.compress(LP, mtime=1)
+            model.write_bytes(repacked)
             model.with_suffix("").write_bytes(LP)
             archive = {"H25": (len(original), hashlib.sha256(original).hexdigest())}
-            with patch.object(inputs, "ARCHIVE", archive):
+            references = {"H25": (len(LP), hashlib.sha256(LP).hexdigest())}
+            with (
+                patch.object(inputs, "ARCHIVE", archive),
+                patch.object(inputs, "LP_REFERENCE", references),
+            ):
                 records, bound = inputs.inspect_models(data, time.monotonic() + 10)
-                self.assertEqual(records["H25"]["status"], "PaScal_model_bytes_matched")
+                self.assertEqual(records["H25"]["status"], "PaScal_LP_bytes_matched")
+                self.assertFalse(records["H25"]["archived_gzip_matched"])
                 self.assertEqual(Path(bound["H25"]["model"]), model.resolve())
-                model.unlink()
+                self.assertEqual(
+                    bound["H25"]["model_sha256"], hashlib.sha256(repacked).hexdigest()
+                )
+                self.assertEqual(bound["H25"]["decoded_sha256"], references["H25"][1])
+
+                model.with_suffix("").unlink()
+                model.write_bytes(gzip.compress(LP.replace(b"x0", b"x1")))
                 records, bound = inputs.inspect_models(data, time.monotonic() + 10)
                 self.assertEqual(
-                    records["H25"]["status"], "PaScal_gzip_digest_not_matched"
+                    records["H25"]["status"], "PaScal_LP_digest_not_matched"
                 )
                 self.assertEqual(bound, {})
 
@@ -60,6 +72,49 @@ class HardInputTests(unittest.TestCase):
 
 
 class PilotTests(unittest.TestCase):
+    def test_pilot_requires_the_sealed_raw_file_after_decoded_admission(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp)
+            model = stage / "H25.lp.gz"
+            checkpoint = stage / "checkpoint.pt"
+            model.write_bytes(gzip.compress(LP, mtime=0))
+            checkpoint.write_bytes(b"frozen checkpoint")
+            reference = (len(LP), hashlib.sha256(LP).hexdigest())
+            row = {
+                "parent": "CFL_hard_instance_25",
+                "model": str(model),
+                "model_bytes": model.stat().st_size,
+                "model_sha256": inputs.digest(model),
+                "decoded_bytes": reference[0],
+                "decoded_sha256": reference[1],
+            }
+            manifest = stage / "inputs.private.json"
+            inputs.write_once(
+                manifest, {"models": {"H25": row}, "checkpoint": str(checkpoint)}
+            )
+            report = stage / "preflight.json"
+            inputs.write_once(
+                report,
+                {
+                    "source_commit": "reviewed",
+                    "private_inputs_sha256": inputs.digest(manifest),
+                    "pilot_input_matched": True,
+                    "admission_rule": "independent_decoded_LP_SHA256_and_size",
+                    "rows": {"H25": {"status": "PaScal_LP_bytes_matched"}},
+                },
+            )
+            accepted = inputs.digest(report)
+            with (
+                patch.object(inputs, "DATA", stage),
+                patch.object(inputs, "CHECKPOINT", inputs.digest(checkpoint)),
+                patch.object(inputs, "LP_REFERENCE", {"H25": reference}),
+                patch.object(inputs, "source_commit", return_value="reviewed"),
+            ):
+                self.assertEqual(pilot.admitted(stage, accepted)[1], model.resolve())
+                model.write_bytes(gzip.compress(LP, mtime=1))
+                with self.assertRaisesRegex(ValueError, "pilot_model_hash"):
+                    pilot.admitted(stage, accepted)
+
     def test_budget_and_effective_parameter_override(self):
         contract = types.SimpleNamespace(
             baseline_parameters=lambda: {"Threads": 1, "TimeLimit": 3600, "Method": -1}

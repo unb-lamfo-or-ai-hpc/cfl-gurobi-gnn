@@ -15,7 +15,7 @@ The PaScal handoff inventory (2026-10-26, evidence archive v2.0.0, source `fbbf7
 | H20 | 135823234 | `9f95036756be3ce65eb93a5ed6f629d168c0e45a504deca8308650ab29e6b4e1` |
 | H25 | 135856517 | `d615e368236abf98cf8bc0a7deb1dddb50b764d263e099b7174a267b900c292c` |
 
-Preflight uses exactly two canonical dataset layouts under the existing data root. It reports original file and decoded LP digests, rejects conflicting decoded copies and requires the archived gzip digest before admitting H25. The H0 observed digest is a fingerprint for comparison with an independently acquired original. The bounded LP envelope check is not an optimization or a full structural or feasibility audit. The preflight also checks the exact checkpoint bytes at the existing PR94 preparation binding without deserializing it. For safety, an input mismatch stops the pilot and an incomplete preflight does not authorize a second attempt.
+Preflight uses exactly two canonical dataset layouts under the existing data root. It reports both digests and rejects conflicting decoded copies. Admission requires the decoded byte size and SHA-256 of the independently hashed LP. The gzip digest remains a provenance field. When multiple copies have identical decoded bytes, prefer an exact PaScal gzip match if present. Otherwise select the first canonical copy and bind its raw size and SHA-256 for pilot rechecks. The H0 observed digest is a fingerprint for comparison with an independently acquired original. The bounded LP envelope check is not an optimization or a full structural or feasibility audit. The preflight also checks the exact checkpoint bytes at the existing PR94 preparation binding without deserializing it. For safety, an input mismatch stops the pilot and an incomplete preflight does not authorize a second attempt.
 
 ### Independently checked local PaScal LP exports
 
@@ -29,7 +29,11 @@ The existing local uncompressed LP exports were read and hashed on 8 November 20
 | H20 | 425988486 | `26f0d26b6a9c6b68536664af45d6e7d9de816918c83234ea4816fd3d5dec5076` |
 | H25 | 425712450 | `bf8661803fa708d1e829ffa44fd69d69e95b228572c12310ba6e43d7d934cb38` |
 
-The preflight command can stay at the initial pinned commit while review continues. A subsequent commit limited to tests and documentation can validate that executable tree by blob identity. A change to any executed source requires a new reviewed installation.
+### Read-only dgx-dasci return on 10 November 2026
+
+The [original preflight receipt](../evidence/pr98/preflight-20261110/hard-preflight-v1.json) has SHA-256 `30edf5b0b82f5a899a40c0c97be570495e4e4c925b2cf70d400d86cfac8f01e1`. The installed checkpoint matched. Five candidates (H5/H10/H15/H20/H25) matched the byte counts and SHA-256 digests of the independent uncompressed LP exports. Each gzip digest differed from its historical PaScal gzip digest. H0 was found and inventoried, with its independent LP reference still pending. The first version rejected H25 at the gzip gate. It made zero solver calls, inference calls and Slurm submissions.
+
+Preserve that receipt and its stage. Install the new pinned commit into a separate isolated stage for the new preflight. It applies the decoded LP criterion and seals the exact selected files used on dgx-dasci. Its new receipt is required for pilot admission.
 
 ## Pilot and controls
 
