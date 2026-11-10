@@ -74,3 +74,4 @@ docs/evidence/pr94/** -text
 
 # Preserve the author-verified hard preflight receipt bytes.
 docs/evidence/pr98/preflight-20261110/hard-preflight-v1.json -text
+docs/evidence/pr98/preflight-20261110/hard-preflight-v2.json -text

@@ -35,6 +35,12 @@ The [original preflight receipt](../evidence/pr98/preflight-20261110/hard-prefli
 
 Preserve that receipt and its stage. Install the new pinned commit into a separate isolated stage for the new preflight. It applies the decoded LP criterion and seals the exact selected files used on dgx-dasci. Its new receipt is required for pilot admission.
 
+### Corrected dgx-dasci return on 10 November 2026
+
+The [corrected preflight receipt](../evidence/pr98/preflight-20261110/hard-preflight-v2.json) was reproduced from the author's console return and independently matched SHA-256 `ff20f7524de8e8a5a6335101b9c69220af3ad145992e0a87898a1db174ff7bdc`. It binds the isolated source `ecf2cf257f462555537f3c270d11d712ce64ee78` and the frozen checkpoint. H5/H10/H15/H20/H25 all passed decoded byte identity and H25 is eligible as pilot input. The installed H25 gzip SHA-256 is `f590f165ab40fd977c0ddc01c09981d2a430d873bb037a0c98fff2a939d6e2f8`. H0 remains outside qualification until its LP has an independent reference. Root, graph, predictions and Starts are pending pilot generation. Solver, inference and Slurm submission counts are zero.
+
+The pinned source passed [Public evidence integrity](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/actions/runs/42877322077). Reuse this installation and the corrected receipt for the separate author CLI decision on the H25 technical pilot. Later receipt or runbook commits do not require updating the installed executable tree.
+
 ## Pilot and controls
 
 H25 was fixed before the cluster inspection. It is the largest compressed workload among the five archived PaScal gzip files, a transparent way to pick one case. Compressed size does not establish the worst memory or runtime among the hard cases.
