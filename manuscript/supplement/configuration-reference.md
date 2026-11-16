@@ -269,7 +269,8 @@ The timing boundary and the resources used belong to each measurement. @tbl-comp
 | Concept | Definition and interpretation here |
 |:--|:--|
 | Computational performance | Solver runtime, application elapsed time including in-scope construction and transfer, memory and attained primal/dual quality. Each clock covers named phases. |
-| Speedup | Reference execution time divided by comparison time for comparable work, termination and clock. The B/R/G time-to-target ratios use a common observed target. |
+| Paired time ratio | Evaluated method time divided by comparator time, with a common clock and an eligible observed quality target. G/B is $T_G/T_B$ and a value below one favours G. The same numerator rule applies to G/R and R/B. |
+| Speedup for resource scaling | Reference-resource time divided by comparison-resource time for comparable work, termination and clock. A value above one means that the comparison resource setting took less time. |
 | Parallel efficiency | Speedup divided by the resource ratio. Thread-cap or GPU-count normalization does not estimate utilization or energy. |
 | Strong scaling | Vary resources at fixed problem size. The CPU thread sweep describes this within method and instance for comparable endpoints. |
 | Weak scaling | Increase problem size and resources together while keeping work per resource approximately fixed. The experiments do not follow this design. |

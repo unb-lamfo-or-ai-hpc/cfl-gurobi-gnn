@@ -328,15 +328,15 @@ def check_source(manuscript, repository=ROOT):
             "0.132417%",
             "0.009495%",
             "0.000524%",
-            "31.43",
-            "47.57",
-            "9.04",
-            "37.56",
-            "35.90",
+            "0.0318",
+            "0.0210",
+            "0.1106",
+            "0.0266",
+            "0.0279",
         ):
             require(value in appendix, "partial_appendix_value:" + value)
         require(
-            "not certified speedups" in appendix
+            "Numerical differences limit comparisons at common quality." in appendix
             and "Exact primal feasibility does not certify global optimality"
             in appendix
             and "every continuous completion with those rounded binaries fixed"
@@ -406,8 +406,8 @@ def build(manuscript=None):
             [
                 cap,
                 *[f"{float(t['observed_seconds']) / 60:.2f}" for t in times],
-                f"{time_ratio(times[0], times[2]):.3f}",
-                f"{time_ratio(times[1], times[2]):.3f}",
+                f"{time_ratio(times[2], times[0]):.3f}",
+                f"{time_ratio(times[2], times[1]):.3f}",
             ]
         )
         group = {
@@ -427,9 +427,9 @@ def build(manuscript=None):
         )
     (tables / "partial_cpu_m0.qmd").write_text(
         table(
-            ["Threads", "B (min)", "R (min)", "G (min)", "B/G", "R/G"],
+            ["Threads", "B (min)", "R (min)", "G (min)", "G/B", "G/R"],
             m0_rows,
-            "M0: first observed reported gap at most 0.01%; conditional time ratios.",
+            "M0: first observed reported gap at most 0.01%.",
             "tbl-partial-cpu-m0",
         ),
         encoding="utf-8",

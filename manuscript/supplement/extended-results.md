@@ -293,7 +293,7 @@ Of the 60 received configurations, 47 report the terminal 0.01% criterion and 13
 
 : Complete long-horizon coverage at the reported 0.01% target. Attainment does not remove numerical qualifications. {#tbl-cpu-long-coverage}
 
-@tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. Ratios describe individual fixed-seed configurations, not replicated or population-level effects.
+@tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. G/B and G/R divide G's time by the comparator's time. Values below one favour G within the same thread configuration and seed.
 
 {{< include ../tables/partial_cpu_m0.qmd >}}
 
@@ -323,9 +323,9 @@ For a time-to-target comparison, a censored observation supplies a lower bound o
 
 {{< include ../tables/partial_cpu_all.qmd >}}
 
-M12 with one thread illustrates why runtime alone is insufficient. B, R and G use 20,379.962, 30,843.561 and 648.369 solver seconds, respectively. The resulting 31.43 and 47.57 runtime quotients are not certified speedups. G reports primal and dual 4.741382854739, while B/R report smaller tolerance-accepted objective values 4.740937765901 and 4.740932705477. The G value is higher and its bound lies above those primal reports; interpreting this ordering requires checking integer feasibility. The largest dual exceeds the smallest primal by 0.000450149263, approximately 0.009495%. A zero gap within one run does not resolve this cross-run disagreement.
+M12 with one thread illustrates why runtime alone is insufficient. B, R and G use 20,379.962, 30,843.561 and 648.369 solver seconds, respectively. The descriptive G/B and G/R runtime ratios are 0.0318 and 0.0210. Numerical differences limit comparisons at common quality. G reports primal and dual 4.741382854739, while B/R report smaller tolerance-accepted objective values 4.740937765901 and 4.740932705477. The G value is higher and its bound lies above those primal reports; interpreting this ordering requires checking integer feasibility. The largest dual exceeds the smallest primal by 0.000450149263, approximately 0.009495%. A zero gap within one run does not resolve this cross-run disagreement.
 
-At two threads, B/R/G use 6,479.262/5,177.102/572.465 seconds; R/G is 9.04. At four threads, B/R/G use 21,726.307/20,762.970/578.430 seconds. The latter runtime quotients, 37.56 and 35.90, are also not certified speedups: G again reports primal/dual 4.741382854739, above the B/R primal reports 4.740932705477/4.740937765901. All three runs report zero internal gap, which does not remove the cross-run discrepancy.
+At two threads, B/R/G use 6,479.262/5,177.102/572.465 seconds (G/R = 0.1106). At four threads, B/R/G use 21,726.307/20,762.970/578.430 seconds. The four-thread G/B and G/R runtime ratios, 0.0266 and 0.0279, describe the recorded times under the same numerical qualification: G again reports primal/dual 4.741382854739, above the B/R primal reports 4.740932705477/4.740937765901. All three runs report zero internal gap, which does not remove the cross-run discrepancy.
 
 At four threads G explores 1,738 nodes, versus 266,765 for B and 217,149 for R. The closed logs provide a more informative account than node counts alone. G processes 72,551 simplex iterations and reports 583.73 work units, compared with 13,553,138 iterations and 29,427.31 work units for B, and 10,831,133 iterations and 27,105.65 work units for R. These are printed log observations, not recovered terminal attributes. Callback times are 0.32, 18.76 and 17.52 seconds, respectively. Together with the approximately 65--68 seconds outside solver Runtime, these measurements show that the hours chiefly accompany different amounts of solver work. They do not exclude unmeasured contention or isolate a causal neural effect.
 
