@@ -374,7 +374,7 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("rendered_asset_receipt_missing")
     else:
         receipt = json.loads(receipt_path.read_text())
-        if receipt.get("source_contract_sha256") != CONTRACT or receipt.get("training_epochs") != 100 or receipt.get("validation_minimum_epoch") != 34 or len(receipt.get("outputs", [])) != 16:
+        if receipt.get("source_contract_sha256") != CONTRACT or receipt.get("training_epochs") != 100 or receipt.get("validation_minimum_epoch") != 34 or len(receipt.get("outputs", [])) != 19:
             failures.append("rendered_asset_source_or_count_mismatch")
         current = root / "results/current"
         for name, expected in receipt.get("source_files", {}).items():
