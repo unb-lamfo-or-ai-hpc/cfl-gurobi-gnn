@@ -397,7 +397,7 @@
       "id": "cpu_cost_solver",
       "document": "supplement/extended-results.md",
       "section": "sec-cost-results",
-      "article_template": "The solver-only G/B ratio of {n}",
+      "article_template": "The solver-only $T_G/T_B$ ratio of {n}",
       "metrics": {
         "n": {
           "source": "cpu_pairs",
@@ -680,7 +680,7 @@
       "id": "pr94_easy_time",
       "document": "index.qmd",
       "section": "sec-pr94-results",
-      "article_template": "geometric mean time ratios R/B, G/B and G/R were {rb}, {gb} and {gr}, respectively.",
+      "article_template": "geometric mean time ratios $T_R/T_B$, $T_G/T_B$ and $T_G/T_R$ were {rb}, {gb} and {gr}, respectively.",
       "metrics": {
         "rb": {
           "source": "pr94_pairs",

@@ -96,8 +96,8 @@ def build(repository=ROOT):
     indexed = {(r["alias"], int(r["threads"]), r["method"]): r for r in rows}
     fig, axes = plt.subplots(1, 2, figsize=(7.4, 3.4), layout="constrained")
     for comparison, denominator, color, marker, delta in (
-        ("G/B", "M0", "#222222", "o", -.12),
-        ("G/R", "M1", "#777777", "s", .12),
+        ("$T_G/T_B$", "M0", "#222222", "o", -.12),
+        ("$T_G/T_R$", "M1", "#777777", "s", .12),
     ):
         for i, cap in enumerate(CAPS):
             for j, parent in enumerate(EASY):
@@ -165,7 +165,7 @@ def build(repository=ROOT):
             "geometric_mean_ratio"]) for n, d in (("M1", "M0"), ("M2", "M0"), ("M2", "M1"))]
         values.append([str(cap)] + [f"{v:.4f}" for v in ratios])
     write_table(tables / "principal_ratios.qmd",
-                ["Threads", "R/B time", "G/B time", "G/R time"], values,
+                ["Threads", "$T_R/T_B$", "$T_G/T_B$", "$T_G/T_R$"], values,
                 "Geometric-mean solver-time ratios on six easy instances, seed42.",
                 "tbl-principal-ratios",
                 "Each ratio gives equal weight to the six original instances. Lower values "
@@ -194,7 +194,7 @@ def build(repository=ROOT):
     )
     values = [[label, f"{float(summary_row(summaries, 16, 'M2', 'M0', metric)['geometric_mean_ratio']):.4f}"]
               for label, metric in scopes]
-    write_table(tables / "principal_costs.qmd", ["Accounting boundary", "G/B ratio"],
+    write_table(tables / "principal_costs.qmd", ["Accounting boundary", "$T_G/T_B$"],
                 values, "Scope-dependent time ratios: six easy instances, sixteen threads, seed42.",
                 "tbl-principal-costs",
                 "Execution is the supervised attempt interval. Preparation scopes and "

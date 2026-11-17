@@ -427,7 +427,7 @@ def build(manuscript=None):
         )
     (tables / "partial_cpu_m0.qmd").write_text(
         table(
-            ["Threads", "B (min)", "R (min)", "G (min)", "G/B", "G/R"],
+            ["Threads", "B (min)", "R (min)", "G (min)", "$T_G/T_B$", "$T_G/T_R$"],
             m0_rows,
             "M0: first observed reported gap at most 0.01%.",
             "tbl-partial-cpu-m0",

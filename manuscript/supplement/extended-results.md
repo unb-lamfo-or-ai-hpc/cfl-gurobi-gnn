@@ -181,7 +181,7 @@ A solver-level advantage is not necessarily an application-level advantage. @tbl
 
 {{< include ../tables/principal_costs.qmd >}}
 
-The solver-only G/B ratio of 0.8435 becomes 1.0461 with delimited cold preparation, or 1.0692 with broader allocation. The corresponding seven-use scenarios yield 0.8935 and 0.8969. Accounting scope and reuse thus reverse the direction of the estimate.
+The solver-only $T_G/T_B$ ratio of 0.8435 becomes 1.0461 with delimited cold preparation, or 1.0692 with broader allocation. The corresponding seven-use scenarios yield 0.8935 and 0.8969. Accounting scope and reuse thus reverse the direction of the estimate.
 
 These are conditional cost scenarios, not complete deployment measurements. The exploratory intervals around the sixteen-thread solver and cold-use ratios both include one. The observation is useful for accounting decisions on this sample, without establishing a universal break-even rule. It also does not remove preparation from the measured campaign expenditure or imply that missing operational costs are zero.
 
@@ -293,7 +293,7 @@ Of the 60 received configurations, 47 report the terminal 0.01% criterion and 13
 
 : Complete long-horizon coverage at the reported 0.01% target. Attainment does not remove numerical qualifications. {#tbl-cpu-long-coverage}
 
-@tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. G/B and G/R divide G's time by the comparator's time. Values below one favour G within the same thread configuration and seed.
+@tbl-partial-cpu-m0 gives M0 crossing times at the same reported 0.01% threshold. The ratios $T_G/T_B$ and $T_G/T_R$ divide G's time by the comparator's time. Values below one favour G within the same thread configuration and seed.
 
 {{< include ../tables/partial_cpu_m0.qmd >}}
 
@@ -323,9 +323,9 @@ For a time-to-target comparison, a censored observation supplies a lower bound o
 
 {{< include ../tables/partial_cpu_all.qmd >}}
 
-M12 with one thread illustrates why runtime alone is insufficient. B, R and G use 20,379.962, 30,843.561 and 648.369 solver seconds, respectively. The descriptive G/B and G/R runtime ratios are 0.0318 and 0.0210. Numerical differences limit comparisons at common quality. G reports primal and dual 4.741382854739, while B/R report smaller tolerance-accepted objective values 4.740937765901 and 4.740932705477. The G value is higher and its bound lies above those primal reports; interpreting this ordering requires checking integer feasibility. The largest dual exceeds the smallest primal by 0.000450149263, approximately 0.009495%. A zero gap within one run does not resolve this cross-run disagreement.
+M12 with one thread illustrates why runtime alone is insufficient. B, R and G use 20,379.962, 30,843.561 and 648.369 solver seconds, respectively. The descriptive $T_G/T_B$ and $T_G/T_R$ runtime ratios are 0.0318 and 0.0210. Numerical differences limit comparisons at common quality. G reports primal and dual 4.741382854739, while B/R report smaller tolerance-accepted objective values 4.740937765901 and 4.740932705477. The G value is higher and its bound lies above those primal reports; interpreting this ordering requires checking integer feasibility. The largest dual exceeds the smallest primal by 0.000450149263, approximately 0.009495%. A zero gap within one run does not resolve this cross-run disagreement.
 
-At two threads, B/R/G use 6,479.262/5,177.102/572.465 seconds (G/R = 0.1106). At four threads, B/R/G use 21,726.307/20,762.970/578.430 seconds. The four-thread G/B and G/R runtime ratios, 0.0266 and 0.0279, describe the recorded times under the same numerical qualification: G again reports primal/dual 4.741382854739, above the B/R primal reports 4.740932705477/4.740937765901. All three runs report zero internal gap, which does not remove the cross-run discrepancy.
+At two threads, B/R/G use 6,479.262/5,177.102/572.465 seconds ($T_G/T_R = 0.1106$). At four threads, B/R/G use 21,726.307/20,762.970/578.430 seconds. The four-thread $T_G/T_B$ and $T_G/T_R$ runtime ratios, 0.0266 and 0.0279, describe the recorded times under the same numerical qualification: G again reports primal/dual 4.741382854739, above the B/R primal reports 4.740932705477/4.740937765901. All three runs report zero internal gap, which does not remove the cross-run discrepancy.
 
 At four threads G explores 1,738 nodes, versus 266,765 for B and 217,149 for R. The closed logs provide a more informative account than node counts alone. G processes 72,551 simplex iterations and reports 583.73 work units, compared with 13,553,138 iterations and 29,427.31 work units for B, and 10,831,133 iterations and 27,105.65 work units for R. These are printed log observations, not recovered terminal attributes. Callback times are 0.32, 18.76 and 17.52 seconds, respectively. Together with the approximately 65--68 seconds outside solver Runtime, these measurements show that the hours chiefly accompany different amounts of solver work. They do not exclude unmeasured contention or isolate a causal neural effect.
 
@@ -359,9 +359,9 @@ The one-hour comparison comprises 144 runs in 48 instance–seed blocks. Each ru
 
 ### B.13.1. Easy instances
 
-All 18 easy blocks attained 0.01% with all three methods. @tbl-pr94-easy reports the median observed time across the three seeds, and the median of the seed-paired ratios for each instance. The ratio columns use paired times directly, so dividing two columns of median times can give a different value.
+All 18 easy blocks attained 0.01% with all three methods. @tbl-pr94-easy reports the median observed time across the three seeds, and the median of the seed-paired ratios for each instance. The ratio columns use paired times directly, so dividing two columns of median times can give a different value. A value of $T_G/T_B$ below one favours G.
 
-| Instance | B (s) | R (s) | G (s) | R/B | G/B | G/R |
+| Instance | B (s) | R (s) | G (s) | $T_R/T_B$ | $T_G/T_B$ | $T_G/T_R$ |
 |:--|--:|--:|--:|--:|--:|--:|
 | E0 | 104.2 | 110.0 | 235.3 | 1.070 | 2.234 | 2.266 |
 | E3 | 71.0 | 71.8 | 42.8 | 1.022 | 0.603 | 0.609 |
@@ -372,7 +372,7 @@ All 18 easy blocks attained 0.01% with all three methods. @tbl-pr94-easy reports
 
 : Easy-instance times to the 0.01% gap target. {#tbl-pr94-easy}
 
-Across the 18 paired observations, geometric mean time ratios were 1.038 for R/B, 1.083 for G/B and 1.043 for G/R at 0.01%. At 10%, the G/B ratio was 0.752, compared with 1.083 at 0.01%. G was faster than B in ten of the 18 pairs at the tight target, but the larger slowdowns on E0 and E29 raised the geometric mean above one. Thus the balance between wins and losses and the size of those differences tell different parts of the story. All three methods have the same terminal primal values within floating-point rounding on these six instances.
+Across the 18 paired observations, geometric mean time ratios were 1.038 for $T_R/T_B$, 1.083 for $T_G/T_B$ and 1.043 for $T_G/T_R$ at 0.01%. At 10%, the $T_G/T_B$ ratio was 0.752, compared with 1.083 at 0.01%. G was faster than B in ten of the 18 pairs at the tight target, but the larger slowdowns on E0 and E29 raised the geometric mean above one. Thus the balance between wins and losses and the size of those differences tell different parts of the story. All three methods have the same terminal primal values within floating-point rounding on these six instances.
 
 ### B.13.2. Medium instances
 
