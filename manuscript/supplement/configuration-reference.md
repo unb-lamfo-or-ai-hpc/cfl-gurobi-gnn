@@ -38,6 +38,8 @@ have different roles and must retain their original identities.
 
 : Data sources and experimental roles. {#tbl-data-sources}
 
+The distributed files retain their maximization headers. Exploratory observations by the authors suggested that maximization made hard instances easy to solve. The available audit supports the minimization convention for these experiments. It leaves the runtime effect of maximization across the benchmark unverified. The [objective-sense audit](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/f3c194b873df01afab8f6bcd41f29b9edd56f80f/docs/research/pr85-closure.md) documents this distinction.
+
 Historical six-medium optimization results and the principal ten-parent CPU
 comparison remain separate populations. Repetition across methods, caps or
 seeds does not create additional independent parents. Canonical identities
@@ -236,7 +238,7 @@ The live manual and Help Center were consulted on 30 October 2026. Their stateme
 
 ## C.5. Solver engine, modeling interface and reproducibility {#sec-solver-interfaces}
 
-The evaluated CPU path uses native gurobipy. A Pyomo front end may call the same engine, but translation and persistent state can change the effective model, row order, starts and parameters [@pyomogurobi2026; @pyomowriter2026]. SCIP and HiGHS document their own parallel modes, randomization and stopping controls [@scipdocs2026; @scipconcurrent2026; @highsoptions2026; @highsparallel2026]. These interfaces and engines are contextual examples. The reported comparisons all use Gurobi and identified inputs.
+The CPU experiments use Gurobi directly through its Python API (gurobipy). A Pyomo front end may call the same engine, but translation and persistent state can change the effective model, row order, starts and parameters [@pyomogurobi2026; @pyomowriter2026]. SCIP and HiGHS document their own parallel modes, randomization and stopping controls [@scipdocs2026; @scipconcurrent2026; @highsoptions2026; @highsparallel2026]. These interfaces and engines are contextual examples. The reported comparisons all use Gurobi and identified inputs.
 
 ## C.6. Observations and resource limits
 
@@ -398,12 +400,16 @@ The extension asks whether the conditional effects of partial Starts persist acr
 
 : Settings for the one-hour solver-seed comparison. {#tbl-one-hour-solver-settings}
 
-The six additional medium instances extend optimization coverage without redefining the learning split. They are not asserted to be previously unexposed test data. M7 remains in the cohort; the numerical qualifications of M4/M12 are retained rather than removed by a new reported gap. The easy and medium designations are inherited from the benchmark. A baseline runtime can describe empirical difficulty under the specified budget.
+The six additional medium instances (M5, M6, M9, M13, M20 and M26) extend optimization coverage while retaining the original learning split. Prior exposure of benchmark instances limits generalization to unseen problems. M7 remains in the cohort; the numerical qualifications of M4/M12 are retained rather than removed by a new reported gap. The easy and medium designations are inherited from the benchmark. A baseline runtime can describe empirical difficulty under the specified budget.
 
 The three seeds perturb Gurobi while leaving training and starting information fixed. They do not represent three independently trained networks or triple the number of independent instances. Comparisons pair B/R/G within instance and seed, report instance-level heterogeneity, and preserve instance clustering in any resampling or statistical model. With only six easy and ten medium instances, external inference remains limited.
 
-For each quality target, analysis distinguishes observed attainment, time censoring, numerical restrictions, infrastructure failure and missing evidence. Terminal primal values, dual bounds and gaps accompany the fixed-horizon records. We use the last callback at or before 3,600 seconds, or the terminal record if the solver ended sooner. The event time is the first observed crossing within budget. Time ratios use paired, observed, eligible crossings only. The one-hour extension and the serial twelve-hour experiment remain separate datasets. Concurrent resource contention and wall-time stopping can affect observed endpoints, so allocation, overlap and preparation costs remain part of the interpretation. Additional solver seeds address sensitivity, not guaranteed repeatability or the uncertainty of training.
+For each quality target, analysis distinguishes observed attainment, time censoring, numerical restrictions, infrastructure failure and missing evidence. Terminal primal values, dual bounds and gaps accompany the fixed-horizon records. The analysis uses the last callback at or before 3,600 seconds, or the terminal record if the solver ended sooner. The event time is the first observed crossing within budget. Time ratios use paired, observed, eligible crossings only. The one-hour extension and the serial twelve-hour experiment remain separate datasets. Concurrent resource contention and wall-time stopping can affect observed endpoints, so allocation, overlap and preparation costs remain part of the interpretation. Additional solver seeds address sensitivity, not guaranteed repeatability or the uncertainty of training.
 
+
+### Prospective comparison of thread caps and search policies
+
+The prospective design adds H0, H5, H10, H15, H20 and H25 to the six easy and ten medium instances. This expansion evaluates optimization with the frozen predictor. The learning split, checkpoint and score threshold are retained. The design specifies five pairs of `Threads` and `ConcurrentMIP`: (1, 1), (4, 1), (4, 2), (8, 1) and (8, 2). Within each instance, solver seed and profile, B, R and G use the same model and resource cap. There are 330 planned blocks and 990 solves. At a fixed thread cap, the two-search setting divides the available threads across independent searches. Seed variation and the nondeterminism of concurrent MIP are separate considerations [@gurobi2026]. Appendix B reports observations from the completed comparisons.
 
 ## C.11. What can be reproduced from the released materials? {#sec-reproduction-levels}
 

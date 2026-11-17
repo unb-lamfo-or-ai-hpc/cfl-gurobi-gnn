@@ -105,7 +105,7 @@ G selects predicted ones in descending score order, then fills remaining positio
 |:--|:--|:--|:--|
 | Starting information | None supplied externally | Stored LP ranking plus G's actual $(k,q)$ | Frozen GNN scores and selected threshold |
 | Selection | No external assignments | Highest $q$ LP scores, then lowest $k-q$ remaining | Predicted ones first, then confident zeros |
-| Solver input | No external Start | Native partial Start | Native partial Start |
+| Solver input | No external Start | Partial Start supplied to Gurobi | Partial Start supplied to Gurobi |
 | Unselected variables | Original domains | Original domains; Start unspecified | Original domains; Start unspecified |
 | Interpretation | Internal solver heuristics remain available | LP-ranked, G-dependent matched control | Full learned starting information |
 
@@ -124,7 +124,7 @@ A fresh model receives the assignments through Start, with GRB.UNDEFINED elsewhe
 | @gasse2019: learned branching on MILP families | Branching decision | Variable selection within search; a different target from a primal Start |
 | @khalil2022: binary MILPs | Variable biases from near-optimal solutions | Solver guidance including warm-starting; a direct precedent for neural Starts |
 | @nair2020: diverse mixed-integer programs | Multiple partial integer assignments | Remaining smaller MIPs are solved; assignments restrict the associated subproblem |
-| @han2023: MILP benchmarks | Variable predictions | Search within a ball around predicted values, rather than unrestricted native Start completion |
+| @han2023: MILP benchmarks | Variable predictions | Search within a ball around predicted values |
 | @canturk2024: learned primal MILP heuristics | Predictions with uncertainty | Reduction and guided subproblem search; different restriction/selection mechanisms |
 | Present CFL study | Scores for binary incumbent labels | One partial candidate per G condition; original full feasible region retained |
 
@@ -153,5 +153,5 @@ Fixed-revision sources document the
 [versioned prenormalization](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5c3ba0e77ea87905fa7986a70567523166156df/src/cfl_gnn/models/gasse_calibrated.py),
 [root capture](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5c3ba0e77ea87905fa7986a70567523166156df/scripts/evidence/pr86_root_preparation.py),
 [guidance preparation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5c3ba0e77ea87905fa7986a70567523166156df/scripts/evidence/pr86_guidance_preparation.py)
-and [native Start path](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5c3ba0e77ea87905fa7986a70567523166156df/scripts/evidence/pr86_solver.py).
+and [Gurobi Start implementation](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/e5c3ba0e77ea87905fa7986a70567523166156df/scripts/evidence/pr86_solver.py).
 The [upstream implementation](https://github.com/ds4dm/learn2branch/tree/57e82603fba39c34ff81baf9bd0b5768f5a1a860) is retained as architectural provenance. Source identities do not replace the per-model and per-outcome qualifications.

@@ -136,7 +136,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("directed_primal_guidance_references_missing")
     if any(term not in article for term in (
         "one physical thread", "numerical",
-        "not an independent LP-only heuristic",
+        "the cost of obtaining these counts belongs to the preparation of R",
         "does not establish a consistent advantage",
     )) or "## B.11. Preliminary six-medium optimization study" not in readers["supplement/extended-results.md"]:
         failures.append("mvp2_seed42_methodological_scope_missing")
@@ -242,7 +242,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if any(term not in before_results for term in ("binary cross-entropy", "Average precision (AP)", "Brier score", "Expected calibration error (ECE)", "right-censored", "parent-macro")):
         failures.append("metrics_not_defined_before_results")
     figure_documents = {
-        "index.qmd": ("fig-pipeline", "fig-gpu-bce"),
+        "index.qmd": ("fig-message-passing", "fig-pipeline", "fig-gpu-bce"),
         "supplement/extended-results.md": ("fig-loss", "fig-effects", "fig-target-time",
             "fig-gpu-bce-appendix",
             "fig-history39-admission", "fig-history39-gap", "fig-history39-times",
