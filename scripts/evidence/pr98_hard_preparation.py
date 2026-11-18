@@ -121,9 +121,43 @@ def h25_review(fresh=False):
     }
 
 
+def workspace_environment(stage, create=False):
+    root = stage / "runtime"
+    names = ("tmp", "cache", "cuda", "torch", "extensions", "matplotlib")
+    if create:
+        root.mkdir()
+        for name in names:
+            (root / name).mkdir()
+    need(root.is_dir() and not root.is_symlink(), "runtime_directory")
+    for name in names:
+        path = root / name
+        need(
+            path.is_dir()
+            and not path.is_symlink()
+            and path.resolve().is_relative_to(stage.resolve()),
+            "runtime_cache_path",
+        )
+    value = {
+        "TMPDIR": str(root / "tmp"),
+        "TMP": str(root / "tmp"),
+        "TEMP": str(root / "tmp"),
+        "XDG_CACHE_HOME": str(root / "cache"),
+        "CUDA_CACHE_PATH": str(root / "cuda"),
+        "TORCH_HOME": str(root / "torch"),
+        "TORCH_EXTENSIONS_DIR": str(root / "extensions"),
+        "MPLCONFIGDIR": str(root / "matplotlib"),
+    }
+    os.environ.update(value)
+    return value
+
+
 def admitted(stage, expected, alias=None):
     need(inputs.digest(stage / "plan.json") == expected, "plan_hash")
     plan = inputs.read(stage / "plan.json")
+    need(
+        plan["runtime_environment"] == workspace_environment(stage),
+        "runtime_environment",
+    )
     need(
         plan["source_commit"] == inputs.source_commit()
         and plan["budget"] == BUDGET
@@ -179,6 +213,7 @@ def freeze(stage, preflight):
     flow.storage(stage, admission=True)
     plan = {
         "protocol": "pr98_five_hard_preparation_v1",
+        "runtime_environment": workspace_environment(stage, create=True),
         "source_commit": inputs.source_commit(),
         "private_inputs_sha256": inputs.digest(stage / "inputs.private.json"),
         "preflight_sha256": preflight,

@@ -389,3 +389,24 @@ class CampaignAdmissionTests(unittest.TestCase):
             self.assertEqual(plan["budget"]["solves"], 990)
             self.assertEqual(plan["child_deadline_seconds"], 4500)
             self.assertEqual(plan["working_storage_GiB_ceiling"], 320)
+
+    def test_runtime_caches_stay_inside_stage_without_overriding_home(self):
+        import os
+
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp)
+            with patch.dict(os.environ, {"HOME": "preserve-user-home"}):
+                value = hard.workspace_environment(stage, create=True)
+                self.assertEqual(os.environ["HOME"], "preserve-user-home")
+                self.assertTrue(
+                    all(
+                        Path(p).is_dir() and Path(p).is_relative_to(stage)
+                        for p in value.values()
+                    )
+                )
+                self.assertEqual(hard.workspace_environment(stage), value)
+                wrong = stage / "runtime/tmp"
+                wrong.rmdir()
+                wrong.write_text("invalid cache path")
+                with self.assertRaisesRegex(ValueError, "runtime_cache_path"):
+                    hard.workspace_environment(stage)

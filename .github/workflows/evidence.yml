@@ -19,6 +19,7 @@ on:
       - 'docs/research/pr66-dasci-runbook.md'
       - 'configs/experiments/pr66_thread_screen_v1.json'
       - 'scripts/evidence/**'
+      - 'docs/research/pr98-cli/**'
       - 'src/cfl_gnn/**'
       - 'tests/evidence/**'
       - 'configs/experiments/mvp2_gpu_comparison_v1.json'
@@ -33,6 +34,7 @@ on:
     paths:
       - 'docs/evidence/**'
       - 'scripts/evidence/**'
+      - 'docs/research/pr98-cli/**'
       - 'src/cfl_gnn/**'
       - 'scripts/slurm/dasci/*pr65*'
       - 'scripts/slurm/dasci/*pr66*'

@@ -223,6 +223,7 @@ def site_preflight():
 def freeze(stage, inputs):
     from pr94_evaluation_contract import baseline_parameters
     from pr94_isolated_preparation import versions
+    from pr98_hard_preparation import workspace_environment
     from pr98_pilot_license_recovery import license_binding
 
     require(
@@ -255,6 +256,7 @@ def freeze(stage, inputs):
         stage / "plan.json",
         {
             "source_commit": source_commit(),
+            "runtime_environment": workspace_environment(stage, create=True),
             "environment": versions(),
             "site": site_preflight(),
             "license": license_binding(),
@@ -274,11 +276,16 @@ def freeze(stage, inputs):
 def admitted(stage, expected):
     from pr94_evaluation_contract import baseline_parameters
     from pr94_isolated_preparation import versions
+    from pr98_hard_preparation import workspace_environment
     from pr98_pilot_license_recovery import license_binding
 
     path = stage / "plan.json"
     require(digest(path) == expected, "plan hash")
     plan = read(path)
+    require(
+        plan["runtime_environment"] == workspace_environment(stage),
+        "runtime environment",
+    )
     require(
         plan["source_commit"] == source_commit()
         and plan["matrix"] == matrix()

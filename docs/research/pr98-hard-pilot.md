@@ -14,6 +14,8 @@ The 990-cell resource decision remains separate from preparation: 4,950 maximum 
 
 The preparation collector checks all six artifact sets, writes an exclusive sealed metadata return and distinguishes five new roots/forwards from the reused H25 calls. Review that return before the full-campaign command. The latter binds the verified PR94 sixteen-parent preparations and the six hard sets without repeating existing E/M or H25 work, then prints the complete plan and budget for the author's CLI decision. All five exact-source CI jobs must pass before the concrete launch wrappers proceed. Preparing these tools does not submit jobs.
 
+Both stages redirect temporary files and CUDA/Torch/XDG caches into their own RAID runtime directories, preserving HOME and all predecessor stages.
+
 PR97 remains in draft and unchanged. Improved labels remain a future ablation. Do not use pilot runtime or terminal-only first-observed feasibility fields as evidence of scientific speedup or generalization. M4/M12 eligibility limitations, abstention, censoring, failures and missing artifacts remain explicit.
 
 ## Evidence boundary
