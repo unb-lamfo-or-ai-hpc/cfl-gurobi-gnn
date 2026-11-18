@@ -353,6 +353,7 @@ class CampaignAdmissionTests(unittest.TestCase):
                 originals, {p.name: p.read_bytes() for p in source.iterdir()}
             )
 
+    @patch.dict("os.environ")
     def test_campaign_freeze_accepts_isolated_checkout_and_binds_policy(self):
         with tempfile.TemporaryDirectory() as tmp:
             stage = Path(tmp)
