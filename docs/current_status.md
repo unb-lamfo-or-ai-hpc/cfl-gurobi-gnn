@@ -1,5 +1,11 @@
 # Current status — 2 November 2026
 
+## PR98 continuation — 18 November 2026
+
+The H25 technical recovery3906 is complete (6/6 gates and independent incumbent audits passed; all six censored at the native time limit). Full source CI44371582565 passed. Preserve all 3891/3905/3906 sources, claims and outputs. The H0 original LP has been independently hashed from the original ZIP whose directory matches the official distribution; see [reference receipt](evidence/pr98/h0-reference-20261118/reference.json).
+
+The next prepared author CLI installs the tested source, qualifies all six hard input bytes, and can submit one explicitly decided preparation job for H0/H5/H10/H15/H20, reusing H25. No new training or evaluation occurs in that stage. Full 990-cell execution follows only after reviewing that return and the concrete 330-block plan/resources. The [runbook](research/pr98-hard-pilot.md) records the new three-hour preparation envelope and unchanged four-hour evaluation-block envelope. No new job is inferred from tool preparation. PR97 remains draft and unchanged; improved labels remain future work.
+
 ## Integration and recovery update — 2 November 2026
 
 This section supersedes the dated pending snapshots below. PR89 has60 received/reconciled cells:47 solver-reported terminal targets and13 time-limit censures, all M7. All15 M7 observations remain; M4/M12 restrictions and the scoped exact-primal audits do not establish certified speedups or a common exact optimum. Installed9ab7823c and original receipts remain unchanged.

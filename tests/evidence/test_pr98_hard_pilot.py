@@ -57,7 +57,10 @@ class HardInputTests(unittest.TestCase):
             folder.mkdir(parents=True)
             parent = "CFL_hard_instance_0"
             (folder / (parent + ".lp")).write_bytes(LP)
-            with patch.object(inputs, "ARCHIVE", {"H0": None}):
+            with (
+                patch.object(inputs, "ARCHIVE", {"H0": None}),
+                patch.object(inputs, "LP_REFERENCE", {"H0": None}),
+            ):
                 report, bound = inputs.inspect_models(data, time.monotonic() + 10)
                 self.assertEqual(
                     report["H0"]["status"], "independent_LP_reference_required"

@@ -109,6 +109,10 @@ jobs:
           bash -n scripts/evidence/operate_pr94_evaluation.sh
           bash -n scripts/evidence/install_pr94_evaluation.template.sh
           bash -n docs/research/solver-seed-extension-v2/recovery-launch.template.sh
+          bash -n docs/research/pr98-cli/prepare-five-hard.template.sh
+          bash -n docs/research/pr98-cli/collect-hard.template.sh
+          bash -n docs/research/pr98-cli/launch-990.template.sh
+          bash -n docs/research/pr98-cli/collect-990.template.sh
       - name: T1 PR89 sealed receipt integrity (no scientific calls)
         run: python -B -m unittest discover -s tests/evidence -p test_pr89_sealed_receipts.py -v
       - name: T1 PR94 installation, preparation and evaluation admission (no scientific calls)

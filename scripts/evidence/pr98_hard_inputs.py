@@ -47,7 +47,10 @@ ARCHIVE = {
 
 # Independent PaScal uncompressed LP exports hashed on 8 November 2026.
 LP_REFERENCE = {
-    "H0": None,
+    "H0": (
+        425757872,
+        "261d4efb2994cb61c8c2beeb1b2ae95806ee24fd9879916693baaf1cc771ea12",
+    ),
     "H5": (
         425851766,
         "9c4923a2c3da283aa079c06347aa1bf324e76be6e64bf29529a1890b82f95c6a",
@@ -233,7 +236,11 @@ def inspect_models(data, deadline):
                 and (value["bytes"], value["sha256"]) == archived
             ]
             path, identity = (archived_matches or candidates)[0]
-            row["status"] = "PaScal_LP_bytes_matched"
+            row["status"] = (
+                "MILPBench_LP_bytes_matched"
+                if alias == "H0"
+                else "PaScal_LP_bytes_matched"
+            )
             row["archived_gzip_matched"] = bool(archived_matches)
             bindings[alias] = {
                 "parent": parent,
