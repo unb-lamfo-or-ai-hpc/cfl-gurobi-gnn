@@ -77,19 +77,27 @@ def admitted(stage, accepted):
 
 
 def clean_env():
-    return {
+    from pr98_pilot_license_recovery import LICENSE_PATH
+
+    value = {
         k: v
         for k, v in os.environ.items()
         if not k.startswith(("SBATCH_", "SLURM_", "SRUN_"))
         and k not in {"PYTHONHOME", "PYTHONPATH"}
     }
+    value["GRB_LICENSE_FILE"] = str(LICENSE_PATH)
+    return value
 
 
 def submit(stage, accepted, decision):
     from pr94_isolated_preparation import command, held_profile, storage, versions
 
     need(decision.strip(), "explicit_pilot_decision_required")
+    from pr98_pilot_license_recovery import claim_path, license_binding
+
     admitted(stage, accepted)
+    license_record = license_binding()
+    destination = claim_path(stage, fresh_accounting=True)
     environment = versions()
     storage(stage, admission=True)
     approval = {
@@ -97,10 +105,11 @@ def submit(stage, accepted, decision):
         "budget": BUDGET,
         "decision": decision,
         "versions": environment,
+        "license": license_record,
         "scope": PILOT_SCOPE,
     }
     # Global, write-once claim survives a partial/ambiguous sbatch and new stage creation.
-    inputs.write_once(inputs.EVIDENCE / "pr98-h25-technical-pilot.claim.json", approval)
+    inputs.write_once(destination, approval)
     inputs.write_once(stage / "pilot-approval.json", approval)
     batch = shlex.join(
         [
@@ -127,6 +136,7 @@ def submit(stage, accepted, decision):
             "--gres=gpu:1",
             "--time=01:00:00",
             "--job-name=cfl_pr98_H25",
+            "--export=ALL,GRB_LICENSE_FILE=" + license_record["path"],
             "--chdir=" + str(inputs.ROOT),
             "--output=" + str(stage / "pilot-%j.private.out"),
             "--error=" + str(stage / "pilot-%j.private.err"),
@@ -149,13 +159,15 @@ def submit(stage, accepted, decision):
 
 def runtime_admission(stage, accepted):
     from pr94_isolated_preparation import allocation, versions
+    from pr98_pilot_license_recovery import claim_path, license_binding
 
     approval = inputs.read(stage / "pilot-approval.json")
     need(
-        inputs.read(inputs.EVIDENCE / "pr98-h25-technical-pilot.claim.json") == approval
+        inputs.read(claim_path(stage)) == approval
         and approval["preflight_sha256"] == accepted
         and approval["budget"] == BUDGET
-        and approval["versions"] == versions(),
+        and approval["versions"] == versions()
+        and approval["license"] == license_binding(),
         "pilot_approval",
     )
     job, gate, allocation_receipt = allocation("guidance", stage)
@@ -469,6 +481,10 @@ def report(stage, accepted):
         "cells": cells,
         "scope": PILOT_SCOPE,
         "complete_marker": (folder / "complete.json").exists(),
+        "license": inputs.read(stage / "pilot-approval.json").get("license"),
+        "predecessor_job_id": "3891"
+        if (stage / "license-recovery.json").exists()
+        else None,
     }
     print(json.dumps(out, indent=2, sort_keys=True))
 
@@ -477,19 +493,25 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     subs = parser.add_subparsers(dest="command", required=True)
     commands = {
-        name: subs.add_parser(name) for name in ("submit", "batch", "child", "report")
+        name: subs.add_parser(name)
+        for name in ("submit", "recover-submit", "batch", "child", "report")
     }
     for sub in commands.values():
         sub.add_argument("stage", type=Path)
         sub.add_argument("preflight_sha256")
-    commands["submit"].add_argument("--decision", required=True)
+    for name in ("submit", "recover-submit"):
+        commands[name].add_argument("--decision", required=True)
     commands["child"].add_argument("kind", choices=("prepare", "solve"))
     commands["child"].add_argument("--concurrent", type=int)
     commands["child"].add_argument("--method", choices=ORDER)
     args = parser.parse_args()
     os.umask(0o077)
     stage = inputs.site_stage(args.stage)
-    if args.command == "submit":
+    if args.command in ("submit", "recover-submit"):
+        if args.command == "recover-submit":
+            from pr98_pilot_license_recovery import approve
+
+            approve(stage, args.preflight_sha256, args.decision)
         submit(stage, args.preflight_sha256, args.decision)
     elif args.command == "batch":
         batch(stage, args.preflight_sha256)

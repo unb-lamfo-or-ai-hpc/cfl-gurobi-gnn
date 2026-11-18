@@ -160,6 +160,13 @@ class PilotTests(unittest.TestCase):
                 patch.dict(sys.modules, {"pr94_isolated_preparation": prior}),
                 patch.object(inputs, "EVIDENCE", root),
                 patch.object(pilot, "admitted", return_value=None),
+                patch(
+                    "pr98_pilot_license_recovery.license_binding",
+                    return_value={
+                        "path": "/canonical/license",
+                        "sha256": "sealed",
+                    },
+                ),
             ):
                 with self.assertRaisesRegex(ValueError, "held_profile_mismatch"):
                     pilot.submit(stage, "evidence_digest", "author approved H25 pilot")

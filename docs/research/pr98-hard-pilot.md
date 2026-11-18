@@ -64,3 +64,22 @@ Install the exact reviewed commit into an isolated `pr98-hard.*` stage within th
 3. Once accounting is terminal: `python -B "$STAGE/source/scripts/evidence/pr98_hard_pilot.py" report "$STAGE" "$PREFLIGHT_SHA"`. Review the job and steps, sampled memory and guard stops, root/graph/prediction/Start seals, and both effective solver profiles. Preserve partial output and intents as diagnostics if the gate fails.
 
 Review the pilot before admitting preparation of the other hard cases. Each remaining case requires its own verified original model, root, graph, prediction and Start receipt. Compare H0 to an independent original LP before admitting it. A complete matrix release also requires site resource review and explicit approval of the campaign budget.
+
+## License refusal and one isolated technical replacement — 18 November 2026
+
+The author's terminal return identifies H25 pilot job 3891 as FAILED/1:0 after 112 seconds. The root worker called `model.optimize(observer)`, which raised `Model too large for size-limited license`. The root intent exists, but no qualified root/artifact receipt, forward intent or B/R/G evaluation intent was produced. The supervisor records no memory or deadline guard stop. Its sampled cgroup peak is 5,258,522,624 bytes. A successful `report` invocation means the diagnostic completed, independently of pilot success.
+
+The author fixes the license location at `/raid/vrcelestino/data/cfl-gurobi-gnn/secrets/gurobi.lic`. The reviewed file fingerprint is `50c98fadf9d6fdcb03ea4233019731e942a620c4827783b90873e2f085a63810`. License bytes and credentials stay on the data filesystem. A standalone environment check opens and closes `gurobipy.Env` with logging disabled and does not create a model or optimize. Both the Slurm export and the worker validate the canonical path and file fingerprint.
+
+The replacement keeps the H25 input, frozen predictor, original root-capture policy and the six technical evaluation profiles within the same one-hour, four-physical-core, 64-GiB, one-V100 envelope. Label improvement remains a future ablation. The pilot remains outside campaign evidence.
+
+The new `recover-submit` command accepts an explicit decision for replacing the failed job. Before submission it rechecks terminal accounting for 3891, the original installed source, refusal log, claims, receipts and absence of later scientific artifacts. A fresh preflight in a separate `pr98-hard.*` stage must bind exactly the original input manifest and checkpoint. The new marker seals the parent evidence. The separate fixed claim `pr98-h25-license-recovery-3891.claim.json` prevents a second replacement across stages. Original source, logs, intents, submission and global claim stay preserved.
+
+The CLI sequence is:
+
+1. Activate `tfm_env`, export the canonical `GRB_LICENSE_FILE`, check its fingerprint and validate a Gurobi environment without constructing a model.
+2. Install the reviewed and CI-tested commit into a new isolated RAID stage. Run the read-only hard-input preflight at that commit.
+3. Supply the specific replacement decision in the author's CLI and invoke `pr98_hard_pilot.py recover-submit STAGE PREFLIGHT_SHA256 --decision DECISION`. The command uses held submission and checks resources before release.
+4. When its job is terminal, invoke `report` in the new stage. Review partial outputs if a gate fails. Any additional attempt requires a new diagnosis and decision.
+
+Offline regressions cover license path/hash drift, explicit Slurm export, parent accounting/activity changes, unchanged input admission, parent evidence tampering and one replacement claim. They use synthetic files and command stubs. No real Gurobi, inference or Slurm execution occurs in these tests.
