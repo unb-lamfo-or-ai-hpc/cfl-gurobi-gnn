@@ -83,3 +83,28 @@ The CLI sequence is:
 4. When its job is terminal, invoke `report` in the new stage. Review partial outputs if a gate fails. Any additional attempt requires a new diagnosis and decision.
 
 Offline regressions cover license path/hash drift, explicit Slurm export, parent accounting/activity changes, unchanged input admission, parent evidence tampering and one replacement claim. They use synthetic files and command stubs. No real Gurobi, inference or Slurm execution occurs in these tests.
+
+## Whole-process timeout after artifact generation — 18 November 2026
+
+The replacement pilot 3905 reached the full-license solver and completed its preparation process in 499.19 seconds. The terminal report verified the hashes and lineage of H25's root, graph, prediction and partial Starts. It records one root capture, one frozen forward, no training or labels, MINIMIZE and no abstention. These checks establish the preparation artifacts' integrity. They do not establish that a subsequent MIP solve accepted and completed either Start.
+
+The first technical evaluation, B with Threads=4 and ConcurrentMIP=1, was then interrupted by the external supervisor at 300.32 seconds. Its private solver log shows a normal TimeLimit termination after 121.78 seconds, with a logged incumbent of 209.1003359181, a bound of 0.809012514159 and a reported gap of 99.6131%. These numbers are diagnostic log values. No terminal result or independently audited solution was exported, so they are ineligible for scientific comparison. The five other cells have no execution intent.
+
+File timestamps indicate about 146 seconds before the optimize intent and about 33 seconds between the final solver-log write and the supervisor's termination. These intervals identify an inadequate whole-process envelope for loading, model checks, optimization and postprocessing. They do not identify the exact Python postprocessing operation that was active at termination. The sampled cgroup peak of the interrupted process was 10.30 GiB; its recorded stop reason was the deadline. The [Gurobi 13 TimeLimit documentation](https://docs.gurobi.com/projects/optimizer/en/13.0/reference/parameters.html#parameter:TimeLimit) also allows solver Runtime to exceed the requested limit while termination attributes are computed. A normal 121.78-second solver run is compatible with TimeLimit=120.
+
+The log's deterministic concurrent LP optimizer concerns solution of the root relaxation under the unchanged Method policy. It is distinct from running two concurrent MIP searches with ConcurrentMIP=2. No Method change follows from the log's performance hint.
+
+### Prepared recovery; separate CLI decision required
+
+The isolated adapter `pr98_pilot_deadline_recovery.py` prepares exactly one replacement technical job after an explicit decision `AUTORIZO RECUPERACAO H25 3905`. This is a proposed resource-envelope correction, not an automatically released retry.
+
+- Reuse byte-identical copies of the four preparation artifacts and their receipt from 3905. No new root, forward, labels or training are admitted.
+- Preserve the original predictor, model, MINIMIZE, partial Start policy, seed 42, Threads=4, ConcurrentMIP=1/2, six-cell order and TimeLimit=120. All six technical evaluations are fresh; this explicitly repeats the interrupted B evaluation, rather than resuming or appending to it.
+- Reserve four physical cores and 64 GiB for at most two hours, with no GPU. The whole-process watchdog permits at most 900 seconds per cell, leaving time for reading, model checks, independent feasibility audit and export. This planning allowance is not a guarantee that every hard instance will fit.
+- The maximum reservation is eight physical-core-hours and 128 GiB-hours. Slurm CPU accounting may include SMT siblings; actual use is recorded separately. The six native solver caps remain 720 seconds in total.
+- Preserve both predecessor stages, source commits, claims, logs and partial outputs. Admission checks the 3905 terminal failure, reviewed native termination, preparation hashes, lack of later cells and unchanged input manifest. Parent evidence is sealed and rechecked. A fixed write-once claim `pr98-h25-deadline-recovery-3905.claim.json` prevents a second replacement after partial copying, ambiguous submission or any failure.
+- The new stage holds the exact CI-tested source. A held CPU job is checked before release. A failed gate stops the sequence without further cells or automatic resubmission.
+
+The adapter calls the existing `pilot.solve_cell`, `Policy` and solver implementation without editing them. The standard timing regions in each completed result separate model construction, native optimization, independent audit and export. Child console markers distinguish admission from the combined solve operation. The report identifies 3905 as the artifact origin and distinguishes historical receipt call counts from zero new preparation calls.
+
+The CLI first waits for all five exact-source CI jobs, installs a new isolated stage, and runs a read-only preflight. It then requests the specific decision above before copying the artifacts or submitting. Once terminal, its `report` reuses the existing artifact, parameter and signature checks and adds recovery lineage. Review that return before any full campaign admission. PR97 remains in draft, and label improvement remains a future ablation.
