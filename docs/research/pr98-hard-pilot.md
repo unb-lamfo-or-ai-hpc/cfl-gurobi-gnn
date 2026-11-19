@@ -1,3 +1,13 @@
+# PR98 closeout — 19 November 2026
+
+The author discontinued the 990-evaluation matrix and authorized merging this PR as a preserved technical record, without further experiments. The proposed 66/18 alternatives were evaluated but are not active campaigns. The launcher is retired and mutating matrix CLI commands fail before stage admission. Matrix inspection and collection code remain available for historical inspection; no 990 matrix job was submitted or reported.
+
+Job3907 is terminal: COMPLETED/0:0, 2455s (40min55s), author accounting query 2026-11-19T11:47:51.038743+00:00. Its return SHA256 3dfd0f47ea047ae92e874741547e0b73df986a13bf0b7fb6c5889d1029e8f2c5 was reproduced from the received report. Five new hard roots/forwards completed, H25 was reused, all six artifact receipts passed the technical checks. This is preparation, not scientific B/R/G campaign evidence. H25's six 120s solves from3906 remain technical-only and censored; 3891/3905 failures remain preserved.
+
+No HPC queue mutation is needed for the unsubmitted matrix, and no direct HPC query or cancellation was performed. The author retains all installed stages, originals and claims. Do not run the historical preparation/launch recipes below. New work is governed by the separate MVP3 methodological mandate and requires its own execution authorization.
+
+## Historical planning and execution record (superseded)
+
 # PR98 hard input qualification and H25 technical pilot
 
 ## Current preparation boundary — 18 November 2026

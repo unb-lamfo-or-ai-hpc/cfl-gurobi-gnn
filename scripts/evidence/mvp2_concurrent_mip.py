@@ -837,6 +837,12 @@ def main():
     cell_parser.add_argument("threads", type=int)
     cell_parser.add_argument("--method", choices=METHODS, required=True)
     args = parser.parse_args()
+    if args.command not in {"matrix", "collect"}:
+        parser.exit(
+            2,
+            "PR98_CAMPAIGN_RETIRED: author discontinued execution on 2026-11-19; "
+            "preserve historical sources and use a separately approved MVP3 protocol.\n",
+        )
     if args.command == "matrix":
         rows = matrix()
         print(json.dumps({"budget": budget(rows), "blocks": rows}, indent=2))

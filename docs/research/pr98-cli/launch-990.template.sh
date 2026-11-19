@@ -1,3 +1,8 @@
+# RETIRED 19 November 2026. Historical launcher retained below for provenance.
+# The author discontinued this campaign; do not copy an older pinned launcher.
+printf '%s\n' 'PR98_CAMPAIGN_RETIRED: no new evaluation is authorized.' >&2
+return 2 2>/dev/null || exit 2
+
 # Use only after Codex reviews the terminal hard-preparation return.
 # 990 NEW evaluations; a separate explicit resource decision is required.
 conda activate tfm_env
