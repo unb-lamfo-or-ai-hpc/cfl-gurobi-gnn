@@ -8,7 +8,7 @@ Start with [the detailed protocol](coauthor-methodological-protocol.md), then [t
 
 | Mandate deliverables | Location |
 |---|---|
-|E1: MVP2 closeout|PR97/98 integration records and PR98 retirement receipt|
+|E1: MVP2 closeout|[PR97](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/97), [PR98](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/98) and [retirement receipt](../../evidence/pr98/closure-20261119/retirement.json)|
 |E2/E3/E4/E7: scientific question, Gurobi/HPC, 90-instance characterization and 39-parent B/R/G|Protocol sections 1–4 and 7–11; evidence contract|
 |E5/E6: dataset/labels/split and serial/DDP|Protocol sections 5–6; decisions D1–D5|
 |E8/E9: shared architecture and independent Benders|Technical Note A–F, component inventory and exactness conditions|
@@ -19,4 +19,4 @@ Start with [the detailed protocol](coauthor-methodological-protocol.md), then [t
 
 The 990 matrix and the 66/18 alternatives are discontinued. Preserve the technical pilots and artifacts as historical evidence. The new principal design is 90 characterization baselines and 39 test parents x B/R/G, with a conservative budget of 207 principal solves; root preparation and learning are budgeted separately. Two 20-core jobs are a candidate, not demonstrated capacity. Extra seeds, hints, parameter sensitivities, shared-core code and Benders implementation are not authorized.
 
-The existing approved Sprint sequence is retained; this packet does not repeat or expand it. Protocol milestone 3 December 2026, pause 19 December–10 January, target journal submission 18 March2027. Resource/schedule risk and required coauthor decisions are visible in the protocol. No main/Pages/Zenodo publication is implied by a develop documentation PR.
+The existing approved Sprint sequence is retained; this packet does not repeat or expand it. Protocol milestone 3 December 2026, pause 19 December–10 January, target journal submission 18 March 2027. Resource/schedule risk and required coauthor decisions are visible in the protocol. No main/Pages/Zenodo publication is implied by a develop documentation PR.

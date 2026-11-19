@@ -16,6 +16,8 @@ Evidence labels used below:
 
 **DEC:** Threads=0 and ConcurrentMIP=1 for the principal CFL-GNN design; two externally concurrent jobs are a candidate, not a measured capacity. **DOC:** conventional parallel MIP and independent concurrent MIP searches are distinct. **OBS:** historical H25 logs identify 40 physical cores and 80 logical CPUs and Gurobi 13.0.1. This is not a live site inventory.
 
+**OBS:** the H25 pilot log showed concurrent LP activity at the root under conventional MIP. ConcurrentMIP=1 does not imply that every root-LP algorithm is single-threaded or nonconcurrent.
+
 The qualification specification must bind physical-core identities and SMT siblings, cpuset/affinity, NUMA policy, per-job memory, environment ThreadLimit, solver ceiling, process native-thread count and sampled CPU utilization. These observations have different meanings. Two jobs can contend for caches and memory bandwidth despite disjoint CPU affinity. No performance improvement is presumed.
 
 ### A2. MIP Start semantics

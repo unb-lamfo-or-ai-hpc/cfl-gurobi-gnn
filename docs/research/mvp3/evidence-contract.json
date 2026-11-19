@@ -35,16 +35,16 @@
         "method": "B|R|G|Benders_separate_future",
         "phase": "characterization|paired_evaluation|preparation|technical_qualification",
         "solver_version": "exact tuple/build",
-        "source_commit": "40hex",
+        "source_commit": "40hex; preflight/dispatcher failures preserve their known source",
         "parameter_map": "all effective algorithmic parameters",
         "parameter_sha256": "canonical binding",
         "environment": "Python, gurobipy, OS, license fingerprint without secrets",
         "input_artifact_hashes": "model/root/graph/checkpoint/prediction/Start as applicable",
         "resources": "physical cores, logical CPUs, sibling map, cpuset, NUMA, Slurm limits",
         "observed_resources": "CPU deltas, native thread ceiling/count, process/cgroup/native memory with units/scope",
-        "native_runtime_seconds": "finite nonnegative",
+        "native_runtime_seconds": "finite nonnegative number|null with explicit unavailability reason",
         "native_work": "finite nonnegative|null with reason",
-        "node_count": "finite nonnegative",
+        "node_count": "finite nonnegative number|null with explicit unavailability reason",
         "incumbent_available": "boolean",
         "reported_objective": "number|null",
         "recalculated_objective": "number|null",
@@ -126,6 +126,7 @@
     "new execution requires separate authorized protocol/source/budget",
     "M4/M12 restrictions remain per-metric",
     "allocation is not active utilization",
-    "time ratios preserve explicitly declared orientation"
+    "time ratios preserve explicitly declared orientation",
+    "failed initialization and malformed returns retain raw hashes and dispositions; unavailable metrics are null with reasons"
   ]
 }
