@@ -1,0 +1,512 @@
+{
+  "official_file_id": "13NS9YTTyNsiV6Dth3qsQ7lWWNQs4Pek0",
+  "official_zip_bytes": 4475639157,
+  "range_bytes_read": 8092,
+  "range_requests": 4,
+  "entries": [
+    {
+      "name": "CFL_hard_instance/",
+      "bytes": 0,
+      "compressed_bytes": 0,
+      "compression": 0,
+      "crc32": "00000000",
+      "header_offset": 0
+    },
+    {
+      "name": "CFL_hard_instance/LP/",
+      "bytes": 0,
+      "compressed_bytes": 0,
+      "compression": 0,
+      "crc32": "00000000",
+      "header_offset": 80
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/",
+      "bytes": 0,
+      "compressed_bytes": 0,
+      "compression": 0,
+      "crc32": "00000000",
+      "header_offset": 163
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_28.lp",
+      "bytes": 425478649,
+      "compressed_bytes": 135723958,
+      "compression": 8,
+      "crc32": "51e62d62",
+      "header_offset": 250
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_11.lp",
+      "bytes": 425751164,
+      "compressed_bytes": 135809738,
+      "compression": 8,
+      "crc32": "0a59d45a",
+      "header_offset": 135724330
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_15.lp",
+      "bytes": 425597797,
+      "compressed_bytes": 135780368,
+      "compression": 8,
+      "crc32": "29b3a042",
+      "header_offset": 271534190
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_17.lp",
+      "bytes": 425737000,
+      "compressed_bytes": 135757083,
+      "compression": 8,
+      "crc32": "0ce60de8",
+      "header_offset": 407314680
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_2.lp",
+      "bytes": 426051775,
+      "compressed_bytes": 135792432,
+      "compression": 8,
+      "crc32": "c1bc540f",
+      "header_offset": 543071885
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_3.lp",
+      "bytes": 425807825,
+      "compressed_bytes": 135808010,
+      "compression": 8,
+      "crc32": "455dcc6e",
+      "header_offset": 678864438
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_4.lp",
+      "bytes": 425970426,
+      "compressed_bytes": 135769613,
+      "compression": 8,
+      "crc32": "74177df3",
+      "header_offset": 814672569
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_10.lp",
+      "bytes": 425778787,
+      "compressed_bytes": 135758605,
+      "compression": 8,
+      "crc32": "1c162c08",
+      "header_offset": 950442303
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_7.lp",
+      "bytes": 425642490,
+      "compressed_bytes": 135769634,
+      "compression": 8,
+      "crc32": "11b9b9a6",
+      "header_offset": 1086201030
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_6.lp",
+      "bytes": 425672956,
+      "compressed_bytes": 135769315,
+      "compression": 8,
+      "crc32": "174ceb19",
+      "header_offset": 1221970785
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_13.lp",
+      "bytes": 425742110,
+      "compressed_bytes": 135762904,
+      "compression": 8,
+      "crc32": "910e69ae",
+      "header_offset": 1357740221
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_20.lp",
+      "bytes": 425988486,
+      "compressed_bytes": 135764389,
+      "compression": 8,
+      "crc32": "27cf2f2e",
+      "header_offset": 1493503247
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_25.lp",
+      "bytes": 425712450,
+      "compressed_bytes": 135801149,
+      "compression": 8,
+      "crc32": "737e90ee",
+      "header_offset": 1629267758
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_23.lp",
+      "bytes": 426041792,
+      "compressed_bytes": 135790297,
+      "compression": 8,
+      "crc32": "22230030",
+      "header_offset": 1765069029
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_27.lp",
+      "bytes": 425656550,
+      "compressed_bytes": 135789111,
+      "compression": 8,
+      "crc32": "4cec5643",
+      "header_offset": 1900859448
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_5.lp",
+      "bytes": 425851766,
+      "compressed_bytes": 135798257,
+      "compression": 8,
+      "crc32": "477cc8ee",
+      "header_offset": 2036648681
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_8.lp",
+      "bytes": 425955523,
+      "compressed_bytes": 135775035,
+      "compression": 8,
+      "crc32": "0e335ba9",
+      "header_offset": 2172447059
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_14.lp",
+      "bytes": 425729558,
+      "compressed_bytes": 135790659,
+      "compression": 8,
+      "crc32": "bc8e68af",
+      "header_offset": 2308222215
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_18.lp",
+      "bytes": 425579472,
+      "compressed_bytes": 135722304,
+      "compression": 8,
+      "crc32": "a37e882d",
+      "header_offset": 2444012996
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_9.lp",
+      "bytes": 425741526,
+      "compressed_bytes": 135772148,
+      "compression": 8,
+      "crc32": "b5266761",
+      "header_offset": 2579735422
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_26.lp",
+      "bytes": 425719637,
+      "compressed_bytes": 135843171,
+      "compression": 8,
+      "crc32": "272b9db7",
+      "header_offset": 2715507691
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_22.lp",
+      "bytes": 425851414,
+      "compressed_bytes": 135798450,
+      "compression": 8,
+      "crc32": "23bbc200",
+      "header_offset": 2851350984
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_0.lp",
+      "bytes": 425757872,
+      "compressed_bytes": 135759790,
+      "compression": 8,
+      "crc32": "92727035",
+      "header_offset": 2987149556
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_1.lp",
+      "bytes": 426089004,
+      "compressed_bytes": 135768356,
+      "compression": 8,
+      "crc32": "8880959c",
+      "header_offset": 3122909467
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_19.lp",
+      "bytes": 425676349,
+      "compressed_bytes": 135715872,
+      "compression": 8,
+      "crc32": "0b8cafc8",
+      "header_offset": 3258677944
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_24.lp",
+      "bytes": 425820631,
+      "compressed_bytes": 135788010,
+      "compression": 8,
+      "crc32": "4ffabb9f",
+      "header_offset": 3394393938
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_29.lp",
+      "bytes": 425885981,
+      "compressed_bytes": 135787015,
+      "compression": 8,
+      "crc32": "d5a1f58b",
+      "header_offset": 3530182070
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_16.lp",
+      "bytes": 426117232,
+      "compressed_bytes": 135792862,
+      "compression": 8,
+      "crc32": "286cea6c",
+      "header_offset": 3665969207
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_12.lp",
+      "bytes": 425807051,
+      "compressed_bytes": 135766538,
+      "compression": 8,
+      "crc32": "378be6f2",
+      "header_offset": 3801762191
+    },
+    {
+      "name": "CFL_hard_instance/LP/CFL_hard_instance_21.lp",
+      "bytes": 425887346,
+      "compressed_bytes": 135786524,
+      "compression": 8,
+      "crc32": "e07e05d3",
+      "header_offset": 3937528851
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_0.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4073315497
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_28.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410394,
+      "compression": 8,
+      "crc32": "1338a5a8",
+      "header_offset": 4086726008
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_3.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410394,
+      "compression": 8,
+      "crc32": "963f5a24",
+      "header_offset": 4100136532
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_10.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4113547055
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_5.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4126957567
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_20.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410396,
+      "compression": 8,
+      "crc32": "8293c190",
+      "header_offset": 4140368078
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_13.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410395,
+      "compression": 8,
+      "crc32": "796d7fac",
+      "header_offset": 4153778604
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_12.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410394,
+      "compression": 8,
+      "crc32": "c36705ae",
+      "header_offset": 4167189129
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_27.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4180599653
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_17.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410394,
+      "compression": 8,
+      "crc32": "266f275a",
+      "header_offset": 4194010165
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_4.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4207420689
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_6.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4220831200
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_16.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410392,
+      "compression": 8,
+      "crc32": "ab46b720",
+      "header_offset": 4234241711
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_11.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410395,
+      "compression": 8,
+      "crc32": "f5a8817e",
+      "header_offset": 4247652233
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_14.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4261062758
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_8.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410396,
+      "compression": 8,
+      "crc32": "1ddc7cec",
+      "header_offset": 4274473270
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_21.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4287883795
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_2.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4301294307
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_29.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410393,
+      "compression": 8,
+      "crc32": "2e0e3a1f",
+      "header_offset": 4314704818
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_19.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410396,
+      "compression": 8,
+      "crc32": "c0f66ee6",
+      "header_offset": 4328115341
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_23.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410395,
+      "compression": 8,
+      "crc32": "a5658476",
+      "header_offset": 4341525867
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_15.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4354936392
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_22.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4368346904
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_24.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410393,
+      "compression": 8,
+      "crc32": "ee55c980",
+      "header_offset": 4381757416
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_18.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410395,
+      "compression": 8,
+      "crc32": "0cefcc04",
+      "header_offset": 4395167939
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_9.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410392,
+      "compression": 8,
+      "crc32": "f8fe0cb4",
+      "header_offset": 4408578464
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_1.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410392,
+      "compression": 8,
+      "crc32": "f4fb3e77",
+      "header_offset": 4421988985
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_7.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410395,
+      "compression": 8,
+      "crc32": "295eb7d8",
+      "header_offset": 4435399506
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_25.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410393,
+      "compression": 8,
+      "crc32": "9a193d14",
+      "header_offset": 4448810030
+    },
+    {
+      "name": "CFL_hard_instance/Pickle/CFL_hard_instance_26.pickle",
+      "bytes": 101377079,
+      "compressed_bytes": 13410382,
+      "compression": 8,
+      "crc32": "e7e22e92",
+      "header_offset": 4462220553
+    }
+  ]
+}

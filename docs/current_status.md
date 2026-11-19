@@ -1,3 +1,11 @@
+# MVP2 closeout and MVP3 transition — 19 November 2026
+
+The author authorized completing PR97 and PR98 and merging both into develop after checks. PR97 adds the integral audited mathematical foundation in Appendix A.8; historical results remain unchanged. PR98 is concluded technical work: the 990-evaluation matrix and proposed reduced alternatives are discontinued before submission. The current launcher and mutating matrix CLI fail closed. Preserve all installed sources, pilots, receipts, claims and artifacts; no HPC queue mutation was performed.
+
+Job3907 is COMPLETED/0:0 in2455s; its terminal return SHA256 3dfd0f47ea047ae92e874741547e0b73df986a13bf0b7fb6c5889d1029e8f2c5 was verified. Five new hard preparations completed and H25 was reused. Six technical H25 solves from3906 remain censored and technical-only; this is not a completed hard scientific campaign.
+
+Next priority: the detailed coauthor methodological packet for MVP3, due3December2026, target submission18March2027. Planning only: native gurobipy, Threads=0, ConcurrentMIP=1, Seed42, eight-hour native solves and12h Slurm, with candidate20physical cores/twojobs subject to qualification. No new scientific execution, Benders development, model change or cross-project implementation is authorized. Older current/planned statements below are dated historical snapshots, superseded by this decision.
+
 # Current status — 5 November 2026
 
 ## Adjustment sprint — 8 November 2026
@@ -61,3 +69,14 @@ The next user CLI integrates existing hashes/environment/current partition,
 separate authorization and serial submission, stopping if preflight fails.
 Allocation gates are checked only in actual approved jobs.
 Earlier entries below are dated history, not current merge/dispatch authority.
+
+
+## Superseded PR98 preparation snapshot
+
+# Current status — 2 November 2026
+
+## PR98 continuation — 18 November 2026
+
+The H25 technical recovery3906 is complete (6/6 gates and independent incumbent audits passed; all six censored at the native time limit). Full source CI44371582565 passed. Preserve all 3891/3905/3906 sources, claims and outputs. The H0 original LP has been independently hashed from the original ZIP whose directory matches the official distribution; see [reference receipt](evidence/pr98/h0-reference-20261118/reference.json).
+
+The next prepared author CLI installs the tested source, qualifies all six hard input bytes, and can submit one explicitly decided preparation job for H0/H5/H10/H15/H20, reusing H25. No new training or evaluation occurs in that stage. Full 990-cell execution follows only after reviewing that return and the concrete 330-block plan/resources. The [runbook](research/pr98-hard-pilot.md) records the new three-hour preparation envelope and unchanged four-hour evaluation-block envelope. No new job is inferred from tool preparation. PR97 remains draft and unchanged; improved labels remain future work.

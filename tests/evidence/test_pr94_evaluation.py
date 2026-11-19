@@ -50,6 +50,7 @@ class ContractTests(unittest.TestCase):
             self.assertEqual(p["Seed"], cell["seed"])
             self.assertEqual(p["Threads"], 1)
             self.assertEqual(p["TimeLimit"], 3600)
+            self.assertNotIn("ConcurrentMIP", p)
         self.assertEqual(
             sum(c["parent"] == "CFL_medium_instance_7" for c in cells.values()), 9
         )
@@ -106,15 +107,40 @@ class ContractTests(unittest.TestCase):
         self.assertIsNotNone(recorder.crossings["0.1"])
         self.assertIsNone(recorder.crossings["0.0001"])
 
-    def test_isolated_solver_changes_only_documentation_and_explicit_empty_Start_gate(
+    def test_isolated_solver_changes_only_explicit_Start_and_concurrency_hooks(
         self,
     ):
-        reference = ast.parse(
+        reference_source = (
+            ROOT / "docs/research/solver-seed-extension-v2/pr89-solver-reference.py.txt"
+        ).read_text()
+        # PR98 adds readback only for the explicitly supplied parameter, and can
+        # opt out of MIP progress callbacks. The historical defaults remain
+        # byte-for-byte represented in the reference outside these exact hooks.
+        changes = (
             (
-                ROOT
-                / "docs/research/solver-seed-extension-v2/pr89-solver-reference.py.txt"
-            ).read_text()
+                '        params["SoftMemLimit"] = m.Params.SoftMemLimit\n',
+                '        params["SoftMemLimit"] = m.Params.SoftMemLimit\n'
+                '        if "ConcurrentMIP" in requested:\n'
+                '            params["ConcurrentMIP"] = m.Params.ConcurrentMIP\n',
+            ),
+            (
+                "        def callback(model, where):",
+                '        record_progress = getattr(execution_policy, "RECORD_PROGRESS", True)\n\n'
+                "        def callback(model, where):",
+            ),
+            (
+                "elif where == GRB.Callback.MIP:",
+                "elif record_progress and where == GRB.Callback.MIP:",
+            ),
+            (
+                "elif where == GRB.Callback.MIPSOL:",
+                "elif record_progress and where == GRB.Callback.MIPSOL:",
+            ),
         )
+        for original, replacement in changes:
+            self.assertEqual(reference_source.count(original), 1)
+            reference_source = reference_source.replace(original, replacement)
+        reference = ast.parse(reference_source)
         derived = ast.parse(
             (ROOT / "scripts/evidence/pr94_evaluation_solver.py").read_text()
         )
