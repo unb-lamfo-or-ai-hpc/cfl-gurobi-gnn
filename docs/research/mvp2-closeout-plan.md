@@ -2,7 +2,16 @@
 
 Atualizado em 2 de novembro de 2026 após a orientação de acelerar S1–S4. A [versão anterior](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/b52cc5ef0952529feb231491d4a6ee2bd9d47f6b/docs/research/mvp2-closeout-plan.md) preserva o planejamento anterior. Esta revisão amplia prospectivamente a PR94; não modifica a campanha PR89, seus arquivos nem os dados históricos.
 
-## Evidências já disponíveis
+## Fechamento da avaliação e sequência atual — 5 de novembro de 2026
+
+O [retorno reconciliado da PR94](../evidence/pr94/final-20261105/README.md) confirma 48 blocos terminais, 144/144 células e zero ausências ou registros inválidos. Os dois ZIPs e os manifestos conferem. A avaliação de 1 h fica separada da PR89 de 12 h. O registro abaixo da integração e publicação inicial é histórico: PR89 e PR93 entraram em develop, e PR95 e PR96 publicaram a versão intermediária em main.
+
+1. **S5 — Revisão científica e editorial.** Revisar a PR editorial em develop com os contrastes B/R/G, os dados de 144 células, a sensibilidade sem M4/M12 e a atualização do artigo e dos apêndices. Conferir os vínculos numéricos, a CI e a paginação dos dois PDFs.
+2. **S6 — Auditoria A–D e curadoria.** Fechar A (integridade dos dados e identidades), B (escopo das inferências e censuras), C (consistência do artigo e dos apêndices) e D (pacote de reprodutibilidade). Revisar em conjunto a PR94 de código/protocolo e a PR editorial. Merges exigem decisões específicas, com novo teste da árvore combinada se a base mudar.
+3. **Release e depósito.** Preparar o release versionado e a promoção a main. Conferir a versão realmente servida no Pages e os downloads após aprovação. Para Zenodo, validar inventário, licenças e redistribuição, hashes, vínculo de versão e DOI antes de solicitar a decisão de depósito.
+4. **Revisão e submissão.** Preparar o pacote completo para os coautores até 15/12/2026. As metas registradas permanecem aprovação final em 7/1/2027, submissão pretendida em 10/1 e limite em 14/1. A submissão fica com os autores.
+
+## Evidências já disponíveis (histórico de 2 de novembro)
 
 A PR89 está encerrada em execução e recepção: 60/60 jobs COMPLETED/0:0, 47 atingimentos do critério terminal reportado e 13 censuras de M7. A consulta conjunta foi em 2/11 às 02:24:05 UTC, ou 1/11 às 23:24:05 em Fortaleza. D0 permanece esse recebimento/reconciliação, independentemente do sinal dos resultados; não é uma nova data de qualificação. [Recibos e disposições](../evidence/pr89/final-20261101/manifest.json) conservam as versões parciais e os flags originais.
 

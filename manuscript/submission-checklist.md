@@ -1,53 +1,24 @@
 # Computers & Operations Research submission checklist
 
-Guidance reviewed on 2 October 2026:
-[Guide for authors](https://www.sciencedirect.com/journal/computers-and-operations-research/publish/guide-for-authors)
-and [Elsevier LaTeX instructions](https://www.elsevier.com/researcher/author/policies-and-guidelines/latex-instructions).
-Recheck the current guide and submission-system requirements immediately
-before submission; this checklist is not publisher approval.
+See the [5 November compliance matrix and inventory](../docs/research/pr97-cor-editorial-review-20261105.md). The reference is the journal [Guide for Authors](https://www.sciencedirect.com/journal/computers-and-operations-research/publish/guide-for-authors), supplied as a dated 3 November capture. Recheck the live instructions before submission.
 
-## Prepared
+## Materials for review
 
-- Exact author-approved title and C2/C3 scientific framing from 30 October; C1
-  is methodological. Article and supplements retain their separate evidence scopes.
-- Scientific supplements A/B/C cover methods, extended results and reproducibility;
-  prospective execution designs and Human–AI decisions remain internal.
+- Article source and separate supplementary source in the manuscript tree. The Manuscript workflow renders both PDFs and packages editable LaTeX, bibliography, figures and dependencies for the same revision.
+- [Separate editable highlights](highlights.txt) with five entries. The build checks the word, keyword and character limits.
+- Reader-facing data and code statement in the article, with reproduction boundaries in Appendix C. The compliance matrix distinguishes the public analytical inputs from intermediate artifacts and restricted bytes.
+- Appendix A covers formulation, prediction and start construction. Appendix B covers extended and adverse results. Appendix C records settings, hardware, terminology and reproducibility. The final supplementary-file selection remains a coauthor decision.
+- Internal review of layouts, claims and provenance precedes merge, deposit, publication and submission.
 
-- Article and registered supplements address journal readers; coauthor instructions,
-  operational status and scheduling belong only in internal repository records.
+## Author inputs for the submission system
 
-- English article organized around a research question and method, not an audit diary.
-- Elsevier author-year preprint layout and editable LaTeX source.
-- Abstract at most 250 words; six keywords.
-- Separate file of five highlights, each at most 85 characters.
-- Ordered authors, institutions, email addresses, and ORCID icons.
-- Actual immutable training curves and all six held-out solver pairs.
-- Explicit development scope, regressions, censoring, influence sensitivity,
-  label selection, missing measurements, and unachieved objectives.
-- Original material MIT; publisher class/style retain LPPL notices.
-- Numbered Acknowledgements thanking UJA and DaSCI for access to dgx-dasci HPC,
-  immediately before the numbered generative-AI declaration.
-- Numbered generative-AI declaration immediately before numbered References;
-  author-approved disclosure wording preserved.
-
-## Author and evidence actions before journal submission
-
-- Confirm all authors approve the final text, author order, affiliations,
-  and corresponding-author designation.
-- Supply actual CRediT contributions, funding statements, and conflict-of-interest
-  declarations. None is invented or inferred from commit history.
-- Resolve the journal's data requirement (Option C): deposit eligible data with
-  a persistent identifier or provide a defensible explanation of restrictions.
-  No public Zenodo DOI or full raw-data release has been verified.
-- Verify benchmark and derivative redistribution rights separately from MIT code.
-- Transfer detailed preparation/inference timings and software/resource receipts
-  if cold end-to-end acceleration is to be quantified. The current article
-  expressly does not claim that result.
-- Review the objective-sense convention and incomplete hard/full-population
-  experiments; do not recast unsuccessful attempts as certificates.
-- Inspect every PDF page; confirm the internal 20-page body budget (references
-  excluded), complete citations, vector figures, readable tables, and links.
-- Decide whether further independent replication is necessary before submission.
-  Publication-integrity checks do not certify novelty or journal suitability.
-- Prepare the cover letter and any submission-system declarations with author
-  approval. No submission or journal account action is authorized by the build.
+| Item | Information to supply or approve |
+|:--|:--|
+| Title page | Final name order, complete institutional postal addresses with country, one corresponding author and their email. |
+| CRediT | Each author confirms applicable roles. Use the official taxonomy from the guide; report only agreed roles. |
+| Funding | Funder, grant number and role, when applicable. Authors confirm the appropriate statement if there was no specific funding. |
+| Competing interests | Authors complete the publisher's declaration even if there are no interests to disclose. |
+| Generative AI | Authors verify the named tools, their use, their review and responsibility in the existing declaration. |
+| Data availability | Approve the article's current wording and supply the verified archival link and citation, or approve a specific restriction and justification under Option C. |
+| Supplementary material | Approve the file inventory, titles, captions and any reduction of historical material in the submitted copy. If appendices move into the article, validate letter-specific figure, table and equation references after rendering. |
+| Submission | Approve the reviewed sources, cover letter, authorship and submission declarations. |

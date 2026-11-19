@@ -15,7 +15,7 @@ format:
   pdf:
     output-file: appendices.pdf
     toc: true
-    toc-depth: 2
+    toc-depth: 1
     documentclass: article
     papersize: a4
     fontsize: 11pt
@@ -29,3 +29,10 @@ format:
     include-in-header:
       text: |
         \usepackage{longtable,booktabs,array,amsmath,amssymb}
+        \newcommand{\AppendixDisplayNumbers}[1]{%
+          \setcounter{table}{0}\setcounter{figure}{0}%
+          \renewcommand{\thetable}{#1.\arabic{table}}%
+          \renewcommand{\thefigure}{#1.\arabic{figure}}%
+          \renewcommand{\theHtable}{#1.\arabic{table}}%
+          \renewcommand{\theHfigure}{#1.\arabic{figure}}%
+        }
