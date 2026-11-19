@@ -96,8 +96,8 @@ def build(repository=ROOT):
     indexed = {(r["alias"], int(r["threads"]), r["method"]): r for r in rows}
     fig, axes = plt.subplots(1, 2, figsize=(7.4, 3.4), layout="constrained")
     for comparison, denominator, color, marker, delta in (
-        ("G/B", "M0", "#222222", "o", -.12),
-        ("G/R", "M1", "#777777", "s", .12),
+        ("$T_G/T_B$", "M0", "#222222", "o", -.12),
+        ("$T_G/T_R$", "M1", "#777777", "s", .12),
     ):
         for i, cap in enumerate(CAPS):
             for j, parent in enumerate(EASY):
@@ -165,7 +165,7 @@ def build(repository=ROOT):
             "geometric_mean_ratio"]) for n, d in (("M1", "M0"), ("M2", "M0"), ("M2", "M1"))]
         values.append([str(cap)] + [f"{v:.4f}" for v in ratios])
     write_table(tables / "principal_ratios.qmd",
-                ["Threads", "R/B time", "G/B time", "G/R time"], values,
+                ["Threads", "$T_R/T_B$", "$T_G/T_B$", "$T_G/T_R$"], values,
                 "Geometric-mean solver-time ratios on six easy instances, seed42.",
                 "tbl-principal-ratios",
                 "Each ratio gives equal weight to the six original instances. Lower values "
@@ -176,10 +176,10 @@ def build(repository=ROOT):
     for parent in EASY:
         maxima = [max(100 * float(indexed[parent, c, m]["gap_fraction"])
                       for c in CAPS) for m in METHODS]
-        values.append([parent] + [f"{v:.6f}" for v in maxima])
+        values.append(["E" + parent[1:]] + [f"{v:.6f}" for v in maxima])
     write_table(tables / "principal_easy_gaps.qmd",
                 ["Instance", "B gap (%)", "R gap (%)", "G gap (%)"], values,
-                "Largest terminal reported MIP gap over the five thread caps, by easy instance and method, seed42.",
+                "Largest terminal reported MIP gap over the five thread caps, by easy instance and method, seed 42.",
                 "tbl-easy-gaps",
                 "Each entry is the maximum of five final gaps, not an average; all 90 "
                 "observations are at or below the 0.01% criterion. Zero is reported "
@@ -194,7 +194,7 @@ def build(repository=ROOT):
     )
     values = [[label, f"{float(summary_row(summaries, 16, 'M2', 'M0', metric)['geometric_mean_ratio']):.4f}"]
               for label, metric in scopes]
-    write_table(tables / "principal_costs.qmd", ["Accounting boundary", "G/B ratio"],
+    write_table(tables / "principal_costs.qmd", ["Accounting boundary", "$T_G/T_B$"],
                 values, "Scope-dependent time ratios: six easy instances, sixteen threads, seed42.",
                 "tbl-principal-costs",
                 "Execution is the supervised attempt interval. Preparation scopes and "
@@ -203,7 +203,7 @@ def build(repository=ROOT):
     values = []
     for parent in EASY:
         for cap in CAPS:
-            values.append([parent, str(cap)] + [
+            values.append(["E" + parent[1:], str(cap)] + [
                 f"{float(indexed[parent, cap, m]['solver_seconds']):.3f}" for m in METHODS
             ] + [
                 f"{100 * float(indexed[parent, cap, m]['gap_fraction']):.6f}" for m in METHODS
@@ -211,7 +211,7 @@ def build(repository=ROOT):
     write_table(tables / "principal_easy_times.qmd",
                 ["Instance", "Threads", "B (s)", "R (s)", "G (s)",
                  "B gap (%)", "R gap (%)", "G gap (%)"], values,
-                "Solver runtimes and terminal MIP gaps for all easy-instance conditions, seed42.",
+                "Solver runtimes and terminal MIP gaps for all easy-instance conditions, seed 42.",
                 "tbl-easy-times",
                 "All rows attain the reported terminal target under the stated tolerances. "
                 "Gaps are percentages, rounded to six decimal places; a displayed zero "

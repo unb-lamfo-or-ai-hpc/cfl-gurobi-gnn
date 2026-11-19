@@ -76,6 +76,13 @@ def package(output: Path, root: Path = MANUSCRIPT) -> None:
     with zipfile.ZipFile(output) as archive:
         if archive.testzip() is not None:
             raise ValueError("ZIP integrity failure")
+    # Publish the checked sources beside the ZIP for the manuscript code links.
+    for name in ("index.tex", "appendices/appendices.tex"):
+        target = output.parent / name
+        if target.is_symlink() or not target.resolve().is_relative_to(output.parent.resolve()):
+            raise ValueError("public TeX destination must remain inside the publication directory")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload[name])
     print("PR62_LATEX_SOURCE_PACKAGE_OK")
     print("SHA256=" + hashlib.sha256(output.read_bytes()).hexdigest())
 

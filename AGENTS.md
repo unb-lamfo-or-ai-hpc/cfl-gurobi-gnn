@@ -1,3 +1,11 @@
+# Current authority — 19 November 2026
+
+The author approved the consolidated MVP3 mandate and explicitly authorized completing and merging PR97 and PR98 into develop after verification. Incorporate the complete mathematical foundation in Appendix A.8, preserving its Portuguese source and documenting technical qualifications. The historical MVP2 evidence, model/checkpoint, split and limitations remain unchanged. Do not infer general superiority of G.
+
+The PR98 990-evaluation campaign is discontinued, including the proposed reduced alternatives: no new experiment is authorized. Preserve the completed technical pilots, job3907 preparation and frozen installed sources. Prepare the MVP3 methodological protocol for coauthors by 3 December 2026; the target submission is 18 March 2027, with pause 19 December–10 January. The prospective reference uses native gurobipy, Threads=0, ConcurrentMIP=1, Seed=42, TimeLimit=28800 and 12h Slurm, subject to a new contract and resource qualification. Existing execution budgets and CLI scripts are not MVP3 authority.
+
+No new training, inference, scientific solve, Slurm job, Benders implementation or shared-core implementation is authorized by the planning mandate. HPC/SSH/SCP remains author CLI only. The author prioritizes preparing the detailed coauthor protocol after these integrations and does not request another Sprint-plan narrative in chat. Merges/publication beyond PR97/98 require their own approval. See docs/research/mvp3/foundation-reconciliation.md for Appendix A provenance.
+
 # Repository instructions
 
 ## Current review and integration — 5 November 2026
