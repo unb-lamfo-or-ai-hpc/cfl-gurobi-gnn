@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "received_date": "2026-11-19",
+  "original": {
+    "path": "docs/research/mvp3/source/fundamentacao-matematica-pt-20261119.txt",
+    "sha256": "d6ecde11deaaa8d87fd85cf52f0bc106e5b761a6ead8cab5a31bc6aa90319a51",
+    "bytes": 31618,
+    "language": "pt",
+    "byte_preserved": true
+  },
+  "translation": {
+    "path": "manuscript/supplement/gnn-mathematical-foundations.md",
+    "sha256": "a0ab14aa139068d0c50a455aa4819e7a3676b351eafef1b12770d81aa179a20c",
+    "language": "en",
+    "appendix": "A.8",
+    "coverage": "all_nine_scientific_sections_and_subsections"
+  },
+  "section_map": [
+    {
+      "original_section": 1,
+      "translation_section": "A.8.1"
+    },
+    {
+      "original_section": 2,
+      "translation_section": "A.8.2"
+    },
+    {
+      "original_section": 3,
+      "translation_section": "A.8.3"
+    },
+    {
+      "original_section": 4,
+      "translation_section": "A.8.4"
+    },
+    {
+      "original_section": 5,
+      "translation_section": "A.8.5"
+    },
+    {
+      "original_section": 6,
+      "translation_section": "A.8.6"
+    },
+    {
+      "original_section": 7,
+      "translation_section": "A.8.7"
+    },
+    {
+      "original_section": 8,
+      "translation_section": "A.8.8"
+    },
+    {
+      "original_section": 9,
+      "translation_section": "A.8.9"
+    }
+  ],
+  "technical_qualifications": [
+    "row_and_column_weight_conventions",
+    "clipping_of_feature_channels",
+    "sigmoid_scores_not_demonstrated_calibration",
+    "binary_labels_subject_to_independent_numeric_checks",
+    "reported_bound_not_exact_certificate",
+    "historical_batch_one_and_matched_global_batch_four_are_different",
+    "no_new_experimental_evidence"
+  ],
+  "removed_non_scientific_artifacts": [
+    "favicon_images",
+    "tracking_query_parameters"
+  ],
+  "evidence_commit": "3700d90af6bdc1beab72a420cd7d0c965b7005bf",
+  "new_solver_calls": 0,
+  "new_training_calls": 0,
+  "new_inference_calls": 0
+}

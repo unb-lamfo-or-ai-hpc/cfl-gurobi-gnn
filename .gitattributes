@@ -66,3 +66,6 @@ docs/research/solver-seed-extension-v2/** text eol=lf
 
 # Collected public root metadata preserves its sealed original bytes.
 docs/evidence/pr94/** -text
+
+# Preserve the complete Portuguese mathematical foundation exactly as received.
+docs/research/mvp3/source/** -text -whitespace

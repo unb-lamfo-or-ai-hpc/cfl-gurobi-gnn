@@ -79,6 +79,7 @@ SUPPLEMENT_INCLUDES |= {"../tables/" + name + ".qmd" for name in PARTIAL_TABLES}
 READER_TEXTS = (
     "index.qmd", "highlights.txt", "supplement/index.qmd",
     "supplement/README.md", "supplement/gnn-methods-audit.md",
+    "supplement/gnn-mathematical-foundations.md",
     "supplement/configuration-reference.md", "supplement/extended-results.md",
 )
 READER_INTERNAL_NOTE = re.compile(
@@ -206,7 +207,7 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if (set(includes) != INCLUDES or len(includes) != len(INCLUDES)
             or set(supplement_includes) != SUPPLEMENT_INCLUDES
             or len(supplement_includes) != len(SUPPLEMENT_INCLUDES)
-            or entry_includes != ["gnn-methods-audit.md", "extended-results.md",
+            or entry_includes != ["gnn-methods-audit.md", "gnn-mathematical-foundations.md", "extended-results.md",
                                    "configuration-reference.md"]
             or re.search(r"```\s*\{", re.sub(
                 r"(?m)^```\{=latex\}\n\\AppendixDisplayNumbers\{[ABC]\}\n```$", "", reader_prose

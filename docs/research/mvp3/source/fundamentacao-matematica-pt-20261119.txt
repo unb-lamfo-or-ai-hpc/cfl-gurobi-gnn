@@ -1,0 +1,706 @@
+# CFL-GNN — Fundamentação matemática da inferência, geração dos rótulos e treinamento
+
+Investigação científica e auditoria da implementação Gasse-inspired 2 × 32\
+Projeto: R02 — CFL-GNN\
+Data: 19 de novembro de 2026
+
+## 1. Objetivo e principais conclusões
+
+A investigação foi realizada a partir do código do repositório [cfl-gurobi-gnn](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn?utm_source=chatgpt.com), especialmente `gasse.py`, `gasse_calibrated.py`, `gurobi_graph_artifact.py`, `build_dataset.py`, `binary_contract.py` e `gasse_reconnected.py`, confrontados com o contrato científico R3 e a documentação oficial do Gurobi.
+
+Antes de desenvolver as equações, há quatro esclarecimentos fundamentais:
+
+1. Nossa GNN possui duas camadas de convolução bipartida, e não simplesmente duas camadas densas ocultas. Cada convolução contém quatro pequenas redes MLP, cada qual com duas transformações lineares.
+2. A relaxação LP e a etiqueta supervisionada são objetos diferentes. A relaxação é uma feature de entrada; a etiqueta deriva de uma solução inteira factível do MILP.
+3. O MIP gap não determina o valor de cada etiqueta. Ele qualifica globalmente a qualidade do incumbente utilizado para produzir o vetor de etiquetas.
+4. Os 26.753 parâmetros são compartilhados por todos os nós e grafos. Não existem 26.753 parâmetros específicos para cada uma das milhões de variáveis.
+
+Uma representação resumida do processo é:
+
+MILP original
+
+Matriz A, função objetivo c, RHS b, limites e domínios
+
+Relaxação da raiz
+
+Vetor contínuo r
+
+Incumbente MILP
+
+Etiquetas binárias y
+
+Grafo bipartido
+
+7 features por variável · 5 por restrição · 1 por aresta
+
+Encoders → Convolução 1 → Convolução 2 → MLP final
+
+Embeddings de dimensão 32 · 26.753 parâmetros treináveis
+
+Logits → Sigmoid → Predições
+
+Durante treinamento: comparar com y pela BCE ponderada
+
+Durante inferência: não utilizar y
+
+A principal distinção é esta: o grafo contém o problema de otimização; o incumbente fornece a supervisão para aprender a prever decisões binárias.
+
+## 2. Como representamos matematicamente um MILP com milhões de variáveis
+
+Considere o problema:
+
+\\[ \begin{aligned} \min\_{\mathbf{x}}\quad &\mathbf{c}^{\top}\mathbf{x}+c_0\\\ \text{s.a.}\quad&A\mathbf{x}\ \bowtie\ \mathbf{b},\\\ &\boldsymbol\ell\leq\mathbf{x}\leq\mathbf{u},\\\ &x_j\in\mathbb R,\mathbb Z\text{ ou }\\{0,1\\}. \end{aligned} \\]
+
+Definimos:
+
+- \\(n\\): número de variáveis do MILP.
+- \\(m\\): número de restrições.
+- \\(A\in\mathbb R^{m\times n}\\): matriz esparsa das restrições.
+- \\(E=\operatorname{nnz}(A)\\): número de coeficientes não nulos.
+
+O grafo bipartido possui \\(n+m\\) nós. Cada coeficiente não nulo \\(A\_{ij}\\) origina uma aresta entre a restrição \\(i\\) e a variável \\(j\\).
+
+Para um problema com um milhão de variáveis, não construímos uma matriz densa com um milhão de linhas e colunas. A representação armazena os \\(E\\) elementos não nulos e os índices de suas extremidades.
+
+### 2.1. Features iniciais das variáveis
+
+O código implementa exatamente sete canais:
+
+\\[ \mathbf{x}^{V}\_j= \begin{bmatrix} \phi(c_j)\\\ \phi(\ell_j)\\\ \phi(u_j)\\\ \mathbb 1[x_j\text{ contínua}]\\\ \mathbb 1[x_j\text{ binária}]\\\ \mathbb 1[x_j\text{ inteira}]\\\ r_j \end{bmatrix} \in\mathbb R^7. \\]
+
+A transformação utilizada nos três primeiros componentes é:
+
+\\[ \phi(t)=\operatorname{sgn}(t)\log(1+|t|), \\]
+
+após o tratamento de valores não finitos e a limitação numérica implementada pelo encoder.
+
+O último componente, \\(r_j\\), é o valor da variável na relaxação capturada na raiz do branch-and-bound.
+
+Assim, a matriz de entrada dos nós de variáveis é:
+
+\\[ \boxed{X_V\in\mathbb R^{n\times7}}. \\]
+
+### 2.2. Features iniciais das restrições
+
+Cada restrição recebe cinco atributos:
+
+\\[ \mathbf{x}^{C}\_i= \begin{bmatrix} \phi(b_i)\\\ \mathbb 1[\leq]\\\ \mathbb 1[=]\\\ \mathbb 1[\geq]\\\ 1 \end{bmatrix} \in\mathbb R^5. \\]
+
+Portanto:
+
+\\[ \boxed{X_C\in\mathbb R^{m\times5}}. \\]
+
+O último elemento é constante igual a 1. Observe que a implementação não utiliza diretamente a norma da linha como um dos cinco canais, embora essa norma seja calculada na preparação dos dados.
+
+### 2.3. Feature de cada aresta
+
+Para a aresta correspondente ao coeficiente \\(A\_{ij}\neq0\\):
+
+\\[ e\_{ij}=\phi(A\_{ij}). \\]
+
+Logo:
+
+\\[ \boxed{X_E\in\mathbb R^{E\times1}}. \\]
+
+Essa representação corresponde ao código:
+
+`src/cfl_gnn/graph/build_dataset.py`
+
+e ao construtor que reconcilia a matriz MILP original:
+
+`src/cfl_gnn/graph/gurobi_graph_artifact.py`.
+
+## 3. Como funciona a inferência matricial com duas convoluções
+
+### 3.1. Encoders iniciais
+
+Antes das convoluções, as sete features de cada variável são convertidas em um embedding de 32 dimensões:
+
+\\[ H_V^{(0)} = \operatorname{ReLU} \left(X_VW_V+b_V\right), \\]
+
+com:
+
+\\[ W_V\in\mathbb R^{7\times32},\qquad b_V\in\mathbb R^{32}. \\]
+
+Portanto:
+
+\\[ H_V^{(0)}\in\mathbb R^{n\times32}. \\]
+
+Da mesma forma, as restrições são transformadas por:
+
+\\[ H_C^{(0)} = \operatorname{ReLU} \left(X_CW_C+b_C\right), \\]
+
+com:
+
+\\[ H_C^{(0)}\in\mathbb R^{m\times32}. \\]
+
+Esses embeddings não são etiquetas. São representações latentes aprendidas a partir dos atributos do MILP.
+
+### 3.2. Primeira metade de uma convolução: variáveis para restrições
+
+Em cada aresta \\((i,j)\\), o modelo concatena:
+
+\\[ \mathbf{z}\_{ij}^{(\ell)} = \left[ \mathbf h\_{C,i}^{(\ell)} \ \Vert\ \mathbf h\_{V,j}^{(\ell)} \ \Vert\ e\_{ij} \right]. \\]
+
+Como cada embedding tem dimensão 32 e a aresta possui uma feature:
+
+\\[ \mathbf z\_{ij}^{(\ell)}\in\mathbb R^{65}. \\]
+
+Esse vetor passa por uma MLP denominada \\(g_C\\):
+
+\\[ \mathbf m\_{ij}^{C,\ell} = W\_{C,2}^{(\ell)} \operatorname{ReLU} \left( W\_{C,1}^{(\ell)} \mathbf z\_{ij}^{(\ell)} + \mathbf b\_{C,1}^{(\ell)} \right) + \mathbf b\_{C,2}^{(\ell)}. \\]
+
+A mensagem de saída possui 32 componentes.
+
+Para a restrição \\(i\\), agregam-se as mensagens das variáveis vizinhas:
+
+\\[ \mathbf a\_{C,i}^{(\ell)} = \sum\_{j:A\_{ij}\neq0} \mathbf m\_{ij}^{C,\ell}. \\]
+
+A agregação é uma soma, não uma média simples nem uma operação de atenção.
+
+Depois aplica-se prenormalização:
+
+\\[ \widetilde{\mathbf a}\_{C,i}^{(\ell)} = \frac{\mathbf a\_{C,i}^{(\ell)}-\boldsymbol\beta_C^{(\ell)}} {\boldsymbol\sigma_C^{(\ell)}}. \\]
+
+O embedding da restrição é atualizado por outra MLP, \\(f_C\\):
+
+\\[ \boxed{ \mathbf h\_{C,i}^{(\ell+1)} = \operatorname{ReLU} \left( f_C^{(\ell)} \left[ \mathbf h\_{C,i}^{(\ell)} \Vert \widetilde{\mathbf a}\_{C,i}^{(\ell)} \right] \right). } \\]
+
+### 3.3. Segunda metade: restrições para variáveis
+
+O modelo usa as restrições recém-atualizadas para enviar mensagens de volta às variáveis.
+
+\\[ \mathbf z\_{ij}^{V,\ell} = \left[ \mathbf h\_{C,i}^{(\ell+1)} \Vert \mathbf h\_{V,j}^{(\ell)} \Vert e\_{ij} \right]. \\]
+
+As mensagens passam por \\(g_V\\), também uma MLP 65 → 32 → 32:
+
+\\[ \mathbf m\_{ij}^{V,\ell} = g_V^{(\ell)} \left( \mathbf z\_{ij}^{V,\ell} \right). \\]
+
+Para cada variável:
+
+\\[ \mathbf a\_{V,j}^{(\ell)} = \sum\_{i:A\_{ij}\neq0} \mathbf m\_{ij}^{V,\ell}. \\]
+
+Após prenormalização, obtém-se:
+
+\\[ \boxed{ \mathbf h\_{V,j}^{(\ell+1)} = \operatorname{ReLU} \left( f_V^{(\ell)} \left[ \mathbf h\_{V,j}^{(\ell)} \Vert \widetilde{\mathbf a}\_{V,j}^{(\ell)} \right] \right). } \\]
+
+Isso encerra uma convolução bipartida completa.
+
+### 3.4. Como expressar toda a convolução em forma matricial
+
+Defina duas matrizes de incidência esparsas:
+
+\\[ P_V\in\\{0,1\\}^{E\times n}, \qquad P_C\in\\{0,1\\}^{E\times m}. \\]
+
+Cada linha corresponde a uma aresta e seleciona, respectivamente, a variável e a restrição ligadas a ela.
+
+Os embeddings nas extremidades das arestas são:
+
+\\[ Z_C^{(\ell)} = \left[ P_CH_C^{(\ell)} \Vert P_VH_V^{(\ell)} \Vert X_E \right] \in\mathbb R^{E\times65}. \\]
+
+Aplicando as MLPs por linha:
+
+\\[ M_C^{(\ell)} = g_C^{(\ell)}(Z_C^{(\ell)}) \in\mathbb R^{E\times32}. \\]
+
+A agregação é representada por:
+
+\\[ A_C^{(\ell)}=P_C^\top M_C^{(\ell)} \in\mathbb R^{m\times32}. \\]
+
+Assim:
+
+\\[ H_C^{(\ell+1)} = \operatorname{ReLU}\left( f_C^{(\ell)} \left[ H_C^{(\ell)} \Vert \operatorname{PN}\_C(A_C^{(\ell)}) \right] \right). \\]
+
+Para o caminho inverso:
+
+\\[ Z_V^{(\ell)} = \left[ P_CH_C^{(\ell+1)} \Vert P_VH_V^{(\ell)} \Vert X_E \right], \\]
+
+\\[ M_V^{(\ell)}=g_V^{(\ell)}(Z_V^{(\ell)}), \\]
+
+\\[ A_V^{(\ell)}=P_V^\top M_V^{(\ell)}, \\]
+
+e:
+
+\\[ H_V^{(\ell+1)} = \operatorname{ReLU}\left( f_V^{(\ell)} \left[ H_V^{(\ell)} \Vert \operatorname{PN}\_V(A_V^{(\ell)}) \right] \right). \\]
+
+Essa é a formulação matricial correspondente às operações `scatter_add_`, MLP e ReLU implementadas em PyTorch.
+
+O processo se repete para:
+
+\\[ \ell=0,1. \\]
+
+Portanto, temos duas convoluções completas e quatro etapas direcionais de propagação.
+
+### 3.5. Saída da rede
+
+Depois da segunda convolução:
+
+\\[ H_V^{(2)}\in\mathbb R^{n\times32}. \\]
+
+Uma máscara seleciona apenas as \\(n_B\\) variáveis com domínio binário elegível.
+
+\\[ H_B=H_V^{(2)}[\mathcal B]\in\mathbb R^{n_B\times32}. \\]
+
+O cabeçalho final é:
+
+\\[ U=\operatorname{ReLU}(H_BW\_{H1}+b\_{H1}), \\]
+
+\\[ \mathbf z=UW\_{H2}+b\_{H2}, \\]
+
+\\[ \boxed{\widehat{\mathbf p}=\sigma(\mathbf z)}, \qquad \sigma(z)=\frac{1}{1+e^{-z}}. \\]
+
+O código retorna inicialmente os logits \\(\mathbf z\\). A sigmoid é aplicada na etapa de conversão em probabilidades.
+
+Resultado: uma estimativa escalar por variável binária, mesmo que o grafo contenha milhões de nós.
+
+A complexidade computacional depende principalmente de \\(E\\), do número de nós e da largura 32 — e não de criar uma matriz densa quadrática com milhões de variáveis.
+
+## 4. Como se obtém a relaxação LP e por que ela não é o MIP gap
+
+Esta é a distinção mais importante para responder à segunda pergunta.
+
+### 4.1. O que o Gurobi relaxa?
+
+O problema original contém restrições de integralidade:
+
+\\[ x_j\in\\{0,1\\} \\]
+
+para as variáveis binárias.
+
+Na relaxação linear básica, substituímos essa condição por:
+
+\\[ 0\leq x_j\leq1, \\]
+
+mantendo as restrições lineares e os demais limites aplicáveis.
+
+O resultado é um problema contínuo:
+
+\\[ \begin{aligned} \min\_{\mathbf x}\quad &\mathbf c^\top\mathbf x+c_0\\\ \text{s.a.}\quad&A\mathbf x\ \bowtie\ \mathbf b,\\\ &\boldsymbol\ell\leq\mathbf x\leq\mathbf u. \end{aligned} \\]
+
+O ótimo da relaxação, \\(\mathbf x^{LP}\\), pode atribuir valores fracionários a variáveis originalmente binárias.
+
+Por exemplo:
+
+| Variável  | Relaxação LP | Incumbente inteiro |
+| --------- | ------------ | ------------------ |
+| \\(x_1\\) | 0,83         | 1                  |
+| \\(x_2\\) | 0,14         | 0                  |
+| \\(x_3\\) | 0,52         | 1                  |
+| \\(x_4\\) | 0,02         | 0                  |
+
+Esses números são ilustrativos, não resultados das nossas instâncias.
+
+A GNN utiliza a coluna de relaxação como entrada e aprende, com base no incumbente, a prever valores binários.
+
+### 4.2. Como a relaxação é realmente capturada no CFL-GNN?
+
+O código não chama simplesmente `model.relax()` e resolve um LP separado.
+
+A implementação `capture_root_relaxation()` utiliza:
+
+- `Presolve = 0`.
+- `NodeLimit = 1`.
+- `Threads = 1`.
+- `Seed = 42`.
+- Callback `MIPNODE`.
+- Verificação `MIPNODE_STATUS == GRB.OPTIMAL`.
+- Verificação de contador de nós explorados igual a zero.
+- `cbGetNodeRel(variables)`.
+
+O callback captura o primeiro vetor de relaxação qualificado na raiz, armazenando um valor para cada variável do modelo, e encerra aquela execução de preparação.
+
+A documentação oficial confirma que `cbGetNodeRel()` retorna os valores da relaxação do nó corrente, desde que o estado seja apropriado. Também esclarece que essa solução não precisa necessariamente ser factível para o modelo inteiro original.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://docs.gurobi.com\&sz=32)
+
+Gurobi Optimizer Reference Manual+1
+
+
+
+Há uma sutileza: a relaxação observada na raiz pode refletir o estado da otimização do nó e cortes já presentes, conforme a etapa do solver. Não devemos equipará-la automaticamente ao ótimo do LP básico sem cortes.
+
+### 4.3. Não é necessário percorrer a árvore inteira
+
+O branch-and-bound procura resolver o MILP global. Entretanto, uma única relaxação LP na raiz já atribui valores a todas as variáveis que participam daquela relaxação, não apenas às variáveis que serão escolhidas para branching.
+
+O algoritmo não percorre uma variável por vez.
+
+Ele resolve um problema matemático conjunto contendo todas as variáveis e restrições da instância.
+
+Portanto, `cbGetNodeRel(variables)` recupera o vetor completo:
+
+\\[ \mathbf r= \begin{bmatrix} r_1&r_2&\cdots&r_n \end{bmatrix}^{\top}. \\]
+
+As variáveis que jamais seriam selecionadas para branching também possuem valores na solução da relaxação.
+
+Não existem etiquetas ausentes simplesmente porque uma variável não foi visitada pela árvore.
+
+### 4.4. Mas de onde vêm as etiquetas binárias?
+
+As etiquetas não vêm da árvore de branching diretamente.
+
+Elas vêm de um incumbente inteiro factível obtido em outra execução de otimização do problema original.
+
+Se esse incumbente for \\(\mathbf x^{inc}\\), então, para cada variável binária elegível \\(j\\):
+
+\\[ \boxed{y_j=x_j^{inc}\in\\{0,1\\}.} \\]
+
+As etiquetas são determinadas pela atribuição completa das variáveis, e não pela ordem de exploração de nós da árvore.
+
+Mesmo que o solver não consiga provar a otimalidade, ele pode ter encontrado uma solução inteira factível com valores definidos para todas as variáveis originais.
+
+A qualidade desse incumbente precisa ser avaliada separadamente.
+
+### 4.5. O papel correto do MIP gap
+
+Considere, em minimização:
+
+- \\(UB\\): objetivo do melhor incumbente factível.
+- \\(LB\\): melhor limite inferior certificado.
+
+O gap relativo usual é:
+
+\\[ \boxed{ g=\frac{|UB-LB|}{|UB|} } \\]
+
+com tratamento especial para objetivo zero e limites não finitos. Essa é a convenção documentada pelo Gurobi.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://support.gurobi.com\&sz=32)
+
+Gurobi Help Center
+
+
+
+Esse gap é uma medida global de qualidade da solução, não um rótulo de variável.
+
+Não faz sentido atribuir um MIP gap diferente a cada nó de variável apenas porque ele possui valor 0 ou 1.
+
+O que o nosso pipeline faz é utilizar o gap da solução para decidir se o vetor de etiquetas é admissível.
+
+O protocolo histórico configura:
+
+\\[ \boxed{g\leq0{,}10} \\]
+
+como limite de qualidade para admitir o incumbente como fonte supervisionada, juntamente com verificações de factibilidade, origem, identidade e integridade dos registros.
+
+Isso equivale a até 10% de gap relativo, não 0,10%.
+
+Observe que outro campo do construtor do grafo marca `is_optimal` quando o gap é menor ou igual a \\(10^{-4}\\). Essa é uma classificação auxiliar muito mais estrita e não deve ser confundida com a política geral de admissibilidade das etiquetas.
+
+### 4.6. Como qualificamos as instâncias para treinamento?
+
+O pipeline possui uma sequência de condições:
+
+1. O MILP original e o arquivo da solução precisam corresponder à mesma identidade.
+2. O incumbente deve existir e ser factível.
+3. As variáveis e seus valores precisam ser completos e consistentes.
+4. O gap terminal deve ser finito e satisfazer o limite de qualidade estabelecido.
+5. A relaxação da raiz deve ter sido capturada corretamente e alinhada à ordem das variáveis.
+6. A representação do grafo deve preservar a matriz, os atributos e a identidade dos rótulos.
+7. As etiquetas selecionadas para a BCE devem corresponder efetivamente a domínios binários.
+
+No conjunto histórico, a seleção resultou em 54 grafos admitidos, de 90 candidatos:
+
+| Classe | Candidatos | Admitidos |
+| ------ | ---------- | --------- |
+| Easy   | 30         | 30        |
+| Medium | 30         | 24        |
+| Hard   | 30         | 0         |
+| Total  | 90         | 54        |
+
+Os 54 foram particionados em 34 treinamento, dez validação e dez teste.
+
+Essa seleção não significa que as 36 instâncias excluídas sejam matematicamente inviáveis. Significa que não satisfizeram o contrato de admissibilidade da população de aprendizado.
+
+Uma implicação científica: a GNN não foi treinada com instâncias hard. Portanto, aplicar o modelo a instâncias hard constitui extrapolação em relação à distribuição representada no treinamento, não generalização comprovada.
+
+## 5. Como as etiquetas se relacionam com os embeddings durante o treinamento
+
+Aqui há uma distinção conceitual importante: não transformamos as etiquetas diretamente em embeddings.
+
+Os embeddings são calculados a partir das features e da conectividade do grafo. As etiquetas são utilizadas posteriormente na função de perda para atualizar os pesos da rede.
+
+### 5.1. Forward pass
+
+Para um grafo de treinamento, temos:
+
+\\[ (X_V,X_C,X_E,\mathcal E), \\]
+
+mais o vetor de etiquetas:
+
+\\[ \mathbf y=(y_1,\ldots,y\_{n_B}). \\]
+
+A GNN calcula:
+
+\\[ \mathbf z=F\_\Theta(X_V,X_C,X_E,\mathcal E), \\]
+
+em que \\(\Theta\\) representa os 26.753 parâmetros treináveis.
+
+Convertemos os logits em escores sigmoid:
+
+\\[ \hat p_j=\sigma(z_j). \\]
+
+Os valores \\(y_j\\) não entram na função \\(F\_\Theta\\).
+
+Se entrassem como feature durante a inferência, haveria vazamento de informação (target leakage).
+
+### 5.2. Função de perda supervisionada
+
+A implementação usa `BCEWithLogitsLoss`, com peso para a classe positiva.
+
+Para cada variável binária:
+
+\\[ \ell_j = -\left[ w\_+y_j\log(\hat p_j) + (1-y_j)\log(1-\hat p_j) \right]. \\]
+
+A perda de um grafo, com a redução média usada pelo PyTorch, é:
+
+\\[ \boxed{ L_g(\Theta)= \frac{1}{n_B} \sum\_{j=1}^{n_B}\ell_j. } \\]
+
+O peso positivo é estimado a partir da população de treinamento:
+
+\\[ w\_+=\frac{N_0}{N_1}, \\]
+
+em que \\(N_0\\) é a quantidade de etiquetas zero e \\(N_1\\) a quantidade de etiquetas um.
+
+Para o checkpoint histórico misto:
+
+\\[ \boxed{w\_+\approx1132{,}976.} \\]
+
+Isso é coerente com o desbalanceamento extremo observado no projeto.
+
+O efeito é tornar erros sobre os raros valores 1 muito mais influentes na função de perda.
+
+Entretanto, o peso não modifica o número de parâmetros nem gera novos exemplos independentes.
+
+### 5.3. Como uma etiqueta modifica os parâmetros?
+
+Para a BCE ponderada, a derivada em relação ao logit é:
+
+\\[ \frac{\partial\ell_j}{\partial z_j} = \begin{cases} \hat p_j, & y_j=0,\\\ w\_+(\hat p_j-1), & y_j=1. \end{cases} \\]
+
+Equivalentemente:
+
+\\[ \frac{\partial\ell_j}{\partial z_j} = \left[1+(w\_+-1)y_j\right]\(\hat p_j-y_j). \\]
+
+Consideremos uma variável cujo rótulo verdadeiro seja \\(y_j=1\\) e cuja previsão atual seja \\(\hat p_j=0,2\\).
+
+Sua contribuição derivativa, antes da redução média, será:
+
+\\[ 1132{,}976(0,2-1) \approx-906{,}38. \\]
+
+Uma previsão \\(\hat p_j=0,2\\) para uma variável cujo rótulo é zero produziria derivada \\(0,2\\).
+
+Isso mostra matematicamente por que os positivos raros podem exercer influência significativa no treinamento.
+
+### 5.4. Retropropagação pela GNN inteira
+
+A regra da cadeia propaga as derivadas da perda desde o cabeçalho final até:
+
+- Os pesos da MLP de saída.
+- As MLPs \\(f_V\\) e \\(g_V\\).
+- As MLPs \\(f_C\\) e \\(g_C\\).
+- A primeira convolução.
+- Os encoders iniciais.
+
+Formalmente:
+
+\\[ \nabla\_\Theta L_g = \frac{\partial L_g}{\partial\mathbf z} \frac{\partial\mathbf z}{\partial\Theta}, \\]
+
+entendendo o segundo fator como o jacobiano da rede, com as operações de composição apropriadas.
+
+A função ReLU é:
+
+\\[ \operatorname{ReLU}(a)=\max(0,a), \\]
+
+e sua derivada usual é:
+
+\\[ \operatorname{ReLU}'(a)= \begin{cases} 1,&a>0,\\\ 0,&a<0. \end{cases} \\]
+
+No ponto zero, utiliza-se uma escolha de subgradiente definida pela implementação.
+
+Portanto, a ReLU não é um parâmetro treinável. Ela modifica quais caminhos do grafo computacional transmitem gradientes.
+
+### 5.5. Atualização pelo Adam
+
+Depois da retropropagação, o código aplica gradient clipping com norma máxima 1 e utiliza Adam, com taxa de aprendizado:
+
+\\[ \eta=0{,}001. \\]
+
+Para um gradiente \\(g_t\\), Adam mantém médias móveis:
+
+\\[ m_t=\beta_1m\_{t-1}+(1-\beta_1)g_t, \\]
+
+\\[ v_t=\beta_2v\_{t-1}+(1-\beta_2)g_t^2. \\]
+
+Após correção de viés:
+
+\\[ \hat m_t=\frac{m_t}{1-\beta_1^t}, \qquad \hat v_t=\frac{v_t}{1-\beta_2^t}. \\]
+
+Os pesos são atualizados por:
+
+\\[ \boxed{ \Theta\_{t+1} = \Theta_t- \eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}. } \\]
+
+Os valores padrão de Adam são utilizados quando não explicitamente substituídos pela configuração.
+
+O processo é repetido para as apresentações dos grafos de treinamento.
+
+### 5.6. Quantas atualizações são realizadas?
+
+O treinamento histórico usa 34 pais, com quatro apresentações determinísticas de cada pai por época:
+
+\\[ 34\times4=136 \\]
+
+apresentações por época.
+
+Com 100 épocas completas:
+
+\\[ 136\times100=13.600 \\]
+
+apresentações de grafos.
+
+Na implementação serial, com batch size 1 e uma atualização por apresentação válida, isso corresponde a 13.600 passos de otimização.
+
+Mas são 34 grafos independentes repetidamente apresentados, e não 13.600 grafos independentes.
+
+O checkpoint final é escolhido pela menor BCE ponderada de validação, e o limiar probabilístico é posteriormente escolhido pelo F1 na validação.
+
+A prenormalização é diferente do treinamento por Adam: suas médias e desvios são estimados a partir dos grafos de treinamento e armazenados como buffers não treináveis.
+
+## 6. De onde vêm exatamente os 26.753 parâmetros treináveis?
+
+Esta contagem pode ser derivada integralmente da implementação. Não depende de uma estimativa empírica.
+
+Para uma transformação linear:
+
+\\[ \mathbf y=W\mathbf x+\mathbf b, \\]
+
+com \\(d\_{\mathrm{in}}\\) entradas e \\(d\_{\mathrm{out}}\\) saídas, o número de parâmetros é:
+
+\\[ \boxed{ P=(d\_{\mathrm{in}}+1)d\_{\mathrm{out}}. } \\]
+
+O termo adicional corresponde aos bias.
+
+### 6.1. Encoders iniciais
+
+| Componente         | Dimensões | Parâmetros         |
+| ------------------ | --------- | ------------------ |
+| Variable encoder   | 7 → 32    | \\(7(32)+32=256\\) |
+| Constraint encoder | 5 → 32    | \\(5(32)+32=192\\) |
+| Subtotal           |           | 448                |
+
+### 6.2. Uma convolução bipartida
+
+Cada convolução contém quatro MLPs, todas com duas transformações lineares.
+
+| Componente              | Primeira transformação | Segunda transformação | Total  |
+| ----------------------- | ---------------------- | --------------------- | ------ |
+| \\(g_C\\)               | 65 → 32: 2.112         | 32 → 32: 1.056        | 3.168  |
+| \\(g_V\\)               | 65 → 32: 2.112         | 32 → 32: 1.056        | 3.168  |
+| \\(f_C\\)               | 64 → 32: 2.080         | 32 → 32: 1.056        | 3.136  |
+| \\(f_V\\)               | 64 → 32: 2.080         | 32 → 32: 1.056        | 3.136  |
+| Subtotal por convolução |                        |                       | 12.608 |
+
+Como o projeto utiliza duas convoluções:
+
+\\[ P\_{\mathrm{convs}}=2(12.608)=25.216. \\]
+
+### 6.3. MLP final
+
+O cabeçalho de classificação transforma um embedding de 32 dimensões em um logit:
+
+| Transformação | Parâmetros |
+| ------------- | ---------- |
+| 32 → 32       | 1.056      |
+| 32 → 1        | 33         |
+| Subtotal      | 1.089      |
+
+### 6.4. Contagem total
+
+\\[ \boxed{ P\_{\mathrm{total}} = 448+25.216+1.089 = 26.753. } \\]
+
+Distribuição dos parâmetros treináveis
+
+| Encoders     | 448    | 1,67%  |
+| ------------ | ------ | ------ |
+| Convolução 1 | 12.608 | 47,13% |
+| Convolução 2 | 12.608 | 47,13% |
+| MLP final    | 1.089  | 4,07%  |
+| Total        | 26.753 | 100%   |
+
+A prenormalização não acrescenta parâmetros treináveis. Suas médias \\(\beta\\) e desvios \\(\sigma\\) são buffers estimados nos grafos de treinamento.
+
+Além disso, os dois conjuntos de convoluções possuem pesos próprios. As duas camadas não compartilham seus parâmetros entre si; o compartilhamento ocorre entre os nós e arestas processados por uma mesma camada.
+
+### 6.5. O que acontece quando uma instância contém milhões de variáveis?
+
+O número de parâmetros permanece igual:
+
+\\[ \boxed{P=26.753.} \\]
+
+O que cresce são os tensores de ativação e o trabalho computacional.
+
+Por exemplo, para \\(n=1.000.000\\) variáveis:
+
+\\[ H_V\in\mathbb R^{1.000.000\times32}. \\]
+
+Isso corresponde a 32 milhões de valores, ou aproximadamente 128 MB em float32, apenas para um tensor de embeddings das variáveis.
+
+As mensagens por aresta podem consumir muito mais memória, pois o tensor intermediário:
+
+\\[ Z_C\in\mathbb R^{E\times65} \\]
+
+tem tamanho proporcional ao número de não nulos da matriz MILP.
+
+Assim, precisamos distinguir:
+
+- Parâmetros: os 26.753 pesos e bias compartilhados.
+- Ativações: embeddings e mensagens temporárias, que crescem com o grafo.
+- Gradientes: derivadas armazenadas no treinamento.
+- Estados do Adam: médias móveis utilizadas para atualizar os parâmetros.
+
+A inferência não precisa armazenar o grafo completo de retropropagação e, por isso, costuma demandar menos memória que o treinamento, embora ainda dependa fortemente do número de arestas.
+
+## 7. Respostas consolidadas às quatro perguntas
+
+| Pergunta                                        | Resposta científica                                                                                                                                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1. Como é realizada a inferência matricial?     | Encoders 7/5 → 32, duas convoluções bipartidas alternadas com agregação por soma, MLP final 32 → 1 e sigmoid. As operações utilizam a matriz esparsa MILP.                                             |
+| 2. Como a relaxação e os rótulos são obtidos?   | A relaxação vem do primeiro `MIPNODE` qualificado na raiz. Os rótulos vêm de um incumbente inteiro factível separado. O MIP gap qualifica globalmente a solução; não rotula variáveis individualmente. |
+| 3. Como as etiquetas viram embeddings?          | Elas não viram embeddings diretamente. Os atributos e a conectividade geram os embeddings; as etiquetas entram na BCE ponderada e determinam os gradientes usados no treinamento.                      |
+| 4. Como surgem e são atualizados os parâmetros? | São 448 dos encoders, 25.216 das duas convoluções e 1.089 do cabeçalho. O backpropagation calcula gradientes, e Adam atualiza os pesos.                                                                |
+
+## 8. Discussão crítica: três implicações científicas importantes
+
+Primeira — a qualidade das etiquetas limita o significado do aprendizado. Uma solução com gap de até 10% pode ser uma etiqueta admissível segundo o contrato, mas não necessariamente representa a solução ótima. O modelo aprende a reproduzir decisões de incumbentes qualificados, não um ótimo matemático necessariamente único.
+
+Segunda — a feature LP pode ser bastante informativa. Ela já contém informações globais da estrutura do problema por meio da solução da relaxação. Assim, a GNN não precisa descobrir todas as relações matemáticas exclusivamente pela propagação local de mensagens. Contudo, a obtenção dessa feature possui um custo computacional que deve integrar a avaliação econômica do método.
+
+Terceira — 26.753 parâmetros não significam 26.753 decisões nem 26.753 variáveis aprendidas. O modelo aprende uma função compartilhada entre grafos e variáveis. Sua capacidade de generalização depende da informação estrutural representada pelos 34 pais de treinamento, da qualidade dos rótulos e da adequação da arquitetura à tarefa.
+
+## 9. Referências e documentação
+
+A distinção entre grafos bipartidos MILP e redes de mensagem tem origem metodológica importante em Gasse et al. (2019), [Exact Combinatorial Optimization with Graph Convolutional Neural Networks](https://proceedings.neurips.cc/paper/2019/file/d14c2267d848abeb81fd590f371d39bd-Paper.pdf?utm_source=chatgpt.com). O trabalho original aprende decisões de branching por imitação, enquanto nosso projeto aprende valores binários de incumbentes para construção de partial MIP Starts.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://proceedings.neurips.cc\&sz=32)
+
+proceedings.neurips.cc
+
+
+
+Para a implementação específica, as fontes primárias são os arquivos:
+
+- [gasse.py — convoluções, MLPs e contagem dos parâmetros](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/develop/src/cfl_gnn/models/gasse.py?utm_source=chatgpt.com)
+- [gasse_calibrated.py — prenormalização](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/develop/src/cfl_gnn/models/gasse_calibrated.py?utm_source=chatgpt.com)
+- [gurobi_graph_artifact.py — captura da raiz e etiquetas](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/develop/src/cfl_gnn/graph/gurobi_graph_artifact.py?utm_source=chatgpt.com)
+- [gasse_reconnected.py — treinamento e seleção do checkpoint](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/develop/src/cfl_gnn/training/gasse_reconnected.py?utm_source=chatgpt.com)
+- [Gurobi — cbGetNodeRel e acesso à relaxação da raiz](https://docs.gurobi.com/projects/optimizer/en/current/reference/python/model.html?utm_source=chatgpt.com#cbGetNodeRel)
+
+### Recomendação
+
+Não identifico, nesta análise matemática, motivo para alterar imediatamente a arquitetura.
+
+A questão científica que merece maior aprofundamento é a validade dos rótulos supervisionados: como a qualidade do incumbente, a raridade dos valores 1 e a seleção de instâncias influenciam a função aprendida e, posteriormente, a utilidade dos partial starts.
+
+Recomendo documentar formalmente as três entidades distintas — \\(r_j\\), \\(y_j\\) e \\(\widehat p_j\\) — no Apêndice A:
+
+\\[ \boxed{ \underbrace{r_j}\_{\text{relaxação LP: entrada}} \quad\longrightarrow\quad \underbrace{\widehat p_j}\_{\text{predição da GNN}} \quad\overset{\text{treinamento}}{\longleftrightarrow}\quad \underbrace{y_j}\_{\text{incumbente: etiqueta}}. } \\]
+
+Essa distinção responde às ambiguidades centrais e fortalece a compreensão matemática e a reprodutibilidade do artigo, sem exigir novos treinamentos ou experimentos HPC.
