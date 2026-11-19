@@ -155,7 +155,7 @@ No scientific solve or load test is authorized by this document. Future site qua
 
 ## 11. Resource estimates and feasibility
 
-The conservative budget counts a fresh B/R/G evaluation, without assuming characterization B reuse:
+The conservative principal-solve budget counts a fresh B/R/G evaluation, without assuming characterization B reuse. It excludes separately budgeted root-preparation solves:
 
 | Stage | Solves | Nominal maximum solver-hours | Maximum Slurm job-hours |
 |---|---:|---:|---:|
@@ -169,7 +169,7 @@ With two continuously available jobs and twelve-hour envelopes, characterization
 
 An optional reuse scenario, only after scientific equivalence review, uses the 39 matching characterization B records and 78 fresh R/G solves: 168 total, 1,344 solver-hours and 2,016 job-hours, or 40,320 reserved physical core-hours. Two-slot phase estimates are 45 + 39 = 84 waves (1,008 hours / 42 days). Different execution periods and resource contention weaken contemporaneous pairing; no budget reduction is assumed until this decision is made.
 
-Memory at 20 cores cannot be extrapolated from four-core pilots. If m GiB per job is qualified, total principal reservation is 2,484m GiB-hours, with two-job peak 2m. Graph/vector sizes and event-retention policy determine storage; compute it from the 90-instance inventory rather than inventing a constant. Baseline characterization needs no GPU. Root/graph preparation, dataset qualification, serial/DDP training, inference and Benders have separate line items not yet quantified by adequate evidence.
+Memory at 20 cores cannot be extrapolated from four-core pilots. If m GiB per job is qualified, total principal reservation is 2,484m GiB-hours, with two-job peak 2m. Graph/vector sizes and event-retention policy determine storage; compute it from the 90-instance inventory rather than inventing a constant. Baseline characterization needs no GPU. Root/graph preparation, dataset qualification, serial/DDP training, inference and Benders have separate line items not yet quantified by adequate evidence. The 207 principal solves are therefore not an upper bound on all Gurobi calls. If each of the 90 parents needs one separately captured root, that adds up to 90 preparation calls, each with its own approved cap and overhead. Do not silently obtain historical-style root features from the main auto-presolved baseline: preparation settings and feature identity must first be specified. Existing roots are reused only after equivalence review; a newly trained predictor also needs its own inference outputs.
 
 For training wall caps h1 and h4, reserved GPU-hours are h1+4h4; do not use a historical speedup to predict the new dataset's duration. The protocol's resource table remains conditional until feasibility and scientific choices are approved.
 

@@ -17,6 +17,6 @@ Start with [the detailed protocol](coauthor-methodological-protocol.md), then [t
 
 ## Boundaries
 
-The 990 matrix and the 66/18 alternatives are discontinued. Preserve the technical pilots and artifacts as historical evidence. The new principal design is 90 characterization baselines and 39 test parents x B/R/G, with a conservative 207-solve budget. Two 20-core jobs are a candidate, not demonstrated capacity. Extra seeds, hints, parameter sensitivities, shared-core code and Benders implementation are not authorized.
+The 990 matrix and the 66/18 alternatives are discontinued. Preserve the technical pilots and artifacts as historical evidence. The new principal design is 90 characterization baselines and 39 test parents x B/R/G, with a conservative budget of 207 principal solves; root preparation and learning are budgeted separately. Two 20-core jobs are a candidate, not demonstrated capacity. Extra seeds, hints, parameter sensitivities, shared-core code and Benders implementation are not authorized.
 
 The existing approved Sprint sequence is retained; this packet does not repeat or expand it. Protocol milestone 3 December 2026, pause 19 December–10 January, target journal submission 18 March2027. Resource/schedule risk and required coauthor decisions are visible in the protocol. No main/Pages/Zenodo publication is implied by a develop documentation PR.

@@ -104,7 +104,8 @@
       "reserved_job_hours": 2484,
       "candidate_reserved_physical_core_hours": 49680,
       "two_slot_waves": 104,
-      "two_slot_reserved_wall_hours": 1248
+      "two_slot_reserved_wall_hours": 1248,
+      "scope": "principal full-budget solves only; excludes root preparation and training"
     },
     "conditional_baseline_reuse": {
       "new_solves_including_characterization": 168,
@@ -113,7 +114,12 @@
       "candidate_reserved_physical_core_hours": 40320,
       "two_slot_reserved_wall_hours": 1008
     },
-    "gpu_preparation_training_storage_memory": "not_yet_qualified_no_invented_numeric_budget"
+    "gpu_preparation_training_storage_memory": "not_yet_qualified_no_invented_numeric_budget",
+    "root_preparation": {
+      "calls": "up to 90 if one separate root capture is needed per original parent",
+      "budget": "N_root times approved root cap plus overhead; not yet authorized",
+      "reuse": "requires explicit feature/parameter/input identity equivalence"
+    }
   },
   "execution_approved": false,
   "new_solver_calls": 0,
