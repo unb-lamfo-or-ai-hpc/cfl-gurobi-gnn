@@ -63,7 +63,7 @@ from pathlib import Path
 r=Path(sys.argv[1]);commit=sys.argv[2]
 base='https://raw.githubusercontent.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/'
 files={
- 'qualify_training_license.py':(commit,'docs/research/npad-runtime-transition-20261120/qualify_training_license.py','5c0c2b1c3b1787a3f093fcbbc3eef0edc0535ba8a12e732284e5b5952fe971a5'),
+ 'qualify_training_license.py':(commit,'docs/research/npad-runtime-transition-20261120/qualify_training_license.py','29460feb61d62bc1c79d5aed8b00dea023dcc6994676abca0fc0e8249094b1bf'),
  'source/gasse.py':('16c2b29f97356e9ece7d72bbf12c3bf3fbcc289f','src/cfl_gnn/models/gasse.py','e4cfb67cf9f62d0ed7c6f05acd79454541a8d12c9db5ba62643cf7a7f6a9c81f'),
  'source/gasse_calibrated.py':('16c2b29f97356e9ece7d72bbf12c3bf3fbcc289f','src/cfl_gnn/models/gasse_calibrated.py','9ad688b085a28c6a0e5cdd063fbaac60214a3214e2cbf10394b82608a9265eab'),
  'source/matched_gpu.py':('16c2b29f97356e9ece7d72bbf12c3bf3fbcc289f','src/cfl_gnn/training/matched_gpu.py','5c1c00c3a5a4d0041b6a9f10808c8dc6acd4e09b218ebea6b58b79e0713ffc87'),
@@ -91,7 +91,7 @@ export GRB_LICENSE_FILE=/home/__NPAD_USER__/model-agrologistic/secrets/gurobi.li
 srun --ntasks=1 --cpus-per-task=8 --cpu-bind=cores --kill-on-bad-exit=1 timeout --signal=TERM --kill-after=10s 600s env -u PYTHONHOME -u PYTHONPATH -u LD_LIBRARY_PATH -u VIRTUAL_ENV -u GRB_WLSACCESSID -u GRB_WLSSECRET -u GRB_LICENSEID "$T/bin/python" -I -B "$R/qualify_training_license.py" "$R" > "$R/worker.private.log" 2>&1
 BATCH
 sha256sum "$R/qualify_training_license.py" "$R/run.sbatch" "$R/source/"*.py > "$R/code.sha256"
-printf 'RECURSOS=1 job|1 V100|1 tarefa|8 CPUs|48G|15 min|3 updates sinteticos|1 MILP de licenca ate 30s\n'
+printf 'RECURSOS=1 job|1 V100|1 tarefa|8 CPUs|48G|15 min|3 updates sinteticos|1 MILP de licenca ate 300s|Threads=0\n'
 sbatch --parsable --job-name=cfl_env_qual --partition=gpu-8-v100 --account=__NPAD_ACCOUNT__ --qos=preempt --nodes=1 --ntasks=1 --cpus-per-task=8 --mem=48G --gres=gpu:1 --time=00:15:00 --no-requeue --chdir="$R" --output="$R/slurm-%j.private.out" --error="$R/slurm-%j.private.err" --export=ALL "$R/run.sbatch" > "$R/submission.private.txt"
 J=$(cut -d';' -f1 "$R/submission.private.txt")
 case "$J" in ''|*[!0-9]*) echo SUBMISSAO_AMBIGUA_PRESERVAR_NAO_REPETIR >&2;exit 1;; esac

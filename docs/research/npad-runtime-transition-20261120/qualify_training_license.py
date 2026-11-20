@@ -205,8 +205,8 @@ def license_test(stage):
             total = gp.quicksum(variables.values())
             model.addConstr(total >= 1)
             model.setObjective(total, gp.GRB.MINIMIZE)
-            model.Params.Threads = 1
-            model.Params.TimeLimit = 30
+            # Preserve the author's native automatic-thread choice, Threads=0.
+            model.Params.TimeLimit = 300
             model.update()
             intent = {
                 "scope": "one_technical_license_check_not_CFL_evidence",

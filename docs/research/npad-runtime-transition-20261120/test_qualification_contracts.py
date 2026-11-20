@@ -93,7 +93,7 @@ class InventoryTests(unittest.TestCase):
 
 class LicenseTests(unittest.TestCase):
     def fake_api(self, stage, status=2):
-        params = types.SimpleNamespace()
+        params = types.SimpleNamespace(Threads=0)
         calls = {"optimize": 0, "env": 0}
 
         class Env:
@@ -171,7 +171,7 @@ class LicenseTests(unittest.TestCase):
             ):
                 result = worker.license_test(stage)
             self.assertEqual(calls, {"optimize": 1, "env": 1})
-            self.assertEqual((params.Threads, params.TimeLimit), (1, 30))
+            self.assertEqual((params.Threads, params.TimeLimit), (0, 300))
             self.assertTrue(result["above_bundled_restricted_variable_limit"])
             self.assertNotIn("PRIVATE_TOKEN", json.dumps(result))
             self.assertNotIn(str(license_file), json.dumps(result))

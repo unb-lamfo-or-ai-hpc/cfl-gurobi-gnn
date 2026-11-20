@@ -44,9 +44,11 @@ synthetic state must never replace a historical model.
 
 The reservation is one node, one V100, ntasks=1, eight Slurm CPUs, 48G and
 15minutes. The worker has a600s process deadline and no requeue/retry. The
-license-check MILP has Threads=1 and TimeLimit=30s; all other solver parameters
-retain their native values. These are technical-test settings, not a change to
-the prospective MVP3 Threads=0 protocol. The expected primal and dual are both1.
+license-check MILP preserves Threads=0 and uses TimeLimit=300s. Other search
+parameters retain their native values. OutputFlag=0 prevents native license
+messages from becoming public output. The expected primal and dual are both1.
+Automatic software-thread selection does not expand the eight-CPU allocation;
+record the actual affinity and do not infer physical cores from thread settings.
 No CFL performance conclusion can be drawn from this deliberately trivial MILP.
 
 For this test only, GRB_LICENSE_FILE points to the existing Agrologistic
