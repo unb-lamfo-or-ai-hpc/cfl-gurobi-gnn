@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "mandate_id": "CFL-GNN-MVP3-SCI-2026-11-19",
+  "date": "2026-11-19",
+  "status": "coauthor_review_not_execution_authority",
+  "source_sha256": {
+    "mandate": "c82bd228b784263865ce9b1866468d2599551fecf772b895da746e1a03a53015",
+    "addendum": "e51079de5a13ac7223dfcab1ae0ae34fdf9632922ef7eb5c367042c97aba2368",
+    "mathematical_foundation": "d6ecde11deaaa8d87fd85cf52f0bc106e5b761a6ead8cab5a31bc6aa90319a51"
+  },
+  "approved_direction": {
+    "native_gurobipy_only": true,
+    "Threads": 0,
+    "ConcurrentMIP": 1,
+    "Method": -1,
+    "Presolve": -1,
+    "MIPFocus": 0,
+    "Seed": 42,
+    "MIPGap": 0.0001,
+    "TimeLimit": 28800,
+    "slurm_seconds": 43200,
+    "objective_sense": "MINIMIZE",
+    "thresholds": [
+      0.1,
+      0.05,
+      0.01,
+      0.0001
+    ],
+    "characterization": {
+      "easy": 30,
+      "medium": 30,
+      "hard": 30
+    },
+    "learning_population": {
+      "easy": 30,
+      "medium": 30,
+      "hard": 0
+    },
+    "target_split": {
+      "train": 42,
+      "validation": 9,
+      "test": 9
+    },
+    "evaluation": {
+      "test_easy_medium": 9,
+      "hard": 30,
+      "methods": [
+        "B",
+        "R",
+        "G"
+      ]
+    },
+    "candidate_physical_cores_per_job": 20,
+    "candidate_concurrent_jobs": 2
+  },
+  "open_decisions": [
+    {
+      "id": "D1",
+      "topic": "label_quality",
+      "decision": "minimum reference gap and disposition of invalid/missing labels before training"
+    },
+    {
+      "id": "D2",
+      "topic": "split",
+      "decision": "22E/20M versus21E/21M training and deterministic parent identities"
+    },
+    {
+      "id": "D3",
+      "topic": "equivalent_work",
+      "decision": "epochs, presentations, global batches, distributed padding and optimizer schedule"
+    },
+    {
+      "id": "D4",
+      "topic": "deployed_predictor",
+      "decision": "validation-only selection rule before solver test outcomes"
+    },
+    {
+      "id": "D5",
+      "topic": "partial_start_policy",
+      "decision": "threshold/support/cap/abstention; no automatic historical inheritance"
+    },
+    {
+      "id": "D6",
+      "topic": "HPC_capacity",
+      "decision": "memory, SMT/cpuset/NUMA, environment thread limits and licenses"
+    },
+    {
+      "id": "D7",
+      "topic": "baseline_reuse",
+      "decision": "fresh contemporaneous B/R/G versus eligible characterization B reuse"
+    },
+    {
+      "id": "D8",
+      "topic": "Benders",
+      "decision": "exact variable partition/certification policy and separate budget"
+    }
+  ],
+  "budget": {
+    "conservative": {
+      "characterization_solves": 90,
+      "evaluation_solves": 117,
+      "total_solves": 207,
+      "nominal_solver_hours": 1656,
+      "reserved_job_hours": 2484,
+      "candidate_reserved_physical_core_hours": 49680,
+      "two_slot_waves": 104,
+      "two_slot_reserved_wall_hours": 1248,
+      "scope": "principal full-budget solves only; excludes root preparation and training"
+    },
+    "conditional_baseline_reuse": {
+      "new_solves_including_characterization": 168,
+      "nominal_solver_hours": 1344,
+      "reserved_job_hours": 2016,
+      "candidate_reserved_physical_core_hours": 40320,
+      "two_slot_reserved_wall_hours": 1008
+    },
+    "gpu_preparation_training_storage_memory": "not_yet_qualified_no_invented_numeric_budget",
+    "root_preparation": {
+      "calls": "up to 90 if one separate root capture is needed per original parent",
+      "budget": "N_root times approved root cap plus overhead; not yet authorized",
+      "reuse": "requires explicit feature/parameter/input identity equivalence"
+    }
+  },
+  "execution_approved": false,
+  "new_solver_calls": 0,
+  "new_training_calls": 0,
+  "new_inference_calls": 0,
+  "publication_approved": false,
+  "schedule": {
+    "protocol": "2026-12-03",
+    "pause_start": "2026-12-19",
+    "pause_end": "2027-01-10",
+    "target_submission": "2027-03-18"
+  }
+}
