@@ -1,0 +1,85 @@
+# NPAD runtime transition — 20 November 2026
+
+This operational record of the completed metadata repair, package installation and scoped runtime qualification does not change the manuscript, historical evidence, learning partitions, model checkpoint or MVP3 experimental protocol. The author executes every HPC/SCP command. No merge, publication or scientific campaign is authorized by this record.
+
+## Current result and requested pause
+
+The author returned job **2278658**, COMPLETED/0:0 in **37 s**. Native Gurobi14 initialized the specified existing license and solved the 2,501-variable technical MILP to primal=dual=1, gap0, retaining Threads=0. The project Gasse model completed three synthetic Adam updates, finite gradients and own model/optimizer state round-trip. The reconstructed result reproduces SHA256 ff27d0c0fd4a511e1f7f1d4d249efc1d45819af4af5a174cd9111e93a92d7c7e; the original venv313 name/version inventory is unchanged. See the [sanitized qualification return](training-license-return-2278658.json). Executed source53dc41f passed all five CI jobs in run44816872315. Preserve this source; do not repeat qualification to follow documentation commits. Real CFL data/driver, historical-checkpoint loading, DDP and performance remain outside this technical GO.
+
+The [DGX inventory review](dgx-inventory-review-20261120.json) verifies the received ZIP hash/CRC and identifies the two coverage gaps: 11 Git-state queries beyond the 32-query cap, and the actual registered pr57-54 worktree rather than the initial pr57_54 selector. No data were moved or deleted. The main repository has local changes and the working dataset is large; no directory is approved for deletion by its name or size.
+
+At the author’s request, pause after this analysis. Follow the [four-part resumption plan](pause-and-resume-plan-20261120.md): finish migration/storage and DGX classification, prepare reviewed archives and transfers, clone the approved CFL revision, and finish the PR99 protocol for coauthor approval before experimental MVP3 development. No additional CLI is requested before this pause.
+
+## Received compatibility evidence
+
+The author completed the minimal DGX compatibility test in job 3917. Python 3.13.18 and gurobipy 14.0.0 loaded the qualified E0 instance, initialized the existing license and returned normally from one optimization. The result JSON reproduced SHA256 df4d14344cd7dea2689ce8357ade6d80fa42060c6b25d45b4ffb47ce758fd64b when reconstructed from the pasted output; full native files were not independently transferred.
+
+The instance is CFL_easy_instance_0, input SHA256 c5c6703a158ced73c7d20ae6c969146c306bd6d71c56163724965d561eb255d1. The run forced MINIMIZE, had no external Start and retained native defaults except TimeLimit=300. Status 9 was TIME_LIMIT, with SolCount 10, Runtime 300.7371549606323s, primal 13.294302903797014, dual 4.557835239808002 and relative gap 0.657158763961499. This is a scoped **GO for native load/license/one optimization on DGX**, not a performance comparison or NPAD/GNN qualification.
+
+The reservation was two CPUs per task and one task. Slurm reported four allocated logical CPUs; the initial process affinity contained four IDs. Gurobi reported 32 software threads with Threads=0. Those observations do not establish access to 32 physical cores or a strong-scaling result. Preserve the run; reconcile resource reservation and software parallelism in the prospective protocol rather than silently changing this test.
+
+## Why the first NPAD installation stopped
+
+The NPAD inventory found two existing Conda prefixes, both with 69 distributions and Python 3.13.15. The original environment had gurobipy 13.0.3; the Gurobi14 environment had14.0.0. Both contained the editable Agrologistic distribution, NumPy 2.5.2 and SciPy 1.18.1. Neither contained Torch/PyG. No additional environment was created.
+
+The add-only installer stopped at its dependency check **before package resolution or PyTorch installation**. The reported conflicts were Agrologistic's installed requirement gurobipy>=13.0.2,<14 and Dash's missing pydantic>=2.10. The original stage, claim, snapshots, tool archive and failure log remain preserved. The author subsequently changed four local Agrologistic source requirements to gurobipy>=13.0.2,<15 and retained a timestamped backup. That source edit does not by itself refresh editable distribution metadata.
+
+The author explicitly authorized this CFL task to reconcile the installed metadata of the existing Gurobi14 prefix, address pydantic and continue the guarded GNN installation. Changes to the **Agrologistic GitHub repository** belong exclusively to project01.01. This PR makes no changes there.
+
+## Executed reconciliation and received package receipt
+
+The author executed the private CLI successfully and returned its metadata receipt. The [template](reconcile-npad.template.sh) is its sanitized archival form; do not repeat this completed installation. Instantiate the placeholders for the existing user, parent-stage basename and source-backup basename; do not run the placeholder template directly. The exact private instance was checked against this template. No credentials, license contents, raw models, private inventories or path maps are committed.
+
+The continuation performs these operations in order:
+
+1. Check the original environment inventory and preserved failed parent, then create an exclusive new continuation claim. Never remove, overwrite or reuse the parent claim.
+2. Compare the local source pyproject against the author's exact backed-up edit and verify the declared Gurobi14 range. Check the editable package's location and standard setuptools build requirements without installing new build dependencies.
+3. If necessary, refresh only the editable Agrologistic distribution with --no-deps and --no-build-isolation. The script does not edit source pyproject or code. The backend may regenerate build metadata. The installed project version may be reconciled to the already declared source version; that exception is recorded. No extras are enabled.
+4. Verify that the original environment inventory and all other existing package versions in the Gurobi14 prefix remain unchanged. Freeze the refreshed inventory. Accept only the already diagnosed missing-pydantic condition as repairable before installation; any other dependency failure stops.
+5. Resolve and hash-lock Torch 2.7.1+cu118, PyG 2.7.0, PyArrow 24.0.0, scikit-learn1.7.2, tqdm4.67.3 and pydantic. Retain an already installed compatible pydantic version; select 2.13.4 if absent. Reject any plan that changes another existing version. Reinstall pydantic at the selected same version only when the prior checker did not recognize it.
+6. Install the reviewed additions, run the dependency check and verify exact before/after inventories. Write a metadata receipt with package and lock identities. No Torch/Gurobi import, CUDA/license initialization, forward, training, solve or Slurm submission occurs.
+
+This permits a specific metadata repair and package installation, not a general upgrade. Conflicts or partial installation are preserved for diagnosis without automatic retry, rollback or claim removal. A package receipt is not proof of CUDA/GNN execution. The author returned the [sanitized installation receipt](installation-receipt.json) with exit 0: 37 distributions were added, yielding 106 while preserving the original prefix and all preexisting non-project versions. Its reconstructed private JSON matches SHA256 8dfbedf6e5d26d7d6c9a019cde6ffab051c8c06c008b9dcfbdd1598579c2cca0. The receipt confirms installed metadata accepts Gurobi14 and pydantic2.13.4 is present. There was no Torch/Gurobi import, CUDA/license initialization, training, solve or Slurm submission in this installation.
+
+## Resource and interpretation boundaries
+
+The live NPAD preflight confirmed 32 physical cores/64 logical CPUs on Intel partitions and 128/256 on amd-512. The user's association exposes QOS preempt, explicitly MaxTRESPU=cpu=1000, MaxJobsPU=10 and MaxSubmitPU=100. These are not guaranteed node allocations and remain subject to inherited and partition limits. The CPU partition QOS compute limits walltime to 2 days, and V100 QOS gpu-short to 6 h, despite larger MaxTime values in sinfo. MaxMemPerCPU is8000MiB on Intel/V100 and4000MiB on AMD.
+
+The global configuration is PreemptType=preempt/qos, PreemptMode=CANCEL, PreemptExemptTime=00:00:00, select/cons_tres with CR_CPU_MEMORY and task/affinity,task/cgroup. Record scheduler preemption separately from scientific TimeLimit, memory censoring and numerical failure. No automatic resubmission or scientific retry is introduced. Larger memory and GPU inventories do not guarantee Benders feasibility or four-GPU admission.
+
+Source/checkpoint/data identities must be qualified before a later real-data GNN pilot. Do not mix DGX/Gurobi13 historical timings with NPAD/Gurobi14 timings as one paired experiment. No new Sprint plan, Benders implementation, full retraining or scientific parameter change accompanies this transition. PR99/101 remain draft and unaffected.
+
+## Verification and handoff
+
+Local Python 3.13 checks passed 25 synthetic cases: 9 locked-plan cases and 16 source/metadata/dependency cases. The runbook passed bash -n. The [reproducible checker](check_runbook.py) uses temporary fixtures only: it never executes the shell, contacts HPC or changes packages. It requires Python>=3.11 and packaging. CI checks implementation contracts, not target GPU/runtime or scientific validity.
+
+Run python docs/research/npad-runtime-transition-20261120/check_runbook.py for the synthetic checks. The CI evidence matrix parses the shell and runs these fixtures on Python3.12. Its historical tensor job remains a separate implementation check, not Gurobi14/Python 3.13 qualification.
+
+The installation receipt is now received; provide this PR link to project01.01 for its own repository reconciliation. The author confirms forecasting/all are legacy inactive extras. Their torch>=2.8 requirement is retained as history: Torch 2.7.1 does not qualify those extras, but this is not a blocker for the scoped CFL runtime test and author requested no automatic update.
+
+The author submitted the reviewed V100 library-runtime check as job **2278626** and returned its terminal collector output. The job and all three steps are COMPLETED/0:0, with 72s job elapsed time and eight allocated Slurm CPUs. The result reports **PASS**. Its reconstructed JSON reproduces SHA256 55972ae2b80b43381a8b985d97621e80cce3f65a92ddfab3b1a9d309b44697c9; raw logs were not independently transferred. See the [sanitized terminal receipt](runtime-return-2278626.json). The installation inventory is unchanged from the reviewed receipt. The runtime scripts do not write to the original prefix; this return does not claim a fresh inventory query of that prefix.
+
+| Check | Observed result |
+| --- | --- |
+| Allocated device | One Tesla V100-SXM2-16GB; CUDA available |
+| Python / Torch / PyG | 3.13.15 / 2.7.1+cu118 / 2.7.0 |
+| NumPy / PyArrow / scikit-learn | 2.5.2 / 24.0.0 / 1.7.2; imports succeeded |
+| NumPy–Torch bridge and fixed CUDA scatter | PASS |
+| Own synthetic HeteroData serialization and GPU transfer | PASS |
+| Training / neural forwards / optimizer steps | 0 / 0 / 0 |
+| Solver calls / license initializations | 0 / 0 |
+| Real instances / historical checkpoints loaded | 0 / 0 |
+
+This supports **GO for the tested library runtime on the allocated V100**. The reported CUDA build is 11.8 and the wheel includes sm_70 for the observed compute capability 7.0. The 72s interval includes library startup and synthetic checks; it is not a GNN training or GPU performance measurement. Eight CPU-affinity IDs are logical processor IDs, not evidence of eight physical cores. The accounting reports 617516 KiB MaxRSS for the worker step; this sampled observation is not a memory feasibility estimate for real graphs, hard MILPs or Benders.
+
+Preserve the [submission](gpu-runtime-submit.template.sh) and [read-only collection](gpu-runtime-collect.template.sh) templates as the executed source. Do not resubmit this completed check. Real GNN architecture/source/checkpoint compatibility, training, DDP and native Gurobi/license execution on NPAD remain separate qualifications; DGX job 3917 does not establish them.
+
+Real-data/source/checkpoint bindings and a separately reviewed technical GNN pilot remain subsequent gates. Finalize the new-chat checkpoint after environment qualification.
+
+Primary operational references: [Slurm QOS](https://slurm.schedmd.com/qos.html), [preemption](https://slurm.schedmd.com/preempt.html), [Gurobi Threads](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameterthreads), and [uv package management](https://docs.astral.sh/uv/pip/packages/).
+
+## Historical preparation of the completed technical qualification
+
+The author requests one bounded project-model training/license check, before the full repository clone, and a read-only inventory before organizing the DGX directories and migrating ignored data. See [the ordered qualification and migration plan](qualification-and-migration.md), the [single-job submission](submit-training-license.template.sh), and the [terminal collector](collect-training-license.template.sh). The technical job is now received above; no full clone, dataset transfer, cleanup, real-data training or new scientific campaign has been launched. The submission waits for all five exact-source CI jobs. It uses the existing Agrologistic license file only for this technical check, without copying or exposing it; the future CFL secrets location is deferred until the clone.
+
+The [metadata-only inventory source](dgx_migration_inventory.py) is embedded unchanged in the author DGX CLI, SHA256 e062f2357294acff4ba60a7fb91e8f015fb48ee31b42994e27bd4436b3be4336. It covers all eight named roots and the ignored input trees, excludes credential contents and follows no symlinks. Its report does not establish duplicate bytes or permission to remove a root. Preserve frozen paths and evidence; prepare concrete cleanup and transfer commands only after reviewing the returned inventory. The original NPAD venv313 remains unchanged.
