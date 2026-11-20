@@ -1,0 +1,155 @@
+{
+  "generated_artifacts": 0,
+  "parents": [
+    {
+      "artifacts": {
+        "M1_assignment_sha256": null,
+        "M2_assignment_sha256": null,
+        "graph_sha256": null,
+        "mathematical_signature_sha256": null,
+        "prediction_sha256": null,
+        "private_starts_sha256": null,
+        "root_sha256": null,
+        "variable_order_sha256": null,
+        "vector_sha256": null
+      },
+      "binding_state": "original_identified_preparation_not_run",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "execution_admitted": false,
+      "generated": false,
+      "model_sha256": "9adf7a5ee5303f75576adebdfde999c160cd9603aa68a95bbc1d98da52b4fe17",
+      "parent": "CFL_medium_instance_5",
+      "same_start_for_solver_seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold": "0.9991843104362488"
+    },
+    {
+      "artifacts": {
+        "M1_assignment_sha256": null,
+        "M2_assignment_sha256": null,
+        "graph_sha256": null,
+        "mathematical_signature_sha256": null,
+        "prediction_sha256": null,
+        "private_starts_sha256": null,
+        "root_sha256": null,
+        "variable_order_sha256": null,
+        "vector_sha256": null
+      },
+      "binding_state": "original_identified_preparation_not_run",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "execution_admitted": false,
+      "generated": false,
+      "model_sha256": "08c54891c1d202176f88cfe38c720957bf6a3e1b3ebde4995c03fb5cec717e48",
+      "parent": "CFL_medium_instance_6",
+      "same_start_for_solver_seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold": "0.9991843104362488"
+    },
+    {
+      "artifacts": {
+        "M1_assignment_sha256": null,
+        "M2_assignment_sha256": null,
+        "graph_sha256": null,
+        "mathematical_signature_sha256": null,
+        "prediction_sha256": null,
+        "private_starts_sha256": null,
+        "root_sha256": null,
+        "variable_order_sha256": null,
+        "vector_sha256": null
+      },
+      "binding_state": "original_identified_preparation_not_run",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "execution_admitted": false,
+      "generated": false,
+      "model_sha256": "57820cdc613ed5349954fad5c34fdc233117270ba75138b1646b2a8fcd145532",
+      "parent": "CFL_medium_instance_9",
+      "same_start_for_solver_seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold": "0.9991843104362488"
+    },
+    {
+      "artifacts": {
+        "M1_assignment_sha256": null,
+        "M2_assignment_sha256": null,
+        "graph_sha256": null,
+        "mathematical_signature_sha256": null,
+        "prediction_sha256": null,
+        "private_starts_sha256": null,
+        "root_sha256": null,
+        "variable_order_sha256": null,
+        "vector_sha256": null
+      },
+      "binding_state": "original_identified_preparation_not_run",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "execution_admitted": false,
+      "generated": false,
+      "model_sha256": "f219560e7ee07013152d4069af8585848e853d6d8bc213b248ba2ebcd0d8dde5",
+      "parent": "CFL_medium_instance_13",
+      "same_start_for_solver_seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold": "0.9991843104362488"
+    },
+    {
+      "artifacts": {
+        "M1_assignment_sha256": null,
+        "M2_assignment_sha256": null,
+        "graph_sha256": null,
+        "mathematical_signature_sha256": null,
+        "prediction_sha256": null,
+        "private_starts_sha256": null,
+        "root_sha256": null,
+        "variable_order_sha256": null,
+        "vector_sha256": null
+      },
+      "binding_state": "original_identified_preparation_not_run",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "execution_admitted": false,
+      "generated": false,
+      "model_sha256": "26598f6e365c8bf7da383802accd9cf768103a6ffa6b36acf056b4168e2c8870",
+      "parent": "CFL_medium_instance_20",
+      "same_start_for_solver_seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold": "0.9991843104362488"
+    },
+    {
+      "artifacts": {
+        "M1_assignment_sha256": null,
+        "M2_assignment_sha256": null,
+        "graph_sha256": null,
+        "mathematical_signature_sha256": null,
+        "prediction_sha256": null,
+        "private_starts_sha256": null,
+        "root_sha256": null,
+        "variable_order_sha256": null,
+        "vector_sha256": null
+      },
+      "binding_state": "original_identified_preparation_not_run",
+      "checkpoint_sha256": "a1868134028694e0f807b5627100a77fcd1dc41e6c884b176290caee253a4028",
+      "execution_admitted": false,
+      "generated": false,
+      "model_sha256": "568bbff8df060b2de1df4d9bf3815d77e2e18ac73158fe676ba121182add70c8",
+      "parent": "CFL_medium_instance_26",
+      "same_start_for_solver_seeds": [
+        42,
+        43,
+        44
+      ],
+      "threshold": "0.9991843104362488"
+    }
+  ]
+}

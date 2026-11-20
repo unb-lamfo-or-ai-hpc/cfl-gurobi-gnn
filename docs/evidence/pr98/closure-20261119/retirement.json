@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-19",
+  "author_decision": "Discontinue planned experiments and merge PR98 as closed technical work",
+  "campaign_990_status": "discontinued_before_submission",
+  "alternative_66_or_18_status": "proposal_not_executed",
+  "scientific_campaign_results": 0,
+  "executed_source_commit": "0bb77ee8e8a7c80a7851955b20fbc73586e02cb5",
+  "frozen_sources_preserved": true,
+  "queue_mutations_by_agent": 0,
+  "jobs": [
+    {
+      "id": "3891",
+      "state": "FAILED",
+      "reason": "size_limited_license"
+    },
+    {
+      "id": "3905",
+      "state": "FAILED",
+      "reason": "whole_process_deadline"
+    },
+    {
+      "id": "3906",
+      "state": "COMPLETED",
+      "scope": "six_technical_only_time_limited_solves"
+    },
+    {
+      "id": "3907",
+      "state": "COMPLETED",
+      "elapsed_seconds": 2455,
+      "scope": "five_new_hard_preparations_H25_reused",
+      "return_sha256": "3dfd0f47ea047ae92e874741547e0b73df986a13bf0b7fb6c5889d1029e8f2c5"
+    }
+  ],
+  "new_training_or_model_change": false,
+  "mvp3_execution_authority_inherited": false
+}

@@ -54,9 +54,9 @@ PUBLIC_MATERIAL_LINKS = (
     "https://unb-lamfo-or-ai-hpc.github.io/cfl-gurobi-gnn/appendices/appendices.tex",
     "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/blob/main/docs/research/mvp2-data-release-plan.md",
 )
-INCLUDES = {"tables/principal_ratios.qmd", "tables/principal_easy_gaps.qmd",
-            "tables/principal_costs.qmd"}
+INCLUDES: set[str] = set()
 SUPPLEMENT_INCLUDES = {
+    "../tables/principal_costs.qmd",
     "../tables/current_predictive.qmd", "../tables/current_heldout.qmd",
     "../tables/current_influence.qmd", "../tables/current_timing.qmd",
     "../tables/principal_easy_times.qmd", "../tables/principal_medium_quality.qmd",
@@ -79,6 +79,7 @@ SUPPLEMENT_INCLUDES |= {"../tables/" + name + ".qmd" for name in PARTIAL_TABLES}
 READER_TEXTS = (
     "index.qmd", "highlights.txt", "supplement/index.qmd",
     "supplement/README.md", "supplement/gnn-methods-audit.md",
+    "supplement/gnn-mathematical-foundations.md",
     "supplement/configuration-reference.md", "supplement/extended-results.md",
 )
 READER_INTERNAL_NOTE = re.compile(
@@ -135,10 +136,10 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if not {"han2023", "scavuzzo2026survey"}.issubset(keys):
         failures.append("directed_primal_guidance_references_missing")
     if any(term not in article for term in (
-        "150 seed42 observations", "numerical",
-        "not an independent LP-only heuristic",
-        "## Preliminary six-medium evidence",
-    )):
+        "one physical thread", "numerical",
+        "the cost of obtaining these counts belongs to the preparation of R",
+        "does not establish a consistent advantage",
+    )) or "## B.11. Preliminary six-medium optimization study" not in readers["supplement/extended-results.md"]:
         failures.append("mvp2_seed42_methodological_scope_missing")
     continuation = evidence.get("mvp2_continuation", {})
     if not isinstance(continuation, dict):
@@ -206,9 +207,11 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if (set(includes) != INCLUDES or len(includes) != len(INCLUDES)
             or set(supplement_includes) != SUPPLEMENT_INCLUDES
             or len(supplement_includes) != len(SUPPLEMENT_INCLUDES)
-            or entry_includes != ["gnn-methods-audit.md", "extended-results.md",
+            or entry_includes != ["gnn-methods-audit.md", "gnn-mathematical-foundations.md", "extended-results.md",
                                    "configuration-reference.md"]
-            or re.search(r"```\s*\{", reader_prose)):
+            or re.search(r"```\s*\{", re.sub(
+                r"(?m)^```\{=latex\}\n\\AppendixDisplayNumbers\{[ABC]\}\n```$", "", reader_prose
+            ))):
         failures.append("executable_or_unreviewed_included_content")
     if any(x not in config for x in ("enabled: false", "freeze: true",
                                      "notebooks: []", "meca-bundle: false")):
@@ -240,8 +243,9 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
     if any(term not in before_results for term in ("binary cross-entropy", "Average precision (AP)", "Brier score", "Expected calibration error (ECE)", "right-censored", "parent-macro")):
         failures.append("metrics_not_defined_before_results")
     figure_documents = {
-        "index.qmd": ("fig-pipeline", "fig-principal-time", "fig-medium-gap", "fig-gpu-bce"),
+        "index.qmd": ("fig-message-passing", "fig-pipeline", "fig-gpu-bce"),
         "supplement/extended-results.md": ("fig-loss", "fig-effects", "fig-target-time",
+            "fig-gpu-bce-appendix",
             "fig-history39-admission", "fig-history39-gap", "fig-history39-times",
             "fig-history39-distributions", "fig-history39-structure",
             "fig-history39-training", "fig-history39-prediction", "fig-partial-cpu"),
@@ -253,9 +257,8 @@ def check_source(root: Path = MANUSCRIPT) -> list[str]:
             if not match or "@" + identity not in text[:match.start()]:
                 failures.append("figure_not_introduced:" + identity)
     table_documents = {
-        "index.qmd": (("principal_ratios", "tbl-principal-ratios"),
-                      ("principal_costs", "tbl-principal-costs")),
         "supplement/extended-results.md": (
+            ("principal_costs", "tbl-principal-costs"),
             ("current_predictive", "tbl-predictive"), ("current_heldout", "tbl-heldout"),
             ("current_influence", "tbl-influence"), ("current_timing", "tbl-times"),
             ("principal_easy_times", "tbl-easy-times"),
@@ -372,7 +375,7 @@ def check_rendered(root: Path = MANUSCRIPT) -> list[str]:
         failures.append("rendered_asset_receipt_missing")
     else:
         receipt = json.loads(receipt_path.read_text())
-        if receipt.get("source_contract_sha256") != CONTRACT or receipt.get("training_epochs") != 100 or receipt.get("validation_minimum_epoch") != 34 or len(receipt.get("outputs", [])) != 16:
+        if receipt.get("source_contract_sha256") != CONTRACT or receipt.get("training_epochs") != 100 or receipt.get("validation_minimum_epoch") != 34 or len(receipt.get("outputs", [])) != 19:
             failures.append("rendered_asset_source_or_count_mismatch")
         current = root / "results/current"
         for name, expected in receipt.get("source_files", {}).items():
@@ -441,7 +444,7 @@ def check_pdf_text(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     normalized = " ".join(text.split())
     failures = []
-    for word in ("Evaluating Graph Neural", "0.6993", "Gasse", "Goerigk", "References"):
+    for word in ("Evaluating Graph Neural", "0.690597", "Gasse", "Goerigk", "References"):
         if word not in normalized:
             failures.append("pdf_text_missing:" + word)
     if "??" in text or "[?]" in text:

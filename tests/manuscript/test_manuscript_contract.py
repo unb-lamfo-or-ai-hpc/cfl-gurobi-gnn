@@ -137,8 +137,8 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("approved_scientific_communication_drift",
                       CHECK.check_source(self.root))
 
-    def test_current_seed42_scope_cannot_be_silently_removed(self):
-        self.change("index.qmd", "150 seed42 observations", "210 multiseed observations")
+    def test_one_hour_thread_scope_cannot_be_silently_removed(self):
+        self.change("index.qmd", "one physical thread", "multiple physical threads")
         self.assertIn("mvp2_seed42_methodological_scope_missing", CHECK.check_source(self.root))
 
 
@@ -197,7 +197,8 @@ class ManuscriptContractTests(unittest.TestCase):
         self.assertIn("reviewed_l2o_context_missing", CHECK.check_source(self.root))
 
     def test_unapproved_include_fails(self):
-        self.change("index.qmd", "tables/principal_ratios.qmd", "../../private.qmd")
+        self.change("supplement/extended-results.md", "../tables/principal_costs.qmd",
+                    "../../private.qmd")
         self.assertIn("executable_or_unreviewed_included_content", CHECK.check_source(self.root))
 
     def test_executable_chunk_fails(self):

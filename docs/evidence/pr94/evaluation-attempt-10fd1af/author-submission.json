@@ -1,0 +1,402 @@
+{
+  "schema": "pr94_author_submission_and_accounting_v1",
+  "date_received": "2026-11-02",
+  "provenance": "author-provided CLI stdout and sacct text, normalized transcription; private submission.json not transferred",
+  "query_timestamp_UTC": null,
+  "source_commit": "10fd1af20ff40c43147331e7321adf10c151a6f5",
+  "accepted_plan_sha256": "44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600",
+  "CLI_exit_code": 0,
+  "automatic_retry": false,
+  "concurrency_ceiling": 4,
+  "groups": 48,
+  "maximum_evaluations": 144,
+  "jobs": [
+    "3785",
+    "3786",
+    "3787",
+    "3788",
+    "3789",
+    "3790",
+    "3791",
+    "3792",
+    "3793",
+    "3794",
+    "3795",
+    "3796",
+    "3797",
+    "3798",
+    "3799",
+    "3800",
+    "3801",
+    "3802",
+    "3803",
+    "3804",
+    "3805",
+    "3806",
+    "3807",
+    "3808",
+    "3809",
+    "3810",
+    "3811",
+    "3812",
+    "3813",
+    "3814",
+    "3815",
+    "3816",
+    "3817",
+    "3818",
+    "3819",
+    "3820",
+    "3821",
+    "3822",
+    "3823",
+    "3824",
+    "3825",
+    "3826",
+    "3827",
+    "3828",
+    "3829",
+    "3830",
+    "3831",
+    "3832"
+  ],
+  "scheduler_snapshot": [
+    {
+      "job_id": "3785",
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 2
+    },
+    {
+      "job_id": "3786",
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 2
+    },
+    {
+      "job_id": "3787",
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 2
+    },
+    {
+      "job_id": "3788",
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 2
+    },
+    {
+      "job_id": "3789",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3790",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3791",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3792",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3793",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3794",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3795",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3796",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3797",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3798",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3799",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3800",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3801",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3802",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3803",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3804",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3805",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3806",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3807",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3808",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3809",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3810",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3811",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3812",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3813",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3814",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3815",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3816",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3817",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3818",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3819",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3820",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3821",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3822",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3823",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3824",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3825",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3826",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3827",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3828",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3829",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3830",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3831",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    },
+    {
+      "job_id": "3832",
+      "state": "PENDING",
+      "exit_code": "0:0",
+      "elapsed": "00:00:00",
+      "AllocCPUS": 1
+    }
+  ],
+  "scientific_reporting_eligible": false
+}

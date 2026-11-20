@@ -87,7 +87,7 @@ def build(root: Path = ROOT) -> None:
     ax.text(.2, 4.6, "APPLICATION", fontsize=10)
     for x, label in zip(xs, ("Original model\nstored root values",
                             "Aligned graph\nfrozen GNN inference",
-                            "G: learned values\nR: LP-ranked values\nmatched (k, q)")):
+                            "G: learned values\nR: LP-ranked values")):
         box(x, 3.25, label)
     arrow((3.05, 3.75), (3.5, 3.75))
     arrow((6.45, 3.75), (6.9, 3.75))
@@ -99,9 +99,37 @@ def build(root: Path = ROOT) -> None:
     arrow((3.05, 1.6), (3.5, 1.6))
     arrow((6.45, 1.6), (6.9, 1.6))
     arrow((8.4, 3.15), (5.0, 2.2))
-    ax.text(.2, .35, "B/R/G preserve all original constraints and variable domains.",
-            fontsize=9)
     save(fig, "figure_pipeline")
+
+    fig, panels = plt.subplots(1, 2, figsize=(7.0, 2.65), layout="constrained")
+    variables = [(0.8, y) for y in (2.1, 1.35, .6)]
+    constraints = [(3.2, y) for y in (1.75, .95)]
+    topology = ((0, 0), (1, 0), (1, 1), (2, 1))
+
+    for stage, (panel, title) in enumerate(zip(
+        panels, ("(a) Variables to constraints", "(b) Updated constraints to variables")
+    )):
+        panel.set(xlim=(0, 4), ylim=(.2, 2.75), title=title)
+        panel.axis("off")
+        panel.text(.8, 2.5, "Variables", ha="center")
+        panel.text(3.2, 2.5, "Constraints", ha="center")
+        for variable, constraint in topology:
+            endpoints = variables[variable], constraints[constraint]
+            start, end = endpoints if stage == 0 else endpoints[::-1]
+            panel.annotate("", xy=end, xytext=start, arrowprops={
+                "arrowstyle": "-|>", "shrinkA": 13, "shrinkB": 13,
+                "color": "#555555", "lw": 1.1, "mutation_scale": 11,
+            })
+        for nodes, symbol, active in (
+            (variables, "v", stage == 1), (constraints, "c", stage == 0)
+        ):
+            marker = "o" if symbol == "v" else "s"
+            for index, (x, y) in enumerate(nodes, 1):
+                panel.scatter(x, y, marker=marker, s=420, linewidth=1,
+                              color="#d6e7ef" if active else "white", edgecolor="#374956")
+                label = "$" + f"{symbol}_{index}" + "$"
+                panel.text(x, y, label, ha="center", va="center")
+    save(fig, "figure_message_passing")
 
     fig, ax = plt.subplots(figsize=(8, 3.0), layout="constrained")
     for key, label, color, style in (("training_weighted_bce", "Training", "#222222", "-"), ("validation_weighted_bce", "Validation", "#777777", "--")):

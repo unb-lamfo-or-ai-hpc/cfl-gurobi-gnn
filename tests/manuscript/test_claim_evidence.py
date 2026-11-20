@@ -111,14 +111,14 @@ class ClaimEvidenceTests(unittest.TestCase):
         )
         self.assertIn("claim_value_mismatch:cpu_cost_cold", self.check())
 
-    def test_abstract_cost_ratio_is_bound_to_the_same_source(self):
+    def test_abstract_gpu_ratio_is_bound_to_the_matched_pair(self):
         path = self.manuscript / "index.qmd"
         text = path.read_text(encoding="utf-8")
-        self.assertIn("ratio is 0.843 for solver runtime", text)
-        path.write_text(text.replace("ratio is 0.843 for solver runtime",
-                                     "ratio is 0.777 for solver runtime"),
+        self.assertIn("a 1.831-fold whole-job speedup", text)
+        path.write_text(text.replace("a 1.831-fold whole-job speedup",
+                                     "a 1.777-fold whole-job speedup"),
                         encoding="utf-8")
-        self.assertIn("claim_value_mismatch:abstract_cpu_cost", self.check())
+        self.assertIn("claim_value_mismatch:abstract_gpu_job", self.check())
 
     def test_unavailable_value_cannot_be_formatted_as_a_number(self):
         source = self.source("gpu_review")

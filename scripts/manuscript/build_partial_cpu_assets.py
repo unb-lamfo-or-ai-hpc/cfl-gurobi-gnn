@@ -281,18 +281,17 @@ def check_source(manuscript, repository=ROOT):
         require(digest(raw_audit) == M12_AUDIT_SHA, "m12_audit_source_hash")
         validate_m12_audit(json.loads(raw_audit))
         rows = sources["cells.csv"]
-        article = (manuscript / "index.qmd").read_text(encoding="utf-8")
         appendix = (manuscript / "supplement/extended-results.md").read_text(
             encoding="utf-8"
         )
-        section = article.split("## Long-horizon CPU observations", 1)[1].split(
+        section = appendix.split("## B.12. Long-horizon CPU evaluation", 1)[1].split(
             "\n## ", 1
         )[0]
         require(
             "All 60 configurations were completed and reconciled" in section
             and "Forty-seven" in section
             and "13 were time-limited, all on M7" in section,
-            "partial_article_counts",
+            "partial_appendix_counts",
         )
         wins = 0
         for cap in (1, 2, 4, 8, 16):
@@ -306,18 +305,18 @@ def check_source(manuscript, repository=ROOT):
             ) < float(threshold(sources, group["B"]["job_id"])["observed_seconds"])
         require(
             wins == 4 and "before B at four of five caps" in section,
-            "partial_article_m0_contrast",
+            "partial_appendix_m0_contrast",
         )
         require(
             len({r["primal"] for r in rows if r["alias"] == "M7"}) == 1
             and "same reported primal value" in section,
-            "partial_article_m7_primal",
+            "partial_appendix_m7_primal",
         )
         require(
             "do not establish certified speedups" in section
             and "All 60 configurations" in section
             and "separately from the 150-observation" in section,
-            "partial_article_scope",
+            "partial_appendix_scope",
         )
         require(
             "| Long-horizon CPU evaluation | 60 completed configurations on the same four medium instances |"
@@ -329,15 +328,15 @@ def check_source(manuscript, repository=ROOT):
             "0.132417%",
             "0.009495%",
             "0.000524%",
-            "31.43",
-            "47.57",
-            "9.04",
-            "37.56",
-            "35.90",
+            "0.0318",
+            "0.0210",
+            "0.1106",
+            "0.0266",
+            "0.0279",
         ):
             require(value in appendix, "partial_appendix_value:" + value)
         require(
-            "not certified speedups" in appendix
+            "Numerical differences limit comparisons at common quality." in appendix
             and "Exact primal feasibility does not certify global optimality"
             in appendix
             and "every continuous completion with those rounded binaries fixed"
@@ -407,8 +406,8 @@ def build(manuscript=None):
             [
                 cap,
                 *[f"{float(t['observed_seconds']) / 60:.2f}" for t in times],
-                f"{time_ratio(times[0], times[2]):.3f}",
-                f"{time_ratio(times[1], times[2]):.3f}",
+                f"{time_ratio(times[2], times[0]):.3f}",
+                f"{time_ratio(times[2], times[1]):.3f}",
             ]
         )
         group = {
@@ -428,9 +427,9 @@ def build(manuscript=None):
         )
     (tables / "partial_cpu_m0.qmd").write_text(
         table(
-            ["Threads", "B (min)", "R (min)", "G (min)", "B/G", "R/G"],
+            ["Threads", "B (min)", "R (min)", "G (min)", "$T_G/T_B$", "$T_G/T_R$"],
             m0_rows,
-            "M0: first observed reported gap at most 0.01%; conditional time ratios.",
+            "M0: first observed reported gap at most 0.01%.",
             "tbl-partial-cpu-m0",
         ),
         encoding="utf-8",

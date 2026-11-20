@@ -1,0 +1,406 @@
+{
+  "CANCELLED": 44,
+  "FAILED": 4,
+  "accounting": [
+    {
+      "AllocCPUS": "2",
+      "ElapsedRaw": "0",
+      "ExitCode": "2:0",
+      "JobIDRaw": "3785",
+      "State": "FAILED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "2",
+      "ElapsedRaw": "0",
+      "ExitCode": "2:0",
+      "JobIDRaw": "3786",
+      "State": "FAILED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "2",
+      "ElapsedRaw": "0",
+      "ExitCode": "2:0",
+      "JobIDRaw": "3787",
+      "State": "FAILED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "2",
+      "ElapsedRaw": "0",
+      "ExitCode": "2:0",
+      "JobIDRaw": "3788",
+      "State": "FAILED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3789",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3790",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3791",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3792",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3793",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3794",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3795",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3796",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3797",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3798",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3799",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3800",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3801",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3802",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3803",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3804",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3805",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3806",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3807",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3808",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3809",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3810",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3811",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3812",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3813",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3814",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3815",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3816",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3817",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3818",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3819",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3820",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3821",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3822",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3823",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3824",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3825",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3826",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3827",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3828",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3829",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3830",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3831",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    },
+    {
+      "AllocCPUS": "1",
+      "ElapsedRaw": "0",
+      "ExitCode": "0:0",
+      "JobIDRaw": "3832",
+      "State": "CANCELLED",
+      "User": "vrcelestino"
+    }
+  ],
+  "all_48_terminal": true,
+  "archive_sha256": "e8755224290ad952846689701b1513a1d4f9d845aa53d8f9703d7830f48b7e89",
+  "durable_optimize_intents": [],
+  "entry_sha256": "9eb631ee51d90c2e95a405c5725cde51b32aaba7706a9be2ae08dfa90c46ffe9",
+  "failure_before_python_worker": true,
+  "new_scientific_calls_by_collector": 0,
+  "original_member_sha256": "70739cff41968a551fcc507af8339aafad168176053527f9dfaa03510536a3ea",
+  "plan_sha256": "44b443a127af5ec4795e454b534aca8274c8e9a3d3d0ddb91fd67bb4cd4a9600",
+  "query_utc": "2026-11-02T17:26:46.443807+00:00",
+  "queue_mutations_by_collector": 0,
+  "run_file_names": [],
+  "sanitization": "Cancellation UID removed; original accounting clock strings omitted because their timezone was not supplied separately. Original member bytes remain in the private archive.",
+  "sanitized_derivative": true,
+  "schema": "pr94_entry_attempt_closed_v1",
+  "scientific_reporting_eligible": false,
+  "source_commit": "10fd1af20ff40c43147331e7321adf10c151a6f5"
+}

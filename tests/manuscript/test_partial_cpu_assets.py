@@ -81,7 +81,7 @@ class PartialCpuTests(unittest.TestCase):
     def test_removing_partial_qualification_rejected(self):
         with tempfile.TemporaryDirectory() as d:
             root = self.prose_fixture(d)
-            path = root / "index.qmd"
+            path = root / "supplement/extended-results.md"
             path.write_text(
                 path.read_text(encoding="utf-8").replace(
                     "do not establish certified speedups",
@@ -90,7 +90,7 @@ class PartialCpuTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertTrue(
-                any("partial_article_scope" in e for e in P.check_source(root))
+                any("partial_appendix_scope" in e for e in P.check_source(root))
             )
 
     def test_population_table_cannot_revert_to_partial_sample(self):
