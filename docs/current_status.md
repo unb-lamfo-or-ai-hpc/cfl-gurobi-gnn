@@ -1,3 +1,7 @@
+# Runtime transition — 20 November 2026
+
+The author authorized installed-metadata reconciliation and guarded GNN dependency additions in the existing NPAD Gurobi14 environment, preserving the original prefix. The initial package check stopped before installation; the specifically authorized continuation completed and its received receipt confirms37 added distributions, preserved original/non-project inventories and corrected Gurobi14 metadata. CUDA/GNN execution is not yet qualified. Forecasting/all remain legacy inactive extras by author confirmation. DGX job3917 passed its one-solve native compatibility test, with an explicit CPU-affinity/software-thread qualification. See the [operational record](research/npad-runtime-transition-20261120/README.md) for received evidence, pending qualification and strict execution boundaries. This does not authorize a new scientific campaign or change PR99/101.
+
 # MVP2 closeout and MVP3 transition — 19 November 2026
 
 The author authorized completing PR97 and PR98 and merging both into develop after checks. PR97 adds the integral audited mathematical foundation in Appendix A.8; historical results remain unchanged. PR98 is concluded technical work: the 990-evaluation matrix and proposed reduced alternatives are discontinued before submission. The current launcher and mutating matrix CLI fail closed. Preserve all installed sources, pilots, receipts, claims and artifacts; no HPC queue mutation was performed.
