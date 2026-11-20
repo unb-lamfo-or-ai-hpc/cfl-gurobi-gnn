@@ -77,3 +77,6 @@ manuscript/tables/partial_cpu_m0.qmd -text !eol
 manuscript/tables/partial_cpu_m7.qmd -text !eol
 docs/evidence/pr98/preflight-20261110/hard-preflight-v1.json -text
 docs/evidence/pr98/preflight-20261110/hard-preflight-v2.json -text
+
+# Runtime templates and their checker must use identical bytes on all platforms.
+docs/research/npad-runtime-transition-20261120/** text eol=lf
