@@ -69,3 +69,9 @@ Preserve the [submission](gpu-runtime-submit.template.sh) and [read-only collect
 Real-data/source/checkpoint bindings and a separately reviewed technical GNN pilot remain subsequent gates. Finalize the new-chat checkpoint after environment qualification.
 
 Primary operational references: [Slurm QOS](https://slurm.schedmd.com/qos.html), [preemption](https://slurm.schedmd.com/preempt.html), [Gurobi Threads](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameterthreads), and [uv package management](https://docs.astral.sh/uv/pip/packages/).
+
+## Next authorized technical qualification and DGX organization
+
+The author requests one bounded project-model training/license check, before the full repository clone, and a read-only inventory before organizing the DGX directories and migrating ignored data. See [the ordered qualification and migration plan](qualification-and-migration.md), the [single-job submission](submit-training-license.template.sh), and the [terminal collector](collect-training-license.template.sh). No full clone, data transfer, cleanup, real-data training or new scientific campaign has been launched. The submission waits for all five exact-source CI jobs. It uses the existing Agrologistic license file only for this technical check, without copying or exposing it; the future CFL secrets location is deferred until the clone.
+
+The [metadata-only inventory source](dgx_migration_inventory.py) is embedded unchanged in the author DGX CLI, SHA256 e062f2357294acff4ba60a7fb91e8f015fb48ee31b42994e27bd4436b3be4336. It covers all eight named roots and the ignored input trees, excludes credential contents and follows no symlinks. Its report does not establish duplicate bytes or permission to remove a root. Preserve frozen paths and evidence; prepare concrete cleanup and transfer commands only after reviewing the returned inventory. The original NPAD venv313 remains unchanged.

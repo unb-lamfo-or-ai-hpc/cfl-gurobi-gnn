@@ -27,6 +27,7 @@ on:
       - 'tests/smoke/test_pr87_matched_gpu.py'
       - 'configs/quality/pr64-ruff.toml'
       - '.github/workflows/evidence.yml'
+      - 'docs/research/npad-runtime-transition-20261120/**'
       - 'tests/smoke/test_pr94_features.py'
       - '.gitattributes'
   push:
@@ -54,6 +55,7 @@ on:
       - 'tests/smoke/test_pr87_matched_gpu.py'
       - 'configs/quality/pr64-ruff.toml'
       - '.github/workflows/evidence.yml'
+      - 'docs/research/npad-runtime-transition-20261120/**'
       - '.gitattributes'
 
 permissions:
@@ -76,15 +78,17 @@ jobs:
       - name: Install pinned offline test dependencies
         run: python -m pip install ruff==0.16.8 numpy==1.26.4 packaging==26.0
       - name: Scoped lint
-        run: python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence docs/research/npad-runtime-transition-20261120/check_runbook.py
+        run: python -m ruff check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence docs/research/npad-runtime-transition-20261120
       - name: Scoped format
-        run: python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence docs/research/npad-runtime-transition-20261120/check_runbook.py
+        run: python -m ruff format --check --config configs/quality/pr64-ruff.toml scripts/evidence tests/evidence docs/research/npad-runtime-transition-20261120
       - name: Check medium operator shell syntax without execution
         shell: bash
         run: |
           bash -n docs/research/npad-runtime-transition-20261120/reconcile-npad.template.sh
           bash -n docs/research/npad-runtime-transition-20261120/gpu-runtime-submit.template.sh
           bash -n docs/research/npad-runtime-transition-20261120/gpu-runtime-collect.template.sh
+          bash -n docs/research/npad-runtime-transition-20261120/submit-training-license.template.sh
+          bash -n docs/research/npad-runtime-transition-20261120/collect-training-license.template.sh
           bash -n scripts/evidence/operate_pr78_medium.sh
           bash -n scripts/slurm/dasci/submit_pr78_medium.sbs
           bash -n scripts/evidence/operate_pr80_numeric.sh
@@ -120,7 +124,9 @@ jobs:
           bash -n docs/research/pr98-cli/collect-990.template.sh
       - name: T1 NPAD metadata and add-only plan contracts (synthetic only)
         if: matrix.python-version == '3.12'
-        run: python -B docs/research/npad-runtime-transition-20261120/check_runbook.py
+        run: python -B docs/research/npad-runtime-transition-20261120
+      - name: NPAD qualification and migration safety fixtures (offline, fake license)
+        run: python -B docs/research/npad-runtime-transition-20261120/test_qualification_contracts.py
       - name: T1 PR89 sealed receipt integrity (no scientific calls)
         run: python -B -m unittest discover -s tests/evidence -p test_pr89_sealed_receipts.py -v
       - name: T1 PR94 installation, preparation and evaluation admission (no scientific calls)
@@ -169,3 +175,5 @@ jobs:
         run: python -B -m unittest discover -s tests/smoke -p test_pr94_features.py -v
       - name: T2 actual gradient averaging and unequal-size graph checks
         run: python -B -m unittest discover -s tests/smoke -p test_pr87_matched_gpu.py -v
+      - name: NPAD project-model synthetic training implementation (CPU only, no solver)
+        run: python -B docs/research/npad-runtime-transition-20261120/test_synthetic_training.py
