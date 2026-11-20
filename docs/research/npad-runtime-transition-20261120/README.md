@@ -1,6 +1,6 @@
 # NPAD runtime transition — 20 November 2026
 
-This operational record and guarded installation proposal do not change the manuscript, historical evidence, learning partitions, model checkpoint or MVP3 experimental protocol. The author executes every HPC/SCP command. No merge, publication or scientific campaign is authorized by this record.
+This operational record of the completed metadata repair, package installation and scoped runtime qualification does not change the manuscript, historical evidence, learning partitions, model checkpoint or MVP3 experimental protocol. The author executes every HPC/SCP command. No merge, publication or scientific campaign is authorized by this record.
 
 ## Received compatibility evidence
 
@@ -39,7 +39,7 @@ The live NPAD preflight confirmed 32 physical cores/64 logical CPUs on Intel par
 
 The global configuration is PreemptType=preempt/qos, PreemptMode=CANCEL, PreemptExemptTime=00:00:00, select/cons_tres with CR_CPU_MEMORY and task/affinity,task/cgroup. Record scheduler preemption separately from scientific TimeLimit, memory censoring and numerical failure. No automatic resubmission or scientific retry is introduced. Larger memory and GPU inventories do not guarantee Benders feasibility or four-GPU admission.
 
-Source/checkpoint/data identities must be qualified before a later GPU/GNN CLI. Do not mix DGX/Gurobi13 historical timings with NPAD/Gurobi14 timings as one paired experiment. No new Sprint plan, Benders implementation, full retraining or scientific parameter change accompanies this transition. PR99/101 remain draft and unaffected.
+Source/checkpoint/data identities must be qualified before a later real-data GNN pilot. Do not mix DGX/Gurobi13 historical timings with NPAD/Gurobi14 timings as one paired experiment. No new Sprint plan, Benders implementation, full retraining or scientific parameter change accompanies this transition. PR99/101 remain draft and unaffected.
 
 ## Verification and handoff
 
@@ -49,7 +49,22 @@ Run python docs/research/npad-runtime-transition-20261120/check_runbook.py for t
 
 The installation receipt is now received; provide this PR link to project01.01 for its own repository reconciliation. The author confirms forecasting/all are legacy inactive extras. Their torch>=2.8 requirement is retained as history: Torch 2.7.1 does not qualify those extras, but this is not a blocker for the scoped CFL runtime test and author requested no automatic update.
 
-The next prepared, not submitted operation is one V100 library-runtime job: one task, eight Slurm CPUs, 48G, a 15min reservation and a 300s process deadline, with no requeue. It imports the installed numerical/data libraries and Torch/PyG, checks NumPy-Torch interoperability and a tiny fixed CUDA scatter sum, then round-trips its own synthetic HeteroData. It loads no real instances or historical checkpoints and performs no neural forward, backward/optimizer step, training, Gurobi import, license initialization or solve. See the [submission](gpu-runtime-submit.template.sh) and [read-only terminal collection](gpu-runtime-collect.template.sh) templates. They bind the received installation receipt and exact environment inventory at submission and again inside the batch worker; a later environment change stops the check. No GPU execution is claimed.
+The author submitted the reviewed V100 library-runtime check as job **2278626** and returned its terminal collector output. The job and all three steps are COMPLETED/0:0, with 72s job elapsed time and eight allocated Slurm CPUs. The result reports **PASS**. Its reconstructed JSON reproduces SHA256 55972ae2b80b43381a8b985d97621e80cce3f65a92ddfab3b1a9d309b44697c9; raw logs were not independently transferred. See the [sanitized terminal receipt](runtime-return-2278626.json). The installation inventory is unchanged from the reviewed receipt. The runtime scripts do not write to the original prefix; this return does not claim a fresh inventory query of that prefix.
+
+| Check | Observed result |
+| --- | --- |
+| Allocated device | One Tesla V100-SXM2-16GB; CUDA available |
+| Python / Torch / PyG | 3.13.15 / 2.7.1+cu118 / 2.7.0 |
+| NumPy / PyArrow / scikit-learn | 2.5.2 / 24.0.0 / 1.7.2; imports succeeded |
+| NumPy–Torch bridge and fixed CUDA scatter | PASS |
+| Own synthetic HeteroData serialization and GPU transfer | PASS |
+| Training / neural forwards / optimizer steps | 0 / 0 / 0 |
+| Solver calls / license initializations | 0 / 0 |
+| Real instances / historical checkpoints loaded | 0 / 0 |
+
+This supports **GO for the tested library runtime on the allocated V100**. The reported CUDA build is 11.8 and the wheel includes sm_70 for the observed compute capability 7.0. The 72s interval includes library startup and synthetic checks; it is not a GNN training or GPU performance measurement. Eight CPU-affinity IDs are logical processor IDs, not evidence of eight physical cores. The accounting reports 617516 KiB MaxRSS for the worker step; this sampled observation is not a memory feasibility estimate for real graphs, hard MILPs or Benders.
+
+Preserve the [submission](gpu-runtime-submit.template.sh) and [read-only collection](gpu-runtime-collect.template.sh) templates as the executed source. Do not resubmit this completed check. Real GNN architecture/source/checkpoint compatibility, training, DDP and native Gurobi/license execution on NPAD remain separate qualifications; DGX job 3917 does not establish them.
 
 Real-data/source/checkpoint bindings and a separately reviewed technical GNN pilot remain subsequent gates. Finalize the new-chat checkpoint after environment qualification.
 
