@@ -1,4 +1,10 @@
-# Next technical qualification and migration gates — 20 November 2026
+# Current — NPAD qualification received; pause after migration analysis — 20 November 2026
+
+Job 2278658 is COMPLETED/0:0 in 37s: Gurobi14/license and three-update synthetic project-model training PASS, result SHA256 ff27d0c0fd4a511e1f7f1d4d249efc1d45819af4af5a174cd9111e93a92d7c7e reproduced offline. The original venv313 inventory remains 94e16343…bc750. Executed source 53dc41f passed all five CI jobs 44816872315 and remains frozen. This does not qualify real-data training, the full CFL driver, historical-checkpoint loading, DDP or performance.
+
+The DGX metadata ZIP SHA256 514962a5…fef412 is received and CRC/hash verified. Remaining coverage is 11 Git queries beyond the 32-query cap and the registered pr57-54 worktree, initially selected with an underscore. Preserve local changes, unique data, frozen source/evidence paths and private material; no files are approved for deletion from metadata alone. Follow the [four-part pause/resumption plan](research/npad-runtime-transition-20261120/pause-and-resume-plan-20261120.md). The author requested a pause after analysis; no new CLI, cleanup, clone, campaign or implementation is scheduled. PR102 stays Draft, PR99/101 unchanged; experimental MVP3 development follows coauthor protocol approval.
+
+# Historical qualification preparation — 20 November 2026
 
 The author requests one synthetic project-model training/native-license qualification on NPAD, using the temporary existing Agrologistic license file, plus a metadata-only inventory of the eight DGX roots and ignored inputs. The [sequence and boundaries](research/npad-runtime-transition-20261120/qualification-and-migration.md) preserve the original venv313 and require environment qualification and DGX organization before the CFL clone/data migration. No clone, file move/deletion, data transfer or new scientific campaign has been executed by this preparation. Exact-source CI and author CLI remain submission gates; claims and failures are preserved without retry.
 

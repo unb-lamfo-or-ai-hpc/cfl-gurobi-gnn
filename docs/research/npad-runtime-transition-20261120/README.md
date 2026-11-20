@@ -2,6 +2,14 @@
 
 This operational record of the completed metadata repair, package installation and scoped runtime qualification does not change the manuscript, historical evidence, learning partitions, model checkpoint or MVP3 experimental protocol. The author executes every HPC/SCP command. No merge, publication or scientific campaign is authorized by this record.
 
+## Current result and requested pause
+
+The author returned job **2278658**, COMPLETED/0:0 in **37 s**. Native Gurobi14 initialized the specified existing license and solved the 2,501-variable technical MILP to primal=dual=1, gap0, retaining Threads=0. The project Gasse model completed three synthetic Adam updates, finite gradients and own model/optimizer state round-trip. The reconstructed result reproduces SHA256 ff27d0c0fd4a511e1f7f1d4d249efc1d45819af4af5a174cd9111e93a92d7c7e; the original venv313 name/version inventory is unchanged. See the [sanitized qualification return](training-license-return-2278658.json). Executed source53dc41f passed all five CI jobs in run44816872315. Preserve this source; do not repeat qualification to follow documentation commits. Real CFL data/driver, historical-checkpoint loading, DDP and performance remain outside this technical GO.
+
+The [DGX inventory review](dgx-inventory-review-20261120.json) verifies the received ZIP hash/CRC and identifies the two coverage gaps: 11 Git-state queries beyond the 32-query cap, and the actual registered pr57-54 worktree rather than the initial pr57_54 selector. No data were moved or deleted. The main repository has local changes and the working dataset is large; no directory is approved for deletion by its name or size.
+
+At the author’s request, pause after this analysis. Follow the [four-part resumption plan](pause-and-resume-plan-20261120.md): finish migration/storage and DGX classification, prepare reviewed archives and transfers, clone the approved CFL revision, and finish the PR99 protocol for coauthor approval before experimental MVP3 development. No additional CLI is requested before this pause.
+
 ## Received compatibility evidence
 
 The author completed the minimal DGX compatibility test in job 3917. Python 3.13.18 and gurobipy 14.0.0 loaded the qualified E0 instance, initialized the existing license and returned normally from one optimization. The result JSON reproduced SHA256 df4d14344cd7dea2689ce8357ade6d80fa42060c6b25d45b4ffb47ce758fd64b when reconstructed from the pasted output; full native files were not independently transferred.
@@ -70,8 +78,8 @@ Real-data/source/checkpoint bindings and a separately reviewed technical GNN pil
 
 Primary operational references: [Slurm QOS](https://slurm.schedmd.com/qos.html), [preemption](https://slurm.schedmd.com/preempt.html), [Gurobi Threads](https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#parameterthreads), and [uv package management](https://docs.astral.sh/uv/pip/packages/).
 
-## Next authorized technical qualification and DGX organization
+## Historical preparation of the completed technical qualification
 
-The author requests one bounded project-model training/license check, before the full repository clone, and a read-only inventory before organizing the DGX directories and migrating ignored data. See [the ordered qualification and migration plan](qualification-and-migration.md), the [single-job submission](submit-training-license.template.sh), and the [terminal collector](collect-training-license.template.sh). No full clone, data transfer, cleanup, real-data training or new scientific campaign has been launched. The submission waits for all five exact-source CI jobs. It uses the existing Agrologistic license file only for this technical check, without copying or exposing it; the future CFL secrets location is deferred until the clone.
+The author requests one bounded project-model training/license check, before the full repository clone, and a read-only inventory before organizing the DGX directories and migrating ignored data. See [the ordered qualification and migration plan](qualification-and-migration.md), the [single-job submission](submit-training-license.template.sh), and the [terminal collector](collect-training-license.template.sh). The technical job is now received above; no full clone, dataset transfer, cleanup, real-data training or new scientific campaign has been launched. The submission waits for all five exact-source CI jobs. It uses the existing Agrologistic license file only for this technical check, without copying or exposing it; the future CFL secrets location is deferred until the clone.
 
 The [metadata-only inventory source](dgx_migration_inventory.py) is embedded unchanged in the author DGX CLI, SHA256 e062f2357294acff4ba60a7fb91e8f015fb48ee31b42994e27bd4436b3be4336. It covers all eight named roots and the ignored input trees, excludes credential contents and follows no symlinks. Its report does not establish duplicate bytes or permission to remove a root. Preserve frozen paths and evidence; prepare concrete cleanup and transfer commands only after reviewing the returned inventory. The original NPAD venv313 remains unchanged.

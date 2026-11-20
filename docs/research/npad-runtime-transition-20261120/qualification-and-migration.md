@@ -83,7 +83,7 @@ Time and entry bounds make incompleteness explicit. No retry is automatic.
 | CFL | Identify original instance files and any unique source data |
 | cfl-gurobi-gnn | Identify canonical source, uncommitted work and ignored data |
 | cfl-gurobi-gnn-archive | Check source versions and unique files; the name does not prove redundancy |
-| cfl-gurobi-gnn-pr57_54 | Preserve training/split provenance and any unique preparation products |
+| cfl-gurobi-gnn-pr57-54 | Preserve training/split provenance and any unique preparation products |
 | cfl-gurobi-gnn-quarantine | Preserve failure evidence and investigate unique files |
 | cfl-gurobi-gnn-worktrees | Reconcile worktree references and frozen source installations |
 | cfl-mvp2-evidence | Preserve plans, claims, logs, roots, Starts, receipts and historical checkpoints |
@@ -132,3 +132,7 @@ path mapping in a new migration receipt. Verify scratch retention and durable
 preservation arrangements before treating an NPAD working copy as the sole
 retained copy. Only then qualify a real-data CFL training pilot or native CFL
 solve under its own concrete CLI. No such pilot or campaign is submitted here.
+
+## Received qualification and inventory review
+
+The technical job2278658 has completed and passed; do not resubmit it. See the [received qualification](training-license-return-2278658.json), [metadata inventory review](dgx-inventory-review-20261120.json), and [pause/resumption plan](pause-and-resume-plan-20261120.md). The original inventory source selected pr57_54; the registered worktree is pr57-54 and still needs directed inventory. The original executed source and receipt remain unchanged.
