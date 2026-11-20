@@ -205,6 +205,17 @@ class LicenseTests(unittest.TestCase):
 
 
 class GuardTests(unittest.TestCase):
+    def test_workflow_python_targets_are_files(self):
+        root = HERE.parents[2]
+        text = (root / ".github/workflows/evidence.yml").read_text()
+        targets = re.findall(
+            r"run:\s+python(?:\s+-B)?\s+(docs/research/npad-runtime-transition-20261120\S*)",
+            text,
+        )
+        self.assertGreaterEqual(len(targets), 3)
+        for target in targets:
+            self.assertTrue((root / target).is_file(), target)
+
     def test_shell_python_blocks_parse_and_bind_the_exact_worker(self):
         text = (HERE / "submit-training-license.template.sh").read_text()
         blocks = re.findall(r"<<'([A-Z]+)'\n(.*?)\n\1(?:\n|$)", text, re.S)

@@ -124,7 +124,7 @@ jobs:
           bash -n docs/research/pr98-cli/collect-990.template.sh
       - name: T1 NPAD metadata and add-only plan contracts (synthetic only)
         if: matrix.python-version == '3.12'
-        run: python -B docs/research/npad-runtime-transition-20261120
+        run: python -B docs/research/npad-runtime-transition-20261120/check_runbook.py
       - name: NPAD qualification and migration safety fixtures (offline, fake license)
         run: python -B docs/research/npad-runtime-transition-20261120/test_qualification_contracts.py
       - name: T1 PR89 sealed receipt integrity (no scientific calls)
