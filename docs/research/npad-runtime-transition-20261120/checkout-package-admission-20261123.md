@@ -25,10 +25,10 @@ The checked receipt reports preservation of every preexisting distribution versi
 
 The inert package root imports successfully from the approved editable source. The resolved scratch filesystem mount alias explains the reported module path. Neither Torch nor Gurobi was imported by this check. This is package discovery admission, not qualification of the training driver, real graphs, historical checkpoints, DDP or performance.
 
-## Preservation and remaining boundary
+## Historical installation boundary and subsequent home binding
 
-The installer reports unchanged tracked source and metadata for all 66 inputs, with zero model-payload reads, solves, neural forwards, optimizer steps, training calls or Slurm submissions. The project's ignored private secrets directory is prepared, but its license file is absent. No license was read, copied or initialized.
+At this installation snapshot, the installer reports unchanged tracked source and metadata for all 66 inputs, with zero model-payload reads, solves, neural forwards, optimizer steps, training calls or Slurm submissions. The project's ignored private secrets directory is prepared, but its license file is absent. No license was read, copied or initialized.
 
-The editable installation points into the preserved admission checkout. Keep that checkout in place; moving or deleting it would break the binding. Long-term source placement and scratch retention must be resolved before production work, through a separately reviewed relocation if needed.
+A subsequent [home-checkout binding](home-checkout-binding-20261123.md) now supersedes this source-location and license-placement boundary. The installation was rebound to the approved home clone; both source checkouts remain preserved. The earlier scratch-source binding and absent-license fields in the immutable installation receipt remain historical.
 
-TR-04 has completed source checkout, input path binding and package admission. Protected project-license placement remains an author action. Any later technical test with real CFL data requires an explicit bounded scope; it is not automatically authorized by this record. TR-05 continues through the English protocol in Draft PR #99 before scientific implementation. PRs #99, #101 and #102 remain Draft; merges require separate approval.
+TR-04 completed source checkout, input path binding and package admission in this snapshot; the later home-binding return also confirms the author-provisioned project-local license path. Any later technical test with real CFL data requires an explicit bounded scope; it is not automatically authorized by this record. TR-05 continues through the English protocol in Draft PR #99 before scientific implementation. PRs #99, #101 and #102 remain Draft; merges require separate approval.
