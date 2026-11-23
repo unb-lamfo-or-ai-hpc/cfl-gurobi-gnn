@@ -1,0 +1,144 @@
+{
+  "schema_version": "mvp3-proposal-v2",
+  "status": "specification_for_coauthor_review",
+  "unit": "original_instance",
+  "expected_primary_records": {
+    "root_relaxation": 66,
+    "incumbents": 66,
+    "evaluation": 45
+  },
+  "keys": {
+    "instance": "original benchmark ID",
+    "run": [
+      "instance",
+      "stage",
+      "method",
+      "seed",
+      "attempt"
+    ],
+    "target": [
+      "run",
+      "gap_target"
+    ],
+    "event": [
+      "run",
+      "event_ordinal"
+    ]
+  },
+  "instance_fields": [
+    "original_ID",
+    "E_M_H_alias",
+    "stored_SHA256",
+    "model_signature",
+    "declared_and_effective_objective_sense",
+    "rows_columns_domains_nonzeros",
+    "numerical_ranges",
+    "graph_shapes_and_bytes",
+    "learning_role",
+    "historical_exposure"
+  ],
+  "identity_basis": {
+    "compressed_hash": "current stored bytes",
+    "decoded_identity": "researcher-confirmed common MILPBench origin; optional independent digest where already available",
+    "decompression_required_by_this_plan": false
+  },
+  "run_fields": [
+    "exact_source_commit",
+    "environment_inventory",
+    "effective_parameter_map",
+    "input_and_output_hashes",
+    "native_runtime",
+    "native_Work",
+    "native_status",
+    "final_primal_dual_gap",
+    "independent_audit",
+    "resource_allocation_and_affinity",
+    "native_thread_lines",
+    "sampled_memory",
+    "termination_cause",
+    "timing_hierarchy"
+  ],
+  "root_fields": [
+    "complete_original_variable_order",
+    "event_where",
+    "MIPNODE_status",
+    "root_event_ordinal",
+    "node_count",
+    "cut_pass_provenance",
+    "full_vector_hash",
+    "coverage_and_numerical_checks"
+  ],
+  "label_fields": [
+    "origin_DIRECT_or_BENDERS",
+    "incumbent_vector_hash",
+    "incumbent_gap",
+    "audit_residuals",
+    "quality_tier",
+    "admission_policy",
+    "parent_partition"
+  ],
+  "start_fields": [
+    "method_B_R_G",
+    "policy_identifier",
+    "support_names_values_hash",
+    "ones_count",
+    "bounds_and_domains",
+    "undefined_remaining_coordinates",
+    "processing_messages",
+    "attributed_candidate",
+    "completion_diagnostic_if_released"
+  ],
+  "gap_targets": [
+    0.1,
+    0.05,
+    0.01,
+    0.0001
+  ],
+  "outcome_categories": [
+    "attained",
+    "right_censored",
+    "feature_unavailable",
+    "no_incumbent",
+    "numeric_ineligible",
+    "memory_termination",
+    "callback_failure",
+    "infrastructure_interruption"
+  ],
+  "invariants": [
+    "Instance-level denominators retained",
+    "Numeric time ratios require common qualified attainment and positive times",
+    "Time ratio orientations T_B/T_G and T_R/T_G; greater than one favours G",
+    "Root feature and incumbent label provenance remain separate",
+    "Training decisions use training/validation roles",
+    "Hard instances are transfer-only for learning",
+    "Historical receipts remain immutable",
+    "Allocation and measured activity retain distinct scopes",
+    "Attempt replacements require explicit release",
+    "Missing measurements have null values and explicit reasons"
+  ],
+  "log_analysis_fields": [
+    "source_log_sha256",
+    "run_identifier",
+    "parser_version_and_release",
+    "parsed_section",
+    "field_coverage",
+    "parsing_warnings",
+    "missing_field_reason",
+    "time_origin",
+    "native_record_reconciliation"
+  ],
+  "paired_time_fields": [
+    "comparator_B_or_R",
+    "gap_target",
+    "clock_and_origin",
+    "T_comparator",
+    "T_G",
+    "both_qualified_attained",
+    "positive_time_eligibility",
+    "S_comparator_over_G",
+    "signed_saving_comparator_minus_G",
+    "ratio_eligibility_reason",
+    "eligible_cohort_and_denominator"
+  ],
+  "ratio_aggregation_rule": "Compute per-instance comparator/G factors, then aggregate within the declared eligible cohort. Invert paired factors before re-aggregation; do not invert an old arithmetic mean."
+}

@@ -1,0 +1,34 @@
+{
+  "source_annotated_PDF_sha256": "1692a7678520ee35ae0d62b81c1cb1be56cc63d2367cb0e238693b147f7e762a",
+  "PDF_pages": 13,
+  "annotation_records": 62,
+  "text_comments": 60,
+  "language": "English",
+  "source_PR99_head": "76530b0b978539a7d7f7838968a446d8016dd1ea",
+  "new_solver_calls": 0,
+  "new_training_calls": 0,
+  "HPC_calls": 0,
+  "scientific_execution_authorized": false,
+  "latest_addendum": {
+    "date": "2026-11-23",
+    "researcher_methodology_approved": true,
+    "request": "Expand Gurobi14 feasibility diagnostics with an evaluation of GRBLogTools and footnote documentation links",
+    "primary_design_or_budget_changed": false,
+    "parser_installed_or_run": false,
+    "source_PR99_head": "7ec1dc37f0e84aad2f8ffaae109e56836b32ad85",
+    "merge_performed": false
+  },
+  "version3": {
+    "date": "2026-11-23",
+    "request": "Adopt T_B/T_G and T_R/T_G with values above one favouring G; review presentation for further reconciliation",
+    "presentation": {
+      "file": "C:\\Users\\cvict\\OneDrive - unb.br\\Posdoc\\Temp Codex\\cfl-gurobi-gnn\\CFL_GNN_MVP3_Protocolo_Coautores_ES_20261123.pdf",
+      "sha256": "8efcdea1c29a77973a7a76c8bdea78ac22354d9847b438d74c8acbf5a326c626",
+      "pages": 42
+    },
+    "source_PR99_head": "8bbe90f141db5d7655559e5ae044a42af7d7a56c",
+    "primary_design_or_budget_changed": false,
+    "scientific_calls": 0,
+    "merge_performed": false
+  }
+}

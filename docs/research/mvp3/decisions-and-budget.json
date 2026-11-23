@@ -1,0 +1,233 @@
+{
+  "schema_version": 2,
+  "date": "2026-11-23",
+  "status": "researcher_approved_methodology_final_documentary_addendum",
+  "language": "English",
+  "execution_approved": false,
+  "publication_approved": false,
+  "population": {
+    "easy": 30,
+    "medium": 30,
+    "hard_ids": [
+      "H0",
+      "H5",
+      "H10",
+      "H15",
+      "H20",
+      "H25"
+    ],
+    "total": 66
+  },
+  "learning": {
+    "parents": 60,
+    "split": {
+      "train": 42,
+      "validation": 9,
+      "test": 9
+    },
+    "proposed_stratification": {
+      "train": {
+        "easy": 21,
+        "medium": 21
+      },
+      "validation": {
+        "easy": 5,
+        "medium": 4
+      },
+      "test": {
+        "easy": 4,
+        "medium": 5
+      }
+    },
+    "partition_ids_frozen": false
+  },
+  "evaluation": {
+    "instances": 15,
+    "easy_medium_test": 9,
+    "hard": 6,
+    "methods": [
+      "B",
+      "R",
+      "G"
+    ],
+    "fresh_baseline": true,
+    "cells": 45,
+    "solver_seed": 42,
+    "primary_time_ratio": "S_B/G=T_B/T_G; S_R/G=T_R/T_G; values greater than one favour G"
+  },
+  "profiles": {
+    "common": {
+      "objective_sense": "MINIMIZE",
+      "Method": -1,
+      "Threads": 0,
+      "ConcurrentMIP": 1,
+      "Seed": 42,
+      "TimeLimit": 28800,
+      "slurm_seconds": 43200
+    },
+    "root_relaxation": {
+      "Presolve": 0,
+      "Heuristics": 0,
+      "MIPFocus": 0,
+      "calls": 66,
+      "early_completion": "qualified complete root vector",
+      "event_provenance_required": true
+    },
+    "incumbents_and_evaluation": {
+      "Presolve": -1,
+      "Heuristics": 0.05,
+      "MIPFocus": 0,
+      "MIPGap": 0.0001,
+      "thresholds": [
+        0.1,
+        0.05,
+        0.01,
+        0.0001
+      ]
+    },
+    "conditional_feasibility_diagnostic": {
+      "MIPFocus": 1,
+      "population": "diagnosed hard instances only",
+      "maximum_calls_proposed": 6,
+      "requires_specific_release": true
+    }
+  },
+  "budget": {
+    "primary": {
+      "root_calls": 66,
+      "incumbent_calls": 66,
+      "evaluation_calls": 45,
+      "total_calls": 177,
+      "maximum_solver_hours": 1416,
+      "reserved_job_hours": 2124,
+      "two_slot_sequential_stage_waves": 89,
+      "two_slot_reserved_calendar_hours": 1068,
+      "physical_core_hours_reserved": 67968,
+      "logical_Slurm_CPU_hours_reserved": 135936,
+      "GiB_hours_reserved": 476928
+    },
+    "working_scenario": {
+      "easy_calls": 72,
+      "medium_hard_calls": 105,
+      "easy_hours_per_call": 1,
+      "other_hours_per_call": 8,
+      "optimisation_hours": 912,
+      "overhead_hours_per_call": 0.25,
+      "job_hours": 956.25,
+      "two_slot_lower_bound_calendar_hours": 478.125,
+      "interpretation": "historically informed scenario; stage barriers and scheduling add time"
+    },
+    "training": {
+      "runs": 2,
+      "serial_gpus": 1,
+      "DDP_gpus": 4,
+      "epochs": 100,
+      "draws_per_parent_per_epoch": 4,
+      "global_batch": 4,
+      "updates_per_arm": 4200,
+      "draws_per_arm": 16800,
+      "wall_hours_per_arm": 6,
+      "model_requested_GPU_hours_cap": 30,
+      "exclusive_node_hours_cap": 12,
+      "eight_GPU_node_device_slot_hours_cap": 96
+    },
+    "CPU_artifact_job_hours_proposed": 24,
+    "conditional_hard_diagnostic_job_hours_cap": 72,
+    "conditional_hard_diagnostic_solver_hours_cap": 48
+  },
+  "proposed_node_envelopes": {
+    "solver_tasks": 1,
+    "solver_CPUs_per_task": 64,
+    "exclusive": true,
+    "Intel_physical_cores": 32,
+    "Intel_logical_CPUs": 64,
+    "easy_medium_mem_GiB": 192,
+    "hard_mem_GiB": 384,
+    "max_concurrent_jobs_total": 2,
+    "max_concurrent_Gurobi_sessions": 2,
+    "training_gpu": "V100 16GB",
+    "training_mem_GiB": 192
+  },
+  "coauthor_decisions": [
+    {
+      "id": "D1",
+      "topic": "label admission",
+      "proposal": "primary learning tier: audited incumbent with gap<=0.0001; coverage disposition reviewed before training"
+    },
+    {
+      "id": "D2",
+      "topic": "parent split",
+      "proposal": "21E/21M train;5E/4M validation;4E/5M test; deterministic seed42 IDs frozen in S1"
+    },
+    {
+      "id": "D3",
+      "topic": "training work",
+      "proposal": "100 epochs, four draws per training parent, global batch4,4200 updates per arm"
+    },
+    {
+      "id": "D4",
+      "topic": "predictor selection",
+      "proposal": "minimum selected parent validation loss; serial arm on exact tie"
+    },
+    {
+      "id": "D5",
+      "topic": "independent R and G policy",
+      "proposal": "R rounds root values;G uses probabilities;each selects confidence tails<=0.1 or>=0.9 up to10% of binaries, tie by variable order"
+    },
+    {
+      "id": "D6",
+      "topic": "exclusive resources",
+      "proposal": "Table6;max2jobs/2solver sessions;native automatic threads with log/affinity evidence"
+    },
+    {
+      "id": "D7",
+      "topic": "feasibility diagnostics",
+      "proposal": "separate MIPFocus1 preparation diagnostic,up to6 hard runs after diagnosis and release"
+    },
+    {
+      "id": "D8",
+      "topic": "Benders",
+      "proposal": "conditional hard-only design with proof,audit,budget and specific approval"
+    }
+  ],
+  "schedule": {
+    "protocol_agreement": "2026-12-03",
+    "pause_start": "2026-12-19",
+    "pause_end": "2027-01-10",
+    "target_submission": "2027-03-18"
+  },
+  "researcher_methodology_approved": true,
+  "approval_date": "2026-11-23",
+  "approval_scope": "Researcher approved the methodological plan and requested the final GRBLogTools/configuration explanation. Concrete HPC releases and merges retain separate approval.",
+  "log_analysis": {
+    "tool": "gurobi-logtools / gurobi_logtools",
+    "role": "secondary offline summary and trajectory inspection",
+    "S1": "pin release and validate used fields against native Gurobi14 logs and worker records",
+    "S5": "join by run/log identity and reconcile timing origins",
+    "primary_evidence": "native records, callback observations and independently audited vectors",
+    "installed_or_executed_in_this_revision": false
+  },
+  "time_ratio_convention": {
+    "version": 3,
+    "author_decision_date": "2026-11-23",
+    "primary": "T_B/T_G",
+    "secondary": "T_R/T_G",
+    "greater_than_one": "favours G",
+    "one": "equal measured time",
+    "less_than_one": "favours named comparator",
+    "clocks": [
+      "qualified target attainment",
+      "end-to-end elapsed time",
+      "cumulative elapsed-time reuse cost"
+    ],
+    "requirements": [
+      "same qualified target and comparable clocks",
+      "positive observed times for numeric ratios",
+      "no substitution of censoring limits for unattained times",
+      "contrast-specific eligible cohorts"
+    ],
+    "signed_saving": "T_comparator-T_G; positive favours G",
+    "training_speedup": "T_serial/T_DDP; greater than one favours DDP",
+    "GPU_efficiency": "training_speedup/4; distinct resource-normalised metric"
+  }
+}

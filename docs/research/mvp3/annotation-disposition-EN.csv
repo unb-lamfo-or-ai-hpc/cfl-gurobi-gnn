@@ -1,0 +1,63 @@
+comment,PDF_page,disposition,status
+1,1,"Removed temporary version-control, outage and chat-status prose.",incorporated_or_scientifically_clarified
+2,2,Added original MILPBench source in a footnote.,incorporated_or_scientifically_clarified
+3,2,Added a footnote explaining the project MINIMIZE correction.,incorporated_or_scientifically_clarified
+4,2,Rewrote root-relaxation methodology in affirmative scientific language.,incorporated_or_scientifically_clarified
+5,2,Defined separate feature and label preparation runs.,incorporated_or_scientifically_clarified
+6,2,Added versioned Gurobi parameter and callback footnotes.,incorporated_or_scientifically_clarified
+7,2,Moved implementation URLs to footnotes.,incorporated_or_scientifically_clarified
+8,2,Explained MIPFocus1 as an incumbent-discovery diagnostic; preserved root capture semantics and independent cut provenance.,incorporated_or_scientifically_clarified
+9,2,Expanded the Gurobi14 scientific motivation with release sources.,incorporated_or_scientifically_clarified
+10,3,Removed developer-facing prohibitions and retained positive capture definitions.,incorporated_or_scientifically_clarified
+11,3,Added the root-relaxation record dictionary in Table1.,incorporated_or_scientifically_clarified
+12,3,Replaced alternative-action warnings with the positive feature-availability procedure.,incorporated_or_scientifically_clarified
+13,3,Added versioned parameter-source footnotes.,incorporated_or_scientifically_clarified
+14,3,Defined terminal gap target and all first-observed threshold times.,incorporated_or_scientifically_clarified
+15,3,Added the feature-versus-label transition.,incorporated_or_scientifically_clarified
+16,3,Added Gasse2019 and complete bibliography.,incorporated_or_scientifically_clarified
+17,3,Removed runtime/migration test statements from the scientific protocol.,incorporated_or_scientifically_clarified
+18,3,Proposed independent relaxation rounding/ranking for R and made support settings explicit review choices.,incorporated_or_scientifically_clarified
+19,4,Moved Start documentation URL to a footnote.,incorporated_or_scientifically_clarified
+20,4,Explained infeasible/incomplete Start processing and the limits of a no-new-incumbent message.,incorporated_or_scientifically_clarified
+21,4,Defined the copied-model completion diagnostic in plain scientific language.,incorporated_or_scientifically_clarified
+22,4,Recast completion outcomes as positive evidence categories.,incorporated_or_scientifically_clarified
+23,4,"Explained fixed assignments, independent audit and unresolved follow-up.",incorporated_or_scientifically_clarified
+24,4,Replaced Benders exclusions with its positive conditional hard-instance scope.,incorporated_or_scientifically_clarified
+25,4,"Added a decomposition introduction and verified Haq,Chaerani,Triska2025 citation.",incorporated_or_scientifically_clarified
+26,4,Replaced remote-draft history with the current66 population.,incorporated_or_scientifically_clarified
+27,4,Defined the split proposal and freeze milestone in affirmative terms.,incorporated_or_scientifically_clarified
+28,4,Expanded the phrase to the six hard instances.,incorporated_or_scientifically_clarified
+29,4,Explained training/validation roles and hard transfer evaluation.,incorporated_or_scientifically_clarified
+30,5,Explained the independent preparation branches and their costs.,incorporated_or_scientifically_clarified
+31,5,Removed the negative example about packing three solves in one job.,incorporated_or_scientifically_clarified
+32,5,Used root-relaxation terminology throughout.,incorporated_or_scientifically_clarified
+33,5,Specified ConcurrentMIP=1.,incorporated_or_scientifically_clarified
+34,5,Replaced absent-arm statements with the positive primary contract.,incorporated_or_scientifically_clarified
+35,5,Applied 28800s/12h to root-relaxation runs.,incorporated_or_scientifically_clarified
+36,5,Described attained-threshold recording explicitly.,incorporated_or_scientifically_clarified
+37,5,Used full root-relaxation terminology.,incorporated_or_scientifically_clarified
+38,5,Applied common maximum time allowance to all66 preparation instances.,incorporated_or_scientifically_clarified
+39,5,"Explained paired contracts, fresh baselines and stage separation.",incorporated_or_scientifically_clarified
+40,5,Defined blocked execution order and comparable resources.,incorporated_or_scientifically_clarified
+41,5,Rewrote operational partitioning as an affirmative scientific procedure.,incorporated_or_scientifically_clarified
+42,5,Corrected Intel topology to32 physical/64logical CPUs and explained native thread evidence.,incorporated_or_scientifically_clarified
+43,6,Treated the empty highlight as part of the resource-accounting revision.,incorporated_or_scientifically_clarified
+44,6,Removed the historical DGX thread-affinity incident.,incorporated_or_scientifically_clarified
+45,6,Explained interruption categories and explicit replacement decisions.,incorporated_or_scientifically_clarified
+46,6,Included66 root-relaxation calls in the177-call total.,incorporated_or_scientifically_clarified
+47,6,"Provided separate optimisation,CPU-artifact andGPU ledgers.",incorporated_or_scientifically_clarified
+48,6,Added historically anchored serial/DDP training budget.,incorporated_or_scientifically_clarified
+49,6,Added easy-instance historical runtimes and a one-hour planning scenario.,incorporated_or_scientifically_clarified
+50,6,Used the two-job/two-Gurobi-session ceiling and recalculated calendar envelopes.,incorporated_or_scientifically_clarified
+51,6,Added exclusive Intel256/512 and V100 resource table.,incorporated_or_scientifically_clarified
+52,6,Added instance and event data dictionaries.,incorporated_or_scientifically_clarified
+53,6,Rewrote structural strata and metric-specific coverage in affirmative terms.,incorporated_or_scientifically_clarified
+54,6,Removed the migration/compatibility results section.,incorporated_or_scientifically_clarified
+55,7,Removed the pending migration sequence section.,incorporated_or_scientifically_clarified
+56,8,"Rewrote the analysis pipeline with equations,examples and target-specific outcomes.",incorporated_or_scientifically_clarified
+57,9,Added explicit scientific S1-S6 and planned PR work packages.,incorporated_or_scientifically_clarified
+58,9,Added a calendar table and Gantt figure.,incorporated_or_scientifically_clarified
+59,9,Removed the operational migration continuation paragraph.,incorporated_or_scientifically_clarified
+60,9,Added references before appendices; resolved the author/year inconsistency to the verified Haq2025 paper.,incorporated_or_scientifically_clarified
+61,10,Treated the empty continuation highlight with removal of the operational paragraph.,incorporated_or_scientifically_clarified
+62,10,Rewrote self-contained appendices; retained scholarly links to published mathematical foundations.,incorporated_or_scientifically_clarified
