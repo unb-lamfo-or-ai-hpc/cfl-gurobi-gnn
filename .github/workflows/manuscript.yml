@@ -36,6 +36,9 @@ jobs:
         with:
           python-version: '3.12'
       - uses: quarto-dev/quarto-actions/setup@v2
+        env:
+          # Quarto's TinyTeX release lookup needs authenticated GitHub API access.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: '1.10.18'
           tinytex: true
