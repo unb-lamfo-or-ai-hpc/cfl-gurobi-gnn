@@ -1,3 +1,11 @@
+# Current authority - 23 November 2026
+
+The researcher approved the English MVP3 protocol v3 and PR99 was merged into develop at 22d5089f59f7306d97f7d5410f248d6b45ebdc0b. The final documentary preparation request consolidates the approved plan, scientific/workbook appendices, C2/C3 hypotheses, experimental design, resource budgets and acceptance criteria. See docs/research/mvp3/preparation/README.md.
+
+This preparation PR contains documentation, approved review artifacts and a planning workbook only. Scientific implementation starts in the next Codex chat through S1-A/S1-B after review/integration. It authorises no training, inference, scientific solve, Slurm job, Benders, automatic retry or remote environment change. HPC/SSH/SCP remains author CLI only. PR101 and PR102 remain Draft. Further merges and publication require their specific approval.
+
+Use T_B/T_G and T_R/T_G, with values above one favouring G. Preserve the approved 66-instance population, 42/9/9 learning totals, 15 evaluation parents, 45 fresh B/R/G cells, 177 primary calls and separate preparation/evaluation clocks. Exact split IDs and executable schemas are S1 deliverables; planning slots and blank workbook fields are not experimental results. Historical authorities below remain dated records.
+
 # Current authority — 19 November 2026
 
 The author approved the consolidated MVP3 mandate and explicitly authorized completing and merging PR97 and PR98 into develop after verification. Incorporate the complete mathematical foundation in Appendix A.8, preserving its Portuguese source and documenting technical qualifications. The historical MVP2 evidence, model/checkpoint, split and limitations remain unchanged. Do not infer general superiority of G.
@@ -248,3 +256,4 @@ source of truth. Chat histories are context, not experimental evidence.
 Every substantive research change must explain what was changed, how it is
 validated, why the design is appropriate, and what remains unqualified. Keep
 the portable context files in `docs/` synchronized with the relevant PR.
+

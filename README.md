@@ -11,6 +11,10 @@ and paired solver experiments. Learned guidance is evaluated as an empirical
 intervention. The software does not assume that a warm start will improve every
 instance.
 
+## MVP 3.0 approved research plan
+
+The [English development preparation dossier](docs/research/mvp3/preparation/README.md) links the approved protocol v3 and scientific Appendices A-D, planning workbook, C2/C3 hypotheses, experimental design, resource budgets and S1-S6 acceptance milestones. PR99 integrated the approved methodology into develop. This documentary packet prepares the next development chat; it does not launch a research campaign.
+
 ## Current research result
 
 ### MVP 2.0 / PR80: installed input review and first frozen-model forwards
@@ -233,3 +237,4 @@ templates. See [LICENSE_POLICY.md](LICENSE_POLICY.md) and
 Citation metadata is provided in [CITATION.cff](CITATION.cff). The core model
 architecture follows Gasse et al. (2019), *Exact Combinatorial Optimization with
 Graph Convolutional Neural Networks*, [arXiv:1906.01629](https://arxiv.org/abs/1906.01629).
+
