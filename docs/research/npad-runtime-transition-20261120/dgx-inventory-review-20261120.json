@@ -1,0 +1,125 @@
+{
+  "scope": "sanitized metadata inventory review; not duplicate verification or deletion authority",
+  "archive_sha256": "514962a5560c5cd749c493aaadc5c07b67c10d30925c3b6bc724929a63fef412",
+  "archive_bytes": 1509919,
+  "metadata_json_bytes": 21371484,
+  "archive_SHA256_and_CRC_verified": true,
+  "source_snapshot_utc": "2026-11-20T21:26:37.864133+00:00",
+  "canonical_alias_confirmed": true,
+  "transfer_recovery": "Verified existing ZIP received after interactive-paste transfer failed; no repeat inventory was executed",
+  "roots": {
+    "CFL": {
+      "status": "scanned",
+      "complete": true,
+      "regular_files": 3,
+      "regular_logical_bytes": 5580158205,
+      "symlinks_not_followed": 0,
+      "repository_markers": 0,
+      "git_states_received": 0,
+      "git_metadata_truncated": false
+    },
+    "cfl-gurobi-gnn": {
+      "status": "scanned",
+      "complete": true,
+      "regular_files": 10091,
+      "regular_logical_bytes": 195564130946,
+      "symlinks_not_followed": 0,
+      "repository_markers": 1,
+      "git_states_received": 1,
+      "git_metadata_truncated": false
+    },
+    "cfl-gurobi-gnn-archive": {
+      "status": "scanned",
+      "complete": true,
+      "regular_files": 85,
+      "regular_logical_bytes": 13732197,
+      "symlinks_not_followed": 0,
+      "repository_markers": 0,
+      "git_states_received": 0,
+      "git_metadata_truncated": false
+    },
+    "cfl-gurobi-gnn-pr57_54": {
+      "status": "ABSENT",
+      "complete": null,
+      "regular_files": null,
+      "regular_logical_bytes": null,
+      "symlinks_not_followed": 0,
+      "repository_markers": 0,
+      "git_states_received": 0,
+      "git_metadata_truncated": false
+    },
+    "cfl-gurobi-gnn-quarantine": {
+      "status": "scanned",
+      "complete": true,
+      "regular_files": 38,
+      "regular_logical_bytes": 10666816,
+      "symlinks_not_followed": 0,
+      "repository_markers": 0,
+      "git_states_received": 0,
+      "git_metadata_truncated": false
+    },
+    "cfl-gurobi-gnn-worktrees": {
+      "status": "scanned",
+      "complete": true,
+      "regular_files": 6179,
+      "regular_logical_bytes": 114907520,
+      "symlinks_not_followed": 0,
+      "repository_markers": 9,
+      "git_states_received": 9,
+      "git_metadata_truncated": false
+    },
+    "cfl-mvp2-evidence": {
+      "status": "scanned",
+      "complete": false,
+      "regular_files": 62166,
+      "regular_logical_bytes": 14639151166,
+      "symlinks_not_followed": 1050,
+      "repository_markers": 43,
+      "git_states_received": 32,
+      "git_metadata_truncated": true
+    },
+    "cfl-zenodo-staging": {
+      "status": "scanned",
+      "complete": true,
+      "regular_files": 98,
+      "regular_logical_bytes": 52649210621,
+      "symlinks_not_followed": 0,
+      "repository_markers": 0,
+      "git_states_received": 0,
+      "git_metadata_truncated": false
+    }
+  },
+  "coverage_findings": {
+    "evidence_git_markers": 43,
+    "evidence_git_states_received": 32,
+    "remaining_git_queries": 11,
+    "no_file_scan_issue_recorded_for_evidence_root": true,
+    "initial_wrong_root_selector": "cfl-gurobi-gnn-pr57_54",
+    "registered_worktree_name": "cfl-gurobi-gnn-pr57-54",
+    "registered_worktree_not_yet_inventoried": true,
+    "main_repository_tracked_modified_entries": 1,
+    "main_repository_untracked_status_entries": 40,
+    "untracked_entries_are_not_a_file_count": true
+  },
+  "largest_data_group": {
+    "relative_path": "cfl-gurobi-gnn/data/bipartite_graphs/pyg_dataset",
+    "regular_files": 6886,
+    "regular_logical_bytes": 168072990396
+  },
+  "requested_legacy_inputs": {
+    "bipartite_graphs": "present",
+    "intermediate_lps": "present",
+    "raw_MILPBench_CFL": "present",
+    "real_train_output": "absent at requested main-repository path; other model/training directories require binding review",
+    "metadata": "absent at requested main-repository path; locate operational manifests and partitions"
+  },
+  "limits": [
+    "Data payload hashes not collected",
+    "Git objects and credentials excluded",
+    "Logical bytes may count hardlinks more than once",
+    "External symlink contents not scanned",
+    "No duplicate bytes, safe removal, NPAD storage quota or complete migration set established"
+  ],
+  "cleanup_moves_or_deletions": 0,
+  "data_migration_performed": false
+}

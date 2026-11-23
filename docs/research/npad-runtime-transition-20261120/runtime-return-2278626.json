@@ -1,0 +1,69 @@
+{
+  "scope": "single_GPU_library_runtime_and_synthetic_serialization_only",
+  "source": "author terminal collector transcript; raw logs were not independently transferred",
+  "cluster": "ufrn",
+  "job_id": "2278626",
+  "submitted_code_CI_run": 44806786702,
+  "result_sha256": "55972ae2b80b43381a8b985d97621e80cce3f65a92ddfab3b1a9d309b44697c9",
+  "result_hash_verification": "Exact JSON reconstructed from pasted result reproduces author SHA256",
+  "compatibility": "PASS",
+  "job_state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 72,
+  "all_four_accounting_rows_completed": true,
+  "step_MaxRSS_KiB": 617516,
+  "allocated_Slurm_CPUs": 8,
+  "cpu_affinity_logical_count": 8,
+  "cpu_affinity_is_not_physical_core_count": true,
+  "resources": {
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus_per_task": 8,
+    "memory_G": 48,
+    "GPUs": 1,
+    "partition": "gpu-8-v100",
+    "Slurm_limit_minutes": 15,
+    "worker_deadline_seconds": 300,
+    "automatic_retry": false
+  },
+  "started_utc": "2026-11-20T20:21:33.039209+00:00",
+  "ended_utc": "2026-11-20T20:22:38.394699+00:00",
+  "versions": {
+    "python": "3.13.15",
+    "gurobipy_distribution": "14.0.0",
+    "numpy": "2.5.2",
+    "pyarrow": "24.0.0",
+    "sklearn": "1.7.2",
+    "torch": "2.7.1+cu118",
+    "pyg": "2.7.0",
+    "torch_cuda_build": "11.8"
+  },
+  "inventory_sha256": "dafe3bf6020249096a4b8f31574b7a192cb3f3d45175f893e916aedd605dd82d",
+  "gpu_name": "Tesla V100-SXM2-16GB",
+  "gpu_memory_bytes": 16928342016,
+  "gpu_compute_capability": [
+    7,
+    0
+  ],
+  "compiled_sm70_present": true,
+  "checks": {
+    "CUDA_available": true,
+    "numpy_torch_bridge": true,
+    "synthetic_cuda_scatter": true,
+    "own_HeteroData_serialization": true,
+    "own_HeteroData_CUDA_transfer": true
+  },
+  "scientific_calls": {
+    "solver": 0,
+    "license_initializations": 0,
+    "training": 0,
+    "neural_forwards": 0,
+    "optimizer_steps": 0,
+    "real_instances_loaded": 0,
+    "historical_checkpoints_loaded": 0
+  },
+  "original_environment": "untouched by runtime scripts; original inventory had been verified during dependency installation; no new original-inventory query is inferred",
+  "qualification": "GO for this allocated V100 library runtime only; real GNN source/checkpoint/training, DDP and native NPAD solver/license remain unqualified",
+  "reviewed_template_commit": "84fb78f36f94f41bea64edb3191cd09392c2c5e3",
+  "reviewed_private_script_sha256": "fa79f9e7d12fe4963a2a9b1f52020777f3f650bf4a702bfb99c9d75af70dcbdc"
+}

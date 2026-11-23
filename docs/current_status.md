@@ -1,3 +1,43 @@
+# Current operational admission — 23 November 2026
+
+The [stable CFL home-checkout binding](research/npad-runtime-transition-20261120/home-checkout-binding-20261123.md) is received and reconciled. Source `61ba422c` remains unchanged. The exact reconstructed receipt reproduces `fee7f455ca186a09153a279723bfb2f658064a9e74e627d14ab828ff07ea1c36`; both import location and editable metadata now point to the approved home clone. All 107 target distribution records retain their versions and the original environment inventory is unchanged. The prior scratch checkout is preserved.
+
+The CFL project's own license file is present, readable and ignored by Git. Its contents were not read/copied by the worker and no new license initialization occurred. Future authorized scripts must explicitly select this project-local license rather than the temporary Agrologistic test path.
+
+TR-04 operational setup is admitted for source/data paths, package discovery and license-path metadata. All 66 original inputs remain inventoried; no additional original transfer is needed. Full real-data driver, DDP, memory and performance qualification remains separate. #99, #101 and #102 stay Draft; the English protocol and budget require approval before scientific MVP3 implementation. No new experiment, merge, publication or cleanup accompanies this update.
+
+The older dated sections below are chronological snapshots. Their pending checkout, transfer and license-placement statements are superseded by the received home-binding record.
+
+# Current66 inventory received — 23 November 2026
+
+The [current NPAD input receipt](research/npad-runtime-transition-20261120/current-input-inventory-20261123.md) verifies all 66 stored .lp.gz identities: 30 easy, 30 medium and six hard; 1,810,985,584 bytes, no errors, receipt SHA256 048b823a865af4988088b9f80388e759a7d227ef1f45e8e796a653077170d83c. SHA256SUMS reconstruction also matches. No missing-original transfer remains. Recompression is recorded; decoded equivalence, gzip integrity and real CFL runtime are not claimed. Earlier missing-six/TAR-wrapper sections below are historical.
+
+Next TR-04: prepare an isolated approved-develop checkout and read-only pyproject/environment/data bindings. No package installation, license copy, source-data change, Gurobi/Torch import, solve, training or publication. The [TR-01–TR-05 register](research/npad-runtime-transition-20261120/transition-sprints-20261123.md) remains stable; #99 stays Draft.
+
+# Current transition — 23 November 2026
+
+Follow the [named transition Sprints TR-01–TR-05](research/npad-runtime-transition-20261120/transition-sprints-20261123.md) and [updated English resumption plan](research/npad-runtime-transition-20261120/pause-and-resume-plan-20261120.md).
+
+The runtime/library and synthetic Gasse/native-license qualifications are received. DGX job 3930 completed; its 27,149-byte metadata ZIP, receipt, index and all 299 selected records reconcile, including 66 original models. The full archive remains on DGX. NPAD storage quota queries and the write/read probe passed within their stated scope.
+
+Both shared-data catalogue receipts are received and their reconstructed SHA256 values match. The complete list contains 24 easy, 30 medium and six hard inputs by parent name, including 53 .lp.tar.gz wrappers missed by the first canonical matcher. Only E24–E29 are absent by name: six DGX gzip files totaling 20,794,882 bytes. Prepare only that original-input delta, preserving the 60 existing compressed files. Stored SHA256 values differ between representations; mathematical content and direct readability of wrappers are not inferred. No decompression is required or performed. See the [sanitized reconciliation record](research/npad-runtime-transition-20261120/migration-reconciliation-20261123.json).
+
+#99, #101 and #102 remain Draft, targeting develop. No merge, main move, publication, cleanup, full clone or scientific campaign has occurred in this update. All new repository/coauthor-facing prose is English. The sections below are dated historical snapshots.
+
+# Current — NPAD qualification received; pause after migration analysis — 20 November 2026
+
+Job 2278658 is COMPLETED/0:0 in 37s: Gurobi14/license and three-update synthetic project-model training PASS, result SHA256 ff27d0c0fd4a511e1f7f1d4d249efc1d45819af4af5a174cd9111e93a92d7c7e reproduced offline. The original venv313 inventory remains 94e16343…bc750. Executed source 53dc41f passed all five CI jobs 44816872315 and remains frozen. This does not qualify real-data training, the full CFL driver, historical-checkpoint loading, DDP or performance.
+
+The DGX metadata ZIP SHA256 514962a5…fef412 is received and CRC/hash verified. Remaining coverage is 11 Git queries beyond the 32-query cap and the registered pr57-54 worktree, initially selected with an underscore. Preserve local changes, unique data, frozen source/evidence paths and private material; no files are approved for deletion from metadata alone. Follow the [four-part pause/resumption plan](research/npad-runtime-transition-20261120/pause-and-resume-plan-20261120.md). The author requested a pause after analysis; no new CLI, cleanup, clone, campaign or implementation is scheduled. PR102 stays Draft, PR99/101 unchanged; experimental MVP3 development follows coauthor protocol approval.
+
+# Historical qualification preparation — 20 November 2026
+
+The author requests one synthetic project-model training/native-license qualification on NPAD, using the temporary existing Agrologistic license file, plus a metadata-only inventory of the eight DGX roots and ignored inputs. The [sequence and boundaries](research/npad-runtime-transition-20261120/qualification-and-migration.md) preserve the original venv313 and require environment qualification and DGX organization before the CFL clone/data migration. No clone, file move/deletion, data transfer or new scientific campaign has been executed by this preparation. Exact-source CI and author CLI remain submission gates; claims and failures are preserved without retry.
+
+# Runtime transition — 20 November 2026
+
+The author completed the installed-metadata reconciliation and guarded GNN dependency additions in the existing NPAD Gurobi14 environment, preserving the original prefix and all preexisting non-project versions. The terminal return of V100 job 2278626 now qualifies the library runtime: COMPLETED/0:0 in 72 s; Python 3.13.15, Torch 2.7.1+cu118 and PyG 2.7.0 passed imports, the NumPy/Torch bridge, fixed CUDA scatter and own synthetic HeteroData serialization/transfer. The reconstructed result reproduces SHA256 55972ae2b80b43381a8b985d97621e80cce3f65a92ddfab3b1a9d309b44697c9. This is scoped runtime GO, with no neural forward, training, solver, license initialization, real instance or historical checkpoint loaded. Native Gurobi/license execution on NPAD and real GNN training/DDP remain unqualified. Forecasting/all are legacy inactive extras and require no automatic Torch update. See the [operational record](research/npad-runtime-transition-20261120/README.md) and [sanitized terminal receipt](research/npad-runtime-transition-20261120/runtime-return-2278626.json). The exact submitted code passed all five jobs of CI 44806786702 before execution. No new scientific campaign, merge or change to PR99/101 is authorized by this return.
+
 # MVP2 closeout and MVP3 transition — 19 November 2026
 
 The author authorized completing PR97 and PR98 and merging both into develop after checks. PR97 adds the integral audited mathematical foundation in Appendix A.8; historical results remain unchanged. PR98 is concluded technical work: the 990-evaluation matrix and proposed reduced alternatives are discontinued before submission. The current launcher and mutating matrix CLI fail closed. Preserve all installed sources, pilots, receipts, claims and artifacts; no HPC queue mutation was performed.
