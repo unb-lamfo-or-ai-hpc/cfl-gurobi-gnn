@@ -1,0 +1,12 @@
+{
+  "source_annotated_PDF_sha256": "1692a7678520ee35ae0d62b81c1cb1be56cc63d2367cb0e238693b147f7e762a",
+  "PDF_pages": 13,
+  "annotation_records": 62,
+  "text_comments": 60,
+  "language": "English",
+  "source_PR99_head": "76530b0b978539a7d7f7838968a446d8016dd1ea",
+  "new_solver_calls": 0,
+  "new_training_calls": 0,
+  "HPC_calls": 0,
+  "scientific_execution_authorized": false
+}

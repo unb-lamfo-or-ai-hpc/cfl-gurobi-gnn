@@ -1,34 +1,23 @@
-# MVP3 methodological review packet
+# MVP 3.0 research protocol
 
-**Editorial status:** narrative reorganization requested by the author; see [the revision plan](editorial-revision-plan.md). PR99 remains Draft. Locally generated PDFs are working previews until the integrated rewrite and final visual review are complete.
+The [English methodological protocol](coauthor-methodological-protocol.md) defines the scientific development programme S1-S6. It covers 66 instances, independent root-relaxation and incumbent preparation, equivalent-work serial/DDP training,45 paired B/R/G evaluation cells, numerical qualification and C2/C3 analysis.
 
-Prepared 19 November 2026 under the approved consolidated mandate. This packet is a scientific proposal for the coauthors, not a request to execute a historical launcher and not an execution authorization. No materials were sent to coauthors.
+The revised version incorporates the researcher's 62 PDF annotation records. Its coauthor-facing text contains the permanent scientific plan. Operational migration and runtime-compatibility records remain in the separate [NPAD transition dossier](../npad-runtime-transition-20261120/README.md).
 
-Start with [the detailed protocol](coauthor-methodological-protocol.md), then [the Gurobi adequacy/shared architecture note](gurobi-adequacy-and-shared-architecture.md). [Decisions and budget](decisions-and-budget.json) identify adopted directions and eight unresolved decisions; [the evidence contract](evidence-contract.json) specifies proposed normalized records without implementing a new pipeline.
+## Documents
 
-## Deliverable coverage
+- [Methodological protocol](coauthor-methodological-protocol.md): methods, population, parameter/resource tables, data collection, analysis, budget, schedule and self-contained appendices.
+- [Decisions and budget](decisions-and-budget.json):177 primary optimisation calls, explicit working scenarios and coauthor-review proposals.
+- [Evidence contract](evidence-contract.json): record identities, event/label/Start fields and metric-specific eligibility.
+- [Gurobi methodological design note](gurobi-adequacy-and-shared-architecture.md): root features, feasible incumbents, Gurobi 14 heuristics and conditional Benders boundaries.
+- [Editorial reconciliation](editorial-revision-plan.md) and [annotation disposition](annotation-disposition-EN.csv): implementation of the PDF review.
+- [Development handover](development-handover.md): portable scientific context and release gates for the next development chat.
+- [References](references.bib): bibliographic records used by the protocol.
 
-| Mandate deliverables | Location |
-| --- | --- |
-| E1: MVP2 closeout | [PR97](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/97), [PR98](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/98) and [retirement receipt](../../evidence/pr98/closure-20261119/retirement.json) |
-| E2/E3/E4/E7: scientific question, Gurobi/HPC, 90-instance characterization and 39-parent B/R/G | Protocol sections 1–4 and 7–11; evidence contract |
-| E5/E6: dataset/labels/split and serial/DDP | Protocol sections 5–6; decisions D1–D5 |
-| E8/E9: shared architecture and independent Benders | Technical Note A–F, component inventory and exactness conditions |
-| E10: full mathematical foundation | [Appendix A.8](../../../manuscript/supplement/gnn-mathematical-foundations.md), [Portuguese original](source/fundamentacao-matematica-pt-20261119.txt) and [reconciliation](foundation-reconciliation.json) |
-| E11: consolidated English coauthor protocol | Detailed protocol plus explicitly linked specifications above |
+The proposed split allocation, label-admission tier, independent R/G support settings, training schedule and conditional diagnostic profiles are visible review choices. The PR remains Draft. Approval of the protocol and a concrete resource release precede scientific execution; merges require the researcher's specific decision.
 
-## Boundaries
+## Rendering
 
-The 990 matrix and the 66/18 alternatives are discontinued. Preserve the technical pilots and artifacts as historical evidence. The new principal design is 90 characterization baselines and 39 test parents x B/R/G, with a conservative budget of 207 principal solves; root preparation and learning are budgeted separately. Two 20-core jobs are a candidate, not demonstrated capacity. Extra seeds, hints, parameter sensitivities, shared-core code and Benders implementation are not authorized.
+Run render_review_pdfs.py with the protocol source and an output directory. It uses Pandoc, XeLaTeX, Pillow and PyMuPDF, generates the two diagrams and produces the PDF, self-contained HTML, page images and a build receipt. PANDOC and XELATEX environment variables can identify local executables. The renderer handles documentary work only.
 
-The existing approved Sprint sequence is retained; this packet does not repeat or expand it. Protocol milestone 3 December 2026, pause 19 December–10 January, target journal submission 18 March 2027. Resource/schedule risk and required coauthor decisions are visible in the protocol. No main/Pages/Zenodo publication is implied by a develop documentation PR.
-
-## Local PDF review builds
-
-The two documents are rendered by [`render_review_pdfs.py`](render_review_pdfs.py), an editorial helper that does not import the scientific pipeline. Requirements: Python with ReportLab, Quarto/Pandoc, a native LaTeX installation with `amsmath`/`amssymb`, Poppler and Times/Arial/Courier fonts (the font directory is configurable). Run from this directory, using an output directory below the approved local temporary workspace:
-
-```text
-python -B render_review_pdfs.py --output-dir <local-output-directory> --revision <exact-commit-sha> --pdflatex <path-to-pdflatex>
-```
-
-Optional `--quarto`, `--pdftoppm` and `--font-dir` arguments select local tools. The build receipt records source and PDF SHA256 hashes; the exact source revision appears in each PDF footer. Render every final page with Poppler and inspect equations, table continuations and pagination before delivery. PDFs and intermediate formula images remain local; this PR versions only the sources and the rendering helper.
+The local coauthor PDF is titled *CFL-GNN MVP3 Research Protocol EN*, dated23 November 2026. GitHub retains the editable source and reproducible renderer; the delivered PDF and detailed machine handover are local review artifacts. This PR changes documentation and rendering assets, with zero new scientific calls.

@@ -1,132 +1,119 @@
 {
-  "schema_version": "mvp3-proposal-v1",
-  "status": "specification_not_implemented",
+  "schema_version": "mvp3-proposal-v2",
+  "status": "specification_for_coauthor_review",
   "unit": "original_instance",
-  "tables": {
-    "instances": {
-      "primary_key": "instance_id",
-      "fields": {
-        "instance_id": "original MILPBench parent ID",
-        "display_alias": "E/M/H alias",
-        "difficulty": "easy|medium|hard",
-        "source_file_sha256": "64hex",
-        "decoded_model_sha256": "64hex when compressed",
-        "mathematical_signature_sha256": "64hex",
-        "original_objective_sense": "as distributed",
-        "effective_objective_sense": "MINIMIZE",
-        "num_variables": "integer",
-        "num_binary": "integer",
-        "num_integer": "integer",
-        "num_continuous": "integer",
-        "num_constraints": "integer",
-        "num_nonzeros": "integer",
-        "graph_variable_nodes": "integer|null with reason",
-        "graph_constraint_nodes": "integer|null with reason",
-        "graph_edges": "integer|null with reason",
-        "historical_exposure": "enumerated provenance",
-        "learning_role": "train|validation|test|transfer_only|not_admitted",
-        "admission_status": "qualified|missing|numeric_ineligible|decision_required"
-      }
-    },
-    "executions": {
-      "primary_key": "execution_id",
-      "foreign_key": "instance_id",
-      "fields": {
-        "method": "B|R|G|Benders_separate_future",
-        "phase": "characterization|paired_evaluation|preparation|technical_qualification",
-        "solver_version": "exact tuple/build",
-        "source_commit": "40hex; preflight/dispatcher failures preserve their known source",
-        "parameter_map": "all effective algorithmic parameters",
-        "parameter_sha256": "canonical binding",
-        "environment": "Python, gurobipy, OS, license fingerprint without secrets",
-        "input_artifact_hashes": "model/root/graph/checkpoint/prediction/Start as applicable",
-        "resources": "physical cores, logical CPUs, sibling map, cpuset, NUMA, Slurm limits",
-        "observed_resources": "CPU deltas, native thread ceiling/count, process/cgroup/native memory with units/scope",
-        "native_runtime_seconds": "finite nonnegative number|null with explicit unavailability reason",
-        "native_work": "finite nonnegative|null with reason",
-        "node_count": "finite nonnegative number|null with explicit unavailability reason",
-        "incumbent_available": "boolean",
-        "reported_objective": "number|null",
-        "recalculated_objective": "number|null",
-        "reported_dual_bound": "number|null",
-        "reported_gap": "number|null",
-        "terminal_status": "native code and normalized reason",
-        "independent_audit": "residuals, tolerances, integrality, objective and scope",
-        "start_processing": "submitted|observed_processing|observed_acceptance|unobserved|not_applicable",
-        "timing_regions": "native/build/preparation/transfer/inference/audit/export with explicit nesting",
-        "job_ids": "Slurm parent/step/array identifiers",
-        "result_sha256": "immutable raw result binding"
-      }
-    },
-    "targets": {
-      "primary_key": [
-        "execution_id",
-        "gap_target"
-      ],
-      "allowed_gap_targets": [
-        0.1,
-        0.05,
-        0.01,
-        0.0001
-      ],
-      "fields": {
-        "status": "attained|right_censored|unavailable|numeric_ineligible",
-        "first_observed_seconds": "number|null",
-        "first_observed_work": "number|null",
-        "primal": "number|null",
-        "dual": "number|null",
-        "observed_gap": "number|null",
-        "nodes": "number|null",
-        "event_id": "reference to observation or terminal fallback",
-        "clock_origin": "native solve start",
-        "numeric_eligibility": "per-metric decision with reason",
-        "censoring_time": "actual terminal observation, never synthetic attainment"
-      }
-    },
-    "events": {
-      "primary_key": "event_id",
-      "foreign_key": "execution_id",
-      "fields": {
-        "where": "actual callback/log/OS event",
-        "what": "queried API fields",
-        "origin": "native_attribute|callback|log|OS_sample|unavailable",
-        "runtime_seconds": "number|null",
-        "work": "number|null",
-        "candidate_objective": "number|null",
-        "best_incumbent": "number|null",
-        "best_dual_bound": "number|null",
-        "nodes": "number|null",
-        "incumbent_vector_sha256": "optional durable retained vector",
-        "availability_reason": "explicit for missing values"
-      }
-    },
-    "labels": {
-      "primary_key": "label_reference_id",
-      "foreign_key": "instance_id",
-      "fields": {
-        "originating_execution": "qualified incumbent execution ID",
-        "vector_sha256": "immutable complete vector",
-        "model_and_variable_order_sha256": "identity binding",
-        "incumbent_gap": "reported and qualified value",
-        "feasibility_integrality": "independent residual/tolerance report",
-        "admission_policy_id": "precommitted label policy",
-        "binary_mask_sha256": "domain mask binding",
-        "root_feature_sha256": "separate inference feature binding",
-        "normalization_fit_role": "training_only",
-        "selection_role": "training|validation|test|excluded"
-      }
-    }
+  "expected_primary_records": {
+    "root_relaxation": 66,
+    "incumbents": 66,
+    "evaluation": 45
   },
+  "keys": {
+    "instance": "original benchmark ID",
+    "run": [
+      "instance",
+      "stage",
+      "method",
+      "seed",
+      "attempt"
+    ],
+    "target": [
+      "run",
+      "gap_target"
+    ],
+    "event": [
+      "run",
+      "event_ordinal"
+    ]
+  },
+  "instance_fields": [
+    "original_ID",
+    "E_M_H_alias",
+    "stored_SHA256",
+    "model_signature",
+    "declared_and_effective_objective_sense",
+    "rows_columns_domains_nonzeros",
+    "numerical_ranges",
+    "graph_shapes_and_bytes",
+    "learning_role",
+    "historical_exposure"
+  ],
+  "identity_basis": {
+    "compressed_hash": "current stored bytes",
+    "decoded_identity": "researcher-confirmed common MILPBench origin; optional independent digest where already available",
+    "decompression_required_by_this_plan": false
+  },
+  "run_fields": [
+    "exact_source_commit",
+    "environment_inventory",
+    "effective_parameter_map",
+    "input_and_output_hashes",
+    "native_runtime",
+    "native_Work",
+    "native_status",
+    "final_primal_dual_gap",
+    "independent_audit",
+    "resource_allocation_and_affinity",
+    "native_thread_lines",
+    "sampled_memory",
+    "termination_cause",
+    "timing_hierarchy"
+  ],
+  "root_fields": [
+    "complete_original_variable_order",
+    "event_where",
+    "MIPNODE_status",
+    "root_event_ordinal",
+    "node_count",
+    "cut_pass_provenance",
+    "full_vector_hash",
+    "coverage_and_numerical_checks"
+  ],
+  "label_fields": [
+    "origin_DIRECT_or_BENDERS",
+    "incumbent_vector_hash",
+    "incumbent_gap",
+    "audit_residuals",
+    "quality_tier",
+    "admission_policy",
+    "parent_partition"
+  ],
+  "start_fields": [
+    "method_B_R_G",
+    "policy_identifier",
+    "support_names_values_hash",
+    "ones_count",
+    "bounds_and_domains",
+    "undefined_remaining_coordinates",
+    "processing_messages",
+    "attributed_candidate",
+    "completion_diagnostic_if_released"
+  ],
+  "gap_targets": [
+    0.1,
+    0.05,
+    0.01,
+    0.0001
+  ],
+  "outcome_categories": [
+    "attained",
+    "right_censored",
+    "feature_unavailable",
+    "no_incumbent",
+    "numeric_ineligible",
+    "memory_termination",
+    "callback_failure",
+    "infrastructure_interruption"
+  ],
   "invariants": [
-    "no invented threshold time or Work",
-    "no rounding/repaired vector promotion without a new qualified record",
-    "original instance is the experimental unit",
-    "no test/hard label access for training selection",
-    "no field silently retrofitted into historical receipts",
-    "new execution requires separate authorized protocol/source/budget",
-    "M4/M12 restrictions remain per-metric",
-    "allocation is not active utilization",
-    "time ratios preserve explicitly declared orientation",
-    "failed initialization and malformed returns retain raw hashes and dispositions; unavailable metrics are null with reasons"
+    "Instance-level denominators retained",
+    "Numeric time ratios require common qualified attainment and positive times",
+    "Main ratio orientation T_G/T_B",
+    "Root feature and incumbent label provenance remain separate",
+    "Training decisions use training/validation roles",
+    "Hard instances are transfer-only for learning",
+    "Historical receipts remain immutable",
+    "Allocation and measured activity retain distinct scopes",
+    "Attempt replacements require explicit release",
+    "Missing measurements have null values and explicit reasons"
   ]
 }
