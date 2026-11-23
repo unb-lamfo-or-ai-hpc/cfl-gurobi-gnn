@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-23",
+  "approved_in_PR": 99,
+  "merged_commit": "22d5089f59f7306d97f7d5410f248d6b45ebdc0b",
+  "PDF": "CFL-GNN-MVP3-Protocol-v3-EN.pdf",
+  "PDF_sha256": "3e55df74176b516154bd62bb37a6a28908179b0d59fed676fe3056c15531410e",
+  "editable_source": "coauthor-methodological-protocol.md",
+  "source_sha256": "6a81b4b470ab9154efa0ea10935cd0f1f51a063e1cc3d149d43ec6274ada1fc2",
+  "TeX_sha256": "1fa15da87c4766596677c8ee4c7b7370ffd222cac7253c7dbb25f94e006a9039",
+  "HTML_sha256": "dad56d999f3b42e528a8b6b2562c50bd5a97749c3f88a93f24aed687ce01d4c4",
+  "pages": 21,
+  "scientific_appendices": [
+    "A Mathematical and learning specification",
+    "B Root-relaxation and Start decision procedures",
+    "C Conditional Benders specification",
+    "D Scientific acceptance checklist"
+  ],
+  "approved_files_modified": false
+}

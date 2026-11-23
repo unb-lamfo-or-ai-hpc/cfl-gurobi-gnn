@@ -1,3 +1,9 @@
+# MVP3 approved protocol and final preparation - 23 November 2026
+
+Protocol v3 was approved by the researcher and merged in PR99 at 22d5089f59f7306d97f7d5410f248d6b45ebdc0b. The [final preparation dossier](research/mvp3/preparation/README.md) consolidates the English plan and Appendices A-D, hypotheses, design, workbook, resource budget and acceptance milestones. Implementation starts with S1 in the next Codex chat after the preparation review/integration.
+
+No MVP3 scientific call, training, inference, Slurm release, Benders implementation or remote checkout/environment update is inferred from this documentary work. PR101 and PR102 remain Draft. Author CLI and specific merge/publication decisions retain their scope. Earlier dated status sections describe historical snapshots.
+
 # MVP2 closeout and MVP3 transition — 19 November 2026
 
 The author authorized completing PR97 and PR98 and merging both into develop after checks. PR97 adds the integral audited mathematical foundation in Appendix A.8; historical results remain unchanged. PR98 is concluded technical work: the 990-evaluation matrix and proposed reduced alternatives are discontinued before submission. The current launcher and mutating matrix CLI fail closed. Preserve all installed sources, pilots, receipts, claims and artifacts; no HPC queue mutation was performed.
@@ -80,3 +86,4 @@ Earlier entries below are dated history, not current merge/dispatch authority.
 The H25 technical recovery3906 is complete (6/6 gates and independent incumbent audits passed; all six censored at the native time limit). Full source CI44371582565 passed. Preserve all 3891/3905/3906 sources, claims and outputs. The H0 original LP has been independently hashed from the original ZIP whose directory matches the official distribution; see [reference receipt](evidence/pr98/h0-reference-20261118/reference.json).
 
 The next prepared author CLI installs the tested source, qualifies all six hard input bytes, and can submit one explicitly decided preparation job for H0/H5/H10/H15/H20, reusing H25. No new training or evaluation occurs in that stage. Full 990-cell execution follows only after reviewing that return and the concrete 330-block plan/resources. The [runbook](research/pr98-hard-pilot.md) records the new three-hour preparation envelope and unchanged four-hour evaluation-block envelope. No new job is inferred from tool preparation. PR97 remains draft and unchanged; improved labels remain future work.
+
