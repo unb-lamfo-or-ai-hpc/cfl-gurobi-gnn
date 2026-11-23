@@ -1,3 +1,13 @@
+# Current admission update — 23 November 2026
+
+The [approved-source checkout and CFL package admission](checkout-package-admission-20261123.md) are received and reconciled. Source `61ba422c` is clean; all 12 project/build requirements are satisfied. The installation receipt reproduces SHA256 `bcda9426e8e0f449b8fb9b911b1cbc4d0545bb619c94520dcc1061a6a92e1ab1`. Only CFL 0.1.0 was added: target records 106→107, current target inventory `1fa27e7b9e2dce69eb2d13d48cfe8dcf32991765c49efa550a3ab7220508f839`. Preexisting versions and the original environment are preserved.
+
+All 66 input identities are recorded. Decoded-LP equivalence with DGX is accepted on the researcher's explicit MILPBench provenance confirmation; no independent decoded-byte comparison is claimed or required. No original-input transfer remains. The duplicate-checkout error correctly blocked a repeat.
+
+TR-04 has completed checkout/path-map/package admission. The ignored project secrets directory exists but its license file is absent; protected license placement and stable retention of the editable source remain operational follow-up. Full CFL driver/real-data training, DDP and performance are unqualified. No scientific run or merge occurred. #99, #101 and #102 remain Draft.
+
+The older dated sections below preserve chronological history; their then-pending checkout/install or transfer statements are superseded by this update.
+
 # Latest received transition evidence — 23 November 2026
 
 The [current 66-input inventory](current-input-inventory-20261123.md) is received: exact receipt/SHA256SUMS reconstruction passed, 30 easy/30 medium/six hard are present, and no additional original transfer is needed. These are stored-file identities, not decoded-content or full-runtime qualification. Prepare the isolated approved-source checkout and read-only requirements/data inspection next. The older missing-six and TAR-wrapper narrative below is historical and does not require another transfer. PR #99 remains Draft; no merge/publication or scientific execution occurs.

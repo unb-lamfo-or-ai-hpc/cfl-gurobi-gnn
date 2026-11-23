@@ -6,7 +6,7 @@ The author's complete JSON reproduces SHA256 `048b823a865af4988088b9f80388e759a7
 
 ## Interpretation
 
-All 66 compressed hashes differ from the DGX representations; all 66 stored lengths agree. Seven hashes are unchanged from the earlier NPAD catalogue. The researcher reports extracting the TAR containers and gzip-compressing the LPs. These observations support a new NPAD compressed-file identity baseline; they do not prove that gzip headers alone explain the differences or establish decoded LP equivalence. Honor the researcher's no-decompression decision. No further input transfer or repeated hashing is required for the next **read-only checkout inspection**.
+All 66 compressed hashes differ from the DGX representations; all 66 stored lengths agree. Seven hashes are unchanged from the earlier NPAD catalogue. The researcher reports extracting the TAR containers and gzip-compressing the LPs. These observations support a new NPAD compressed-file identity baseline; they do not prove that gzip headers alone explain the differences or establish decoded LP equivalence. The researcher subsequently confirmed that all decoded LPs are the same MILPBench instances and explicitly accepted their equivalence. Record that provenance decision separately from independent byte verification, which was not performed. Honor the researcher's no-decompression decision. No further input transfer or repeated hashing is required for the accepted checkout/package admission.
 
 The earlier six-file private-stage verifier returned exit 2 because it targeted another location/representation. That result remains historical. It does not make the now-complete shared cohort missing. Preserve the unused private incoming stage; no cleanup or deletion follows automatically.
 
@@ -25,8 +25,8 @@ The verified job 3930 index has a disjoint 299-file classification:
 
 These are snapshot member sizes, not new NPAD consumption or RAM requirements. Existing NPAD presence of non-model artifacts is not established by an instance catalogue. No historical label, root or Start becomes an MVP 3.0 observation. The complete 168 GB historical dataset and active DGX interpreter dependencies remain in place; this classification is not a deletion approval.
 
-## Next bounded handoff
+## Current bounded handoff
 
-TR-03 has received the current input inventory and preservation index. TR-04 proceeds with preparation of an **isolated checkout of the approved develop revision**, plus read-only checks of pyproject requirements, both environment inventories and current data metadata. Do not install the project or any dependency automatically, import Gurobi/Torch, invoke project entry points, copy a license, train or solve.
+TR-03 has received the current input inventory and preservation index. TR-04 has completed the approved-source checkout, 66-file path map, static requirements review and CFL-only package installation. See the [admission record](checkout-package-admission-20261123.md). Both earlier environment inventories were preserved through checkout; the later install added only CFL 0.1.0 to the target and retained all preexisting versions. The original environment is unchanged.
 
-A full real-data technical qualification, if required later, needs a separate concrete scope and resource decision. Scientific MVP 3.0 implementation remains behind the reviewed English protocol and budget in Draft PR #99. The original environment, historical evidence, main/develop refs and publication remain unchanged.
+The project secrets directory is prepared but its license file is absent. Preserve the editable source location and arrange its stable retention before production use. A full real-data technical qualification, if needed later, requires a separate concrete scope and resource decision. Scientific MVP 3.0 implementation remains behind the reviewed English protocol and budget in Draft PR #99. Historical evidence, main/develop refs and publication remain unchanged.
