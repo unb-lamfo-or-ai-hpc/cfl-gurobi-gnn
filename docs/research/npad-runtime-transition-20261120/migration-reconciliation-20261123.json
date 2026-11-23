@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-23",
+  "scope": "transition_evidence_only_not_MVP3_results",
+  "transition_sprints": [
+    "TR-01",
+    "TR-02",
+    "TR-03",
+    "TR-04",
+    "TR-05"
+  ],
+  "DGX_directed_inventory": {
+    "ZIP_SHA256": "3c704d52ec931090cb38d5454e7f8b7d5f7e71ce36e1cae4ec7204008b02730d",
+    "bytes": 98929,
+    "hash_CRC_schema": "PASS",
+    "valid_Git_states": 12,
+    "cache_marker_exceptions": 1,
+    "complete_metadata_manifests": 8,
+    "pr57_registered_worktree_complete": true
+  },
+  "preservation_3930": {
+    "job_id": "3930",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 408,
+    "metadata_ZIP_SHA256": "fae8ee2f7825580703316b4428968e0e70fc82cd72f91bc65439c1b220abd6a7",
+    "metadata_ZIP_bytes": 27149,
+    "metadata_verification": "SHA256_CRC_receipt_index_and_all_selected_records_PASS",
+    "selection_SHA256": "b94344762a387d7c3c5021f9af4ccfab0db194fcb05266bf608ce8d3a6a57e84",
+    "members": 299,
+    "original_models": 66,
+    "prior_expected_hashes_matched": 251,
+    "new_preservation_hashes": 48,
+    "member_payload_bytes": 14231575022,
+    "archive_SHA256_reported_by_DGX": "c52b13b53ac87fe9a13a8e8e6b28c6de542ca728734558a067755300985ff499",
+    "archive_bytes_reported_by_DGX": 6832048460,
+    "archive_downloaded_locally": false,
+    "archive_rehashed_locally": false
+  },
+  "NPAD_storage": {
+    "receipt_SHA256": "ec219622403d6b23a3db53d6ce79fb29a45685c28aa568205904af7661f125f0",
+    "user_group_default_quota_hard_limits": "unlimited_as_reported",
+    "write_read_probe_4KiB": "PASS",
+    "free_shared_filesystem_bytes_at_query": 16133267128320,
+    "not_dedicated_allocation": true,
+    "unsupported_optional_queries": [
+      "--version",
+      "--df"
+    ],
+    "zero_usage_or_inode_counters_not_proof_of_absence_or_exhaustion": true
+  },
+  "NPAD_shared_catalogue": {
+    "receipt_SHA256": "df638ada63fbd9414c7d30047998f116fac177500d59415ac3295e121d43f511",
+    "receipt_verification": "author_supplied_JSON_reconstructed_exact_SHA256_PASS",
+    "scan_entries": 63,
+    "scan_directories": 4,
+    "canonical_model_names_recognized": 7,
+    "other_file_names_not_listed": 53,
+    "matched_stored_SHA256": 0,
+    "matching_sizes": 7,
+    "first_scope_complete": true,
+    "whole_filename_inventory_complete": false,
+    "complementary_census": "prepared_not_executed_or_received",
+    "missing_instance_count": null,
+    "no_missing_verdict_from_canonical_filter": true
+  },
+  "boundaries": {
+    "existing_shared_data_preferred": true,
+    "missing_only_transfer_pending": true,
+    "no_automatic_overwrite": true,
+    "decompression_added": false,
+    "new_dataset_transfer": false,
+    "new_clone": false,
+    "new_cleanup": false,
+    "new_scientific_execution": false,
+    "original_environment_preserved": true,
+    "raw_path_maps_committed": false,
+    "credentials_committed": false
+  },
+  "frozen_qualification": {
+    "executed_commit": "53dc41f61383651c5909a992607245f9f9ca69ee",
+    "CI_run": 44816872315,
+    "library_job": "2278626",
+    "synthetic_training_license_job": "2278658",
+    "do_not_repeat_for_documentary_commits": true
+  },
+  "author_actions_required": [
+    "complementary_NPAD_filename_and_stored_hash_census",
+    "reviewed_missing_only_transfer_CLI",
+    "specific_merge_approval"
+  ],
+  "limitations": [
+    "Stored gzip byte inequality does not establish different decoded MILPs.",
+    "Names and sizes alone do not establish model-byte identity.",
+    "No decompression is imposed; use documentary identity where qualified and preserve unresolved cases.",
+    "Runtime PASS excludes real CFL driver/data, historical checkpoint, DDP, hard-memory and performance qualification."
+  ]
+}

@@ -1,3 +1,13 @@
+# Current transition — 23 November 2026
+
+Follow the [named transition Sprints TR-01–TR-05](research/npad-runtime-transition-20261120/transition-sprints-20261123.md) and [updated English resumption plan](research/npad-runtime-transition-20261120/pause-and-resume-plan-20261120.md).
+
+The runtime/library and synthetic Gasse/native-license qualifications are received. DGX job 3930 completed; its 27,149-byte metadata ZIP, receipt, index and all 299 selected records reconcile, including 66 original models. The full archive remains on DGX. NPAD storage quota queries and the write/read probe passed within their stated scope.
+
+The first shared-data catalogue is received and its SHA256 is verified. Its canonical-name filter recognized seven models, while 53 other filenames were not listed. All seven stored gzip hashes differ from the DGX representations despite matching sizes. No new decompression is required or performed. Do not declare 59 missing inputs or copy the full archive: finish the complementary filename/stored-hash census, reuse qualified existing files and transfer only reviewed missing items. See the [sanitized reconciliation record](research/npad-runtime-transition-20261120/migration-reconciliation-20261123.json).
+
+#99, #101 and #102 remain Draft, targeting develop. No merge, main move, publication, cleanup, full clone or scientific campaign has occurred in this update. All new repository/coauthor-facing prose is English. The sections below are dated historical snapshots.
+
 # Current — NPAD qualification received; pause after migration analysis — 20 November 2026
 
 Job 2278658 is COMPLETED/0:0 in 37s: Gurobi14/license and three-update synthetic project-model training PASS, result SHA256 ff27d0c0fd4a511e1f7f1d4d249efc1d45819af4af5a174cd9111e93a92d7c7e reproduced offline. The original venv313 inventory remains 94e16343…bc750. Executed source 53dc41f passed all five CI jobs 44816872315 and remains frozen. This does not qualify real-data training, the full CFL driver, historical-checkpoint loading, DDP or performance.

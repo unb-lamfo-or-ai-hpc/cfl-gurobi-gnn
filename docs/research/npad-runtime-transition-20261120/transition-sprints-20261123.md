@@ -1,0 +1,31 @@
+# Named transition Sprints — MVP 2.0 to MVP 3.0
+
+**Updated:** 23 November 2026. **Language:** English for repository and coauthor-facing material.
+
+These identifiers track operational transition work. They do not rename the scientific Sprints S1–S6 or authorize experiments. Earlier provisional T1–T3 delivery labels are superseded by the TR identifiers below.
+
+| ID and name | PR boundary | Received evidence or prepared output | Completion criterion and present status |
+| --- | --- | --- | --- |
+| **TR-01 — Editorial and Release Readiness** | #101, into develop only | TinyTeX authenticated release lookup; publication handoff and preserved article/supplement links | Exact-revision CI and review completed before a separately authorized develop integration. Draft; no merge or publication in this update. |
+| **TR-02 — Runtime Qualification** | #102 | Installation receipt; V100 job 2278626; synthetic project-model/native-license job 2278658 | Scoped library/model-training/license compatibility PASS. Completed for these technical scopes; real CFL driver/data, historical checkpoint, DDP and performance remain unqualified. Do not repeat successful qualification to follow documentary commits. |
+| **TR-03 — Data Preservation and Reconciliation** | #102 | Directed DGX inventory; storage admission; job 3930 preservation receipt and all 299 member records; first NPAD shared-data catalogue | Preserve unique data and frozen paths. Finish destination filename/hash coverage before declaring missing inputs. In progress: the first catalogue recognized seven canonical names but omitted 53 other filenames. |
+| **TR-04 — NPAD Data Admission and Project Checkout** | #102 preparation; a focused implementation PR if needed | Existing shared data take priority; missing-only transfer and approved-revision clone are planned | Receive and verify the missing-only delta, path map and protected project license setup while preserving the original environment. Pending TR-03; no full bundle transfer, extraction, checkout or cleanup is inferred. |
+| **TR-05 — Methodological Approval and Handover** | #99, maintained separately in Draft | Integrated English protocol and Gurobi note under author review | Incorporate author comments and approved addenda; obtain protocol/budget approval from the researcher/coauthors before scientific implementation. No coauthor communication or new experiment occurs through this plan. |
+
+## Evidence and interpretation
+
+The [current migration receipt](migration-reconciliation-20261123.json) records the checked identities and their scope. The author executes all HPC/SSH/SCP commands. GitHub contains sanitized summaries, source and reproducible records; private inventories, raw path maps, credentials and large payloads remain outside Git.
+
+The DGX preservation job 3930 completed successfully. The metadata ZIP, receipt and index were verified locally. All 299 members match the frozen selection, including 66 original models. There are 251 matches to previously qualified expected hashes and 48 newly recorded preservation hashes. This does not turn historical artifacts into MVP 3.0 experimental results. The archive digest is reported by the DGX receipt; the 6,832,048,460-byte archive was not transferred or rehashed locally.
+
+The first NPAD catalogue receipt is authentic and complete **within its canonical-name filter**, not a complete listing of all existing filenames. It visited 63 entries in four directories and recognized seven LP gzip files. All seven match the DGX counterparts in size but not in stored-file SHA256. Different gzip bytes do not by themselves demonstrate a different MILP. Conversely, matching names and sizes do not prove byte identity. Preserve the existing files and record this distinction without automatic overwrite or duplicate transfer.
+
+The author explicitly waived decompressed-content verification. Continue with filenames, sizes, stored-file hashes and qualified documentary identities; do not add decompression as a gate. A bounded complementary census lists the omitted filenames and hashes their stored bytes, reusing the seven prior hashes when file size and modification time remain unchanged. No missing-instance count or transfer volume is established before reviewing that return.
+
+## Acceptance records
+
+Each Sprint records its PR, exact revision, validation, evidence scope, unresolved items and author intervention. Preserve historical receipts and incident records; correct present status through dated superseding records rather than rewriting executed source. All new repository/coauthor-facing prose is English; discussion with the researcher may remain PT-BR.
+
+The original environment is preserved. The target runtime is qualified only for the recorded technical scopes. Native Threads=0 still requires allocation/affinity qualification for later real-data work. Do not pool DGX/Gurobi 13 and NPAD/Gurobi 14 timings as paired performance evidence.
+
+Merges remain separately approved and target develop. A subsequent main synchronization and Pages publication require the approved release flow. Keep #99, #101 and #102 Draft until their respective review decisions.
