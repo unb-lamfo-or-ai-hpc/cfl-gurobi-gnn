@@ -1,3 +1,9 @@
+# TR-01 publication readiness — 23 November 2026
+
+PR #101 remains Draft, targeting develop, with a scoped TinyTeX authentication fix. The [English release handoff](research/transition-release-readiness-20261123.md) defines its review and later publication sequence. The #97/#98-only branch synchronization was already completed at 61ba422c147c3a3d9ae04b49f1607ed5fca4d0e1; no new merge, main update or Pages deployment is performed here.
+
+PR #102 separately tracks the operational transition; #99 remains the methodological Draft. Use named transition Sprints TR-01–TR-05 without renaming scientific Sprints S1–S6. Repository/coauthor-facing documents are English; discussion with the researcher may remain PT-BR. The following dated sections preserve historical status.
+
 # MVP2 closeout and MVP3 transition — 19 November 2026
 
 The author authorized completing PR97 and PR98 and merging both into develop after checks. PR97 adds the integral audited mathematical foundation in Appendix A.8; historical results remain unchanged. PR98 is concluded technical work: the 990-evaluation matrix and proposed reduced alternatives are discontinued before submission. The current launcher and mutating matrix CLI fail closed. Preserve all installed sources, pilots, receipts, claims and artifacts; no HPC queue mutation was performed.
