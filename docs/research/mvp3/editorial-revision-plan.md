@@ -17,7 +17,7 @@ S1-S6 now have explicit planned PR packages, acceptance artifacts and a working 
 - The recorded Intel node topology is32 physical cores/64 logical CPUs; the memory-class suffix denotes the node class.
 - An unsuccessful Start message has multiple explanations; partial completion and main-solve benefit have separate evidence categories.
 - The supplied Benders paper is verified as Haq, Chaerani and Triska(2025), resolving the later author/year shorthand in the annotations.
-- The primary method time ratio is consistently T_G/T_B; conventional training-system speedup has its own clearly labelled resource-scaling definition.
+- Method time ratios use T_B/T_G and T_R/T_G, with values above one favouring G; training-system speedup retains T_serial/T_DDP and its separate resource-scaling scope.
 
 ## Review decisions
 
@@ -26,3 +26,7 @@ The [decision register](decisions-and-budget.json) makes the proposed label tier
 ## Final researcher-approved addendum
 
 The researcher approved the methodological plan and requested a final expansion of Gurobi14 feasibility diagnostics. The revision explains the roles of MIPFocus, heuristic budgets, traditional/in-tree NoRel, PDHG-based incumbent search and partial-Start completion limits. GRBLogTools receives an explicit secondary offline role, field/clock reconciliation procedure and release-specific coverage record. Documentation URLs appear in footnotes. The accepted population,177-call primary budget,comparison profiles and S1-S6 sequence are unchanged. No parser installation or execution occurred.
+
+## Version 3: time-ratio decision and presentation reconciliation
+
+The researcher resolved slide 34 by adopting comparator/G speedup factors. Equations, examples, paired-outcome categories, end-to-end and reuse reporting, the evidence contract and handover now use that orientation. The presentation review covers all 42 slides; the separate reconciliation record supplies slide-level replacement guidance. StartNodeLimit is explained with its default inheritance. Break-even equality and positive-time eligibility are explicit. Scientific arms, budgets and execution gates are unchanged.

@@ -30,7 +30,7 @@ The diagnostic proposal records its trigger, instance, parameters and cost befor
 | Start adapter | B empty external Start; independent R; frozen G; undefined unselected values |
 | Numerical audit | Objective, row, bound and integrality checks tied to exact vectors |
 | Dispatcher/collector | Two-job/two-session ceiling, exclusive-node contract, attempt identities and terminal reconciliation |
-| Analysis layer | Target-specific denominators, T_G/T_B orientation, quality, effort and cost scopes |
+| Analysis layer | Target-specific denominators, T_B/T_G and T_R/T_G orientations (above one favours G), quality, effort and cost scopes |
 
 Historical executable sources and receipts remain preserved. S1 introduces the new versioned scientific contract and checks event/source semantics before any dataset release. Existing scientific workers with version-specific guards serve as design references; their historical invocations remain unchanged.
 

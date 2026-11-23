@@ -107,7 +107,7 @@
   "invariants": [
     "Instance-level denominators retained",
     "Numeric time ratios require common qualified attainment and positive times",
-    "Main ratio orientation T_G/T_B",
+    "Time ratio orientations T_B/T_G and T_R/T_G; greater than one favours G",
     "Root feature and incumbent label provenance remain separate",
     "Training decisions use training/validation roles",
     "Hard instances are transfer-only for learning",
@@ -126,5 +126,19 @@
     "missing_field_reason",
     "time_origin",
     "native_record_reconciliation"
-  ]
+  ],
+  "paired_time_fields": [
+    "comparator_B_or_R",
+    "gap_target",
+    "clock_and_origin",
+    "T_comparator",
+    "T_G",
+    "both_qualified_attained",
+    "positive_time_eligibility",
+    "S_comparator_over_G",
+    "signed_saving_comparator_minus_G",
+    "ratio_eligibility_reason",
+    "eligible_cohort_and_denominator"
+  ],
+  "ratio_aggregation_rule": "Compute per-instance comparator/G factors, then aggregate within the declared eligible cohort. Invert paired factors before re-aggregation; do not invert an old arithmetic mean."
 }

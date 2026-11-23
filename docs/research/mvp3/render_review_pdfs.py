@@ -79,7 +79,7 @@ def build(source,out):
     pandoc=os.environ.get('PANDOC') or shutil.which('pandoc') or 'C:/Program Files/Quarto/bin/tools/pandoc.exe'
     engine=os.environ.get('XELATEX') or shutil.which('xelatex') or str(Path.home()/'AppData/Roaming/TinyTeX/bin/windows/xelatex.exe')
     common=[pandoc,'--standalone','--from=markdown+tex_math_dollars+autolink_bare_uris','--resource-path='+str(out)+os.pathsep+str(source.parent),'--toc']
-    pdf=out/'CFL-GNN-MVP3-Research-Protocol-EN-20261123-v2.pdf'
+    pdf=out/'CFL-GNN-MVP3-Research-Protocol-EN-20261123-v3.pdf'
     tex=out/(pdf.stem+'.tex')
     command=common+[str(out/'protocol-pdf.md'),'--to=latex','--variable=mainfont:Times New Roman','--variable=sansfont:Arial','--variable=monofont:Consolas','--variable=mathfont:Cambria Math','--include-in-header='+str(out/'header.tex'),'--output='+str(tex)]
     run=subprocess.run(command,cwd=out,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=90)
@@ -90,7 +90,7 @@ def build(source,out):
         logs.append(run.stdout+'\n'+run.stderr)
         (out/'pdf-build.log').write_text('\n'.join(logs),encoding='utf-8')
         if run.returncode:raise RuntimeError(run.stdout[-6000:]+run.stderr[-1000:])
-    run=subprocess.run(common+[str(source),'--to=html5','--embed-resources','--mathml','--output='+str(out/'CFL-GNN-MVP3-Research-Protocol-EN-20261123-v2.html')],cwd=out,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=90)
+    run=subprocess.run(common+[str(source),'--to=html5','--embed-resources','--mathml','--output='+str(out/'CFL-GNN-MVP3-Research-Protocol-EN-20261123-v3.html')],cwd=out,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=90)
     (out/'html-build.log').write_text(run.stderr,encoding='utf-8');assert run.returncode==0
     doc=pymupdf.open(pdf);qa=out/'qa';qa.mkdir(exist_ok=True);texts=[];bounds=[]
     for i,page in enumerate(doc):

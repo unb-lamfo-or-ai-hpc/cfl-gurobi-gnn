@@ -116,7 +116,7 @@ The following configuration guide makes these roles explicit:
 - **Feasibility focus:** MIPFocus=1 emphasises feasible solutions. Heuristics controls the desired share of effort devoted to feasibility search; the primary profile retains its native value 0.05. NoRelTreeHeur controls the new in-tree NoRel mechanism, which MIPFocus=1 activates automatically.[^diag-tree]
 - **Pre-root search:** NoRelHeurTime or NoRelHeurWork budgets the traditional NoRel heuristic before the root relaxation. These settings define a different search phase from in-tree NoRel.[^diag-preroot]
 - **PDHG-based incumbent search:** PDHGMIPHeurTime, PDHGMIPHeurWork and PDHGMIPHeurSolutions control the new pre-root MIP heuristic. PDHGGPU governs its optional accelerator use. The primary study uses CPU-only solver nodes.[^diag-pdhg]
-- **Partial-Start completion:** StartTimeLimit and StartWorkLimit bound the solver's effort to complete unspecified Start values. Time and work retain their distinct units and reproducibility properties; the principal comparison preserves native completion settings.[^diag-start]
+- **Partial-Start completion:** StartNodeLimit bounds the branch-and-bound nodes explored when completing a partial Start; its default of -1 inherits SubMIPNodes. StartTimeLimit and StartWorkLimit bound completion time and work. Time and work retain their distinct units and reproducibility properties; the principal comparison preserves native completion settings.[^diag-start]
 
 The root-relaxation feature run retains Presolve=0 and Heuristics=0, with explicit root-event and cut-pass provenance. Feasibility-oriented settings act on incumbent discovery and therefore have their own preparation purpose. Gurobi 14 also treats SolutionLimit=1 as a stopping rule; its former implicit activation of extra heuristics has been removed.[^changes]
 
@@ -132,7 +132,7 @@ The offline workflow will join parsed rows to the immutable run identifier and s
 [^diag-tree]: Gurobi 14 NoRel tree heuristic and NoRelTreeHeur: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html#norel-tree-heuristic; https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#noreltreeheur.
 [^diag-preroot]: Traditional NoRel budgets: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#norelheurtime and https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#norelheurwork.
 [^diag-pdhg]: Gurobi 14 PDHG-based MIP heuristic: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html#pdhg-based-mip-heuristic. Budget controls: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#pdhgmipheurwork; optional GPU control: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#pdhggpu.
-[^diag-start]: Gurobi 14 Start completion limits: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#starttimelimit and https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#startworklimit.
+[^diag-start]: Gurobi 14 Start completion limits: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#startnodelimit, https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#starttimelimit and https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#startworklimit.
 [^changes]: Gurobi 14 release notes, including the SolutionLimit change: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html.
 [^grblogtools]: Official GRBLogTools repository, API examples and tutorial: https://github.com/Gurobi/gurobi-logtools#pandasplotly. The examples also document the NoRel progress clock.
 [^grblogtools-changes]: Release-specific parsing coverage: https://github.com/Gurobi/gurobi-logtools/blob/master/CHANGELOG.md. S1 records the chosen release and the fields demonstrated on the study's reference logs.
@@ -413,32 +413,31 @@ $$
 
 where $\mathcal T_m$ is the recorded observation schedule for method $m$. This definition makes callback sampling resolution part of the measurement. A valid run that ends before attainment contributes right-censored follow-up at its actual endpoint.
 
-All method-comparison time ratios use the guided method in the numerator and its named comparator in the denominator:
+Method-comparison time ratios use the comparator time in the numerator and G time in the denominator. For a common quality target and a common measurement clock, the two reported contrasts are
 
 $$
-\rho_{G/B}(\tau)=\frac{T_G(\tau)}{T_B(\tau)},\qquad
-\rho_{R/B}(\tau)=\frac{T_R(\tau)}{T_B(\tau)},\qquad
-\rho_{G/R}(\tau)=\frac{T_G(\tau)}{T_R(\tau)}.
+S_{B/G}(\tau)=\frac{T_B(\tau)}{T_G(\tau)},\qquad
+S_{R/G}(\tau)=\frac{T_R(\tau)}{T_G(\tau)}.
 \tag{5}
 $$
 
-For $\rho_{G/B}$, values below one favour G. For $\rho_{R/B}$ and $\rho_{G/R}$, values below one favour the numerator method. Figures and tables state the formula, target and clock in their caption or column definition. The primary B/G communication consistently uses $T_G/T_B$.
+Values above one favour G: they indicate that B or R takes longer than G to reach the same target. A value of one indicates equal measured time; a value below one favours the named comparator. These method-comparison speedup factors quantify relative elapsed time under matched conditions. Figures, tables, examples and derived datasets use this orientation and identify the formula, target, clock and eligible instance set.
 
-Table 12 explains how attainment enters the paired analysis. A numeric ratio is calculated for common target attainment with positive comparable times. Other pair outcomes have their own visible counts.
+Table 12 explains how attainment enters the paired analysis. Let C denote the comparator, either B or R. A numeric ratio is calculated only when C and G both have qualified attainment of the same target and positive comparable times. Each contrast retains its own eligible cohort and visible attainment counts.
 
 **Table 12. Target-specific paired outcomes.**
 
 | Outcome | Reported result |
 | --- | --- |
-| Both methods attain the same target | Time ratio, paired time difference and individual times |
+| C and G attain the same target | Speedup factor, signed time saving and individual times |
 | G alone attains the target | G-only attainment and comparator follow-up |
-| B alone attains the target | B-only attainment and G follow-up |
+| C alone attains the target | Comparator-only attainment and G follow-up |
 | Both have valid censored follow-up | Two censures and final quality at a common observed horizon |
 | One record is numerically or operationally ineligible | Reason and metric-specific denominator |
 
-For illustration, a G time of 120 seconds and B time of 180 seconds gives $T_G/T_B=0.667$. If B has valid follow-up to 28,800 seconds with no target attainment, the result is G-only attainment rather than a numeric observed time ratio. These examples show the reporting rule, rather than additional experimental results.
+For illustration, G taking 120 seconds, B taking 180 seconds and R taking 150 seconds gives $S_{B/G}=1.50$ and $S_{R/G}=1.25$. Thus, B takes 1.50 times and R takes 1.25 times the G time. The corresponding signed savings, $T_B-T_G=60$ seconds and $T_R-T_G=30$ seconds, are positive when G is faster. If a comparator has valid follow-up to 28,800 seconds without target attainment, the result is G-only attainment rather than an observed numeric speedup. A target recorded at time zero is retained as attained, with the ratio marked ineligible because its positive-time requirement is not met. These examples illustrate reporting rules rather than experimental results.
 
-The main summaries are per-instance trajectories, target-specific attainment counts, medians and distributions of qualified paired ratios. Geometric means, where reported, identify their exact eligible cohort, target and clock. Easy/medium test and hard-transfer results have separate summaries. The inferential unit remains the original instance; seed42 describes one prespecified solver configuration.
+The main summaries are per-instance trajectories, target-specific attainment counts, medians and distributions of qualified paired ratios. Ratios are computed from each instance's paired times before aggregation. Reversing a previous ratio convention therefore requires recomputing the factors and summaries; the reciprocal of an arithmetic mean is not the arithmetic mean of the reciprocal factors. Geometric means, where reported, identify their exact eligible cohort, target and clock. Easy/medium test and hard-transfer results have separate summaries. The inferential unit remains the original instance; seed42 describes one prespecified solver configuration.
 
 ## 6.3. Primal progress, dual progress and C2
 
@@ -450,7 +449,7 @@ This evidence supports an association-based interpretation of search behaviour. 
 
 ## 6.4. End-to-end costs, reuse and C3
 
-The native solver clock measures the main optimisation call. The end-to-end clock includes the required model loading, relaxation feature, graph construction and transfer, inference, Start assembly, optimisation, audit and export. A timing hierarchy identifies nested regions before additive cost tables are produced.
+The native solver clock measures the main optimisation call. The end-to-end clock includes the required model loading, relaxation feature, graph construction and transfer, inference, Start assembly, optimisation, audit and export. A timing hierarchy identifies nested regions before additive cost tables are produced. End-to-end time comparisons retain the same orientation, $S^{\mathrm{e2e}}_{B/G}=T^{\mathrm{e2e}}_B/T^{\mathrm{e2e}}_G$ and $S^{\mathrm{e2e}}_{R/G}=T^{\mathrm{e2e}}_R/T^{\mathrm{e2e}}_G$. Each comparison identifies which preparation operations are included and requires a common qualified output target.
 
 For method $m$, define reusable preparation $P_m$ and recurring per-use cost $q_m$ under a stated quality target and clock. The reuse model is
 
@@ -466,9 +465,11 @@ k_{\mathrm{BE}}=\max\!\left(1,\left\lceil\frac{\Delta P}{d}\right\rceil\right).
 \tag{7}
 $$
 
+For positive cumulative elapsed-time costs, the reuse comparisons are $S^{\mathrm{reuse}}_{B/G}(k)=C_B(k)/C_G(k)$ and $S^{\mathrm{reuse}}_{R/G}(k)=C_R(k)/C_G(k)$, again with values above one favouring G. Equality is break-even; strict net saving requires $C_G(k)<C_C(k)$ for the named comparator C. Time ratios, monetary costs and CPU/GPU resource quantities retain separate units.
+
 The calculation states which features, graph, prediction or trained model remain reusable and which per-use operations recur. When recurring G cost equals or exceeds recurring B cost, the report gives the direct cost inequality and the resulting absence of an amortisation threshold for positive extra preparation. Training cost appears as a separate line and can be included in a clearly stated system-lifetime scenario.
 
-For example, extra preparation of 600 seconds and an observed recurring saving of 100 seconds gives a conditional threshold of six uses under those assumptions. Reusing a model after a change to coefficients, feature construction or predictor policy requires a new identity and cost assessment. The study reports calculated scenarios as conditional economics, with observed uses and hypothetical uses explicitly identified.
+For example, extra preparation of 600 seconds and an observed recurring saving of 100 seconds gives a conditional threshold of six uses under those assumptions. The ceiling operator leaves an exact integer unchanged: six uses gives equality in this example, and strict net saving starts after that threshold. Reusing a model after a change to coefficients, feature construction or predictor policy requires a new identity and cost assessment. The study reports calculated scenarios as conditional economics, with observed uses and hypothetical uses explicitly identified.
 
 ## 6.5. Predictive quality, training efficiency and scale
 
@@ -482,7 +483,7 @@ E_{\mathrm{GPU}}=\frac{S_{\mathrm{train}}}{4}.
 \tag{8}
 $$
 
-The notation distinguishes the conventional resource-scaling speedup from the method-comparison ratio $\rho_{G/B}$. Training-loop, full-job and exclusive-node clocks each receive their own result. CPU resources, GPUs used and node occupancy make the resource scope explicit.
+Both the training-system and method-comparison time ratios use a reference time divided by the time of the system or method being assessed. Values above one therefore indicate shorter elapsed time for DDP in $S_{\mathrm{train}}$ and for G in $S_{B/G}$ or $S_{R/G}$. GPU-normalised efficiency retains its separate resource denominator; it need not exceed one for DDP to be faster. Training-loop, full-job and exclusive-node clocks each receive their own result. CPU resources, GPUs used and node occupancy make the resource scope explicit.
 
 Computational performance comprises elapsed time, memory, attained quality and preparation effort. Strong scaling holds the work fixed while resources increase; weak scaling increases work and resources together at approximately fixed work per resource. Solving larger original instances at a fixed resource policy is problem-size scale-up. Throughput is completed defined work per unit elapsed time under a stated resource scope. The planned serial/DDP pair examines equivalent-work training-system scaling; the B/R/G campaign examines guidance and instance-size effects under its fixed automatic-thread policy.
 

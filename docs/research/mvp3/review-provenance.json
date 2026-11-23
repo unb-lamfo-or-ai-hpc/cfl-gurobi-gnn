@@ -17,5 +17,18 @@
     "parser_installed_or_run": false,
     "source_PR99_head": "7ec1dc37f0e84aad2f8ffaae109e56836b32ad85",
     "merge_performed": false
+  },
+  "version3": {
+    "date": "2026-11-23",
+    "request": "Adopt T_B/T_G and T_R/T_G with values above one favouring G; review presentation for further reconciliation",
+    "presentation": {
+      "file": "C:\\Users\\cvict\\OneDrive - unb.br\\Posdoc\\Temp Codex\\cfl-gurobi-gnn\\CFL_GNN_MVP3_Protocolo_Coautores_ES_20261123.pdf",
+      "sha256": "8efcdea1c29a77973a7a76c8bdea78ac22354d9847b438d74c8acbf5a326c626",
+      "pages": 42
+    },
+    "source_PR99_head": "8bbe90f141db5d7655559e5ae044a42af7d7a56c",
+    "primary_design_or_budget_changed": false,
+    "scientific_calls": 0,
+    "merge_performed": false
   }
 }

@@ -20,4 +20,8 @@ The researcher approved the methodological plan on 23 November 2026 and requeste
 
 Run render_review_pdfs.py with the protocol source and an output directory. It uses Pandoc, XeLaTeX, Pillow and PyMuPDF, generates the two diagrams and produces the PDF, self-contained HTML, page images and a build receipt. PANDOC and XELATEX environment variables can identify local executables. The renderer handles documentary work only.
 
-The local coauthor PDF is titled *CFL-GNN MVP3 Research Protocol EN, version 2*, dated23 November 2026. GitHub retains the editable source and reproducible renderer; the delivered PDF and detailed machine handover are local review artifacts. This PR changes documentation and rendering assets, with zero new scientific calls.
+The local coauthor PDF is titled *CFL-GNN MVP3 Research Protocol EN, version 3*, dated 23 November 2026. GitHub retains the editable source and reproducible renderer; the delivered PDF and detailed machine handover are local review artifacts. This PR changes documentation and rendering assets, with zero new scientific calls.
+
+## Standard time-ratio convention
+
+Version 3 adopts T_B/T_G and T_R/T_G throughout method-time comparisons: values above one favour G. The same direction applies to comparable end-to-end and cumulative elapsed-time costs. See the [presentation reconciliation](presentation-reconciliation-20261123.md) for the 42-slide review and the resolved slide 34 convention. The experimental design and primary budget remain unchanged.
