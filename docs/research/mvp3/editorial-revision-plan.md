@@ -22,3 +22,7 @@ S1-S6 now have explicit planned PR packages, acceptance artifacts and a working 
 ## Review decisions
 
 The [decision register](decisions-and-budget.json) makes the proposed label tier, balanced split allocation, training schedule, predictor selection, R/G support settings and conditional diagnostic budget explicit. Their presence in the revised plan is a proposal for coauthor review, not a claim that experiments have been released. PR #99 remains Draft. The revision executes no solver, training, inference or HPC commands.
+
+## Final researcher-approved addendum
+
+The researcher approved the methodological plan and requested a final expansion of Gurobi14 feasibility diagnostics. The revision explains the roles of MIPFocus, heuristic budgets, traditional/in-tree NoRel, PDHG-based incumbent search and partial-Start completion limits. GRBLogTools receives an explicit secondary offline role, field/clock reconciliation procedure and release-specific coverage record. Documentation URLs appear in footnotes. The accepted population,177-call primary budget,comparison profiles and S1-S6 sequence are unchanged. No parser installation or execution occurred.

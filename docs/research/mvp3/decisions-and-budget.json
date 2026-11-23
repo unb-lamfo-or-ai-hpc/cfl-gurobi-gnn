@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "date": "2026-11-23",
-  "status": "coauthor_review_proposal",
+  "status": "researcher_approved_methodology_final_documentary_addendum",
   "language": "English",
   "execution_approved": false,
   "publication_approved": false,
@@ -195,5 +195,16 @@
     "pause_start": "2026-12-19",
     "pause_end": "2027-01-10",
     "target_submission": "2027-03-18"
+  },
+  "researcher_methodology_approved": true,
+  "approval_date": "2026-11-23",
+  "approval_scope": "Researcher approved the methodological plan and requested the final GRBLogTools/configuration explanation. Concrete HPC releases and merges retain separate approval.",
+  "log_analysis": {
+    "tool": "gurobi-logtools / gurobi_logtools",
+    "role": "secondary offline summary and trajectory inspection",
+    "S1": "pin release and validate used fields against native Gurobi14 logs and worker records",
+    "S5": "join by run/log identity and reconcile timing origins",
+    "primary_evidence": "native records, callback observations and independently audited vectors",
+    "installed_or_executed_in_this_revision": false
   }
 }

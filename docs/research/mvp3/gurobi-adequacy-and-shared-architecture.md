@@ -41,3 +41,11 @@ Benders is conditional and restricted to the six hard instances. A design packag
 ## References
 
 The protocol provides the complete bibliography and versioned manual footnotes. Core technical sources are the Gurobi 14 parameter reference, callback codes, Start attribute and release notes; Gasse et al.(2019), Li et al.(2020) and Haq et al.(2025) supply the architectural, distributed-training and decomposition context.
+
+## Offline log analysis with GRBLogTools
+
+The approved protocol incorporates gurobi-logtools as a secondary offline summary and progress-analysis tool. S1 records the selected parser release, demonstrates the fields used on representative Gurobi14 logs, and reconciles them with native/worker records. S5 joins those derived tables to run identifiers and original log digests, retaining each section's time origin. Callback records and audited vectors retain their defined evidential roles.
+
+The package documentation describes parse(), summary() and progress() plus plotting and spreadsheet interfaces. The changelog distinguishes released capabilities from development entries, including PDHG-related parsing. This review is documentary: the package was neither installed nor run in this revision.
+
+Official documentation: https://github.com/Gurobi/gurobi-logtools; release history: https://github.com/Gurobi/gurobi-logtools/blob/master/CHANGELOG.md. The protocol includes these URLs as footnotes together with the versioned Gurobi parameter sources.

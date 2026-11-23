@@ -6,7 +6,7 @@
 
 Read the [methodological protocol](coauthor-methodological-protocol.md), [decision and budget register](decisions-and-budget.json), [evidence contract](evidence-contract.json), and [Gurobi design note](gurobi-adequacy-and-shared-architecture.md). The [annotation disposition](annotation-disposition-EN.csv) records the treatment of the researcher's 62 PDF annotation records.
 
-Operational evidence belongs in the separate [NPAD transition dossier](../npad-runtime-transition-20261120/README.md). The accepted home-binding receipt completes bounded source, package and license-path admission. The scientific protocol remains in Draft PR #99 for researcher/coauthor approval. PRs #101 and #102 also remain Draft; merges require specific approval.
+Operational evidence belongs in the separate [NPAD transition dossier](../npad-runtime-transition-20261120/README.md). The accepted home-binding receipt completes bounded source, package and license-path admission. The researcher approved the methodological plan on 23 November 2026; Draft PR #99 now includes the requested final GRBLogTools/configuration addendum. Specific merge approval remains pending. PRs #101 and #102 also remain Draft; merges require specific approval.
 
 ## Scientific direction and decisions
 
@@ -16,7 +16,7 @@ Use native Gurobi 14 and canonical MINIMIZE, preserving the original mathematica
 
 The primary main-solver profile is Threads=0, Method=-1, ConcurrentMIP=1, Seed=42, MIPGap=0.0001, automatic presolve and default heuristics. Root-relaxation capture uses Presolve=0 and Heuristics=0 with event/cut provenance. MIPFocus=1 is a proposed conditional hard-instance feasibility diagnostic. B supplies an empty external Start; R is proposed as independent relaxation rounding/ranking; G uses the frozen selected predictor. Method comparisons use T_G/T_B, with lower values favouring G. Training-system speedup has a separately labelled resource-scaling definition.
 
-The balanced split composition, label-admission tier, equivalent-work schedule, validation-only deployment rule, R/G support settings and conditional diagnostic budget remain explicit coauthor-review proposals. Dataset acceptance reviews feature and label coverage before training. Benders is conditional and hard-only, with a per-instance mathematical design, audit, budget and specific approval. DIRECT/BENDERS label provenance remains distinct from root-feature provenance.
+The balanced split composition, label-admission tier, equivalent-work schedule, validation-only deployment rule, R/G support settings and conditional diagnostic budget are recorded as the researcher-approved methodological direction for the coauthor packet. Dataset acceptance reviews feature and label coverage before training. Benders is conditional and hard-only, with a per-instance mathematical design, audit, budget and specific approval. DIRECT/BENDERS label provenance remains distinct from root-feature provenance.
 
 ## Development sequence
 
@@ -44,3 +44,7 @@ The author runs every HPC/SSH/SCP command and uploads sensitive files manually. 
 Existing runtime qualifications cover library operations, three synthetic training updates and a native technical license solve. Home binding covers package discovery and license-path metadata. Full CFL operation with real data, historical-checkpoint loading, real-data DDP, hard-instance memory and performance remain later scoped research work.
 
 The private DELL5300 package contains local/NPAD paths, receipt references, repository snapshots and a starter prompt. The coauthor PDF contains the permanent scientific protocol and development plan only.
+
+## Final logging addendum
+
+S1 includes release-pinned, field-specific qualification of offline GRBLogTools extraction against native logs and worker records. S5 may use the reconciled summary/progress tables, preserving each section's clock origin and missing-field status. Native callback observations and audited vectors retain their measurement roles. The plan is approved by the researcher; concrete implementation/CLI releases and PR integration follow their stated review and approval flow.

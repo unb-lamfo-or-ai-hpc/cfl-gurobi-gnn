@@ -115,5 +115,16 @@
     "Allocation and measured activity retain distinct scopes",
     "Attempt replacements require explicit release",
     "Missing measurements have null values and explicit reasons"
+  ],
+  "log_analysis_fields": [
+    "source_log_sha256",
+    "run_identifier",
+    "parser_version_and_release",
+    "parsed_section",
+    "field_coverage",
+    "parsing_warnings",
+    "missing_field_reason",
+    "time_origin",
+    "native_record_reconciliation"
   ]
 }

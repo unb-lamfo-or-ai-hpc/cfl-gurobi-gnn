@@ -108,11 +108,34 @@ For a binary variable $j$, the supervised label is the audited incumbent value $
 
 ### Gurobi 14 feasibility diagnostics
 
-Gurobi 14 introduces a NoRel tree heuristic and a PDHG-based MIP heuristic. MIPFocus=1 activates a feasibility-oriented strategy, including the new NoRel tree mechanism. The release also makes SolutionLimit=1 a stopping rule rather than an implicit activation of extra heuristics.[^changes] These features motivate a clearly labelled **feasibility diagnostic** for a hard instance whose direct run provides inadequate incumbent information.
+The diagnostic strategy links each setting to a scientific objective: an original-variable root-relaxation feature, a feasible integer incumbent, or completion of a submitted partial Start. The primary B/R/G comparison uses one common native profile. A diagnosed hard-instance preparation run can use the separately specified feasibility profile, with its own parameter identity and cost record.
 
-The diagnostic proposal uses MIPFocus=1 on a separate original-model run, with default presolve and heuristics and the same maximum time allowance. Its purpose is incumbent discovery and label qualification. The principal B/R/G comparison retains one common native strategy, MIPFocus=0. This separates a targeted preparation remedy from the paired assessment of external guidance. The diagnostic register specifies the exact parameters, trigger, instance and budget before a run is released. The hard-instance contingency envelope contains at most six such additional runs; section 4 accounts for it separately.
+The following configuration guide makes these roles explicit:
 
-[^changes]: Gurobi 14 release notes, sections *NoRel tree heuristic*, *PDHG-based MIP heuristic* and the SolutionLimit change: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html. The proposed diagnostic investigates feasible incumbents; the root-relaxation feature profile is defined independently.
+- **Native reference:** MIPFocus=0 balances primal discovery and dual progress. Automatic presolve, Method=-1 and Threads=0 retain the primary configuration defined in Table 5.[^diag-focus]
+- **Feasibility focus:** MIPFocus=1 emphasises feasible solutions. Heuristics controls the desired share of effort devoted to feasibility search; the primary profile retains its native value 0.05. NoRelTreeHeur controls the new in-tree NoRel mechanism, which MIPFocus=1 activates automatically.[^diag-tree]
+- **Pre-root search:** NoRelHeurTime or NoRelHeurWork budgets the traditional NoRel heuristic before the root relaxation. These settings define a different search phase from in-tree NoRel.[^diag-preroot]
+- **PDHG-based incumbent search:** PDHGMIPHeurTime, PDHGMIPHeurWork and PDHGMIPHeurSolutions control the new pre-root MIP heuristic. PDHGGPU governs its optional accelerator use. The primary study uses CPU-only solver nodes.[^diag-pdhg]
+- **Partial-Start completion:** StartTimeLimit and StartWorkLimit bound the solver's effort to complete unspecified Start values. Time and work retain their distinct units and reproducibility properties; the principal comparison preserves native completion settings.[^diag-start]
+
+The root-relaxation feature run retains Presolve=0 and Heuristics=0, with explicit root-event and cut-pass provenance. Feasibility-oriented settings act on incumbent discovery and therefore have their own preparation purpose. Gurobi 14 also treats SolutionLimit=1 as a stopping rule; its former implicit activation of extra heuristics has been removed.[^changes]
+
+The hard-instance feasibility diagnostic uses MIPFocus=1 on a fresh original-model run, with default presolve and heuristics and the same maximum time allowance. Its register states the trigger, instance, effective parameters and budget before release. The contingency envelope contains at most six additional runs, accounted for separately in section 4. Each collected outcome connects the observed primal/dual trajectory with the intended diagnostic purpose.
+
+**Assessment and use of GRBLogTools.** Gurobi's Python package **gurobi-logtools**, imported as **gurobi_logtools**, provides a secondary offline route for extracting and visualising information from retained native logs. Its documented interface uses parse() to read log collections, summary() to build run-level tables and progress() to obtain supported progress sections, including node logs, root-LP and NoRel observations. It also supports pandas-based processing, plots and spreadsheet output.[^grblogtools]
+
+The methodological assessment supports adoption for comparative log summaries and exploratory trajectory inspection. S1 will pin the parser release and validate each adopted field against representative Gurobi 14 logs and the corresponding native/worker records. The field-coverage checklist includes normal completion, time/memory termination, early feature capture and truncated logs. Parsing warnings, missing sections and unsupported fields receive explicit availability flags. The official changelog distinguishes released features from development entries, including PDHG-related parsing, so the selected release and its demonstrated field coverage form part of the analysis provenance.[^grblogtools-changes]
+
+The offline workflow will join parsed rows to the immutable run identifier and source-log digest, reconcile final status, objective, bound, gap and runtime where available, and retain the origin of each time series. NoRel progress time is measured from the start of that heuristic in the documented example; read/presolve time and the main native clock have their own origins. The analysis will align those clocks before comparisons. Native callback records and retained vectors supply the evidence for root-feature identity, independently audited feasibility and first observed target attainment. This allocation of responsibilities makes the parser useful for C2 while preserving the measurement and audit definitions used throughout the study.
+
+[^diag-focus]: Gurobi 14 parameter definitions for MIPFocus, Heuristics, Method and Threads: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#mipfocus; https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#heuristics.
+[^diag-tree]: Gurobi 14 NoRel tree heuristic and NoRelTreeHeur: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html#norel-tree-heuristic; https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#noreltreeheur.
+[^diag-preroot]: Traditional NoRel budgets: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#norelheurtime and https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#norelheurwork.
+[^diag-pdhg]: Gurobi 14 PDHG-based MIP heuristic: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html#pdhg-based-mip-heuristic. Budget controls: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#pdhgmipheurwork; optional GPU control: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#pdhggpu.
+[^diag-start]: Gurobi 14 Start completion limits: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#starttimelimit and https://docs.gurobi.com/projects/optimizer/en/14.0/reference/parameters.html#startworklimit.
+[^changes]: Gurobi 14 release notes, including the SolutionLimit change: https://docs.gurobi.com/projects/optimizer/en/14.0/reference/releasenotes/changes.html.
+[^grblogtools]: Official GRBLogTools repository, API examples and tutorial: https://github.com/Gurobi/gurobi-logtools#pandasplotly. The examples also document the NoRel progress clock.
+[^grblogtools-changes]: Release-specific parsing coverage: https://github.com/Gurobi/gurobi-logtools/blob/master/CHANGELOG.md. S1 records the chosen release and the fields demonstrated on the study's reference logs.
 
 ## 2.3. GNN and equivalent-work serial/DDP training
 
@@ -517,6 +540,8 @@ At the end of each Sprint, the team reviews actual runtime, memory, coverage and
 [5] Collins, A. *OptAI 101: Warm Starts and Callbacks*. Gurobi educational course slides supplied to the research team. Implementation semantics are specified using reference [4].
 
 [6] MILPBench. *Benchmark datasets and baseline library*. CFL instance source. https://github.com/thuiar/MILPBench.
+
+[7] Gurobi Optimization, LLC. *gurobi-logtools: Extract and visualise information from Gurobi log files*. Software documentation and changelog. https://github.com/Gurobi/gurobi-logtools.
 
 # Appendix A. Mathematical and learning specification
 

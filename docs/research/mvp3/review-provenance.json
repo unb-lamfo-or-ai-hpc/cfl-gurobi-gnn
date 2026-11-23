@@ -8,5 +8,14 @@
   "new_solver_calls": 0,
   "new_training_calls": 0,
   "HPC_calls": 0,
-  "scientific_execution_authorized": false
+  "scientific_execution_authorized": false,
+  "latest_addendum": {
+    "date": "2026-11-23",
+    "researcher_methodology_approved": true,
+    "request": "Expand Gurobi14 feasibility diagnostics with an evaluation of GRBLogTools and footnote documentation links",
+    "primary_design_or_budget_changed": false,
+    "parser_installed_or_run": false,
+    "source_PR99_head": "7ec1dc37f0e84aad2f8ffaae109e56836b32ad85",
+    "merge_performed": false
+  }
 }

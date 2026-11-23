@@ -14,10 +14,10 @@ The revised version incorporates the researcher's 62 PDF annotation records. Its
 - [Development handover](development-handover.md): portable scientific context and release gates for the next development chat.
 - [References](references.bib): bibliographic records used by the protocol.
 
-The proposed split allocation, label-admission tier, independent R/G support settings, training schedule and conditional diagnostic profiles are visible review choices. The PR remains Draft. Approval of the protocol and a concrete resource release precede scientific execution; merges require the researcher's specific decision.
+The researcher approved the methodological plan on 23 November 2026 and requested this final GRBLogTools/configuration explanation. The coauthor packet retains its stated settings and budget. S1 will qualify secondary offline log extraction, and S5 will use reconciled summaries with explicit clock origins. The PR remains Draft pending specific merge approval; concrete HPC releases remain separate decisions.
 
 ## Rendering
 
 Run render_review_pdfs.py with the protocol source and an output directory. It uses Pandoc, XeLaTeX, Pillow and PyMuPDF, generates the two diagrams and produces the PDF, self-contained HTML, page images and a build receipt. PANDOC and XELATEX environment variables can identify local executables. The renderer handles documentary work only.
 
-The local coauthor PDF is titled *CFL-GNN MVP3 Research Protocol EN*, dated23 November 2026. GitHub retains the editable source and reproducible renderer; the delivered PDF and detailed machine handover are local review artifacts. This PR changes documentation and rendering assets, with zero new scientific calls.
+The local coauthor PDF is titled *CFL-GNN MVP3 Research Protocol EN, version 2*, dated23 November 2026. GitHub retains the editable source and reproducible renderer; the delivered PDF and detailed machine handover are local review artifacts. This PR changes documentation and rendering assets, with zero new scientific calls.
