@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-23",
+  "scope": "NPAD_current66_stored_gzip_input_inventory_not_solver_or_decoded_content_qualification",
+  "source_receipt_SHA256": "048b823a865af4988088b9f80388e759a7d227ef1f45e8e796a653077170d83c",
+  "source_SHA256SUMS_SHA256": "6dc39f36376813e2c06b1db63a21c2f3b77d5b606344204364ffe0ad9f5f8728",
+  "receipt_exact_reconstruction": "PASS",
+  "SHA256SUMS_exact_reconstruction": "PASS",
+  "files": 66,
+  "families": {
+    "easy": 30,
+    "medium": 30,
+    "hard": 6
+  },
+  "stored_bytes": 1810985584,
+  "elapsed_seconds": 10.269928,
+  "missing_originals": 0,
+  "additional_original_transfer_required": false,
+  "matching_DGX_stored_hashes": 0,
+  "matching_DGX_stored_sizes": 66,
+  "gzip_magic_and_stability": "PASS_as_reported_by_reviewed_checker",
+  "raw_file_stats_not_independently_received": true,
+  "fresh_hashes_no_cache": true,
+  "gzip_integrity_or_LP_content_tested": false,
+  "decoded_equivalence_with_DGX_proved": false,
+  "current_identity_rule": "Bind NPAD work to its new compressed-file hashes; retain separate DGX identities. Size equality and compression history do not prove decoded equivalence.",
+  "author_conversion": "The author reported TAR extraction, LP gzip compression and removal of the former TAR wrappers. Earlier NPAD wrapper hashes remain historical.",
+  "preservation": {
+    "originals_on_DGX": "preserved; full3930_snapshot_not_transferred",
+    "canonical_historical_checkpoint": {
+      "files": 1,
+      "bytes": 124450,
+      "status": "preserved; no loading or promotion"
+    },
+    "historical_graph_root_label_prediction_Start_assets": {
+      "files": 226,
+      "bytes": 6838697772,
+      "status": "preserved on DGX; review reproduction subset separately; not fresh Gurobi14 artifacts"
+    },
+    "family_archives": {
+      "files": 3,
+      "bytes": 5580158205,
+      "status": "preserved on DGX; no duplicate transfer required for the current66 input inventory"
+    },
+    "metadata_archives": {
+      "files": 2,
+      "bytes": 1608848,
+      "status": "preserved"
+    },
+    "uncommitted_editorial_file": {
+      "files": 1,
+      "bytes": 163,
+      "status": "preserved; not automatically applied to approved checkout"
+    }
+  },
+  "boundaries": {
+    "decompression_calls_in_verification": 0,
+    "solver_calls": 0,
+    "training_calls": 0,
+    "shared_files_written_by_verification": 0,
+    "files_removed_by_verification": 0,
+    "original_environment_modified": false,
+    "full_repository_checkout_on_NPAD": "prepared_next_author_CLI_not_received",
+    "license_setup": "separate author action; no credentials copied or published"
+  },
+  "PR99": "Draft unchanged",
+  "next": "Prepare isolated approved-develop source checkout and read-only package/data bindings, without installation, imports of solver/GNN or scientific execution."
+}

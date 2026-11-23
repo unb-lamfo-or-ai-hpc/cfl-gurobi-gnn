@@ -1,3 +1,7 @@
+# Latest received transition evidence — 23 November 2026
+
+The [current 66-input inventory](current-input-inventory-20261123.md) is received: exact receipt/SHA256SUMS reconstruction passed, 30 easy/30 medium/six hard are present, and no additional original transfer is needed. These are stored-file identities, not decoded-content or full-runtime qualification. Prepare the isolated approved-source checkout and read-only requirements/data inspection next. The older missing-six and TAR-wrapper narrative below is historical and does not require another transfer. PR #99 remains Draft; no merge/publication or scientific execution occurs.
+
 # NPAD runtime and migration transition
 
 **Current update: 23 November 2026.** See the [named transition Sprints](transition-sprints-20261123.md), [English resumption plan](pause-and-resume-plan-20261120.md) and [sanitized migration reconciliation](migration-reconciliation-20261123.json).

@@ -114,5 +114,8 @@
     "Names and sizes alone do not establish model-byte identity.",
     "No decompression is imposed; use documentary identity where qualified and preserve unresolved cases.",
     "Runtime PASS excludes real CFL driver/data, historical checkpoint, DDP, hard-memory and performance qualification."
-  ]
+  ],
+  "record_state": "HISTORICAL_PRE_CONVERSION_CENSUS",
+  "superseded_current_input_receipt": "current-cohort66-receipt-20261123.json",
+  "superseded_current_input_hashes": "current-input-hashes-20261123.json"
 }

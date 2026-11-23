@@ -1,3 +1,7 @@
+# Latest resumption update — 23 November 2026
+
+The [current66 receipt](current-input-inventory-20261123.md) is received and checked. All original inputs are present under current .lp.gz names; no missing-original transfer remains. The six-file arrival route and earlier TAR-wrapper census below are historical. Prepare an isolated approved-source checkout/read-only dependency inspection next, preserving both environments and all source data. No installation, license copy, solve or training is included. PR #99 remains Draft; scientific development still follows protocol/budget approval.
+
 # Migration, preservation and methodological handover plan
 
 **Updated:** 23 November 2026. This English plan supersedes the 20 November pause snapshot at this path. Executed sources, receipts and historical data are preserved.

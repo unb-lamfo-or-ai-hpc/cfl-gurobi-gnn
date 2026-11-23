@@ -1,3 +1,9 @@
+# Current66 inventory received — 23 November 2026
+
+The [current NPAD input receipt](research/npad-runtime-transition-20261120/current-input-inventory-20261123.md) verifies all 66 stored .lp.gz identities: 30 easy, 30 medium and six hard; 1,810,985,584 bytes, no errors, receipt SHA256 048b823a865af4988088b9f80388e759a7d227ef1f45e8e796a653077170d83c. SHA256SUMS reconstruction also matches. No missing-original transfer remains. Recompression is recorded; decoded equivalence, gzip integrity and real CFL runtime are not claimed. Earlier missing-six/TAR-wrapper sections below are historical.
+
+Next TR-04: prepare an isolated approved-develop checkout and read-only pyproject/environment/data bindings. No package installation, license copy, source-data change, Gurobi/Torch import, solve, training or publication. The [TR-01–TR-05 register](research/npad-runtime-transition-20261120/transition-sprints-20261123.md) remains stable; #99 stays Draft.
+
 # Current transition — 23 November 2026
 
 Follow the [named transition Sprints TR-01–TR-05](research/npad-runtime-transition-20261120/transition-sprints-20261123.md) and [updated English resumption plan](research/npad-runtime-transition-20261120/pause-and-resume-plan-20261120.md).

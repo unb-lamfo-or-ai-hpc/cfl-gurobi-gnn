@@ -1,3 +1,7 @@
+# Current inventory update — 23 November 2026
+
+The [current66 input receipt](current-input-inventory-20261123.md) supersedes the missing-six transfer status below: all 66 .lp.gz inputs are now inventoried with fresh stored hashes. **TR-03:** input receipt/manifest received; historical preservation remains explicit. **TR-04:** isolated approved-source checkout/read-only admission prepared next; no further original-input transfer needed. The chronological census/transfer explanation below is retained as history. Scientific Sprints S1–S6 and the TR identifiers are unchanged.
+
 # Named transition Sprints — MVP 2.0 to MVP 3.0
 
 **Updated:** 23 November 2026. **Language:** English for repository and coauthor-facing material.
