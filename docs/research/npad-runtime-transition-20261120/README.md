@@ -2,7 +2,7 @@
 
 **Current update: 23 November 2026.** See the [named transition Sprints](transition-sprints-20261123.md), [English resumption plan](pause-and-resume-plan-20261120.md) and [sanitized migration reconciliation](migration-reconciliation-20261123.json).
 
-Runtime qualifications are complete for their recorded technical scopes. Directed source inventory and storage admission have advanced; the DGX preservation snapshot is received as verified metadata, not as a bulk destination transfer. The first NPAD catalogue is received. Its filename-filter limitation requires a complementary census before missing-only transfer decisions. Follow the author's no-decompression instruction and preserve existing shared files. Keep #99/#101/#102 Draft; no merge or scientific execution accompanies this documentation.
+Runtime qualifications are complete for their recorded technical scopes. Directed source inventory and storage admission have advanced; the DGX preservation snapshot is received as verified metadata, not as a bulk destination transfer. The first NPAD catalogue is received. The complementary census resolves its filename-filter limitation: 60 named originals are present and only E24–E29 are absent. Their six-file transfer is prepared separately; stored-wrapper content and full-driver qualification remain outside this inventory. Follow the author's no-decompression instruction and preserve existing shared files. Keep #99/#101/#102 Draft; no merge or scientific execution accompanies this documentation.
 
 The sections below record the 20 November installation/qualification and initial inventory history. Their then-pending conditions do not override the current dated update above.
 

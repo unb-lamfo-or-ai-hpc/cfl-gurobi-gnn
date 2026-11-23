@@ -59,10 +59,31 @@
     "matched_stored_SHA256": 0,
     "matching_sizes": 7,
     "first_scope_complete": true,
-    "whole_filename_inventory_complete": false,
-    "complementary_census": "prepared_not_executed_or_received",
-    "missing_instance_count": null,
-    "no_missing_verdict_from_canonical_filter": true
+    "whole_filename_inventory_complete": true,
+    "complementary_census": "received_exact_SHA256_verified",
+    "missing_instance_count": 6,
+    "no_missing_verdict_from_canonical_filter": true,
+    "complementary_receipt_SHA256": "d472a436438daedb04e7934369ca9fbdc99e46c4572f9cbad4c8a7c15c3fe160",
+    "named_originals_present": {
+      "easy": 24,
+      "medium": 30,
+      "hard": 6,
+      "total": 60
+    },
+    "wrappers_recorded": {
+      "lp_tar_gz": 53,
+      "lp_gz": 7
+    },
+    "missing_names": [
+      "E24",
+      "E25",
+      "E26",
+      "E27",
+      "E28",
+      "E29"
+    ],
+    "missing_DGX_stored_bytes": 20794882,
+    "inventory_presence_is_not_decompressed_or_runtime_qualification": true
   },
   "boundaries": {
     "existing_shared_data_preferred": true,
@@ -85,8 +106,7 @@
     "do_not_repeat_for_documentary_commits": true
   },
   "author_actions_required": [
-    "complementary_NPAD_filename_and_stored_hash_census",
-    "reviewed_missing_only_transfer_CLI",
+    "reviewed_six_originals_missing_only_transfer_CLI",
     "specific_merge_approval"
   ],
   "limitations": [

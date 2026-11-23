@@ -12,7 +12,7 @@ The directed DGX collection resolved the original coverage gaps: twelve genuine 
 
 NPAD user, primary-group and default BeeGFS quota queries reported unlimited hard limits, and the 4 KiB write/read probe passed. Shared filesystem free capacity is not dedicated entitlement. Unsupported optional tool flags and zero inode/usage counters do not invalidate successful quota queries and actual writing, nor prove that storage is empty. Retention, preemption, inherited limits and actual allocation remain operational considerations.
 
-The first destination catalogue recognized only seven canonical model filenames among 60 regular files. A complete nominal census is required before identifying a missing-only transfer. Do not interpret the canonical filter's completion flag as complete scientific-cohort coverage.
+The first destination catalogue recognized seven canonical model filenames. The received complementary census explains the other 53 filenames: they end in .lp.tar.gz. All 60 recorded files have stored SHA256 values; 24 easy, 30 medium and six hard are present by parent name. Only E24–E29 are absent. Their six original gzip files total 20,794,882 bytes. This is inventory/provenance reconciliation, not decompressed-content or full-driver qualification. Preserve the existing compressed representations.
 
 ## 2. Preserve and classify DGX data — TR-03
 
@@ -50,4 +50,4 @@ The researcher reviews PDFs before circulation. Do not contact coauthors on the 
 
 ## Next author intervention
 
-The first NPAD catalogue is received. The complementary stored-file census is prepared but not yet executed or received. Review it, reconcile the existing collection, then issue the concrete missing-only transfer CLI. No repeat of successful runtime qualification or DGX packaging is needed. No new solve, training, cleanup, repository clone, merge or publication is performed by this documentary update.
+Both NPAD catalogue receipts are received and their reconstructed SHA256 values match. Prepare the six-file E24–E29 stored-byte transfer through the author's CLI, to a new private incoming stage with a checked path map; do not overwrite the shared collection. Review required non-model historical artifacts separately. No repeat of successful runtime qualification or DGX packaging is needed. No new solve, training, cleanup, repository clone, merge or publication is performed by this documentary update.
