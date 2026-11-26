@@ -91,3 +91,5 @@ docs/research/mvp3/s1b-instrumentation.md text eol=lf
 docs/research/mvp3/s1a-integration-20261126.json text eol=lf
 docs/research/mvp3/s1b-qualification-attempt-20261126.json text eol=lf
 docs/research/mvp3/s1b-qualification-attempts-20261126.json text eol=lf
+configs/mvp3/production/** text eol=lf
+docs/research/mvp3/s2-production-qualification.md text eol=lf

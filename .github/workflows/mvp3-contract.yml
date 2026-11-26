@@ -9,6 +9,7 @@ on:
       - 'tests/mvp3/**'
       - 'scripts/mvp3/**'
       - 'docs/research/mvp3/s1*.md'
+      - 'docs/research/mvp3/s2*.md'
       - 'pyproject.toml'
       - '.gitattributes'
       - '.github/workflows/mvp3-contract.yml'
@@ -51,3 +52,10 @@ jobs:
         run: python -B -m cfl_gnn.mvp3 --bundle configs/mvp3/v1
       - name: Exercise synthetic contract and evidence failures
         run: python -B -m unittest discover -s tests/mvp3 -v
+      - name: Parse production preparation PowerShell without executing it
+        shell: pwsh
+        run: |
+          $productionTokens = $null
+          $productionErrors = $null
+          [void][System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD 'scripts/mvp3/prepare_production.ps1'), [ref]$productionTokens, [ref]$productionErrors)
+          if ($productionErrors.Count) { throw 'Production preparation PowerShell syntax failed.' }
