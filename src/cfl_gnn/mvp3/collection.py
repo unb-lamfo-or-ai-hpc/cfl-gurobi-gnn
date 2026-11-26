@@ -20,6 +20,7 @@ def collect_attempt(folder, *, matrix=None, policy=None):
         "optimize.intent",
         "native-return",
         "native-result",
+        "worker-error",
         "worker-terminal",
     ):
         path = folder / f"{name}.json"
@@ -141,6 +142,7 @@ def collect_attempt(folder, *, matrix=None, policy=None):
         "verified_point_artifacts": vectors,
         "replayed_candidate_audits": candidates,
         "native_result": result,
+        "worker_error": receipts.get("worker-error"),
         "scientific_qualification": "pending_full_run_record_resource_and_target_validation",
         "scheduler_state": None,
         "scheduler_missing_reason": "scheduler_accounting_is_separate_evidence",

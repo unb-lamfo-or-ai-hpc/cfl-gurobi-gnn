@@ -249,6 +249,7 @@ class AttemptStore:
                         "optimize.intent.json",
                         "native-return.json",
                         "native-result.json",
+                        "worker-error.json",
                     )
                     if (self.folder / name).is_file()
                 },

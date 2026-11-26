@@ -1,6 +1,7 @@
 """Prospective five-call local qualification. Never run merely by importing."""
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -97,6 +98,36 @@ def fixture_start(session):
     }
 
 
+def explicit_license_path(path):
+    require(
+        isinstance(path, (str, Path)) and bool(str(path).strip()),
+        "Explicit previously qualified local license path required",
+    )
+    result = Path(path).resolve()
+    require(result.is_file(), "Previously qualified local license file is unavailable")
+    return result
+
+
+def configure_worker_license(path):
+    """Worker-only routing; inspect existence, never open/hash the license file."""
+    os.environ["GRB_LICENSE_FILE"] = str(explicit_license_path(path))
+
+
+def safe_worker_error(error, phase, binding_sha256):
+    code = getattr(error, "errno", None)
+    return {
+        "binding_sha256": binding_sha256,
+        "phase": phase,
+        "exception_type": type(error).__name__,
+        "native_error_code": code if type(code) is int else None,
+        "error_code_missing_reason": None
+        if type(code) is int
+        else "exception_has_no_numeric_code",
+        "exception_message_copied": False,
+        "automatic_retry": False,
+    }
+
+
 def worker(spec_path, spec_sha256):
     require(file_sha256(spec_path) == spec_sha256, "Worker specification changed")
     spec = load_json(spec_path)
@@ -125,7 +156,9 @@ def worker(spec_path, spec_sha256):
         candidate_limit=16,
     )
     outcome = "native_or_capture_failure"
+    session = None
     try:
+        configure_worker_license(spec["license_file"])
         # Deliberate native import is confined to the author-approved CLI worker.
         import gurobipy as gp
 
@@ -142,9 +175,10 @@ def worker(spec_path, spec_sha256):
             "Threads": 1,
             "TimeLimit": 10,
         }
-        with NativeSession(
+        session = NativeSession(
             gp, spec["input_path"], permit, store, profile, AuditPolicy()
-        ) as session:
+        )
+        with session:
             if spec["binding"]["key"]["stage"] == "evaluation":
                 session.install_start(fixture_start(session))
             result = session.optimize_once()
@@ -153,16 +187,29 @@ def worker(spec_path, spec_sha256):
                 "Native observer failed",
             )
             outcome = "native_returned_pending_qualification"
+    except Exception as error:
+        durable_json(
+            store.folder / "worker-error.json",
+            safe_worker_error(
+                error,
+                session.phase
+                if session is not None
+                else "license_routing_or_API_import",
+                store.binding_sha256,
+            ),
+        )
+        raise
     finally:
         store.close(outcome)
 
 
-def qualify(output, source_commit, approval_reference):
+def qualify(output, source_commit, approval_reference, *, license_file=None):
     check_source(source_commit)
     require(
         isinstance(approval_reference, str) and approval_reference.strip(),
         "Explicit author CLI approval reference required",
     )
+    license_file = explicit_license_path(license_file)
     output = Path(output).resolve()
     require(
         not output.is_relative_to(REPOSITORY),
@@ -190,6 +237,9 @@ def qualify(output, source_commit, approval_reference):
             "platform": sys.platform,
             "dependencies": dependencies,
             "credential_or_environment_variable_values_collected": False,
+            "license_routing": "explicit_existing_path_only_in_worker_GRB_LICENSE_FILE",
+            "license_contents_read_or_hashed": False,
+            "parent_environment_or_profiles_changed": False,
         },
     )
     input_path = output / "technical-fixture.lp"
@@ -201,6 +251,7 @@ def qualify(output, source_commit, approval_reference):
         {
             "source_commit": source_commit,
             "approval_reference": approval_reference,
+            "license_file": str(license_file),
             "maximum_native_calls": 5,
             "native_seconds_per_call": 10,
             "worker_wall_seconds_per_call": 30,
@@ -239,6 +290,7 @@ def qualify(output, source_commit, approval_reference):
             "input_path": str(input_path),
             "input_sha256": input_sha,
             "attempt_folder": str(output / name),
+            "license_file": str(license_file),
             "approval_reference": approval_reference,
         }
         spec_path = output / f"{name}.spec.json"
@@ -263,12 +315,21 @@ def qualify(output, source_commit, approval_reference):
                 approval_reference=approval_reference,
             )
             record["supervision"] = supervised
+            collected = None
+            if (output / name / "attempt.json").is_file():
+                collected = collect_attempt(output / name)
+                durable_json(output / f"{name}.collection.json", collected)
+                record["call_accounting"] = {
+                    "state": collected["state"],
+                    "budget_reserved_calls": collected["budget_reserved_calls"],
+                    "observed_native_returns": collected["observed_native_returns"],
+                    "worker_error": collected["worker_error"],
+                }
             require(
                 supervised["child_returncode"] == 0 and supervised["guard"] is None,
                 "Qualification worker did not complete cleanly",
             )
-            collected = collect_attempt(output / name)
-            durable_json(output / f"{name}.collection.json", collected)
+            require(collected is not None, "Worker did not create an attempt")
             native = collected["native_result"]
             require(
                 native is not None and collected["observed_native_returns"] == 1,
@@ -342,6 +403,10 @@ def main(argv=None):
     parser.add_argument("--output")
     parser.add_argument("--source-commit")
     parser.add_argument("--approval-reference")
+    parser.add_argument(
+        "--license-file",
+        help="Previously qualified local license path; contents are never copied",
+    )
     parser.add_argument("--worker", help=argparse.SUPPRESS)
     parser.add_argument("--spec-sha256", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
@@ -351,10 +416,22 @@ def main(argv=None):
             worker(args.worker, args.spec_sha256)
             return 0
         require(
-            all((args.output, args.source_commit, args.approval_reference)),
-            "Output, exact commit and author CLI approval reference are required",
+            all(
+                (
+                    args.output,
+                    args.source_commit,
+                    args.approval_reference,
+                    args.license_file,
+                )
+            ),
+            "Output, exact commit, author CLI reference and explicit local license path are required",
         )
-        report = qualify(args.output, args.source_commit, args.approval_reference)
+        report = qualify(
+            args.output,
+            args.source_commit,
+            args.approval_reference,
+            license_file=args.license_file,
+        )
         print(
             "MVP3_LOCAL_QUALIFICATION_OK"
             if report["all_five_cells_qualified"]

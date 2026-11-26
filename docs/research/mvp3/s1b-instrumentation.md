@@ -1,7 +1,8 @@
 # S1-B native instrumentation and evidence capture
 
-Status: implementation under review; offline qualification only. Actual Gurobi
-14.0.0 API/log qualification and production resource qualification are pending.
+Status: implementation under review; first local qualification stopped before
+optimize intent. Actual Gurobi14.0.0 API/log qualification and production resource
+qualification remain pending. See the [sanitized attempt receipt](s1b-qualification-attempt-20261126.json).
 This document and the code confer no scientific or HPC execution authority.
 
 S1-A [PR104](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/104)
@@ -172,8 +173,37 @@ Each failure stops the sequence and preserves partial files; no automatic retry.
 The resulting private report requires actual native14 API returns, audited tiny
 points and actual native14 log headers. It does not qualify the research parent
 population, production hardware, a trained predictor or a scientific Start policy.
-Review the return before any production release. This CLI has not been executed
-by the implementation task and is not an HPC command.
+Review the return before any production release. The corrected CLI has not been
+executed and requires a new source-specific author decision. It is local.
+
+### First attempt and reviewed correction
+
+The author explicitly approved one invocation of source
+`f6cf5fa8ef640ee55fa2828d0b362971986b0cc1`, conditional on all nine CI jobs.
+Both exact-source CI runs succeeded before that invocation. The first worker
+returned GurobiError before measurement admission/optimize intent, with zero
+optimization calls. The sequence stopped and preserved every private artifact;
+the remaining four cells were not started. The original worker recorded only
+the exception class, so the precise native error code/admission phase is unknown.
+This is an admission failure, not optimization censoring or a scientific result.
+
+The received earlier Dell license qualification had routed the existing local
+Gurobi14 license explicitly in the child. Default discovery in the first worker
+did not reproduce that configuration. The corrected CLI requires `--license-file`
+with that already qualified local path, checks existence without opening or
+hashing its contents, and sets `GRB_LICENSE_FILE` only inside the worker before
+the native import/environment start. It does not inspect the parent variable,
+change profiles or modify a license file. This routing difference is a likely
+cause; it is not retrospectively asserted as a verified native error code.
+
+Failed workers now retain a sealed `worker-error.json` with the fixed phase,
+exception class and numeric native error code when present, excluding exception
+message text. Parent collection reconciles failed workers as well as successful
+returns. Offline tests cover child routing without license-content reads,
+safe diagnostics, environment-start failure before intent and single-attempt
+parent behavior. The corrected source requires a new specific CLI decision,
+its own passing CI and a new output directory. The failed attempt is never
+overwritten or automatically retried. This correction does not authorise a call.
 
 ## Offline verification
 
@@ -187,8 +217,8 @@ version drift/missingness and prospective qualification guards. Historical CI
 continues separately. No offline pass is described as native or scientific
 qualification.
 
-Local verification on 26 November 2026: **102 offline tests passed** (55 S1-A
-contracts and47 instrumentation/resource/parser/release-guard tests), Python3.13
+Local verification on 26 November 2026: **106 offline tests passed** (55 S1-A
+contracts and51 instrumentation/resource/parser/release-guard tests), Python3.13
 in a separate tooling environment. Scoped Ruff checks and formatting pass. CI
 results belong to the exact PR head and are recorded in its description; this
 local statement does not claim a CI or actual native qualification result.

@@ -36,6 +36,9 @@
     "artifact_bytes_per_call": 8388608,
     "events_per_call": 1000,
     "requires_separate_concrete_author_CLI_approval": true,
+    "license_routing": "explicit_previously_qualified_local_path_in_worker_GRB_LICENSE_FILE_only",
+    "license_contents_read_copied_or_hashed_by_instrumentation": false,
+    "error_diagnostics": "fixed_phase_exception_class_and_numeric_code_no_message_text",
     "research_parents_or_learned_predictor": false,
     "production_hardware_qualification": false
   },

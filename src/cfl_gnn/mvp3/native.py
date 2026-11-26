@@ -99,8 +99,10 @@ class NativeSession:
         self.environment = self.model = self.matrix = self.identity = None
         self.called = False
         self.start_installed = False
+        self.phase = "not_admitted"
 
     def __enter__(self):
+        self.phase = "permit_and_profile_validation"
         self.permit.validate(self.store, self.path)
         stage = self.store.binding["key"]["stage"]
         require(
@@ -175,10 +177,13 @@ class NativeSession:
             "Native version must be the admitted Gurobi14.0.0",
         )
         try:
+            self.phase = "environment_creation"
             self.environment = self.api.Env(empty=True)
             # Native stdout is redirected by the owning supervisor. No LogFile,
             # LogToConsole or other undeclared model parameter is modified.
+            self.phase = "environment_start"
             self.environment.start()
+            self.phase = "original_model_read"
             self.model = self.api.read(str(self.path), env=self.environment)
             declared = {1: "MINIMIZE", -1: "MAXIMIZE"}[self.model.ModelSense]
             self.model.ModelSense = self.api.GRB.MINIMIZE
@@ -188,15 +193,19 @@ class NativeSession:
                 "Model contains a prior solution or Start",
             )
             for name, value in self.profile.items():
+                self.phase = "native_parameter_overrides"
                 self.model.setParam(name, value)
+            self.phase = "original_matrix_identity"
             self.matrix = NativeMatrix(self.model, declared, self.api.GRB.INFINITY)
             self.identity = streamed_identity(self.matrix)
+            self.phase = "native_parameter_inventory"
             self.parameters = parameter_inventory(self.api, self.model)
             expected = {**self.parameters["defaults"], **self.profile}
             require(
                 self.parameters["effective"] == expected,
                 "Undeclared native parameter change",
             )
+            self.phase = "measurement_storage_admission"
             self.store.reserve_final_vectors(len(self.matrix.variables))
             admitted = self.store.append(
                 {
@@ -209,12 +218,14 @@ class NativeSession:
                 critical=True,
             )
             require(admitted is not None, "Native admission could not be retained")
+            self.phase = "admitted_before_optimize"
             return self
         except BaseException:
             self.close()
             raise
 
     def install_start(self, start):
+        self.phase = "partial_start_validation"
         require(not self.called, "Start must be installed before the sole main call")
         require(not self.start_installed, "External Start can be installed only once")
         require(
@@ -311,6 +322,7 @@ class NativeSession:
             "Start admission could not be retained",
         )
         self.start_installed = True
+        self.phase = "admitted_before_optimize"
 
     def _current_identity(self):
         return streamed_identity(
@@ -325,12 +337,15 @@ class NativeSession:
             "Evaluation requires an explicit validated B/R/G Start record",
         )
         observer = NativeObserver(self.api, self.matrix, self.store, stage)
+        self.phase = "durable_optimize_intent"
         self.store.optimize_intent(self.permit.approval_reference)
         self.called = True
         started = time.perf_counter()
+        self.phase = "native_optimize"
         self.model.optimize(observer)
         wall = time.perf_counter() - started
         self.store.native_returned(int(self.model.Status))
+        self.phase = "native_return_and_audit"
         require(
             self._current_identity() == self.identity,
             "Original model changed during native optimisation",
@@ -395,6 +410,7 @@ class NativeSession:
             "scientific_population": self.permit.mode,
         }
         durable_json(self.store.folder / "native-result.json", result)
+        self.phase = "result_persisted"
         return result
 
     def close(self):

@@ -1,5 +1,7 @@
 # Current S1-B implementation authority - 26 November 2026
 
+The author specifically approved one local qualification invocation at f6cf5fa8ef640ee55fa2828d0b362971986b0cc1 after nine passing CI jobs. It ran once and failed before optimise intent with GurobiError: zero optimisation calls, all files preserved, no retry. The corrected explicit worker-only existing-license routing and safe diagnostic capture have106 passing offline tests. The original approval is consumed; any new source/invocation needs its own passing CI and specific author CLI decision. Keep PR105 Draft and preserve the failed attempt. See docs/research/mvp3/s1b-qualification-attempt-20261126.json.
+
 The researcher authorised autonomous continuation, tests and a Draft PR for develop, asking only for merge or concrete author CLI execution approval. PR104 (S1-A, head a2f475682e7b51055d24f487eb2a125426c3373c) was explicitly authorised and merged at edad5cc57f287d178706c2b91de8ba27e7878baa after nine successful CI jobs. That approval applies to PR104 only. Continue S1-B in a separate branch; preserve historical components and the sealed configs/mvp3/v1 bytes. Do not access HPC/SSH/SCP, run real native qualification or scientific campaigns, or merge further PRs without the corresponding explicit author decision. Local offline development checks remain within the implementation mandate. Older dated restrictions below record their original scope.
 
 # Current implementation authority - 26 November 2026
