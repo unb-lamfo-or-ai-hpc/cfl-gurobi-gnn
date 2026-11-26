@@ -161,6 +161,34 @@ class ResourceAndLogTests(unittest.TestCase):
             "fake-sensitive-value", (self.folder / "parsed" / "parsed.json").read_text()
         )
 
+        fields = result["summaries"][0]["fields"]
+        self.assertEqual(fields["NumConstrs"]["value"], 1)
+        self.assertEqual(fields["NumVars"]["value"], 20)
+        self.assertEqual(fields["PresolvedNumVars"]["value"], 0)
+        self.assertEqual(fields["Runtime"]["value"], 0.01)
+        self.assertEqual(fields["ObjVal"]["value"], 11)
+        tree = next(row for row in result["progress"] if row["section"] == "nodelog")
+        self.assertEqual(tree["rows"][-1]["CurrentNode"]["value"], 0)
+
+    def test_root_LP_status_and_time_cannot_become_truncated_MIP_terminal(self):
+        path = self.folder / "synthetic-truncated.log"
+        path.write_text(
+            "Gurobi Optimizer version 14.0.0 (synthetic)\nOptimize a model with 1 rows, 20 columns and 20 nonzeros\nSolved in 1 iterations and 0.02 seconds (0.01 work units)\nOptimal objective 1.100000000e+01\n"
+        )
+        result = parse_native_log(
+            path, self.folder / "parsed", source_kind="synthetic_fixture"
+        )
+        summary = result["summaries"][0]
+        self.assertIsNone(summary["fields"]["Status"]["value"])
+        self.assertIsNone(summary["fields"]["Runtime"]["value"])
+        self.assertIsNone(summary["fields"]["ObjVal"]["value"])
+        self.assertEqual(
+            summary["continuous_phase"]["fields"]["Status"]["value"], "OPTIMAL"
+        )
+        self.assertEqual(
+            summary["continuous_phase"]["fields"]["Runtime"]["value"], 0.02
+        )
+
     def test_truncated_or_unsupported_terminal_is_missing_not_optimal(self):
         for index, ending in enumerate(
             ("", "Sub-optimal termination", "Locally optimal solution found")

@@ -25,12 +25,13 @@ SUMMARY_FIELDS = (
     "Threads",
     "PhysicalCores",
     "LogicalProcessors",
-    "Rows",
-    "Columns",
-    "Nonzeros",
-    "PresolvedRows",
-    "PresolvedColumns",
-    "PresolvedNonzeros",
+    "NumConstrs",
+    "NumVars",
+    "NumNZs",
+    "PresolvedNumConstrs",
+    "PresolvedNumVars",
+    "PresolvedNumNZs",
+    "PresolveTime",
     "NoRelTime",
     "NoRelBestBd",
     "NoRelBestSol",
@@ -95,11 +96,35 @@ def parse_native_log(path, output, *, source_kind, maximum_bytes=64 * 1024 * 102
     parsed = glt.parse(str(sanitized))
     summaries, progress = [], []
     for _, number, parser in parsed.parsers:
-        raw = parser.get_summary()
+        raw = dict(parser.get_summary())
+        # Merged summaries can carry root-LP OPTIMAL/Runtime into truncated MIP.
+        tree = parser.nodelog_parser.get_summary()
+        terminal = parser.termination_parser.get_summary()
+        for name in ("Runtime", "Work", "ObjVal", "ObjBound", "MIPGap", "NodeCount"):
+            raw[name] = tree.get(name)
+        raw["Status"] = terminal.get("Status")
+        continuous = parser.continuous_parser.get_summary()
         summaries.append(
             {
                 "log_number": number,
                 "fields": {name: observed(raw.get(name)) for name in SUMMARY_FIELDS},
+                "continuous_phase": {
+                    "clock_origin": "native_continuous_log_origin_unqualified",
+                    "fields": {
+                        name: observed(continuous.get(name))
+                        for name in (
+                            "Status",
+                            "Runtime",
+                            "Work",
+                            "ObjVal",
+                            "RelaxObj",
+                            "RelaxTime",
+                            "RelaxIterCount",
+                            "IterCount",
+                            "BarIterCount",
+                        )
+                    },
+                },
             }
         )
         for section, reader, origin in (
@@ -129,9 +154,18 @@ def parse_native_log(path, output, *, source_kind, maximum_bytes=64 * 1024 * 102
                             "BestBd",
                             "BestObj",
                             "Gap",
-                            "Expl",
-                            "Unexpl",
-                            "ItCnt",
+                            "CurrentNode",
+                            "RemainingNodes",
+                            "ItPerNode",
+                            "Iteration",
+                            "Objective",
+                            "PInf",
+                            "DInf",
+                            "PObj",
+                            "DObj",
+                            "PRes",
+                            "DRes",
+                            "Compl",
                             "Obj",
                             "PrimalInf",
                             "DualInf",

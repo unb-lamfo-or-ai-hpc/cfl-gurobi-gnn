@@ -139,6 +139,10 @@ Numeric/status fields absent or unsupported by this release remain null with
 reasons; unknown/truncated terminal text is not inferred OPTIMAL. NoRel time
 starts at the heuristic entry and is never relabelled global optimize Runtime.
 Rounded textual times cannot replace point-specific native callback clocks.
+Merged parser summaries can carry a root-LP status or Runtime into an incomplete
+MIP log. The adapter therefore takes MIP final values only from the tree/final
+termination sections and retains continuous-phase summaries separately. A
+continuous OPTIMAL status never becomes a MIP terminal status by inheritance.
 
 Raw stdout is private, retained unchanged and hashed. A separate sanitized copy
 removes credential/license/transport lines before parsing; structured output is
@@ -183,8 +187,8 @@ version drift/missingness and prospective qualification guards. Historical CI
 continues separately. No offline pass is described as native or scientific
 qualification.
 
-Local verification on 26 November 2026: **101 offline tests passed** (55 S1-A
-contracts and46 instrumentation/resource/parser/release-guard tests), Python3.13
+Local verification on 26 November 2026: **102 offline tests passed** (55 S1-A
+contracts and47 instrumentation/resource/parser/release-guard tests), Python3.13
 in a separate tooling environment. Scoped Ruff checks and formatting pass. CI
 results belong to the exact PR head and are recorded in its description; this
 local statement does not claim a CI or actual native qualification result.
