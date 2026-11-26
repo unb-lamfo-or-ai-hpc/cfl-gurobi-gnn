@@ -5,10 +5,14 @@
   "$defs": {
     "sha256": {
       "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
       "pattern": "^[0-9a-f]{64}$"
     },
     "sha1": {
       "type": "string",
+      "minLength": 40,
+      "maxLength": 40,
       "pattern": "^[0-9a-f]{40}$"
     },
     "quantity": {
@@ -86,7 +90,11 @@
         },
         "attempt": {
           "type": "string",
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+          "maxLength": 128,
+          "not": {
+            "pattern": "\\s"
+          }
         }
       },
       "required": [

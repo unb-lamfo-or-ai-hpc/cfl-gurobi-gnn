@@ -82,6 +82,17 @@ class ObservationTests(unittest.TestCase):
             with self.assertRaises(ContractError):
                 validate_record(record, bundle())
 
+    def test_hash_and_attempt_whitespace_cannot_enter_immutable_keys(self):
+        for field in ("source_commit", "environment_sha256", "attempt"):
+            record = run()
+            if field == "attempt":
+                record["key"][field] += "\n"
+            else:
+                record[field] += "\n"
+            record["run_sha256"] = run_identity(record)
+            with self.subTest(field=field), self.assertRaises(ContractError):
+                validate_record(record, bundle())
+
     def test_primary_parameter_resource_and_default_reference_drift_fail(self):
         for mutation in (
             "focus",

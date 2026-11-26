@@ -38,8 +38,18 @@ def evidence_schema():
         ],
     )
     definitions = {
-        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "sha256": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+        },
+        "sha1": {
+            "type": "string",
+            "minLength": 40,
+            "maxLength": 40,
+            "pattern": "^[0-9a-f]{40}$",
+        },
         "quantity": quantity,
         "key": obj(
             {
@@ -53,6 +63,8 @@ def evidence_schema():
                 "attempt": {
                     "type": "string",
                     "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+                    "maxLength": 128,
+                    "not": {"pattern": "\\s"},
                 },
             }
         ),
