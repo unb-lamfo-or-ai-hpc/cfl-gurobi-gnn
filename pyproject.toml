@@ -44,6 +44,7 @@ Issues = "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/issues"
 
 [project.optional-dependencies]
 mvp3-contract = ["jsonschema==4.26.0"]
+mvp3-instrumentation = ["jsonschema==4.26.0", "psutil==7.2.2", "gurobi-logtools==4.0.1"]
 scip = ["pyscipopt>=6.1,<7"]
 projection = ["umap-learn>=0.5"]
 test = ["pytest>=7"]

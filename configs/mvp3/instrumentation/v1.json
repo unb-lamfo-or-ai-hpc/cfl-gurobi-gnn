@@ -1,0 +1,53 @@
+{
+  "schema_version": "mvp3-s1b-instrumentation-v1",
+  "scientific_execution_authorized": false,
+  "audit": {
+    "row": 0.000001,
+    "bound": 0.000001,
+    "integrality": 0.00001,
+    "objective": 0.000001
+  },
+  "audit_scope": "original_linear_MILP_absolute_float_tolerances_not_exact_rational_certificate",
+  "integer_policy": "retain_raw_point_and_explicitly_snapped_point_reaudit_all_original_rows",
+  "root_objective_policy": "continuous_feasibility_separate_from_native_root_bound",
+  "native_parameter_value_encoding": "typed_native_infinities_as_strings_v1_NaN_rejected",
+  "Windows_native_model_paths": "ASCII_admission_before_native_initialization_preserve_original_input_bytes_and_SHA",
+  "qualification_attempt_identity": "UUID_per_invocation_distinct_attempt_keys_original_attempts_preserved",
+  "log_parser": {
+    "distribution": "gurobi-logtools",
+    "version": "4.0.1",
+    "wheel_sha256": "bc75fa6cc60fcfb37c42c95a8c97836ea158b2ae9105205ecb85e49d7fa92955",
+    "implicit_parameter_defaults_used": false,
+    "NoRel_clock_origin": "NoRel_heuristic_entry_not_optimize_entry"
+  },
+  "supervisor": {
+    "distribution": "psutil",
+    "version": "7.2.2",
+    "process_memory_scope": "sampled_owned_tree_RSS_sum_not_exact_peak",
+    "job_memory_scope": "exact_job_cgroup_v2_or_explicitly_unavailable",
+    "native_memory_scope": "separate_native_callback_GB",
+    "automatic_retry": false
+  },
+  "local_qualification": {
+    "maximum_native_calls": 5,
+    "parallel_workers": 1,
+    "native_seconds_per_call": 10,
+    "worker_wall_seconds_per_call": 30,
+    "worker_observed_memory_bytes": 1073741824,
+    "worker_observed_stdout_bytes": 16777216,
+    "candidate_vectors_per_call": 16,
+    "artifact_bytes_per_call": 8388608,
+    "events_per_call": 1000,
+    "requires_separate_concrete_author_CLI_approval": true,
+    "license_routing": "explicit_previously_qualified_local_path_in_worker_GRB_LICENSE_FILE_only",
+    "license_contents_read_copied_or_hashed_by_instrumentation": false,
+    "error_diagnostics": "fixed_phase_exception_class_and_numeric_code_no_message_text",
+    "research_parents_or_learned_predictor": false,
+    "production_hardware_qualification": false
+  },
+  "primary_campaign": {
+    "released": false,
+    "measurement_envelope": null,
+    "missing_reason": "requires_resource_qualification_and_separately_approved_exact_source_release"
+  }
+}

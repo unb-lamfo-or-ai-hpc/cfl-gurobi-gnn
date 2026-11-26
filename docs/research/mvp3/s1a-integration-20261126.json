@@ -1,0 +1,22 @@
+{
+  "schema_version": "mvp3-s1a-integration-v1",
+  "date": "2026-11-26",
+  "repository": "unb-lamfo-or-ai-hpc/cfl-gurobi-gnn",
+  "pull_request": 104,
+  "target_branch": "develop",
+  "approved_head": "a2f475682e7b51055d24f487eb2a125426c3373c",
+  "previous_develop": "b14db3298c051107dc99b0f2087a90e60bbc6fd6",
+  "merge_commit": "edad5cc57f287d178706c2b91de8ba27e7878baa",
+  "merge_tree": "df1d77bfe8e9accd70c44528d14863f1da346352",
+  "merge_tree_equals_approved_head": true,
+  "explicit_author_approval": "Autorizar merge da PR #104",
+  "approval_scope": "PR104_only",
+  "successful_CI_jobs": 9,
+  "CI_runs": [45832487862, 45832488129],
+  "local_offline_contract_tests": 55,
+  "main_changed": false,
+  "HPC_access": false,
+  "installed_HPC_source_changed": false,
+  "native_optimization_calls": 0,
+  "scientific_observations_generated": 0
+}
