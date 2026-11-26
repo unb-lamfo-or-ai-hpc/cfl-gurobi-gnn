@@ -243,6 +243,7 @@ class ProductionTests(unittest.TestCase):
             "effective_process_memory_limit_bytes": 192 * 1024**3,
             "limit_chain_complete": True,
             "memory_mount_root_is_host_root": True,
+            "kernel_hierarchy_consistent": True,
             "peak_job_bytes": 123,
         }
         kwargs = dict(
@@ -306,6 +307,7 @@ class ProductionTests(unittest.TestCase):
                 (job / name).write_text(value)
         else:
             (proc / "cgroup").write_text("7:memory:/slurm/uid_1000/job_42/step_0\n")
+            (child / "memory.stat").write_text(f"hierarchical_memory_limit {limit}\n")
             (proc / "mountinfo").write_text(
                 f"1 0 0:1 /slurm {mount.as_posix()} rw - cgroup cgroup rw,memory\n"
             )
@@ -335,6 +337,15 @@ class ProductionTests(unittest.TestCase):
         self.assertEqual(result["version"], "v1")
         self.assertEqual(result["current_job_bytes"], 12)
         self.assertEqual(result["events"]["failcnt"], 0)
+        self.assertTrue(result["kernel_hierarchy_consistent"])
+
+    def test_v1_disabled_hierarchy_cannot_imply_an_effective_ancestor_limit(self):
+        self.cgroup("v1")
+        (self.folder / "memory/uid_1000/job_42/step_0/memory.stat").write_text(
+            f"hierarchical_memory_limit {2**63 - 4096}\n"
+        )
+        result = cgroup_memory("42", proc=self.folder / "proc")
+        self.assertFalse(result["kernel_hierarchy_consistent"])
 
     def test_missing_ancestor_limit_is_explicit_and_ineligible(self):
         self.cgroup("v2")

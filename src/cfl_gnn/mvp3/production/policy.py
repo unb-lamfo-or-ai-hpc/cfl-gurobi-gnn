@@ -1,4 +1,4 @@
-"""Technical qualification envelope, separate from the177 scientific cells."""
+"""Technical qualification envelope, separate from the 177 scientific cells."""
 
 import re
 from pathlib import Path

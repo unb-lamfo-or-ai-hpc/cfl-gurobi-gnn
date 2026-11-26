@@ -229,6 +229,7 @@ def collect(plan, output, runner=bounded_read):
         ),
         "scientific_S2_released": False,
         "real_CFL_memory_or_performance_qualified": False,
+        "real_CFL_license_size_capacity_qualified": False,
         "other_Gurobi_sessions_globally_machine_verified": False,
         "further_native_calls_authorized": False,
         "automatic_retry": False,

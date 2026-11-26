@@ -131,6 +131,20 @@ def cgroup_memory(job_id, *, pid=None, proc="/proc"):
         if path == mount:
             break
         path = path.parent
+    effective = min(limits) if limits else None
+    hierarchy_limit = None
+    if kind == "v1":
+        try:
+            stats = dict(
+                line.split()
+                for line in (current / "memory.stat").read_text().splitlines()
+            )
+            hierarchy_limit = int(stats["hierarchical_memory_limit"])
+        except (OSError, ValueError, KeyError):
+            pass
+    hierarchy_consistent = kind == "v2" or (
+        hierarchy_limit == effective and effective is not None
+    )
     events = {}
     if kind == "v2":
         try:
@@ -167,7 +181,9 @@ def cgroup_memory(job_id, *, pid=None, proc="/proc"):
         "process_scope": str(current),
         "current_job_bytes": number(job, names[0]),
         "peak_job_bytes": number(job, names[1]),
-        "effective_process_memory_limit_bytes": min(limits) if limits else None,
+        "effective_process_memory_limit_bytes": effective,
+        "kernel_hierarchical_limit_bytes": hierarchy_limit,
+        "kernel_hierarchy_consistent": hierarchy_consistent,
         "limit_chain_complete": not unreadable_limits,
         "memory_mount_root_is_host_root": root == PurePosixPath("/"),
         "unreadable_limit_scopes": unreadable_limits,
@@ -262,7 +278,8 @@ def audit_allocation(
         "memory_enforcement": memory.get("effective_process_memory_limit_bytes")
         == requested
         and memory.get("limit_chain_complete") is True
-        and memory.get("memory_mount_root_is_host_root") is True,
+        and memory.get("memory_mount_root_is_host_root") is True
+        and memory.get("kernel_hierarchy_consistent") is True,
         "job_peak_counter": memory.get("peak_job_bytes") is not None,
         "maximum_two_jobs": 1 <= own_job_count <= 2,
     }
