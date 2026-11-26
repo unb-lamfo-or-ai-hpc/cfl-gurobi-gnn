@@ -1,0 +1,476 @@
+{
+  "schema_version": "mvp3-s1a-v1",
+  "algorithm": "sha256-seed42-family-original-id-v1",
+  "seed": 42,
+  "catalogue_sha256": "1c1735e1f5cd2a5b0a407ca4928c3aef546374eebc4f0d402034e9313274e41a",
+  "selection_inputs": [
+    "seed",
+    "family",
+    "original_id"
+  ],
+  "coverage_changes_partition": false,
+  "parents": [
+    {
+      "alias": "E0",
+      "original_id": "CFL_easy_instance_0",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "061bef6729c589dead8bcf4726b5d13961f94e6b4e6c3b99c2d9092286cfdd4b"
+    },
+    {
+      "alias": "E1",
+      "original_id": "CFL_easy_instance_1",
+      "family": "easy",
+      "role": "validation",
+      "split_rank_sha256": "c33f6b48adbb3f782005d50a06805be9dd23dfd12be9acc9a7b60e6be98e2908"
+    },
+    {
+      "alias": "E2",
+      "original_id": "CFL_easy_instance_2",
+      "family": "easy",
+      "role": "validation",
+      "split_rank_sha256": "ce9b13f38ea9ad2b2f94fc5d9264bcc33e4a79ee0ebca1ec179b0a12f287e9eb"
+    },
+    {
+      "alias": "E3",
+      "original_id": "CFL_easy_instance_3",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "12f312379607b6f13ef0aa6f57e22184aa91c3bfc8d0a14918cf468d2eb0baf3"
+    },
+    {
+      "alias": "E4",
+      "original_id": "CFL_easy_instance_4",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "5c0e705b95fc0e7932f4c664b0baf0651362320d9e9a5c2ebe3876f0d20df96d"
+    },
+    {
+      "alias": "E5",
+      "original_id": "CFL_easy_instance_5",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "14a7e2b3be8b8ead72eefd11b199ee96034b2f69d1601dbeec51f190ffab4090"
+    },
+    {
+      "alias": "E6",
+      "original_id": "CFL_easy_instance_6",
+      "family": "easy",
+      "role": "validation",
+      "split_rank_sha256": "c246b625bda61601dec85c4eef5cc0cf09bab814ff6f949f1a487ae8a430e6f1"
+    },
+    {
+      "alias": "E7",
+      "original_id": "CFL_easy_instance_7",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "85aedac947047ec41d76c5284cd006870bd2fc778a430e652a47f3517da92985"
+    },
+    {
+      "alias": "E8",
+      "original_id": "CFL_easy_instance_8",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "19505b090ce816ff42706a260614ddf2d42f66295323150178da6e55803b41a9"
+    },
+    {
+      "alias": "E9",
+      "original_id": "CFL_easy_instance_9",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "88c395a261566b21e9444f64d0533f1d9a52eb34d2c3c0bad38c93a31b23786b"
+    },
+    {
+      "alias": "E10",
+      "original_id": "CFL_easy_instance_10",
+      "family": "easy",
+      "role": "validation",
+      "split_rank_sha256": "b5a36b8664314a614d6bc66e3df3ea7a5a85072bfe98ede6cfffd70c5c6ed407"
+    },
+    {
+      "alias": "E11",
+      "original_id": "CFL_easy_instance_11",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "6924a0fc3328a1c0ef8ce51fcfe2b88a3877a87927fbf2bc8a6191a0983d951f"
+    },
+    {
+      "alias": "E12",
+      "original_id": "CFL_easy_instance_12",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "8a636229c81815be0942d939951eb1883fa8df2d6eb0ef4fa1dd811eaba0fe37"
+    },
+    {
+      "alias": "E13",
+      "original_id": "CFL_easy_instance_13",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "7a739fa2d916eed5eba40c833762213d3cc9f5b5bb596478ddbda647e92be661"
+    },
+    {
+      "alias": "E14",
+      "original_id": "CFL_easy_instance_14",
+      "family": "easy",
+      "role": "test",
+      "split_rank_sha256": "dccf7f5904de4e9b25fdbf0e65a18d6126599257285b767ace3b7eeb97a2a9fa"
+    },
+    {
+      "alias": "E15",
+      "original_id": "CFL_easy_instance_15",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "3cec3eb45dc24974f9f9f41afd1efd2a9bf5a54d19357d5bc22f834f9d362081"
+    },
+    {
+      "alias": "E16",
+      "original_id": "CFL_easy_instance_16",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "617d2250e760c941d2981a210de5029b64e83be381c2af6b53b20e3c2eb67b05"
+    },
+    {
+      "alias": "E17",
+      "original_id": "CFL_easy_instance_17",
+      "family": "easy",
+      "role": "test",
+      "split_rank_sha256": "f6363e0d40f9e3ddb346b3ca54bd424ef6dc7fb0224ee811d68284f592190a6e"
+    },
+    {
+      "alias": "E18",
+      "original_id": "CFL_easy_instance_18",
+      "family": "easy",
+      "role": "validation",
+      "split_rank_sha256": "b2e836ef086aa3ae154b7d97ae4f528fcc09adff25b4617895940b78b222a8e7"
+    },
+    {
+      "alias": "E19",
+      "original_id": "CFL_easy_instance_19",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "8b121eef7e5a8c85be3b2bbed4255667cd50f148594edebaad92adf76f53a3c9"
+    },
+    {
+      "alias": "E20",
+      "original_id": "CFL_easy_instance_20",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "8a4a35430a6de114b7af14fbfdda5dd367f828acb5a4c0b9fa652b29ccc5087d"
+    },
+    {
+      "alias": "E21",
+      "original_id": "CFL_easy_instance_21",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "2fbb942327b55f9154a3ba3689204bc0a5eb79467434cdcff8e57196e1ac5db3"
+    },
+    {
+      "alias": "E22",
+      "original_id": "CFL_easy_instance_22",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "16010c13c69e4a6c378ec4d37e10a46576319b3d29ff920c87f26f0d0d44f91e"
+    },
+    {
+      "alias": "E23",
+      "original_id": "CFL_easy_instance_23",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "a661fb66249b0a56ee8feaa1e8c4079d2668bfeb70479067e8f1c68667d3b53e"
+    },
+    {
+      "alias": "E24",
+      "original_id": "CFL_easy_instance_24",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "50ef064cd1433ebcdd9de1957c0f52a3f9afcdab5400b1f2acffc43ab8120cb0"
+    },
+    {
+      "alias": "E25",
+      "original_id": "CFL_easy_instance_25",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "85906c353950fe153580af10f346b65a701b679cc21b67055d586febf15d21f1"
+    },
+    {
+      "alias": "E26",
+      "original_id": "CFL_easy_instance_26",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "4af16b62f8bef2da6e26766d938e87a80dfb33ae08f803c5a5fcdb1f89268772"
+    },
+    {
+      "alias": "E27",
+      "original_id": "CFL_easy_instance_27",
+      "family": "easy",
+      "role": "test",
+      "split_rank_sha256": "d7f0ccfa8d9e7395cd95ff16246ca54c34a00066d25e68ca94f1d210a58a32b4"
+    },
+    {
+      "alias": "E28",
+      "original_id": "CFL_easy_instance_28",
+      "family": "easy",
+      "role": "train",
+      "split_rank_sha256": "6beaa35da25cc2f02bc91f9314941b0d4b653bba7e15ce372e033d9eb87cd9b2"
+    },
+    {
+      "alias": "E29",
+      "original_id": "CFL_easy_instance_29",
+      "family": "easy",
+      "role": "test",
+      "split_rank_sha256": "ee548fe7e5f4d17d96efd1d1590a2c78118f0177d29c04dad8fe20d202b7db02"
+    },
+    {
+      "alias": "M0",
+      "original_id": "CFL_medium_instance_0",
+      "family": "medium",
+      "role": "validation",
+      "split_rank_sha256": "c2d02d1f567dc9f56dc44b33de05abbf4f1a7741d87a48472d914d54444302d6"
+    },
+    {
+      "alias": "M1",
+      "original_id": "CFL_medium_instance_1",
+      "family": "medium",
+      "role": "validation",
+      "split_rank_sha256": "ccba5bdbb802cb4b6350465fd75c12ba88677b5d09ce8bd9c1578c962df527f1"
+    },
+    {
+      "alias": "M2",
+      "original_id": "CFL_medium_instance_2",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "9668011dec6bb21f345b804ce9b13073eee40b194acf143cca8e8f3cf33461d4"
+    },
+    {
+      "alias": "M3",
+      "original_id": "CFL_medium_instance_3",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "13f50515cad678940a13813fe22cd4d61ccaa1d2d8155de876726dbaca4aec00"
+    },
+    {
+      "alias": "M4",
+      "original_id": "CFL_medium_instance_4",
+      "family": "medium",
+      "role": "validation",
+      "split_rank_sha256": "ce0eacf246ca6463c382f5481c5c9302de736fcef6fa1e7f1ae6ccabafc6e529"
+    },
+    {
+      "alias": "M5",
+      "original_id": "CFL_medium_instance_5",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "ba01b30c22cbca0d5668035b73eb902462eb36e1c71d046a7171fbb6b321d0c9"
+    },
+    {
+      "alias": "M6",
+      "original_id": "CFL_medium_instance_6",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "3c6f9381bc978ecfde0631d4a49ce4214b553eb9791370f1f091d82312e4c5ca"
+    },
+    {
+      "alias": "M7",
+      "original_id": "CFL_medium_instance_7",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "6a198da53213f5703f75c5337eef9ed38317446e27916278a96472954b3b0704"
+    },
+    {
+      "alias": "M8",
+      "original_id": "CFL_medium_instance_8",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "b9d19ff59d1c4ef6f22c6c67ce055204b44da59569de249301c8c5bd87b15ba9"
+    },
+    {
+      "alias": "M9",
+      "original_id": "CFL_medium_instance_9",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "17df91b0a4eccf075673eec959f58ff9e16a3792e8568cb17acc5dab55ce5524"
+    },
+    {
+      "alias": "M10",
+      "original_id": "CFL_medium_instance_10",
+      "family": "medium",
+      "role": "test",
+      "split_rank_sha256": "f62f6d43de0cabe94e305b6df8cb99b67f1cd68f3b2fbf18ec7f9d5f3de51187"
+    },
+    {
+      "alias": "M11",
+      "original_id": "CFL_medium_instance_11",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "4ddb2dcce05c422c9a0007e442cacacdc6bf5802fcf950932e415aa29b4e78b9"
+    },
+    {
+      "alias": "M12",
+      "original_id": "CFL_medium_instance_12",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "76b99b431b5b50f5dea9373ca5d7067f4fb029dd7cd688d0922c57e012ce64bf"
+    },
+    {
+      "alias": "M13",
+      "original_id": "CFL_medium_instance_13",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "90d5e13a7c2d120cbbe358e50e337b68fc0b95952073b90e94c633078b04b32f"
+    },
+    {
+      "alias": "M14",
+      "original_id": "CFL_medium_instance_14",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "b333de35221c881cc98ea88bf97923f9684a5c878da77845c58afac4ab4833bf"
+    },
+    {
+      "alias": "M15",
+      "original_id": "CFL_medium_instance_15",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "b9e9762c5627007f3fb42887dcb6a372ab24d9d67a42991846c4ad430b6f9b7b"
+    },
+    {
+      "alias": "M16",
+      "original_id": "CFL_medium_instance_16",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "a79d9352ed2a106b090ea71d780d4556d652d1031358d0e0e4c1c1b55065298f"
+    },
+    {
+      "alias": "M17",
+      "original_id": "CFL_medium_instance_17",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "ac674985e70b1968cd2db74933aea607c741a02ea7aca7fa3eb63504dcda53d2"
+    },
+    {
+      "alias": "M18",
+      "original_id": "CFL_medium_instance_18",
+      "family": "medium",
+      "role": "test",
+      "split_rank_sha256": "cfb885bd00d54ee3f2bf3d3022f62cc8f2420056af690652de05742aa3a3cebb"
+    },
+    {
+      "alias": "M19",
+      "original_id": "CFL_medium_instance_19",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "4e5bed4925ad2f832dd5e78d748c7b813019cd948b001900ff6d7f84cb90537c"
+    },
+    {
+      "alias": "M20",
+      "original_id": "CFL_medium_instance_20",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "b94cc0345ff35cccc0be1b9345c569a365af6e26e11572040a73847fd3ea649c"
+    },
+    {
+      "alias": "M21",
+      "original_id": "CFL_medium_instance_21",
+      "family": "medium",
+      "role": "test",
+      "split_rank_sha256": "fa8ce2a907b2007fa873eabfbc1f598890235503e512e58ae3b7bceb5951e6db"
+    },
+    {
+      "alias": "M22",
+      "original_id": "CFL_medium_instance_22",
+      "family": "medium",
+      "role": "test",
+      "split_rank_sha256": "f5682449b59bb3a363e22e3fc2a38d5a6d7e1e528a6c810242e3896a5ef10049"
+    },
+    {
+      "alias": "M23",
+      "original_id": "CFL_medium_instance_23",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "b8990c973debf442feeefb7bb0f17654e10e977fdb8db2fde3934a0166800fad"
+    },
+    {
+      "alias": "M24",
+      "original_id": "CFL_medium_instance_24",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "63842add414fcf12e93a443823addfa1fb32fbe34025e9eeeb658cd6e280b0cd"
+    },
+    {
+      "alias": "M25",
+      "original_id": "CFL_medium_instance_25",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "7385cd786e47eceefc48170c3126a7190257aaeb258396a6e2a00481deb37195"
+    },
+    {
+      "alias": "M26",
+      "original_id": "CFL_medium_instance_26",
+      "family": "medium",
+      "role": "test",
+      "split_rank_sha256": "d7d099bb564283e274dd2a6d6c6146abdb97ad3c502a3e57c45cfe4af4412bae"
+    },
+    {
+      "alias": "M27",
+      "original_id": "CFL_medium_instance_27",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "b4028d2c940ebb4c0a081b4d51a5794d195c68371d82df16a406df2f1cbf2243"
+    },
+    {
+      "alias": "M28",
+      "original_id": "CFL_medium_instance_28",
+      "family": "medium",
+      "role": "train",
+      "split_rank_sha256": "29b9d4f84602d5bc54237aeb7076db27a43031b9bd3673d8f17815a19a201f84"
+    },
+    {
+      "alias": "M29",
+      "original_id": "CFL_medium_instance_29",
+      "family": "medium",
+      "role": "validation",
+      "split_rank_sha256": "caec03768d97e03bc636910f06197371c97a98e0d56e2d3a4c9dc9e5a00f1f89"
+    },
+    {
+      "alias": "H0",
+      "original_id": "CFL_hard_instance_0",
+      "family": "hard",
+      "role": "transfer_only",
+      "split_rank_sha256": null
+    },
+    {
+      "alias": "H5",
+      "original_id": "CFL_hard_instance_5",
+      "family": "hard",
+      "role": "transfer_only",
+      "split_rank_sha256": null
+    },
+    {
+      "alias": "H10",
+      "original_id": "CFL_hard_instance_10",
+      "family": "hard",
+      "role": "transfer_only",
+      "split_rank_sha256": null
+    },
+    {
+      "alias": "H15",
+      "original_id": "CFL_hard_instance_15",
+      "family": "hard",
+      "role": "transfer_only",
+      "split_rank_sha256": null
+    },
+    {
+      "alias": "H20",
+      "original_id": "CFL_hard_instance_20",
+      "family": "hard",
+      "role": "transfer_only",
+      "split_rank_sha256": null
+    },
+    {
+      "alias": "H25",
+      "original_id": "CFL_hard_instance_25",
+      "family": "hard",
+      "role": "transfer_only",
+      "split_rank_sha256": null
+    }
+  ]
+}

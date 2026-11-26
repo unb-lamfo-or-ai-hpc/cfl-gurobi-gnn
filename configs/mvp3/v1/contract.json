@@ -1,0 +1,227 @@
+{
+  "schema_version": "mvp3-s1a-v1",
+  "authority": {
+    "protocol_version": 3,
+    "protocol_approval_date": "2026-11-23",
+    "protocol_pdf_sha256": "3e55df74176b516154bd62bb37a6a28908179b0d59fed676fe3056c15531410e",
+    "protocol_merge": "22d5089f59f7306d97f7d5410f248d6b45ebdc0b",
+    "preparation_merge": "b14db3298c051107dc99b0f2087a90e60bbc6fd6",
+    "scientific_execution_authorized": false
+  },
+  "population": {
+    "easy": 30,
+    "medium": 30,
+    "hard": 6,
+    "total": 66
+  },
+  "learning": {
+    "seed": 42,
+    "split_algorithm": "sha256-seed42-family-original-id-v1",
+    "train": {
+      "easy": 21,
+      "medium": 21
+    },
+    "validation": {
+      "easy": 5,
+      "medium": 4
+    },
+    "test": {
+      "easy": 4,
+      "medium": 5
+    },
+    "hard_role": "transfer_only",
+    "label_tier": "audited_terminal_target",
+    "label_gap_maximum": 0.0001,
+    "coverage_decision_before_training": true,
+    "epochs": 100,
+    "presentations_per_parent_per_epoch": 4,
+    "global_batch": 4,
+    "updates_per_epoch": 42,
+    "updates_per_arm": 4200,
+    "presentations_per_arm": 16800,
+    "serial_gpus": 1,
+    "ddp_gpus": 4,
+    "gpu_model": "V100-16GB",
+    "job_limit_seconds_per_arm": 21600,
+    "initial_state_and_global_batches": "identical_across_arms",
+    "fitted_transforms_and_class_weights": "training_parents_only",
+    "loss": "mean_of_per_graph_weighted_binary_cross_entropy",
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "gradient_clip_norm": 1.0,
+    "precision": "FP32",
+    "checkpoint_selection": "minimum_mean_parent_validation_loss",
+    "epoch_tie_break": "earliest_epoch",
+    "predictor_tie_break": "serial_arm"
+  },
+  "mathematics": {
+    "effective_objective_sense": "MINIMIZE",
+    "preserve_declared_objective_sense": true,
+    "preserve_objective_constant": true,
+    "preserve_rows_bounds_domains_and_variable_order": true,
+    "root_and_label_preparations": "independent_fresh_models",
+    "main_models": "fresh_original_MILP_per_call",
+    "external_treatment": "partial_Start_only",
+    "root_vector": "complete_original_variable_order",
+    "root_event": "root_MIPNODE_OPTIMAL_with_cut_pass_provenance",
+    "unselected_Start_values": "UNDEFINED"
+  },
+  "solver": {
+    "version": "14.0.0",
+    "profiles": {
+      "root_relaxation": {
+        "Method": -1,
+        "Threads": 0,
+        "ConcurrentMIP": 1,
+        "Seed": 42,
+        "TimeLimit": 28800,
+        "MIPFocus": 0,
+        "Presolve": 0,
+        "Heuristics": 0
+      },
+      "incumbent": {
+        "Method": -1,
+        "Threads": 0,
+        "ConcurrentMIP": 1,
+        "Seed": 42,
+        "TimeLimit": 28800,
+        "MIPFocus": 0,
+        "Presolve": -1,
+        "Heuristics": 0.05,
+        "MIPGap": 0.0001
+      },
+      "evaluation": {
+        "Method": -1,
+        "Threads": 0,
+        "ConcurrentMIP": 1,
+        "Seed": 42,
+        "TimeLimit": 28800,
+        "MIPFocus": 0,
+        "Presolve": -1,
+        "Heuristics": 0.05,
+        "MIPGap": 0.0001
+      }
+    },
+    "record_all_effective_parameters": true,
+    "target_gaps": [
+      0.1,
+      0.05,
+      0.01,
+      0.0001
+    ]
+  },
+  "resources": {
+    "maximum_jobs": 2,
+    "maximum_Gurobi_sessions": 2,
+    "maximum_active_calls_per_parent": 1,
+    "solver_profiles": {
+      "easy": {
+        "node_class": "intel-256",
+        "tasks": 1,
+        "logical_CPUs": 64,
+        "physical_cores": 32,
+        "memory_GiB": 192,
+        "exclusive": true,
+        "requested_GPUs": 0,
+        "job_limit_seconds": 43200
+      },
+      "medium": {
+        "node_class": "intel-256",
+        "tasks": 1,
+        "logical_CPUs": 64,
+        "physical_cores": 32,
+        "memory_GiB": 192,
+        "exclusive": true,
+        "requested_GPUs": 0,
+        "job_limit_seconds": 43200
+      },
+      "hard": {
+        "node_class": "intel-512",
+        "tasks": 1,
+        "logical_CPUs": 64,
+        "physical_cores": 32,
+        "memory_GiB": 384,
+        "exclusive": true,
+        "requested_GPUs": 0,
+        "job_limit_seconds": 43200
+      }
+    },
+    "allocation_native_threads_and_activity": "separate_measurements"
+  },
+  "guidance": {
+    "R_source": "independent_root_rounding_and_ranking",
+    "G_source": "frozen_validation_selected_predictor",
+    "confidence_tails": [
+      0.1,
+      0.9
+    ],
+    "maximum_binary_support_fraction": 0.1,
+    "confidence_ranking": "descending_absolute_2v_minus_1",
+    "tie_break": "original_variable_order",
+    "production_policy_freeze": "S3_before_evaluation",
+    "R_G_support_matching_required": false
+  },
+  "evaluation": {
+    "parents": 15,
+    "cells": 45,
+    "methods": [
+      "B",
+      "R",
+      "G"
+    ],
+    "blocked_rotating_orders": [
+      [
+        "B",
+        "R",
+        "G"
+      ],
+      [
+        "R",
+        "G",
+        "B"
+      ],
+      [
+        "G",
+        "B",
+        "R"
+      ]
+    ],
+    "same_parent_overlap_permitted": false,
+    "fresh_B_required": true
+  },
+  "budget": {
+    "root_relaxation_calls": 66,
+    "incumbent_calls": 66,
+    "evaluation_calls": 45,
+    "primary_calls": 177,
+    "maximum_solver_hours": 1416,
+    "reserved_solver_job_hours": 2124,
+    "artifact_CPU_job_hours": 24,
+    "training_GPU_node_hours": 12,
+    "training_model_GPU_hours": 30,
+    "whole_8_GPU_node_slot_hours": 96,
+    "conditional_hard_diagnostic_calls": 6,
+    "conditional_diagnostic_separately_released": true,
+    "Benders_standing_budget": null
+  },
+  "measurement": {
+    "clocks": {
+      "native_runtime": "optimize_entry",
+      "worker_elapsed": "worker_entry",
+      "end_to_end": "pipeline_entry",
+      "reuse_elapsed": "scenario_entry"
+    },
+    "time_unit": "seconds",
+    "Work_unit": "native_Work",
+    "ratio_numerator": "comparator_B_or_R",
+    "ratio_denominator": "G",
+    "above_one_favours": "G",
+    "numeric_ratio_requires": "qualified_common_target_positive_same_clock",
+    "signed_saving": "T_comparator_minus_T_G",
+    "aggregate": "per_parent_factors_before_cohort_summary",
+    "training_speedup": "T_serial_over_T_DDP",
+    "GPU_efficiency": "training_speedup_divided_by_4",
+    "missing": "null_with_nonempty_reason",
+    "censoring": "actual_valid_followup_not_an_imputed_attainment_time"
+  }
+}

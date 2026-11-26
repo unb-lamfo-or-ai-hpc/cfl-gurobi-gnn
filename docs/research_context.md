@@ -1,3 +1,7 @@
+# MVP3 S1-A implementation context - 26 November 2026
+
+The approved protocol v3 and final preparation are integrated through PR99/PR103. The researcher now authorises local/offline S1-A implementation, tests and a Draft PR into develop, without HPC access or merge. See [the executable contract and frozen split](research/mvp3/s1a-contract.md). Root/label provenance, original-model identities, target clocks, missingness and comparator/G factors have versioned record definitions. Dataset coverage, native instrumentation, numerical/default-policy qualification and the later predictor/policy freeze retain their stated milestones. Historical executable sources and evidence remain unchanged.
+
 # CFL--GNN research context
 
 ## Integration and recovery update — 2 November 2026

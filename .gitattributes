@@ -77,3 +77,9 @@ manuscript/tables/partial_cpu_m0.qmd -text !eol
 manuscript/tables/partial_cpu_m7.qmd -text !eol
 docs/evidence/pr98/preflight-20261110/hard-preflight-v1.json -text
 docs/evidence/pr98/preflight-20261110/hard-preflight-v2.json -text
+
+# MVP3 S1-A contracts are sealed as exact UTF-8/LF bytes.
+configs/mvp3/v1/*.json -text
+src/cfl_gnn/mvp3/** text eol=lf
+tests/mvp3/** text eol=lf
+.github/workflows/mvp3-contract.yml text eol=lf

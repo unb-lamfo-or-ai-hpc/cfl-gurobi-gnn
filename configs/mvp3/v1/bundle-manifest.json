@@ -1,0 +1,25 @@
+{
+  "schema_version": "mvp3-s1a-v1",
+  "files": {
+    "contract.json": {
+      "bytes": 6213,
+      "sha256": "e74c9d9db345e83ac83b9bdecdac04c00ed4f08b271f3aa497549f492c2d6cbd"
+    },
+    "input-catalogue.json": {
+      "bytes": 15355,
+      "sha256": "3eb7a0efb06f82f55420740a64da60677e329013928cee22519f68bbf1cdf9f7"
+    },
+    "parent-manifest.json": {
+      "bytes": 14701,
+      "sha256": "9acdfae67066623973e6128067365626ecd19b71dbb662a98dfe355fa59767a7"
+    },
+    "primary-plan.json": {
+      "bytes": 52601,
+      "sha256": "17218f6731bd199a83e8fd8adea7c3c6c6323187b2e66d8953fb0691bdc763fc"
+    },
+    "evidence.schema.json": {
+      "bytes": 25413,
+      "sha256": "d2322e5b096775a699a1593c52a8fa90cce01a3289ed861336accc64b451991e"
+    }
+  }
+}

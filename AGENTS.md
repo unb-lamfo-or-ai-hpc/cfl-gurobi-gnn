@@ -1,3 +1,7 @@
+# Current implementation authority - 26 November 2026
+
+The researcher explicitly authorised autonomous S1-A implementation, offline tests and a Draft PR targeting develop. Preserve historical components and receipts. Do not perform HPC/SSH/SCP, scientific solves, training or inference, remote environment changes or merge. The versioned offline contracts and frozen parent/primary-call manifests are documented in docs/research/mvp3/s1a-contract.md. Planning slots are not observations. S1-B native instrumentation and concrete experimental releases retain their separate scope. The approved protocol v3 and primary budgets remain unchanged.
+
 # Current authority - 23 November 2026
 
 The researcher approved the English MVP3 protocol v3 and PR99 was merged into develop at 22d5089f59f7306d97f7d5410f248d6b45ebdc0b. The final documentary preparation request consolidates the approved plan, scientific/workbook appendices, C2/C3 hypotheses, experimental design, resource budgets and acceptance criteria. See docs/research/mvp3/preparation/README.md.
