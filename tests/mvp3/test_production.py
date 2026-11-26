@@ -262,6 +262,26 @@ class ProductionTests(unittest.TestCase):
             **kwargs,
         )
         self.assertTrue(result["allocation_qualified"])
+        legacy = job.replace("AllocTRES=", "TRES=")
+        legacy_result = audit_allocation(
+            "intel-256",
+            legacy + " Nodes=n256 CPU_IDs=0-63 Mem=196608",
+            " ".join(f"{k}={v}" for k, v in node().items()),
+            cpu(),
+            memory,
+            **kwargs,
+        )
+        self.assertTrue(legacy_result["allocation_qualified"])
+        self.assertFalse(
+            audit_allocation(
+                "intel-256",
+                legacy,
+                " ".join(f"{k}={v}" for k, v in node().items()),
+                cpu(),
+                memory,
+                **kwargs,
+            )["allocation_qualified"]
+        )
         self.assertFalse(result["real_CFL_memory_adequacy_established"])
         for modified, cpus, mem in (
             (job.replace("OverSubscribe=NO", "OverSubscribe=YES"), cpu(), memory),

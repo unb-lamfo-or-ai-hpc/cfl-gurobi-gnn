@@ -210,22 +210,32 @@ def audit_allocation(
 ):
     require(profile in PROFILES, "Unknown production profile")
     job, node = slurm_pairs(job_text), slurm_pairs(node_text)
-    tres = dict(
-        item.split("=", 1)
-        for item in job.get("AllocTRES", "").split(",")
-        if "=" in item
-    )
+    modern_tres = "AllocTRES" in job
+    tres_text = job.get("AllocTRES", job.get("TRES", ""))
+    tres = dict(item.split("=", 1) for item in tres_text.split(",") if "=" in item)
     cores = {}
     for row in cpu["mapping"]:
         cores.setdefault((row["package_id"], row["core_id"]), []).append(
             row["logical_id"]
         )
     requested = PROFILES[profile]["memory_GiB"] * 1024**3
+    # Slurm22.05 calls this TRES and may fall back to a request string. Require
+    # the actual running per-node resource section as independent corroboration.
+    legacy_allocation = False
+    if not modern_tres and all(
+        key in job for key in ("TRES", "Nodes", "CPU_IDs", "Mem")
+    ):
+        legacy_allocation = (
+            job["Nodes"] == node_name
+            and len(expand_cpus(job["CPU_IDs"])) == 64
+            and memory_bytes(job["Mem"]) == requested
+        )
     user_match = re.fullmatch(r".*\(([0-9]+)\)", job.get("UserId", ""))
     tests = {
         "job_id": job.get("JobId") == str(job_id),
         "own_job": user_match is not None and int(user_match[1]) == uid,
         "running": job.get("JobState") == "RUNNING",
+        "actual_TRES_source": modern_tres or legacy_allocation,
         "single_node": job.get("NumNodes") == "1"
         and job.get("NodeList") == node_name == node.get("NodeName"),
         "single_task": job.get("NumTasks") == "1",
@@ -293,6 +303,9 @@ def audit_allocation(
         "checks": tests,
         "allocation_qualified": all(tests.values()),
         "requested_memory_bytes": requested,
+        "TRES_source": "AllocTRES"
+        if modern_tres
+        else "legacy_TRES_requires_actual_running_per_node_CPU_IDs_and_Mem",
         "scheduler_fields": {
             name: job.get(name)
             for name in (
@@ -303,6 +316,10 @@ def audit_allocation(
                 "NumTasks",
                 "NumCPUs",
                 "AllocTRES",
+                "TRES",
+                "Nodes",
+                "CPU_IDs",
+                "Mem",
                 "OverSubscribe",
                 "Exclusive",
                 "Shared",
