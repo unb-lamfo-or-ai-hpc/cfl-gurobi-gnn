@@ -19,7 +19,13 @@ from cfl_gnn.mvp3.contract import ContractError, approved_contract, digest, load
 from cfl_gnn.mvp3.identity import model_identity
 from cfl_gnn.mvp3.journal import AttemptStore, file_sha256, read_vector, scan_journal
 from cfl_gnn.mvp3.matrix import DescriptionMatrix, NativeMatrix, streamed_identity
-from cfl_gnn.mvp3.native import NativePermit, NativeSession, parameter_inventory
+from cfl_gnn.mvp3.native import (
+    NativePermit,
+    NativeSession,
+    parameter_inventory,
+    parameter_value,
+    validate_reader_path,
+)
 from cfl_gnn.mvp3.observer import NativeObserver
 from cfl_gnn.mvp3.records import validate_audit
 
@@ -171,7 +177,34 @@ class InstrumentationTests(unittest.TestCase):
         result = parameter_inventory(api, native)
         self.assertIn("WLSSecret", result["excluded_auth_transport_names_not_queried"])
         self.assertNotIn("WLSSecret", result["effective"])
-        self.assertEqual(result["effective"], native.defaults)
+        self.assertEqual(result["effective"]["TimeLimit"], "+Infinity")
+        self.assertEqual(result["effective"]["BestObjStop"], "-Infinity")
+        self.assertEqual(result["parameter_types"]["MemLimit"], "float")
+        self.assertEqual(result["defaults_sha256"], digest(result["defaults"]))
+        self.assertEqual(result["effective"]["Seed"], 0)
+
+    def test_parameter_infinity_is_not_missing_or_a_nonfinite_JSON_number(self):
+        self.assertEqual(parameter_value(float("inf")), "+Infinity")
+        self.assertEqual(parameter_value(-float("inf")), "-Infinity")
+        self.assertEqual(parameter_value(1e100), 1e100)
+        with self.assertRaises(ContractError):
+            parameter_value(float("nan"))
+        api, native, _ = fake_api()
+        result = parameter_inventory(api, native)
+        self.assertEqual(result["parameter_types"]["TimeLimit"], "float")
+        self.assertEqual(
+            result["value_encoding"],
+            "typed_native_infinities_as_strings_v1_NaN_rejected",
+        )
+
+    def test_native_Windows_reader_path_is_admitted_before_environment_start(self):
+        path = self.folder / "Pós-doc" / "model.lp"
+        with self.assertRaises(ContractError):
+            validate_reader_path(path, platform="win32")
+        self.assertEqual(validate_reader_path(path, platform="linux"), path.resolve())
+        self.assertEqual(
+            validate_reader_path(self.input, platform="win32"), self.input.resolve()
+        )
 
     def test_vector_roundtrip_tampering_and_path_traversal(self):
         store = self.store()

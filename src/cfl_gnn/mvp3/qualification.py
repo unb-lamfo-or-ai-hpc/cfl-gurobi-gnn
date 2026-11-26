@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 import sys
+import uuid
 from importlib.metadata import version
 from pathlib import Path
 
@@ -13,7 +14,12 @@ from .collection import collect_attempt
 from .contract import approved_contract, digest, load_json, require
 from .journal import AttemptStore, durable_json, file_sha256
 from .logparse import parse_native_log
-from .native import NativePermit, NativeSession
+from .native import (
+    NativePermit,
+    NativeSession,
+    ParameterInventoryError,
+    validate_reader_path,
+)
 from .supervisor import supervise
 
 REPOSITORY = Path(__file__).resolve().parents[3]
@@ -124,6 +130,13 @@ def safe_worker_error(error, phase, binding_sha256):
         if type(code) is int
         else "exception_has_no_numeric_code",
         "exception_message_copied": False,
+        "parameter_context": {
+            "name": error.parameter_name,
+            "operation": error.operation,
+            "original_exception_type": error.original_exception_type,
+        }
+        if isinstance(error, ParameterInventoryError)
+        else None,
         "automatic_retry": False,
     }
 
@@ -211,6 +224,7 @@ def qualify(output, source_commit, approval_reference, *, license_file=None):
     )
     license_file = explicit_license_path(license_file)
     output = Path(output).resolve()
+    validate_reader_path(output / "technical-fixture.lp")
     require(
         not output.is_relative_to(REPOSITORY),
         "Private qualification output must be outside the clean checkout",
@@ -230,6 +244,7 @@ def qualify(output, source_commit, approval_reference, *, license_file=None):
         "Qualification dependency drift",
     )
     output.mkdir(parents=True, exist_ok=False)
+    qualification_id = uuid.uuid4().hex
     durable_json(
         output / "environment.json",
         {
@@ -250,6 +265,7 @@ def qualify(output, source_commit, approval_reference, *, license_file=None):
         output / "qualification-intent.json",
         {
             "source_commit": source_commit,
+            "qualification_id": qualification_id,
             "approval_reference": approval_reference,
             "license_file": str(license_file),
             "maximum_native_calls": 5,
@@ -277,7 +293,7 @@ def qualify(output, source_commit, approval_reference, *, license_file=None):
                 "stage": stage,
                 "method": method,
                 "seed": 42,
-                "attempt": name,
+                "attempt": f"qual-{qualification_id}-{name}",
             },
             "root_artifact_sha256": digest("technical_root_fixture_not_scientific"),
             "frozen_start_policy_sha256": digest(
@@ -383,6 +399,7 @@ def qualify(output, source_commit, approval_reference, *, license_file=None):
             break
     report = {
         "schema_version": "mvp3-s1b-local-qualification-v1",
+        "qualification_id": qualification_id,
         "source_commit": source_commit,
         "all_five_cells_qualified": len(cells) == 5
         and all(cell["qualified"] for cell in cells),

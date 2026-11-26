@@ -18,6 +18,7 @@ from fake_native import fake_api
 from cfl_gnn.mvp3.collection import collect_attempt
 from cfl_gnn.mvp3.contract import ContractError, canonical_bytes, load_json
 from cfl_gnn.mvp3.journal import file_sha256
+from cfl_gnn.mvp3.native import ParameterInventoryError, parameter_inventory
 from cfl_gnn.mvp3.qualification import (
     CELLS,
     TINY_LP,
@@ -178,6 +179,31 @@ class QualificationGuardTests(unittest.TestCase):
             self.assertEqual(model.calls, 0)
             self.assertTrue(environment.closed)
 
+    def test_parameter_failure_identifies_only_noncredential_name_and_operation(self):
+        api, native, _ = fake_api()
+        original = native.getParamInfo
+
+        def query(name):
+            if name == "MemLimit":
+                raise ValueError("private-test-value-must-not-appear")
+            return original(name)
+
+        native.getParamInfo = query
+        with self.assertRaises(ParameterInventoryError) as caught:
+            parameter_inventory(api, native)
+        record = safe_worker_error(
+            caught.exception, "native_parameter_inventory", "a" * 64
+        )
+        self.assertEqual(
+            record["parameter_context"],
+            {
+                "name": "MemLimit",
+                "operation": "query_metadata",
+                "original_exception_type": "ValueError",
+            },
+        )
+        self.assertNotIn("private-test-value", str(record))
+
     def test_parent_passes_explicit_license_and_stops_after_first_failure(self):
         with tempfile.TemporaryDirectory() as temporary:
             folder = Path(temporary)
@@ -210,6 +236,49 @@ class QualificationGuardTests(unittest.TestCase):
             self.assertFalse(result["all_five_cells_qualified"])
             spec = load_json(folder / "output/1-root_relaxation-none.spec.json")
             self.assertEqual(spec["license_file"], str(license_file.resolve()))
+
+    def test_separately_approved_invocations_have_distinct_attempt_identities(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            folder = Path(temporary)
+            license_file = folder / "fake.lic"
+            license_file.write_text("invented-test-only")
+            dependencies = {
+                "gurobipy": "14.0.0",
+                "psutil": "7.2.2",
+                "gurobi-logtools": "4.0.1",
+                "jsonschema": "4.26.0",
+            }
+            with (
+                patch("cfl_gnn.mvp3.qualification.check_source"),
+                patch(
+                    "cfl_gnn.mvp3.qualification.version",
+                    side_effect=lambda name: dependencies[name],
+                ),
+                patch(
+                    "cfl_gnn.mvp3.qualification.supervise",
+                    return_value={"child_returncode": 1, "guard": None},
+                ),
+            ):
+                first = qualify(
+                    folder / "first",
+                    "a" * 40,
+                    "offline-only",
+                    license_file=license_file,
+                )
+                second = qualify(
+                    folder / "second",
+                    "a" * 40,
+                    "offline-only",
+                    license_file=license_file,
+                )
+            self.assertNotEqual(first["qualification_id"], second["qualification_id"])
+            keys = [
+                load_json(folder / directory / "1-root_relaxation-none.spec.json")[
+                    "binding"
+                ]["key"]
+                for directory in ("first", "second")
+            ]
+            self.assertNotEqual(keys[0]["attempt"], keys[1]["attempt"])
 
 
 if __name__ == "__main__":

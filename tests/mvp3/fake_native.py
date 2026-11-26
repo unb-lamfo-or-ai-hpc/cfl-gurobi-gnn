@@ -22,6 +22,10 @@ class FakeModel:
         self.defaults = {
             **approved_contract()["solver"]["profiles"]["incumbent"],
             "Cuts": -1,
+            "Seed": 0,
+            "TimeLimit": float("inf"),
+            "MemLimit": float("inf"),
+            "BestObjStop": -float("inf"),
         }
         self.parameters = dict(self.defaults)
         self.closed = self.terminated = False

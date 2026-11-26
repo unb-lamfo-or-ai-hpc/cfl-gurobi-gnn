@@ -10,6 +10,9 @@
   "audit_scope": "original_linear_MILP_absolute_float_tolerances_not_exact_rational_certificate",
   "integer_policy": "retain_raw_point_and_explicitly_snapped_point_reaudit_all_original_rows",
   "root_objective_policy": "continuous_feasibility_separate_from_native_root_bound",
+  "native_parameter_value_encoding": "typed_native_infinities_as_strings_v1_NaN_rejected",
+  "Windows_native_model_paths": "ASCII_admission_before_native_initialization_preserve_original_input_bytes_and_SHA",
+  "qualification_attempt_identity": "UUID_per_invocation_distinct_attempt_keys_original_attempts_preserved",
   "log_parser": {
     "distribution": "gurobi-logtools",
     "version": "4.0.1",

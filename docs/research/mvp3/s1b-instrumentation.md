@@ -3,6 +3,10 @@
 Status: implementation under review; first local qualification stopped before
 optimize intent. Actual Gurobi14.0.0 API/log qualification and production resource
 qualification remain pending. See the [sanitized attempt receipt](s1b-qualification-attempt-20261126.json).
+The [three-attempt admission register](s1b-qualification-attempts-20261126.json)
+records the subsequent licence-routed and ASCII-path attempts; all stopped before
+optimize intent, with zero optimization calls. The current correction is offline
+tested and requires a new source-specific CLI decision.
 This document and the code confer no scientific or HPC execution authority.
 
 S1-A [PR104](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/104)
@@ -70,6 +74,13 @@ prior solution/Start, and the approved stage profile. Complete documented
 noncredential model parameter defaults and effective values are recorded; auth/
 transport parameter names are excluded **before querying their values**. The
 full retained effective map must equal defaults plus the declared profile.
+Native parameter infinities use explicit `+Infinity`/`-Infinity` strings together
+with retained API types and a versioned encoding label. Finite sentinels such as
+`1e100` retain their observed values. NaN is rejected. These are valid parameter
+settings, not missing measurements; the finite/missing measurement policy is
+unchanged. S1-A already permits string parameter values, so its sealed schema
+does not change. Parameter query/encoding failures expose only a noncredential
+parameter name, operation and exception class/code, never a value or message.
 `LogFile`/`LogToConsole` are not overridden: native stdout belongs to the owning
 supervisor. Neither license files nor credential/environment-variable values
 are read by the instrumentation.
@@ -205,6 +216,34 @@ parent behavior. The corrected source requires a new specific CLI decision,
 its own passing CI and a new output directory. The failed attempt is never
 overwritten or automatically retried. This correction does not authorise a call.
 
+### Subsequent admission findings
+
+Source d258258 passed all nine CI jobs. Its first specifically approved
+invocation initialized the existing local licence but failed at native model
+read (GurobiError0) from the non-ASCII workspace path. A separately approved
+invocation of the **same source** in an ASCII temporary directory read the LP,
+applied parameters and extracted the original geometry, then stopped in the
+parameter inventory with ValueError. It also wrote no optimize intent. All14
+files from that temporary attempt were copied into private workspace preservation
+storage and their hashes matched; the original temporary folder remains intact.
+
+The native parameter inventory's strict JSON handling could not represent IEEE
+infinity; an API double reproduces ValueError with unbounded defaults. The
+official parameter reference defines several defaults as Infinity. The current
+correction records typed infinities explicitly, models them in the API double,
+and adds per-parameter safe diagnostic context. The observed failure phase is
+confirmed; the old attempt did not record the individual parameter/operation,
+so infinity serialization remains a working diagnosis until native qualification.
+
+Windows model paths are now admitted as ASCII before native initialization; a
+non-ASCII path fails locally with an explicit staging instruction. Byte-preserving
+staging retains the input SHA and mathematical identity. Each new qualification
+invocation has its own UUID and distinct attempt keys; the two old d258258
+bindings were identical across separate preserved directories because their
+original technical attempt tokens were reused. The old files are not rewritten.
+Original geometry identity is persisted before parameter inventory, improving
+partial admission evidence. These are prospective technical corrections.
+
 ## Offline verification
 
 The four Linux/Windows Python3.10/3.13 CI cells install only validation/parser/
@@ -217,8 +256,8 @@ version drift/missingness and prospective qualification guards. Historical CI
 continues separately. No offline pass is described as native or scientific
 qualification.
 
-Local verification on 26 November 2026: **106 offline tests passed** (55 S1-A
-contracts and51 instrumentation/resource/parser/release-guard tests), Python3.13
+Local verification on 26 November 2026: **110 offline tests passed** (55 S1-A
+contracts and55 instrumentation/resource/parser/release-guard tests), Python3.13
 in a separate tooling environment. Scoped Ruff checks and formatting pass. CI
 results belong to the exact PR head and are recorded in its description; this
 local statement does not claim a CI or actual native qualification result.

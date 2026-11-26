@@ -1,11 +1,21 @@
 """Explicit one-call native session; import performs no Gurobi initialisation."""
 
+import math
 import re
+import sys
 import time
 from dataclasses import dataclass
+from pathlib import Path
 
 from .audit import audit_point
-from .contract import approved_contract, canonical_bytes, digest, load_bundle, require
+from .contract import (
+    ContractError,
+    approved_contract,
+    canonical_bytes,
+    digest,
+    load_bundle,
+    require,
+)
 from .journal import durable_json, file_sha256, read_vector
 from .matrix import NativeMatrix, streamed_identity
 from .observer import NativeObserver, available
@@ -22,6 +32,7 @@ class NativePermit:
     mode: str
 
     def validate(self, store, input_path):
+        validate_reader_path(input_path)
         require(
             re.fullmatch(r"[0-9a-f]{40}", self.source_commit) is not None,
             "Exact source commit required",
@@ -50,6 +61,39 @@ class NativePermit:
         )
 
 
+def validate_reader_path(path, *, platform=None):
+    resolved = Path(path).resolve()
+    require(
+        (platform or sys.platform) != "win32" or str(resolved).isascii(),
+        "Windows native reader requires an ASCII model path; preserve bytes and input SHA when staging",
+    )
+    return resolved
+
+
+def parameter_value(value):
+    """Parameter infinity is a valid setting, distinct from missing measurements."""
+    require(
+        type(value) in (int, float, str, bool), "Unsupported native parameter value"
+    )
+    if type(value) is float:
+        require(not math.isnan(value), "NaN is not a valid native parameter")
+        if math.isinf(value):
+            return "+Infinity" if value > 0 else "-Infinity"
+    return value
+
+
+class ParameterInventoryError(ContractError):
+    """Safe context only, never a native message or parameter value."""
+
+    def __init__(self, name, operation, error):
+        super().__init__("Noncredential native parameter snapshot failed")
+        self.parameter_name = name
+        self.operation = operation
+        self.original_exception_type = type(error).__name__
+        code = getattr(error, "errno", None)
+        self.errno = code if type(code) is int else None
+
+
 def parameter_inventory(api, model):
     all_names = sorted(
         {
@@ -62,15 +106,28 @@ def parameter_inventory(api, model):
     require(all_names, "Documented native parameter catalogue is unavailable")
     excluded = [name for name in all_names if private_parameter(name)]
     names = [name for name in all_names if name not in excluded]
-    defaults, effective = {}, {}
+    defaults, effective, types = {}, {}, {}
     for name in names:
-        info = model.getParamInfo(name)
-        require(
-            len(info) == 6 and info[0] == name, "Native parameter metadata mismatch"
-        )
-        defaults[name], effective[name] = info[5], info[2]
+        operation = "query_metadata"
+        try:
+            info = model.getParamInfo(name)
+            require(
+                len(info) == 6 and info[0] == name, "Native parameter metadata mismatch"
+            )
+            require(
+                info[1] in (int, float, str, bool), "Unsupported native parameter type"
+            )
+            types[name] = info[1].__name__
+            operation = "encode_default"
+            defaults[name] = parameter_value(info[5])
+            operation = "encode_effective"
+            effective[name] = parameter_value(info[2])
+        except Exception as error:
+            raise ParameterInventoryError(name, operation, error) from error
     return {
         "scope": "documented_noncredential_model_parameters",
+        "value_encoding": "typed_native_infinities_as_strings_v1_NaN_rejected",
+        "parameter_types": types,
         "excluded_auth_transport_names_not_queried": excluded,
         "public_catalogue_names_sha256": digest(all_names),
         "parameter_names_sha256": digest(names),
@@ -198,6 +255,14 @@ class NativeSession:
             self.phase = "original_matrix_identity"
             self.matrix = NativeMatrix(self.model, declared, self.api.GRB.INFINITY)
             self.identity = streamed_identity(self.matrix)
+            require(
+                self.store.append(
+                    {"kind": "original_model_identity", "identity": self.identity},
+                    critical=True,
+                )
+                is not None,
+                "Original-model identity could not be retained",
+            )
             self.phase = "native_parameter_inventory"
             self.parameters = parameter_inventory(self.api, self.model)
             expected = {**self.parameters["defaults"], **self.profile}

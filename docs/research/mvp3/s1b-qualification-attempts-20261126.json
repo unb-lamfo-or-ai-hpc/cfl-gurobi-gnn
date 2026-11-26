@@ -1,0 +1,62 @@
+{
+  "schema_version": "mvp3-s1b-admission-attempt-register-v1",
+  "date": "2026-11-26",
+  "pull_request": 105,
+  "total_authorised_CLI_invocations": 3,
+  "total_optimize_intents": 0,
+  "total_native_optimization_calls": 0,
+  "total_native_optimization_returns": 0,
+  "qualified_cells": 0,
+  "scientific_observations_generated": 0,
+  "HPC_access": false,
+  "automatic_retry": false,
+  "attempts": [
+    {
+      "source_commit": "f6cf5fa8ef640ee55fa2828d0b362971986b0cc1",
+      "separately_authorised": true,
+      "nine_CI_jobs_passed": true,
+      "precise_phase": null,
+      "exception_type": "GurobiError",
+      "native_error_code": null,
+      "optimize_intents": 0,
+      "result_sha256": "16f0a1e23b8163fc39169752fb63ad8384922a8eabf50663da06a8734e743fbf",
+      "detail_receipt": "s1b-qualification-attempt-20261126.json"
+    },
+    {
+      "source_commit": "d258258e3b76ba2d3ec7a42c06163b97dcf58d04",
+      "separately_authorised": true,
+      "nine_CI_jobs_passed": true,
+      "explicit_worker_only_license_route": true,
+      "native_license_initialization_returned": true,
+      "model_path_ASCII": false,
+      "precise_phase": "original_model_read",
+      "exception_type": "GurobiError",
+      "native_error_code": 0,
+      "optimize_intents": 0,
+      "result_sha256": "6b55da7d1618956d2be634d5eae17523aff1e8456d39e024ce9597cf2dd0bf39"
+    },
+    {
+      "source_commit": "d258258e3b76ba2d3ec7a42c06163b97dcf58d04",
+      "separately_authorised": true,
+      "nine_CI_jobs_passed": true,
+      "explicit_worker_only_license_route": true,
+      "native_license_initialization_returned": true,
+      "model_path_ASCII": true,
+      "native_model_read_returned": true,
+      "precise_phase": "native_parameter_inventory",
+      "exception_type": "ValueError",
+      "native_error_code": null,
+      "parameter_name_and_operation": null,
+      "missing_reason": "old_source_recorded_phase_but_not_individual_parameter_context",
+      "optimize_intents": 0,
+      "result_sha256": "2e3852520184fc73e482b58e282a10d3db1271727174c21e95e74bb2c2b4bb3f",
+      "workspace_preservation_copy_files": 14,
+      "original_and_preservation_copy_hashes_equal": true
+    }
+  ],
+  "observed_phase_is_confirmed": true,
+  "infinity_serialization_diagnosis": "API_double_reproduces_ValueError_with_native_infinities_exact_old_parameter_was_not_recorded",
+  "new_source_native_qualification": "pending_new_exact_source_CI_and_specific_CLI_approval",
+  "license_contents_read_copied_or_hashed_by_instrumentation": false,
+  "parent_environment_or_profiles_modified": false
+}
