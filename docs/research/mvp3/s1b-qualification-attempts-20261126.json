@@ -2,11 +2,11 @@
   "schema_version": "mvp3-s1b-admission-attempt-register-v1",
   "date": "2026-11-26",
   "pull_request": 105,
-  "total_authorised_CLI_invocations": 3,
-  "total_optimize_intents": 0,
-  "total_native_optimization_calls": 0,
-  "total_native_optimization_returns": 0,
-  "qualified_cells": 0,
+  "total_authorised_CLI_invocations": 4,
+  "total_optimize_intents": 5,
+  "total_native_optimization_calls": 5,
+  "total_native_optimization_returns": 5,
+  "qualified_cells": 5,
   "scientific_observations_generated": 0,
   "HPC_access": false,
   "automatic_retry": false,
@@ -52,11 +52,122 @@
       "result_sha256": "2e3852520184fc73e482b58e282a10d3db1271727174c21e95e74bb2c2b4bb3f",
       "workspace_preservation_copy_files": 14,
       "original_and_preservation_copy_hashes_equal": true
+    },
+    {
+      "source_commit": "dab3b99ef8172d320223d05f74155eeeac063768",
+      "qualification_id": "2748582533b341cfbd138efb286394b1",
+      "separately_authorised": true,
+      "nine_CI_jobs_passed": true,
+      "successful_CI_runs": [
+        45862135727,
+        45862136240
+      ],
+      "offline_tests_per_new_matrix_cell": 110,
+      "native_solver_version": "14.0.0",
+      "explicit_worker_only_license_route": true,
+      "model_path_ASCII": true,
+      "optimize_intents": 5,
+      "native_optimization_returns": 5,
+      "qualified_technical_cells": 5,
+      "independent_original_row_point_replay_passed": true,
+      "actual_native14_logs_verified": true,
+      "effective_parameter_profiles_verified": true,
+      "native_threads_per_call": 1,
+      "native_seconds_limit_per_call": 10,
+      "input_sha256": "0eae0d3bde3a20f01a8dbe3e78136c7f844b5704510e1ea9ee4322230e25ec76",
+      "original_model_sha256": "9acbc86be4bcc2b98300511aef577f56d9688b57dd312dd5cf1f2ed7e11cec0a",
+      "common_defaults_sha256": "de6ab8a2098f8f9cc73cb80f79175019b71f816337958530b212a93127af9ce2",
+      "observed_infinite_parameter_defaults_encoded": 18,
+      "cells": [
+        {
+          "actual_native14_log_verified": true,
+          "cell": "1-root_relaxation-none",
+          "collection_verified": true,
+          "independent_replay_qualified": true,
+          "native_status": 11,
+          "original_model_sha256": "9acbc86be4bcc2b98300511aef577f56d9688b57dd312dd5cf1f2ed7e11cec0a",
+          "root_event": {
+            "cut_pass": 0,
+            "cut_state": "pre_cut",
+            "ordinal": 1
+          },
+          "root_native_bound": {
+            "missing_reason": null,
+            "value": 11.0
+          },
+          "root_point_objective": 10.5,
+          "root_vector_sha256": "a11d0a6188896e13c17a161082d537d99f7f014012758bd414127282935de48f",
+          "source_commit": "dab3b99ef8172d320223d05f74155eeeac063768"
+        },
+        {
+          "actual_native14_log_verified": true,
+          "cell": "2-incumbent-none",
+          "collection_verified": true,
+          "final_vector_sha256": "2132dd878ea0aab9c573a13b83ae211652fd0fbd85a9a62c64f5a1dfec845d55",
+          "independent_replay_qualified": true,
+          "native_status": 2,
+          "objective": 11,
+          "original_model_sha256": "9acbc86be4bcc2b98300511aef577f56d9688b57dd312dd5cf1f2ed7e11cec0a",
+          "source_commit": "dab3b99ef8172d320223d05f74155eeeac063768"
+        },
+        {
+          "actual_native14_log_verified": true,
+          "cell": "3-evaluation-B",
+          "collection_verified": true,
+          "final_vector_sha256": "2132dd878ea0aab9c573a13b83ae211652fd0fbd85a9a62c64f5a1dfec845d55",
+          "independent_replay_qualified": true,
+          "native_status": 2,
+          "objective": 11,
+          "original_model_sha256": "9acbc86be4bcc2b98300511aef577f56d9688b57dd312dd5cf1f2ed7e11cec0a",
+          "source_commit": "dab3b99ef8172d320223d05f74155eeeac063768",
+          "synthetic_start_size": 0
+        },
+        {
+          "actual_native14_log_verified": true,
+          "cell": "4-evaluation-R",
+          "collection_verified": true,
+          "final_vector_sha256": "2132dd878ea0aab9c573a13b83ae211652fd0fbd85a9a62c64f5a1dfec845d55",
+          "independent_replay_qualified": true,
+          "native_status": 2,
+          "objective": 11,
+          "original_model_sha256": "9acbc86be4bcc2b98300511aef577f56d9688b57dd312dd5cf1f2ed7e11cec0a",
+          "source_commit": "dab3b99ef8172d320223d05f74155eeeac063768",
+          "synthetic_start_size": 2
+        },
+        {
+          "actual_native14_log_verified": true,
+          "cell": "5-evaluation-G",
+          "collection_verified": true,
+          "final_vector_sha256": "2132dd878ea0aab9c573a13b83ae211652fd0fbd85a9a62c64f5a1dfec845d55",
+          "independent_replay_qualified": true,
+          "native_status": 2,
+          "objective": 11,
+          "original_model_sha256": "9acbc86be4bcc2b98300511aef577f56d9688b57dd312dd5cf1f2ed7e11cec0a",
+          "source_commit": "dab3b99ef8172d320223d05f74155eeeac063768",
+          "synthetic_start_size": 2
+        }
+      ],
+      "guidance_scope": "invented_technical_wiring_no_learned_predictor",
+      "result_sha256": "77a4e28525f1135aade4dd7eb93f4c5201d0f6bfcdd5acd4dd0d153db2e1b759",
+      "independent_review_sha256": "bf83960380dd20f78358bc6a4b17967d667e19462fbfe68d0d290d9303e5e685",
+      "workspace_preservation_copy_files": 86,
+      "original_and_preservation_copy_hashes_equal": true,
+      "qualified_code_trees": {
+        "src/cfl_gnn/mvp3": "b35175aa2da790294168f1c6f6e247b7e18cad7c",
+        "scripts/mvp3": "279ed9bcc9a1828b8c1098fd0e3c186327af9b03",
+        "tests/mvp3": "00572022ec8b025cb4964f1233f6e9b52df9f948",
+        "configs/mvp3": "88c3d60144b798cb713d3e40a2b22409322a8064"
+      },
+      "production_hardware_qualified": false,
+      "research_parent_population_qualified": false,
+      "learned_predictor_or_scientific_start_policy_qualified": false,
+      "scientific_observations_generated": 0,
+      "automatic_retry": false
     }
   ],
   "observed_phase_is_confirmed": true,
-  "infinity_serialization_diagnosis": "API_double_reproduces_ValueError_with_native_infinities_exact_old_parameter_was_not_recorded",
-  "new_source_native_qualification": "pending_new_exact_source_CI_and_specific_CLI_approval",
+  "infinity_serialization_diagnosis": "actual_snapshot_has18_infinite_defaults_typed_encoding_and_independent_replay_passed_old_individual_parameter_not_recorded",
+  "new_source_native_qualification": "five_tiny_technical_cells_qualified_at_dab3b99_production_qualification_pending",
   "license_contents_read_copied_or_hashed_by_instrumentation": false,
   "parent_environment_or_profiles_modified": false
 }

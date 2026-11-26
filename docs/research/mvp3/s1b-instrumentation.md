@@ -1,12 +1,11 @@
 # S1-B native instrumentation and evidence capture
 
-Status: implementation under review; first local qualification stopped before
-optimize intent. Actual Gurobi14.0.0 API/log qualification and production resource
-qualification remain pending. See the [sanitized attempt receipt](s1b-qualification-attempt-20261126.json).
-The [three-attempt admission register](s1b-qualification-attempts-20261126.json)
-records the subsequent licence-routed and ASCII-path attempts; all stopped before
-optimize intent, with zero optimization calls. The current correction is offline
-tested and requires a new source-specific CLI decision.
+Status: implementation under review; **five tiny local Gurobi14.0.0 technical
+cells qualified**, including independent point replay and actual log checks.
+See the [qualification register](s1b-qualification-attempts-20261126.json).
+The three earlier separately authorised admission failures remain preserved;
+they made zero optimization calls. Production resources, the research parent
+population, a learned predictor and the scientific Start policy remain pending.
 This document and the code confer no scientific or HPC execution authority.
 
 S1-A [PR104](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/104)
@@ -163,7 +162,7 @@ error text are not committed to Git. The offline Gurobi14-shaped log tests are
 invented fixtures, not execution evidence. The earlier Dell native license probe
 did not save raw logs, so it cannot qualify this parser or callback API.
 
-## Prospective local CLI qualification (separate approval)
+## Local CLI qualification (separate approval per invocation)
 
 Entry: `scripts/mvp3/qualify_local.py`. The reviewed command must name the exact
 40-character commit, a new private output directory outside the clean checkout,
@@ -184,8 +183,9 @@ Each failure stops the sequence and preserves partial files; no automatic retry.
 The resulting private report requires actual native14 API returns, audited tiny
 points and actual native14 log headers. It does not qualify the research parent
 population, production hardware, a trained predictor or a scientific Start policy.
-Review the return before any production release. The corrected CLI has not been
-executed and requires a new source-specific author decision. It is local.
+Review the return before any production release. The qualified invocation is
+recorded below. Every further invocation still needs its own concrete author
+CLI decision. It is local.
 
 ### First attempt and reviewed correction
 
@@ -243,6 +243,35 @@ bindings were identical across separate preserved directories because their
 original technical attempt tokens were reused. The old files are not rewritten.
 Original geometry identity is persisted before parameter inventory, improving
 partial admission evidence. These are prospective technical corrections.
+
+### Qualified local return and documentary closeout
+
+The author specifically approved one invocation of source
+`dab3b99ef8172d320223d05f74155eeeac063768` after its nine CI jobs passed
+(runs 45862135727/45862136240). Its five sequential native calls completed:
+one root capture and incumbent/B/R/G wiring. Offline independent replay checked
+the original 20-binary/one-row geometry, retained vectors, audits, source/input/
+parameter bindings, journal seals, actual 14.0.0 log headers and terminal values.
+All five passed. The root event was ordinal 1/pre-cut/pass 0; its point objective
+was 10.5 and its native bound 11. Four main calls ended OPTIMAL with objective and
+bound 11. B/R/G synthetic Start sizes were 0/2/2; these are wiring fixtures.
+
+The actual factory snapshot contained 18 infinite parameter defaults. Typed
+serialization and the complete effective-map checks passed. All five used one
+thread, Seed42 and the declared ten-second technical limit. Their original-model
+hash and default-map hash agreed. There is no speedup or predictor-quality claim.
+The 86 private return files were preserved in the workspace with every file hash
+matching the original ASCII temporary directory. Earlier failed attempts remain
+unchanged. The sanitized register includes the result and independent-review
+hashes, code-tree IDs, call accounting and qualification limits.
+
+This final closeout changes documentation/receipts only. The qualified source
+remains pinned to dab3b99; package, entry, test and configuration tree IDs are
+recorded so that equivalence of later documentary commits is reviewable. No
+additional native execution accompanies the closeout. S2 requires a separately
+reviewed production environment/resource envelope and author-controlled release
+before any of the 177 planned primary calls. Hardware qualification and actual
+scientific collection are not implied by the local return.
 
 ## Offline verification
 
