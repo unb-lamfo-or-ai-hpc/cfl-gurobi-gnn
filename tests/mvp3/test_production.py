@@ -191,7 +191,13 @@ class ProductionTests(unittest.TestCase):
         with (
             patch(
                 "cfl_gnn.mvp3.production.inventory.os.statvfs",
-                return_value=SimpleNamespace(f_favail=100),
+                return_value=SimpleNamespace(
+                    f_favail=100,
+                    f_bavail=100,
+                    f_bfree=200,
+                    f_frsize=4096,
+                    f_blocks=1000,
+                ),
                 create=True,
             ),
             patch.object(
