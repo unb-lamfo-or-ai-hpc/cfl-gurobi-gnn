@@ -122,7 +122,7 @@ class ProductionTests(unittest.TestCase):
             "created_utc": "2026-11-26T12:00:00+00:00",
             "package_versions": {"gurobipy": "14.0.0"},
             "license_file_exists": True,
-            "license_file_path": str(license_file),
+            "license_file_path": str(license_file.resolve()),
             "python_executable": str(python),
             "python_prefix": str(self.folder),
         }
