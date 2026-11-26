@@ -125,7 +125,8 @@ def validate_audit(audit, model_sha256, vector_sha256, *, continuous=False):
         value = audit[key]["value"]
         require(value is None or value >= 0, "Negative audit residual")
         if audit["status"] == "qualified" and not (
-            continuous and name == "integrality"
+            continuous
+            and (name == "integrality" or (name == "objective" and value is None))
         ):
             require(
                 value is not None and value <= audit["tolerances"][name],

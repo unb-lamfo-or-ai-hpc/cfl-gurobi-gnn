@@ -1,3 +1,7 @@
+# Current S1-B implementation authority - 26 November 2026
+
+The researcher authorised autonomous continuation, tests and a Draft PR for develop, asking only for merge or concrete author CLI execution approval. PR104 (S1-A, head a2f475682e7b51055d24f487eb2a125426c3373c) was explicitly authorised and merged at edad5cc57f287d178706c2b91de8ba27e7878baa after nine successful CI jobs. That approval applies to PR104 only. Continue S1-B in a separate branch; preserve historical components and the sealed configs/mvp3/v1 bytes. Do not access HPC/SSH/SCP, run real native qualification or scientific campaigns, or merge further PRs without the corresponding explicit author decision. Local offline development checks remain within the implementation mandate. Older dated restrictions below record their original scope.
+
 # Current implementation authority - 26 November 2026
 
 The researcher explicitly authorised autonomous S1-A implementation, offline tests and a Draft PR targeting develop. Preserve historical components and receipts. Do not perform HPC/SSH/SCP, scientific solves, training or inference, remote environment changes or merge. The versioned offline contracts and frozen parent/primary-call manifests are documented in docs/research/mvp3/s1a-contract.md. Planning slots are not observations. S1-B native instrumentation and concrete experimental releases retain their separate scope. The approved protocol v3 and primary budgets remain unchanged.
