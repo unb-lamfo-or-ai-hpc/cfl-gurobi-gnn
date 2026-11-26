@@ -43,6 +43,7 @@ Documentation = "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/tree/deve
 Issues = "https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/issues"
 
 [project.optional-dependencies]
+mvp3-contract = ["jsonschema==4.26.0"]
 scip = ["pyscipopt>=6.1,<7"]
 projection = ["umap-learn>=0.5"]
 test = ["pytest>=7"]

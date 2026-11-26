@@ -1,0 +1,51 @@
+name: MVP3 offline contracts
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'src/cfl_gnn/mvp3/**'
+      - 'configs/mvp3/**'
+      - 'tests/mvp3/**'
+      - 'docs/research/mvp3/s1a-contract.md'
+      - 'pyproject.toml'
+      - '.gitattributes'
+      - '.github/workflows/mvp3-contract.yml'
+  push:
+    branches: [develop]
+    paths:
+      - 'src/cfl_gnn/mvp3/**'
+      - 'configs/mvp3/**'
+      - 'tests/mvp3/**'
+      - 'pyproject.toml'
+      - '.gitattributes'
+      - '.github/workflows/mvp3-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install only contract validation and lint dependencies
+        run: python -m pip install jsonschema==4.26.0 ruff==0.16.8
+      - name: Lint new contract components
+        run: python -m ruff check --config configs/quality/pr64-ruff.toml src/cfl_gnn/mvp3 tests/mvp3
+      - name: Verify formatting
+        run: python -m ruff format --check --config configs/quality/pr64-ruff.toml src/cfl_gnn/mvp3 tests/mvp3
+      - name: Validate frozen bundle without scientific execution
+        run: python -B -m cfl_gnn.mvp3 --bundle configs/mvp3/v1
+      - name: Exercise synthetic contract and evidence failures
+        run: python -B -m unittest discover -s tests/mvp3 -v

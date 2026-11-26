@@ -1,5 +1,7 @@
 # MVP 3.0 research protocol
 
+S1-A implementation is documented in [the versioned contract and frozen parent identities](s1a-contract.md). It adds offline schemas, validation and planning manifests without scientific execution; the approved protocol and historical sources remain preserved.
+
 The [English methodological protocol](coauthor-methodological-protocol.md) defines the scientific development programme S1-S6. It covers 66 instances, independent root-relaxation and incumbent preparation, equivalent-work serial/DDP training,45 paired B/R/G evaluation cells, numerical qualification and C2/C3 analysis.
 
 The revised version incorporates the researcher's 62 PDF annotation records. Its coauthor-facing text contains the permanent scientific plan. Operational migration and runtime-compatibility records remain in the separate [NPAD transition dossier](https://github.com/unb-lamfo-or-ai-hpc/cfl-gurobi-gnn/pull/102).
