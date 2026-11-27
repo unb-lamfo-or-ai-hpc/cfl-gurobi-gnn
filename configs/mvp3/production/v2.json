@@ -1,0 +1,42 @@
+{
+  "automatic_retry": false,
+  "capacity_scope": "reservation_affinity_and_kernel_limit_not_memory_saturation_or_real_CFL_performance",
+  "cores_per_socket": 16,
+  "dedicated_execution_directory": "cfl-gurobi-gnn-mvp30",
+  "exclusive": true,
+  "home_root_outputs_allowed": false,
+  "job_seconds": 300,
+  "logical_CPUs": 64,
+  "maximum_Gurobi_sessions_within_plan": 2,
+  "maximum_jobs": 2,
+  "maximum_native_calls_per_slot": 1,
+  "maximum_technical_calls": 2,
+  "native_seconds_per_call": 10,
+  "physical_cores": 32,
+  "primary_calls_released": 0,
+  "primary_contract_sha256": "7cc940aa71b60baa632754c0125bea859e6af62cbb5899d5a9eafff43bcef1ee",
+  "profiles": {
+    "intel-256": {
+      "families": [
+        "easy",
+        "medium"
+      ],
+      "memory_GiB": 192
+    },
+    "intel-512": {
+      "families": [
+        "hard"
+      ],
+      "memory_GiB": 384
+    }
+  },
+  "requested_GPUs": 0,
+  "runtime_subdirectory": "runs",
+  "schema_version": "mvp3-s2-production-v2",
+  "scientific_execution_authorized": false,
+  "sockets": 2,
+  "tasks": 1,
+  "threads_per_core": 2,
+  "transfer_subdirectory": "incoming",
+  "worker_wall_seconds": 60
+}
