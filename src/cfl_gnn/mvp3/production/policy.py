@@ -35,6 +35,10 @@ def policy():
     return {
         "schema_version": VERSION,
         "scientific_execution_authorized": False,
+        "dedicated_execution_directory": "cfl-gurobi-gnn-mvp30",
+        "runtime_subdirectory": "runs",
+        "transfer_subdirectory": "incoming",
+        "home_root_outputs_allowed": False,
         "profiles": PROFILES,
         "tasks": 1,
         "logical_CPUs": 64,

@@ -2,7 +2,17 @@
 
 Status, 26 November 2026: prepared for author review and staged CLI execution. No production environment has been qualified by this preparation, no job has been submitted, and no scientific call is released. PR104 and PR105 were approved and integrated into `develop`; PR105 merge is `d50a71b1254afa66f2d60869adc0d8472a95816a`. The local five-cell S1-B qualification at `dab3b99ef8172d320223d05f74155eeeac063768` remains historical evidence with its original scope. Existing S1-A/S1-B files, receipts, sealed contracts and scientific protocol are preserved.
 
-The isolated package `cfl_gnn.mvp3.production`, entry `scripts/mvp3/qualify_production.py`, preparation wrapper `scripts/mvp3/prepare_production.ps1` and policy `configs/mvp3/production/v1.json` prepare separate, explicit stages. Importing them does not load gurobipy, create a native environment or contact Slurm. No implementation calls SSH, SCP, sbatch or scancel. Submission commands are rendered as proposals for the author.
+The isolated package `cfl_gnn.mvp3.production`, entry `scripts/mvp3/qualify_production.py`, preparation wrapper `scripts/mvp3/prepare_production.ps1` and current policy `configs/mvp3/production/v2.json` prepare separate, explicit stages. The v1 policy and previous packet remain historical. Importing components does not load gurobipy, create a native environment or contact Slurm. No implementation calls SSH, SCP, sbatch or scancel. Submission commands are rendered as proposals for the author.
+
+## Dedicated execution directory - author correction, 27 November 2026
+
+Use `/home/vrrcelestino/cfl-gurobi-gnn-mvp30` for all new MVP3 artifacts. Nothing is transferred directly into `/home/vrrcelestino`. `prepare` now generates the author directory-creation command, discovery launcher and `handoff.json` from the same tested source, instead of relying on a separate private script renderer.
+
+First execute the generated creation block in the author's CLI. It creates the project, `incoming`, `runs` and an exclusive `incoming/<source-prefix>` directory. Existing source namespaces are not overwritten. Then manually transfer only the TAR and generated discovery script into that incoming directory. The script verifies its own location, checks the TAR SHA256, creates an exclusive `runs/<source-prefix>`, changes into it and extracts the bundle there. The creation command and discovery script are prepared offline; the agent performs no remote creation or transfer.
+
+The v2 CLI accepts `--execution-root`, defaulting to this project path. Discovery, proposal generation, plan admission, workers and collection reject runtime paths outside its `runs` tree, including sibling-prefix collisions, traversal and symlink escapes. Inputs such as the original dataset, interpreter, license and installed checkout are read-only external references. Source manifests, discovery and plans bind the execution root. The CLI changes into the run directory; Slurm uses an explicit `--chdir` and the child uses its attempt directory. No temporary source or result is staged in the home root.
+
+The 26 November packet and its direct-home transfer command are superseded and preserved only as history. Its CI/manifest receipt does not qualify the changed v2 source; the replacement packet needs its own exact-source CI receipt.
 
 ## License and environment routes
 
@@ -10,7 +20,7 @@ On Windows the preparation wrapper sets `GRB_LICENSE_FILE=C:\gurobi1400\gurobi.l
 
 The previously recorded NPAD routes are `/home/vrrcelestino/venv313_g14/bin/python` and `/home/vrrcelestino/cfl-gurobi-gnn/secrets/gurobi.lic`. The Linux batch child sets `GRB_LICENSE_FILE` to that existing own-project Linux path. The Windows license is not transferred. The original `/home/vrrcelestino/venv313` and installed home checkout are left intact. Their recorded state is context, not fresh qualification. No package installation or environment mutation is included.
 
-The portable source bundle is built from Git blobs at an exact clean commit with a receipt for nine successful CI jobs. It includes only the MVP3 source, entries and versioned configuration; no data, private returns, license or Git directory. Archive and external manifest SHA256 values bind the transferred bytes. Runtime rechecks the exact file set, sizes and hashes. Use a new private ASCII scratch directory without spaces, outside the installed checkout. Outputs must be outside the extracted bundle; Python bytecode generation is disabled. Preserve the original archive, manifest, CI receipt and every stage output.
+The portable source bundle is built from Git blobs at an exact clean commit with a receipt for nine successful CI jobs. It includes only the MVP3 source, entries and versioned configuration; no data, private returns, license or Git directory. Archive and external manifest SHA256 values bind the transferred bytes. Runtime rechecks the exact file set, sizes and hashes. Use only new private ASCII run directories inside the dedicated project, outside the installed checkout. Outputs must be outside the extracted bundle; Python bytecode generation is disabled. Preserve the original archive, manifest, CI receipt and every stage output.
 
 ## Proposed technical budget, separate from 177 scientific calls
 
@@ -32,9 +42,11 @@ The review handoff supplies a concrete source commit, portable archive, SHA256 v
 ```bash
 GRB_LICENSE_FILE=/home/vrrcelestino/cfl-gurobi-gnn/secrets/gurobi.lic \
   /home/vrrcelestino/venv313_g14/bin/python -B \
-  /ABSOLUTE_ASCII_BUNDLE/scripts/mvp3/qualify_production.py \
-  --bundle /ABSOLUTE_ASCII_BUNDLE --manifest-sha256 MANIFEST_SHA256 \
-  discover --output /NEW_ASCII_PRIVATE_OUTPUT \
+  /home/vrrcelestino/cfl-gurobi-gnn-mvp30/runs/SOURCE/bundle/scripts/mvp3/qualify_production.py \
+  --bundle /home/vrrcelestino/cfl-gurobi-gnn-mvp30/runs/SOURCE/bundle \
+  --manifest-sha256 MANIFEST_SHA256 \
+  --execution-root /home/vrrcelestino/cfl-gurobi-gnn-mvp30 \
+  discover --output /home/vrrcelestino/cfl-gurobi-gnn-mvp30/runs/SOURCE/discovery \
   --license-file /home/vrrcelestino/cfl-gurobi-gnn/secrets/gurobi.lic \
   --installed-repo /home/vrrcelestino/cfl-gurobi-gnn \
   --data-root /home/Projeto_LAMFO_LAPPS/data/CFL

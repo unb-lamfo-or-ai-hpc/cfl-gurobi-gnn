@@ -8,6 +8,8 @@ from pathlib import Path
 
 from ..contract import digest, load_json, require
 from ..journal import durable_json, file_sha256
+from .layout import DEFAULT_EXECUTION_ROOT, plan_paths, run_paths
+from .layout import execution_root as checked_root
 from .policy import PROFILES, ascii_path, policy, token
 from .release import verify_bundle
 
@@ -25,13 +27,17 @@ def make_plan(
     python,
     license_file,
     approval_reference,
+    execution_root=DEFAULT_EXECUTION_ROOT,
 ):
+    execution_root = checked_root(execution_root)
+    run_paths(execution_root, bundle, discovery_path, output)
     bundle, output, license_file = map(ascii_path, (bundle, output, license_file))
     python = ascii_path(python, resolve_links=False)
     manifest = verify_bundle(bundle, manifest_sha256)
     discovery = load_json(discovery_path)
     require(
         discovery["source_commit"] == manifest["source_commit"]
+        and Path(discovery["execution_root"]).resolve() == execution_root
         and discovery["inventory"] is not None
         and not discovery["commands_failed"],
         "Complete exact-source discovery is required",
@@ -94,6 +100,7 @@ def make_plan(
         "schema_version": policy()["schema_version"],
         "qualification_id": identifier,
         "source_commit": manifest["source_commit"],
+        "execution_root": str(execution_root),
         "bundle": str(bundle),
         "manifest_sha256": manifest_sha256,
         "discovery_sha256": file_sha256(discovery_path),
@@ -133,6 +140,8 @@ def make_plan(
             str(bundle),
             "--manifest-sha256",
             manifest_sha256,
+            "--execution-root",
+            str(execution_root),
             "worker",
             "--plan",
             str(plan_path),
@@ -159,6 +168,7 @@ def make_plan(
                 f"#SBATCH --nodelist={slot['node']}",
                 f"#SBATCH --output={output}/{profile}.%j.out",
                 f"#SBATCH --error={output}/{profile}.%j.err",
+                f"#SBATCH --chdir={output}",
                 "set -euo pipefail",
                 "umask 077",
                 f"export GRB_LICENSE_FILE={shlex.quote(str(license_file))}",
@@ -191,13 +201,21 @@ def make_plan(
     return result
 
 
-def load_plan(path, checksum, manifest, *, bundle=None, manifest_sha256=None):
+def load_plan(
+    path, checksum, manifest, *, bundle=None, manifest_sha256=None, execution_root=None
+):
     require(
         re.fullmatch(r"[0-9a-f]{64}", checksum) is not None
         and file_sha256(path) == checksum,
         "Plan bytes changed",
     )
     plan = load_json(path)
+    plan_paths(plan, path)
+    if execution_root is not None:
+        require(
+            checked_root(plan["execution_root"]) == checked_root(execution_root),
+            "CLI/plan execution roots differ",
+        )
     require(
         plan["source_commit"] == manifest["source_commit"]
         and plan["policy"] == policy()

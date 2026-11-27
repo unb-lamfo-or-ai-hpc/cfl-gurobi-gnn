@@ -8,6 +8,8 @@ from pathlib import Path
 from ..contract import require
 from .collection import collect
 from .inventory import discover
+from .layout import DEFAULT_EXECUTION_ROOT, run_paths
+from .layout import execution_root as checked_root
 from .planning import load_plan, make_plan
 from .release import prepare, verify_bundle
 from .worker import probe, worker
@@ -17,6 +19,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bundle")
     parser.add_argument("--manifest-sha256")
+    parser.add_argument("--execution-root", default=DEFAULT_EXECUTION_ROOT)
     sub = parser.add_subparsers(dest="mode", required=True)
     build = sub.add_parser(
         "prepare",
@@ -78,11 +81,14 @@ def main(argv=None):
                 args.local_license_file,
             )
         else:
+            root = checked_root(args.execution_root)
             require(
                 args.bundle and args.manifest_sha256,
                 "Pinned portable source bundle required",
             )
+            run_paths(root, args.bundle)
             manifest = verify_bundle(args.bundle, args.manifest_sha256)
+            os.chdir(Path(args.bundle).resolve().parent)
             if args.mode == "discover":
                 result = discover(
                     args.output,
@@ -92,6 +98,7 @@ def main(argv=None):
                     data_root=args.data_root,
                     catalogue_path=Path(args.bundle)
                     / "configs/mvp3/v1/input-catalogue.json",
+                    execution_root=root,
                 )
             elif args.mode == "plan":
                 result = make_plan(
@@ -106,8 +113,10 @@ def main(argv=None):
                     python=args.python,
                     license_file=args.license_file,
                     approval_reference=args.approval_reference,
+                    execution_root=root,
                 )
             elif args.mode == "worker":
+                run_paths(root, args.plan)
                 result = worker(
                     args.bundle,
                     manifest,
@@ -115,15 +124,24 @@ def main(argv=None):
                     args.plan,
                     args.plan_sha256,
                     args.profile,
+                    execution_root=root,
                 )
             else:
+                run_paths(root, args.plan)
                 plan = load_plan(
                     args.plan,
                     args.plan_sha256,
                     manifest,
                     bundle=args.bundle,
                     manifest_sha256=args.manifest_sha256,
+                    execution_root=root,
                 )
+                require(
+                    Path(plan["execution_root"]).resolve() == root,
+                    "CLI/plan execution roots differ",
+                )
+                if args.mode == "probe":
+                    os.chdir(plan["slots"][args.profile]["output"])
                 result = (
                     probe(plan, args.profile, manifest["source_commit"])
                     if args.mode == "probe"

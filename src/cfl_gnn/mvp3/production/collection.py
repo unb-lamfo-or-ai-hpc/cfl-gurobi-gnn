@@ -12,6 +12,7 @@ from ..journal import durable_json, file_sha256
 from ..matrix import DescriptionMatrix
 from ..qualification import TINY_LP
 from .inventory import bounded_read
+from .layout import plan_paths
 from .policy import PROFILES, memory_bytes, technical_parameters
 
 
@@ -36,6 +37,7 @@ def tiny_geometry():
 
 
 def collect(plan, output, runner=bounded_read):
+    plan_paths(plan, output)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     results = {}

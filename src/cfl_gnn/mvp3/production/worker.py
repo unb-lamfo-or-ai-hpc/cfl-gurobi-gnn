@@ -20,6 +20,7 @@ from ..qualification import TINY_LP, safe_worker_error
 from .allocation import cgroup_memory, live_allocation
 from .collection import tiny_geometry
 from .inventory import bounded_read
+from .layout import plan_paths
 from .planning import load_plan
 from .policy import ascii_path, technical_parameters
 
@@ -65,6 +66,7 @@ def admission(plan, profile, runner=bounded_read):
 
 def probe(plan, profile, source_commit, *, api=None):
     """No primary model path exists in this interface; exactly one tiny optimize."""
+    plan_paths(plan)
     folder = ascii_path(plan["slots"][profile]["output"])
     allocation = admission(plan, profile)
     require(
@@ -248,9 +250,23 @@ def probe(plan, profile, source_commit, *, api=None):
             store.close(outcome)
 
 
-def worker(bundle, manifest, manifest_sha256, plan_path, plan_sha256, profile):
+def worker(
+    bundle,
+    manifest,
+    manifest_sha256,
+    plan_path,
+    plan_sha256,
+    profile,
+    *,
+    execution_root=None,
+):
     plan = load_plan(
-        plan_path, plan_sha256, manifest, bundle=bundle, manifest_sha256=manifest_sha256
+        plan_path,
+        plan_sha256,
+        manifest,
+        bundle=bundle,
+        manifest_sha256=manifest_sha256,
+        execution_root=execution_root,
     )
     folder = ascii_path(plan["slots"][profile]["output"])
     folder.mkdir(parents=True, exist_ok=False)
@@ -281,6 +297,8 @@ def worker(bundle, manifest, manifest_sha256, plan_path, plan_sha256, profile):
             str(bundle),
             "--manifest-sha256",
             manifest_sha256,
+            "--execution-root",
+            plan["execution_root"],
             "probe",
             "--plan",
             str(plan_path),
@@ -295,6 +313,7 @@ def worker(bundle, manifest, manifest_sha256, plan_path, plan_sha256, profile):
                 stdout=output,
                 stderr=subprocess.STDOUT,
                 start_new_session=True,
+                cwd=folder,
                 shell=False,
             )
             start = time.perf_counter()

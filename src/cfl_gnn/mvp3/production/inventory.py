@@ -11,6 +11,8 @@ from pathlib import Path
 from ..contract import load_json, require
 from ..journal import durable_json
 from . import VERSION
+from .layout import DEFAULT_EXECUTION_ROOT, run_paths
+from .layout import execution_root as checked_root
 from .policy import candidate, slurm_pairs, token
 
 NODE_FIELDS = {
@@ -212,8 +214,11 @@ def discover(
     installed_repo,
     data_root,
     catalogue_path,
+    execution_root=DEFAULT_EXECUTION_ROOT,
     runner=bounded_read,
 ):
+    execution_root = checked_root(execution_root)
+    run_paths(execution_root, output, catalogue_path)
     require(
         platform.system() == "Linux",
         "Production discovery must be run by the author on the Linux target",
@@ -276,6 +281,7 @@ def discover(
     report = {
         "schema_version": VERSION,
         "source_commit": source_commit,
+        "execution_root": str(execution_root),
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "uid": os.getuid(),
         "user": user,

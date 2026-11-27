@@ -10,6 +10,8 @@ from pathlib import Path, PurePosixPath
 from ..contract import canonical_bytes, load_json, require
 from ..journal import durable_json, file_sha256
 from . import VERSION
+from .handoff import write_handoff
+from .layout import DEFAULT_EXECUTION_ROOT
 
 PREFIXES = ("src/cfl_gnn/mvp3/", "scripts/mvp3/", "configs/mvp3/")
 ROOT_FILE = "src/cfl_gnn/__init__.py"
@@ -85,6 +87,7 @@ def prepare(repository, output, source_commit, ci_receipt, local_license_file):
     manifest = {
         "schema_version": VERSION,
         "source_commit": source_commit,
+        "default_execution_root": DEFAULT_EXECUTION_ROOT,
         "CI": ci,
         "scientific_execution_authorized": False,
         "files": {
@@ -112,8 +115,9 @@ def prepare(repository, output, source_commit, ci_receipt, local_license_file):
         "license_contents_read_copied_or_hashed": False,
         "native_calls": 0,
         "HPC_access": False,
-        "instructions": "Author manually transfers archive, verifies archive SHA256, extracts into a new private ASCII scratch folder and runs discover with the manifest SHA256. Never overwrite the installed home checkout.",
+        "instructions": "Author first creates the dedicated execution directory using handoff.json, transfers only into its incoming/source directory and runs discovery into its runs/source directory. Never transfer into the home root or overwrite the installed checkout.",
     }
+    result["handoff"] = write_handoff(output, result)
     durable_json(output / "prepared.json", result)
     return result
 
@@ -131,6 +135,7 @@ def verify_bundle(root, expected_manifest_sha256):
     manifest = load_json(path)
     require(
         manifest["schema_version"] == VERSION
+        and manifest.get("default_execution_root") == DEFAULT_EXECUTION_ROOT
         and manifest["scientific_execution_authorized"] is False,
         "Invalid bundle authority",
     )

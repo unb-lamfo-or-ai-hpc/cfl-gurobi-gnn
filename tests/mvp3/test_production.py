@@ -1,13 +1,17 @@
 """Offline production qualification tests. No Slurm, remote host or real Gurobi."""
 # ruff: noqa: E402 -- checkout bootstrap
 
+import gc
+import io
 import json
 import os
 import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -24,12 +28,19 @@ from cfl_gnn.mvp3.production.allocation import (
     cgroup_memory,
     expand_cpus,
 )
+from cfl_gnn.mvp3.production.cli import main as production_main
 from cfl_gnn.mvp3.production.collection import collect
+from cfl_gnn.mvp3.production.handoff import write_handoff
 from cfl_gnn.mvp3.production.inventory import (
     bounded_read,
     parse_inventory,
     read_commands,
     storage_inventory,
+)
+from cfl_gnn.mvp3.production.layout import (
+    DEFAULT_EXECUTION_ROOT,
+    execution_root,
+    run_paths,
 )
 from cfl_gnn.mvp3.production.planning import load_plan, make_plan
 from cfl_gnn.mvp3.production.policy import (
@@ -89,11 +100,27 @@ def cpu():
 class ProductionTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.addCleanup(self.temp.cleanup)
+        self.addCleanup(self.cleanup_fixture)
         self.folder = Path(self.temp.name)
+        self.execution_root = self.folder / "cfl-gurobi-gnn-mvp30"
+        self.run_dir = self.execution_root / "runs/offline-fixture"
+        self.run_dir.mkdir(parents=True)
+
+    def cleanup_fixture(self):
+        # Windows can retain completed subprocess handles until cyclic GC runs.
+        # Retry only deletion of this owned synthetic fixture, never a native call.
+        gc.collect()
+        for attempt in range(10):
+            try:
+                self.temp.cleanup()
+                return
+            except PermissionError:
+                if attempt == 9:
+                    raise
+                time.sleep(0.1)
 
     def bundle(self):
-        root = self.folder / "bundle"
+        root = self.run_dir / "bundle"
         paths = ("src/cfl_gnn/__init__.py", "scripts/mvp3/qualify_production.py")
         files = {}
         for name in paths:
@@ -105,6 +132,7 @@ class ProductionTests(unittest.TestCase):
             "schema_version": policy()["schema_version"],
             "source_commit": "a" * 40,
             "scientific_execution_authorized": False,
+            "default_execution_root": DEFAULT_EXECUTION_ROOT,
             "files": files,
         }
         checksum = durable_json(root / "bundle-manifest.json", manifest)
@@ -118,6 +146,7 @@ class ProductionTests(unittest.TestCase):
         discovery = {
             "source_commit": "a" * 40,
             "inventory": parse_inventory(scheduler_outputs()),
+            "execution_root": str(self.execution_root),
             "commands_failed": {},
             "created_utc": "2026-11-26T12:00:00+00:00",
             "package_versions": {"gurobipy": "14.0.0"},
@@ -126,13 +155,13 @@ class ProductionTests(unittest.TestCase):
             "python_executable": str(python),
             "python_prefix": str(self.folder),
         }
-        path = self.folder / "discovery.json"
+        path = self.run_dir / "discovery.json"
         durable_json(path, discovery)
         proposal = make_plan(
             bundle,
             checksum,
             path,
-            self.folder / "proposal",
+            self.run_dir / "proposal",
             partition="compute",
             account="account",
             qos="preempt",
@@ -140,8 +169,9 @@ class ProductionTests(unittest.TestCase):
             python=python,
             license_file=license_file,
             approval_reference="invented-offline-not-execution-authority",
+            execution_root=self.execution_root,
         )
-        plan_path = self.folder / "proposal/plan.json"
+        plan_path = self.run_dir / "proposal/plan.json"
         return (
             load_plan(plan_path, proposal["plan_sha256"], manifest),
             proposal,
@@ -154,7 +184,126 @@ class ProductionTests(unittest.TestCase):
         self.assertEqual(policy()["primary_calls_released"], 0)
         self.assertEqual(technical_parameters()["Threads"], 0)
         self.assertEqual(technical_parameters()["TimeLimit"], 10)
-        self.assertEqual(load_json(ROOT / "configs/mvp3/production/v1.json"), policy())
+        self.assertEqual(load_json(ROOT / "configs/mvp3/production/v2.json"), policy())
+
+    def test_runtime_paths_reject_home_incoming_siblings_and_traversal(self):
+        for bad in (self.folder, Path.home()):
+            with self.assertRaises(ContractError):
+                execution_root(bad)
+        for bad in (
+            self.folder / "result",
+            self.execution_root / "incoming/result",
+            self.execution_root / "runs/../../result",
+            self.execution_root.parent / "cfl-gurobi-gnn-mvp300/runs/result",
+            Path("relative/result"),
+        ):
+            with self.assertRaises(ContractError):
+                run_paths(self.execution_root, bad)
+        self.assertEqual(
+            run_paths(self.execution_root, self.run_dir / "result"),
+            [(self.run_dir / "result").resolve()],
+        )
+
+    @unittest.skipUnless(os.name == "posix", "Linux directory symlink confinement")
+    def test_runtime_paths_reject_symlink_escape(self):
+        (self.execution_root / "runs/escape").symlink_to(
+            self.folder, target_is_directory=True
+        )
+        with self.assertRaises(ContractError):
+            run_paths(self.execution_root, self.execution_root / "runs/escape/result")
+
+    def test_handoff_creation_and_transfers_stay_in_dedicated_project(self):
+        out = self.folder / "handoff"
+        out.mkdir()
+        prepared = {
+            "source_commit": "a" * 40,
+            "archive_sha256": "b" * 64,
+            "manifest_sha256": "c" * 64,
+        }
+        result = write_handoff(out, prepared)
+        for key in (
+            "incoming_directory",
+            "run_directory",
+            "remote_archive",
+            "remote_launcher",
+            "return_file",
+        ):
+            self.assertTrue(result[key].startswith(DEFAULT_EXECUTION_ROOT + "/"))
+        self.assertIn("/incoming/aaaaaaaaaaaa/", result["remote_archive"])
+        self.assertIn("/runs/aaaaaaaaaaaa/", result["return_file"])
+        script = (out / "run-s2-discovery-aaaaaaaaaaaa.sh").read_text()
+        self.assertIn('cd -- "$production_run"', script)
+        self.assertIn('--execution-root "$production_project"', script)
+        self.assertFalse(result["remote_directory_created_by_agent"])
+        self.assertNotIn("sbatch ", script)
+        if os.name == "posix":
+            for filename in (
+                "create-execution-directory.sh",
+                "run-s2-discovery-aaaaaaaaaaaa.sh",
+            ):
+                subprocess.run(["bash", "-n", str(out / filename)], check=True)
+
+    def test_cli_discovery_dispatch_uses_execution_directory_as_cwd(self):
+        previous_mask = os.umask(0o077)
+        self.addCleanup(os.umask, previous_mask)
+        bundle, checksum, _ = self.bundle()
+        result = {"source_commit": "a" * 40, "commands_failed": {}}
+        with (
+            patch("cfl_gnn.mvp3.production.cli.os.chdir") as change,
+            patch(
+                "cfl_gnn.mvp3.production.cli.discover", return_value=result
+            ) as discover,
+            redirect_stdout(io.StringIO()),
+        ):
+            code = production_main(
+                [
+                    "--bundle",
+                    str(bundle),
+                    "--manifest-sha256",
+                    checksum,
+                    "--execution-root",
+                    str(self.execution_root),
+                    "discover",
+                    "--output",
+                    str(self.run_dir / "discovery"),
+                    "--license-file",
+                    str(self.folder / "fake.lic"),
+                    "--installed-repo",
+                    str(self.folder / "old-repository"),
+                    "--data-root",
+                    str(self.folder / "data"),
+                ]
+            )
+        self.assertEqual(code, 0)
+        change.assert_called_once_with(bundle.resolve().parent)
+        self.assertEqual(
+            discover.call_args.kwargs["execution_root"], self.execution_root.resolve()
+        )
+
+    def test_collection_rejects_outside_output_before_any_scheduler_query(self):
+        plan, _, _ = self.plan()
+        with self.assertRaises(ContractError):
+            collect(
+                plan,
+                self.folder / "outside",
+                lambda _: self.fail("No scheduler query permitted"),
+            )
+        self.assertFalse((self.folder / "outside").exists())
+
+    def test_probe_rejects_outside_slot_before_native_or_allocation(self):
+        plan, _, _ = self.plan()
+        plan["slots"]["intel-256"]["output"] = str(self.folder / "outside")
+        api, model, env = fake_api()
+        with (
+            patch(
+                "cfl_gnn.mvp3.production.worker.admission",
+                side_effect=AssertionError("No scheduler query permitted"),
+            ),
+            self.assertRaises(ContractError),
+        ):
+            probe(plan, "intel-256", "a" * 40, api=api)
+        self.assertFalse(env.started)
+        self.assertEqual(model.calls, 0)
 
     def test_candidate_topology_and_memory_do_not_assert_vendor(self):
         self.assertTrue(candidate(node(), "intel-256"))
@@ -404,6 +553,8 @@ class ProductionTests(unittest.TestCase):
             "--mem=192G",
             "--time=00:05:00",
             "--no-requeue",
+            "--execution-root",
+            "#SBATCH --chdir=",
         ):
             self.assertIn(fragment, script)
         if os.name == "posix":
@@ -442,6 +593,9 @@ class ProductionTests(unittest.TestCase):
         repo.mkdir()
         subprocess.run(["git", "init", "--quiet", str(repo)], check=True)
         for key, value in (
+            ("core.fsmonitor", "false"),
+            ("maintenance.auto", "false"),
+            ("gc.auto", "0"),
             ("commit.gpgsign", "false"),
             ("core.autocrlf", "false"),
             ("user.name", "Offline Test"),
@@ -571,7 +725,7 @@ class ProductionTests(unittest.TestCase):
 
     def test_collection_replays_both_roots_but_never_releases_S2(self):
         plan, runner = self.returned_plan()
-        report = collect(plan, self.folder / "collection", runner)
+        report = collect(plan, self.run_dir / "collection", runner)
         self.assertTrue(report["two_production_envelopes_technically_qualified"])
         self.assertFalse(report["scientific_S2_released"])
         self.assertFalse(report["real_CFL_memory_or_performance_qualified"])
@@ -583,14 +737,14 @@ class ProductionTests(unittest.TestCase):
         plan, runner = self.returned_plan()
         report = collect(
             plan,
-            self.folder / "collection",
+            self.run_dir / "collection",
             lambda args: runner(args).replace("cpu=64", "cpu=32"),
         )
         self.assertFalse(report["two_production_envelopes_technically_qualified"])
 
     def test_collection_keeps_missing_accounting_ineligible_without_retry(self):
         plan, _ = self.returned_plan()
-        report = collect(plan, self.folder / "collection", lambda args: "")
+        report = collect(plan, self.run_dir / "collection", lambda args: "")
         self.assertFalse(report["automatic_retry"])
         self.assertTrue(
             all(
@@ -603,7 +757,7 @@ class ProductionTests(unittest.TestCase):
         plan, runner = self.returned_plan()
         folder = Path(plan["slots"]["intel-256"]["output"])
         (folder / "allocation.json").write_text("{}")
-        report = collect(plan, self.folder / "collection", runner)
+        report = collect(plan, self.run_dir / "collection", runner)
         self.assertFalse(report["profiles"]["intel-256"]["qualified"])
 
     def test_failed_allocation_never_starts_native_environment(self):
